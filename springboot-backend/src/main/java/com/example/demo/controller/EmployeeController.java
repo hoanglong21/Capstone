@@ -77,5 +77,33 @@ public class EmployeeController {
         return ResponseEntity.ok(response);
     }
 
-   
+    // get with filter and pagination
+    @GetMapping("/employeesWithSearch")
+    public ResponseEntity<Map<String, Object>> getAllEmployeesFilterAndPagination(@RequestParam(required = false) String id,
+                                                             @RequestParam(defaultValue = "0") int page,
+                                                             @RequestParam(defaultValue = "3") int size) {
+        try {
+            List<Employee> employees = new ArrayList<>();
+            Pageable paging = PageRequest.of(page, size);
+
+            Page<Employee> pageEmployees;
+            if(id == null)
+                pageEmployees = employeeRepository.findAll(paging);
+            else
+                pageEmployees = employeeRepository.findById(id, paging);
+
+            employees = pageEmployees.getContent();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("employees", employees);
+            response.put("currentPage", pageEmployees.getNumber());
+            response.put("totalItems", pageEmployees.getTotalElements());
+            response.put("totalPages", pageEmployees.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
