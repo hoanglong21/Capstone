@@ -1,10 +1,9 @@
-package com.example.demo.controller;
+package com.capstone.project.controller;
 
-import com.example.demo.exception.ResourceNotFroundException;
-import com.example.demo.model.Employee;
-import com.example.demo.repository.EmployeeRepository;
+import com.capstone.project.model.Employee;
+import com.capstone.project.repository.EmployeeRepository;
+import com.capstone.project.exception.ResourceNotFroundException;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package com.capstone.project.repository;
 
-import com.example.demo.model.Employee;
+import com.capstone.project.model.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

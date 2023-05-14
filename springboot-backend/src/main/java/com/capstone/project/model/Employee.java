@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.capstone.project.model;
 
 import jakarta.persistence.*;
 import lombok.*;
