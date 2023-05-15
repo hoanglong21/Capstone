@@ -20,7 +20,7 @@ import java.util.Map;
 
 //@CrossOrigin(origins = "http://localhost:3000")
 //for cloud
-@CrossOrigin(origins = "https://capstone-iota-roan.vercel.app")
+@CrossOrigin(origins = "https://capstone-g13.vercel.app")
 @RestController
 @RequestMapping("/api/v1/")
 public class EmployeeController {
