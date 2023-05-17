@@ -1,9 +1,9 @@
 package com.capstone.project.controller;
 
 import com.capstone.project.model.Employee;
-import com.capstone.project.repository.EmployeeRepository;
 import com.capstone.project.exception.ResourceNotFroundException;
 
+import com.capstone.project.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,63 +18,52 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 //for cloud
-@CrossOrigin(origins = "https://capstone-g13.vercel.app")
+//@CrossOrigin(origins = "https://capstone-g13.vercel.app")
 @RestController
 @RequestMapping("/api/v1/")
 public class EmployeeController {
 
-    private final EmployeeRepository employeeRepository;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public EmployeeController(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
-    // autowired auto-inject suitable bean
 
     //get all employees
     @GetMapping("/employees")
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+        return employeeService.getAllEmployees();
     }
 
     //create employee rest api
     @PostMapping("/employees")
     public Employee createEmployee(@RequestBody Employee employee) {
-        return employeeRepository.save(employee);
+        return employeeService.createEmployee(employee);
     }
 
     //get employee by id rest api
     @GetMapping("/employees/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) throws ResourceNotFroundException {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFroundException("Employee not exist with id :" + id));
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id){
+        Employee employee = employeeService.getEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
 
     //update employee rest api
     @PutMapping("/employees/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,@RequestBody Employee employeeDetails) throws ResourceNotFroundException {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFroundException("Employee not exist with id :" + id));
-        employee.setFirstName(employeeDetails.getFirstName());
-        employee.setLastName(employeeDetails.getLastName());
-        employee.setEmailId(employeeDetails.getEmailId());
-
-        Employee updateEmployee = employeeRepository.save(employee);
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id,@RequestBody Employee employeeDetails){
+        Employee updateEmployee = employeeService.updateEmployee(id, employeeDetails);
         return ResponseEntity.ok(updateEmployee);
     }
 
     // delete employee rest api
     @DeleteMapping("/employees/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id) throws ResourceNotFroundException {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFroundException("Employee not exist with id :" + id));
-
-        employeeRepository.delete(employee);
+    public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id){
+        boolean deleted = employeeService.deleteEmployee(id);
         Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
+        response.put("deleted", deleted);
         return ResponseEntity.ok(response);
     }
 
@@ -83,28 +72,6 @@ public class EmployeeController {
     public ResponseEntity<Map<String, Object>> getAllEmployeesFilterAndPagination(@RequestParam(required = false) String id,
                                                              @RequestParam(defaultValue = "0") int page,
                                                              @RequestParam(defaultValue = "3") int size) {
-        try {
-            List<Employee> employees = new ArrayList<>();
-            Pageable paging = PageRequest.of(page, size);
-
-            Page<Employee> pageEmployees;
-            if(id == null)
-                pageEmployees = employeeRepository.findAll(paging);
-            else
-                pageEmployees = employeeRepository.findById(id, paging);
-
-            employees = pageEmployees.getContent();
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("employees", employees);
-            response.put("currentPage", pageEmployees.getNumber());
-            response.put("totalItems", pageEmployees.getTotalElements());
-            response.put("totalPages", pageEmployees.getTotalPages());
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return employeeService.getAllEmployeesFilterAndPagination(id, page, size);
     }
 }
