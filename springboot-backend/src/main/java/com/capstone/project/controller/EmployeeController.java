@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class EmployeeController {
 
     //get all employees
     @GetMapping("/employees")
+//    @PreAuthorize("hasRole('ROLE_USER'), hasRole('ROLE_ADMIN')")
     public List<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
@@ -45,6 +47,7 @@ public class EmployeeController {
     }
 
     //get employee by id rest api
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/employees/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id){
         Employee employee = employeeService.getEmployeeById(id);
