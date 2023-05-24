@@ -1,34 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ListEmployeeComponent from './components/ListEmployeeComponent';
-import HeaderComponent from './components/HeaderComponent';
-import FooterComponent from './components/FooterComponent';
-import CreateEmployeeComponent from './components/CreateEmployeeComponent';
-import ViewEmployeeComponent from './components/ViewEmployeeComponent';
-// import UpdateEmployeeComponent from './components/UpdateEmployeeComponent';
+import './App.css'
+import ListEmployee from './components/Employee/ListEmployeeComponent'
+import Header from './components/Header'
+import Footer from './components/Footer'
+
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import CreateEmployee from './components/Employee/CreateEmployeeComponent'
+import ViewEmployee from './components/Employee/ViewEmployeeComponent'
 
 function App() {
-  return (
-    <div className="App">
-      <Router>
-          <HeaderComponent />
-          <div className="container">
-            <Routes> 
-              <Route path="/" element = {<ListEmployeeComponent/>}></Route>
-              <Route path="/employees" element = {<ListEmployeeComponent/>}></Route>
+    return (
+        <div>
+            <Router>
+                <Header />
 
-              {/* step 1 */}
-              <Route path="/add-employee/:id" element = {<CreateEmployeeComponent/>}></Route>
-              {/* <Route path="/update-employee/:id" element = {<UpdateEmployeeComponent/>}></Route> */}
-              
-              <Route path="/view-employee/:id" element = {<ViewEmployeeComponent/>}></Route>
-            </Routes>
-          </div>
-          <FooterComponent />
-      </Router>
-    </div>
-  );
+                <div className="container">
+                    <Routes>
+                        <Route
+                            path="/"
+                            exact
+                            element={<ListEmployee />}
+                        ></Route>
+                        <Route
+                            path="/employees"
+                            element={<ListEmployee />}
+                        ></Route>
+                        <Route
+                            path="/add-employee/:id"
+                            element={<CreateEmployee />}
+                        ></Route>
+                        <Route
+                            path="/view-employee/:id"
+                            element={<ViewEmployee />}
+                        ></Route>
+                    </Routes>
+                </div>
+
+                <Footer />
+            </Router>
+        </div>
+    )
 }
 
-export default App;
+export default App
