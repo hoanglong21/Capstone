@@ -19,14 +19,14 @@ class RegisterComponent extends Component {
             lastName: '',
             email: '',
             password: '',
-            role: ''
+            roles: ''
         }
     }
 
     registration = (e) => {
         e.preventDefault();
         let user = {firstName: this.state.firstName, lastName: this.state.lastName, 
-            email: this.state.email, password: this.state.password, role: this.state.role};
+            email: this.state.email, password: this.state.password, roles: this.state.roles};
         console.log('user => ' + JSON.stringify(user));
         AuthService.registration(user).then(res => {
             this.props.navigation('/login');
@@ -50,8 +50,8 @@ class RegisterComponent extends Component {
         this.setState({password: event.target.value})
     }
 
-    changeRoleHandler = (event) => {
-        this.setState({role: event.target.value})
+    changeRolesHandler = (event) => {
+        this.setState({roles: event.target.value})
     }
 
     render() {
@@ -92,9 +92,9 @@ class RegisterComponent extends Component {
                                         value={this.state.password} onChange={this.changePasswordHandler}/>
                             </div>
                             <div className="form-group mb-3">
-                                <label className="form-label">Role</label>
-                                <input placeholder='Enter role' name='emailId' className='form-control' 
-                                        value={this.state.role} onChange={this.changeRoleHandler}/>
+                                <label className="form-label">roles</label>
+                                <input placeholder='Enter roles' name='roles' className='form-control' 
+                                        value={this.state.roles} onChange={this.changeRolesHandler}/>
                             </div>
                             <div className="form-group">
                                 <button className="btn btn-primary" onClick={this.registration}>Register</button>

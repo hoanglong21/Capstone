@@ -51,14 +51,7 @@ public class AuthController {
 
     @GetMapping("/logout")
     public void logout() {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("jwtToken")) {
-//                String token = json.get(cookie.getValue());
-//                String jwt = jwtTokenProvider.resolveToken(request);
-//                window.sessionStorage.removeItem("token")
-            }
-        }
+        return;
     }
 
 

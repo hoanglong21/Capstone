@@ -1,44 +1,40 @@
-import './App.css'
-import ListEmployee from './components/Employee/ListEmployeeComponent'
-import Header from './components/Header'
-import Footer from './components/Footer'
-
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import CreateEmployee from './components/Employee/CreateEmployeeComponent'
-import ViewEmployee from './components/Employee/ViewEmployeeComponent'
+import logo from './logo.svg';
+import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ListEmployeeComponent from './components/ListEmployee';
+import IndexComponent from './components/Auth/IndexComponent';
+import HeaderComponent from './components/Header';
+import FooterComponent from './components/Footer';
+import CreateEmployeeComponent from './components/CreateEmployee';
+import ViewEmployeeComponent from './components/ViewEmployee';
+import LoginComponent from './components/Auth/LoginComponent';
+import RegisterComponent from './components/Auth/RegisterComponent';
+// import UpdateEmployeeComponent from './components/UpdateEmployeeComponent';
 
 function App() {
-    return (
-        <div>
-            <Router>
-                <Header />
+  return (
+    <div className="App">
+      <Router>
+          <HeaderComponent />
+          <div className="container">
+            <Routes> 
+              
+              <Route path="/" element = {<IndexComponent/>}></Route>
+              <Route path="/login" element = {<LoginComponent/>}></Route>
+              <Route path="/register" element = {<RegisterComponent/>}></Route>
+              <Route path="/employees" element = {<ListEmployeeComponent/>}></Route>
 
-                <div className="container">
-                    <Routes>
-                        <Route
-                            path="/"
-                            exact
-                            element={<ListEmployee />}
-                        ></Route>
-                        <Route
-                            path="/employees"
-                            element={<ListEmployee />}
-                        ></Route>
-                        <Route
-                            path="/add-employee/:id"
-                            element={<CreateEmployee />}
-                        ></Route>
-                        <Route
-                            path="/view-employee/:id"
-                            element={<ViewEmployee />}
-                        ></Route>
-                    </Routes>
-                </div>
-
-                <Footer />
-            </Router>
-        </div>
-    )
+              {/* step 1 */}
+              <Route path="/add-employee/:id" element = {<CreateEmployeeComponent/>}></Route>
+              {/* <Route path="/update-employee/:id" element = {<UpdateEmployeeComponent/>}></Route> */}
+              
+              <Route path="/view-employee/:id" element = {<ViewEmployeeComponent/>}></Route>
+            </Routes>
+          </div>
+          <FooterComponent />
+      </Router>
+    </div>
+  );
 }
 
-export default App
+export default App;
