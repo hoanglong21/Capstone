@@ -15,6 +15,7 @@ class RegisterComponent extends Component {
         super(props)
 
         this.state = {
+            username: '',
             firstName: '',
             lastName: '',
             email: '',
@@ -26,6 +27,7 @@ class RegisterComponent extends Component {
     registration = (e) => {
         e.preventDefault()
         let user = {
+            username: this.state.username,
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             email: this.state.email,
@@ -36,6 +38,10 @@ class RegisterComponent extends Component {
         AuthService.registration(user).then((res) => {
             this.props.navigation('/login')
         })
+    }
+
+    changeUsernameHandler = (event) => {
+        this.setState({ username: event.target.value })
     }
 
     changeFirstNameHandler = (event) => {
@@ -72,6 +78,17 @@ class RegisterComponent extends Component {
                     </div>
                     <div className="card-body">
                         <form>
+                            <div className="form-group mb-3">
+                                <label className="form-label">Username</label>
+                                <input
+                                    placeholder="Username"
+                                    name="username"
+                                    className="form-control"
+                                    value={this.state.username}
+                                    onChange={this.changeUsernameHandler}
+                                />
+                            </div>
+
                             <div className="form-group mb-3">
                                 <label className="form-label">First Name</label>
                                 <input

@@ -1,18 +1,34 @@
 :root {
     /* ===== Color theme ===== */
+    --yellow-56: #ffcd1f;
+    --yellow-69: #ffdc62;
+
+    --blue-20: #282e3e;
+    --blue-42: #586380;
     --blue-94: #edeff4;
     --blue-97: #f6f7fb;
+
+    --blue-magenta-55: #423ed8;
 
     --cyan-blue-19: #242d3e;
     --cyan-blue-41: #1174bf;
     --cyan-blue-51: #1991eb;
 
     /* ===== Project color definitions ===== */
-    --bg-color: var(--blue-94);
-    --border-color: var(--blue-97);
+    --bg-color: var(--blue-97);
+    --border: var(--blue-94);
+    --text-primary: var(--cyan-blue-19);
 
-    --btn-primary-color: var(--cyan-blue-51);
-    --btn-primary-hover: var(--cyan-blue-41);
+    --header-bg-color: white;
+
+    --icon-primary: var(--cyan-blue-51);
+    --icon-primary-hover: var(--blue-magenta-55);
+
+    --btn-light-color: var(--blue-42);
+    --btn-light-bg-hover: var(--blue-97);
+    --btn-warning-color: var(--blue-20);
+    --btn-warning-bg: var(--yellow-56);
+    --btn-warning-bg-hover: var(--yellow-69);
 
     --nav-link: var(--cyan-blue-19);
     --nav-link-hover: var(--cyan-blue-51);
@@ -20,14 +36,73 @@
 
 body {
     margin: 0;
+    padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
         'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
         'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.625;
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
+}
+
+.text-primary {
+    color: var(--text-primary) !important;
+}
+
+.border-bottom {
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.nav-link {
+    color: var(--nav-link);
+    transition: all 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--nav-link-hover);
+}
+
+.btn {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+}
+
+.btn-light {
+    background-color: white;
+    color: var(--btn-light-color);
+}
+
+.btn-light:hover {
+    background-color: var(--btn-light-bg-hover);
+    color: var(--btn-light-color);
+}
+
+.btn-warning {
+    background-color: var(--btn-warning-bg);
+    color: var(--btn-warning-color);
+}
+
+.btn-warning:hover {
+    background-color: var(--btn-warning-bg-hover);
+    color: var(--btn-warning-color);
+}
+
+.icon-primary {
+    fill: var(--icon-primary);
+    transition: all 0.3s;
+}
+
+.icon-primary:hover {
+    fill: var(--icon-primary-hover);
 }
