@@ -1,13 +1,33 @@
+:root {
+    /* ===== Color theme ===== */
+    --blue-94: #edeff4;
+    --blue-97: #f6f7fb;
+
+    --cyan-blue-19: #242d3e;
+    --cyan-blue-41: #1174bf;
+    --cyan-blue-51: #1991eb;
+
+    /* ===== Project color definitions ===== */
+    --bg-color: var(--blue-94);
+    --border-color: var(--blue-97);
+
+    --btn-primary-color: var(--cyan-blue-51);
+    --btn-primary-hover: var(--cyan-blue-41);
+
+    --nav-link: var(--cyan-blue-19);
+    --nav-link-hover: var(--cyan-blue-51);
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+        'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+        'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
 }

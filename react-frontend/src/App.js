@@ -1,41 +1,51 @@
+import logo from './logo.svg'
 import './App.css'
-import ListEmployee from './components/Employee/ListEmployeeComponent'
-import Header from './components/Header'
-import Footer from './components/Footer'
-
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import CreateEmployee from './components/Employee/CreateEmployeeComponent'
-import ViewEmployee from './components/Employee/ViewEmployeeComponent'
+import ListEmployeeComponent from './components/ListEmployee'
+import IndexComponent from './components/Auth/IndexComponent'
+import HeaderComponent from './components/Header'
+import FooterComponent from './components/Footer'
+import CreateEmployeeComponent from './components/CreateEmployee'
+import ViewEmployeeComponent from './components/ViewEmployee'
+import LoginComponent from './components/Auth/LoginComponent'
+import RegisterComponent from './components/Auth/RegisterComponent'
+// import UpdateEmployeeComponent from './components/UpdateEmployeeComponent';
 
 function App() {
     return (
-        <div>
+        <div className="App">
             <Router>
-                <Header />
-
+                <HeaderComponent />
                 <div className="container">
                     <Routes>
+                        <Route path="/" element={<IndexComponent />}></Route>
                         <Route
-                            path="/"
-                            exact
-                            element={<ListEmployee />}
+                            path="/login"
+                            element={<LoginComponent />}
+                        ></Route>
+                        <Route
+                            path="/register"
+                            element={<RegisterComponent />}
                         ></Route>
                         <Route
                             path="/employees"
-                            element={<ListEmployee />}
+                            element={<ListEmployeeComponent />}
                         ></Route>
+
+                        {/* step 1 */}
                         <Route
                             path="/add-employee/:id"
-                            element={<CreateEmployee />}
+                            element={<CreateEmployeeComponent />}
                         ></Route>
+                        {/* <Route path="/update-employee/:id" element = {<UpdateEmployeeComponent/>}></Route> */}
+
                         <Route
                             path="/view-employee/:id"
-                            element={<ViewEmployee />}
+                            element={<ViewEmployeeComponent />}
                         ></Route>
                     </Routes>
                 </div>
-
-                <Footer />
+                <FooterComponent />
             </Router>
         </div>
     )
