@@ -9,6 +9,7 @@ import CreateEmployeeComponent from './components/CreateEmployee';
 import ViewEmployeeComponent from './components/ViewEmployee';
 import LoginComponent from './components/Auth/LoginComponent';
 import RegisterComponent from './components/Auth/RegisterComponent';
+import VideoChatContainer from './components/Chat/VideoChatContainer';
 // import UpdateEmployeeComponent from './components/UpdateEmployeeComponent';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
               {/* <Route path="/update-employee/:id" element = {<UpdateEmployeeComponent/>}></Route> */}
               
               <Route path="/view-employee/:id" element = {<ViewEmployeeComponent/>}></Route>
+              <Route path="/chat" element = {<VideoChatContainer/>}></Route>
             </Routes>
           </div>
           <FooterComponent />
