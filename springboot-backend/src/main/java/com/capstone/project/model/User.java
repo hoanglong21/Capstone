@@ -14,8 +14,22 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String name;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String password;
     private String roles;
+
+    @Column(name = "is_banned", columnDefinition="boolean default false", nullable = false)
+    private Boolean banned;
 }

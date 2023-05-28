@@ -117,10 +117,10 @@ class RegisterComponent extends Component {
                                 />
                             </div>
                             <div className="form-group mb-3">
-                                <label className="form-label">Role</label>
+                                <label className="form-label">roles</label>
                                 <input
                                     placeholder="Enter roles"
-                                    name="emailId"
+                                    name="roles"
                                     className="form-control"
                                     value={this.state.roles}
                                     onChange={this.changeRolesHandler}

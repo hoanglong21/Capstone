@@ -1,4 +1,3 @@
-import logo from './logo.svg'
 import './App.css'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import ListEmployeeComponent from './components/ListEmployee'
@@ -9,7 +8,6 @@ import CreateEmployeeComponent from './components/CreateEmployee'
 import ViewEmployeeComponent from './components/ViewEmployee'
 import LoginComponent from './components/Auth/LoginComponent'
 import RegisterComponent from './components/Auth/RegisterComponent'
-// import UpdateEmployeeComponent from './components/UpdateEmployeeComponent';
 
 function App() {
     return (
