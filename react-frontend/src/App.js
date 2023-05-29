@@ -11,6 +11,7 @@ import LoginComponent from './components/Auth/LoginComponent';
 import RegisterComponent from './components/Auth/RegisterComponent';
 import VideoChatContainer from './components/Chat/VideoChatContainer';
 import ChatContainer from './components/Chat/ChatContainer';
+import StorageContainer from './components/FileManagement/StorageContainer';
 // import UpdateEmployeeComponent from './components/UpdateEmployeeComponent';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               <Route path="/view-employee/:id" element = {<ViewEmployeeComponent/>}></Route>
               <Route path="/videochat" element = {<VideoChatContainer/>}></Route>
               <Route path="/chat" element = {<ChatContainer/>}></Route>
+              <Route path="/file" element = {<StorageContainer/>}></Route>
             </Routes>
           </div>
           <FooterComponent />
