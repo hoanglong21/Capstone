@@ -3,17 +3,18 @@ import React, { useEffect } from 'react';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
-import './style.css';
+import './videoChatStyle.css';
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM",
-    authDomain: "capstone-project-34253.firebaseapp.com",
-    projectId: "capstone-project-34253",
-    storageBucket: "capstone-project-34253.appspot.com",
-    messagingSenderId: "342570414778",
-    appId: "1:342570414778:web:6f43802265129593d88883",
-    measurementId: "G-0LG2E3HGPQ"
+  apiKey: "AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM",
+  authDomain: "capstone-project-34253.firebaseapp.com",
+  databaseURL: "https://capstone-project-34253-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "capstone-project-34253",
+  storageBucket: "capstone-project-34253.appspot.com",
+  messagingSenderId: "342570414778",
+  appId: "1:342570414778:web:6f43802265129593d88883",
+  measurementId: "G-0LG2E3HGPQ"
 };
 
 if (!firebase.apps.length) {
