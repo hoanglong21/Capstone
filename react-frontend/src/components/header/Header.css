@@ -44,3 +44,7 @@ header {
 .dropdown-menu .dropdown-item {
     color: var(--blue-42);
 }
+
+.dropdown-menu .dropdown-divider {
+    border-top: 1px solid var(--border);
+}
