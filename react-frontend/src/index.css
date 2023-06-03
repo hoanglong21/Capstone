@@ -3,6 +3,7 @@
     --yellow-56: #ffcd1f;
     --yellow-69: #ffdc62;
 
+    --blue-13: #1a1d28;
     --blue-20: #282e3e;
     --blue-42: #586380;
     --blue-88: #d9dde8;
@@ -12,13 +13,13 @@
     --blue-magenta-55: #423ed8;
 
     --cyan-blue-26: #2e3856;
-    --cyan-blue-41: #1174bf;
     --cyan-blue-51: #1991eb;
 
     /* ===== Project color definitions ===== */
     --bg-color: var(--blue-97);
     --border: var(--blue-94);
     --text-primary: var(--cyan-blue-26);
+    --text-light: var(--blue-42);
 
     --header-bg-color: white;
 
@@ -28,17 +29,28 @@
     --icon-outline-secondary-border: var(--blue-88);
     --icon-outline-secondary-border-hover: var(--blue-42);
 
+    --btn-primary-bg: var(--cyan-blue-51);
+    --btn-primary-bg-hover: var(--blue-magenta-55);
     --btn-light-color: var(--blue-42);
     --btn-light-bg-hover: var(--blue-97);
     --btn-warning-color: var(--blue-20);
     --btn-warning-bg: var(--yellow-56);
     --btn-warning-bg-hover: var(--yellow-69);
 
-    --nav-link: var(--cyan-blue-19);
+    --nav-link: var(--cyan-blue-26);
     --nav-link-hover: var(--cyan-blue-51);
+
+    --link-primary: var(--cyan-blue-51);
+    --link-primary-hover: var(--blue-magenta-55);
+
+    --form-text: var(--blue-13);
+    --form-placeholder: rgba(var(--blue-13), 0.3);
+    --form-border: var(--blue-88);
+    --form-border-focus: var(--yellow-56);
 }
 
-html {
+html,
+body {
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
@@ -75,12 +87,29 @@ code {
     color: var(--nav-link-hover);
 }
 
+.link-primary {
+    color: var(--link-primary) !important;
+    transition: all 0.3s;
+}
+
+.link-primary:hover {
+    color: var(--link-primary-hover) !important;
+}
+
 .btn {
     font-weight: 600;
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 0.5rem;
     transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--btn-primary-bg);
+}
+
+.btn-primary:hover {
+    background-color: var(--btn-primary-bg-hover);
 }
 
 .btn-light {
@@ -111,4 +140,17 @@ code {
 
 .icon-primary:hover {
     fill: var(--icon-primary-hover);
+}
+
+input::placeholder {
+    opacity: 0.5;
+    color: var(--form-placeholder);
+}
+
+.form-control {
+    color: var(--form-text);
+}
+
+.form-control:focus {
+    box-shadow: none;
 }

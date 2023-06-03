@@ -6,14 +6,14 @@ import { store } from './state/store'
 import ListEmployeeComponent from './components/ListEmployee'
 import CreateEmployeeComponent from './components/CreateEmployee'
 import ViewEmployeeComponent from './components/ViewEmployee'
-import RegisterComponent from './components/Auth/RegisterComponent'
+import RegisterComponent from './components/auth/RegisterComponent'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
 import TestJWT from './components/Chat/TestJWT'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import Login from './pages/Login'
+import Login from './pages/Login/Login'
 
 
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -27,7 +27,6 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
-                        <Route path="login" element={<Login />} />
                         <Route
                             path="register"
                             element={<RegisterComponent />}
@@ -65,6 +64,8 @@ function App() {
                             element={<TestJWT />}
                         />
                     </Route>
+
+                    <Route path="/login" element={<Login />} />
                 </Routes>
             </BrowserRouter>
         </Provider>

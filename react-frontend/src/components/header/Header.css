@@ -31,6 +31,7 @@ header {
     border-radius: 0.5rem;
     border: 1px solid var(--border);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    transition: all 0.3s;
 }
 
 .dropdown-menu .dropdown-header {
@@ -47,4 +48,20 @@ header {
 
 .dropdown-menu .dropdown-divider {
     border-top: 1px solid var(--border);
+}
+
+.search .form-control {
+    border: none;
+    background-color: var(--bg-color);
+}
+
+.search {
+    background-color: var(--bg-color);
+    border-radius: 1.25rem;
+    border: 1px solid var(--border);
+    font-size: 0.875rem;
+}
+
+.search .form-control:focus {
+    background-color: var(--bg-color);
 }
