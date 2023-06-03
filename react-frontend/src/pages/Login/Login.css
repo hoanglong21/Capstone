@@ -15,10 +15,9 @@ h5 {
 .form .form-control {
     padding: 1rem;
     border: 1px solid var(--form-border);
-    color: var(--form-text) !important;
+    
 }
 
 .form .form-control:focus {
-    box-shadow: none;
     border-color: var(--form-border-focus);
 }

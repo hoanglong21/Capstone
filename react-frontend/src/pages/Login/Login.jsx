@@ -31,29 +31,27 @@ const Login = () => {
 
     return (
         <div className="login">
-            <div className="p-4 container">
-                <div className="d-flex flex-wrap align-items-center justify-content-start">
-                    <a
-                        href="/"
-                        className="d-flex align-items-center mb-0 me-auto text-white text-decoration-none"
-                    >
-                        <img
-                            className="bi me-5"
-                            src={logo}
-                            alt="logo"
-                            height="32"
-                        />
-                    </a>
+            <div className="py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
+                <a
+                    href="/"
+                    className="d-flex align-items-center ms-5 mb-0 me-auto text-white text-decoration-none"
+                >
+                    <img
+                        className="bi me-5"
+                        src={logo}
+                        alt="logo"
+                        height="32"
+                    />
+                </a>
 
-                    <div className="d-flex">
-                        <p>New User?</p>
-                        <a
-                            href="/register"
-                            className="link-primary text-decoration-none ms-2 fw-semibold"
-                        >
-                            Sign up
-                        </a>
-                    </div>
+                <div className="d-flex">
+                    <p>New User?</p>
+                    <a
+                        href="/register"
+                        className="link-primary text-decoration-none ms-2 me-5 fw-semibold"
+                    >
+                        Sign up
+                    </a>
                 </div>
             </div>
             <div className="row mt-2">
@@ -88,14 +86,14 @@ const Login = () => {
                             />
                         </div>
                         {/* forgot */}
-                        <span className="d-flex justify-content-end mb-3">
+                        <div className="d-flex justify-content-end">
                             <a
                                 href="/forgot"
-                                className="link-primary text-decoration-none fw-semibold"
+                                className="mb-5 link-primary text-decoration-none fw-semibold"
                             >
                                 Forgot Password?
                             </a>
-                        </span>
+                        </div>
                         {/* login btn */}
                         <div className="form-group mt-5">
                             <button

@@ -146,3 +146,11 @@ input::placeholder {
     opacity: 0.5;
     color: var(--form-placeholder);
 }
+
+.form-control {
+    color: var(--form-text);
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
