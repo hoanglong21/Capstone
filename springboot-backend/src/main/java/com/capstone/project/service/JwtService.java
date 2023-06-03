@@ -1,10 +1,13 @@
 package com.capstone.project.service;
 
+import com.capstone.project.model.User;
+import com.capstone.project.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,13 @@ import java.util.function.Function;
 public class JwtService {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public JwtService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -59,9 +69,13 @@ public class JwtService {
     }
 
     private String createToken(Map<String, Object> claims, String userName) {
+        User user = userRepository.findUserByUsername(userName);
+        if(user == null) {
+            user = userRepository.findUserByEmail(userName);
+        }
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userName)
+                .setSubject(user.getUsername()) // get actual username
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*24))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();

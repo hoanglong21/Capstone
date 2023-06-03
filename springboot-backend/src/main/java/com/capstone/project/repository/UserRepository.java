@@ -2,7 +2,10 @@ package com.capstone.project.repository;
 
 import com.capstone.project.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
@@ -10,6 +13,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByEmail(String email);
 
+    User findUserByUsername(String username);
+
+    User findUserByEmail(String email);
+
     User findUserById(int id);
+
+    @Query("SELECT username FROM User WHERE username != :username")
+    List<String> findAllNameExcept(@Param("username") String username);
 
 }

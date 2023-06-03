@@ -7,9 +7,14 @@ import ListEmployeeComponent from './components/ListEmployee'
 import CreateEmployeeComponent from './components/CreateEmployee'
 import ViewEmployeeComponent from './components/ViewEmployee'
 import RegisterComponent from './components/Auth/RegisterComponent'
+import VideoChatContainer from './components/Chat/VideoChatContainer'
+import ChatContainer from './components/Chat/ChatContainer'
+import StorageContainer from './components/FileManagement/StorageContainer'
+import TestJWT from './components/Chat/TestJWT'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
+
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
@@ -38,6 +43,26 @@ function App() {
                         <Route
                             path="view-employee/:id"
                             element={<ViewEmployeeComponent />}
+                        />
+                        <Route
+                            path="videochat"
+                            element={<VideoChatContainer />}
+                        />
+                        <Route
+                            path="videochat/:call"
+                            element={<VideoChatContainer />}
+                        />
+                        <Route
+                            path="chat"
+                            element={<ChatContainer />}
+                        />
+                        <Route
+                            path="file"
+                            element={<StorageContainer />}
+                        />
+                        <Route
+                            path="test"
+                            element={<TestJWT />}
                         />
                     </Route>
                 </Routes>

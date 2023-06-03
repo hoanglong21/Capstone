@@ -4,8 +4,11 @@ import com.capstone.project.model.User;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,4 +25,11 @@ public class UserServiceImpl implements UserService {
         }
         return userRepository.save(user);
     }
+
+    @Override
+    public List<String> findAllNameExcept(String username) {
+        return userRepository.findAllNameExcept(username);
+    }
+
+
 }

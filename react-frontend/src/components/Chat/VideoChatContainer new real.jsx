@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom'
 // v9 compat packages are API compatible with v8 code
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
 import './videoChatStyle.css';
-
 
 
 const firebaseConfig = {
@@ -44,7 +42,6 @@ let remoteStream = null;
 const VideoChatContainer = () => {
 
   let webcamButton, webcamVideo, callButton, callInput, answerButton, remoteVideo, hangupButton;
-  const { call } = useParams()
   
   useEffect(() => {
     webcamButton = document.getElementById('webcamButton');
@@ -54,15 +51,6 @@ const VideoChatContainer = () => {
     answerButton = document.getElementById('answerButton');
     remoteVideo = document.getElementById('remoteVideo');
     hangupButton = document.getElementById('hangupButton');
-
-    webcamButtonClick();
-    if(call == null) {
-      callButtonClick();
-    } else {
-      document.getElementById('callInput').value = call;
-      answerButtonClick();
-    }
-    
   }, [])
 
   let webcamButtonClick = async () => {
@@ -86,8 +74,7 @@ const VideoChatContainer = () => {
   
     callButton.disabled = false;
     answerButton.disabled = false;
-    webcamButton.disabled = false;
-
+    webcamButton.disabled = true;
   };
 
   let callButtonClick = async () => {
@@ -148,7 +135,6 @@ let answerButtonClick = async () => {
   };
 
   const callData = (await callDoc.get()).data();
-  console.log(callData)
 
   const offerDescription = callData.offer;
   await pc.setRemoteDescription(new RTCSessionDescription(offerDescription));
