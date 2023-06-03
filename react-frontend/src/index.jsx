@@ -9,7 +9,7 @@ import ViewEmployeeComponent from './components/ViewEmployee'
 import RegisterComponent from './components/auth/RegisterComponent'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import Login from './pages/Login'
+import Login from './pages/Login/Login'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
@@ -22,7 +22,6 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
-                        <Route path="login" element={<Login />} />
                         <Route
                             path="register"
                             element={<RegisterComponent />}
@@ -40,6 +39,8 @@ function App() {
                             element={<ViewEmployeeComponent />}
                         />
                     </Route>
+
+                    <Route path="/login" element={<Login />} />
                 </Routes>
             </BrowserRouter>
         </Provider>

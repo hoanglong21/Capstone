@@ -31,6 +31,7 @@ header {
     border-radius: 0.5rem;
     border: 1px solid var(--border);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    transition: all 0.3s;
 }
 
 .dropdown-menu .dropdown-header {

@@ -18,11 +18,10 @@ import {
     StudySetIcon,
     FolderIcon,
     ClassIcon,
-} from '../../assets/icons/icons'
+} from '../icons'
 import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../state/authSlice'
-import { useEffect, useState } from 'react'
 
 const Header = () => {
     const isLogged = useSelector((state) => state.auth.isLogged)
@@ -34,7 +33,7 @@ const Header = () => {
                 <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <a
                         href="/"
-                        className="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
+                        className="d-flex align-items-center mb-2 mb-lg-0 me-auto text-white text-decoration-none"
                     >
                         <img
                             className="bi me-5"
@@ -101,7 +100,7 @@ const Header = () => {
                         </li>
                     </ul>
 
-                    <div className="text-end">
+                    <div>
                         {/* Add button */}
                         <div className="dropdown d-inline-flex">
                             <button
@@ -285,7 +284,7 @@ const Header = () => {
                             </>
                         ) : (
                             <>
-                                <Link to="login">
+                                <Link to="/login">
                                     <button
                                         type="button"
                                         className="btn btn-light me-2"
