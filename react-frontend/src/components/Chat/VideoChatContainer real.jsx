@@ -2,17 +2,19 @@ import React, { useEffect } from 'react';
 // v9 compat packages are API compatible with v8 code
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-import { useParams } from 'react-router-dom'
+
+import './videoChatStyle.css';
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM",
-    authDomain: "capstone-project-34253.firebaseapp.com",
-    projectId: "capstone-project-34253",
-    storageBucket: "capstone-project-34253.appspot.com",
-    messagingSenderId: "342570414778",
-    appId: "1:342570414778:web:6f43802265129593d88883",
-    measurementId: "G-0LG2E3HGPQ"
+  apiKey: "AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM",
+  authDomain: "capstone-project-34253.firebaseapp.com",
+  databaseURL: "https://capstone-project-34253-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "capstone-project-34253",
+  storageBucket: "capstone-project-34253.appspot.com",
+  messagingSenderId: "342570414778",
+  appId: "1:342570414778:web:6f43802265129593d88883",
+  measurementId: "G-0LG2E3HGPQ"
 };
 
 if (!firebase.apps.length) {
@@ -39,8 +41,7 @@ let remoteStream = null;
 const VideoChatContainer = () => {
 
   let webcamButton, webcamVideo, callButton, callInput, answerButton, remoteVideo, hangupButton;
-  const { call } = useParams()
-
+  
   useEffect(() => {
     webcamButton = document.getElementById('webcamButton');
     webcamVideo = document.getElementById('webcamVideo');
@@ -49,35 +50,27 @@ const VideoChatContainer = () => {
     answerButton = document.getElementById('answerButton');
     remoteVideo = document.getElementById('remoteVideo');
     hangupButton = document.getElementById('hangupButton');
-
-        webcamButtonClick();
-    if(call == null) {
-      callButtonClick();
-    } else {
-      document.getElementById('callInput').value = call;
-      answerButtonClick();
-    }
   }, [])
 
   let webcamButtonClick = async () => {
     localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
     remoteStream = new MediaStream();
-
+  
     // Push tracks from local stream to peer connection
     localStream.getTracks().forEach((track) => {
       pc.addTrack(track, localStream);
     });
-
+  
     // Pull tracks from remote stream, add to video stream
     pc.ontrack = (event) => {
       event.streams[0].getTracks().forEach((track) => {
         remoteStream.addTrack(track);
       });
     };
-
+  
     webcamVideo.srcObject = localStream;
     remoteVideo.srcObject = remoteStream;
-
+  
     callButton.disabled = false;
     answerButton.disabled = false;
     webcamButton.disabled = true;
@@ -86,7 +79,7 @@ const VideoChatContainer = () => {
   let callButtonClick = async () => {
   // Reference Firestore collections for signaling
   const callDoc = firestore.collection('calls').doc();
-
+  
   const offerCandidates = callDoc.collection('offerCandidates');
   const answerCandidates = callDoc.collection('answerCandidates');
 
@@ -190,7 +183,7 @@ let answerButtonClick = async () => {
             <h2>4. Hangup</h2>
             <button id="hangupButton" disabled>Hangup</button>
           </div>
-
+          
       )
 }
 
