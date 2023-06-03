@@ -1,0 +1,50 @@
+header {
+    background-color: var(--header-bg-color);
+}
+
+.btn.icon-outline-secondary {
+    border-radius: 50%;
+    padding: 0.5rem;
+    border: 1px solid var(--icon-outline-secondary-border);
+    transition: all 0.3s;
+}
+
+.btn.icon-outline-secondary:hover {
+    border: 1px solid var(--icon-outline-secondary-border-hover);
+    background-color: white;
+    color: var(--icon-outline-secondary);
+}
+
+.btn-avatar {
+    border-radius: 50%;
+    padding: 0;
+}
+
+.avatar {
+    border-radius: 100%;
+    margin: 0;
+    height: 2.5rem;
+    width: 2.5rem;
+}
+
+.dropdown .dropdown-menu {
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.dropdown-menu .dropdown-header {
+    color: var(--text-primary);
+}
+
+.dropdown-header p {
+    margin: 0;
+}
+
+.dropdown-menu .dropdown-item {
+    color: var(--blue-42);
+}
+
+.dropdown-menu .dropdown-divider {
+    border-top: 1px solid var(--border);
+}

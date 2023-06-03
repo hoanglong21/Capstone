@@ -14,7 +14,7 @@ const ViewEmployee = () => {
         }
 
         fetchData()
-    }, [])
+    }, [id])
 
     return (
         <div>
