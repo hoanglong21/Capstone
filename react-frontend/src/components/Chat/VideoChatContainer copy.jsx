@@ -14,8 +14,6 @@ const firebaseConfig = {
     measurementId: "G-0LG2E3HGPQ"
 };
 
-var docRef;
-
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -89,7 +87,9 @@ const VideoChatContainer = () => {
   const answerCandidates = callDoc.collection('answerCandidates');
 
   callInput.value = callDoc.id;
-  docRef = firestore.collection('calls').doc(callDoc.id);
+
+  call = callInput.value;
+
   // Get candidates for caller, save to db
   pc.onicecandidate = (event) => {
     event.candidate && offerCandidates.add(event.candidate.toJSON());
@@ -131,7 +131,6 @@ const VideoChatContainer = () => {
 let answerButtonClick = async () => {
   const callId = callInput.value;
   const callDoc = firestore.collection('calls').doc(callId);
-  docRef = callDoc;
   const answerCandidates = callDoc.collection('answerCandidates');
   const offerCandidates = callDoc.collection('offerCandidates');
 
@@ -156,7 +155,7 @@ let answerButtonClick = async () => {
 
   offerCandidates.onSnapshot((snapshot) => {
     snapshot.docChanges().forEach((change) => {
-      // console.log(change);
+      console.log(change);
       if (change.type === 'added') {
         let data = change.doc.data();
         pc.addIceCandidate(new RTCIceCandidate(data));
@@ -167,11 +166,13 @@ let answerButtonClick = async () => {
 
 let hangupButtonClick = () => {
   // console.log("hangup")
-  //  const videoEndMessage = document.getElementById('videoEndMessage');
+  // const videoEndMessage = document.getElementById('videoEndMessage');
   //   videoEndMessage.style.display = 'block';
+
   pc.close();
   localStream.getTracks().forEach((track) => track.stop());
   remoteStream.getTracks().forEach((track) => track.stop());
+  
 
   localStream = null;
   remoteStream = null;
@@ -205,10 +206,6 @@ let hangupButtonClick = () => {
 
     callDoc.delete();
   }
-    // Wait for the connection state to transition to "disconnected"
-  setTimeout(() => {
-    console.log(pc.iceConnectionState); // "disconnected"
-  }, 5000); // Wait for 5 seconds for the state to change
 };
 
 window.addEventListener('beforeunload', function(event) {
@@ -216,16 +213,16 @@ window.addEventListener('beforeunload', function(event) {
   hangupButtonClick();
 });
 
-pc.oniceconnectionstatechange = (event) => {
-  console.log('ICE Connection State changed: ', pc.iceConnectionState);
-  
-  if (pc.iceConnectionState === 'disconnected' || pc.iceConnectionState === 'failed' || pc.iceConnectionState === 'closed') {
-    // The connection with the other peer has been lost.
-    // Handle this event in your app as needed.
-    console.log("ahaha")
-  }
-};
-
+const docRef = firestore().collection('collection').doc(call);
+  docRef.delete()
+    .then(() => {
+      console.log('Document successfully deleted!');
+        const videoEndMessage = document.getElementById('videoEndMessage');
+        videoEndMessage.style.display = 'block';
+    })
+    .catch((error) => {
+      console.error('Error removing document: ', error);
+    });
 
   return (
           <div>
@@ -250,7 +247,7 @@ pc.oniceconnectionstatechange = (event) => {
             <button id="answerButton" onClick={answerButtonClick}>Answer</button>
             <h2>4. Hangup</h2>
             <button id="hangupButton" onClick={hangupButtonClick}>Hangup</button>
-             <div id="videoEndMessage" style={{display: 'none'}}>Video end</div>
+            <div id="videoEndMessage" style={{display: 'none'}}>Video end</div>
           </div>
 
       )
