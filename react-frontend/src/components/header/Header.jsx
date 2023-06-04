@@ -85,7 +85,7 @@ const Header = () => {
                 <form className="search ms-2 col-5 d-inline-flex align-items-center m-0 me-auto p-1">
                     <SearchIcon className="mx-1" size="1.5rem" />
                     <input
-                        class="form-control"
+                        className="form-control"
                         type="text"
                         placeholder="Search..."
                         aria-label="Search"
@@ -176,14 +176,14 @@ const Header = () => {
                                 <ul className="dropdown-menu dropdown-menu-end p-2">
                                     <li>
                                         <div className="dropdown-header d-flex align-items-center">
-                                            <div class="flex-shrink-0">
+                                            <div className="flex-shrink-0">
                                                 <img
                                                     src={avatar}
                                                     alt="avatar"
                                                     className="avatar"
                                                 />
                                             </div>
-                                            <div class="flex-grow-1 ms-3">
+                                            <div className="flex-grow-1 ms-3">
                                                 <p className="fw-semibold">
                                                     TuyetNTA
                                                 </p>
@@ -199,7 +199,7 @@ const Header = () => {
                                         </div>
                                     </li>
                                     <li>
-                                        <hr class="dropdown-divider" />
+                                        <hr className="dropdown-divider" />
                                     </li>
                                     <li>
                                         <button
@@ -244,7 +244,7 @@ const Header = () => {
                                         </button>
                                     </li>
                                     <li>
-                                        <hr class="dropdown-divider" />
+                                        <hr className="dropdown-divider" />
                                     </li>
                                     <li>
                                         <button

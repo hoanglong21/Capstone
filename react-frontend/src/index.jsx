@@ -10,7 +10,6 @@ import Register from './pages/Register/Register'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
-import TestJWT from './components/Chat/TestJWT'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login/Login'
@@ -47,9 +46,9 @@ function App() {
                             path="videochat/:call"
                             element={<VideoChatContainer />}
                         />
+                        <Route path="test" element={<TestJWT />} />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="file" element={<StorageContainer />} />
-                        <Route path="test" element={<TestJWT />} />
                     </Route>
 
                     <Route path="/login" element={<Login />} />
