@@ -59,7 +59,6 @@ header {
     background-color: var(--bg-color);
     border-radius: 1.25rem;
     border: 1px solid var(--border);
-    font-size: 0.875rem;
 }
 
 .search .form-control:focus {

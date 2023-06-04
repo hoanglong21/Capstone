@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import AuthService from '../../services/AuthService'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 
 import logo from '../../assets/images/Quizlet-Logo.png'
 import illustration from '../../assets/images/study.jpg'
@@ -17,11 +16,10 @@ const Register = () => {
         roles: '',
     })
     const navigate = useNavigate()
-    const dispatch = useDispatch()
 
-    const registration = (e) => {
+    const registration = async (e) => {
         e.preventDefault()
-        AuthService.registration(user).then((res) => {
+        AuthService.registration(user).then(() => {
             navigate('/login')
         })
     }
@@ -32,7 +30,7 @@ const Register = () => {
 
     return (
         <div>
-            <div className="mb-5 py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
+            <div className="py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
                 <a
                     href="/"
                     className="d-flex align-items-center ms-5 mb-0 me-auto text-white text-decoration-none"
@@ -55,16 +53,12 @@ const Register = () => {
                     </Link>
                 </div>
             </div>
-            <div className="d-flex flex-row align-items-center h-100">
-                <div
-                    className="col-6"
-                    style={{
-                        background: `url(${illustration}) no-repeat center bottom/cover`,
-                        height: '100%',
-                    }}
-                />
-                <div className="col-6 p-5">
-                    <h1>Get Started</h1>
+            <div className="d-flex flex-row align-items-center">
+                <div className="col-6">
+                    <img src={illustration} className="w-100" alt="" />
+                </div>
+                <div className="col-6">
+                    <h2>Get Started</h2>
                     <h5
                         className="fw-normal"
                         style={{ color: 'var(--text-light)' }}
@@ -103,7 +97,7 @@ const Register = () => {
                             </label>
                             <input
                                 placeholder="Type your last name"
-                                name="firstName"
+                                name="lastName"
                                 className={`form-control ${styles.formControl}`}
                                 value={user.lastName}
                                 onChange={handleChange}
@@ -136,37 +130,39 @@ const Register = () => {
                         <div className="form-group mb-4">
                             <label className={styles.formLabel}>Role</label>
                             <div
-                                class="btn-group d-block"
+                                className="btn-group d-block"
                                 role="group"
                                 aria-label="role toggle"
                             >
                                 <input
                                     type="radio"
-                                    class="btn-check"
-                                    name="role"
+                                    className="btn-check"
+                                    name="roles"
                                     id="learner"
                                     value="ROLE_LEANER"
-                                    autocomplete="off"
+                                    autoComplete="off"
                                     checked
+                                    onChange={handleChange}
                                 />
                                 <label
-                                    className={`btn btn-outline-warning px-4 py-3 col-4 ${styles.labelRadio}`}
-                                    for="learner"
+                                    className={`btn btn-outline-warning ${styles.labelRadio}`}
+                                    htmlFor="learner"
                                 >
                                     Learner
                                 </label>
 
                                 <input
                                     type="radio"
-                                    class="btn-check"
-                                    name="role"
+                                    className="btn-check"
+                                    name="roles"
                                     id="tutor"
                                     value="ROLE_TUTOR"
-                                    autocomplete="off"
+                                    autoComplete="off"
+                                    onChange={handleChange}
                                 />
                                 <label
-                                    class="btn btn-outline-warning px-5 py-3 col-4"
-                                    for="tutor"
+                                    className={`btn btn-outline-warning ${styles.labelRadio}`}
+                                    htmlFor="tutor"
                                 >
                                     Tutor
                                 </label>

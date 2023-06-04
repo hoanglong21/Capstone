@@ -46,7 +46,6 @@ function App() {
                             path="videochat/:call"
                             element={<VideoChatContainer />}
                         />
-                        <Route path="test" element={<TestJWT />} />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="file" element={<StorageContainer />} />
                     </Route>

@@ -16,13 +16,11 @@ const Login = () => {
 
     const login = async (e) => {
         e.preventDefault()
-
-        AuthService.login(user).then((response) => {
-            const token = response.data
-            localStorage.setItem('token', token)
-            dispatch(setLogin())
-            navigate('/')
-        })
+        const response = AuthService.login(user)
+        const token = response.data
+        localStorage.setItem('token', token)
+        dispatch(setLogin())
+        navigate('/')
     }
 
     const handleChange = (event) => {
@@ -59,7 +57,7 @@ const Login = () => {
                     <img src={illustration} className="w-100" alt="" />
                 </div>
                 <div className="col-5">
-                    <h1>Welcome Back!</h1>
+                    <h2>Welcome Back!</h2>
                     <h5
                         className="fw-normal"
                         style={{ color: 'var(--text-light)' }}
@@ -68,7 +66,7 @@ const Login = () => {
                     </h5>
                     <form className="form mt-5 me-5">
                         {/* username/email */}
-                        <div className="form-group mb-4">
+                        <div className="form-group mb-3">
                             <label className={styles.formLabel}>Username</label>
                             <input
                                 placeholder="Type your username or email address"
@@ -79,7 +77,7 @@ const Login = () => {
                             />
                         </div>
                         {/* password */}
-                        <div className="form-group mb-2">
+                        <div className="form-group mb-3">
                             <label className={styles.formLabel}>Password</label>
                             <input
                                 type="password"
@@ -100,7 +98,7 @@ const Login = () => {
                             </a>
                         </div>
                         {/* login btn */}
-                        <div className="form-group mt-5">
+                        <div className="form-group mt-4">
                             <button
                                 className={`btn btn-primary col-12 ${styles.btn}`}
                                 onClick={login}

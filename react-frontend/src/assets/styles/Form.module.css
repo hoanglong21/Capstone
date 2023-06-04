@@ -7,7 +7,7 @@
 input.formControl {
     color: var(--form-text);
     border: 1px solid var(--form-border);
-    padding: 0.75rem 0.875rem;
+    padding: 0.7rem;
 }
 
 input.formControl:focus {
@@ -17,9 +17,13 @@ input.formControl:focus {
 
 button.btn {
     padding: 0.8rem 0;
-    font-size: 1.1rem;
 }
 
 label.labelRadio {
     color: var(--form-text);
+    transition: all 0.3s;
+}
+
+label.labelRadio:hover {
+    color: var(--form-label-hover);
 }
