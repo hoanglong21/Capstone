@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/compat/app";
 import {
   getDatabase,
@@ -13,12 +13,12 @@ import {
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import ChatService from "../../services/ChatService";
+// import { AES, enc } from 'crypto-js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM",
   authDomain: "capstone-project-34253.firebaseapp.com",
-  databaseURL:
-    "https://capstone-project-34253-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://capstone-project-34253-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "capstone-project-34253",
   storageBucket: "capstone-project-34253.appspot.com",
   messagingSenderId: "342570414778",
@@ -127,6 +127,24 @@ const ChatContainer = () => {
     const newReceiver = document.getElementById("receiver").value;
     setreceiverUsername(newReceiver);
   };
+  // const key = "6A576E5A7234753778217A25432A462D4A614E645267556B5870327335763879"; //256-bit && hex
+  // TODO when done add to backend all of key
+  function openVideoChat() {
+    const myParameter = document.getElementById("receiver").value;
+    // const url = 'http://localhost:3000/videochat?param=' + AES.encrypt(myParameter, key).toString();
+    const url = 'http://localhost:3000/videochat?param=' + myParameter;
+    // Try to get a reference to the existing video chat window
+    var myWindow = window.open("", "myWindow");
+
+    // Check if the window is already open
+    if (myWindow.location.href === "about:blank") {
+      // If the window is not yet navigated to a page, navigate to the desired page
+      myWindow.location.href = url;
+    } else {
+      // If the window is already open and navigated to a page, focus it
+      myWindow.focus();
+    }
+  }
 
   return (
     <div>
@@ -137,6 +155,15 @@ const ChatContainer = () => {
           </option>
         ))}
       </select>
+
+     
+      <button className="btn btn-success" onClick={openVideoChat}> Call</button>
+      {messages
+          .filter((message) => ((message.sender === myUsername && message.receiver === receiverUsername)
+           || (message.sender === receiverUsername && message.receiver === myUsername)) && message.video_call === true)
+          .map((message) => (
+            <a href={"videochat/" + message.message}>Answer</a>
+          ))}
       <form onSubmit={sendMessage}>
         <input id="message" placeholder="Enter message" autoComplete="off" />
         <input type="submit" />
@@ -145,9 +172,11 @@ const ChatContainer = () => {
       {/* <ul id="messages"></ul> */}
       {/* Render a list of messages */}
       <ul id="messages">
+
+
         {messages
-          .filter((message) => (message.sender === myUsername && message.receiver === receiverUsername)
-           || (message.sender === receiverUsername && message.receiver === myUsername))
+          .filter((message) => ((message.sender === myUsername && message.receiver === receiverUsername)
+          || (message.sender === receiverUsername && message.receiver === myUsername)) && message.video_call !== true )
           .map((message) => (
             <li key={message.key}>
             {message.sender === myUsername && (
@@ -157,15 +186,15 @@ const ChatContainer = () => {
                 Delete
               </button>
             )}
+           
+           {message.video_call ? (
+            <a href={"videochat/" + message.message}>Call</a>
+            ) : (
+            <span>
             {message.sender}: {message.message}
+            </span>
+            )}
             </li>
-
-            // <li key={message.key}>
-            //   <button onClick={() => deleteMessage(message.key)}>Delete</button>
-            //   {message.sender}: {message.message}
-            // </li>
-
-            
           ))}
       </ul>
     </div>

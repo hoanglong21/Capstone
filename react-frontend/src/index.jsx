@@ -10,7 +10,6 @@ import RegisterComponent from './components/Auth/RegisterComponent'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
-import TestJWT from './components/Chat/TestJWT'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login/Login'
@@ -58,10 +57,6 @@ function App() {
                         <Route
                             path="file"
                             element={<StorageContainer />}
-                        />
-                        <Route
-                            path="test"
-                            element={<TestJWT />}
                         />
                     </Route>
 
