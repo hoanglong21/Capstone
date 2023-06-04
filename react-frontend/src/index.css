@@ -47,6 +47,7 @@
     --form-placeholder: rgba(var(--blue-13), 0.3);
     --form-border: var(--blue-88);
     --form-border-focus: var(--yellow-56);
+    --form-label-hover: var(--yellow-56);
 }
 
 html,
@@ -58,7 +59,7 @@ body {
         'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--bg-color);
+    background-color: white;
     color: var(--text-primary);
     line-height: 1.625;
     font-size: 17px;
@@ -69,7 +70,8 @@ code {
         monospace;
 }
 
-.text-primary {
+.text-primary,
+h1 {
     color: var(--text-primary) !important;
 }
 
@@ -145,12 +147,4 @@ code {
 input::placeholder {
     opacity: 0.5;
     color: var(--form-placeholder);
-}
-
-.form-control {
-    color: var(--form-text);
-}
-
-.form-control:focus {
-    box-shadow: none;
 }
