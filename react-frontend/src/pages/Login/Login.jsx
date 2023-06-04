@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 import AuthService from '../../services/AuthService'
@@ -7,7 +7,7 @@ import { login as setLogin } from '../../state/authSlice'
 
 import logo from '../../assets/images/Quizlet-Logo.png'
 import illustration from '../../assets/images/study.jpg'
-import './Login.css'
+import styles from '../../assets/styles/Form.module.css'
 
 const Login = () => {
     const [user, setUser] = useState({ username: '', password: '' })
@@ -16,13 +16,11 @@ const Login = () => {
 
     const login = async (e) => {
         e.preventDefault()
-
-        AuthService.login(user).then((response) => {
-            const token = response.data
-            localStorage.setItem('token', token)
-            dispatch(setLogin())
-            navigate('/')
-        })
+        const response = AuthService.login(user)
+        const token = response.data
+        localStorage.setItem('token', token)
+        dispatch(setLogin())
+        navigate('/')
     }
 
     const handleChange = (event) => {
@@ -46,12 +44,12 @@ const Login = () => {
 
                 <div className="d-flex">
                     <p>New User?</p>
-                    <a
-                        href="/register"
+                    <Link
+                        to="/register"
                         className="link-primary text-decoration-none ms-2 me-5 fw-semibold"
                     >
                         Sign up
-                    </a>
+                    </Link>
                 </div>
             </div>
             <div className="row mt-2">
@@ -59,28 +57,33 @@ const Login = () => {
                     <img src={illustration} className="w-100" alt="" />
                 </div>
                 <div className="col-5">
-                    <h1>Welcome Back!</h1>
-                    <h5 className="fw-normal">Login to continue</h5>
+                    <h2>Welcome Back!</h2>
+                    <h5
+                        className="fw-normal"
+                        style={{ color: 'var(--text-light)' }}
+                    >
+                        Login to continue
+                    </h5>
                     <form className="form mt-5 me-5">
                         {/* username/email */}
-                        <div className="form-group mb-4">
-                            <label>Username</label>
+                        <div className="form-group mb-3">
+                            <label className={styles.formLabel}>Username</label>
                             <input
                                 placeholder="Type your username or email address"
                                 name="username"
-                                className="form-control"
+                                className={`form-control ${styles.formControl}`}
                                 value={user.username}
                                 onChange={handleChange}
                             />
                         </div>
                         {/* password */}
-                        <div className="form-group mb-2">
-                            <label>Password</label>
+                        <div className="form-group mb-3">
+                            <label className={styles.formLabel}>Password</label>
                             <input
                                 type="password"
                                 placeholder="Type your password"
                                 name="password"
-                                className="form-control"
+                                className={`form-control ${styles.formControl}`}
                                 value={user.password}
                                 onChange={handleChange}
                             />
@@ -95,9 +98,9 @@ const Login = () => {
                             </a>
                         </div>
                         {/* login btn */}
-                        <div className="form-group mt-5">
+                        <div className="form-group mt-4">
                             <button
-                                className="btn btn-primary w-100"
+                                className={`btn btn-primary col-12 ${styles.btn}`}
                                 onClick={login}
                             >
                                 Login

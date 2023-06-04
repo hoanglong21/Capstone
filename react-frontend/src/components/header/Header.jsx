@@ -28,7 +28,7 @@ const Header = () => {
     const dispatch = useDispatch()
 
     return (
-        <header className="px-5 border-bottom">
+        <header className="px-3 border-bottom">
             <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a
                     href="/"
@@ -42,7 +42,7 @@ const Header = () => {
                     />
                 </a>
 
-                <ul className="nav col-12 col-lg-auto me-5 mb-2 mb-md-0 fw-semibold">
+                <ul className="nav col-12 col-lg-auto me-3 mb-2 mb-md-0 fw-semibold">
                     <li>
                         <NavLink
                             to="."
@@ -83,7 +83,7 @@ const Header = () => {
 
                 {/* Search */}
                 <form className="search ms-2 col-5 d-inline-flex align-items-center m-0 me-auto p-1">
-                    <SearchIcon className="mx-1" size="1.5rem" />
+                    <SearchIcon className="mx-1" />
                     <input
                         className="form-control"
                         type="text"

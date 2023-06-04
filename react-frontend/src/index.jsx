@@ -6,14 +6,13 @@ import { store } from './state/store'
 import ListEmployeeComponent from './components/ListEmployee'
 import CreateEmployeeComponent from './components/CreateEmployee'
 import ViewEmployeeComponent from './components/ViewEmployee'
-import RegisterComponent from './components/Auth/RegisterComponent'
+import Register from './pages/Register/Register'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login/Login'
-
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
@@ -26,10 +25,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
-                        <Route
-                            path="register"
-                            element={<RegisterComponent />}
-                        />
+
                         <Route
                             path="employees"
                             element={<ListEmployeeComponent />}
@@ -50,17 +46,12 @@ function App() {
                             path="videochat/:call"
                             element={<VideoChatContainer />}
                         />
-                        <Route
-                            path="chat"
-                            element={<ChatContainer />}
-                        />
-                        <Route
-                            path="file"
-                            element={<StorageContainer />}
-                        />
+                        <Route path="chat" element={<ChatContainer />} />
+                        <Route path="file" element={<StorageContainer />} />
                     </Route>
 
                     <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                 </Routes>
             </BrowserRouter>
         </Provider>
