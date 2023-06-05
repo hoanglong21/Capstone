@@ -1,8 +1,7 @@
 package com.capstone.project.startup;
 
 import com.capstone.project.model.StudySetType;
-import com.capstone.project.repository.StudysetTypeRepository;
-import jakarta.annotation.PostConstruct;
+import com.capstone.project.repository.StudySetTypeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -17,7 +16,7 @@ import java.util.List;
 public class ApplicationStartup implements ApplicationRunner {
 
     @Autowired
-    private StudysetTypeRepository studysetTypeRepository;
+    private StudySetTypeRepository studysetTypeRepository;
 
     @Override
     @Transactional
