@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Configuration, OpenAIApi } from "openai";
+import env from "react-dotenv";
 
+// hide key
 const configuration = new Configuration({
-  organization: "org-CKQaom1cZ7Ypdj5Yqw2fFD4f",
-  apiKey: "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",
+  organization: env.REACT_APP_ORGANIZATION,
+  apiKey: env.REACT_APP_API_KEY,
 });
+
 
 // fix: Refused to set unsafe header "User-Agent" (because it auto add in configuration)
 delete configuration.baseOptions.headers['User-Agent'];
