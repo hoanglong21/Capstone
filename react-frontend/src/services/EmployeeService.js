@@ -15,7 +15,7 @@ class EmployeeService {
     }
 
     getEmployeeById(employeeId) {
-        return axios.get(EMPLOYEE_API_BASE_URL + '/' + employeeId);
+        return axios.get(EMPLOYEE_API_BASE_URL + '/' + employeeId, { headers: {"Authorization" : `Bearer ${localStorage.getItem("token")}`} });
     }
 
     updateEmployee(employee ,employeeId) {
