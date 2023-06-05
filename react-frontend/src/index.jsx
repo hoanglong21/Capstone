@@ -17,6 +17,7 @@ import Login from './pages/Login/Login'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
+import GPTContainer from './components/Chat/GPTContainer'
 
 function App() {
     return (
@@ -48,6 +49,7 @@ function App() {
                         />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="file" element={<StorageContainer />} />
+                        <Route path="gpt" element={<GPTContainer />} />
                     </Route>
 
                     <Route path="/login" element={<Login />} />
