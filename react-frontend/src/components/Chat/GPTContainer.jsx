@@ -3,7 +3,7 @@ import { Configuration, OpenAIApi } from "openai";
 
 const configuration = new Configuration({
   organization: "org-CKQaom1cZ7Ypdj5Yqw2fFD4f",
-  apiKey: "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",
+  apiKey: "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",
 });
 
 // fix: Refused to set unsafe header "User-Agent" (because it auto add in configuration)
