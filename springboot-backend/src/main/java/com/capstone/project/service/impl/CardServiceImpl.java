@@ -55,9 +55,9 @@ public class CardServiceImpl implements CardService {
             e.printStackTrace();
         }
 
-        card.setTerm(cardDetails.getTerm());
-        card.setDefinition(cardDetails.getDefinition());
-        card.setNote(cardDetails.getNote());
+//        card.setTerm(cardDetails.getTerm());
+//        card.setDefinition(cardDetails.getDefinition());
+//        card.setNote(cardDetails.getNote());
         card.setStudySet(studySetRepository.findStudySetById(cardDetails.getStudySet().getId()));
 
         Card updateCard = cardRepository.save(card);

@@ -6,18 +6,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "studyset")
-public class StudySet {
+@Table(name = "assignment")
+public class Assignment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class classroom;
 
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
@@ -25,14 +30,21 @@ public class StudySet {
 
     private String title;
 
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_date;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date due_date;
+
     private String description;
 
-    private boolean status; // delete or not
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified_date;
 
-    @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false)
-    private StudySetType studySetType;
-
-    @ManyToMany(mappedBy = "studySets")
-    Set<Class> classes;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date start_date;
 }

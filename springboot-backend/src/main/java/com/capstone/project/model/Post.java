@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "studyset")
-public class StudySet {
+@Table(name = "post")
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -23,16 +22,9 @@ public class StudySet {
     @JoinColumn(name = "author_id", nullable = false)
     private User user;
 
-    private String title;
-
-    private String description;
-
-    private boolean status; // delete or not
-
     @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false)
-    private StudySetType studySetType;
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class classroom;
 
-    @ManyToMany(mappedBy = "studySets")
-    Set<Class> classes;
+    private String content;
 }

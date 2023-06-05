@@ -20,9 +20,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (user.getBanned()==null) {
-            user.setBanned(false);
-        }
+//        if (user.getBanned()==null) {
+//            user.setBanned(false);
+//        }
         return userRepository.save(user);
     }
 

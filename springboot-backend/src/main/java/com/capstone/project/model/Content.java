@@ -9,22 +9,20 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "card")
-public class Card {
+@Table(name = "content")
+public class Content {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    private String term;
-//
-//    private String definition;
-
-    private String picture;
-
-    private String audio;
+    @ManyToOne
+    @JoinColumn(name = "card_id", nullable = false)
+    private Card card;
 
     @ManyToOne
-    @JoinColumn(name = "studyset_id", nullable = false)
-    private StudySet studySet;
+    @JoinColumn(name = "field_id", nullable = false)
+    private Field field;
+
+    private String content;
 }
