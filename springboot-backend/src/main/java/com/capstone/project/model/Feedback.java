@@ -4,17 +4,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Date;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "studyset")
-public class StudySet {
+@Table(name = "feedback")
+public class Feedback {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -25,14 +24,15 @@ public class StudySet {
 
     private String title;
 
-    private String description;
-
-    private boolean status; // delete or not
-
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
-    private StudySetType studySetType;
+    private FeedbackType feedbackType;
 
-    @ManyToMany(mappedBy = "studySets")
-    Set<Class> classes;
+    private String destination;
+
+    private String content;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_date;
 }

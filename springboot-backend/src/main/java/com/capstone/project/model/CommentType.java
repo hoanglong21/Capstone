@@ -5,26 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "card")
-public class Card {
+@Table(name = "comment_type")
+public class CommentType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    private String term;
-//
-//    private String definition;
-
-    private String picture;
-
-    private String audio;
-
-    @ManyToOne
-    @JoinColumn(name = "studyset_id", nullable = false)
-    private StudySet studySet;
+    private String name;
 }

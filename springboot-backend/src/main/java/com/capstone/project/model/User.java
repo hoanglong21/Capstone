@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+import java.util.Set;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -18,18 +21,39 @@ public class User {
     @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(name = "first_name")
-    private String firstName;
+    private String first_name;
 
-    @Column(name = "last_name")
-    private String lastName;
+    private String last_name;
+
+//    private boolean gender; // 0 male; 1 female
+
+    private String gender;
+
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Date DOB;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    private String password;
-    private String roles;
+    @Column(unique = true)
+    private String phone_number;
 
-    @Column(name = "is_banned", columnDefinition="boolean default false", nullable = false)
-    private Boolean banned;
+    private String password;
+
+    private String role;
+
+    private String address;
+
+    private String bio;
+
+    private String status;
+
+    private String avatar;
+
+    @ManyToMany(mappedBy = "users")
+    Set<Class> classes;
+
+//    @Column(name = "is_banned", columnDefinition="boolean default false", nullable = false)
+//    private Boolean banned;
 }

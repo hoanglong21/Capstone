@@ -56,7 +56,9 @@ public class StudySetServiceImpl implements StudySetService {
         }
         studySet.setTitle(studySetDetails.getTitle());
         studySet.setDescription(studySetDetails.getDescription());
-        studySet.setStatus(studySetDetails.getStatus());
+//        studySet.setStatus(studySetDetails.getStatus());
+
+        // TODO fix all change
         studySet.setUser(userRepository.findUserById(studySetDetails.getUser().getId()));
 
         StudySet updateStudySet = studySetRepository.save(studySet);
