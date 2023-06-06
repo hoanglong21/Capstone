@@ -3,16 +3,14 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from './state/store'
 
-import ListEmployeeComponent from './components/ListEmployee'
-import CreateEmployeeComponent from './components/CreateEmployee'
-import ViewEmployeeComponent from './components/ViewEmployee'
-import Register from './pages/Register/Register'
+import Register from './pages/Register'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import Login from './pages/Login/Login'
+import Login from './pages/Login'
+import CreateStudySet from './pages/CreateStudySet'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
@@ -28,23 +26,15 @@ function App() {
                         <Route index element={<Home />} />
 
                         <Route
-                            path="employees"
-                            element={<ListEmployeeComponent />}
+                            path="study-set/add"
+                            element={<CreateStudySet />}
                         />
                         <Route
-                            path="add-employee/:id"
-                            element={<CreateEmployeeComponent />}
-                        />
-                        <Route
-                            path="view-employee/:id"
-                            element={<ViewEmployeeComponent />}
-                        />
-                        <Route
-                            path="videochat"
+                            path="video-chat"
                             element={<VideoChatContainer />}
                         />
                         <Route
-                            path="videochat/:call"
+                            path="video-chat/:call"
                             element={<VideoChatContainer />}
                         />
                         <Route path="chat" element={<ChatContainer />} />
