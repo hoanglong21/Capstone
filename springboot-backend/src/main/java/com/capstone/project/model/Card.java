@@ -16,10 +16,6 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    private String term;
-//
-//    private String definition;
-
     private String picture;
 
     private String audio;

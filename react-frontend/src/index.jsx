@@ -7,6 +7,7 @@ import Register from './pages/Register'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
+import Test from './components/Kanji/Test'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -40,6 +41,7 @@ function App() {
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="file" element={<StorageContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
+                        <Route path="test" element={<Test />} />
                     </Route>
 
                     <Route path="/login" element={<Login />} />

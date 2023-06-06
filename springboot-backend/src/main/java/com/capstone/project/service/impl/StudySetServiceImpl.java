@@ -16,15 +16,11 @@ import java.util.List;
 public class StudySetServiceImpl implements StudySetService {
 
     private final StudySetRepository studySetRepository;
-    private final UserRepository userRepository;
 
-    private final StudySetTypeRepository studysetTypeRepository;
 
     @Autowired
-    public StudySetServiceImpl(StudySetRepository studySetRepository, UserRepository userRepository, StudySetTypeRepository studysetTypeRepository) {
+    public StudySetServiceImpl(StudySetRepository studySetRepository) {
         this.studySetRepository = studySetRepository;
-        this.userRepository = userRepository;
-        this.studysetTypeRepository = studysetTypeRepository;
     }
 
     @Override
@@ -60,11 +56,8 @@ public class StudySetServiceImpl implements StudySetService {
         }
         studySet.setTitle(studySetDetails.getTitle());
         studySet.setDescription(studySetDetails.getDescription());
-        studySet.setStatus(studySetDetails.isStatus());
-
-        studySet.setStudySetType(studysetTypeRepository.findStudySetTypeById(studySetDetails.getStudySetType().getId()));
-
-        studySet.setUser(userRepository.findUserById(studySetDetails.getUser().getId()));
+        studySet.setDeleted(studySetDetails.isDeleted());
+        studySet.setPublic(studySetDetails.isPublic());
 
         StudySet updateStudySet = studySetRepository.save(studySet);
         return updateStudySet;

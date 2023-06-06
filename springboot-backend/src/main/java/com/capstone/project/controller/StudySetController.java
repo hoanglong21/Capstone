@@ -35,12 +35,16 @@ public class StudySetController {
     /*
         // add example
     {
-        "title": "set1",
-            "description": "this is the set1",
-            "status": "ok",
-            "user": {
-                "id": 1
-            }
+        "title": "set2",
+        "description": "this is the set",
+        "deleted": true,
+        "public": false,
+        "studySetType": {
+            "id": 1
+        },
+        "user": {
+            "id": 1
+        }
     }*/
 
     @GetMapping("/studysets/{id}")
