@@ -1,19 +1,19 @@
-import DigitalInk from "react-native-digital-ink";
+// import DigitalInk from "react-native-digital-ink";
 
-// ...
+// // ...
 
-const result = await DigitalInk.multiply(3, 7);
+// const result = await DigitalInk.multiply(3, 7);
 
-import React, { Component } from 'react';
+// import React, { Component } from 'react';
 
-class Test extends Component {
-    render() {
-        return (
-            <div>
+// class Test extends Component {
+//     render() {
+//         return (
+//             <div>
  
-            </div>x
-        );
-    }
-}
+//             </div>
+//         );
+//     }
+// }
 
-export default Test;
+// export default Test;
