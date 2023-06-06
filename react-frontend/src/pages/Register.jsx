@@ -1,19 +1,19 @@
 import { useState } from 'react'
-import AuthService from '../../services/AuthService'
+import AuthService from '../services/AuthService'
 import { Link, useNavigate } from 'react-router-dom'
 
-import logo from '../../assets/images/Quizlet-Logo.png'
-import illustration from '../../assets/images/study.jpg'
-import styles from '../../assets/styles/Form.module.css'
+import logo from '../assets/images/Quizlet-Logo.png'
+import illustration from '../assets/images/study.jpg'
+import styles from '../assets/styles/Form.module.css'
 
 const Register = () => {
     const [user, setUser] = useState({
         username: '',
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
-        roles: '',
+        role: '',
     })
     const navigate = useNavigate()
 
@@ -84,9 +84,9 @@ const Register = () => {
                             </label>
                             <input
                                 placeholder="Type your first name"
-                                name="firstName"
+                                name="first_name"
                                 className={`form-control ${styles.formControl}`}
-                                value={user.firstName}
+                                value={user.first_name}
                                 onChange={handleChange}
                             />
                         </div>
@@ -97,9 +97,9 @@ const Register = () => {
                             </label>
                             <input
                                 placeholder="Type your last name"
-                                name="lastName"
+                                name="last_name"
                                 className={`form-control ${styles.formControl}`}
-                                value={user.lastName}
+                                value={user.last_name}
                                 onChange={handleChange}
                             />
                         </div>
@@ -137,12 +137,11 @@ const Register = () => {
                                 <input
                                     type="radio"
                                     className="btn-check"
-                                    name="roles"
+                                    name="role"
                                     id="learner"
                                     value="ROLE_LEANER"
                                     autoComplete="off"
-                                    checked
-                                    onChange={handleChange}
+                                    onClick={handleChange}
                                 />
                                 <label
                                     className={`btn btn-outline-warning ${styles.labelRadio}`}
@@ -154,11 +153,11 @@ const Register = () => {
                                 <input
                                     type="radio"
                                     className="btn-check"
-                                    name="roles"
+                                    name="role"
                                     id="tutor"
                                     value="ROLE_TUTOR"
                                     autoComplete="off"
-                                    onChange={handleChange}
+                                    onClick={handleChange}
                                 />
                                 <label
                                     className={`btn btn-outline-warning ${styles.labelRadio}`}

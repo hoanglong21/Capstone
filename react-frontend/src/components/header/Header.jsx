@@ -19,7 +19,7 @@ import {
     FolderIcon,
     ClassIcon,
 } from '../icons'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../state/authSlice'
 
@@ -105,9 +105,10 @@ const Header = () => {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <button
+                                <Link
                                     className="dropdown-item py-2 px-3"
                                     type="button"
+                                    to="study-set/add"
                                 >
                                     <StudySetIcon
                                         className="me-3"
@@ -116,7 +117,7 @@ const Header = () => {
                                     <span className="align-middle fw-semibold">
                                         Study Set
                                     </span>
-                                </button>
+                                </Link>
                             </li>
                             <li>
                                 <button

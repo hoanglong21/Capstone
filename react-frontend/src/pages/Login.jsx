@@ -1,13 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-import AuthService from '../../services/AuthService'
+import AuthService from '../services/AuthService'
 import { useDispatch } from 'react-redux'
-import { login as setLogin } from '../../state/authSlice'
+import { login as setLogin } from '../state/authSlice'
 
-import logo from '../../assets/images/Quizlet-Logo.png'
-import illustration from '../../assets/images/study.jpg'
-import styles from '../../assets/styles/Form.module.css'
+import logo from '../assets/images/Quizlet-Logo.png'
+import illustration from '../assets/images/study.jpg'
+import styles from '../assets/styles/Form.module.css'
 
 const Login = () => {
     const [user, setUser] = useState({ username: '', password: '' })
