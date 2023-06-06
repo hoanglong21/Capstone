@@ -15,12 +15,10 @@ import java.util.List;
 public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
-    private final StudySetRepository studySetRepository;
 
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository, StudySetRepository studySetRepository) {
+    public CardServiceImpl(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
-        this.studySetRepository = studySetRepository;
     }
 
     @Override
@@ -55,10 +53,9 @@ public class CardServiceImpl implements CardService {
             e.printStackTrace();
         }
 
-//        card.setTerm(cardDetails.getTerm());
-//        card.setDefinition(cardDetails.getDefinition());
-//        card.setNote(cardDetails.getNote());
-        card.setStudySet(studySetRepository.findStudySetById(cardDetails.getStudySet().getId()));
+        card.setPicture(cardDetails.getPicture());
+        card.setAudio(cardDetails.getAudio());
+//        card.setStudySet(studySetRepository.findStudySetById(cardDetails.getStudySet().getId()));
 
         Card updateCard = cardRepository.save(card);
         return updateCard;
