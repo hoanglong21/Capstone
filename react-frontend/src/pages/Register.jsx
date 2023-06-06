@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import AuthService from '../../services/AuthService'
+import AuthService from '../services/AuthService'
 import { Link, useNavigate } from 'react-router-dom'
 
-import logo from '../../assets/images/Quizlet-Logo.png'
-import illustration from '../../assets/images/study.jpg'
-import styles from '../../assets/styles/Form.module.css'
+import logo from '../assets/images/Quizlet-Logo.png'
+import illustration from '../assets/images/study.jpg'
+import styles from '../assets/styles/Form.module.css'
 
 const Register = () => {
     const [user, setUser] = useState({

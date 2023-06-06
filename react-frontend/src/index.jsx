@@ -6,15 +6,16 @@ import { store } from './state/store'
 import ListEmployeeComponent from './components/ListEmployee'
 import CreateEmployeeComponent from './components/CreateEmployee'
 import ViewEmployeeComponent from './components/ViewEmployee'
-import Register from './pages/Register/Register'
+import Register from './pages/Register'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
-import Test from './components/Kanji/Test'
+import Dictaphone from './components/InputModel/Dictaphone'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import Login from './pages/Login/Login'
-
+import Login from './pages/Login'
+// import CreateStudySet from './pages/CreateStudySet'
+import Draw from './components/InputModel/Draw'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
@@ -51,7 +52,8 @@ function App() {
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="file" element={<StorageContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
-                        <Route path="test" element={<Test />} />
+                        <Route path="voice" element={<Dictaphone />} />
+                        <Route path="draw" element={<Draw />} />
                     </Route>
 
                     <Route path="/login" element={<Login />} />
