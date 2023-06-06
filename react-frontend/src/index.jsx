@@ -26,10 +26,10 @@ function App() {
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
 
-                        <Route
+                        {/* <Route
                             path="study-set/add"
                             element={<CreateStudySet />}
-                        />
+                        /> */}
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
