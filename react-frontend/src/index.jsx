@@ -29,10 +29,10 @@ function App() {
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
 
-                        <Route
-                            path="employees"
-                            element={<ListEmployeeComponent />}
-                        />
+                        {/* <Route
+                            path="study-set/add"
+                            element={<CreateStudySet />}
+                        /> */}
                         <Route
                             path="add-employee/:id"
                             element={<CreateEmployeeComponent />}

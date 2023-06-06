@@ -7,9 +7,14 @@ const Dictaphone = () => {
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition
-  } = useSpeechRecognition();
+  } = useSpeechRecognition({
+    // Set language code to Japanese
+    language: 'ja',
+    // Display final result only
+    interimResults: false
+  });
 
-  const startListening = () => SpeechRecognition.startListening({ continuous: true });
+  const startListening = () => SpeechRecognition.startListening({ continuous: true, language: 'ja' });
 
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
@@ -18,11 +23,12 @@ const Dictaphone = () => {
   return (
     <div>
       <p>Microphone: {listening ? 'on' : 'off'}</p>
-      <button onClick={SpeechRecognition.startListening}>Start</button>
+      <button onClick={startListening}>Start</button>
       <button onClick={SpeechRecognition.stopListening}>Stop</button>
       <button onClick={resetTranscript}>Reset</button>
       <p>{transcript}</p>
     </div>
   );
 };
+
 export default Dictaphone;
