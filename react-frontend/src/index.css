@@ -18,6 +18,7 @@
     /* ===== Project color definitions ===== */
     --bg-color: var(--blue-97);
     --border: var(--blue-94);
+    --divider: var(--blue-88);
     --text-primary: var(--cyan-blue-26);
     --text-light: var(--blue-42);
 
@@ -59,7 +60,7 @@ body {
         'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: white;
+    background-color: var(--bg-color);
     color: var(--text-primary);
     line-height: 1.625;
 }
@@ -76,6 +77,10 @@ h1 {
 
 .border-bottom {
     border-bottom: 1px solid var(--border) !important;
+}
+
+.divider {
+    border-bottom: 1px solid var(--divider) !important;
 }
 
 .nav-link {
