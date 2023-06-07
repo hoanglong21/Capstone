@@ -10,7 +10,7 @@ import Register from './pages/Register'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './components/FileManagement/StorageContainer'
-import Dictaphone from './components/InputModel/Dictaphone'
+import SpeechToText from './components/InputModel/SpeechToText'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -20,6 +20,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
 import GPTContainer from './components/Chat/GPTContainer'
+import TextToSpeech from './components/InputModel/TextToSpeech'
 
 function App() {
     return (
@@ -52,8 +53,9 @@ function App() {
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="file" element={<StorageContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
-                        <Route path="voice" element={<Dictaphone />} />
+                        <Route path="voice" element={<SpeechToText />} />
                         <Route path="draw" element={<Draw />} />
+                        <Route path="tospeech" element={<TextToSpeech/>}/>
                     </Route>
 
                     <Route path="/login" element={<Login />} />
