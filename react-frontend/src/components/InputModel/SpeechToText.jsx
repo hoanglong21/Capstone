@@ -1,7 +1,7 @@
 import React from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 
-const Dictaphone = () => {
+const SpeechToText = () => {
   const {
     transcript,
     listening,
@@ -31,4 +31,4 @@ const Dictaphone = () => {
   );
 };
 
-export default Dictaphone;
+export default SpeechToText;
