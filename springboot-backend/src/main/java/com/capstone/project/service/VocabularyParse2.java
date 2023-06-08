@@ -15,30 +15,90 @@
 //        try{
 //            File inputFile = new File("src/main/resources/OmohaDictionary.xml");
 //            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//            dbf.setValidating(false);
-//            dbf.setFeature("http://xml.org/sax/features/namespaces", false); // optional
-//            dbf.setFeature("http://xml.org/sax/features/validation", false); // optional
-//            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-////            DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-////            Document doc = dBuilder.parse(inputFile);
-////            doc.getDocumentElement().normalize();
+//
+//            // Add this line to increase the entity expansion limit
+//            System.setProperty("entityExpansionLimit", "1000000");
+//
+//            DocumentBuilder dBuilder = dbf.newDocumentBuilder();
+//            Document doc = dBuilder.parse(inputFile);
+//            doc.getDocumentElement().normalize();
 //
 //            String result = "";
 //            NodeList entries = doc.getElementsByTagName("entry");
+//
 //            for (int i = 0; i < entries.getLength(); i++) {
 //                Element entry = (Element)entries.item(i);
-//                String keb = ((Element)entry.getElementsByTagName("keb").item(0)).getTextContent();
-//                String reb1 = ((Element)entry.getElementsByTagName("reb").item(0)).getTextContent();
-//                String reb2 = ((Element)entry.getElementsByTagName("reb").item(1)).getTextContent();
-//                String reInf = ((Element)entry.getElementsByTagName("re_inf").item(0)).getTextContent();
-//                String ant = ((Element)entry.getElementsByTagName("ant").item(0)).getTextContent();
-//                String gloss1 = ((Element)entry.getElementsByTagName("gloss").item(0)).getTextContent();
-//                String gloss2 = ((Element)entry.getElementsByTagName("gloss").item(1)).getTextContent();
-//                String pos1 = ((Element)entry.getElementsByTagName("pos").item(0)).getTextContent();
-//                String pos2 = ((Element)entry.getElementsByTagName("pos").item(1)).getTextContent();
-//                String exText = ((Element)entry.getElementsByTagName("ex_text").item(0)).getTextContent();
-//                String exSentJpn = ((Element)entry.getElementsByTagName("ex_sent").item(0)).getTextContent();
-//                String exSentVi = ((Element)entry.getElementsByTagName("ex_sent").item(1)).getTextContent();
+//                String keb = "";
+//                NodeList kebNodes = entry.getElementsByTagName("keb");
+//                if (kebNodes.getLength() > 0) {
+//                    keb = ((Element)kebNodes.item(0)).getTextContent();
+//                }
+//
+//                String reb1 = "";
+//                NodeList reb1Nodes = entry.getElementsByTagName("reb");
+//                if (reb1Nodes.getLength() > 0) {
+//                    reb1 = ((Element)reb1Nodes.item(0)).getTextContent();
+//                }
+//
+//                String reb2 = "";
+//                NodeList reb2Nodes = entry.getElementsByTagName("reb");
+//                if (reb2Nodes.getLength() > 1) {
+//                    reb2 = ((Element)reb2Nodes.item(1)).getTextContent();
+//                }
+//
+//                String reInf = "";
+//                NodeList reInfNodes = entry.getElementsByTagName("re_inf");
+//                if (reInfNodes.getLength() > 0) {
+//                    reInf = ((Element)reInfNodes.item(0)).getTextContent();
+//                }
+//
+//                String ant = "";
+//                NodeList antNodes = entry.getElementsByTagName("ant");
+//                if (antNodes.getLength() > 0) {
+//                    ant = ((Element)antNodes.item(0)).getTextContent();
+//                }
+//
+//                String gloss1 = "";
+//                NodeList gloss1Nodes = entry.getElementsByTagName("gloss");
+//                if (gloss1Nodes.getLength() > 0) {
+//                    gloss1 = ((Element)gloss1Nodes.item(0)).getTextContent();
+//                }
+//
+//                String gloss2 = "";
+//                NodeList gloss2Nodes = entry.getElementsByTagName("gloss");
+//                if (gloss2Nodes.getLength() > 1) {
+//                    gloss2 = ((Element)gloss2Nodes.item(1)).getTextContent();
+//                }
+//
+//                String pos1 = "";
+//                NodeList pos1Nodes = entry.getElementsByTagName("pos");
+//                if (pos1Nodes.getLength() > 0) {
+//                    pos1 = ((Element)pos1Nodes.item(0)).getTextContent();
+//                }
+//
+//                String pos2 = "";
+//                NodeList pos2Nodes = entry.getElementsByTagName("pos");
+//                if (pos2Nodes.getLength() > 1) {
+//                    pos2 = ((Element)pos2Nodes.item(1)).getTextContent();
+//                }
+//
+//                String exText = "";
+//                NodeList exTextNodes = entry.getElementsByTagName("ex_text");
+//                if (exTextNodes.getLength() > 0) {
+//                    exText = ((Element)exTextNodes.item(0)).getTextContent();
+//                }
+//
+//                String exSentJpn = "";
+//                NodeList exSentJpnNodes = entry.getElementsByTagName("ex_sent");
+//                if (exSentJpnNodes.getLength() > 0) {
+//                    exSentJpn = ((Element)exSentJpnNodes.item(0)).getTextContent();
+//                }
+//
+//                String exSentVi = "";
+//                NodeList exSentViNodes = entry.getElementsByTagName("ex_sent");
+//                if (exSentViNodes.getLength() > 1) {
+//                    exSentVi = ((Element)exSentViNodes.item(1)).getTextContent();
+//                }
 ////            result +=
 //                System.out.println("Entry " + (i+1));
 //                System.out.println("Kanji: " + keb);

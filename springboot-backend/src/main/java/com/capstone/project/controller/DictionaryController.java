@@ -1,13 +1,13 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.model.Card;
 import com.capstone.project.model.Kanji;
+import com.capstone.project.model.Vocabulary;
 import com.capstone.project.service.KanjiParser;
 import com.capstone.project.service.VocabularyParse;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,8 +28,9 @@ public class DictionaryController {
     }
 
     @GetMapping("/vocabulary")
-    public String getAllVocabulary() {
-        return vocabularyParse.getAllVocabulary();
+    public List<Vocabulary> getAllVocabulary( @RequestParam(defaultValue = "1") int page,
+                                              @RequestParam(defaultValue = "3") int size) {
+        return vocabularyParse.getAllVocabulary(page, size);
     }
 
     @GetMapping("/radical/{number}")
