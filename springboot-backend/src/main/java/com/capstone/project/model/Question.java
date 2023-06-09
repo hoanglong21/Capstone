@@ -23,4 +23,8 @@ public class Question {
     private QuestionType questionType;
 
     private int num_choice;
+
+    @ManyToOne
+    @JoinColumn(name = "test_id", nullable = false)
+    private Test test;
 }

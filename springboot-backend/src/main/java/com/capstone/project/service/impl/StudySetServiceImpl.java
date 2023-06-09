@@ -3,6 +3,7 @@ package com.capstone.project.service.impl;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.StudySet;
 import com.capstone.project.repository.StudySetRepository;
+import com.capstone.project.repository.StudySetTypeRepository;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,11 @@ import java.util.List;
 public class StudySetServiceImpl implements StudySetService {
 
     private final StudySetRepository studySetRepository;
-    private final UserRepository userRepository;
+
 
     @Autowired
-    public StudySetServiceImpl(StudySetRepository studySetRepository, UserRepository userRepository) {
+    public StudySetServiceImpl(StudySetRepository studySetRepository) {
         this.studySetRepository = studySetRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -56,10 +56,8 @@ public class StudySetServiceImpl implements StudySetService {
         }
         studySet.setTitle(studySetDetails.getTitle());
         studySet.setDescription(studySetDetails.getDescription());
-//        studySet.setStatus(studySetDetails.getStatus());
-
-        // TODO fix all change
-        studySet.setUser(userRepository.findUserById(studySetDetails.getUser().getId()));
+        studySet.setDeleted(studySetDetails.isDeleted());
+        studySet.setPublic(studySetDetails.isPublic());
 
         StudySet updateStudySet = studySetRepository.save(studySet);
         return updateStudySet;

@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
 
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,7 +25,9 @@ public class StudySet {
 
     private String description;
 
-    private boolean status; // delete or not
+    private boolean isDeleted; // delete 0 or not 1
+
+    private boolean isPublic; // private 0 or public 1
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
