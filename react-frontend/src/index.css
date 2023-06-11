@@ -1,19 +1,22 @@
 :root {
     /* ===== Color theme ===== */
-    --yellow-56: #ffcd1f;
-    --yellow-69: #ffdc62;
-
     --blue-13: #1a1d28;
     --blue-20: #282e3e;
     --blue-42: #586380;
+    --blue-64: #939bb4;
     --blue-88: #d9dde8;
     --blue-94: #edeff4;
     --blue-97: #f6f7fb;
 
     --blue-magenta-55: #423ed8;
 
+    --cyan-52: #3ccfcf;
+
     --cyan-blue-26: #2e3856;
     --cyan-blue-51: #1991eb;
+
+    --yellow-56: #ffcd1f;
+    --yellow-69: #ffdc62;
 
     /* ===== Project color definitions ===== */
     --bg-color: var(--blue-97);
@@ -29,6 +32,7 @@
     --icon-outline-secondary: var(--blue-42);
     --icon-outline-secondary-border: var(--blue-88);
     --icon-outline-secondary-border-hover: var(--blue-42);
+    --icon-warning-hover: var(--yellow-56);
 
     --btn-primary-bg: var(--cyan-blue-51);
     --btn-primary-bg-hover: var(--blue-magenta-55);
@@ -49,6 +53,17 @@
     --form-border: var(--blue-88);
     --form-border-focus: var(--yellow-56);
     --form-label-hover: var(--yellow-56);
+
+    --upload-hover: var(--yellow-56);
+    --upload-border: var(--blue-88);
+
+    --editor-border: var(--blue-42);
+    --editor-border-focus: var(--yellow-56);
+
+    --card-color: var(--blue-64);
+    --card-border: var(--blue-97);
+    --card-button-border: var(--cyan-52);
+    --card-button-hover: var(--yellow-56);
 }
 
 html,
@@ -148,7 +163,86 @@ h1 {
     fill: var(--icon-primary-hover);
 }
 
+.icon-warning {
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.icon-warning:hover {
+    color: var(--icon-warning-hover);
+}
+
 input::placeholder {
     opacity: 0.5;
     color: var(--form-placeholder);
+}
+
+.card {
+    border-color: var(--card-border);
+}
+
+.card-header {
+    border-bottom: 2px solid var(--card-border);
+    background-color: white;
+}
+
+.card-header-label {
+    color: var(--card-color);
+    font-weight: 700;
+}
+
+.card-body {
+    color: var(--text-primary);
+}
+
+.card-body .card-header-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.0625rem;
+}
+
+.card-button {
+    border: none;
+    background-color: white;
+    display: inline-block;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0.075rem;
+    padding: 0 0 0.75rem;
+    color: var(--text-primary);
+    border-bottom: 5px solid var(--card-button-border);
+}
+
+.card-button:hover {
+    color: var(--card-button-hover);
+    transition: all 0.3s;
+    border-color: var(--card-button-hover);
+}
+
+.image-upload {
+    height: 3.75rem;
+    width: 5.25rem;
+    border: 0.125rem dashed var(--upload-border);
+    border-radius: 0.315rem;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.625rem;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.image-upload:hover {
+    color: var(--upload-hover);
+}
+
+.ck.ck-editor__editable_inline {
+    border: none;
+    border-bottom: 0.125rem solid var(--editor-border);
+    transition: all 0.3s;
+}
+
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+    border: none;
+    border-bottom: 0.25rem solid var(--editor-border-focus);
+    box-shadow: none;
 }

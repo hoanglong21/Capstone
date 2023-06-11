@@ -4,12 +4,14 @@
     margin-bottom: 0.5rem;
 }
 
-input.formControl {
+input.formControl,
+textarea.formControl {
     color: var(--form-text);
     border: 1px solid var(--form-border);
 }
 
-input.formControl:focus {
+input.formControl:focus,
+textarea.formControl:focus {
     box-shadow: none;
     border-color: var(--form-border-focus);
 }
