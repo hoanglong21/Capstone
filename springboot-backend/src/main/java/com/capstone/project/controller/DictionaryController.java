@@ -28,8 +28,9 @@ public class DictionaryController {
     private KanjivgFinder kanjivgFinder;
 
     @GetMapping("/kanji")
-    public List<Kanji> getAllKanji() {
-        return kanjiParser.getAllKanji();
+    public List<Kanji> getAllKanji(@RequestParam(defaultValue = "1") int page,
+                                   @RequestParam(defaultValue = "3") int size) {
+        return kanjiParser.getAllKanji(page, size);
     }
 
     @GetMapping("/vocabulary")

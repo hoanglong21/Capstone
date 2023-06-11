@@ -14,15 +14,15 @@ public class KanjivgFinder {
         String hex = Integer.toHexString(kcode);
         int zeros = 5 - hex.length();
         hex = "0".repeat(zeros) + hex; // Get Unicode code point as hexadecimal string
-        String fileName = "src/main/resources/kanji/" + hex + ".svg";
-        System.out.println(fileName);
+        String fileName = "src/main/resources/kanji/" + hex + "-animated.svg";
+//        System.out.println(fileName);
 //        String unicodeHex = Integer.toHexString((int)kanji);
 //        String fileName = unicodeHex.toUpperCase() + ".svg"; // Kanjivg file name is hex code point + ".svg"
 
         // Now you can use this file name to locate the SVG file in the Kanjivg collection.
         // The exact method for doing so will depend on your specific project and file system setup.
         File svgFile = new File(fileName);
-        System.out.println(svgFile.getAbsolutePath());
+//        System.out.println(svgFile.getAbsolutePath());
         if (!svgFile.exists()) {
             return "SVG file not found.";
         }
