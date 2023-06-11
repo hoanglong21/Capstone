@@ -20,7 +20,7 @@ jobs:
           sudo apt-get install openjdk-20-jdk -y
 
       - name: Set up SSH
-        uses: webfactory/ssh-agent@v1
+        uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
