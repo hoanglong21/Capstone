@@ -18,6 +18,7 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
+import Flashcard from './pages/Flashcard'
 
 function App() {
     return (
@@ -49,6 +50,7 @@ function App() {
 
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/flashcard" element={<Flashcard />} />
                 </Routes>
             </BrowserRouter>
         </Provider>
