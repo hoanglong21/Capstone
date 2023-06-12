@@ -1,43 +1,36 @@
-# Deploy script for frontend and backend Docker containers on AWS Elastic Beanstalk
-# This script assumes that you have already set up your AWS credentials and Elastic Beanstalk environment
-
+name: Deploy to AWS Elastic Beanstalk
 on:
   push:
     branches:
-      - main # replace with the branch you want to deploy from
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: us-east-1
-
-      - name: Install Elastic Beanstalk CLI
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
+      
+      - name: Install EB command line interface
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip3 install awsebcli --upgrade
+          sudo apt-get install python3-pip
+          sudo pip3 install awsebcli
 
-      - name: Deploy react-frontend app
-        run: |
-          cd react-frontend
-          eb use CapstoneProject-env --platform docker --region us-east-1
-          eb deploy
-
-      - name: Deploy springboot-backend app
+      - name: Create Elastic Beanstalk application version
         run: |
           cd springboot-backend
-          eb use CapstoneProject-env --platform docker --region us-east-1
-          eb deploy
+          eb init # Initialize Elastic Beanstalk CLI configuration
+          eb create # Create an environment for your application
+          eb setenv CapstoneProject-env=production # Set the Spring profile for your application
+          eb deploy # Deploy your application to the environment
 
 # name: Deployment
 # on:
