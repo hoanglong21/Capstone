@@ -41,8 +41,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          environment_name: Project-env
-          application_name: project
+          application_name: capstone
+          environment_name: capstone-env
           version_label: ${{github.SHA}}
           region: us-east-1
           deployment_package: capstone-0.0.1-SNAPSHOT.jar
