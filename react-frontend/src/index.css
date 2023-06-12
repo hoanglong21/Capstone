@@ -177,48 +177,6 @@ input::placeholder {
     color: var(--form-placeholder);
 }
 
-.card {
-    border-color: var(--card-border);
-}
-
-.card-header {
-    border-bottom: 2px solid var(--card-border);
-    background-color: white;
-}
-
-.card-header-label {
-    color: var(--card-color);
-    font-weight: 700;
-}
-
-.card-body {
-    color: var(--text-primary);
-}
-
-.card-body .card-header-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.0625rem;
-}
-
-.card-button {
-    border: none;
-    background-color: white;
-    display: inline-block;
-    font-size: 0.9375rem;
-    font-weight: 700;
-    letter-spacing: 0.075rem;
-    padding: 0 0 0.75rem;
-    color: var(--text-primary);
-    border-bottom: 5px solid var(--card-button-border);
-}
-
-.card-button:hover {
-    color: var(--card-button-hover);
-    transition: all 0.3s;
-    border-color: var(--card-button-hover);
-}
-
 .ck.ck-editor__editable_inline {
     border: none;
     border-bottom: 0.125rem solid var(--editor-border);

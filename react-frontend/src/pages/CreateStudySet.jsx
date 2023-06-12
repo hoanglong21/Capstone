@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react'
 
 import styles from '../assets/styles/Form.module.css'
 import '../assets/styles/stickyHeader.css'
-import { DeleteIcon, MicIcon } from '../components/icons'
-
-import TextEditor from '../components/ui/TextEditor'
-import UploadImages from '../components/UploadImages'
+import CardStyles from '../assets/styles/Card.module.css'
+import { Card } from '../components/Card/Card'
 
 const CreateStudySet = () => {
     const [isScroll, setIsScroll] = useState(false)
@@ -95,50 +93,17 @@ const CreateStudySet = () => {
                 </div>
                 {/* Card */}
                 {cardList.map((card, index) => {
-                    return (
-                        <div className="card mb-3" key={index} id={index}>
-                            <div className="card-header d-flex justify-content-between align-items-center mb-1">
-                                <span className="card-header-label">
-                                    {index + 1}
-                                </span>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <UploadImages />
-                                    <MicIcon className="ms-3 icon-warning" />
-                                </div>
-                                <button
-                                    type="button"
-                                    className="btn"
-                                    onClick={handleDelete}
-                                >
-                                    <DeleteIcon className="icon-warning" />
-                                </button>
-                            </div>
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col-6 d-flex flex-column">
-                                        <TextEditor />
-                                        <span className="card-header-label mt-1">
-                                            TERM
-                                        </span>
-                                    </div>
-                                    <div className="col-6 d-flex flex-column">
-                                        <TextEditor />
-                                        <span className="card-header-label mt-1">
-                                            DEFINITION
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
+                    return <Card index={index} handleDelete={handleDelete} />
                 })}
 
                 {/* Add button */}
-                <div className="card mb-3 py-4">
-                    <div className="card-body d-flex justify-content-center">
+                <div className={`card ${CardStyles.card} mb-3 py-4`}>
+                    <div
+                        className={`card-body ${CardStyles.card_body} d-flex justify-content-center`}
+                    >
                         <button
                             type="button"
-                            className="card-button"
+                            className={CardStyles.card_button}
                             onClick={handleAdd}
                         >
                             + ADD CARD
