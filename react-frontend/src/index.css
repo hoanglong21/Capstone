@@ -219,22 +219,6 @@ input::placeholder {
     border-color: var(--card-button-hover);
 }
 
-.image-upload {
-    height: 3.75rem;
-    width: 5.25rem;
-    border: 0.125rem dashed var(--upload-border);
-    border-radius: 0.315rem;
-    cursor: pointer;
-    text-align: center;
-    font-size: 0.625rem;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.image-upload:hover {
-    color: var(--upload-hover);
-}
-
 .ck.ck-editor__editable_inline {
     border: none;
     border-bottom: 0.125rem solid var(--editor-border);

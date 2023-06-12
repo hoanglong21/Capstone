@@ -1,0 +1,34 @@
+.image-upload-container {
+    height: 3.75rem;
+    width: 5.25rem;
+    cursor: pointer;
+    font-size: 0.625rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    overflow: hidden;
+}
+
+.image-upload-container:hover {
+    color: var(--upload-hover);
+}
+
+.image-upload-container img {
+    height: auto;
+    width: 100%;
+}
+
+.image-upload {
+    height: 3.75rem;
+    width: 5.25rem;
+    border: 0.125rem dashed var(--upload-border);
+    border-radius: 0.315rem;
+}
+
+.file_upload {
+    opacity: 0;
+    display: none;
+}
+
+label {
+    cursor: pointer;
+}
