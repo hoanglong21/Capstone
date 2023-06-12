@@ -28,7 +28,7 @@ jobs:
       - name: Create Elastic Beanstalk application version
         run: |
           cd springboot-backend
-          eb init # Initialize Elastic Beanstalk CLI configuration
+          eb init -r us-west-1 # Initialize Elastic Beanstalk CLI configuration
           eb create # Create an environment for your application
           eb setenv CapstoneProject-env=production # Set the Spring profile for your application
           eb deploy # Deploy your application to the environment
