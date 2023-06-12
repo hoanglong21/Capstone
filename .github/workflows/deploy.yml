@@ -30,13 +30,13 @@ jobs:
       - name: Deploy react-frontend app
         run: |
           cd react-frontend
-          eb init CapstoneProject-env --platform docker --region us-east-1
+          eb use CapstoneProject-env --platform docker --region us-east-1
           eb deploy
 
       - name: Deploy springboot-backend app
         run: |
           cd springboot-backend
-          eb init CapstoneProject-env --platform docker --region us-east-1
+          eb use CapstoneProject-env --platform docker --region us-east-1
           eb deploy
 
 # name: Deployment
