@@ -28,7 +28,7 @@ jobs:
       - name: Create Elastic Beanstalk application version
         run: |
           cd springboot-backend
-          eb init -i capstoneProject --region us-west-1 # Initialize Elastic Beanstalk CLI configuration
+          eb init -i capstoneProject --region us-west-1 -p "Java 20" -s "64bit Amazon Linux 2 v5.0.0 running Tomcat 9 Java 20"
           eb create # Create an environment for your application
           eb setenv CapstoneProject-env=production # Set the Spring profile for your application
           eb deploy # Deploy your application to the environment
