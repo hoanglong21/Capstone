@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -14,21 +15,20 @@ public class KanjivgFinder {
         String hex = Integer.toHexString(kcode);
         int zeros = 5 - hex.length();
         hex = "0".repeat(zeros) + hex; // Get Unicode code point as hexadecimal string
-        String fileName = "src/main/resources/kanji/" + hex + "-animated.svg";
-//        System.out.println(fileName);
-//        String unicodeHex = Integer.toHexString((int)kanji);
-//        String fileName = unicodeHex.toUpperCase() + ".svg"; // Kanjivg file name is hex code point + ".svg"
+        String fileName = "kanji/" + hex + "-animated.svg";
 
-        // Now you can use this file name to locate the SVG file in the Kanjivg collection.
-        // The exact method for doing so will depend on your specific project and file system setup.
-        File svgFile = new File(fileName);
-//        System.out.println(svgFile.getAbsolutePath());
-        if (!svgFile.exists()) {
+        // Get the classloader for the current thread
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+        // Use the classloader to get an input stream to the resource
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+
+        if (inputStream == null) {
             return "SVG file not found.";
         }
 
         try {
-            String svgData = new String(Files.readAllBytes(Paths.get(svgFile.getAbsolutePath())));
+            String svgData = new String(inputStream.readAllBytes());
             return svgData;
         } catch (IOException e) {
             return "Error reading SVG file: " + e.getMessage();

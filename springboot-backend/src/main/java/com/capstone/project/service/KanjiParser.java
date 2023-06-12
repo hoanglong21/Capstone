@@ -17,10 +17,12 @@ public class KanjiParser {
     public List<Kanji> getAllKanji(int page, int size) {
         try {
             // Load the XML file
-            File inputFile = new File("src/main/resources/kanjidic2.xml");
+            ClassLoader classLoader = getClass().getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream("kanjidic2.xml");
+
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(inputFile);
+            Document doc = dBuilder.parse(inputStream);
             doc.getDocumentElement().normalize();
 
             // Extract information from the XML elements
