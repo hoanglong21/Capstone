@@ -19,7 +19,7 @@ import './index.css'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
-import Classroom from './pages/Classroom'
+import CreateClassroom from './pages/CreateClassroom'
 
 function App() {
     return (
@@ -52,7 +52,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/flashcard" element={<Flashcard />} />
-                    <Route path="/class" element={<Classroom />} />
+                    <Route path="/class" element={<CreateClassroom />} />
                 </Routes>
             </BrowserRouter>
         </Provider>
