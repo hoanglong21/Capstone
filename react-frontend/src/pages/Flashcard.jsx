@@ -1,4 +1,4 @@
-import React,  {NavButtons} from 'react';
+import React from 'react';
 import '../assets/styles/Flashcard.css'
 
 class Flashcards extends React.Component {
@@ -102,7 +102,7 @@ class FlashcardItem extends React.Component {
 	}
 }
 
-NavButtons = (props) => {
+export const NavButtons = (props) => {
 	const leftStyle = props.cardIndex - 1 < 0 ? { opacity: 0.5 } : {};
 	const rightStyle = props.cardIndex + 1 >= props.cardLength ? { opacity: 0.5 } : {};
 	return (
