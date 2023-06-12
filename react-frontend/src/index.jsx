@@ -20,6 +20,7 @@ import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateClassroom from './pages/CreateClassroom'
+import JoinClass from './pages/JoinClass'
 
 function App() {
     return (
@@ -52,8 +53,11 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/flashcard" element={<Flashcard />} />
-                    <Route path="/class" element={<CreateClassroom />} />
+                    <Route path="/createclass" element={<CreateClassroom />} />
+                    <Route path="/joinclass" element={<JoinClass />} />
                 </Routes>
+                
+                
             </BrowserRouter>
         </Provider>
     )
