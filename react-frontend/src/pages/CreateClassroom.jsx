@@ -27,8 +27,9 @@ export default function CreateClassroom() {
 
   return (
     <div className="form">
-      <p className="class__title">Create Class</p>
     <div className="form__inputs">
+    <p className="class__title">Create Classroom</p>
+      <Link to="/" className="close">&times;</Link>
       <form onSubmit={(e) => onSubmit(e)}>
       <fieldset className="form__input">
            <input type={"text"} name="className" placeholder='Class Name' value={className} required onChange={(e) => onInputChange(e)}/>
@@ -42,10 +43,7 @@ export default function CreateClassroom() {
        <fieldset className="form__input">
            <input type={"date"} name="createDate" placeholder='Create Date' value={createDate}  required onChange={(e) => onInputChange(e)}/>
        </fieldset>
-       <button type="submit" className="btn btn-outline-primary">Submit</button>
-       <Link className="btn btn-outline-danger mx-2" to="/">
-          Cancel
-        </Link>
+       <button type="submit" className="submit">Submit</button>
       </form>
     </div>
     </div>
