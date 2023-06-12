@@ -44,6 +44,6 @@ jobs:
           application_name: longdh21
           environment_name: Longdh21-env
           version_label: ${{github.SHA}}
-          region: us-east-1
+          region: ap-southeast-2
           deployment_package: capstone-0.0.1-SNAPSHOT.jar
           use_existing_version_if_available: true
