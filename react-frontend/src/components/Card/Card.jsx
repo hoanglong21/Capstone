@@ -46,11 +46,21 @@ export const Card = (props) => {
         }
     }
 
+    const handleDeleteImage = () => {
+        setImage(null)
+        setPreviewImage(null)
+    }
+
     const handleChangeAudio = (e) => {
         if (e.target.files[0]) {
             setAudio(e.target.files[0])
             setPreviewAudio(URL.createObjectURL(e.target.files[0]))
         }
+    }
+
+    const handleDeleteAudio = () => {
+        setAudio(null)
+        setPreviewAudio(null)
     }
 
     const handleUpload = () => {
@@ -99,11 +109,7 @@ export const Card = (props) => {
     }
 
     return (
-        <div
-            className={`card ${styles.card} mb-3`}
-            key={props.index}
-            id={props.index}
-        >
+        <div className={`card ${styles.card} mb-3`} id={props.index}>
             <div
                 className={`card-header ${styles.card_header} d-flex justify-content-between align-items-center mb-1`}
             >
@@ -165,13 +171,37 @@ export const Card = (props) => {
                 </div>
             </div>
             {(previewImage || previewAudio) && (
-                <div class={`card-footer ${styles.card_footer}`}>
-                    {previewImage && (
-                        <img
-                            src={previewImage}
-                            className={styles.image_upload}
-                        />
-                    )}
+                <div className={`card-footer ${styles.card_footer} p-3`}>
+                    <div className="row">
+                        {previewImage && (
+                            <div className="col-6 d-flex align-items-center">
+                                <img
+                                    src={previewImage}
+                                    className={styles.image_upload}
+                                    alt="user upload"
+                                />
+                                <button
+                                    type="button"
+                                    className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
+                                    onClick={handleDeleteImage}
+                                >
+                                    <DeleteIcon size="1.25rem" />
+                                </button>
+                            </div>
+                        )}
+                        {previewAudio && (
+                            <div className="col-6 d-flex align-items-center ">
+                                <audio controls src={previewAudio}></audio>
+                                <button
+                                    type="button"
+                                    className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
+                                    onClick={handleDeleteAudio}
+                                >
+                                    <DeleteIcon size="1.25rem" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

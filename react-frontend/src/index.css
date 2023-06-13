@@ -15,6 +15,9 @@
     --cyan-blue-26: #2e3856;
     --cyan-blue-51: #1991eb;
 
+    --red-68: #ff725b;
+    --red-74: #ff8e7b;
+
     --yellow-56: #ffcd1f;
     --yellow-69: #ffdc62;
 
@@ -41,6 +44,8 @@
     --btn-warning-color: var(--blue-20);
     --btn-warning-bg: var(--yellow-56);
     --btn-warning-bg-hover: var(--yellow-69);
+    --btn-danger: var(--red-68);
+    --btn-danger-hover: var(--red-74);
 
     --nav-link: var(--cyan-blue-26);
     --nav-link-hover: var(--cyan-blue-51);
@@ -78,6 +83,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-primary);
     line-height: 1.625;
+    box-sizing: border-box;
 }
 
 code {
@@ -151,6 +157,15 @@ h1 {
 .btn-warning:hover {
     background-color: var(--btn-warning-bg-hover);
     color: var(--btn-warning-color);
+}
+
+.btn-danger {
+    background-color: var(--btn-danger);
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: var(--btn-danger-hover);
 }
 
 .icon-primary {

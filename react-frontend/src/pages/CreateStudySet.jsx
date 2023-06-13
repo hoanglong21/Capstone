@@ -93,7 +93,7 @@ const CreateStudySet = () => {
                 </div>
                 {/* Card */}
                 {cardList.map((card, index) => {
-                    return <Card index={index} handleDelete={handleDelete} />
+                    return <Card key={index} index={index} handleDelete={handleDelete} />
                 })}
 
                 {/* Add button */}

@@ -54,3 +54,8 @@ div.card_footer {
     height: auto;
     width: 10rem;
 }
+
+.btn_del {
+    width: 2.5rem;
+    height: 2.5rem;
+}
