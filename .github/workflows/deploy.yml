@@ -99,8 +99,8 @@ on:
 env:
   AWS_REGION: us-east-1
   DOCKER_REPO: ghcr.io/${{ github.repository_owner }}
-  APP_NAME: my-app-name
-  ENV_NAME: my-env-name
+  APP_NAME: capstoneProject
+  ENV_NAME: CapstoneProject-env
 
 jobs:
   deploy:
