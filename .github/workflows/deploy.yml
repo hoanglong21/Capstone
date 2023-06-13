@@ -82,3 +82,50 @@
 #           region: us-east-1
 #           deployment_package: capstone-0.0.1-SNAPSHOT.jar
 #           use_existing_version_if_available: true
+
+name: Deploy to Elastic Beanstalk
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: us-east-1
+  APP_NAME: capstoneProject
+  ENV_NAME: CapstoneProject-env
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and Push Spring Boot app
+        working-directory: ./springboot-backend
+        run: |
+          $(aws ecr get-login --no-include-email --region $AWS_REGION)
+          docker build -t $APP_NAME/springboot-backend:${{ github.sha }} .
+          docker tag $APP_NAME/springboot-backend:${{ github.sha }} $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME/springboot-backend:${{ github.sha }}
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME/springboot-backend:${{ github.sha }}
+
+      - name: Build and Push React app
+        working-directory: ./react-frontend
+        run: |
+          $(aws ecr get-login --no-include-email --region $AWS_REGION)
+          docker build -t $APP_NAME/react-frontend:${{ github.sha }} .
+          docker tag $APP_NAME/react-frontend:${{ github.sha }} $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME/react-frontend:${{ github.sha }}
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME/react-frontend:${{ github.sha }}
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v17.1
+        with:
+          aws_access_key: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ env.AWS_REGION }}
+          application_name: ${{ env.APP_NAME }}
+          environment_name: ${{ env.ENV_NAME }}
+          version_label: ${{ github.sha }}
+          no_waits: true
