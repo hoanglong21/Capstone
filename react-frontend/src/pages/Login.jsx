@@ -16,7 +16,7 @@ const Login = () => {
 
     const login = async (e) => {
         e.preventDefault()
-        const response = AuthService.login(user)
+        const response = await AuthService.login(user)
         const token = response.data
         localStorage.setItem('token', token)
         dispatch(setLogin())

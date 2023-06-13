@@ -80,6 +80,7 @@ const VideoChatContainer = () => {
     hangupButton = document.getElementById('hangupButton');
 
     let string = localStorage.getItem("token");
+    // console.log(string)
     if (string == null) {
       // TODO navigation
       navigate("/login");

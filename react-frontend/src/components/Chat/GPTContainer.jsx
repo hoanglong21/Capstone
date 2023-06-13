@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Configuration, OpenAIApi } from "openai";
-import env from "react-dotenv";
 
 // hide key
 const configuration = new Configuration({
-  organization: env.REACT_APP_ORGANIZATION,
-  apiKey: env.REACT_APP_API_KEY,
+  organization: process.env.REACT_APP_ORGANIZATION,
+  apiKey: process.env.REACT_APP_API_KEY,
 });
 
 

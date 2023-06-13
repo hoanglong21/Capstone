@@ -132,7 +132,7 @@ const ChatContainer = () => {
   function openVideoChat() {
     const myParameter = document.getElementById("receiver").value;
     // const url = 'http://localhost:3000/videochat?param=' + AES.encrypt(myParameter, key).toString();
-    const url = 'http://localhost:3000/videochat?param=' + myParameter;
+    const url = 'http://localhost:3000/video-chat?param=' + myParameter;
     // Try to get a reference to the existing video chat window
     var myWindow = window.open("", "myWindow");
 
@@ -162,7 +162,7 @@ const ChatContainer = () => {
           .filter((message) => ((message.sender === myUsername && message.receiver === receiverUsername)
            || (message.sender === receiverUsername && message.receiver === myUsername)) && message.video_call === true)
           .map((message) => (
-            <a href={"videochat/" + message.message}>Answer</a>
+            <a href={"video-chat/" + message.message}>Answer</a>
           ))}
       <form onSubmit={sendMessage}>
         <input id="message" placeholder="Enter message" autoComplete="off" />
