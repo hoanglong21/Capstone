@@ -23,11 +23,18 @@ const Login = () => {
 
     const handleLogin = async (event) => {
         setError('')
+        document
+            .querySelector('#username')
+            .classList.remove('is-invalid', 'is-valid')
+        document
+            .querySelector('#password')
+            .classList.remove('is-invalid', 'is-valid')
         var form = document.querySelector('.needs-validation')
         event.preventDefault()
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
             event.stopPropagation()
+            setError('Please complete all fields.')
         } else {
             AuthService.login(user)
                 .then((response) => {
@@ -36,10 +43,17 @@ const Login = () => {
                     navigate('/')
                 })
                 .catch((error) => {
+                    form.classList.remove('was-validated')
                     if (error.message === 'Network Error') {
                         setError('There was a network error.')
                     } else {
                         setError('Incorrect username or password.')
+                        document
+                            .querySelector('#username')
+                            .classList.add('is-invalid')
+                        document
+                            .querySelector('#password')
+                            .classList.add('is-invalid')
                     }
                 })
         }
@@ -99,14 +113,12 @@ const Login = () => {
                             <input
                                 placeholder="Type your username or email address"
                                 name="username"
+                                id="username"
                                 className={`form-control ${styles.formControl}`}
                                 value={user.username}
                                 onChange={handleChange}
                                 required
                             />
-                            <div class="invalid-feedback">
-                                Please type your username or email address.
-                            </div>
                         </div>
                         {/* password */}
                         <div className="form-group mb-3">
@@ -115,14 +127,12 @@ const Login = () => {
                                 type="password"
                                 placeholder="Type your password"
                                 name="password"
+                                id="password"
                                 className={`form-control ${styles.formControl}`}
                                 value={user.password}
                                 onChange={handleChange}
                                 required
                             />
-                            <div class="invalid-feedback">
-                                Please type your password.
-                            </div>
                         </div>
                         {/* forgot */}
                         <div className="d-flex justify-content-end">
