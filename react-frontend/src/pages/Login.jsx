@@ -28,7 +28,7 @@ const Login = () => {
     }
 
     return (
-        <div className="login">
+        <div className="login bg-white">
             <div className="py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
                 <a
                     href="/"
