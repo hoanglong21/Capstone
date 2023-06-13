@@ -21,6 +21,7 @@ import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateClassroom from './pages/CreateClassroom'
 import JoinClass from './pages/JoinClass'
+import InsideClassroom from './pages/InsideClassroom'
 
 function App() {
     return (
@@ -55,6 +56,7 @@ function App() {
                     <Route path="/flashcard" element={<Flashcard />} />
                     <Route path="/createclass" element={<CreateClassroom />} />
                     <Route path="/joinclass" element={<JoinClass />} />
+                    <Route path="/insideclass" element={<InsideClassroom />} />
                 </Routes>
                 
                 

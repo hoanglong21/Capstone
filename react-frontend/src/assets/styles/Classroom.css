@@ -193,8 +193,102 @@ input[type=text], input[type=date]{
     margin-top: 25px;
 }
 
-
 li:first-child{
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.inside {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 1.5rem;
+  padding-top: 1.5rem;
+}
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.inside__list {
+  display: flex;
+  flex-direction: column;
+  height: 18.375rem;
+  margin-bottom: 1.5rem;
+  margin-right: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+  width: 18.75rem;
+  background-color: #fff;
+  border: 0.0625rem solid #dadce0;
+  -webkit-border-radius: 0.5rem;
+  border-radius: 0.5rem;
+}
+.inside__imgWrapper {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: #174ea6;
+}
+.inside__image {
+  background-image: url(https://gstatic.com/classroom/themes/Physics.jpg);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  background-size: cover;
+}
+.inside__container {
+  position: relative;
+}
+.inside__content {
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  height: 4.5rem;
+  padding: 1rem 1rem 0.75rem;
+  position: relative;
+}
+.inside__title {
+  color: white;
+  font-family: "Roboto";
+  text-decoration: none;
+}
+.inside__title h2 {
+  font-weight: 400;
+}
+.inside__title h2:hover {
+  text-decoration: underline;
+}
+.inside__owner {
+  color: white;
+  font-weight: 400 !important;
+  font-size: 15px !important;
+}
+.inside__avatar {
+  float: right;
+  height: 4.6875rem !important;
+  position: relative !important;
+  margin-top: -3.09375rem !important;
+  width: 4.6875rem !important;
+  text-align: left;
+}
+.inside__bottom {
+  margin-top: 40%;
+  display: flex;
+  color: #5f6368;
+  justify-content: flex-end;
+  border-top: 0.2px solid #e0e0e0;
+  padding: 10px;
+}
+.inside__bottom > * {
+  margin-right: 20px;
 }
