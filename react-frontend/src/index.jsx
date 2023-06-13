@@ -16,6 +16,9 @@ import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
+import CreateClassroom from './pages/CreateClassroom'
+import JoinClass from './pages/JoinClass'
+import InsideClassroom from './pages/InsideClassroom'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
@@ -51,7 +54,12 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/flashcard" element={<Flashcard />} />
+                    <Route path="/createclass" element={<CreateClassroom />} />
+                    <Route path="/joinclass" element={<JoinClass />} />
+                    <Route path="/insideclass" element={<InsideClassroom />} />
                 </Routes>
+                
+                
             </BrowserRouter>
         </Provider>
     )
