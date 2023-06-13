@@ -4,6 +4,7 @@ import {
     ref,
     uploadBytesResumable,
     getDownloadURL,
+    deleteObject 
 } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -72,4 +73,18 @@ export const uploadFile = (file) => {
         }
     )
     return getDownloadURL(uploadTask.snapshot.ref)
+}
+
+export const deleteFile = (fileName) => {
+    // Create a reference to the file to delete
+    const fileRef = ref(storage, `images/${fileName}`)
+  
+    // Delete the file
+    deleteObject(fileRef)
+      .then(() => {
+        console.log(`${fileName} has been deleted successfully.`)
+      })
+      .catch((error) => {
+        console.error(`Error deleting ${fileName}: ${error}`)
+      })
 }

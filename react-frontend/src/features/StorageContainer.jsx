@@ -5,6 +5,7 @@ import {
     ref,
     uploadBytesResumable,
     getDownloadURL,
+    deleteObject 
 } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -83,10 +84,26 @@ const StorageContainer = () => {
         )
     }
 
+    const deleteFile = (fileName) => {
+        // Create a reference to the file to delete
+        const fileRef = ref(storage, `images/${fileName}`)
+      
+        // Delete the file
+        deleteObject(fileRef)
+          .then(() => {
+            console.log(`${fileName} has been deleted successfully.`)
+          })
+          .catch((error) => {
+            console.error(`Error deleting ${fileName}: ${error}`)
+          })
+    }
+
     return (
         <div>
             <input type="file" onChange={handleChange} />
             <button onClick={handleUpload}>Upload</button>
+
+            <button onClick={() => deleteFile('123.jpg')}>Delete</button>
         </div>
     )
 }
