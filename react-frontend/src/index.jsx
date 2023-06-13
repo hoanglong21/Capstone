@@ -6,22 +6,23 @@ import { store } from './state/store'
 import Register from './pages/Register'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
-import StorageContainer from './components/FileManagement/StorageContainer'
+import StorageContainer from './features/StorageContainer'
 import SpeechToText from './components/InputModel/SpeechToText'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Login from './pages/Login'
-// import CreateStudySet from './pages/CreateStudySet'
+import CreateStudySet from './pages/CreateStudySet'
 import Draw from './components/InputModel/Draw'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle'
-import './index.css'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateClassroom from './pages/CreateClassroom'
 import JoinClass from './pages/JoinClass'
 import InsideClassroom from './pages/InsideClassroom'
+
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle'
+import './index.css'
 
 function App() {
     return (
@@ -30,11 +31,10 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
-
-                        {/* <Route
+                        <Route
                             path="study-set/add"
                             element={<CreateStudySet />}
-                        /> */}
+                        />
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
@@ -48,7 +48,7 @@ function App() {
                         <Route path="gpt" element={<GPTContainer />} />
                         <Route path="voice" element={<SpeechToText />} />
                         <Route path="draw" element={<Draw />} />
-                        <Route path="tospeech" element={<TextToSpeech/>}/>
+                        <Route path="tospeech" element={<TextToSpeech />} />
                     </Route>
 
                     <Route path="/login" element={<Login />} />

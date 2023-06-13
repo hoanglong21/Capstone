@@ -2,6 +2,7 @@ package com.capstone.project.service;
 import java.io.File;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
@@ -107,14 +108,16 @@ public class VocabularyParse {
 
     public List<Vocabulary> getAllVocabulary(int page, int size) {
         try {
-            File inputFile = new File("src/main/resources/OmohaDictionary.xml");
+            ClassLoader classLoader = getClass().getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream("OmohaDictionary.xml");
+
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-            // Add this line to increase the entity expansion limit
+// Add this line to increase the entity expansion limit
             System.setProperty("entityExpansionLimit", "1000000");
 
             DocumentBuilder dBuilder = dbf.newDocumentBuilder();
-            Document doc = dBuilder.parse(inputFile);
+            Document doc = dBuilder.parse(inputStream);
             doc.getDocumentElement().normalize();
 
             NodeList nodeList = doc.getElementsByTagName("entry");

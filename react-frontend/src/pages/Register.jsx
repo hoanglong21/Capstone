@@ -29,7 +29,7 @@ const Register = () => {
     }
 
     return (
-        <div>
+        <div className="bg-white">
             <div className="py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
                 <a
                     href="/"
