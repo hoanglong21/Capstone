@@ -83,11 +83,6 @@
 #           deployment_package: capstone-0.0.1-SNAPSHOT.jar
 #           use_existing_version_if_available: true
 
-name: Deploy to Elastic Beanstalk
-on:
-  push:
-    branches:
-      - main
 
 name: Deploy to AWS Elastic Beanstalk
 
