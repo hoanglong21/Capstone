@@ -2,25 +2,47 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 import AuthService from '../services/AuthService'
-import { useDispatch } from 'react-redux'
-import { login as setLogin } from '../state/authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
 
+import { login as setLogin } from '../state/authSlice'
 import logo from '../assets/images/Quizlet-Logo.png'
 import illustration from '../assets/images/study.jpg'
 import styles from '../assets/styles/Form.module.css'
 
 const Login = () => {
     const [user, setUser] = useState({ username: '', password: '' })
+    const isLoggedIn = useSelector((state) => state.auth.token)
+    const [error, setError] = useState('')
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const login = async (e) => {
-        e.preventDefault()
-        const response = await AuthService.login(user)
-        const token = response.data
-        localStorage.setItem('token', token)
-        dispatch(setLogin())
-        navigate('/')
+    if (isLoggedIn) {
+        return <Navigate to="/" />
+    }
+
+    const handleLogin = async (event) => {
+        setError('')
+        var form = document.querySelector('.needs-validation')
+        event.preventDefault()
+        form.classList.add('was-validated')
+        if (!form.checkValidity()) {
+            event.stopPropagation()
+        } else {
+            AuthService.login(user)
+                .then((response) => {
+                    localStorage.setItem('token', response.data)
+                    dispatch(setLogin())
+                    navigate('/')
+                })
+                .catch((error) => {
+                    if (error.message === 'Network Error') {
+                        setError('There was a network error.')
+                    } else {
+                        setError('Incorrect username or password.')
+                    }
+                })
+        }
     }
 
     const handleChange = (event) => {
@@ -59,12 +81,18 @@ const Login = () => {
                 <div className="col-5">
                     <h2>Welcome Back!</h2>
                     <h5
-                        className="fw-normal"
+                        className="fw-normal mb-5"
                         style={{ color: 'var(--text-light)' }}
                     >
                         Login to continue
                     </h5>
-                    <form className="form mt-5 me-5">
+                    <form className="form me-5 needs-validation" noValidate>
+                        {/* error message */}
+                        {error && (
+                            <div class="alert alert-danger" role="alert">
+                                {error}
+                            </div>
+                        )}
                         {/* username/email */}
                         <div className="form-group mb-3">
                             <label className={styles.formLabel}>Username</label>
@@ -74,7 +102,11 @@ const Login = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.username}
                                 onChange={handleChange}
+                                required
                             />
+                            <div class="invalid-feedback">
+                                Please type your username or email address.
+                            </div>
                         </div>
                         {/* password */}
                         <div className="form-group mb-3">
@@ -86,7 +118,11 @@ const Login = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.password}
                                 onChange={handleChange}
+                                required
                             />
+                            <div class="invalid-feedback">
+                                Please type your password.
+                            </div>
                         </div>
                         {/* forgot */}
                         <div className="d-flex justify-content-end">
@@ -101,7 +137,7 @@ const Login = () => {
                         <div className="form-group mt-4">
                             <button
                                 className={`btn btn-primary col-12 ${styles.btn}`}
-                                onClick={login}
+                                onClick={handleLogin}
                             >
                                 Login
                             </button>

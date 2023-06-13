@@ -19,12 +19,12 @@ import {
     FolderIcon,
     ClassIcon,
 } from '../icons'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../state/authSlice'
 
 const Header = () => {
-    const isLogged = useSelector((state) => state.auth.isLogged)
+    const isLogged = useSelector((state) => state.auth.token)
     const dispatch = useDispatch()
 
     return (
