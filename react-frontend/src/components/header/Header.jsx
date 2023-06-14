@@ -18,24 +18,25 @@ import {
 } from '../icons'
 
 import AuthService from '../../services/AuthService'
+import { logout } from '../../state/authSlice'
 
 import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../../state/authSlice'
-// import * as bootstrap from 'bootstrap'
+import Toast from 'react-bootstrap/Toast'
+import { useState } from 'react'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 
 const Header = () => {
     const isLogged = useSelector((state) => state.auth.token)
     const dispatch = useDispatch()
+    const [showA, setShowA] = useState(false)
+
+    const toggleShowA = () => setShowA(!showA)
 
     const handleLogout = () => {
         AuthService.logout()
         dispatch(logout())
-
-        // var bsToast = bootstrap.Toast.getInstance(
-        //     document.querySelector('#toast')
-        // )
-        // bsToast.show()
+        toggleShowA()
     }
 
     return (
@@ -300,30 +301,15 @@ const Header = () => {
                 </div>
             </div>
             {/* Logout message */}
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                <div
-                    id="toast"
-                    class="toast"
-                    role="alert"
-                    aria-live="assertive"
-                    aria-atomic="true"
-                >
-                    <div class="toast-header">
-                        <img src="..." class="rounded me-2" alt="..." />
-                        <strong class="me-auto">Bootstrap</strong>
-                        <small>11 mins ago</small>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="toast"
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                    <div class="toast-body">
-                        Hello, world! This is a toast message.
-                    </div>
-                </div>
-            </div>
+            <ToastContainer
+                className="p-3 mt-5"
+                position="top-end"
+                style={{ zIndex: 1 }}
+            >
+                <Toast show={showA} onClose={toggleShowA} delay={3000} autohide>
+                    <Toast.Body>You have been logged out</Toast.Body>
+                </Toast>
+            </ToastContainer>
         </header>
     )
 }
