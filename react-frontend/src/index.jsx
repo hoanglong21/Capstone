@@ -49,17 +49,21 @@ function App() {
                         <Route path="voice" element={<SpeechToText />} />
                         <Route path="draw" element={<Draw />} />
                         <Route path="tospeech" element={<TextToSpeech />} />
+                        <Route
+                            path="createclass"
+                            element={<CreateClassroom />}
+                        />
+                        <Route path="joinclass" element={<JoinClass />} />
+                        <Route
+                            path="insideclass"
+                            element={<InsideClassroom />}
+                        />
+                        <Route path="flashcard" element={<Flashcard />} />
                     </Route>
 
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/flashcard" element={<Flashcard />} />
-                    <Route path="/createclass" element={<CreateClassroom />} />
-                    <Route path="/joinclass" element={<JoinClass />} />
-                    <Route path="/insideclass" element={<InsideClassroom />} />
                 </Routes>
-                
-                
             </BrowserRouter>
         </Provider>
     )
