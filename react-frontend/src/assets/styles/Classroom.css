@@ -1,4 +1,4 @@
-.form{
+.createClass__form{
     background: #e7e7e7;
     height: 100vh;
     position: fixed;
@@ -12,26 +12,27 @@
     opacity: 0; */
 }
 
-.form:target{
+.createClass__form:target{
     visibility: visible;
     opacity: 1;
 }
 
-.form__inputs{
+.createClass__form__inputs{
     margin: 70px auto;
     padding: 20px;
     background: #e7e7e7;
-    border-radius: 5px;
+    border-radius: 15px;
     width: 50%;
     position: relative;
     transition: all 5s ease-in-out;
 }
 
-p{
+.createClass__title{
     font-size: 30px;
+    text-align: center;
 }
 
-.close{
+.createClass__close{
     position: absolute;
     top: 15px;
     right: 30px;
@@ -41,7 +42,7 @@ p{
     text-decoration: none;
     color: #333;
 }
-input[type=text], input[type=date]{
+.createClass__input, .joinClass__code{
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -52,16 +53,26 @@ input[type=text], input[type=date]{
     font-size: 18px;
 }
 
-.submit{
+.createClass__submit{
     background-color: #2B7DEA;
     color: #fff;
     padding: 15px 50px;
     border: none;
     border-radius: 50px;
     cursor: pointer;
+    width: 30%;
+    margin: 0 auto;
+}
+
+.createClass__submit button{
+  background-color: #2B7DEA;
+    color: #fff;
+    border: none;
+    cursor: pointer;
     font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 3px;
+    text-align: center;
 }
 
 .joinClass {
@@ -193,7 +204,7 @@ input[type=text], input[type=date]{
     margin-top: 25px;
 }
 
-li:first-child{
+.joinClass__li:first-child{
     margin-top: 5px;
     margin-bottom: 5px;
 }
