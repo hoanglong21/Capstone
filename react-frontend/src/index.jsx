@@ -4,14 +4,13 @@ import { Provider } from 'react-redux'
 import { store } from './state/store'
 
 import Register from './pages/Register'
+import Login from './pages/Login'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import StorageContainer from './features/StorageContainer'
 import SpeechToText from './components/InputModel/SpeechToText'
-import Layout from './components/Layout'
+import Layout from './components/layouts/Layout'
 import Home from './pages/Home'
-import Login from './pages/Login'
-import CreateStudySet from './pages/CreateStudySet'
 import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
@@ -19,6 +18,9 @@ import Flashcard from './pages/Flashcard'
 import CreateClassroom from './pages/CreateClassroom'
 import JoinClass from './pages/JoinClass'
 import InsideClassroom from './pages/InsideClassroom'
+import StudySetList from './pages/library/StudySetList'
+import CreateStudySet from './pages/studySet/CreateStudySet'
+import Library from './pages/library/Library'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
@@ -31,6 +33,9 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
+                        <Route path="library" element={<Library />}>
+                            <Route index element={<StudySetList />} />
+                        </Route>
                         <Route
                             path="study-set/add"
                             element={<CreateStudySet />}

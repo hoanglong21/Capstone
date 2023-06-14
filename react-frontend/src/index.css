@@ -114,6 +114,15 @@ h1 {
     color: var(--nav-link-hover);
 }
 
+.sub-nav-link {
+    transition: all 0.3s;
+}
+
+.sub-nav-link.active,
+.sub-nav-link:hover {
+    border-bottom: 2px solid var(--nav-link-hover);
+}
+
 .link-primary {
     color: var(--link-primary) !important;
     transition: all 0.3s;

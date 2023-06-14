@@ -15,6 +15,7 @@ import {
     StudySetIcon,
     FolderIcon,
     ClassIcon,
+    JoinIcon,
 } from '../icons'
 
 import AuthService from '../../services/AuthService'
@@ -119,7 +120,7 @@ const Header = () => {
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
                                 <Link
-                                    className="dropdown-item py-2 px-3"
+                                    className="dropdown-item py-2 px-2"
                                     type="button"
                                     to="study-set/add"
                                 >
@@ -134,7 +135,7 @@ const Header = () => {
                             </li>
                             <li>
                                 <button
-                                    className="dropdown-item py-2 px-3"
+                                    className="dropdown-item py-2 px-2"
                                     type="button"
                                 >
                                     <FolderIcon
@@ -148,7 +149,7 @@ const Header = () => {
                             </li>
                             <li>
                                 <button
-                                    className="dropdown-item py-2 px-3"
+                                    className="dropdown-item py-2 px-2"
                                     type="button"
                                 >
                                     <ClassIcon
@@ -157,6 +158,20 @@ const Header = () => {
                                     />
                                     <span className="align-middle fw-semibold">
                                         Class
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className="dropdown-item py-2 px-2"
+                                    type="button"
+                                >
+                                    <JoinIcon
+                                        className="me-3"
+                                        strokeWidth="2"
+                                    />
+                                    <span className="align-middle fw-semibold">
+                                        Join Class
                                     </span>
                                 </button>
                             </li>
