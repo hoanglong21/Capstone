@@ -11,6 +11,10 @@ import illustration from '../assets/images/study.jpg'
 import styles from '../assets/styles/Form.module.css'
 
 const Login = () => {
+    const EMPTY_MESS = 'Please complete all fields.'
+    const NETWORK_MESS = 'There was a network error.'
+    const WRONG_MESS = 'Incorrect username or password.'
+
     const [user, setUser] = useState({ username: '', password: '' })
     const isLoggedIn = useSelector((state) => state.auth.token)
     const [error, setError] = useState('')
@@ -23,6 +27,8 @@ const Login = () => {
 
     const handleLogin = async (event) => {
         setError('')
+        document.querySelector('#loading').classList.remove('d-none')
+        document.querySelector('#loading').classList.add('d-block')
         document
             .querySelector('#username')
             .classList.remove('is-invalid', 'is-valid')
@@ -34,7 +40,7 @@ const Login = () => {
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
             event.stopPropagation()
-            setError('Please complete all fields.')
+            setError(EMPTY_MESS)
         } else {
             AuthService.login(user)
                 .then((response) => {
@@ -44,10 +50,14 @@ const Login = () => {
                 })
                 .catch((error) => {
                     form.classList.remove('was-validated')
+                    document
+                        .querySelector('#loading')
+                        .classList.remove('d-block')
+                    document.querySelector('#loading').classList.add('d-none')
                     if (error.message === 'Network Error') {
-                        setError('There was a network error.')
+                        setError(NETWORK_MESS)
                     } else {
-                        setError('Incorrect username or password.')
+                        setError(WRONG_MESS)
                         document
                             .querySelector('#username')
                             .classList.add('is-invalid')
@@ -103,10 +113,18 @@ const Login = () => {
                     <form className="form me-5 needs-validation" noValidate>
                         {/* error message */}
                         {error && (
-                            <div class="alert alert-danger" role="alert">
+                            <div className="alert alert-danger" role="alert">
                                 {error}
                             </div>
                         )}
+                        {/* Loading */}
+                        <div
+                            className="spinner-border text-secondary d-none mx-auto mb-1"
+                            role="status"
+                            id="loading"
+                        >
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                         {/* username/email */}
                         <div className="form-group mb-3">
                             <label className={styles.formLabel}>Username</label>
