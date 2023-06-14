@@ -1,9 +1,6 @@
 import './Header.css'
 import logo from '../../assets/images/Quizlet-Logo.png'
 import avatar from '../../assets/images/avatar-default.jpg'
-
-import AuthService from '../../services/AuthService'
-
 import {
     HomeIcon,
     SearchIcon,
@@ -19,13 +16,27 @@ import {
     FolderIcon,
     ClassIcon,
 } from '../icons'
+
+import AuthService from '../../services/AuthService'
+
 import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../../state/authSlice'
+// import * as bootstrap from 'bootstrap'
 
 const Header = () => {
     const isLogged = useSelector((state) => state.auth.token)
     const dispatch = useDispatch()
+
+    const handleLogout = () => {
+        AuthService.logout()
+        dispatch(logout())
+
+        // var bsToast = bootstrap.Toast.getInstance(
+        //     document.querySelector('#toast')
+        // )
+        // bsToast.show()
+    }
 
     return (
         <header className="px-3 border-bottom">
@@ -252,18 +263,11 @@ const Header = () => {
                                         <button
                                             className="dropdown-item py-2 px-3"
                                             type="button"
-                                            onClick={() => {
-                                                AuthService.logout()
-                                                dispatch(logout())
-                                            }}
+                                            onClick={handleLogout}
                                         >
                                             <LogoutIcon
                                                 className="me-3"
                                                 strokeWidth="2"
-                                                onClick={() => {
-                                                    AuthService.logout()
-                                                    dispatch(logout())
-                                                }}
                                             />
                                             <span className="align-middle fw-semibold">
                                                 Logout
@@ -293,6 +297,31 @@ const Header = () => {
                             </Link>
                         </>
                     )}
+                </div>
+            </div>
+            {/* Logout message */}
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div
+                    id="toast"
+                    class="toast"
+                    role="alert"
+                    aria-live="assertive"
+                    aria-atomic="true"
+                >
+                    <div class="toast-header">
+                        <img src="..." class="rounded me-2" alt="..." />
+                        <strong class="me-auto">Bootstrap</strong>
+                        <small>11 mins ago</small>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="toast"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
                 </div>
             </div>
         </header>
