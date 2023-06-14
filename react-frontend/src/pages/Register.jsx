@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux'
 const Register = () => {
     const EMPTY_MESS = 'Please complete all fields.'
     const NETWORK_MESS = 'There was a network error.'
-    const WRONG_MESS = 'Incorrect username or password.'
+    const EXIST_MESS = 'Username or email is taken. Try another.'
 
     const [user, setUser] = useState({
         username: '',
@@ -30,8 +30,12 @@ const Register = () => {
 
     const handleRegister = async (event) => {
         event.preventDefault()
+
         setError('')
         document.querySelector('#loading').classList.remove('d-none')
+        document.querySelector('#username').classList.remove('is-invalid')
+        document.querySelector('#email').classList.remove('is-invalid')
+
         var form = document.querySelector('.needs-validation')
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
@@ -49,13 +53,13 @@ const Register = () => {
                     if (error.message === 'Network Error') {
                         setError(NETWORK_MESS)
                     } else {
-                        setError(WRONG_MESS)
-                        // document
-                        //     .querySelector('#username')
-                        //     .classList.add('is-invalid')
-                        // document
-                        //     .querySelector('#password')
-                        //     .classList.add('is-invalid')
+                        setError(EXIST_MESS)
+                        document
+                            .querySelector('#username')
+                            .classList.add('is-invalid')
+                        document
+                            .querySelector('#email')
+                            .classList.add('is-invalid')
                     }
                 })
         }
@@ -120,17 +124,21 @@ const Register = () => {
                         >
                             <span className="visually-hidden">Loading...</span>
                         </div>
-                        {/* username/email */}
+                        {/* username */}
                         <div className="form-group mb-4">
                             <label className={styles.formLabel}>Username</label>
                             <input
                                 placeholder="Type your username"
+                                id="username"
                                 name="username"
                                 className={`form-control ${styles.formControl}`}
                                 value={user.username}
                                 onChange={handleChange}
                                 required
                             />
+                            <div class="invalid-feedback">
+                                Please use a valid username
+                            </div>
                         </div>
                         {/* First name */}
                         <div className="form-group mb-4">
@@ -166,11 +174,16 @@ const Register = () => {
                             <input
                                 placeholder="Type your email"
                                 name="email"
+                                type="email"
+                                id="email"
                                 className={`form-control ${styles.formControl}`}
                                 value={user.email}
                                 onChange={handleChange}
                                 required
                             />
+                            <div class="invalid-feedback">
+                                Please use a valid email address
+                            </div>
                         </div>
                         {/* Password */}
                         <div className="form-group mb-4">
@@ -182,8 +195,26 @@ const Register = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.password}
                                 onChange={handleChange}
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                 required
                             />
+                            <div class="invalid-feedback">
+                                <ul>
+                                    Password must contain the following:
+                                    <li id="letter" class="invalid">
+                                        A <b>lowercase</b> letter
+                                    </li>
+                                    <li id="capital" class="invalid">
+                                        A <b>capital (uppercase)</b> letter
+                                    </li>
+                                    <li id="number" class="invalid">
+                                        A <b>number</b>
+                                    </li>
+                                    <li id="length" class="invalid">
+                                        Minimum <b>8 characters</b>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         {/* Role */}
                         <div className="form-group mb-4">
