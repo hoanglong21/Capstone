@@ -23,6 +23,7 @@ import InsideClassroom from './pages/InsideClassroom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
+import MainClass from './pages/MainClass'
 
 function App() {
     return (
@@ -57,6 +58,7 @@ function App() {
                     <Route path="/createclass" element={<CreateClassroom />} />
                     <Route path="/joinclass" element={<JoinClass />} />
                     <Route path="/insideclass" element={<InsideClassroom />} />
+                    <Route path='/mainclass' element={<MainClass />} />
                 </Routes>
                 
                 
