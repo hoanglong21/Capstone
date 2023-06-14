@@ -42,7 +42,7 @@ const Header = () => {
                     />
                 </a>
 
-                <ul className="nav col-12 col-lg-auto me-3 mb-2 mb-md-0 fw-semibold">
+                <ul className="nav flex-grow-1 me-3 mb-2 mb-md-0 fw-semibold">
                     <li>
                         <NavLink
                             to="."
@@ -53,6 +53,18 @@ const Header = () => {
                         >
                             <HomeIcon className="mx-1" />
                             <span className="align-middle">Home</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="search"
+                            className={
+                                'nav-link px-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <SearchIcon className="mx-1" />
+                            <span className="align-middle">Search</span>
                         </NavLink>
                     </li>
                     <li>
@@ -80,17 +92,6 @@ const Header = () => {
                         </NavLink>
                     </li>
                 </ul>
-
-                {/* Search */}
-                <form className="search ms-2 col-5 d-inline-flex align-items-center m-0 me-auto p-1">
-                    <SearchIcon className="mx-1" />
-                    <input
-                        className="form-control"
-                        type="text"
-                        placeholder="Search..."
-                        aria-label="Search"
-                    />
-                </form>
 
                 <div className="d-flex align-items-center">
                     {/* Add button */}

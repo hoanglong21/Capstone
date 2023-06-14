@@ -64,7 +64,7 @@ const Login = () => {
     }
 
     return (
-        <div className="login bg-white">
+        <div className="login bg-white h-100">
             <div className="py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
                 <a
                     href="/"
