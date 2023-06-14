@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import AuthService from '../services/AuthService'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 import logo from '../assets/images/Quizlet-Logo.png'
 import illustration from '../assets/images/study.jpg'
 import styles from '../assets/styles/Form.module.css'
+import { useSelector } from 'react-redux'
 
 const Register = () => {
+    const EMPTY_MESS = 'Please complete all fields.'
+    const NETWORK_MESS = 'There was a network error.'
+    const WRONG_MESS = 'Incorrect username or password.'
+
     const [user, setUser] = useState({
         username: '',
         first_name: '',
@@ -15,13 +20,45 @@ const Register = () => {
         password: '',
         role: '',
     })
+    const [error, setError] = useState('')
+    const isLoggedIn = useSelector((state) => state.auth.token)
     const navigate = useNavigate()
 
-    const registration = async (e) => {
-        e.preventDefault()
-        AuthService.registration(user).then(() => {
-            navigate('/login')
-        })
+    if (isLoggedIn) {
+        return <Navigate to="/" />
+    }
+
+    const handleRegister = async (event) => {
+        event.preventDefault()
+        setError('')
+        document.querySelector('#loading').classList.remove('d-none')
+        var form = document.querySelector('.needs-validation')
+        form.classList.add('was-validated')
+        if (!form.checkValidity()) {
+            document.querySelector('#loading').classList.add('d-none')
+            event.stopPropagation()
+            setError(EMPTY_MESS)
+        } else {
+            AuthService.registration(user)
+                .then((response) => {
+                    navigate('/login')
+                })
+                .catch((error) => {
+                    form.classList.remove('was-validated')
+                    document.querySelector('#loading').classList.add('d-none')
+                    if (error.message === 'Network Error') {
+                        setError(NETWORK_MESS)
+                    } else {
+                        setError(WRONG_MESS)
+                        // document
+                        //     .querySelector('#username')
+                        //     .classList.add('is-invalid')
+                        // document
+                        //     .querySelector('#password')
+                        //     .classList.add('is-invalid')
+                    }
+                })
+        }
     }
 
     const handleChange = (event) => {
@@ -65,7 +102,24 @@ const Register = () => {
                     >
                         Create your account now
                     </h5>
-                    <form className="form mt-5 me-5">
+                    <form
+                        className="form mt-5 me-5 needs-validation"
+                        noValidate
+                    >
+                        {/* error message */}
+                        {error && (
+                            <div className="alert alert-danger" role="alert">
+                                {error}
+                            </div>
+                        )}
+                        {/* Loading */}
+                        <div
+                            className="spinner-border text-secondary d-block d-none mx-auto mb-1"
+                            role="status"
+                            id="loading"
+                        >
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
                         {/* username/email */}
                         <div className="form-group mb-4">
                             <label className={styles.formLabel}>Username</label>
@@ -75,6 +129,7 @@ const Register = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.username}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
                         {/* First name */}
@@ -88,6 +143,7 @@ const Register = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.first_name}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
                         {/* Last name */}
@@ -101,6 +157,7 @@ const Register = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.last_name}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
                         {/* Email */}
@@ -112,6 +169,7 @@ const Register = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.email}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
                         {/* Password */}
@@ -124,45 +182,41 @@ const Register = () => {
                                 className={`form-control ${styles.formControl}`}
                                 value={user.password}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
                         {/* Role */}
                         <div className="form-group mb-4">
-                            <label className={styles.formLabel}>Role</label>
-                            <div
-                                className="btn-group d-block"
-                                role="group"
-                                aria-label="role toggle"
-                            >
+                            <label className={`d-block ${styles.formLabel}`}>
+                                Role
+                            </label>
+                            <div class="form-check form-check-inline me-5">
                                 <input
                                     type="radio"
-                                    className="btn-check"
+                                    class="form-check-input"
                                     name="role"
                                     id="learner"
-                                    value="ROLE_LEANER"
+                                    value="ROLE_LEARNER"
                                     autoComplete="off"
                                     onClick={handleChange}
+                                    required
                                 />
-                                <label
-                                    className={`btn btn-outline-warning ${styles.labelRadio}`}
-                                    htmlFor="learner"
-                                >
+                                <label class="form-check-label" for="learner">
                                     Learner
                                 </label>
-
+                            </div>
+                            <div class="form-check mb-3 form-check-inline">
                                 <input
                                     type="radio"
-                                    className="btn-check"
+                                    class="form-check-input"
                                     name="role"
                                     id="tutor"
                                     value="ROLE_TUTOR"
                                     autoComplete="off"
                                     onClick={handleChange}
+                                    required
                                 />
-                                <label
-                                    className={`btn btn-outline-warning ${styles.labelRadio}`}
-                                    htmlFor="tutor"
-                                >
+                                <label class="form-check-label" for="tutor">
                                     Tutor
                                 </label>
                             </div>
@@ -171,7 +225,7 @@ const Register = () => {
                         <div className="form-group mt-5">
                             <button
                                 className={`btn btn-primary col-12 ${styles.btn}`}
-                                onClick={registration}
+                                onClick={handleRegister}
                             >
                                 Sign up
                             </button>

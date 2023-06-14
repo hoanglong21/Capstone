@@ -18,7 +18,7 @@ const Library = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="search"
+                            to="folders"
                             className={
                                 'nav-link px-3 sub-nav-link me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -29,7 +29,7 @@ const Library = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="translate"
+                            to="classes"
                             className={
                                 'nav-link px-3 sub-nav-link me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))

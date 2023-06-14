@@ -25,6 +25,7 @@ import Library from './pages/library/Library'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
+import Landing from './pages/Landing'
 
 function App() {
     return (
@@ -32,9 +33,10 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Layout />}>
-                        <Route index element={<Home />} />
+                        <Route index element={<Landing />} />
+                        <Route path='home' element={<Home />} />
                         <Route path="library" element={<Library />}>
-                            <Route index element={<StudySetList />} />
+                            <Route path="sets" element={<StudySetList />} />
                         </Route>
                         <Route
                             path="study-set/add"
@@ -53,7 +55,7 @@ function App() {
                         <Route path="gpt" element={<GPTContainer />} />
                         <Route path="voice" element={<SpeechToText />} />
                         <Route path="draw" element={<Draw />} />
-                        <Route path="tospeech" element={<TextToSpeech />} />
+                        <Route path="to-speech" element={<TextToSpeech />} />
                         <Route
                             path="createclass"
                             element={<CreateClassroom />}

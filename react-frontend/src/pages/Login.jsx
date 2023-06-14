@@ -26,6 +26,7 @@ const Login = () => {
     }
 
     const handleLogin = async (event) => {
+        event.preventDefault()
         setError('')
         document.querySelector('#loading').classList.remove('d-none')
         document.querySelector('#loading').classList.add('d-block')

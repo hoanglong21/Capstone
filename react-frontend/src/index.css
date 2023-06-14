@@ -109,6 +109,10 @@ h1 {
     transition: all 0.3s;
 }
 
+.nav-link:focus {
+    color: var(--nav-link);
+}
+
 .nav-link:hover,
 .nav-link.active {
     color: var(--nav-link-hover);
