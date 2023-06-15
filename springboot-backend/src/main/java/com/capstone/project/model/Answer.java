@@ -21,5 +21,5 @@ public class Answer {
 
     private String content;
 
-    private boolean isTrue;
+    private boolean is_true;
 }

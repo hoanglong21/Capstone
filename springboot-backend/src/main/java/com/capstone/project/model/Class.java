@@ -48,5 +48,9 @@ public class Class {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     Set<User> users;
 
+    private boolean is_deleted;
 
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Date deleted_date;
 }
