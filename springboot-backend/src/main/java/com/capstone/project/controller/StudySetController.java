@@ -1,5 +1,7 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.model.Card;
+import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;

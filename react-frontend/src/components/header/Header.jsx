@@ -152,14 +152,15 @@ const Header = () => {
                                 </button>
                             </li>
                             <li>
-                                <button
+                                <Link
                                     className="dropdown-item py-2 px-2"
                                     type="button"
+                                    to="joinclass"
                                 >
                                     <span className="align-middle fw-semibold">
                                         Join Class
                                     </span>
-                                </button>
+                                </Link>
                             </li>
                         </ul>
                     </div>

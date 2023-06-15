@@ -21,4 +21,11 @@ public class Field {
     private StudySetType studySetType;
 
     private String name;
+
+    public Field(int id, String name) {
+        StudySetType studySetType = new StudySetType();
+        studySetType.setId(id);
+        this.studySetType = studySetType;
+        this.name = name;
+    }
 }
