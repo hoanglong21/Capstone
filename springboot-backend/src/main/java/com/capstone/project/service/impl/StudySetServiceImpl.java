@@ -2,9 +2,8 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.StudySet;
+import com.capstone.project.repository.CardRepository;
 import com.capstone.project.repository.StudySetRepository;
-import com.capstone.project.repository.StudySetTypeRepository;
-import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,8 +15,6 @@ import java.util.List;
 public class StudySetServiceImpl implements StudySetService {
 
     private final StudySetRepository studySetRepository;
-
-
     @Autowired
     public StudySetServiceImpl(StudySetRepository studySetRepository) {
         this.studySetRepository = studySetRepository;

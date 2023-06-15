@@ -1,7 +1,9 @@
 package com.capstone.project.startup;
 
+import com.capstone.project.model.Field;
 import com.capstone.project.model.StudySetType;
 import com.capstone.project.model.User;
+import com.capstone.project.repository.FieldRepository;
 import com.capstone.project.repository.StudySetTypeRepository;
 import com.capstone.project.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -25,6 +27,9 @@ public class ApplicationStartup implements ApplicationRunner {
     private UserRepository userRepository;
 
     @Autowired
+    private FieldRepository fieldRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -40,6 +45,29 @@ public class ApplicationStartup implements ApplicationRunner {
                 studysetTypes.add(studysetType);
             }
             studysetTypeRepository.saveAll(studysetTypes);
+        }
+
+        if(fieldRepository.count() == 0) {
+            List<Field> fields = Arrays.asList(
+                    new Field(1, "term"),
+                    new Field(1, "definition"),
+                    new Field(2, "character"),
+                    new Field(2, "name"),
+                    new Field(2, "gradeLevel"),
+                    new Field(2, "strokes"),
+                    new Field(2, "jlptLevel"),
+                    new Field(2, "radical"),
+                    new Field(2, "onyomi"),
+                    new Field(2, "kunyomi"),
+                    new Field(2, "meanings"),
+                    new Field(2, "strokeOrder"),
+                    new Field(3, "title"),
+                    new Field(3, "jlptLevel"),
+                    new Field(3, "meaning"),
+                    new Field(3, "example"),
+                    new Field(3, "explanation"),
+                    new Field(3, "note"));
+            fieldRepository.saveAll(fields);
         }
 
         if(userRepository.count() == 0) {
