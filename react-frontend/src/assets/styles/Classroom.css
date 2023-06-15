@@ -324,6 +324,9 @@
     top: 0px;
     right: 20px;
     transition: all 200ms;
+    border: none;
+    background-color: transparent;
+    background-repeat:no-repeat;
 }
 
 .main__wrapper {

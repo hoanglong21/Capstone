@@ -13,7 +13,23 @@ const InsideClassroom = ({ classData }) => {
             <div className="inside__imgWrapper" />
             <div className="inside__image" />
             <div className="inside__content">
-              <Link to="/createclass" className="inside__close">&#8801;</Link>
+            <button className="inside__close" type="button" data-bs-toggle="dropdown" aria-expanded="false">&#8801;</button>
+            <ul className="dropdown-menu dropdown-menu-end p-2">
+                            <li>
+                                <button className="dropdown-item py-2 px-2" type="button" >
+                                    <span className="align-middle fw-semibold">
+                                        Update Classroom
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button className="dropdown-item py-2 px-2" type="button">
+                                    <span className="align-middle fw-semibold">
+                                        Delete Classroom
+                                    </span>
+                                </button>
+                            </li>
+                        </ul>
               <Link className="inside__title" to={`/mainclass`}>
                 <h2>Class Name</h2>
               </Link>

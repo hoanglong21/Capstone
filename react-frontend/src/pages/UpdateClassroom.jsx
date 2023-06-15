@@ -3,7 +3,7 @@ import '../assets/styles/Classroom.css'
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function CreateClassroom() {
+export default function UpdateClassroom() {
     let navigate = useNavigate()
 
     const [classroom, setClassroom] = useState({
@@ -28,7 +28,7 @@ export default function CreateClassroom() {
   return (
     <div className="createClass__form">
       <div className="createClass__form__inputs">
-        <p className="createClass__title">Create Classroom</p>
+        <p className="createClass__title">Update Classroom</p>
         <Link to="/" className="createClass__close">&times;</Link>
         <form onSubmit={(e) => onSubmit(e)}>
           <fieldset className="createClass__form__input">
@@ -44,7 +44,7 @@ export default function CreateClassroom() {
             <input className="createClass__input" type={"date"} name="createDate" placeholder='Create Date' value={createDate} required onChange={(e) => onInputChange(e)} />
           </fieldset>
           <div className="createClass__submit">
-            <button type="submit">Submit</button>
+            <button type="submit">Update</button>
           </div>
         </form>
       </div>
