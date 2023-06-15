@@ -1,5 +1,7 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.model.Card;
+import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
 public class StudySetController {

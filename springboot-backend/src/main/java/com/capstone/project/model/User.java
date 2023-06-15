@@ -37,7 +37,7 @@ public class User {
     private String email;
 
     @Column(unique = true)
-    private String phone_number;
+    private String phone;
 
     private String password;
 

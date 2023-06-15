@@ -14,7 +14,7 @@
     <name>capstone</name>
     <description>capstone</description>
     <properties>
-        <java.version>20</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -90,11 +90,13 @@
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
         </dependency>
-
-
     </dependencies>
-
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -102,5 +104,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

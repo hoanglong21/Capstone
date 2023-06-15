@@ -1,23 +1,30 @@
 :root {
     /* ===== Color theme ===== */
-    --yellow-56: #ffcd1f;
-    --yellow-69: #ffdc62;
-
     --blue-13: #1a1d28;
     --blue-20: #282e3e;
     --blue-42: #586380;
+    --blue-64: #939bb4;
     --blue-88: #d9dde8;
     --blue-94: #edeff4;
     --blue-97: #f6f7fb;
 
     --blue-magenta-55: #423ed8;
 
+    --cyan-52: #3ccfcf;
+
     --cyan-blue-26: #2e3856;
     --cyan-blue-51: #1991eb;
+
+    --red-68: #ff725b;
+    --red-74: #ff8e7b;
+
+    --yellow-56: #ffcd1f;
+    --yellow-69: #ffdc62;
 
     /* ===== Project color definitions ===== */
     --bg-color: var(--blue-97);
     --border: var(--blue-94);
+    --divider: var(--blue-88);
     --text-primary: var(--cyan-blue-26);
     --text-light: var(--blue-42);
 
@@ -28,6 +35,7 @@
     --icon-outline-secondary: var(--blue-42);
     --icon-outline-secondary-border: var(--blue-88);
     --icon-outline-secondary-border-hover: var(--blue-42);
+    --icon-warning-hover: var(--yellow-56);
 
     --btn-primary-bg: var(--cyan-blue-51);
     --btn-primary-bg-hover: var(--blue-magenta-55);
@@ -36,6 +44,8 @@
     --btn-warning-color: var(--blue-20);
     --btn-warning-bg: var(--yellow-56);
     --btn-warning-bg-hover: var(--yellow-69);
+    --btn-danger: var(--red-68);
+    --btn-danger-hover: var(--red-74);
 
     --nav-link: var(--cyan-blue-26);
     --nav-link-hover: var(--cyan-blue-51);
@@ -48,6 +58,17 @@
     --form-border: var(--blue-88);
     --form-border-focus: var(--yellow-56);
     --form-label-hover: var(--yellow-56);
+
+    --upload-hover: var(--yellow-56);
+    --upload-border: var(--blue-88);
+
+    --editor-border: var(--blue-42);
+    --editor-border-focus: var(--yellow-56);
+
+    --card-color: var(--blue-64);
+    --card-border: var(--blue-97);
+    --card-button-border: var(--cyan-52);
+    --card-button-hover: var(--yellow-56);
 }
 
 html,
@@ -59,9 +80,10 @@ body {
         'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: white;
+    background-color: var(--bg-color);
     color: var(--text-primary);
     line-height: 1.625;
+    box-sizing: border-box;
 }
 
 code {
@@ -78,14 +100,31 @@ h1 {
     border-bottom: 1px solid var(--border) !important;
 }
 
+.divider {
+    border-bottom: 1px solid var(--divider) !important;
+}
+
 .nav-link {
     color: var(--nav-link);
     transition: all 0.3s;
 }
 
+.nav-link:focus {
+    color: var(--nav-link);
+}
+
 .nav-link:hover,
 .nav-link.active {
     color: var(--nav-link-hover);
+}
+
+.sub-nav-link {
+    transition: all 0.3s;
+}
+
+.sub-nav-link.active,
+.sub-nav-link:hover {
+    border-bottom: 2px solid var(--nav-link-hover);
 }
 
 .link-primary {
@@ -133,6 +172,15 @@ h1 {
     color: var(--btn-warning-color);
 }
 
+.btn-danger {
+    background-color: var(--btn-danger);
+    transition: all 0.3s;
+}
+
+.btn-danger:hover {
+    background-color: var(--btn-danger-hover);
+}
+
 .icon-primary {
     fill: var(--icon-primary);
     color: white;
@@ -143,7 +191,28 @@ h1 {
     fill: var(--icon-primary-hover);
 }
 
+.icon-warning {
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.icon-warning:hover {
+    color: var(--icon-warning-hover);
+}
+
 input::placeholder {
     opacity: 0.5;
     color: var(--form-placeholder);
+}
+
+.ck.ck-editor__editable_inline {
+    border: none;
+    border-bottom: 0.125rem solid var(--editor-border);
+    transition: all 0.3s;
+}
+
+.ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
+    border: none;
+    border-bottom: 0.25rem solid var(--editor-border-focus);
+    box-shadow: none;
 }

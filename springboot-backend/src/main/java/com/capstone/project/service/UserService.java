@@ -8,4 +8,8 @@ public interface UserService {
     User createUser(User User);
 
     List<String> findAllNameExcept(String username);
+
+    User getUserByUsername(String username);
+
+    User updateUser(String username, User userDetails);
 }

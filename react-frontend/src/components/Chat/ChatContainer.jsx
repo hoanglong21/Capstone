@@ -75,7 +75,7 @@ const ChatContainer = () => {
     let string = localStorage.getItem("token");
     if (string == null) {
       // TODO navigation
-
+      
       navigate("/login");
     } else {
       let decode = jwt_decode(string);
