@@ -5,7 +5,7 @@ import AuthService from '../services/AuthService'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { login as setLogin } from '../state/authSlice'
-import logo from '../assets/images/Quizlet-Logo.png'
+import logo from '../assets/images/logo-2.png'
 import illustration from '../assets/images/study.jpg'
 import styles from '../assets/styles/Form.module.css'
 

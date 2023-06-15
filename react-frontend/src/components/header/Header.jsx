@@ -1,5 +1,5 @@
 import './Header.css'
-import logo from '../../assets/images/Quizlet-Logo.png'
+import logo from '../../assets/images/logo-2.png'
 import avatar from '../../assets/images/avatar-default.jpg'
 import {
     HomeIcon,
@@ -30,18 +30,18 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 const Header = () => {
     const isLogged = useSelector((state) => state.auth.token)
     const dispatch = useDispatch()
-    const [showA, setShowA] = useState(false)
+    const [showLogoutMess, setShowLogoutMess] = useState(false)
 
-    const toggleShowA = () => setShowA(!showA)
+    const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
     const handleLogout = () => {
         AuthService.logout()
         dispatch(logout())
-        toggleShowA()
+        toggleShowLogoutMess()
     }
 
     return (
-        <header className="px-3 border-bottom">
+        <header className="px-4 border-bottom">
             <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a
                     href="/"
@@ -51,7 +51,7 @@ const Header = () => {
                         className="bi me-5"
                         src={logo}
                         alt="logo"
-                        height="32"
+                        width="60rem"
                     />
                 </a>
 
@@ -64,7 +64,7 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <HomeIcon className="mx-1" />
+                            <HomeIcon className="mx-2" />
                             <span className="align-middle">Home</span>
                         </NavLink>
                     </li>
@@ -76,7 +76,7 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <SearchIcon className="mx-1" />
+                            <SearchIcon className="mx-2" />
                             <span className="align-middle">Search</span>
                         </NavLink>
                     </li>
@@ -88,20 +88,32 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <TranslateIcon className="mx-1" />
+                            <TranslateIcon className="mx-2" />
                             <span className="align-middle">Translate</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink
-                            to="library"
+                            to="sets"
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <LibraryIcon className="mx-1" />
-                            <span className="align-middle">Your Library</span>
+                            <StudySetIcon className="mx-2" />
+                            <span className="align-middle">Study Sets</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="classes"
+                            className={
+                                'nav-link px-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <ClassIcon className="mx-2" />
+                            <span className="align-middle">Classes</span>
                         </NavLink>
                     </li>
                 </ul>
@@ -124,10 +136,6 @@ const Header = () => {
                                     type="button"
                                     to="study-set/add"
                                 >
-                                    <StudySetIcon
-                                        className="me-3"
-                                        strokeWidth="2"
-                                    />
                                     <span className="align-middle fw-semibold">
                                         Study Set
                                     </span>
@@ -138,24 +146,6 @@ const Header = () => {
                                     className="dropdown-item py-2 px-2"
                                     type="button"
                                 >
-                                    <FolderIcon
-                                        className="me-3"
-                                        strokeWidth="2"
-                                    />
-                                    <span className="align-middle fw-semibold">
-                                        Folder
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item py-2 px-2"
-                                    type="button"
-                                >
-                                    <ClassIcon
-                                        className="me-3"
-                                        strokeWidth="2"
-                                    />
                                     <span className="align-middle fw-semibold">
                                         Class
                                     </span>
@@ -166,10 +156,6 @@ const Header = () => {
                                     className="dropdown-item py-2 px-2"
                                     type="button"
                                 >
-                                    <JoinIcon
-                                        className="me-3"
-                                        strokeWidth="2"
-                                    />
                                     <span className="align-middle fw-semibold">
                                         Join Class
                                     </span>
@@ -189,9 +175,9 @@ const Header = () => {
                             </button>
 
                             {/* User */}
-                            <div className="dropdown me-2 d-inline-flex">
+                            <div className="dropdown d-inline-flex">
                                 <button
-                                    className="btn btn-avatar"
+                                    className="btn btn-avatar pe-0"
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
@@ -321,7 +307,12 @@ const Header = () => {
                 position="top-end"
                 style={{ zIndex: 1 }}
             >
-                <Toast show={showA} onClose={toggleShowA} delay={3000} autohide>
+                <Toast
+                    show={showLogoutMess}
+                    onClose={toggleShowLogoutMess}
+                    delay={3000}
+                    autohide
+                >
                     <Toast.Body>You have been logged out</Toast.Body>
                 </Toast>
             </ToastContainer>

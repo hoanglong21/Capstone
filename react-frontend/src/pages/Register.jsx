@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import AuthService from '../services/AuthService'
 import { Link, useNavigate } from 'react-router-dom'
 
-import logo from '../assets/images/Quizlet-Logo.png'
+import logo from '../assets/images/logo-2.png'
 import illustration from '../assets/images/study.jpg'
 import styles from '../assets/styles/Form.module.css'
 import { useSelector } from 'react-redux'
