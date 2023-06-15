@@ -3,13 +3,16 @@ package com.capstone.project.controller;
 import com.capstone.project.model.Assignment;
 import com.capstone.project.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -38,10 +41,18 @@ public class AssignmentController {
         return assignmentService.createAssignment(assignment);
     }
 
-    @PutMapping ("/assignment/{id}")
+    @PutMapping ("/assignments/{id}")
     public Assignment updateTest(@PathVariable int id, @RequestBody Assignment assignment) throws ParseException {
 
         return assignmentService.updateAssignment(id,assignment);
+    }
+
+    @DeleteMapping("/assignments/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteAssignment(@PathVariable int id) {
+        boolean deleted = assignmentService.deleteAssignment(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", deleted);
+        return ResponseEntity.ok(response);
     }
 
 }
