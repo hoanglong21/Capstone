@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -25,9 +26,9 @@ public class StudySet {
 
     private String description;
 
-    private boolean isDeleted; // delete 0 or not 1
+    private boolean is_deleted; // delete 0 or not 1
 
-    private boolean isPublic; // private 0 or public 1
+    private boolean is_public; // private 0 or public 1
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
@@ -35,4 +36,8 @@ public class StudySet {
 
     @ManyToMany(mappedBy = "studySets")
     Set<Class> classes;
+
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Date deleted_date;
 }

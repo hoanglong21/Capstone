@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -60,8 +61,9 @@ public class StudySetServiceImpl implements StudySetService {
         }
         studySet.setTitle(studySetDetails.getTitle());
         studySet.setDescription(studySetDetails.getDescription());
-        studySet.setDeleted(studySetDetails.isDeleted());
-        studySet.setPublic(studySetDetails.isPublic());
+        studySet.set_deleted(studySetDetails.is_deleted());
+        studySet.set_public(studySetDetails.is_public());
+        studySet.setDeleted_date(studySetDetails.getDeleted_date());
 
         StudySet updateStudySet = studySetRepository.save(studySet);
         return updateStudySet;
@@ -77,7 +79,8 @@ public class StudySetServiceImpl implements StudySetService {
             e.printStackTrace();
             return false;
         }
-        studySet.setDeleted(true);
+        studySet.set_deleted(true);
+        studySet.setDeleted_date(new Date());
         studySetRepository.save(studySet);
         return true;
     }
