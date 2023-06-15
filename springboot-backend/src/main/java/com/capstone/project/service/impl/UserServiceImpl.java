@@ -1,5 +1,6 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.model.User;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.UserService;
@@ -20,6 +21,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new DuplicateValueException("Username '" + user.getUsername() + "' already exists");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new DuplicateValueException("Email '" + user.getEmail() + "' already exists");
+        }
         return userRepository.save(user);
     }
 
