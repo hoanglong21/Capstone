@@ -22,4 +22,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("SELECT username FROM User WHERE username != :username")
     List<String> findAllNameExcept(@Param("username") String username);
 
+    boolean existsByUsername(String username);
+
+    boolean existsByPhone(String phone);
+
+    boolean existsByEmail(String email);
 }
