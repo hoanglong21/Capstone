@@ -5,7 +5,6 @@ import {
     HomeIcon,
     SearchIcon,
     TranslateIcon,
-    LibraryIcon,
     AddIcon,
     NotifyIcon,
     ProfileIcon,
@@ -13,9 +12,7 @@ import {
     HelpIcon,
     LogoutIcon,
     StudySetIcon,
-    FolderIcon,
     ClassIcon,
-    JoinIcon,
 } from '../icons'
 
 import AuthService from '../../services/AuthService'
