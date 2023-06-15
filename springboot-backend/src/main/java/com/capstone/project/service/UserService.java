@@ -10,4 +10,6 @@ public interface UserService {
     List<String> findAllNameExcept(String username);
 
     User getUserByUsername(String username);
+
+    User updateUser(String username, User userDetails);
 }
