@@ -27,7 +27,6 @@ export default function CreateClassroom() {
     }
 
   return (
-    <><Header />
     <div className="createClass__form">
       <div className="createClass__form__inputs">
         <p className="createClass__title">Create Classroom</p>
@@ -50,6 +49,6 @@ export default function CreateClassroom() {
           </div>
         </form>
       </div>
-    </div></>
+    </div>
   );
 }
