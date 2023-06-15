@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthService from '../services/AuthService'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-import logo from '../assets/images/Quizlet-Logo.png'
-import illustration from '../assets/images/study.jpg'
+import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
 import { useSelector } from 'react-redux'
 
 const Register = () => {
     const EMPTY_MESS = 'Please complete all fields.'
     const NETWORK_MESS = 'There was a network error.'
-    const EXIST_MESS = 'Username or email is taken. Try another.'
+    const EXIST_USERNAME_MESS = 'Username is already taken. Try another.'
+    const EXIST_EMAIL_MESS = 'Username is already taken. Try another.'
+    const OTHER_MESS = 'An error occurred. Please try again later.'
 
     const [user, setUser] = useState({
         username: '',
@@ -24,9 +25,12 @@ const Register = () => {
     const isLoggedIn = useSelector((state) => state.auth.token)
     const navigate = useNavigate()
 
-    if (isLoggedIn) {
-        return <Navigate to="/" />
-    }
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate('/')
+            return () => {}
+        }
+    }, [isLoggedIn])
 
     const handleRegister = async (event) => {
         event.preventDefault()
@@ -44,22 +48,36 @@ const Register = () => {
             setError(EMPTY_MESS)
         } else {
             AuthService.registration(user)
-                .then((response) => {
-                    navigate('/login')
+                .then(() => {
+                    document.querySelector('#loading').classList.add('d-none')
+                    document.querySelector('#modalBtn').click()
                 })
                 .catch((error) => {
                     form.classList.remove('was-validated')
                     document.querySelector('#loading').classList.add('d-none')
-                    if (error.message === 'Network Error') {
+                    if (
+                        error.message === 'Request failed with status code 400'
+                    ) {
+                        if (
+                            error.response.data ===
+                            'Username already registered'
+                        ) {
+                            setError(EXIST_USERNAME_MESS)
+                            document
+                                .querySelector('#username')
+                                .classList.add('is-invalid')
+                        } else if (
+                            error.response.data === 'Email already registered'
+                        ) {
+                            setError(EXIST_EMAIL_MESS)
+                            document
+                                .querySelector('#email')
+                                .classList.add('is-invalid')
+                        }
+                    } else if (error.message === 'Network Error') {
                         setError(NETWORK_MESS)
                     } else {
-                        setError(EXIST_MESS)
-                        document
-                            .querySelector('#username')
-                            .classList.add('is-invalid')
-                        document
-                            .querySelector('#email')
-                            .classList.add('is-invalid')
+                        setError(OTHER_MESS)
                     }
                 })
         }
@@ -70,35 +88,12 @@ const Register = () => {
     }
 
     return (
-        <div className="bg-white">
-            <div className="py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
-                <a
-                    href="/"
-                    className="d-flex align-items-center ms-5 mb-0 me-auto text-white text-decoration-none"
-                >
-                    <img
-                        className="bi me-5"
-                        src={logo}
-                        alt="logo"
-                        height="32"
-                    />
-                </a>
-
-                <div className="d-flex">
-                    <p>Have an account?</p>
-                    <Link
-                        to="/login"
-                        className="link-primary text-decoration-none ms-2 me-5 fw-semibold"
-                    >
-                        Login
-                    </Link>
+        <div className="bg-white p-5">
+            <div className="row">
+                <div className="col d-flex align-items-start">
+                    <img src={logo} className="w-100" alt="" />
                 </div>
-            </div>
-            <div className="d-flex flex-row align-items-center">
-                <div className="col-6">
-                    <img src={illustration} className="w-100" alt="" />
-                </div>
-                <div className="col-6">
+                <div className="col-6 pe-5">
                     <h2>Get Started</h2>
                     <h5
                         className="fw-normal"
@@ -107,7 +102,8 @@ const Register = () => {
                         Create your account now
                     </h5>
                     <form
-                        className="form mt-5 me-5 needs-validation"
+                        className="form me-5 pe-5 needs-validation"
+                        style={{ marginTop: '4rem' }}
                         noValidate
                     >
                         {/* error message */}
@@ -136,7 +132,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 required
                             />
-                            <div class="invalid-feedback">
+                            <div className="invalid-feedback">
                                 Please use a valid username
                             </div>
                         </div>
@@ -181,7 +177,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 required
                             />
-                            <div class="invalid-feedback">
+                            <div className="invalid-feedback">
                                 Please use a valid email address
                             </div>
                         </div>
@@ -198,19 +194,19 @@ const Register = () => {
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                 required
                             />
-                            <div class="invalid-feedback">
+                            <div className="invalid-feedback">
                                 <ul>
                                     Password must contain the following:
-                                    <li id="letter" class="invalid">
+                                    <li id="letter" className="invalid">
                                         A <b>lowercase</b> letter
                                     </li>
-                                    <li id="capital" class="invalid">
+                                    <li id="capital" className="invalid">
                                         A <b>capital (uppercase)</b> letter
                                     </li>
-                                    <li id="number" class="invalid">
+                                    <li id="number" className="invalid">
                                         A <b>number</b>
                                     </li>
-                                    <li id="length" class="invalid">
+                                    <li id="length" className="invalid">
                                         Minimum <b>8 characters</b>
                                     </li>
                                 </ul>
@@ -221,10 +217,10 @@ const Register = () => {
                             <label className={`d-block ${styles.formLabel}`}>
                                 Role
                             </label>
-                            <div class="form-check form-check-inline me-5">
+                            <div className="form-check form-check-inline me-5">
                                 <input
                                     type="radio"
-                                    class="form-check-input"
+                                    className="form-check-input"
                                     name="role"
                                     id="learner"
                                     value="ROLE_LEARNER"
@@ -232,14 +228,17 @@ const Register = () => {
                                     onClick={handleChange}
                                     required
                                 />
-                                <label class="form-check-label" for="learner">
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="learner"
+                                >
                                     Learner
                                 </label>
                             </div>
-                            <div class="form-check mb-3 form-check-inline">
+                            <div className="form-check mb-4 form-check-inline">
                                 <input
                                     type="radio"
-                                    class="form-check-input"
+                                    className="form-check-input"
                                     name="role"
                                     id="tutor"
                                     value="ROLE_TUTOR"
@@ -247,7 +246,10 @@ const Register = () => {
                                     onClick={handleChange}
                                     required
                                 />
-                                <label class="form-check-label" for="tutor">
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="tutor"
+                                >
                                     Tutor
                                 </label>
                             </div>
@@ -262,6 +264,74 @@ const Register = () => {
                             </button>
                         </div>
                     </form>
+                    <div className="d-flex">
+                        <p>Have an account?</p>
+                        <Link
+                            to="/login"
+                            className="link-primary text-decoration-none ms-2 me-5 fw-semibold"
+                        >
+                            Login
+                        </Link>
+                    </div>
+                </div>
+            </div>
+            {/* Button trigger modal */}
+            <button
+                type="button"
+                id="modalBtn"
+                className="btn btn-primary d-none"
+                data-bs-toggle="modal"
+                data-bs-target="#messModal"
+            >
+                Launch modal
+            </button>
+            {/* Modal after register */}
+            <div
+                className="modal fade"
+                id="messModal"
+                tabindex="-1"
+                aria-labelledby="messModalLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1
+                                className="modal-title fs-5"
+                                id="messModalLabel"
+                            >
+                                Success!
+                            </h1>
+                            <button
+                                type="button"
+                                id="modalCloseBtn"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <h5>You have registered for your account</h5>
+                            <p>
+                                Check your email for your account activation
+                                link
+                            </p>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={() => {
+                                    document
+                                        .querySelector('#modalCloseBtn')
+                                        .click()
+                                    navigate('/login')
+                                }}
+                            >
+                                Go to Login
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
