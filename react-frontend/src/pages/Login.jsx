@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import AuthService from '../services/AuthService'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,9 +21,11 @@ const Login = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    if (isLoggedIn) {
-        return <Navigate to="/" />
-    }
+    useEffect(() => {
+        if (isLoggedIn) {
+            return <Navigate to="/" />
+        }
+    }, [isLoggedIn])
 
     const handleLogin = async (event) => {
         event.preventDefault()

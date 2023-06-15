@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AuthService from '../services/AuthService'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 
@@ -24,9 +24,11 @@ const Register = () => {
     const isLoggedIn = useSelector((state) => state.auth.token)
     const navigate = useNavigate()
 
-    if (isLoggedIn) {
-        return <Navigate to="/" />
-    }
+    useEffect(() => {
+        if (isLoggedIn) {
+            return <Navigate to="/" />
+        }
+    }, [isLoggedIn])
 
     const handleRegister = async (event) => {
         event.preventDefault()
@@ -44,8 +46,9 @@ const Register = () => {
             setError(EMPTY_MESS)
         } else {
             AuthService.registration(user)
-                .then((response) => {
-                    navigate('/login')
+                .then(() => {
+                    document.querySelector('#loading').classList.add('d-none')
+                    document.querySelector('#modalBtn').click()
                 })
                 .catch((error) => {
                     form.classList.remove('was-validated')
@@ -136,7 +139,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 required
                             />
-                            <div class="invalid-feedback">
+                            <div className="invalid-feedback">
                                 Please use a valid username
                             </div>
                         </div>
@@ -181,7 +184,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 required
                             />
-                            <div class="invalid-feedback">
+                            <div className="invalid-feedback">
                                 Please use a valid email address
                             </div>
                         </div>
@@ -198,19 +201,19 @@ const Register = () => {
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                 required
                             />
-                            <div class="invalid-feedback">
+                            <div className="invalid-feedback">
                                 <ul>
                                     Password must contain the following:
-                                    <li id="letter" class="invalid">
+                                    <li id="letter" className="invalid">
                                         A <b>lowercase</b> letter
                                     </li>
-                                    <li id="capital" class="invalid">
+                                    <li id="capital" className="invalid">
                                         A <b>capital (uppercase)</b> letter
                                     </li>
-                                    <li id="number" class="invalid">
+                                    <li id="number" className="invalid">
                                         A <b>number</b>
                                     </li>
-                                    <li id="length" class="invalid">
+                                    <li id="length" className="invalid">
                                         Minimum <b>8 characters</b>
                                     </li>
                                 </ul>
@@ -221,10 +224,10 @@ const Register = () => {
                             <label className={`d-block ${styles.formLabel}`}>
                                 Role
                             </label>
-                            <div class="form-check form-check-inline me-5">
+                            <div className="form-check form-check-inline me-5">
                                 <input
                                     type="radio"
-                                    class="form-check-input"
+                                    className="form-check-input"
                                     name="role"
                                     id="learner"
                                     value="ROLE_LEARNER"
@@ -232,14 +235,17 @@ const Register = () => {
                                     onClick={handleChange}
                                     required
                                 />
-                                <label class="form-check-label" for="learner">
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="learner"
+                                >
                                     Learner
                                 </label>
                             </div>
-                            <div class="form-check mb-3 form-check-inline">
+                            <div className="form-check mb-3 form-check-inline">
                                 <input
                                     type="radio"
-                                    class="form-check-input"
+                                    className="form-check-input"
                                     name="role"
                                     id="tutor"
                                     value="ROLE_TUTOR"
@@ -247,7 +253,10 @@ const Register = () => {
                                     onClick={handleChange}
                                     required
                                 />
-                                <label class="form-check-label" for="tutor">
+                                <label
+                                    className="form-check-label"
+                                    htmlFor="tutor"
+                                >
                                     Tutor
                                 </label>
                             </div>
@@ -262,6 +271,65 @@ const Register = () => {
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+            {/* Button trigger modal */}
+            <button
+                type="button"
+                id="modalBtn"
+                className="btn btn-primary d-none"
+                data-bs-toggle="modal"
+                data-bs-target="#messModal"
+            >
+                Launch modal
+            </button>
+            {/* Modal after register */}
+            <div
+                className="modal fade"
+                id="messModal"
+                tabindex="-1"
+                aria-labelledby="messModalLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1
+                                className="modal-title fs-5"
+                                id="messModalLabel"
+                            >
+                                Success!
+                            </h1>
+                            <button
+                                type="button"
+                                id="modalCloseBtn"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <h5>You have registered for your account</h5>
+                            <p>
+                                Check your email for your account activation
+                                link
+                            </p>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={() => {
+                                    document
+                                        .querySelector('#modalCloseBtn')
+                                        .click()
+                                    navigate('/login')
+                                }}
+                            >
+                                Go to Login
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
