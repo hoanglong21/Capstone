@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import AuthService from '../services/AuthService'
 import { Link, useNavigate } from 'react-router-dom'
 
-import logo from '../assets/images/logo-2.png'
-import illustration from '../assets/images/study.jpg'
+import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
 import { useSelector } from 'react-redux'
 
@@ -89,35 +88,12 @@ const Register = () => {
     }
 
     return (
-        <div className="bg-white">
-            <div className="py-4 px-5 d-flex flex-wrap align-items-center justify-content-start">
-                <a
-                    href="/"
-                    className="d-flex align-items-center ms-5 mb-0 me-auto text-white text-decoration-none"
-                >
-                    <img
-                        className="bi me-5"
-                        src={logo}
-                        alt="logo"
-                        height="32"
-                    />
-                </a>
-
-                <div className="d-flex">
-                    <p>Have an account?</p>
-                    <Link
-                        to="/login"
-                        className="link-primary text-decoration-none ms-2 me-5 fw-semibold"
-                    >
-                        Login
-                    </Link>
+        <div className="bg-white p-5">
+            <div className="row">
+                <div className="col d-flex align-items-start">
+                    <img src={logo} className="w-100" alt="" />
                 </div>
-            </div>
-            <div className="d-flex flex-row align-items-center">
-                <div className="col-6">
-                    <img src={illustration} className="w-100" alt="" />
-                </div>
-                <div className="col-6">
+                <div className="col-6 pe-5">
                     <h2>Get Started</h2>
                     <h5
                         className="fw-normal"
@@ -126,7 +102,8 @@ const Register = () => {
                         Create your account now
                     </h5>
                     <form
-                        className="form mt-5 me-5 needs-validation"
+                        className="form me-5 pe-5 needs-validation"
+                        style={{ marginTop: '4rem' }}
                         noValidate
                     >
                         {/* error message */}
@@ -258,7 +235,7 @@ const Register = () => {
                                     Learner
                                 </label>
                             </div>
-                            <div className="form-check mb-3 form-check-inline">
+                            <div className="form-check mb-4 form-check-inline">
                                 <input
                                     type="radio"
                                     className="form-check-input"
@@ -287,6 +264,15 @@ const Register = () => {
                             </button>
                         </div>
                     </form>
+                    <div className="d-flex">
+                        <p>Have an account?</p>
+                        <Link
+                            to="/login"
+                            className="link-primary text-decoration-none ms-2 me-5 fw-semibold"
+                        >
+                            Login
+                        </Link>
+                    </div>
                 </div>
             </div>
             {/* Button trigger modal */}

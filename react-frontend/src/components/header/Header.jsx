@@ -58,7 +58,7 @@ const Header = () => {
                 <ul className="nav d-flex align-items-center flex-grow-1 me-3 mb-2 mb-md-0 fw-semibold">
                     <li>
                         <NavLink
-                            to={isLogged ? 'home' : '.'}
+                            to={'.'}
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
