@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 
 import AuthService from '../services/AuthService'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom'
 
 import { login as setLogin } from '../state/authSlice'
 import logo from '../assets/images/Quizlet-Logo.png'
@@ -23,7 +22,8 @@ const Login = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            return <Navigate to="/" />
+            navigate('/')
+            return () => {}
         }
     }, [isLoggedIn])
 

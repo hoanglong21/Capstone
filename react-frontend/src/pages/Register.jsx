@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import AuthService from '../services/AuthService'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import logo from '../assets/images/Quizlet-Logo.png'
 import illustration from '../assets/images/study.jpg'
@@ -28,7 +28,8 @@ const Register = () => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            return <Navigate to="/" />
+            navigate('/')
+            return () => {}
         }
     }, [isLoggedIn])
 
