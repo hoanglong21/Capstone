@@ -2,12 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../assets/styles/Classroom.css";
 import { AiFillContacts, AiOutlineFolder } from "react-icons/ai";
-import Header from "../components/header/Header";
 import Footer from "../components/Footer.jsx"
 
 const InsideClassroom = ({ classData }) => {
   return (
-    <><><Header />
+    <>
       <li className="inside__list">
         <div className="inside__wrapper">
           <div className="inside__container">
@@ -15,7 +14,7 @@ const InsideClassroom = ({ classData }) => {
             <div className="inside__image" />
             <div className="inside__content">
               <Link to="/createclass" className="inside__close">&#8801;</Link>
-              <Link className="inside__title" to={`/`}>
+              <Link className="inside__title" to={`/mainclass`}>
                 <h2>Class Name</h2>
               </Link>
               <p className="inside__owner">Tutor</p>
@@ -29,7 +28,7 @@ const InsideClassroom = ({ classData }) => {
           <AiFillContacts />
           <AiOutlineFolder />
         </div>
-      </li></><Footer /></>
+      </li><Footer /></>
   );
 };
 

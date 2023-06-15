@@ -162,18 +162,19 @@ const Header = () => {
                                 </button>
                             </li>
                             <li>
-                                <button
+                                <Link
                                     className="dropdown-item py-2 px-2"
                                     type="button"
+                                    to="joinclass"
                                 >
                                     <JoinIcon
                                         className="me-3"
                                         strokeWidth="2"
                                     />
-                                    <span className="align-middle fw-semibold">
+                                    <span className="align-middle fw-semibold" >
                                         Join Class
                                     </span>
-                                </button>
+                                </Link>
                             </li>
                         </ul>
                     </div>
