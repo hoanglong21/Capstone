@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import styles from '../assets/styles/Form.module.css'
-import '../assets/styles/stickyHeader.css'
-import CardStyles from '../assets/styles/Card.module.css'
-import { Card } from '../components/Card/Card'
+import styles from '../../assets/styles/Form.module.css'
+import '../../assets/styles/stickyHeader.css'
+import CardStyles from '../../assets/styles/Card.module.css'
+import { Card } from '../../components/Card'
 
 const CreateStudySet = () => {
     const [isScroll, setIsScroll] = useState(false)
@@ -93,7 +93,13 @@ const CreateStudySet = () => {
                 </div>
                 {/* Card */}
                 {cardList.map((card, index) => {
-                    return <Card key={index} index={index} handleDelete={handleDelete} />
+                    return (
+                        <Card
+                            key={index}
+                            index={index}
+                            handleDelete={handleDelete}
+                        />
+                    )
                 })}
 
                 {/* Add button */}

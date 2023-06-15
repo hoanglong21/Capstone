@@ -1,9 +1,6 @@
 import './Header.css'
 import logo from '../../assets/images/Quizlet-Logo.png'
 import avatar from '../../assets/images/avatar-default.jpg'
-
-import AuthService from '../../services/AuthService'
-
 import {
     HomeIcon,
     SearchIcon,
@@ -18,14 +15,30 @@ import {
     StudySetIcon,
     FolderIcon,
     ClassIcon,
+    JoinIcon,
 } from '../icons'
+
+import AuthService from '../../services/AuthService'
+import { logout } from '../../state/authSlice'
+
 import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../../state/authSlice'
+import Toast from 'react-bootstrap/Toast'
+import { useState } from 'react'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 
 const Header = () => {
     const isLogged = useSelector((state) => state.auth.token)
     const dispatch = useDispatch()
+    const [showA, setShowA] = useState(false)
+
+    const toggleShowA = () => setShowA(!showA)
+
+    const handleLogout = () => {
+        AuthService.logout()
+        dispatch(logout())
+        toggleShowA()
+    }
 
     return (
         <header className="px-3 border-bottom">
@@ -42,10 +55,10 @@ const Header = () => {
                     />
                 </a>
 
-                <ul className="nav col-12 col-lg-auto me-3 mb-2 mb-md-0 fw-semibold">
+                <ul className="nav d-flex align-items-center flex-grow-1 me-3 mb-2 mb-md-0 fw-semibold">
                     <li>
                         <NavLink
-                            to="."
+                            to={isLogged ? 'home' : '.'}
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -53,6 +66,18 @@ const Header = () => {
                         >
                             <HomeIcon className="mx-1" />
                             <span className="align-middle">Home</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="search"
+                            className={
+                                'nav-link px-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <SearchIcon className="mx-1" />
+                            <span className="align-middle">Search</span>
                         </NavLink>
                     </li>
                     <li>
@@ -81,17 +106,6 @@ const Header = () => {
                     </li>
                 </ul>
 
-                {/* Search */}
-                <form className="search ms-2 col-5 d-inline-flex align-items-center m-0 me-auto p-1">
-                    <SearchIcon className="mx-1" />
-                    <input
-                        className="form-control"
-                        type="text"
-                        placeholder="Search..."
-                        aria-label="Search"
-                    />
-                </form>
-
                 <div className="d-flex align-items-center">
                     {/* Add button */}
                     <div className="dropdown d-inline-flex">
@@ -106,7 +120,7 @@ const Header = () => {
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
                                 <Link
-                                    className="dropdown-item py-2 px-3"
+                                    className="dropdown-item py-2 px-2"
                                     type="button"
                                     to="study-set/add"
                                 >
@@ -121,7 +135,7 @@ const Header = () => {
                             </li>
                             <li>
                                 <button
-                                    className="dropdown-item py-2 px-3"
+                                    className="dropdown-item py-2 px-2"
                                     type="button"
                                 >
                                     <FolderIcon
@@ -135,7 +149,7 @@ const Header = () => {
                             </li>
                             <li>
                                 <button
-                                    className="dropdown-item py-2 px-3"
+                                    className="dropdown-item py-2 px-2"
                                     type="button"
                                 >
                                     <ClassIcon
@@ -144,6 +158,20 @@ const Header = () => {
                                     />
                                     <span className="align-middle fw-semibold">
                                         Class
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    className="dropdown-item py-2 px-2"
+                                    type="button"
+                                >
+                                    <JoinIcon
+                                        className="me-3"
+                                        strokeWidth="2"
+                                    />
+                                    <span className="align-middle fw-semibold">
+                                        Join Class
                                     </span>
                                 </button>
                             </li>
@@ -251,18 +279,11 @@ const Header = () => {
                                         <button
                                             className="dropdown-item py-2 px-3"
                                             type="button"
-                                            onClick={() => {
-                                                AuthService.logout()
-                                                dispatch(logout())
-                                            }}
+                                            onClick={handleLogout}
                                         >
                                             <LogoutIcon
                                                 className="me-3"
                                                 strokeWidth="2"
-                                                onClick={() => {
-                                                    AuthService.logout()
-                                                    dispatch(logout())
-                                                }}
                                             />
                                             <span className="align-middle fw-semibold">
                                                 Logout
@@ -294,6 +315,16 @@ const Header = () => {
                     )}
                 </div>
             </div>
+            {/* Logout message */}
+            <ToastContainer
+                className="p-3 mt-5"
+                position="top-end"
+                style={{ zIndex: 1 }}
+            >
+                <Toast show={showA} onClose={toggleShowA} delay={3000} autohide>
+                    <Toast.Body>You have been logged out</Toast.Body>
+                </Toast>
+            </ToastContainer>
         </header>
     )
 }
