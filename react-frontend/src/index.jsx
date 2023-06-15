@@ -27,6 +27,7 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
+import UpdateClassroom from './pages/UpdateClassroom'
 
 function App() {
     return (
@@ -76,7 +77,7 @@ function App() {
                     <Route path="/joinclass" element={<JoinClass />} />
                     <Route path="/insideclass" element={<InsideClassroom />} />
                     <Route path='/mainclass' element={<MainClass />} />
-
+                    <Route path='/updateclass' element={<UpdateClassroom />} />
                 </Routes>
             </BrowserRouter>
         </Provider>

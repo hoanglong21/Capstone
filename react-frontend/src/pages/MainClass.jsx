@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../assets/styles/Classroom.css";
 import { AiOutlineUser } from "react-icons/ai";
+import Header from "../components/header/Header";
 
 const MainClass = ({ classData }) => {
   const [showInput, setShowInput] = useState(false);
@@ -14,7 +15,7 @@ const MainClass = ({ classData }) => {
   };
 
   return (
-    <div className="main">
+    <><Header /><div className="main">
       <div className="main__wrapper">
         <div className="main__content">
           <div className="main__wrapper1">
@@ -47,10 +48,9 @@ const MainClass = ({ classData }) => {
                       id="filled-multiline-flexible"
                       placeholder="Announce something to class"
                       value={inputValue}
-                      onChange={(e) => setInput(e.target.value)}
-                    />
+                      onChange={(e) => setInput(e.target.value)} />
                     <div className="main__buttons">
-                      <input onChange={handleChange} type="file"/>
+                      <input onChange={handleChange} type="file" />
 
                       <div>
                         <button onClick={() => setShowInput(false)} className="btn btn-outline-danger mx-2">
@@ -77,7 +77,7 @@ const MainClass = ({ classData }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div></>
   );
 };
 

@@ -2,20 +2,35 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../assets/styles/Classroom.css";
 import { AiFillContacts, AiOutlineFolder } from "react-icons/ai";
-import Header from "../components/header/Header";
 import Footer from "../components/Footer.jsx"
 
 const InsideClassroom = ({ classData }) => {
   return (
-    <><><Header />
+    <>
       <li className="inside__list">
         <div className="inside__wrapper">
           <div className="inside__container">
             <div className="inside__imgWrapper" />
             <div className="inside__image" />
             <div className="inside__content">
-              <Link to="/createclass" className="inside__close">&#8801;</Link>
-              <Link className="inside__title" to={`/`}>
+            <button className="inside__close" type="button" data-bs-toggle="dropdown" aria-expanded="false">&#8801;</button>
+            <ul className="dropdown-menu dropdown-menu-end p-2">
+                            <li>
+                                <button className="dropdown-item py-2 px-2" type="button" >
+                                    <span className="align-middle fw-semibold">
+                                        Update Classroom
+                                    </span>
+                                </button>
+                            </li>
+                            <li>
+                                <button className="dropdown-item py-2 px-2" type="button">
+                                    <span className="align-middle fw-semibold">
+                                        Delete Classroom
+                                    </span>
+                                </button>
+                            </li>
+                        </ul>
+              <Link className="inside__title" to={`/mainclass`}>
                 <h2>Class Name</h2>
               </Link>
               <p className="inside__owner">Tutor</p>
@@ -29,7 +44,7 @@ const InsideClassroom = ({ classData }) => {
           <AiFillContacts />
           <AiOutlineFolder />
         </div>
-      </li></><Footer /></>
+      </li><Footer /></>
   );
 };
 
