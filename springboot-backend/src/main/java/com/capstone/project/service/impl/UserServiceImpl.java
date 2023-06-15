@@ -22,10 +22,10 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new DuplicateValueException("Username '" + user.getUsername() + "' already exists");
+            throw new DuplicateValueException("Username already registered");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new DuplicateValueException("Email '" + user.getEmail() + "' already exists");
+            throw new DuplicateValueException("Email already registered");
         }
         return userRepository.save(user);
     }
