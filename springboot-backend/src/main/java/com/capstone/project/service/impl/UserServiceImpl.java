@@ -35,5 +35,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAllNameExcept(username);
     }
 
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
+
 
 }
