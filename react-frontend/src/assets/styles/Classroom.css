@@ -1,3 +1,4 @@
+
 .createClass__form{
     background: #e7e7e7;
     height: 100vh;
@@ -8,8 +9,8 @@
     right: 0;
     background: rgba(0, 0, 0, 0.3);
     transition: opacity 500ms;
-    /* visibility: hidden;
-    opacity: 0; */
+    visibility: hidden;
+    opacity: 0;
 }
 
 .createClass__form:target{
@@ -42,6 +43,7 @@
     text-decoration: none;
     color: #333;
 }
+
 .createClass__input, .joinClass__code{
     width: 100%;
     padding: 10px;
@@ -52,6 +54,7 @@
     margin-bottom: 16px;
     font-size: 18px;
 }
+
 
 .createClass__submit{
     background-color: #2B7DEA;
@@ -86,44 +89,44 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .joinClass__wrapper {
+}
+.joinClass__wrapper {
     display: flex;
     justify-content: space-between;
     border-bottom: 0.0625rem solid #e0e0e0;
     padding: 0.5rem 1rem;
     width: 98vw;
-  }
-  
-  .joinClass__wraper2 {
+}
+
+.joinClass__wraper2 {
     height: 48px;
     color: #5f6368;
     fill: #5f6368;
     display: flex;
     align-items: center;
-  }
-  .joinClass__topHead {
-    font-family: "Google Sans", Roboto, Arial, sans-serif;
+}
+.joinClass__topHead {
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
     font-size: 1.375rem;
     font-weight: 400;
     line-height: 1.75rem;
     color: #80868b;
     margin-left: 1rem;
-  }
-  .joinClass__svg {
+}
+.joinClass__svg {
     cursor: pointer;
-  }
-  .joinClass__btn {
+}
+.joinClass__btn {
     width: 80px !important;
     height: 40px !important;
-    background: #2B7DEA;
+    background: #2b7dea;
     color: #e7e7e7;
     font-size: 1rem;
-    border: #2B7DEA;
+    border: #2b7dea;
     border-radius: 7px;
     text-transform: uppercase;
-  }
-  .joinClass__form {
+}
+.joinClass__form {
     margin-top: 1rem;
     max-width: 35rem;
     box-sizing: border-box;
@@ -136,22 +139,22 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-  }
-  .joinClass__formText {
+}
+.joinClass__formText {
     color: #7f7f7f;
     font-size: 1rem;
     margin-bottom: 0.5rem;
     text-align: left;
-  }
-  .joinClass__loginInfo {
+}
+.joinClass__loginInfo {
     align-items: center;
     display: flex;
     flex-flow: row wrap;
     width: 100%;
     justify-content: space-between;
-  }
-  .joinClass__loginName {
-    font-family: "Google Sans", Roboto, Arial, sans-serif;
+}
+.joinClass__loginName {
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
     font-size: 1rem;
     font-weight: 500;
     line-height: 1.25rem;
@@ -159,8 +162,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     display: block;
-  }
-  .joinClass__loginEmail {
+}
+.joinClass__loginEmail {
     letter-spacing: 0.025em;
     font-family: Roboto, Arial, sans-serif;
     font-size: 0.875rem;
@@ -171,16 +174,16 @@
     overflow: hidden;
     white-space: nowrap;
     display: block;
-  }
-  .joinClass__loginText {
+}
+.joinClass__loginText {
     margin-left: 15px;
     width: 80%;
-  }
-  .joinClass__classLeft {
+}
+.joinClass__classLeft {
     display: flex;
-  }
+}
 
-  .closeJoin{
+.closeJoin {
     position: absolute;
     top: 22px;
     left: 20px;
@@ -191,18 +194,19 @@
     color: #80868b;
 }
 
-.logout{
+.logout {
     background: #f0f0f0;
-    color: #2B7DEA;
+    color: #2b7dea;
     border: #f0f0f0;
     padding: 10px;
     font-size: 1rem;
     border-radius: 5px;
 }
 
-.note{
+.note {
     margin-top: 25px;
 }
+
 
 .joinClass__li:first-child{
     margin-top: 5px;
@@ -210,10 +214,10 @@
 }
 
 .inside {
-  display: flex;
-  flex-wrap: wrap;
-  padding-left: 1.5rem;
-  padding-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 1.5rem;
+    padding-top: 1.5rem;
 }
 
 .inside__list {
@@ -234,28 +238,29 @@
   border-radius: 0.5rem;
 }
 .inside__imgWrapper {
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  background-color: #174ea6;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: #174ea6;
 }
 .inside__image {
-  background-image: url(https://gstatic.com/classroom/themes/Physics.jpg);
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  background-repeat: no-repeat;
-  -webkit-background-size: cover;
-  background-size: cover;
+    background-image: url(https://gstatic.com/classroom/themes/Physics.jpg);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
 }
 .inside__container {
-  position: relative;
+    position: relative;
 }
 .inside__content {
+
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
@@ -264,24 +269,26 @@
   height: 7rem;
   padding: 1rem 1rem 0.75rem;
   position: relative;
+
 }
 .inside__title {
-  color: white;
-  font-family: "Roboto";
-  text-decoration: none;
+    color: white;
+    font-family: 'Roboto';
+    text-decoration: none;
 }
 .inside__title h2 {
-  font-weight: 400;
+    font-weight: 400;
 }
 .inside__title h2:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 .inside__owner {
-  color: white;
-  font-weight: 400 !important;
-  font-size: 15px !important;
+    color: white;
+    font-weight: 400 !important;
+    font-size: 15px !important;
 }
 .inside__avatar {
+
   float: right;
   height: 4.6875rem !important;
   position: relative !important;

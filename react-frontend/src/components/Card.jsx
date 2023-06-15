@@ -1,10 +1,10 @@
 import { useState } from 'react'
 
-import { uploadFile } from '../../features/fileManagement'
+import { uploadFile } from '../features/fileManagement'
 
-import { DeleteIcon, ImageIcon, MicIcon } from '../../components/icons'
-import TextEditor from '../../components/TextEditor'
-import styles from '../../assets/styles/Card.module.css'
+import { DeleteIcon, ImageIcon, MicIcon } from './icons'
+import TextEditor from './TextEditor'
+import styles from '../assets/styles/Card.module.css'
 
 export const Card = (props) => {
     const [card, setCard] = useState({
