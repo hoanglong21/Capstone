@@ -10,7 +10,9 @@ import { useSelector } from 'react-redux'
 const Register = () => {
     const EMPTY_MESS = 'Please complete all fields.'
     const NETWORK_MESS = 'There was a network error.'
-    const EXIST_MESS = 'Username or email is taken. Try another.'
+    const EXIST_USERNAME_MESS = 'Username is already taken. Try another.'
+    const EXIST_EMAIL_MESS = 'Username is already taken. Try another.'
+    const OTHER_MESS = 'An error occurred. Please try again later.'
 
     const [user, setUser] = useState({
         username: '',
@@ -53,16 +55,29 @@ const Register = () => {
                 .catch((error) => {
                     form.classList.remove('was-validated')
                     document.querySelector('#loading').classList.add('d-none')
-                    if (error.message === 'Network Error') {
+                    if (
+                        error.message === 'Request failed with status code 400'
+                    ) {
+                        if (
+                            error.response.data ===
+                            'Username already registered'
+                        ) {
+                            setError(EXIST_USERNAME_MESS)
+                            document
+                                .querySelector('#username')
+                                .classList.add('is-invalid')
+                        } else if (
+                            error.response.data === 'Email already registered'
+                        ) {
+                            setError(EXIST_EMAIL_MESS)
+                            document
+                                .querySelector('#email')
+                                .classList.add('is-invalid')
+                        }
+                    } else if (error.message === 'Network Error') {
                         setError(NETWORK_MESS)
                     } else {
-                        setError(EXIST_MESS)
-                        document
-                            .querySelector('#username')
-                            .classList.add('is-invalid')
-                        document
-                            .querySelector('#email')
-                            .classList.add('is-invalid')
+                        setError(OTHER_MESS)
                     }
                 })
         }
