@@ -68,4 +68,12 @@ public class StudySetController {
         response.put("deleted", deleted);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/deletestudysets/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteHardStudySet(@PathVariable int id) {
+        boolean deleted = studySetService.deleteHardStudySet(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("hard deleted", deleted);
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,8 +1,11 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.Card;
+import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
 import com.capstone.project.repository.CardRepository;
+import com.capstone.project.repository.ContentRepository;
 import com.capstone.project.repository.StudySetRepository;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +18,13 @@ import java.util.List;
 public class StudySetServiceImpl implements StudySetService {
 
     private final StudySetRepository studySetRepository;
+    private final CardRepository cardRepository;
+    private final ContentRepository contentRepository;
     @Autowired
-    public StudySetServiceImpl(StudySetRepository studySetRepository) {
+    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository) {
         this.studySetRepository = studySetRepository;
+        this.cardRepository = cardRepository;
+        this.contentRepository = contentRepository;
     }
 
     @Override
@@ -69,6 +76,29 @@ public class StudySetServiceImpl implements StudySetService {
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
             return false;
+        }
+        studySet.setDeleted(true);
+        studySetRepository.save(studySet);
+        return true;
+    }
+
+    @Override
+    public Boolean deleteHardStudySet(int id) {
+        StudySet studySet;
+        try {
+            studySet = studySetRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + id));
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // delete all the cards and contents associated with the study set
+        for (Card card : cardRepository.getCardByStudySetId(studySet.getId())) {
+            for (Content content : contentRepository.getContentByCardId(card.getId())) {
+                contentRepository.delete(content);
+            }
+            cardRepository.delete(card);
         }
         studySetRepository.delete(studySet);
         return true;
