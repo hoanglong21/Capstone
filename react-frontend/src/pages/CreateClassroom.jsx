@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import '../assets/styles/Classroom.css'
-import axios from 'axios'
-import { Link, useNavigate } from 'react-router-dom'
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import Header from '../components/header/Header';
 
 export default function CreateClassroom() {
     let navigate = useNavigate()
@@ -25,59 +26,30 @@ export default function CreateClassroom() {
         navigate('/login')
     }
 
-    return (
-        <div className="form">
-            <div className="form__inputs">
-                <p className="class__title">Create Classroom</p>
-                <Link to="/" className="close">
-                    &times;
-                </Link>
-                <form onSubmit={(e) => onSubmit(e)}>
-                    <fieldset className="form__input">
-                        <input
-                            type={'text'}
-                            name="className"
-                            placeholder="Class Name"
-                            value={className}
-                            required
-                            onChange={(e) => onInputChange(e)}
-                        />
-                    </fieldset>
-                    <fieldset className="form__input">
-                        <input
-                            type={'text'}
-                            name="tutor"
-                            placeholder="Tutor Guide"
-                            value={tutor}
-                            required
-                            onChange={(e) => onInputChange(e)}
-                        />
-                    </fieldset>
-                    <fieldset className="form__input">
-                        <input
-                            type={'text'}
-                            name="classDescription"
-                            placeholder="Class Description"
-                            value={classDescription}
-                            required
-                            onChange={(e) => onInputChange(e)}
-                        />
-                    </fieldset>
-                    <fieldset className="form__input">
-                        <input
-                            type={'date'}
-                            name="createDate"
-                            placeholder="Create Date"
-                            value={createDate}
-                            required
-                            onChange={(e) => onInputChange(e)}
-                        />
-                    </fieldset>
-                    <button type="submit" className="submit">
-                        Submit
-                    </button>
-                </form>
-            </div>
-        </div>
-    )
+  return (
+    <><Header />
+    <div className="createClass__form">
+      <div className="createClass__form__inputs">
+        <p className="createClass__title">Create Classroom</p>
+        <Link to="/" className="createClass__close">&times;</Link>
+        <form onSubmit={(e) => onSubmit(e)}>
+          <fieldset className="createClass__form__input">
+            <input className="createClass__input" type={"text"} name="className" placeholder='Class Name' value={className} required onChange={(e) => onInputChange(e)} />
+          </fieldset>
+          <fieldset className="createClass__form__input">
+            <input className="createClass__input" type={"text"} name="tutor" placeholder='Tutor Guide' value={tutor} required onChange={(e) => onInputChange(e)} />
+          </fieldset>
+          <fieldset className="createClass__form__input">
+            <input className="createClass__input" type={"text"} name="classDescription" placeholder='Class Description' value={classDescription} required onChange={(e) => onInputChange(e)} />
+          </fieldset>
+          <fieldset className="createClass__form__input">
+            <input className="createClass__input" type={"date"} name="createDate" placeholder='Create Date' value={createDate} required onChange={(e) => onInputChange(e)} />
+          </fieldset>
+          <div className="createClass__submit">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div></>
+  );
 }

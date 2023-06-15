@@ -25,6 +25,7 @@ import Library from './pages/library/Library'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import './index.css'
+import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
 
 function App() {
@@ -70,6 +71,12 @@ function App() {
 
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/flashcard" element={<Flashcard />} />
+                    <Route path="/createclass" element={<CreateClassroom />} />
+                    <Route path="/joinclass" element={<JoinClass />} />
+                    <Route path="/insideclass" element={<InsideClassroom />} />
+                    <Route path='/mainclass' element={<MainClass />} />
+
                 </Routes>
             </BrowserRouter>
         </Provider>
