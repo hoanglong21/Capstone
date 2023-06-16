@@ -4,7 +4,7 @@ import "../assets/styles/Classroom.css";
 import { AiFillContacts, AiOutlineFolder } from "react-icons/ai";
 import Footer from "../components/Footer.jsx"
 
-const InsideClassroom = ({ classData }) => {
+const InsideClassroom = () => {
   return (
     <>
       <li className="inside__list">
@@ -16,14 +16,14 @@ const InsideClassroom = ({ classData }) => {
             <button className="inside__close" type="button" data-bs-toggle="dropdown" aria-expanded="false">&#8801;</button>
             <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <button className="dropdown-item py-2 px-2" type="button" >
+                                <button className="dropdown-item py-2 px-2" type="submit">
                                     <span className="align-middle fw-semibold">
                                         Update Classroom
                                     </span>
                                 </button>
-                            </li>
+                            </li>   
                             <li>
-                                <button className="dropdown-item py-2 px-2" type="button">
+                                <button className="dropdown-item py-2 px-2" type="submit">
                                     <span className="align-middle fw-semibold">
                                         Delete Classroom
                                     </span>
