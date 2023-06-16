@@ -1,5 +1,7 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.model.Card;
+import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,14 @@ public class StudySetController {
         boolean deleted = studySetService.deleteStudySet(id);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", deleted);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/deletestudysets/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteHardStudySet(@PathVariable int id) {
+        boolean deleted = studySetService.deleteHardStudySet(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("hard deleted", deleted);
         return ResponseEntity.ok(response);
     }
 }

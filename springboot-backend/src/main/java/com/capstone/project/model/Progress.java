@@ -35,9 +35,9 @@ public class Progress {
 
     private int wrong;
 
-    private int totalWrong;
+    private int total_wrong;
 
-    private boolean star;
+    private boolean is_star;
 
     private String note;
 
