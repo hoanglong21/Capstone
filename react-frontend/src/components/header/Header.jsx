@@ -3,7 +3,6 @@ import logo from '../../assets/images/logo-2.png'
 import avatar from '../../assets/images/avatar-default.jpg'
 import {
     HomeIcon,
-    SearchIcon,
     TranslateIcon,
     AddIcon,
     NotifyIcon,
@@ -13,6 +12,8 @@ import {
     LogoutIcon,
     StudySetIcon,
     ClassIcon,
+    DictIcon,
+    LibraryIcon,
 } from '../icons'
 
 import AuthService from '../../services/AuthService'
@@ -21,19 +22,20 @@ import { logout } from '../../state/authSlice'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import StudySetService from '../../services/StudySetService'
 import UserService from '../../services/UserService'
 
 const Header = () => {
-    const isLogged = useSelector((state) => state.auth.token)
-    const username = useSelector((state) => state.auth.username)
-
-    const [showLogoutMess, setShowLogoutMess] = useState(false)
-
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    const isLogged = useSelector((state) => state.auth.token)
+    const username = useSelector((state) => state.auth.username)
+    const user = useSelector((state) => state.auth.user)
+
+    const [showLogoutMess, setShowLogoutMess] = useState(false)
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
@@ -99,8 +101,8 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <SearchIcon className="mx-2" />
-                            <span className="align-middle">Search</span>
+                            <DictIcon className="mx-2" />
+                            <span className="align-middle">Dictionary</span>
                         </NavLink>
                     </li>
                     <li>
@@ -123,20 +125,8 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <StudySetIcon className="mx-2" />
-                            <span className="align-middle">Study Sets</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="classes"
-                            className={
-                                'nav-link px-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <ClassIcon className="mx-2" />
-                            <span className="align-middle">Classes</span>
+                            <LibraryIcon className="mx-2" />
+                            <span className="align-middle">Your Library</span>
                         </NavLink>
                     </li>
                 </ul>
@@ -164,16 +154,19 @@ const Header = () => {
                                     </span>
                                 </button>
                             </li>
-                            <li>
-                                <button
-                                    className="dropdown-item py-2 px-2"
-                                    type="button"
-                                >
-                                    <span className="align-middle fw-semibold">
-                                        Class
-                                    </span>
-                                </button>
-                            </li>
+                            {console.log(user)}
+                            {user.role === 'ROLE_TUTOR' && (
+                                <li>
+                                    <button
+                                        className="dropdown-item py-2 px-2"
+                                        type="button"
+                                    >
+                                        <span className="align-middle fw-semibold">
+                                            Class
+                                        </span>
+                                    </button>
+                                </li>
+                            )}
                             <li>
                                 <Link
                                     className="dropdown-item py-2 px-2"

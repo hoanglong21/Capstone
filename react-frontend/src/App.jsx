@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import Register from './pages/Register'
 import Login from './pages/Login'
@@ -17,9 +18,10 @@ import InsideClassroom from './pages/InsideClassroom'
 import CreateStudySet from './pages/studySet/CreateStudySet'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
-import { useSelector } from 'react-redux'
 import AccountLayout from './components/layouts/Account/AccountLayout'
 import Profile from './pages/account/Profile'
+import LibraryLayout from './components/layouts/LibraryLayout'
+import StudySetList from './pages/studySet/StudySetList'
 
 const App = () => {
     const isLoggedIn = useSelector((state) => state.auth.token)
@@ -34,6 +36,9 @@ const App = () => {
                     />
                     <Route path="account" element={<AccountLayout />}>
                         <Route index element={<Profile />} />
+                    </Route>
+                    <Route path="sets" element={<LibraryLayout />}>
+                        <Route index element={<StudySetList />} />
                     </Route>
                     <Route path="create-set/:id" element={<CreateStudySet />} />
                     <Route path="video-chat" element={<VideoChatContainer />} />
