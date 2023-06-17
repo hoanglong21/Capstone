@@ -3,8 +3,31 @@ import { Link } from "react-router-dom";
 import "../assets/styles/Classroom.css";
 import { AiFillContacts, AiOutlineFolder } from "react-icons/ai";
 import Footer from "../components/Footer.jsx"
+import Swal from "sweetalert2";
 
 const InsideClassroom = () => {
+  const UpdateClass = () =>{
+      
+  }
+  const DeleteClass = () =>{
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Deleted!',
+          'Your class has been deleted.',
+          'success'
+        )
+      }
+    })
+  }
   return (
     <>
       <li className="inside__list">
@@ -16,14 +39,14 @@ const InsideClassroom = () => {
             <button className="inside__close" type="button" data-bs-toggle="dropdown" aria-expanded="false">&#8801;</button>
             <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <button className="dropdown-item py-2 px-2" type="submit">
+                                <button className="dropdown-item py-2 px-2" onClick={UpdateClass}>
                                     <span className="align-middle fw-semibold">
                                         Update Classroom
                                     </span>
                                 </button>
                             </li>   
                             <li>
-                                <button className="dropdown-item py-2 px-2" type="submit">
+                                <button className="dropdown-item py-2 px-2" onClick={DeleteClass}>
                                     <span className="align-middle fw-semibold">
                                         Delete Classroom
                                     </span>
