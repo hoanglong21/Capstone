@@ -6,9 +6,6 @@ import Footer from "../components/Footer.jsx"
 import Swal from "sweetalert2";
 
 const InsideClassroom = () => {
-  const UpdateClass = () =>{
-      
-  }
   const DeleteClass = () =>{
     Swal.fire({
       title: 'Are you sure?',
@@ -39,7 +36,7 @@ const InsideClassroom = () => {
             <button className="inside__close" type="button" data-bs-toggle="dropdown" aria-expanded="false">&#8801;</button>
             <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <button className="dropdown-item py-2 px-2" onClick={UpdateClass}>
+                                <button className="dropdown-item py-2 px-2">
                                     <span className="align-middle fw-semibold">
                                         Update Classroom
                                     </span>
