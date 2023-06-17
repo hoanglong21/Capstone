@@ -71,4 +71,4 @@ const InsideClassroom = () => {
   );
 };
 
-export default InsideClassroom;
+export default InsideClassroom

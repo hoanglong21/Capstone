@@ -1,8 +1,10 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Assignment;
+import com.capstone.project.model.*;
 import com.capstone.project.repository.AssignmentRepository;
+import com.capstone.project.repository.AttachmentRepository;
+import com.capstone.project.repository.SubmissionRepository;
 import com.capstone.project.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,15 @@ import java.util.List;
 public class AssignmentServiceImpl implements AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
+    private final SubmissionRepository submissionRepository;
+
+    private final AttachmentRepository attachmentRepository;
 
     @Autowired
-    public AssignmentServiceImpl(AssignmentRepository assignmentRepository) {
+    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, AttachmentRepository attachmentRepository) {
         this.assignmentRepository = assignmentRepository;
+        this.submissionRepository = submissionRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     @Override
@@ -29,7 +36,12 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment createAssignment(Assignment assignment) {
+    public Assignment createAssignment(Assignment assignment) throws ParseException {
+        Date currentDate = new Date();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String formattedDate = dateFormat.format(currentDate);
+        Date parsedDate = dateFormat.parse(formattedDate);
+        assignment.setCreated_date(parsedDate);
         return assignmentRepository.save(assignment);
     }
 
@@ -63,6 +75,28 @@ public class AssignmentServiceImpl implements AssignmentService {
         assignmentclass.setModified_date(parsedDate);
         assignmentclass.setTitle(assignment.getTitle());
         return assignmentRepository.save(assignmentclass);
+    }
+
+    @Override
+    public Boolean deleteAssignment(int id) {
+        Assignment assignmentclass = null;
+        try {
+            assignmentclass = assignmentRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFroundException("Assignment not exist with id:" + id));
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // delete all the cards and contents associated with the study set
+        for (Submission submission : submissionRepository.getSubmissionByAssignmentId(assignmentclass.getId())) {
+            for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())) {
+               attachmentRepository.delete(attachment);
+            }
+            submissionRepository.delete(submission);
+        }
+        assignmentRepository.delete(assignmentclass);
+        return true;
     }
     }
 

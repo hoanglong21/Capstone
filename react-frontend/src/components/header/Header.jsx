@@ -3,9 +3,7 @@ import logo from '../../assets/images/logo-2.png'
 import avatar from '../../assets/images/avatar-default.jpg'
 import {
     HomeIcon,
-    SearchIcon,
     TranslateIcon,
-    LibraryIcon,
     AddIcon,
     NotifyIcon,
     ProfileIcon,
@@ -13,23 +11,30 @@ import {
     HelpIcon,
     LogoutIcon,
     StudySetIcon,
-    FolderIcon,
     ClassIcon,
-    JoinIcon,
+    DictIcon,
+    LibraryIcon,
 } from '../icons'
 
 import AuthService from '../../services/AuthService'
 import { logout } from '../../state/authSlice'
 
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import StudySetService from '../../services/StudySetService'
+import UserService from '../../services/UserService'
 
 const Header = () => {
-    const isLogged = useSelector((state) => state.auth.token)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const isLogged = useSelector((state) => state.auth.token)
+    const username = useSelector((state) => state.auth.username)
+    const user = useSelector((state) => state.auth.user)
+
     const [showLogoutMess, setShowLogoutMess] = useState(false)
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
@@ -38,6 +43,26 @@ const Header = () => {
         AuthService.logout()
         dispatch(logout())
         toggleShowLogoutMess()
+    }
+
+    const handleAddStudySet = async () => {
+        const user = (await UserService.getUser(username)).data
+        const studySet = (
+            await StudySetService.createStudySet({
+                user: {
+                    id: user.id,
+                },
+                title: 'Draft',
+                description: '',
+                deleted: false,
+                public: true,
+                studySetType: {
+                    id: 1,
+                },
+                deleted_date: '',
+            })
+        ).data
+        navigate('create-set/' + studySet.id)
     }
 
     return (
@@ -76,8 +101,8 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <SearchIcon className="mx-2" />
-                            <span className="align-middle">Search</span>
+                            <DictIcon className="mx-2" />
+                            <span className="align-middle">Dictionary</span>
                         </NavLink>
                     </li>
                     <li>
@@ -100,20 +125,8 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <StudySetIcon className="mx-2" />
-                            <span className="align-middle">Study Sets</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="classes"
-                            className={
-                                'nav-link px-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <ClassIcon className="mx-2" />
-                            <span className="align-middle">Classes</span>
+                            <LibraryIcon className="mx-2" />
+                            <span className="align-middle">Your Library</span>
                         </NavLink>
                     </li>
                 </ul>
@@ -131,26 +144,29 @@ const Header = () => {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <Link
+                                <button
                                     className="dropdown-item py-2 px-2"
                                     type="button"
-                                    to="study-set/add"
+                                    onClick={handleAddStudySet}
                                 >
                                     <span className="align-middle fw-semibold">
                                         Study Set
                                     </span>
-                                </Link>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item py-2 px-2"
-                                    type="button"
-                                >
-                                    <span className="align-middle fw-semibold">
-                                        Class
-                                    </span>
                                 </button>
                             </li>
+                            {console.log(user)}
+                            {user.role === 'ROLE_TUTOR' && (
+                                <li>
+                                    <button
+                                        className="dropdown-item py-2 px-2"
+                                        type="button"
+                                    >
+                                        <span className="align-middle fw-semibold">
+                                            Class
+                                        </span>
+                                    </button>
+                                </li>
+                            )}
                             <li>
                                 <Link
                                     className="dropdown-item py-2 px-2"
@@ -221,6 +237,9 @@ const Header = () => {
                                         <button
                                             className="dropdown-item py-2 px-3"
                                             type="button"
+                                            onClick={() => {
+                                                navigate('account')
+                                            }}
                                         >
                                             <ProfileIcon
                                                 className="me-3"
