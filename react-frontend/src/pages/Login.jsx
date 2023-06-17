@@ -39,7 +39,6 @@ const Login = () => {
             .classList.remove('is-invalid', 'is-valid')
         var form = document.querySelector('.needs-validation')
         event.preventDefault()
-        form.classList.add('was-validated')
         if (!form.checkValidity()) {
             event.stopPropagation()
             setError(EMPTY_MESS)
@@ -51,7 +50,6 @@ const Login = () => {
                     navigate('/')
                 })
                 .catch((error) => {
-                    form.classList.remove('was-validated')
                     document
                         .querySelector('#loading')
                         .classList.remove('d-block')
