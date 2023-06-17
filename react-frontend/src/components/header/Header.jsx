@@ -244,6 +244,9 @@ const Header = () => {
                                         <button
                                             className="dropdown-item py-2 px-3"
                                             type="button"
+                                            onClick={() => {
+                                                navigate('account')
+                                            }}
                                         >
                                             <ProfileIcon
                                                 className="me-3"

@@ -18,6 +18,8 @@ import CreateStudySet from './pages/studySet/CreateStudySet'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
 import { useSelector } from 'react-redux'
+import AccountLayout from './components/layouts/Account/AccountLayout'
+import Profile from './pages/account/Profile'
 
 const App = () => {
     const isLoggedIn = useSelector((state) => state.auth.token)
@@ -30,6 +32,9 @@ const App = () => {
                         index
                         element={isLoggedIn ? <Home /> : <Landing />}
                     />
+                    <Route path="account" element={<AccountLayout />}>
+                        <Route index element={<Profile />} />
+                    </Route>
                     <Route path="create-set/:id" element={<CreateStudySet />} />
                     <Route path="video-chat" element={<VideoChatContainer />} />
                     <Route
