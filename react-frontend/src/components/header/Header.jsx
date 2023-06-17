@@ -60,7 +60,7 @@ const Header = () => {
                 deleted_date: '',
             })
         ).data
-        navigate('study-set/add', { state: studySet })
+        navigate('create-set/' + studySet.id)
     }
 
     return (

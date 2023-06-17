@@ -10,6 +10,14 @@ class StudySetService {
     updateStudySet(id, studySetDetails) {
         return axios.put(API_BASE_URL + '/studysets/' + id, studySetDetails)
     }
+
+    deleteStudySet(id) {
+        return axios.delete(API_BASE_URL + '/studysets/' + id)
+    }
+
+    getStudySetById(id) {
+        return axios.get(API_BASE_URL + '/studysets/' + id)
+    }
 }
 
 export default new StudySetService()

@@ -4,17 +4,24 @@ import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
 import { Card } from '../../components/Card'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import CardService from '../../services/CardService'
 import ContentService from '../../services/ContentService'
 import StudySetService from '../../services/StudySetService'
 
 const CreateStudySet = () => {
-    const location = useLocation()
+    const { id } = useParams()
 
     const [isScroll, setIsScroll] = useState(false)
-    const [studySet, setStudySet] = useState(location.state)
-    const [cardList, setCardList] = useState([])
+    const [studySet, setStudySet] = useState({})
+    const [cards, setCards] = useState([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setStudySet((await StudySetService.getStudySetById(id)).data)
+        }
+        fetchData()
+    }, [])
 
     useEffect(() => {
         // handle sticky header
@@ -24,6 +31,19 @@ const CreateStudySet = () => {
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
+
+    useEffect(() => {
+        // handle reload page
+        window.addEventListener('beforeunload', handleReload)
+        return () => {
+            window.removeEventListener('beforeunload', handleReload)
+        }
+    }, [])
+
+    const handleReload = (event) => {
+        event.preventDefault()
+        return false
+    }
 
     const handleAddCard = async () => {
         const card = (
@@ -57,7 +77,7 @@ const CreateStudySet = () => {
                 content: '',
             })
         ).data
-        setCardList([...cardList, { ...card, contents: [term, definition] }])
+        setCards([...cards, { ...card, contents: [term, definition] }])
     }
 
     const handleSubmit = (event) => {
@@ -65,10 +85,10 @@ const CreateStudySet = () => {
     }
 
     const handleDelete = (event) => {
-        var array = [...cardList]
+        var array = [...cards]
         var index = event.target.closest('.card').id
         array.splice(index, 1)
-        setCardList([...array])
+        setCards([...array])
     }
 
     const handleChange = (event) => {
@@ -141,7 +161,7 @@ const CreateStudySet = () => {
                         ></textarea>
                     </div>
                     {/* Card */}
-                    {cardList.map((card, index) => (
+                    {cards.map((card, index) => (
                         <Card
                             key={index}
                             index={index}

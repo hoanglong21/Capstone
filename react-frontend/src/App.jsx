@@ -30,7 +30,7 @@ const App = () => {
                         index
                         element={isLoggedIn ? <Home /> : <Landing />}
                     />
-                    <Route path="study-set/add" element={<CreateStudySet />} />
+                    <Route path="create-set/:id" element={<CreateStudySet />} />
                     <Route path="video-chat" element={<VideoChatContainer />} />
                     <Route
                         path="video-chat/:call"
