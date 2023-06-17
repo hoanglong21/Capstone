@@ -12,4 +12,10 @@ public interface UserService {
     User getUserByUsername(String username);
 
     User updateUser(String username, User userDetails);
+
+    Boolean banUser(String username);
+
+    Boolean deleteUser(String username);
+
+    Boolean recoverUser(String username);
 }

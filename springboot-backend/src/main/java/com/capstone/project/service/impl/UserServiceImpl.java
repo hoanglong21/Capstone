@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -45,15 +46,17 @@ public class UserServiceImpl implements UserService {
     public User updateUser(String username, User userDetails) {
         User user = null;
         try {
-            user = userRepository.findByUsername(username)
-                    .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with username:" + username));
+            user = userRepository.findUserByUsername(username);
+            if (user == null) {
+                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+            }
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
         user.setEmail(userDetails.getEmail());
         user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         user.setBio(userDetails.getBio());
-        user.setDOB(userDetails.getDOB());
+        user.setDob(userDetails.getDob());
         user.setAvatar(userDetails.getAvatar());
         user.setAddress(userDetails.getAddress());
         user.setFirst_name(userDetails.getFirst_name());
@@ -68,5 +71,72 @@ public class UserServiceImpl implements UserService {
         return updateUser;
     }
 
+    @Override
+    public Boolean banUser(String username) {
+        User user = null;
+        try {
+            user = userRepository.findUserByUsername(username);
+            if (user == null) {
+                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+            }
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        user.setStatus("banned");
+        user.setBanned_date(new Date());
+        userRepository.save(user);
+        return true;
+    }
 
+    @Override
+    public Boolean deleteUser(String username) {
+        User user = null;
+        try {
+            user = userRepository.findUserByUsername(username);
+            if (user == null) {
+                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+            }
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        user.setStatus("deleted");
+        user.setDeleted_date(new Date());
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public Boolean recoverUser(String username) {
+        User user = null;
+        try {
+            user = userRepository.findUserByUsername(username);
+            if (user == null) {
+                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+            }
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Date today = new Date();
+        Date banned_date = user.getBanned_date();
+        if(banned_date != null) {
+            long diffInMillis = today.getTime() - banned_date.getTime();
+            long diffInDays = diffInMillis / (24 * 60 * 60 * 1000);
+            if(diffInDays<=7) {
+                user.setStatus("banned");
+                userRepository.save(user);
+                return false;
+            } else {
+                user.setStatus("active");
+                userRepository.save(user);
+                return true;
+            }
+        } else {
+            user.setStatus("active");
+            userRepository.save(user);
+            return true;
+        }
+    }
 }
