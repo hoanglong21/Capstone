@@ -27,6 +27,11 @@ public class CardController {
         return cardService.getAllCards();
     }
 
+    @GetMapping("/cardbystudysetid")
+    public ResponseEntity<List<Card>> getAllByStudySetId(@RequestParam int id) {
+        return ResponseEntity.ok(cardService.getAllByStudySetId(id));
+    }
+
     @PostMapping("/cards")
     public Card createCard(@RequestBody Card card) {
         return cardService.createCard(card);
