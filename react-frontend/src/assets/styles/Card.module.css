@@ -17,6 +17,7 @@ div.card_header {
 }
 
 .card_header_label {
+    display: block;
     color: var(--card-color);
     font-weight: 700;
 }

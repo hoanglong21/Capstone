@@ -216,3 +216,7 @@ input::placeholder {
     border-bottom: 0.25rem solid var(--editor-border-focus);
     box-shadow: none;
 }
+
+svg {
+    pointer-events: none;
+}

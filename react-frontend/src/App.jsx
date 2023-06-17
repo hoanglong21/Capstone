@@ -4,7 +4,6 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
-import StorageContainer from './features/StorageContainer'
 import SpeechToText from './components/InputModel/SpeechToText'
 import Layout from './components/layouts/Layout'
 import Home from './pages/Home'
@@ -38,15 +37,10 @@ const App = () => {
                         element={<VideoChatContainer />}
                     />
                     <Route path="chat" element={<ChatContainer />} />
-                    <Route path="file" element={<StorageContainer />} />
                     <Route path="gpt" element={<GPTContainer />} />
                     <Route path="voice" element={<SpeechToText />} />
                     <Route path="draw" element={<Draw />} />
                     <Route path="to-speech" element={<TextToSpeech />} />
-                    <Route path="createclass" element={<CreateClassroom />} />
-                    <Route path="joinclass" element={<JoinClass />} />
-                    <Route path="insideclass" element={<InsideClassroom />} />
-                    <Route path="flashcard" element={<Flashcard />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />

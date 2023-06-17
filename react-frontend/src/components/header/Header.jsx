@@ -18,16 +18,22 @@ import {
 import AuthService from '../../services/AuthService'
 import { logout } from '../../state/authSlice'
 
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
 import { useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import StudySetService from '../../services/StudySetService'
+import UserService from '../../services/UserService'
 
 const Header = () => {
     const isLogged = useSelector((state) => state.auth.token)
-    const dispatch = useDispatch()
+    const username = useSelector((state) => state.auth.username)
+
     const [showLogoutMess, setShowLogoutMess] = useState(false)
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
@@ -35,6 +41,26 @@ const Header = () => {
         AuthService.logout()
         dispatch(logout())
         toggleShowLogoutMess()
+    }
+
+    const handleAddStudySet = async () => {
+        const user = (await UserService.getUser(username)).data
+        const studySet = (
+            await StudySetService.createStudySet({
+                user: {
+                    id: user.id,
+                },
+                title: 'Draft',
+                description: '',
+                deleted: false,
+                public: true,
+                studySetType: {
+                    id: 1,
+                },
+                deleted_date: '',
+            })
+        ).data
+        navigate('study-set/add', { state: studySet })
     }
 
     return (
@@ -128,15 +154,15 @@ const Header = () => {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <Link
+                                <button
                                     className="dropdown-item py-2 px-2"
                                     type="button"
-                                    to="study-set/add"
+                                    onClick={handleAddStudySet}
                                 >
                                     <span className="align-middle fw-semibold">
                                         Study Set
                                     </span>
-                                </Link>
+                                </button>
                             </li>
                             <li>
                                 <button

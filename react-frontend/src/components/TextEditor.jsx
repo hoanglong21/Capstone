@@ -1,10 +1,12 @@
 import Editor from 'ckeditor5-custom-build/build/ckeditor'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 
-export default function TextEditor() {
+export default function TextEditor(props) {
     const editorConfiguration = {
         toolbar: {
             items: [
+                'textPartLanguage',
+                '|',
                 'bold',
                 'italic',
                 'underline',
@@ -17,17 +19,22 @@ export default function TextEditor() {
                 'redo',
             ],
         },
-        language: 'en',
+        language: {
+            textPartLanguage: [
+                { title: 'English', languageCode: 'en' },
+                { title: 'Vietnamese', languageCode: 'vi' },
+                { title: 'Japanese', languageCode: 'ja' },
+            ],
+        },
     }
 
     return (
         <CKEditor
             editor={Editor}
             config={editorConfiguration}
-            onChange={(even, editor) => {
-                const data = editor.getData()
-                console.log(data)
-            }}
+            data={props.data}
+            onChange={props.onChange}
+            onBlur={props.onBlur}
         />
     )
 }
