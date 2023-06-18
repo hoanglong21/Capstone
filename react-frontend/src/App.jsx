@@ -22,6 +22,7 @@ import AccountLayout from './components/layouts/Account/AccountLayout'
 import Profile from './pages/account/Profile'
 import LibraryLayout from './components/layouts/LibraryLayout'
 import StudySetList from './pages/studySet/StudySetList'
+import NoClass from './pages/NoClass'
 import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
 
 const App = () => {
@@ -72,8 +73,12 @@ const App = () => {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/flashcard" element={<Flashcard />} />
+                <Route path="/createclass" element={<CreateClassroom />} />
+                <Route path="/mainclass" element={<MainClass />} />
+                <Route path="/noclass" element={<NoClass />} />
             </Routes>
         </BrowserRouter>
     )
 }
-export default App
+export default App;
