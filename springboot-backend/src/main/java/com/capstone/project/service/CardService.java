@@ -7,6 +7,8 @@ import java.util.List;
 public interface CardService {
     List<Card> getAllCards();
 
+    List<Card> getAllByStudySetId(int id);
+
     Card createCard( Card card);
 
     Card getCardById( int id);
