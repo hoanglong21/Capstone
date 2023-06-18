@@ -1,8 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import jwtDecode from 'jwt-decode'
 
 import AuthService from '../../services/AuthService'
-import UserService from '../../services/UserService'
 
 export const register = createAsyncThunk(
     'auth/register',
@@ -26,9 +24,6 @@ export const login = createAsyncThunk(
             const userToken = (await AuthService.login(user)).data
             // store user's token in local storage
             localStorage.setItem('userToken', userToken)
-            const username = jwtDecode(userToken).sub
-            const userInfo = (await UserService.getUser(username)).data
-            return userInfo
         } catch (error) {
             if (error.response && error.response.data) {
                 return rejectWithValue(error.response.data)

@@ -11,7 +11,6 @@ const userToken = localStorage.getItem('userToken')
 const initialState = {
     loading: false,
     userToken,
-    userInfo: null,
     error: null,
     success: null,
 }
@@ -28,7 +27,6 @@ export const authSlice = createSlice({
         logout: (state) => {
             localStorage.removeItem('userToken') // deletes token from storage
             state.loading = false
-            state.userInfo = null
             state.userToken = null
             state.error = null
         },
@@ -40,7 +38,7 @@ export const authSlice = createSlice({
                 state.loading = true
                 state.error = null
             })
-            .addCase(register.fulfilled, (state, { payload }) => {
+            .addCase(register.fulfilled, (state) => {
                 state.loading = false
                 state.success = true // registration successful
             })
@@ -53,9 +51,8 @@ export const authSlice = createSlice({
                 state.loading = true
                 state.error = null
             })
-            .addCase(login.fulfilled, (state, { payload }) => {
+            .addCase(login.fulfilled, (state) => {
                 state.loading = false
-                state.userInfo = payload
                 state.userToken = localStorage.getItem('userToken')
             })
             .addCase(login.rejected, (state, { payload }) => {

@@ -51,6 +51,17 @@ const App = () => {
                             path="video-chat/:call"
                             element={<VideoChatContainer />}
                         />
+                        <Route path="/flashcard" element={<Flashcard />} />
+                        <Route
+                            path="/createclass"
+                            element={<CreateClassroom />}
+                        />
+                        <Route path="/joinclass" element={<JoinClass />} />
+                        <Route
+                            path="/insideclass"
+                            element={<InsideClassroom />}
+                        />
+                        <Route path="/mainclass" element={<MainClass />} />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
                         <Route path="voice" element={<SpeechToText />} />
@@ -61,11 +72,6 @@ const App = () => {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/createclass" element={<CreateClassroom />} />
-                <Route path="/joinclass" element={<JoinClass />} />
-                <Route path="/insideclass" element={<InsideClassroom />} />
-                <Route path="/mainclass" element={<MainClass />} />
             </Routes>
         </BrowserRouter>
     )

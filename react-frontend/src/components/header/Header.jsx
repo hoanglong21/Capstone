@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
 import { useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { useEffect } from 'react'
 
 import StudySetService from '../../services/StudySetService'
 import { logout } from '../../features/auth/authSlice'
+import { getUser } from '../../features/user/userAction'
 
 import logo from '../../assets/images/logo-2.png'
 import avatar from '../../assets/images/avatar-default.jpg'
@@ -27,9 +29,16 @@ const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { userToken, userInfo } = useSelector((state) => state.auth)
+    const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
 
     const [showLogoutMess, setShowLogoutMess] = useState(false)
+
+    useEffect(() => {
+        if (userToken) {
+            dispatch(getUser(userToken))
+        }
+    }, [userToken, dispatch])
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
