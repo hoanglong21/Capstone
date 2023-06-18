@@ -91,19 +91,21 @@ export const deleteFile = (fileName) => {
 
 export const deleteFileByUrl = (url) => {
     // Get the file path from the URL
-    const pathStartIndex = url.indexOf('/images');
-    const pathEndIndex = url.indexOf('?');
-    const filePath = decodeURIComponent(url.substring(pathStartIndex + 1, pathEndIndex));
+    const pathStartIndex = url.indexOf('/images')
+    const pathEndIndex = url.indexOf('?')
+    const filePath = decodeURIComponent(
+        url.substring(pathStartIndex + 1, pathEndIndex)
+    )
 
     // Create a reference to the file to delete
     const fileRef = ref(storage, filePath)
-  
+
     // Delete the file
     deleteObject(fileRef)
-      .then(() => {
-        console.log(`${filePath} has been deleted successfully.`)
-      })
-      .catch((error) => {
-        console.error(`Error deleting ${filePath}: ${error}`)
-      })
+        .then(() => {
+            console.log(`${filePath} has been deleted successfully.`)
+        })
+        .catch((error) => {
+            console.error(`Error deleting ${filePath}: ${error}`)
+        })
 }

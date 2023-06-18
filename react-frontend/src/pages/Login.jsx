@@ -13,13 +13,13 @@ const Login = () => {
     const dispatch = useDispatch()
 
     const { register, handleSubmit } = useForm()
-    const { loading, userInfo, error } = useSelector((state) => state.auth)
+    const { loading, userToken, error } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        if (userInfo) {
+        if (userToken) {
             navigate('/')
         }
-    }, [navigate, userInfo])
+    }, [navigate, userToken])
 
     const submitForm = (data) => {
         var form = document.querySelector('.needs-validation')
@@ -28,12 +28,13 @@ const Login = () => {
             return
         }
         dispatch(login(data))
+        navigate('/')
     }
 
     return (
         <div className="login bg-white h-100 p-5">
             <div className="row px-4">
-                <div className="col d-flex align-items-start">
+                <div className="col d-flex align-items-start p-5">
                     <img src={logo} className="w-100" alt="" />
                 </div>
                 <div className="col-6 mt-4 me-5 pe-5">
