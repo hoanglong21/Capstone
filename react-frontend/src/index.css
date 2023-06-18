@@ -11,7 +11,9 @@
 
     --blue-magenta-55: #423ed8;
 
+    --cyan-27: #116a7b;
     --cyan-52: #3ccfcf;
+    --cyan-82: #c2dedc;
 
     --cyan-blue-26: #2e3856;
     --cyan-blue-38: #0070c4;
@@ -50,6 +52,9 @@
     --btn-warning-bg-hover: var(--yellow-69);
     --btn-danger: var(--red-68);
     --btn-danger-hover: var(--red-74);
+    --btn-info: var(--cyan-27);
+    --btn-info-bg: var(--cyan-82);
+    --btn-info-bg-hover: white;
 
     --nav-link: var(--cyan-blue-26);
     --nav-link-hover: var(--cyan-blue-51);
@@ -191,6 +196,16 @@ h1 {
 
 .btn-danger:hover {
     background-color: var(--btn-danger-hover);
+}
+
+.btn-info {
+    color: var(--btn-info);
+    background-color: var(--btn-info-bg);
+}
+
+.btn-info:hover {
+    color: var(--btn-info);
+    background-color: var(--btn-info-bg-hover);
 }
 
 .icon-primary {

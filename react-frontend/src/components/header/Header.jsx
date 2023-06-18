@@ -1,4 +1,12 @@
-import './Header.css'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import Toast from 'react-bootstrap/Toast'
+import { useState } from 'react'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+
+import StudySetService from '../../services/StudySetService'
+import { logout } from '../../features/auth/authSlice'
+
 import logo from '../../assets/images/logo-2.png'
 import avatar from '../../assets/images/avatar-default.jpg'
 import {
@@ -10,59 +18,47 @@ import {
     SettingIcon,
     HelpIcon,
     LogoutIcon,
-    StudySetIcon,
-    ClassIcon,
     DictIcon,
     LibraryIcon,
 } from '../icons'
-
-import AuthService from '../../services/AuthService'
-import { logout } from '../../state/authSlice'
-
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import Toast from 'react-bootstrap/Toast'
-import { useEffect, useState } from 'react'
-import ToastContainer from 'react-bootstrap/ToastContainer'
-import StudySetService from '../../services/StudySetService'
-import UserService from '../../services/UserService'
+import './Header.css'
 
 const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const isLogged = useSelector((state) => state.auth.token)
-    const username = useSelector((state) => state.auth.username)
-    const user = useSelector((state) => state.auth.user)
+    const { userToken, userInfo } = useSelector((state) => state.auth)
 
     const [showLogoutMess, setShowLogoutMess] = useState(false)
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
     const handleLogout = () => {
-        AuthService.logout()
         dispatch(logout())
         toggleShowLogoutMess()
     }
 
     const handleAddStudySet = async () => {
-        const user = (await UserService.getUser(username)).data
-        const studySet = (
-            await StudySetService.createStudySet({
-                user: {
-                    id: user.id,
-                },
-                title: 'Draft',
-                description: '',
-                deleted: false,
-                public: true,
-                studySetType: {
-                    id: 1,
-                },
-                deleted_date: '',
-            })
-        ).data
-        navigate('create-set/' + studySet.id)
+        if (userToken) {
+            const studySet = (
+                await StudySetService.createStudySet({
+                    user: {
+                        id: userInfo.id,
+                    },
+                    title: 'Draft',
+                    description: '',
+                    deleted: false,
+                    public: true,
+                    studySetType: {
+                        id: 1,
+                    },
+                    deleted_date: '',
+                })
+            ).data
+            navigate('create-set/' + studySet.id)
+        } else {
+            navigate('create-set/0')
+        }
     }
 
     return (
@@ -154,8 +150,7 @@ const Header = () => {
                                     </span>
                                 </button>
                             </li>
-                            {console.log(user)}
-                            {user.role === 'ROLE_TUTOR' && (
+                            {userInfo?.role !== 'ROLE_LEARNER' && (
                                 <li>
                                     <button
                                         className="dropdown-item py-2 px-2"
@@ -181,7 +176,7 @@ const Header = () => {
                         </ul>
                     </div>
 
-                    {isLogged ? (
+                    {userToken ? (
                         <>
                             {/* Notify */}
                             <button

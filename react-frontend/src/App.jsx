@@ -22,35 +22,41 @@ import AccountLayout from './components/layouts/Account/AccountLayout'
 import Profile from './pages/account/Profile'
 import LibraryLayout from './components/layouts/LibraryLayout'
 import StudySetList from './pages/studySet/StudySetList'
+import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
 
 const App = () => {
-    const isLoggedIn = useSelector((state) => state.auth.token)
+    const token = useSelector((state) => state.auth.userToken)
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
-                    <Route
-                        index
-                        element={isLoggedIn ? <Home /> : <Landing />}
-                    />
-                    <Route path="account" element={<AccountLayout />}>
-                        <Route index element={<Profile />} />
+                    <Route index element={token ? <Home /> : <Landing />} />
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="account" element={<AccountLayout />}>
+                            <Route index element={<Profile />} />
+                        </Route>
+                        <Route path="sets" element={<LibraryLayout />}>
+                            <Route index element={<StudySetList />} />
+                        </Route>
+                        <Route
+                            path="create-set/:id"
+                            element={<CreateStudySet />}
+                        />
+                        <Route
+                            path="video-chat"
+                            element={<VideoChatContainer />}
+                        />
+                        <Route
+                            path="video-chat/:call"
+                            element={<VideoChatContainer />}
+                        />
+                        <Route path="chat" element={<ChatContainer />} />
+                        <Route path="gpt" element={<GPTContainer />} />
+                        <Route path="voice" element={<SpeechToText />} />
+                        <Route path="draw" element={<Draw />} />
+                        <Route path="to-speech" element={<TextToSpeech />} />
                     </Route>
-                    <Route path="sets" element={<LibraryLayout />}>
-                        <Route index element={<StudySetList />} />
-                    </Route>
-                    <Route path="create-set/:id" element={<CreateStudySet />} />
-                    <Route path="video-chat" element={<VideoChatContainer />} />
-                    <Route
-                        path="video-chat/:call"
-                        element={<VideoChatContainer />}
-                    />
-                    <Route path="chat" element={<ChatContainer />} />
-                    <Route path="gpt" element={<GPTContainer />} />
-                    <Route path="voice" element={<SpeechToText />} />
-                    <Route path="draw" element={<Draw />} />
-                    <Route path="to-speech" element={<TextToSpeech />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />
