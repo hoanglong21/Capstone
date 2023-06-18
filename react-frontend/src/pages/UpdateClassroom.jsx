@@ -22,7 +22,7 @@ export default function UpdateClassroom() {
     const onSubmit = async (e) => {
         e.preventDefault()
         await axios.post('http://localhost:8080', classroom)
-        navigate('/login')
+        navigate('/')
     }
 
   return (
