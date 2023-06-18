@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -45,32 +47,38 @@ public class UserControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
     }
 
-    @Test
     @Order(1)
-    void testGetUser() throws Exception {
+    @ParameterizedTest(name = "{index} => username={0}, first_name={1}, last_name={2}, gender={3}, dob={4}, email={5}," +
+            " phone={6}, password={7}, role={8}, address={9}, bio={10}, status={11}, avatar={12}")
+    @CsvSource({
+            "long, Hoang, Long, Male, 2001-11-21, long@gmail.com, 0352269303, 123456, ROLE_LEARNER, HN, Swag, active, avatar.jpg",
+            "tuyet, Nguyen, Tuyet, Female, 2001-09-27, tuyet@gmail.com, 0352269304, 123456, ROLE_ADMIN, HG, Hello, pending, avatar2.png"
+    })
+    void testGetUser(String username, String first_name, String last_name, String gender, String date, String email,
+                     String phone, String password, String role, String address, String bio, String status, String avatar)
+            throws Exception {
         // make stub
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         User user = User.builder()
-                .username("long9999")
-                .first_name("Hoang")
-                .last_name("Long")
-                .gender("Male")
-//                .DOB(new Date())
-                .dob(dateFormat.parse("2001-11-21"))
-                .email("long9999@gmail.com")
-                .phone("0352269303")
-                .password("123456")
-                .role("ROLE_LEARNER")
-                .address("HN")
-                .bio("Swag")
-                .status("active")
-                .avatar("avatar.jpg")
+                .username(username)
+                .first_name(first_name)
+                .last_name(last_name)
+                .gender(gender)
+                .dob(dateFormat.parse(date))
+                .email(email)
+                .phone(phone)
+                .password(password)
+                .role(role)
+                .address(address)
+                .bio(bio)
+                .status(status)
+                .avatar(avatar)
                 .build();
 
-        when(userService.getUserByUsername("long9999")).thenReturn(user);
+        when(userService.getUserByUsername(username)).thenReturn(user);
 
         // test
-        mockMvc.perform(get("/api/v1/users/{username}", "long9999"))
+        mockMvc.perform(get("/api/v1/users/{username}", username))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
@@ -88,13 +96,20 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.avatar").value(user.getAvatar()));
     }
 
-    @Test
     @Order(2)
-    void testUpdateUser() throws Exception {
+    @ParameterizedTest(name = "{index} => username={0}, first_name={1}, last_name={2}, gender={3}, dob={4}, email={5}," +
+            " phone={6}, password={7}, role={8}, address={9}, bio={10}, status={11}, avatar={12}")
+    @CsvSource({
+            "test_long, Hoang, Long, Male, 2001-11-21, test_long@gmail.com, 0352269303, 123456, ROLE_LEARNER, HN, Swag, active, avatar.jpg",
+            "test_long, Hoang, Long, Male, 2001-11-21, test_long@gmail.com, 0352269303, 123456, ROLE_TUTOR, HB, Hello, pending, avatar2.jpg",
+    })
+    void testUpdateUser(String username, String first_name, String last_name, String gender, String date, String email,
+                        String phone, String password, String role, String address, String bio, String status, String avatar)
+            throws Exception {
         // make stub
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         User user = User.builder()
-                .username("long")
+                .username(username)
                 .first_name("Hoang")
                 .last_name("Long")
                 .gender("Male")
@@ -111,27 +126,27 @@ public class UserControllerTest {
 
 
         User userDetails = User.builder()
-                .username("long")
-                .first_name("Hoangnew")
-                .last_name("Longnew")
-                .gender("Female")
-                .dob(dateFormat.parse("2001-11-21"))
-                .email("longnew@gmail.com")
-                .phone("0352269304")
-                .password("1234567")
-                .role("ROLE_TUTOR")
-                .address("HN1")
-                .bio("Swagnew")
-                .status("deleted")
-                .avatar("avatarnew.jpg")
+                .username(username)
+                .first_name(first_name)
+                .last_name(last_name)
+                .gender(gender)
+                .dob(dateFormat.parse(date))
+                .email(email)
+                .phone(phone)
+                .password(password)
+                .role(role)
+                .address(address)
+                .bio(bio)
+                .status(status)
+                .avatar(avatar)
                 .build();
 
 
-//        when(userService.getUserByUsername("long")).thenReturn(user);
-        when(userService.updateUser("long", userDetails)).thenReturn(userDetails);
+        when(userService.getUserByUsername(username)).thenReturn(user);
+        when(userService.updateUser(username, userDetails)).thenReturn(userDetails);
 
         // test
-        mockMvc.perform(put("/api/v1/users/{username}", "long")
+        mockMvc.perform(put("/api/v1/users/{username}", username)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDetails)))
                     .andExpect(status().isOk())
@@ -151,100 +166,75 @@ public class UserControllerTest {
                     .andExpect(jsonPath("$.avatar").value(userDetails.getAvatar()));
     }
 
-    @Test
-    @Order(3)
-    void testFindAllNameExcept() throws Exception {
-        // make stub
-        String user1 = "long1";
-        String user2 = "long2";
 
-        List<String> userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-        when(userService.findAllNameExcept("long")).thenReturn(userList);
+    @Order(3)
+    @ParameterizedTest(name = "{index} => excludedName = {0}, expectedNumber = {1}")
+    @CsvSource({
+            "Long1, 1",
+            "Short, 2",
+            "Long2, 1",
+            "VeryLongName, 2",
+    })
+    void testFindAllNameExcept(String excludedName, int expectedNumber) throws Exception {
+        // make stub
+        List<String> names = new ArrayList<>();
+        names.add("Long1");
+        names.add("Long2");
+
+        names.remove(excludedName);
+
+        when(userService.findAllNameExcept(excludedName)).thenReturn(names);
 
         // test
-        mockMvc.perform(get("/api/v1/otherusers/{username}", "long"))
+        mockMvc.perform(get("/api/v1/otherusers/{username}", excludedName))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", Matchers.hasSize(2)))
-                .andExpect(jsonPath("$[0]").value("long1"))
-                .andExpect(jsonPath("$[1]").value("long2"));
+                .andExpect(jsonPath("$", Matchers.hasSize(expectedNumber)));
 
     }
 
-    @Test
     @Order(4)
-    void testBanUser() throws Exception {
-        String username = "long";
-        when(userService.banUser(username)).thenReturn(true);
-    }
-
-    @Test
-    @Order(5)
-    @DisplayName("Ban User - Success")
-    void testBanUserSuccess() throws Exception {
-        String username = "long";
-        when(userService.banUser(username)).thenReturn(true);
+    @ParameterizedTest(name = "{index} => username={0}, isBanSuccess={1}")
+    @CsvSource({
+            "test_long, true",
+            "test_long, false",
+    })
+    void testBanUser(String username,boolean isBanSuccess) throws Exception {
+        when(userService.banUser(username)).thenReturn(isBanSuccess);
         mockMvc.perform(get("/api/v1/users/{username}/ban", username))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
+                .andExpect(jsonPath("$.success").value(isBanSuccess));
     }
 
-    @Test
     @Order(5)
-    @DisplayName("Ban User - Failure")
-    void testBanUserFailure() throws Exception {
-        String username = "long";
-        when(userService.banUser(username)).thenReturn(false);
-        mockMvc.perform(get("/api/v1/users/{username}/ban", username))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
+    @ParameterizedTest(name = "{index} => username={0}, email={1}, status={2}, isDeleteSuccess={3}")
+    @CsvSource({
+            "test_long, true",
+            "test_long, false",
+    })
+    void testDeleteUser(String username,boolean isDeleteSuccess) throws Exception {
 
-    @Test
-    @Order(6)
-    @DisplayName("Delete User - Success")
-    void testDeleteUserSuccess() throws Exception {
-        String username = "long";
-        when(userService.deleteUser(username)).thenReturn(true);
+        when(userService.deleteUser(username)).thenReturn(isDeleteSuccess);
         mockMvc.perform(get("/api/v1/users/{username}/delete", username))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
+                .andExpect(jsonPath("$.success").value(isDeleteSuccess));
     }
 
-    @Test
-    @Order(7)
-    @DisplayName("Delete User - Failure")
-    void testDeleteUserFailure() throws Exception {
-        String username = "long";
-        when(userService.deleteUser(username)).thenReturn(false);
-        mockMvc.perform(get("/api/v1/users/{username}/delete", username))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
-
-    @Test
     @Order(8)
-    @DisplayName("Recover User - Success")
-    void testRecoverUserSuccess() throws Exception {
-        String username = "long";
-        when(userService.recoverUser(username)).thenReturn(true);
+    @ParameterizedTest(name = "{index} => username={0}, email={1}, status={2}, isBannedDateMoreThan7Days={3}")
+    @CsvSource({
+            "test_long, test_long@gmail.com, active, false",
+            "test_long, test_long@gmail.com, delete, true",
+            "test_long, test_long@gmail.com, delete, false"
+    })
+    void testRecoverUser(String username, boolean isBannedDateMoreThan7Days) throws Exception {
+
+        when(userService.recoverUser(username)).thenReturn(isBannedDateMoreThan7Days);
         mockMvc.perform(get("/api/v1/users/{username}/recover", username))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
+                .andExpect(jsonPath("$.success").value(isBannedDateMoreThan7Days));
     }
 
-    @Test
-    @Order(9)
-    @DisplayName("Recover User - Failure")
-    void testRecoverUserFailure() throws Exception {
-        String username = "long";
-        when(userService.recoverUser(username)).thenReturn(false);
-        mockMvc.perform(get("/api/v1/users/{username}/recover", username))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(false));
-    }
 
 }
