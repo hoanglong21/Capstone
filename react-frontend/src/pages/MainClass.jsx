@@ -16,7 +16,6 @@ const MainClass = ({}) => {
 
     return (
         <>
-            <Header />
             <div className="main">
                 <div className="main__wrapper">
                     <div className="main__content">
