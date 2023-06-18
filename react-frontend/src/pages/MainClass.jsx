@@ -3,7 +3,7 @@ import "../assets/styles/Classroom.css";
 import { AiOutlineUser } from "react-icons/ai";
 import Header from "../components/header/Header";
 
-const MainClass = ({ classData }) => {
+const MainClass = ({}) => {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState("");
   const [image, setImage] = useState(null);
