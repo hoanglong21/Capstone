@@ -1,90 +1,50 @@
-import { useEffect, useState } from 'react'
-import AuthService from '../services/AuthService'
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form'
+
+import { register as userRegister } from '../features/auth/authAction'
 
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
-import { useSelector } from 'react-redux'
 
 const Register = () => {
-    const EMPTY_MESS = 'Please complete all fields.'
-    const NETWORK_MESS = 'There was a network error.'
-    const EXIST_USERNAME_MESS = 'Username is already taken. Try another.'
-    const EXIST_EMAIL_MESS = 'Username is already taken. Try another.'
-    const OTHER_MESS = 'An error occurred. Please try again later.'
-
-    const [user, setUser] = useState({
-        username: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        role: '',
-    })
-    const [error, setError] = useState('')
-    const isLoggedIn = useSelector((state) => state.auth.token)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const { loading, userInfo, error, success } = useSelector(
+        (state) => state.auth
+    )
+    const { register, handleSubmit } = useForm()
 
     useEffect(() => {
-        if (isLoggedIn) {
-            navigate('/')
-            return () => {}
-        }
-    }, [isLoggedIn])
+        // redirect user to login page if registration was successful
+        if (success) navigate('/login')
+        // redirect authenticated user to profile screen
+        if (userInfo) navigate('/')
+        // set error validation
+    }, [navigate, userInfo, success])
 
-    const handleRegister = async (event) => {
-        event.preventDefault()
-
-        setError('')
-        document.querySelector('#loading').classList.remove('d-none')
+    const submitForm = async (data) => {
+        // clear error validation
         document.querySelector('#username').classList.remove('is-invalid')
         document.querySelector('#email').classList.remove('is-invalid')
 
         var form = document.querySelector('.needs-validation')
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
-            document.querySelector('#loading').classList.add('d-none')
-            event.stopPropagation()
-            setError(EMPTY_MESS)
-        } else {
-            AuthService.registration(user)
-                .then(() => {
-                    document.querySelector('#loading').classList.add('d-none')
-                    document.querySelector('#modalBtn').click()
-                })
-                .catch((error) => {
-                    form.classList.remove('was-validated')
-                    document.querySelector('#loading').classList.add('d-none')
-                    if (
-                        error.message === 'Request failed with status code 400'
-                    ) {
-                        if (
-                            error.response.data ===
-                            'Username already registered'
-                        ) {
-                            setError(EXIST_USERNAME_MESS)
-                            document
-                                .querySelector('#username')
-                                .classList.add('is-invalid')
-                        } else if (
-                            error.response.data === 'Email already registered'
-                        ) {
-                            setError(EXIST_EMAIL_MESS)
-                            document
-                                .querySelector('#email')
-                                .classList.add('is-invalid')
-                        }
-                    } else if (error.message === 'Network Error') {
-                        setError(NETWORK_MESS)
-                    } else {
-                        setError(OTHER_MESS)
-                    }
-                })
+            return
         }
-    }
+        dispatch(userRegister(data))
 
-    const handleChange = (event) => {
-        setUser({ ...user, [event.target.name]: event.target.value })
+        if (error === 'Username already registered') {
+            form.classList.remove('was-validated')
+            document.querySelector('#username').classList.add('is-invalid')
+        }
+        if (error === 'Email already registered') {
+            form.classList.remove('was-validated')
+            document.querySelector('#email').classList.add('is-invalid')
+        }
     }
 
     return (
@@ -104,6 +64,7 @@ const Register = () => {
                     <form
                         className="form me-5 pe-5 needs-validation"
                         style={{ marginTop: '4rem' }}
+                        onSubmit={handleSubmit(submitForm)}
                         noValidate
                     >
                         {/* error message */}
@@ -112,14 +73,6 @@ const Register = () => {
                                 {error}
                             </div>
                         )}
-                        {/* Loading */}
-                        <div
-                            className="spinner-border text-secondary d-block d-none mx-auto mb-1"
-                            role="status"
-                            id="loading"
-                        >
-                            <span className="visually-hidden">Loading...</span>
-                        </div>
                         {/* username */}
                         <div className="form-group mb-4">
                             <label className={styles.formLabel}>Username</label>
@@ -128,8 +81,7 @@ const Register = () => {
                                 id="username"
                                 name="username"
                                 className={`form-control ${styles.formControl}`}
-                                value={user.username}
-                                onChange={handleChange}
+                                {...register('username')}
                                 required
                             />
                             <div className="invalid-feedback">
@@ -145,8 +97,7 @@ const Register = () => {
                                 placeholder="Type your first name"
                                 name="first_name"
                                 className={`form-control ${styles.formControl}`}
-                                value={user.first_name}
-                                onChange={handleChange}
+                                {...register('first_name')}
                                 required
                             />
                         </div>
@@ -159,8 +110,7 @@ const Register = () => {
                                 placeholder="Type your last name"
                                 name="last_name"
                                 className={`form-control ${styles.formControl}`}
-                                value={user.last_name}
-                                onChange={handleChange}
+                                {...register('last_name')}
                                 required
                             />
                         </div>
@@ -169,12 +119,11 @@ const Register = () => {
                             <label className={styles.formLabel}>Email</label>
                             <input
                                 placeholder="Type your email"
+                                id="email"
                                 name="email"
                                 type="email"
-                                id="email"
                                 className={`form-control ${styles.formControl}`}
-                                value={user.email}
-                                onChange={handleChange}
+                                {...register('email')}
                                 required
                             />
                             <div className="invalid-feedback">
@@ -189,8 +138,7 @@ const Register = () => {
                                 placeholder="Enter your password"
                                 name="password"
                                 className={`form-control ${styles.formControl}`}
-                                value={user.password}
-                                onChange={handleChange}
+                                {...register('password')}
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                                 required
                             />
@@ -225,7 +173,7 @@ const Register = () => {
                                     id="learner"
                                     value="ROLE_LEARNER"
                                     autoComplete="off"
-                                    onClick={handleChange}
+                                    {...register('role')}
                                     required
                                 />
                                 <label
@@ -243,7 +191,7 @@ const Register = () => {
                                     id="tutor"
                                     value="ROLE_TUTOR"
                                     autoComplete="off"
-                                    onClick={handleChange}
+                                    {...register('role')}
                                     required
                                 />
                                 <label
@@ -257,10 +205,23 @@ const Register = () => {
                         {/* register btn */}
                         <div className="form-group mt-5">
                             <button
+                                type="submit"
                                 className={`btn btn-primary col-12 ${styles.btn}`}
-                                onClick={handleRegister}
+                                disabled={loading}
                             >
-                                Sign up
+                                {loading ? (
+                                    <div
+                                        className="spinner-border text-secondary mx-auto mb-1"
+                                        role="status"
+                                        id="loading"
+                                    >
+                                        <span className="visually-hidden">
+                                            Loading...
+                                        </span>
+                                    </div>
+                                ) : (
+                                    'Register'
+                                )}
                             </button>
                         </div>
                     </form>
@@ -272,65 +233,6 @@ const Register = () => {
                         >
                             Login
                         </Link>
-                    </div>
-                </div>
-            </div>
-            {/* Button trigger modal */}
-            <button
-                type="button"
-                id="modalBtn"
-                className="btn btn-primary d-none"
-                data-bs-toggle="modal"
-                data-bs-target="#messModal"
-            >
-                Launch modal
-            </button>
-            {/* Modal after register */}
-            <div
-                className="modal fade"
-                id="messModal"
-                tabindex="-1"
-                aria-labelledby="messModalLabel"
-                aria-hidden="true"
-            >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h1
-                                className="modal-title fs-5"
-                                id="messModalLabel"
-                            >
-                                Success!
-                            </h1>
-                            <button
-                                type="button"
-                                id="modalCloseBtn"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            <h5>You have registered for your account</h5>
-                            <p>
-                                Check your email for your account activation
-                                link
-                            </p>
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={() => {
-                                    document
-                                        .querySelector('#modalCloseBtn')
-                                        .click()
-                                    navigate('/login')
-                                }}
-                            >
-                                Go to Login
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
