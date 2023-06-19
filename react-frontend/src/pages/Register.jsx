@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
@@ -15,6 +15,7 @@ const Register = () => {
     const { loading, userToken, error, success } = useSelector(
         (state) => state.auth
     )
+    const [emptyMess, setEmptyMess] = useState('')
     const { register, handleSubmit } = useForm()
 
     useEffect(() => {
@@ -28,16 +29,29 @@ const Register = () => {
     const submitForm = async (data) => {
         const usernameEl = document.querySelector('#username')
         const emailEl = document.querySelector('#email')
+        const emailInvalidEl = document.querySelector('#email-invalid')
         const passwordEl = document.querySelector('#password')
-        // clear error validation
-        usernameEl.classList.remove('is-invalid')
-        emailEl.classList.remove('is-invalid')
-        passwordEl.classList.remove('is-invalid')
-
         var form = document.querySelector('.needs-validation')
+        // clear validation
+        form.classList.remove('was-validated')
+        usernameEl.classList.remove('is-invalid')
+        emailInvalidEl.classList.remove('d-none')
+
+        setEmptyMess('')
+
         if (!form.checkValidity()) {
-            if(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(data.password)) {
-                
+            form.classList.add('was-validated')
+            if (
+                !data.username ||
+                !data.first_name ||
+                !data.last_name ||
+                !data.email ||
+                !data.password
+            ) {
+                setEmptyMess('Please complete all the fields.')
+                if (!data.email) {
+                    emailInvalidEl.classList.add('d-none')
+                }
             }
             return
         }
@@ -72,9 +86,9 @@ const Register = () => {
                         noValidate
                     >
                         {/* error message */}
-                        {error && (
+                        {(emptyMess || error) && (
                             <div className="alert alert-danger" role="alert">
-                                {error}
+                                {emptyMess || error}
                             </div>
                         )}
                         {/* username */}
@@ -129,6 +143,12 @@ const Register = () => {
                                 {...register('email')}
                                 required
                             />
+                            <div
+                                className="invalid-feedback"
+                                id="email-invalid"
+                            >
+                                Please enter a valid email
+                            </div>
                         </div>
                         {/* Password */}
                         <div className="form-group mb-4">
@@ -169,13 +189,13 @@ const Register = () => {
                             <div className="form-check form-check-inline me-5">
                                 <input
                                     type="radio"
-                                    className="form-check-input"
+                                    className={`form-check-input ${styles.formCheckInput}`}
                                     name="role"
                                     id="learner"
                                     value="ROLE_LEARNER"
                                     autoComplete="off"
                                     {...register('role')}
-                                    required
+                                    checked
                                 />
                                 <label
                                     className="form-check-label"
@@ -187,13 +207,12 @@ const Register = () => {
                             <div className="form-check mb-4 form-check-inline">
                                 <input
                                     type="radio"
-                                    className="form-check-input"
+                                    className={`form-check-input ${styles.formCheckInput}`}
                                     name="role"
                                     id="tutor"
                                     value="ROLE_TUTOR"
                                     autoComplete="off"
                                     {...register('role')}
-                                    required
                                 />
                                 <label
                                     className="form-check-label"

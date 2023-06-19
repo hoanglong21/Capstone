@@ -25,6 +25,7 @@
 
     --yellow-56: #ffcd1f;
     --yellow-69: #ffdc62;
+    --yellow-87: #ffeebc;
 
     /* ===== Project color definitions ===== */
     --bg-color: var(--blue-97);
@@ -67,6 +68,7 @@
     --form-border: var(--blue-88);
     --form-border-focus: var(--yellow-56);
     --form-label-hover: var(--yellow-56);
+    --form-check-shadow: var(--yellow-87);
 
     --upload-hover: var(--yellow-56);
     --upload-border: var(--blue-88);
@@ -246,4 +248,48 @@ input::placeholder {
 
 svg {
     pointer-events: none;
+}
+
+.form-control.is-valid:focus,
+.was-validated :valid.form-control {
+    border-color: var(--form-border);
+    background-image: inherit;
+    box-shadow: inherit;
+}
+
+.form-check-input.is-valid,
+.was-validated .form-check-input:valid {
+    border-color: var(--form-border);
+}
+
+.form-check-input.is-valid:checked,
+.was-validated .form-check-input:valid:checked {
+    background-color: var(--form-border-focus);
+    border-color: var(--form-border-focus);
+}
+
+.form-check-input:checked,
+.form-check-input.is-valid ~ .form-check-label {
+    color: var(--text-light);
+    border-color: var(--form-border-focus);
+    background-color: var(--form-border-focus);
+}
+
+.was-validated .form-check-input:valid ~ .form-check-label {
+    color: var(--text-light);
+    border-color: var(--form-border-focus);
+}
+
+.form-check-input.is-valid:focus,
+.was-validated .form-check-input:valid:focus {
+    box-shadow: 0 0 0 0.25rem var(--form-check-shadow);
+}
+
+.form-control.is-valid:focus,
+.was-validated .form-control:valid:focus {
+    box-shadow: 0 0 0 0.25rem var(--form-check-shadow);
+}
+
+.form-control.is-invalid, .was-validated .form-control:invalid{
+    
 }

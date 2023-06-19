@@ -318,7 +318,7 @@ const Header = () => {
                                     type="button"
                                     className="btn btn-warning"
                                 >
-                                    Sign-up
+                                    Sign up
                                 </button>
                             </Link>
                         </>
