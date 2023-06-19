@@ -45,6 +45,7 @@ const Header = () => {
     const handleLogout = () => {
         dispatch(logout())
         toggleShowLogoutMess()
+        navigate('/')
     }
 
     const handleAddStudySet = async () => {
@@ -329,7 +330,7 @@ const Header = () => {
             <ToastContainer
                 className="p-3 mt-5"
                 position="top-end"
-                style={{ zIndex: 1 }}
+                style={{ zIndex: 9999 }}
             >
                 <Toast
                     show={showLogoutMess}

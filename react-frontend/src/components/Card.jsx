@@ -10,30 +10,41 @@ import CardService from '../services/CardService'
 
 export const Card = (props) => {
     const [card, setCard] = useState(props.card)
-    const [term, setTerm] = useState({
-        card: {
-            id: card.id,
-        },
-        field: {
-            id: 1,
-        },
-        content: '',
-    })
-    const [definition, setDefinition] = useState({
-        card: {
-            id: card.id,
-        },
-        field: {
-            id: 2,
-        },
-        content: '',
-    })
+    const [term, setTerm] = useState({})
+    const [definition, setDefinition] = useState({})
 
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
             const contents = (await ContentService.getAllByCardId(card.id)).data
-            if (contents.length > 0) {
+            if (contents.length == 0) {
+                setTerm(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 1,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setDefinition(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 2,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+            } else {
                 setTerm(contents[0])
                 setDefinition(contents[1])
             }
@@ -108,7 +119,11 @@ export const Card = (props) => {
     }
 
     return (
-        <div className={`card ${styles.card} mb-3`} id={props.index}>
+        <div
+            className={`card ${styles.card} mb-3`}
+            index={props.index}
+            id={card.id}
+        >
             <div
                 className={`card-header ${styles.card_header} d-flex justify-content-between align-items-center mb-1 px-4`}
             >

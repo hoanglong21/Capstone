@@ -51,37 +51,52 @@ const CreateStudySet = () => {
     }
 
     const handleAddCard = async () => {
-        const card = (
-            await CardService.createCard({
-                picture: '',
-                audio: '',
-                studySet: {
-                    id: studySet.id,
-                },
-            })
-        ).data
-        setCards([...cards, card])
+        try {
+            const card = (
+                await CardService.createCard({
+                    picture: '',
+                    audio: '',
+                    studySet: {
+                        id: studySet.id,
+                    },
+                })
+            ).data
+            setCards([...cards, card])
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleSubmit = (event) => {
         const titleEl = document.querySelector('#title')
+        var form = document.querySelector('.needs-validation')
         // clear validate
+        form.classList.remove('was-validated')
         titleEl.classList.remove('is-invalid')
+        setError('')
 
         event.preventDefault()
-        var form = document.querySelector('.needs-validation')
         if (!form.checkValidity()) {
+            form.classList.add('was-validated')
             titleEl.classList.add('is-invalid')
-            return
+        } 
+        if (cards.length == 0) {
+            setError('You must have at least one cards to save your set.')
+        } else {
+            // navigate('/set/' + id)
         }
-        // navigate('/set/' + id)
     }
 
-    const handleDelete = (event) => {
-        var array = [...cards]
-        var index = event.target.closest('.card').id
-        array.splice(index, 1)
-        setCards([...array])
+    const handleDelete = async (event) => {
+        try {
+            var cardEl = event.target.closest('.card')
+            await CardService.deleteCard(cardEl.id)
+            var array = [...cards]
+            array.splice(cardEl.index, 1)
+            setCards([...array])
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleChange = (event) => {
@@ -89,7 +104,11 @@ const CreateStudySet = () => {
     }
 
     const doUpdate = async () => {
-        await StudySetService.updateStudySet(studySet.id, studySet)
+        try {
+            await StudySetService.updateStudySet(studySet.id, studySet)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -146,7 +165,6 @@ const CreateStudySet = () => {
                                 value={studySet.public}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
-                                required
                             >
                                 <option value={true}>Public</option>
                                 <option value={false}>Private</option>

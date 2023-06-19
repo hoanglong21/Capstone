@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
-import { register as userRegister } from '../features/auth/authAction'
+import { login, register as userRegister } from '../features/auth/authAction'
 
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
+import AuthService from '../services/AuthService'
 
 const Register = () => {
     const navigate = useNavigate()
@@ -15,22 +16,18 @@ const Register = () => {
     const { loading, userToken, error, success } = useSelector(
         (state) => state.auth
     )
-    const [emptyMess, setEmptyMess] = useState('')
     const { register, handleSubmit } = useForm()
 
+    const [emptyMess, setEmptyMess] = useState('')
+
     useEffect(() => {
-        // redirect user to login page if registration was successful
-        if (success) navigate('/login')
-        // redirect authenticated user to profile screen
         if (userToken) navigate('/')
-        // set error validation
-    }, [navigate, userToken, success])
+    }, [navigate, userToken])
 
     const submitForm = async (data) => {
         const usernameEl = document.querySelector('#username')
         const emailEl = document.querySelector('#email')
         const emailInvalidEl = document.querySelector('#email-invalid')
-        const passwordEl = document.querySelector('#password')
         var form = document.querySelector('.needs-validation')
         // clear validation
         form.classList.remove('was-validated')
@@ -89,6 +86,16 @@ const Register = () => {
                         {(emptyMess || error) && (
                             <div className="alert alert-danger" role="alert">
                                 {emptyMess || error}
+                            </div>
+                        )}
+                        {/* success message */}
+                        {success && (
+                            <div className="alert alert-success" role="alert">
+                                Registered successfully. Please{' '}
+                                <Link to="/login" className="link-success">
+                                    Login
+                                </Link>{' '}
+                                to continue.
                             </div>
                         )}
                         {/* username */}
