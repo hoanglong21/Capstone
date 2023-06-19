@@ -24,6 +24,7 @@ import LibraryLayout from './components/layouts/LibraryLayout'
 import StudySetList from './pages/studySet/StudySetList'
 import NoClass from './pages/NoClass'
 import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
+import ForgotPassword from './pages/ForgotPassword'
 
 const App = () => {
     const token = useSelector((state) => state.auth.userToken)
@@ -73,6 +74,7 @@ const App = () => {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path='/forgot' element={<ForgotPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/createclass" element={<CreateClassroom />} />
                 <Route path="/mainclass" element={<MainClass />} />
