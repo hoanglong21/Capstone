@@ -68,12 +68,4 @@ public class CardController {
         response.put("deleted", deleted);
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/checkcard/{id}")
-    public ResponseEntity<Map<String, Boolean>> checkBlank(@PathVariable int id) {
-        boolean blank = cardService.checkBlank(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("blank", blank);
-        return ResponseEntity.ok(response);
-    }
 }

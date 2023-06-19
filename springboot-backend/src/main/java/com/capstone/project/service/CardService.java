@@ -17,5 +17,4 @@ public interface CardService {
 
     Boolean deleteCard (int id);
 
-    Boolean checkBlank(int id);
 }
