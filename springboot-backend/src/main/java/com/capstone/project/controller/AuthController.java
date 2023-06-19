@@ -43,7 +43,12 @@ public class AuthController {
             String jwtToken = jwtService.generateToken(authRequest.getUsername());
             return ResponseEntity.ok(jwtToken);
         } else {
-            throw new UsernameNotFoundException("invalid user request !");
+            try {
+                throw new UsernameNotFoundException("invalid user request !");
+            } catch (UsernameNotFoundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+
         }
     }
 
