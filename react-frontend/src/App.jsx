@@ -23,6 +23,8 @@ import Profile from './pages/account/Profile'
 import LibraryLayout from './components/layouts/LibraryLayout'
 import StudySetList from './pages/studySet/StudySetList'
 import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import StudySet from './pages/studySet/StudySet'
 
 const App = () => {
@@ -74,6 +76,8 @@ const App = () => {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot" element={<ForgotPassword />} />
+                <Route path="/reset" element={<ResetPassword />} />
             </Routes>
         </BrowserRouter>
     )
