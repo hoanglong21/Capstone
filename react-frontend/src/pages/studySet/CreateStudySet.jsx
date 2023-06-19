@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import { Card } from '../../components/Card'
+import CardService from '../../services/CardService'
+import StudySetService from '../../services/StudySetService'
 
 import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
-import { Card } from '../../components/Card'
-import { useParams } from 'react-router-dom'
-import CardService from '../../services/CardService'
-import ContentService from '../../services/ContentService'
-import StudySetService from '../../services/StudySetService'
 
 const CreateStudySet = () => {
+    const navigate = useNavigate()
+
     const { id } = useParams()
 
     const [isScroll, setIsScroll] = useState(false)
@@ -19,12 +21,13 @@ const CreateStudySet = () => {
     useEffect(() => {
         const fetchData = async () => {
             setStudySet((await StudySetService.getStudySetById(id)).data)
+            setCards((await CardService.getAllByStudySetId(id)).data)
         }
         fetchData()
-    }, [])
+    }, [id])
 
+    // handle sticky header
     useEffect(() => {
-        // handle sticky header
         const handleScroll = () => {
             setIsScroll(window.scrollY > 96)
         }
@@ -32,8 +35,8 @@ const CreateStudySet = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    // handle reload page
     useEffect(() => {
-        // handle reload page
         window.addEventListener('beforeunload', handleReload)
         return () => {
             window.removeEventListener('beforeunload', handleReload)
@@ -55,33 +58,12 @@ const CreateStudySet = () => {
                 },
             })
         ).data
-        const term = (
-            await ContentService.createContent({
-                card: {
-                    id: card.id,
-                },
-                field: {
-                    id: 1,
-                },
-                content: '',
-            })
-        ).data
-        const definition = (
-            await ContentService.createContent({
-                card: {
-                    id: card.id,
-                },
-                field: {
-                    id: 2,
-                },
-                content: '',
-            })
-        ).data
-        setCards([...cards, { ...card, contents: [term, definition] }])
+        setCards([...cards, card])
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
+        navigate('/set/' + id)
     }
 
     const handleDelete = (event) => {

@@ -12,7 +12,7 @@ const Register = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const { loading, userInfo, error, success } = useSelector(
+    const { loading, userToken, error, success } = useSelector(
         (state) => state.auth
     )
     const { register, handleSubmit } = useForm()
@@ -21,9 +21,9 @@ const Register = () => {
         // redirect user to login page if registration was successful
         if (success) navigate('/login')
         // redirect authenticated user to profile screen
-        if (userInfo) navigate('/')
+        if (userToken) navigate('/')
         // set error validation
-    }, [navigate, userInfo, success])
+    }, [navigate, userToken, success])
 
     const submitForm = async (data) => {
         // clear error validation
@@ -50,7 +50,7 @@ const Register = () => {
     return (
         <div className="bg-white p-5">
             <div className="row">
-                <div className="col d-flex align-items-start">
+                <div className="col d-flex align-items-start p-5">
                     <img src={logo} className="w-100" alt="" />
                 </div>
                 <div className="col-6 pe-5">

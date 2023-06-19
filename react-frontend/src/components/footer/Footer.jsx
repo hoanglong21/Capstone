@@ -48,7 +48,10 @@ const Footer = () => {
                                 Learn
                             </a>
                             <a className="siteFooter-sectionLink" href="">
-                                Classes
+                                Dictionary
+                            </a>
+                            <a className="siteFooter-sectionLink" href="">
+                                Translate
                             </a>
                         </div>
                         <div className="d-flex flex-column col">

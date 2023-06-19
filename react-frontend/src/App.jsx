@@ -23,6 +23,7 @@ import Profile from './pages/account/Profile'
 import LibraryLayout from './components/layouts/LibraryLayout'
 import StudySetList from './pages/studySet/StudySetList'
 import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
+import StudySet from './pages/studySet/StudySet'
 
 const App = () => {
     const token = useSelector((state) => state.auth.userToken)
@@ -43,6 +44,7 @@ const App = () => {
                             path="create-set/:id"
                             element={<CreateStudySet />}
                         />
+                        <Route path="set/:id" element={<StudySet />} />
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
