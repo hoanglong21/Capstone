@@ -2,7 +2,9 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
+import com.capstone.project.model.Content;
 import com.capstone.project.repository.CardRepository;
+import com.capstone.project.repository.ContentRepository;
 import com.capstone.project.repository.StudySetRepository;
 import com.capstone.project.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,12 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
 
+    private final ContentRepository contentRepository;
+
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository) {
+    public CardServiceImpl(CardRepository cardRepository, ContentRepository contentRepository) {
         this.cardRepository = cardRepository;
+        this.contentRepository = contentRepository;
     }
 
     @Override
@@ -75,6 +80,9 @@ public class CardServiceImpl implements CardService {
         }catch (ResourceNotFroundException e) {
             e.printStackTrace();
             return false;
+        }
+        for (Content content: contentRepository.getContentByCardId(card.getId())) {
+            contentRepository.delete(content);
         }
         cardRepository.delete(card);
         return true;
