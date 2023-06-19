@@ -1,10 +1,12 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Test;
+import com.capstone.project.model.*;
+import com.capstone.project.repository.AnswerRepository;
+import com.capstone.project.repository.QuestionRepository;
 import com.capstone.project.repository.TestRepository;
-import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.TestService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -17,11 +19,16 @@ import java.util.List;
 public class TestServiceImpl  implements TestService {
 
     private final TestRepository testRepository;
-    private final UserRepository userRepository;
 
-    public TestServiceImpl(TestRepository testRepository, UserRepository userRepository) {
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
+
+
+    @Autowired
+    public TestServiceImpl(TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository) {
         this.testRepository = testRepository;
-        this.userRepository = userRepository;
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
     }
 
     @Override
@@ -56,7 +63,6 @@ public class TestServiceImpl  implements TestService {
             e.printStackTrace();
         }
         testclass.setTitle(test.getTitle());
-        testclass.setUser(userRepository.findUserById(test.getUser().getId()));
         testclass.setDescription(test.getDescription());
         testclass.setDuration(test.getDuration());
         Date currentDate = new Date();
@@ -75,6 +81,12 @@ public class TestServiceImpl  implements TestService {
                     .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + id));
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
+        }
+        for (Question question : questionRepository.getQuestionByTestId(testclass.getId())) {
+            for (Answer answer : answerRepository.getAnswerByQuestionId(question.getId())) {
+                  answerRepository.delete(answer);
+            }
+              questionRepository.delete(question);
         }
         testRepository.delete(testclass);
         return true;
