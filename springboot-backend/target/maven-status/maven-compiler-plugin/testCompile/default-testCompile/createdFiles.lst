@@ -1,1 +1,9 @@
+com\capstone\project\model\UserTest.class
+com\capstone\project\model\UserTest2.class
+com\capstone\project\repository\UserRepositoryTest.class
+com\capstone\project\controller\UserControllerTest.class
+com\capstone\project\controller\UserControllerTest2.class
+com\capstone\project\repository\UserRepositoryTest2.class
+com\capstone\project\service\UserServiceImplTest.class
 com\capstone\project\ProjectApplicationTests.class
+com\capstone\project\service\UserServiceImplTest2.class

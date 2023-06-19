@@ -4,20 +4,27 @@ import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
 import { Card } from '../../components/Card'
+import { useParams } from 'react-router-dom'
+import CardService from '../../services/CardService'
+import ContentService from '../../services/ContentService'
+import StudySetService from '../../services/StudySetService'
 
 const CreateStudySet = () => {
+    const { id } = useParams()
+
     const [isScroll, setIsScroll] = useState(false)
-    const [studySet, setStudySet] = useState({
-        user: '',
-        title: '',
-        description: '',
-        isDeleted: false,
-        isPublic: false,
-        studySetType: 1,
-    })
-    const [cardList, setCardList] = useState([])
+    const [studySet, setStudySet] = useState({})
+    const [cards, setCards] = useState([])
 
     useEffect(() => {
+        const fetchData = async () => {
+            setStudySet((await StudySetService.getStudySetById(id)).data)
+        }
+        fetchData()
+    }, [])
+
+    useEffect(() => {
+        // handle sticky header
         const handleScroll = () => {
             setIsScroll(window.scrollY > 96)
         }
@@ -25,9 +32,52 @@ const CreateStudySet = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
-    const handleAdd = (event) => {
-        let card = { picture: '', audio: '', studySet: '' }
-        setCardList([...cardList, card])
+    useEffect(() => {
+        // handle reload page
+        window.addEventListener('beforeunload', handleReload)
+        return () => {
+            window.removeEventListener('beforeunload', handleReload)
+        }
+    }, [])
+
+    const handleReload = (event) => {
+        event.preventDefault()
+        return false
+    }
+
+    const handleAddCard = async () => {
+        const card = (
+            await CardService.createCard({
+                picture: '',
+                audio: '',
+                studySet: {
+                    id: studySet.id,
+                },
+            })
+        ).data
+        const term = (
+            await ContentService.createContent({
+                card: {
+                    id: card.id,
+                },
+                field: {
+                    id: 1,
+                },
+                content: '',
+            })
+        ).data
+        const definition = (
+            await ContentService.createContent({
+                card: {
+                    id: card.id,
+                },
+                field: {
+                    id: 2,
+                },
+                content: '',
+            })
+        ).data
+        setCards([...cards, { ...card, contents: [term, definition] }])
     }
 
     const handleSubmit = (event) => {
@@ -35,89 +85,108 @@ const CreateStudySet = () => {
     }
 
     const handleDelete = (event) => {
-        var array = [...cardList]
+        var array = [...cards]
         var index = event.target.closest('.card').id
         array.splice(index, 1)
-        setCardList([...array])
+        setCards([...array])
+    }
+
+    const handleChange = (event) => {
+        setStudySet({ ...studySet, [event.target.name]: event.target.value })
+    }
+
+    const doUpdate = async () => {
+        await StudySetService.updateStudySet(studySet.id, studySet)
     }
 
     return (
-        <form className="mt-2">
-            {/* Heading */}
-            <div
-                className={`p-3 sticky-top sticky-header ${
-                    isScroll ? 'scroll-shadows' : ''
-                }`}
-            >
-                <div className="container d-flex justify-content-between">
-                    <h3 className="fw-bold">Create a new study set</h3>
-                    <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={handleSubmit}
-                    >
-                        Create
-                    </button>
-                </div>
-            </div>
-            <div className="container mt-4">
-                {/* Study set */}
-                <div className="row">
-                    <div className="form-group mb-3 col-6">
-                        <label className={styles.formLabel}>Title</label>
-                        <input
-                            placeholder="Enter your title"
-                            name="title"
-                            className={`form-control ${styles.formControl}`}
-                            value={studySet.title}
-                        />
-                    </div>
-                    <div className="form-group mb-3 col-6">
-                        <label className={styles.formLabel}>Access</label>
-                        <select
-                            className={`form-select ${styles.formSelect}`}
-                            aria-label="access"
-                        >
-                            <option value="0">Public</option>
-                            <option value="1">Private</option>
-                        </select>
-                    </div>
-                </div>
-                <div className="form-group mb-5">
-                    <label className={styles.formLabel}>Description</label>
-                    <textarea
-                        className={`form-control ${styles.formControl}`}
-                        placeholder="Add a description..."
-                        rows="3"
-                    ></textarea>
-                </div>
-                {/* Card */}
-                {cardList.map((card, index) => {
-                    return (
-                        <Card
-                            key={index}
-                            index={index}
-                            handleDelete={handleDelete}
-                        />
-                    )
-                })}
-
-                {/* Add button */}
-                <div className={`card ${CardStyles.card} mb-3 py-4`}>
-                    <div
-                        className={`card-body ${CardStyles.card_body} d-flex justify-content-center`}
-                    >
+        <div>
+            <form className="mt-2">
+                {/* Heading */}
+                <div
+                    className={`p-3 sticky-top sticky-header ${
+                        isScroll ? 'scroll-shadows' : ''
+                    }`}
+                >
+                    <div className="container d-flex justify-content-between">
+                        <h3 className="fw-bold">Create a new study set</h3>
                         <button
-                            type="button"
-                            className={CardStyles.card_button}
-                            onClick={handleAdd}
+                            type="submit"
+                            className="btn btn-primary"
+                            onClick={handleSubmit}
                         >
-                            + ADD CARD
+                            Create
                         </button>
                     </div>
                 </div>
-            </div>
-        </form>
+                <div className="container mt-4">
+                    {/* Study set */}
+                    <div className="row">
+                        <div className="form-group mb-3 col-6">
+                            <label className={styles.formLabel}>Title</label>
+                            <input
+                                placeholder="Enter your title"
+                                name="title"
+                                className={`form-control ${styles.formControl}`}
+                                value={studySet.title}
+                                onChange={handleChange}
+                                onBlur={doUpdate}
+                            />
+                        </div>
+                        <div className="form-group mb-3 col-6">
+                            <label className={styles.formLabel}>Access</label>
+                            <select
+                                className={`form-select ${styles.formSelect}`}
+                                aria-label="public"
+                                name="public"
+                                value={studySet.public}
+                                onChange={handleChange}
+                                onBlur={doUpdate}
+                            >
+                                <option value={true}>Public</option>
+                                <option value={false}>Private</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="form-group mb-5">
+                        <label className={styles.formLabel}>Description</label>
+                        <textarea
+                            className={`form-control ${styles.formControl}`}
+                            placeholder="Add a description..."
+                            name="description"
+                            value={studySet.description}
+                            onChange={handleChange}
+                            onBlur={doUpdate}
+                            rows="3"
+                        ></textarea>
+                    </div>
+                    {/* Card */}
+                    {cards.map((card, index) => (
+                        <Card
+                            key={index}
+                            index={index}
+                            card={card}
+                            handleDelete={handleDelete}
+                        />
+                    ))}
+
+                    {/* Add button */}
+                    <div className={`card ${CardStyles.card} mb-3 py-4`}>
+                        <div
+                            className={`card-body ${CardStyles.card_body} d-flex justify-content-center`}
+                        >
+                            <button
+                                type="button"
+                                className={CardStyles.card_button}
+                                onClick={handleAddCard}
+                            >
+                                + ADD CARD
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     )
 }
 export default CreateStudySet

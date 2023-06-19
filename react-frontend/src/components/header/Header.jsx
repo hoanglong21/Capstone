@@ -1,43 +1,73 @@
-import './Header.css'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import Toast from 'react-bootstrap/Toast'
+import { useState } from 'react'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import { useEffect } from 'react'
+
+import StudySetService from '../../services/StudySetService'
+import { logout } from '../../features/auth/authSlice'
+import { getUser } from '../../features/user/userAction'
+
 import logo from '../../assets/images/logo-2.png'
 import avatar from '../../assets/images/avatar-default.jpg'
 import {
     HomeIcon,
-    SearchIcon,
     TranslateIcon,
-    LibraryIcon,
     AddIcon,
     NotifyIcon,
     ProfileIcon,
     SettingIcon,
     HelpIcon,
     LogoutIcon,
-    StudySetIcon,
-    FolderIcon,
-    ClassIcon,
-    JoinIcon,
+    DictIcon,
+    LibraryIcon,
 } from '../icons'
-
-import AuthService from '../../services/AuthService'
-import { logout } from '../../state/authSlice'
-
-import { Link, NavLink } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import Toast from 'react-bootstrap/Toast'
-import { useState } from 'react'
-import ToastContainer from 'react-bootstrap/ToastContainer'
+import './Header.css'
 
 const Header = () => {
-    const isLogged = useSelector((state) => state.auth.token)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
+
     const [showLogoutMess, setShowLogoutMess] = useState(false)
+
+    useEffect(() => {
+        if (userToken) {
+            dispatch(getUser(userToken))
+        }
+    }, [userToken, dispatch])
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
     const handleLogout = () => {
-        AuthService.logout()
         dispatch(logout())
         toggleShowLogoutMess()
+    }
+
+    const handleAddStudySet = async () => {
+        if (userToken) {
+            const studySet = (
+                await StudySetService.createStudySet({
+                    user: {
+                        id: userInfo.id,
+                    },
+                    title: 'Draft',
+                    description: '',
+                    deleted: false,
+                    public: true,
+                    studySetType: {
+                        id: 1,
+                    },
+                    deleted_date: '',
+                })
+            ).data
+            navigate('create-set/' + studySet.id)
+        } else {
+            navigate('create-set/0')
+        }
     }
 
     return (
@@ -76,8 +106,8 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <SearchIcon className="mx-2" />
-                            <span className="align-middle">Search</span>
+                            <DictIcon className="mx-2" />
+                            <span className="align-middle">Dictionary</span>
                         </NavLink>
                     </li>
                     <li>
@@ -100,20 +130,8 @@ const Header = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <StudySetIcon className="mx-2" />
-                            <span className="align-middle">Study Sets</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="classes"
-                            className={
-                                'nav-link px-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <ClassIcon className="mx-2" />
-                            <span className="align-middle">Classes</span>
+                            <LibraryIcon className="mx-2" />
+                            <span className="align-middle">Your Library</span>
                         </NavLink>
                     </li>
                 </ul>
@@ -131,26 +149,28 @@ const Header = () => {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <Link
+                                <button
                                     className="dropdown-item py-2 px-2"
                                     type="button"
-                                    to="study-set/add"
+                                    onClick={handleAddStudySet}
                                 >
                                     <span className="align-middle fw-semibold">
                                         Study Set
                                     </span>
-                                </Link>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item py-2 px-2"
-                                    type="button"
-                                >
-                                    <span className="align-middle fw-semibold">
-                                        Class
-                                    </span>
                                 </button>
                             </li>
+                            {userInfo?.role !== 'ROLE_LEARNER' && (
+                                <li>
+                                    <button
+                                        className="dropdown-item py-2 px-2"
+                                        type="button"
+                                    >
+                                        <span className="align-middle fw-semibold">
+                                            Class
+                                        </span>
+                                    </button>
+                                </li>
+                            )}
                             <li>
                                 <Link
                                     className="dropdown-item py-2 px-2"
@@ -165,7 +185,7 @@ const Header = () => {
                         </ul>
                     </div>
 
-                    {isLogged ? (
+                    {userToken ? (
                         <>
                             {/* Notify */}
                             <button
@@ -221,6 +241,9 @@ const Header = () => {
                                         <button
                                             className="dropdown-item py-2 px-3"
                                             type="button"
+                                            onClick={() => {
+                                                navigate('account')
+                                            }}
                                         >
                                             <ProfileIcon
                                                 className="me-3"

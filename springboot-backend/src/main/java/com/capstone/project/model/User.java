@@ -2,6 +2,7 @@ package com.capstone.project.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "user")
 public class User {
     @Id
@@ -31,7 +33,7 @@ public class User {
 
     @Column
     @Temporal(TemporalType.DATE)
-    private Date DOB;
+    private Date dob;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -54,6 +56,11 @@ public class User {
     @ManyToMany(mappedBy = "users")
     Set<Class> classes;
 
-//    @Column(name = "is_banned", columnDefinition="boolean default false", nullable = false)
-//    private Boolean banned;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date banned_date;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deleted_date;
 }

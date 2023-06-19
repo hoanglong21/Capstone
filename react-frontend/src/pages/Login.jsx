@@ -1,78 +1,33 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-
-import AuthService from '../services/AuthService'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form'
 
-import { login as setLogin } from '../state/authSlice'
+import { login } from '../features/auth/authAction'
+
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
 
 const Login = () => {
-    const EMPTY_MESS = 'Please complete all fields.'
-    const NETWORK_MESS = 'There was a network error.'
-    const WRONG_MESS = 'Incorrect username or password.'
-
-    const [user, setUser] = useState({ username: '', password: '' })
-    const isLoggedIn = useSelector((state) => state.auth.token)
-    const [error, setError] = useState('')
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (isLoggedIn) {
-            navigate('/')
-            return () => {}
-        }
-    }, [isLoggedIn])
+    const { register, handleSubmit } = useForm()
+    const { loading, userInfo, error } = useSelector((state) => state.auth)
 
-    const handleLogin = async (event) => {
-        event.preventDefault()
-        setError('')
-        document.querySelector('#loading').classList.remove('d-none')
-        document.querySelector('#loading').classList.add('d-block')
-        document
-            .querySelector('#username')
-            .classList.remove('is-invalid', 'is-valid')
-        document
-            .querySelector('#password')
-            .classList.remove('is-invalid', 'is-valid')
+    useEffect(() => {
+        if (userInfo) {
+            navigate('/')
+        }
+    }, [navigate, userInfo])
+
+    const submitForm = (data) => {
         var form = document.querySelector('.needs-validation')
-        event.preventDefault()
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
-            event.stopPropagation()
-            setError(EMPTY_MESS)
-        } else {
-            AuthService.login(user)
-                .then((response) => {
-                    localStorage.setItem('token', response.data)
-                    dispatch(setLogin())
-                    navigate('/')
-                })
-                .catch((error) => {
-                    form.classList.remove('was-validated')
-                    document
-                        .querySelector('#loading')
-                        .classList.remove('d-block')
-                    document.querySelector('#loading').classList.add('d-none')
-                    if (error.message === 'Network Error') {
-                        setError(NETWORK_MESS)
-                    } else {
-                        setError(WRONG_MESS)
-                        document
-                            .querySelector('#username')
-                            .classList.add('is-invalid')
-                        document
-                            .querySelector('#password')
-                            .classList.add('is-invalid')
-                    }
-                })
+            return
         }
-    }
-
-    const handleChange = (event) => {
-        setUser({ ...user, [event.target.name]: event.target.value })
+        dispatch(login(data))
     }
 
     return (
@@ -93,6 +48,7 @@ const Login = () => {
                         <form
                             className="form needs-validation pe-4"
                             style={{ marginTop: '5rem' }}
+                            onSubmit={handleSubmit(submitForm)}
                             noValidate
                         >
                             {/* error message */}
@@ -104,16 +60,6 @@ const Login = () => {
                                     {error}
                                 </div>
                             )}
-                            {/* Loading */}
-                            <div
-                                className="spinner-border text-secondary d-none mx-auto mb-1"
-                                role="status"
-                                id="loading"
-                            >
-                                <span className="visually-hidden">
-                                    Loading...
-                                </span>
-                            </div>
                             {/* username/email */}
                             <div className="form-group mb-3">
                                 <label className={styles.formLabel}>
@@ -124,8 +70,7 @@ const Login = () => {
                                     name="username"
                                     id="username"
                                     className={`form-control ${styles.formControl}`}
-                                    value={user.username}
-                                    onChange={handleChange}
+                                    {...register('username')}
                                     required
                                 />
                             </div>
@@ -140,8 +85,7 @@ const Login = () => {
                                     name="password"
                                     id="password"
                                     className={`form-control ${styles.formControl}`}
-                                    value={user.password}
-                                    onChange={handleChange}
+                                    {...register('password')}
                                     required
                                 />
                             </div>
@@ -157,10 +101,23 @@ const Login = () => {
                             {/* login btn */}
                             <div className="form-group mt-4">
                                 <button
+                                    type="submit"
                                     className={`btn btn-primary col-12 ${styles.btn}`}
-                                    onClick={handleLogin}
+                                    disabled={loading}
                                 >
-                                    Login
+                                    {loading ? (
+                                        <div
+                                            className="spinner-border text-secondary mx-auto mb-1"
+                                            role="status"
+                                            id="loading"
+                                        >
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        'Login'
+                                    )}
                                 </button>
                             </div>
                         </form>

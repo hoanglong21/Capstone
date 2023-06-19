@@ -6,17 +6,22 @@
     --blue-64: #939bb4;
     --blue-88: #d9dde8;
     --blue-94: #edeff4;
+    --blue-96: #e9f0ff;
     --blue-97: #f6f7fb;
 
     --blue-magenta-55: #423ed8;
 
+    --cyan-27: #116a7b;
     --cyan-52: #3ccfcf;
+    --cyan-82: #c2dedc;
 
     --cyan-blue-26: #2e3856;
+    --cyan-blue-38: #0070c4;
+    --cyan-blue-50: #0095ff;
     --cyan-blue-51: #1991eb;
 
-    --red-68: #ff725b;
-    --red-74: #ff8e7b;
+    --pink-red-51: #f60f10;
+    --pink-red-71: #ec7e7f;
 
     --yellow-56: #ffcd1f;
     --yellow-69: #ffdc62;
@@ -25,6 +30,7 @@
     --bg-color: var(--blue-97);
     --border: var(--blue-94);
     --divider: var(--blue-88);
+
     --text-primary: var(--cyan-blue-26);
     --text-light: var(--blue-42);
 
@@ -46,6 +52,9 @@
     --btn-warning-bg-hover: var(--yellow-69);
     --btn-danger: var(--red-68);
     --btn-danger-hover: var(--red-74);
+    --btn-info: var(--cyan-27);
+    --btn-info-bg: var(--cyan-82);
+    --btn-info-bg-hover: white;
 
     --nav-link: var(--cyan-blue-26);
     --nav-link-hover: var(--cyan-blue-51);
@@ -98,6 +107,14 @@ h1 {
 
 .border-bottom {
     border-bottom: 1px solid var(--border) !important;
+}
+
+.border-top {
+    border-top: 1px solid var(--border) !important;
+}
+
+.border-end {
+    border-right: 1px solid var(--border) !important;
 }
 
 .divider {
@@ -181,6 +198,16 @@ h1 {
     background-color: var(--btn-danger-hover);
 }
 
+.btn-info {
+    color: var(--btn-info);
+    background-color: var(--btn-info-bg);
+}
+
+.btn-info:hover {
+    color: var(--btn-info);
+    background-color: var(--btn-info-bg-hover);
+}
+
 .icon-primary {
     fill: var(--icon-primary);
     color: white;
@@ -215,4 +242,8 @@ input::placeholder {
     border: none;
     border-bottom: 0.25rem solid var(--editor-border-focus);
     box-shadow: none;
+}
+
+svg {
+    pointer-events: none;
 }

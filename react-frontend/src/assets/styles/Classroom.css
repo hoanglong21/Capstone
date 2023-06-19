@@ -78,25 +78,24 @@
 }
 
 .joinClass {
-  font-family: Roboto, Arial, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-  line-height: 20px;
-  padding: 0 24px;
-  flex-grow: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: white;
-  height: 100%;
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  right: 0;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    padding: 0 24px;
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    height: 100%;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    right: 0;
 }
-
 
 .joinClass__wrapper {
     display: flex;
@@ -326,7 +325,7 @@
     transition: all 200ms;
     border: none;
     background-color: transparent;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
 }
 
 .main__wrapper {
