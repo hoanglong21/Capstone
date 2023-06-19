@@ -87,4 +87,22 @@ public class CardServiceImpl implements CardService {
         cardRepository.delete(card);
         return true;
     }
+
+    @Override
+    public Boolean checkBlank(int id) {
+        Card card;
+        try {
+            card = cardRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
+        }catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return true;
+        }
+        if (contentRepository.getContentByCardId(card.getId()).size()==0 && card.getAudio() == null && card.getPicture() == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
