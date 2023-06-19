@@ -8,6 +8,7 @@ import com.capstone.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
@@ -38,17 +39,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> AuthenticateAndGetToken(@RequestBody AuthenticationRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            String jwtToken = jwtService.generateToken(authRequest.getUsername());
-            return ResponseEntity.ok(jwtToken);
-        } else {
-            try {
-                throw new UsernameNotFoundException("invalid user request !");
-            } catch (UsernameNotFoundException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+            if (authentication.isAuthenticated()) {
+                String jwtToken = jwtService.generateToken(authRequest.getUsername());
+                return ResponseEntity.ok(jwtToken);
+            } else {
+                return ResponseEntity.badRequest().body("The login details you provided are incorrect. please try again.");
             }
-
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.badRequest().body("The login details you provided are incorrect. please try again.");
         }
     }
 
