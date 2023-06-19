@@ -8,6 +8,7 @@ import com.capstone.project.repository.ClassRepository;
 import com.capstone.project.repository.PostRepository;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.PostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class PostServiceImpl implements PostService {
     private final ClassRepository classRepository;
     private final UserRepository userRepository;
 
+    @Autowired
     public PostServiceImpl(PostRepository postRepository, ClassRepository classRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.classRepository = classRepository;
@@ -58,7 +60,6 @@ public class PostServiceImpl implements PostService {
         }
         post.setContent(posts.getContent());
         post.setUser(userRepository.findUserById(posts.getUser().getId()));
-        post.setClassroom(classRepository.findClassById(posts.getClassroom().getId()));
         return postRepository.save(post);
     }
 

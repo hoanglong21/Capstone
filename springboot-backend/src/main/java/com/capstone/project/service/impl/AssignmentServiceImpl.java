@@ -88,7 +88,6 @@ public class AssignmentServiceImpl implements AssignmentService {
             return false;
         }
 
-        // delete all the cards and contents associated with the study set
         for (Submission submission : submissionRepository.getSubmissionByAssignmentId(assignmentclass.getId())) {
             for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())) {
                attachmentRepository.delete(attachment);
