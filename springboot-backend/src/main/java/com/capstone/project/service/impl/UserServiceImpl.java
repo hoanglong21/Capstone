@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,13 +23,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new DuplicateValueException("Username already registered");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateValueException("Email already registered");
         }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        String uniqueToken;
+        while(true) {
+            uniqueToken = UUID.randomUUID().toString();
+            if(!userRepository.existsByToken(uniqueToken)) {
+                break;
+            }
+        }
+        user.setToken(uniqueToken);
+        user.setStatus("pending");
+
         return userRepository.save(user);
     }
 
@@ -109,7 +121,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean recoverUser(String username) {
-        User user = null;
+        User user;
         try {
             user = userRepository.findUserByUsername(username);
             if (user == null) {
@@ -138,5 +150,10 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             return true;
         }
+    }
+
+    @Override
+    public User findByToken(String token) {
+        return userRepository.findUserByToken(token);
     }
 }

@@ -58,4 +58,20 @@ public class UserController {
         response.put("success", success);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
+        System.out.println("123");
+        // validate token against user record in the database
+        User user = userService.findByToken(token);
+
+        if (user != null) {
+            // mark account as verified and log user in
+            user.setStatus("active");
+            userService.updateUser(user.getUsername(), user);
+            return ResponseEntity.ok("successfully");
+        } else {
+            return ResponseEntity.badRequest().body("failed");
+        }
+    }
 }

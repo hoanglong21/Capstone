@@ -18,4 +18,6 @@ public interface UserService {
     Boolean deleteUser(String username);
 
     Boolean recoverUser(String username);
+
+    User findByToken(String token);
 }

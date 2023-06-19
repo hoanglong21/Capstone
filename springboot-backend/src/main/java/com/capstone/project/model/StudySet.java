@@ -26,9 +26,11 @@ public class StudySet {
 
     private String description;
 
-    private boolean is_deleted; // delete 0 or not 1
+    private boolean is_deleted; // delete 1 or not 0
 
-    private boolean is_public; // private 0 or public 1
+    private boolean is_public; // public 1 or private 0
+
+//    private boolean is_draft; // draft 1 or not 0
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
