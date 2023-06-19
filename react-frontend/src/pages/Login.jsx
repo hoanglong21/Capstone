@@ -16,6 +16,8 @@ const Login = () => {
     const { register, handleSubmit } = useForm()
     const { loading, userToken, error } = useSelector((state) => state.auth)
 
+    const [emptyMess, setEmptyMess] = useState('')
+
     useEffect(() => {
         if (userToken) {
             navigate('/')
@@ -23,24 +25,30 @@ const Login = () => {
     }, [navigate, userToken])
 
     const submitForm = (data) => {
+        var form = document.querySelector('.needs-validation')
         const usernameEl = document.getElementById('username')
         const passwordEl = document.getElementById('password')
         // clear validation
+        form.classList.remove('was-validated')
         usernameEl.classList.remove('is-invalid')
         passwordEl.classList.remove('is-invalid')
+        setEmptyMess('')
 
-        var form = document.querySelector('.needs-validation')
         if (!form.checkValidity()) {
-            if (!data.username) {
-                usernameEl.classList.add('is-invalid')
+            form.classList.add('was-validated')
+            if (!data.username || !data.password) {
+                setEmptyMess('Please complete all the fields.')
+                if (!data.username) {
+                    usernameEl.classList.add('is-invalid')
+                }
+                if (!data.password) {
+                    passwordEl.classList.add('is-invalid')
+                }
             }
-            if (!data.password) {
-                passwordEl.classList.add('is-invalid')
-            }
+
             return
         }
         dispatch(login(data))
-        // navigate('/')
     }
 
     return (
@@ -65,12 +73,12 @@ const Login = () => {
                             noValidate
                         >
                             {/* error message */}
-                            {error && (
+                            {(emptyMess || error) && (
                                 <div
                                     className="alert alert-danger"
                                     role="alert"
                                 >
-                                    {error}
+                                    {emptyMess || error}
                                 </div>
                             )}
                             {/* username/email */}
@@ -86,9 +94,6 @@ const Login = () => {
                                     {...register('username')}
                                     required
                                 />
-                                <div className="invalid-feedback">
-                                    Your username cannot be left blank.
-                                </div>
                             </div>
                             {/* password */}
                             <div className="form-group mb-3">
@@ -104,9 +109,6 @@ const Login = () => {
                                     {...register('password')}
                                     required
                                 />
-                                <div className="invalid-feedback">
-                                    Your password cannot be left blank.
-                                </div>
                             </div>
                             {/* forgot */}
                             <div className="d-flex justify-content-end">
