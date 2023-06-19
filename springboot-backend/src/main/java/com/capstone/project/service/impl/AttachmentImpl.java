@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Attachment;
 import com.capstone.project.repository.AttachmentRepository;
 import com.capstone.project.service.AttachmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public class AttachmentImpl implements AttachmentService {
 
     private final AttachmentRepository attachmentRepository;
 
+    @Autowired
     public AttachmentImpl(AttachmentRepository attachmentRepository) {
         this.attachmentRepository = attachmentRepository;
     }
@@ -48,6 +50,7 @@ public class AttachmentImpl implements AttachmentService {
             e.printStackTrace();
         }
         attachment_new.setFile(attachment.getFile());
+        attachment_new.setAttachmentType(attachment.getAttachmentType());
         return attachmentRepository.save(attachment_new);
     }
 

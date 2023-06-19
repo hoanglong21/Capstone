@@ -1,6 +1,7 @@
 package com.capstone.project.controller;
 
 import com.capstone.project.model.Assignment;
+import com.capstone.project.model.Card;
 import com.capstone.project.service.AssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
 public class AssignmentController {
@@ -30,6 +31,11 @@ public class AssignmentController {
         return assignmentService.getAllAssignment();
     }
 
+    @GetMapping("/assignments/{id}")
+    public Assignment getAssignmentById(@PathVariable int id) {
+        return assignmentService.getAssignmentById(id);
+    }
+
     @PostMapping("/assignments")
     public Assignment createAssignment(@RequestBody Assignment assignment) throws ParseException {
         Date currentDate = new Date();
@@ -42,7 +48,7 @@ public class AssignmentController {
     }
 
     @PutMapping ("/assignments/{id}")
-    public Assignment updateTest(@PathVariable int id, @RequestBody Assignment assignment) throws ParseException {
+    public Assignment updateAssignment(@PathVariable int id, @RequestBody Assignment assignment) throws ParseException {
 
         return assignmentService.updateAssignment(id,assignment);
     }
