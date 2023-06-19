@@ -16,7 +16,7 @@ public interface StudySetService {
 
     Boolean deleteStudySet( int id);
 
-    public Boolean deleteHardStudySet(int id);
+    Boolean deleteHardStudySet(int id);
 
 //    ResponseEntity<Map<String, Object>> getAllEmployeesFilterAndPagination(String id, int page, int size);
 }
