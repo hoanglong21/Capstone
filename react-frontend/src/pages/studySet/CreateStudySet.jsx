@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
 
 import { Card } from '../../components/Card'
 import CardService from '../../services/CardService'
@@ -8,9 +10,12 @@ import StudySetService from '../../services/StudySetService'
 import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUser } from '../../services/UserService'
 
 const CreateStudySet = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const { id } = useParams()
 
@@ -18,6 +23,7 @@ const CreateStudySet = () => {
     const [studySet, setStudySet] = useState({})
     const [cards, setCards] = useState([])
     const [error, setError] = useState('')
+    const [showDiscardMess, setShowDiscardMess] = useState(false)
 
     // fetch data
     useEffect(() => {
@@ -45,8 +51,20 @@ const CreateStudySet = () => {
         }
     }, [])
 
+    // toggle discard toast
+    useEffect(() => {
+        setShowDiscardMess(sessionStorage.getItem('isReload', 'true'))
+        console.log(sessionStorage.getItem('isReload', 'true'))
+    }, [])
+
+    const toggleShowDiscardMess = () => {
+        setShowDiscardMess(!showDiscardMess)
+        sessionStorage.clear()
+    }
+
     const handleReload = (event) => {
         event.preventDefault()
+        sessionStorage.setItem('isReload', 'true')
         return false
     }
 
@@ -79,7 +97,7 @@ const CreateStudySet = () => {
         if (!form.checkValidity()) {
             form.classList.add('was-validated')
             titleEl.classList.add('is-invalid')
-        } 
+        }
         if (cards.length == 0) {
             setError('You must have at least one cards to save your set.')
         } else {
@@ -106,6 +124,31 @@ const CreateStudySet = () => {
     const doUpdate = async () => {
         try {
             await StudySetService.updateStudySet(studySet.id, studySet)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleDiscard = async () => {
+        try {
+            const newStudySet = (
+                await StudySetService.createStudySet({
+                    user: {
+                        id: studySet.user.id,
+                    },
+                    title: '',
+                    description: '',
+                    deleted: false,
+                    public: true,
+                    studySetType: {
+                        id: 1,
+                    },
+                    deleted_date: '',
+                })
+            ).data
+            await StudySetService.deleteStudySet(studySet.id)
+            navigate('/create-set/' + newStudySet.id)
+            toggleShowDiscardMess()
         } catch (error) {
             console.log(error)
         }
@@ -209,6 +252,42 @@ const CreateStudySet = () => {
                     </div>
                 </div>
             </form>
+            {/* discard message */}
+            <ToastContainer
+                className="p-3 mt-5 opacity-75 position-sticky"
+                position="bottom-start"
+                style={{ zIndex: 9999 }}
+            >
+                <Toast
+                    show={showDiscardMess}
+                    onClose={toggleShowDiscardMess}
+                    delay={10000}
+                    className="toast align-items-center text-bg-dark border-0"
+                    autohide
+                >
+                    <Toast.Body className="d-flex flex-column p-3">
+                        <div className="d-flex justify-content-between">
+                            <span className="me-auto">
+                                This is an auto-saved set.
+                            </span>
+                            <button
+                                type="button"
+                                class="btn-close btn-close-white"
+                                data-bs-dismiss="toast"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div>
+                            <button
+                                className="btn text-white"
+                                onClick={handleDiscard}
+                            >
+                                Discard it
+                            </button>
+                        </div>
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
         </div>
     )
 }
