@@ -7,6 +7,7 @@ import { login } from '../features/auth/authAction'
 
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
+import { useState } from 'react'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -22,13 +23,24 @@ const Login = () => {
     }, [navigate, userToken])
 
     const submitForm = (data) => {
+        const usernameEl = document.getElementById('username')
+        const passwordEl = document.getElementById('password')
+        // clear validation
+        usernameEl.classList.remove('is-invalid')
+        passwordEl.classList.remove('is-invalid')
+
         var form = document.querySelector('.needs-validation')
-        form.classList.add('was-validated')
         if (!form.checkValidity()) {
+            if (!data.username) {
+                usernameEl.classList.add('is-invalid')
+            }
+            if (!data.password) {
+                passwordEl.classList.add('is-invalid')
+            }
             return
         }
         dispatch(login(data))
-        navigate('/')
+        // navigate('/')
     }
 
     return (
@@ -74,6 +86,9 @@ const Login = () => {
                                     {...register('username')}
                                     required
                                 />
+                                <div className="invalid-feedback">
+                                    Your username cannot be left blank.
+                                </div>
                             </div>
                             {/* password */}
                             <div className="form-group mb-3">
@@ -89,6 +104,9 @@ const Login = () => {
                                     {...register('password')}
                                     required
                                 />
+                                <div className="invalid-feedback">
+                                    Your password cannot be left blank.
+                                </div>
                             </div>
                             {/* forgot */}
                             <div className="d-flex justify-content-end">

@@ -28,23 +28,25 @@ const Register = () => {
     const submitForm = async (data) => {
         const usernameEl = document.querySelector('#username')
         const emailEl = document.querySelector('#email')
+        const passwordEl = document.querySelector('#password')
         // clear error validation
         usernameEl.classList.remove('is-invalid')
         emailEl.classList.remove('is-invalid')
+        passwordEl.classList.remove('is-invalid')
 
         var form = document.querySelector('.needs-validation')
-        form.classList.add('was-validated')
         if (!form.checkValidity()) {
+            if(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(data.password)) {
+                
+            }
             return
         }
         dispatch(userRegister(data))
 
         if (error === 'Username already registered') {
-            form.classList.remove('was-validated')
             usernameEl.classList.add('is-invalid')
         }
         if (error === 'Email already registered') {
-            form.classList.remove('was-validated')
             emailEl.classList.add('is-invalid')
         }
     }
@@ -86,9 +88,6 @@ const Register = () => {
                                 {...register('username')}
                                 required
                             />
-                            <div className="invalid-feedback">
-                                Please use a valid username
-                            </div>
                         </div>
                         {/* First name */}
                         <div className="form-group mb-4">
@@ -98,6 +97,7 @@ const Register = () => {
                             <input
                                 placeholder="Type your first name"
                                 name="first_name"
+                                id="first_name"
                                 className={`form-control ${styles.formControl}`}
                                 {...register('first_name')}
                                 required
@@ -111,6 +111,7 @@ const Register = () => {
                             <input
                                 placeholder="Type your last name"
                                 name="last_name"
+                                id="last_name"
                                 className={`form-control ${styles.formControl}`}
                                 {...register('last_name')}
                                 required
@@ -128,9 +129,6 @@ const Register = () => {
                                 {...register('email')}
                                 required
                             />
-                            <div className="invalid-feedback">
-                                Please use a valid email address
-                            </div>
                         </div>
                         {/* Password */}
                         <div className="form-group mb-4">
@@ -139,6 +137,7 @@ const Register = () => {
                                 type="password"
                                 placeholder="Enter your password"
                                 name="password"
+                                id="password"
                                 className={`form-control ${styles.formControl}`}
                                 {...register('password')}
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
