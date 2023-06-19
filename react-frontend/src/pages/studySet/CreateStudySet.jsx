@@ -17,7 +17,9 @@ const CreateStudySet = () => {
     const [isScroll, setIsScroll] = useState(false)
     const [studySet, setStudySet] = useState({})
     const [cards, setCards] = useState([])
+    const [error, setError] = useState('')
 
+    // fetch data
     useEffect(() => {
         const fetchData = async () => {
             setStudySet((await StudySetService.getStudySetById(id)).data)
@@ -62,8 +64,17 @@ const CreateStudySet = () => {
     }
 
     const handleSubmit = (event) => {
+        const titleEl = document.querySelector('#title')
+        // clear validate
+        titleEl.classList.remove('is-invalid')
+
         event.preventDefault()
-        navigate('/set/' + id)
+        var form = document.querySelector('.needs-validation')
+        if (!form.checkValidity()) {
+            titleEl.classList.add('is-invalid')
+            return
+        }
+        // navigate('/set/' + id)
     }
 
     const handleDelete = (event) => {
@@ -83,7 +94,7 @@ const CreateStudySet = () => {
 
     return (
         <div>
-            <form className="mt-2">
+            <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div
                     className={`p-3 sticky-top sticky-header ${
@@ -102,18 +113,29 @@ const CreateStudySet = () => {
                     </div>
                 </div>
                 <div className="container mt-4">
+                    {/* error message */}
+                    {error && (
+                        <div className="alert alert-danger" role="alert">
+                            {error}
+                        </div>
+                    )}
                     {/* Study set */}
                     <div className="row">
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Title</label>
                             <input
                                 placeholder="Enter your title"
+                                id="title"
                                 name="title"
                                 className={`form-control ${styles.formControl}`}
                                 value={studySet.title}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
+                                required
                             />
+                            <div className="invalid-feedback">
+                                Please enter a title to create your set.
+                            </div>
                         </div>
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Access</label>
@@ -124,6 +146,7 @@ const CreateStudySet = () => {
                                 value={studySet.public}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
+                                required
                             >
                                 <option value={true}>Public</option>
                                 <option value={false}>Private</option>

@@ -54,7 +54,7 @@ const Header = () => {
                     user: {
                         id: userInfo.id,
                     },
-                    title: 'Draft',
+                    title: '',
                     description: '',
                     deleted: false,
                     public: true,

@@ -26,9 +26,11 @@ const Register = () => {
     }, [navigate, userToken, success])
 
     const submitForm = async (data) => {
+        const usernameEl = document.querySelector('#username')
+        const emailEl = document.querySelector('#email')
         // clear error validation
-        document.querySelector('#username').classList.remove('is-invalid')
-        document.querySelector('#email').classList.remove('is-invalid')
+        usernameEl.classList.remove('is-invalid')
+        emailEl.classList.remove('is-invalid')
 
         var form = document.querySelector('.needs-validation')
         form.classList.add('was-validated')
@@ -39,11 +41,11 @@ const Register = () => {
 
         if (error === 'Username already registered') {
             form.classList.remove('was-validated')
-            document.querySelector('#username').classList.add('is-invalid')
+            usernameEl.classList.add('is-invalid')
         }
         if (error === 'Email already registered') {
             form.classList.remove('was-validated')
-            document.querySelector('#email').classList.add('is-invalid')
+            emailEl.classList.add('is-invalid')
         }
     }
 
