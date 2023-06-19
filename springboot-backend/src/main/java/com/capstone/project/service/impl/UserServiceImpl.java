@@ -5,8 +5,12 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.UserService;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,8 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JavaMailSender mailSender;
 
     @Override
     public User createUser(User user) {
@@ -153,7 +159,65 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByToken(String token) {
-        return userRepository.findUserByToken(token);
+    public Boolean verifyAccount(String token) {
+        User user = userRepository.findUserByToken(token);
+        if (user != null) {
+            // mark account as verified and log user in
+            user.setStatus("active");
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean sendVerificationEmail(String username) {
+        try {
+            User user = userRepository.findUserByUsername(username);
+            // for current version only
+            String siteURL = "http://localhost:8080/api/v1/";
+
+            // end of current version
+            String toAddress = user.getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+//            String subject = "Please verify your registration";
+//            String content = "Dear [[name]],<br>"
+//                    + "We hope this message finds you well.<br>"
+//                    + "We would like to kindly request that you please follow the link provided below to verify your registration: "
+//                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+//                    + "Thank you for taking the time to complete this important step. If you have any questions or concerns, please do not hesitate to contact us.:<br>"
+//                    + "Thank you,<br>"
+//                    + "The NihongoLevelUp Team";
+
+            String subject = "Confirm Your Registration with NihongoLevelUp";
+            String content = "Dear [[name]],<br><br>"
+                    + "Thank you for registering for a NihongoLevelUp account. To complete your registration, please click the button below to verify your email address: "
+                    + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Verify Email</a><br><br>"
+                    + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                    + "Best regards,<br>"
+                    + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", user.getFirst_name() + " " + user.getLast_name());
+
+            String verifyURL = siteURL + "verify?token=" + user.getToken();
+            content = content.replace("[[URL]]", verifyURL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 }

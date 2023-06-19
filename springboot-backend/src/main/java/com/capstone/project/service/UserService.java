@@ -19,5 +19,7 @@ public interface UserService {
 
     Boolean recoverUser(String username);
 
-    User findByToken(String token);
+    Boolean verifyAccount(String token);
+
+    Boolean sendVerificationEmail(String username);
 }

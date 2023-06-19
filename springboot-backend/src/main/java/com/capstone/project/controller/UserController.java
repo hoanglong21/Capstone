@@ -61,17 +61,19 @@ public class UserController {
 
     @GetMapping("/verify")
     public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
-        System.out.println("123");
-        // validate token against user record in the database
-        User user = userService.findByToken(token);
-
-        if (user != null) {
-            // mark account as verified and log user in
-            user.setStatus("active");
-            userService.updateUser(user.getUsername(), user);
+        if (userService.verifyAccount(token)) {
             return ResponseEntity.ok("successfully");
         } else {
             return ResponseEntity.badRequest().body("failed");
+        }
+    }
+
+    @GetMapping("/sendverify")
+    public ResponseEntity<Boolean> sendVerificationEmail(@RequestParam("username") String username) {
+        if(userService.sendVerificationEmail(username)) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
         }
     }
 }
