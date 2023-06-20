@@ -1,17 +1,29 @@
 import React from "react";
 import "../assets/styles/Landing.css";
+import img1 from "../assets/images/blog_1.jpg"
+import img2 from "../assets/images/blog_2.jpg"
+import img3 from "../assets/images/blog_3.jpg"
 import video from "../assets/video/learn once, use anywhere.mp4";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const Landing = () => {
-  const vidRef=useRef();
+  const vidRef = useRef();
 
-  useEffect(() => { vidRef.current.play(); },[]);
+  useEffect(() => {
+    vidRef.current.play();
+  }, []);
   return (
     <>
       <div className="landing__video">
-        <video controls muted="true" autoPlay={true} loop src={video} ref={ vidRef }/>
+        <video
+          controls
+          muted="true"
+          autoPlay={true}
+          loop
+          src={video}
+          ref={vidRef}
+        />
       </div>
       <div className="landing__ti text-center">
         <h2 className="heading__line">What is NihongoLevelUp?</h2>
@@ -95,20 +107,101 @@ const Landing = () => {
         </div>
       </div>
       <div className="section-title">
-        <h4 className="title mb-4 text-center">Have Question ? Get in touch!</h4>
-        <p className="text-muted para-desc mx-auto text-center">
-          Start working with <span class="text-primary fw-bold">NihongoLevelUp</span>{" "}
-          that can provide everything you need about Japanese
+        <h4 className="title mb-4 text-center">
+          Have Question ? Get in touch!
+        </h4>
+        <p className="text-muted para-desc mx-auto text-center" style={{fontSize: '1.2rem'}}>
+          Start working with{" "}
+          <span class="text-primary fw-bold">NihongoLevelUp</span> that can
+          provide everything you need about Japanese
         </p>
-        <div className="landing__contact text-center">
-        <a className="landing__btn" href="/">
-          {" "}
-          <span>Contact us</span>
-        </a>
-        </div>
       </div>
-      <div className="landing__footer">
-        
+      <div className="row" style={{marginTop: '100px', width: '1140px', height: '477px', marginLeft: '90px'}}>
+        <div className="col-12 col-md-6 col-lg-4">
+          <div className="single-blog wow fadeIn res-margin" data-wow-duration="2s">
+            <div className="blog-thumb">
+                <img src={img1} alt="" className="row__img"/>
+            </div>
+            <div className="blog-content p-4">
+              <ul className="meta-info d-flex justify-content-between">
+                <li>
+                  By Anna Sword
+                </li>
+                <li>
+                  <a href="/">Feb 05, 2019</a>
+                </li>
+              </ul>
+              <h3 className="blog-title my-3">
+                <a href="/">Blog Title Here</a>
+              </h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Ratione obcaecati, animi vitae recusandae, praesentium quae.
+              </p>
+              <a href="/" className="blog-btn mt-3">
+                Read More
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <div className="single-blog wow fadeIn res-margin" data-wow-duration="2s">
+            <div className="blog-thumb">
+              <a href="/">
+                <img src={img2} alt="" className="row__img"/>
+              </a>
+            </div>
+            <div className="blog-content p-4">
+              <ul className="meta-info d-flex justify-content-between">
+                <li>
+                  By Jassica William
+                </li>
+                <li>
+                  <a href="/">Feb 05, 2019</a>
+                </li>
+              </ul>
+              <h3 className="blog-title my-3">
+                <a href="/">Blog Title Here</a>
+              </h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Ratione obcaecati, animi vitae recusandae, praesentium quae.
+              </p>
+              <a href="/" className="blog-btn mt-3">
+                Read More
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <div className="single-blog wow fadeIn res-margin" data-wow-duration="2s">
+            <div className="blog-thumb">
+              <a href="/">
+                <img src={img3} alt="" className="row__img"/>
+              </a>
+            </div>
+            <div className="blog-content p-4">
+              <ul className="meta-info d-flex justify-content-between">
+                <li>
+                  By John Doe
+                </li>
+                <li>
+                  <a href="/">Mar 05, 2019</a>
+                </li>
+              </ul>
+              <h3 className="blog-title my-3">
+                <a href="/">Blog Title Here</a>
+              </h3>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Ratione obcaecati, animi vitae recusandae, praesentium quae.
+              </p>
+              <a href="/" className="blog-btn mt-3">
+                Read More
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
