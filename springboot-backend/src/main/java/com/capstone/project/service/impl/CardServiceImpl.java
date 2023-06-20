@@ -98,11 +98,14 @@ public class CardServiceImpl implements CardService {
             e.printStackTrace();
             return true;
         }
-        if (contentRepository.getContentByCardId(card.getId()).size()==0 && card.getAudio() == null && card.getPicture() == null) {
-            return true;
-        } else {
-            return false;
+        if (card.getAudio() == null && card.getPicture() == null) {
+            for (Content content : contentRepository.getContentByCardId(card.getId())) {
+                if (content.getContent()==null||content.getContent().equals("")) {
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
 }
