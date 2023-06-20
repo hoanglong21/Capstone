@@ -28,6 +28,7 @@ import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import UpdateStudySet from './pages/studySet/UpdateStudySet'
+import UpdateClassroom from './pages/UpdateClassroom'
 
 const App = () => {
     const token = useSelector((state) => state.auth.userToken)
@@ -61,17 +62,6 @@ const App = () => {
                             path="video-chat/:call"
                             element={<VideoChatContainer />}
                         />
-                        <Route path="/flashcard" element={<Flashcard />} />
-                        <Route
-                            path="/createclass"
-                            element={<CreateClassroom />}
-                        />
-                        <Route path="/joinclass" element={<JoinClass />} />
-                        <Route
-                            path="/insideclass"
-                            element={<InsideClassroom />}
-                        />
-                        <Route path="/mainclass" element={<MainClass />} />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
                         <Route path="voice" element={<SpeechToText />} />
@@ -84,6 +74,11 @@ const App = () => {
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot" element={<ForgotPassword />} />
                 <Route path="/reset" element={<ResetPassword />} />
+                <Route path="/flashcard" element={<Flashcard />} />
+                <Route path="/createclass" element={<CreateClassroom />} />
+                <Route path="/updateclass" element={<UpdateClassroom />} />
+                <Route path="/mainclass" element={<MainClass />} />
+                <Route path="/noclass" element={<NoClass />} />
             </Routes>
         </BrowserRouter>
     )
