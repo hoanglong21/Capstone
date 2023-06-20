@@ -82,7 +82,8 @@ const CreateStudySet = () => {
         }
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
+        event.preventDefault()
         const titleEl = document.querySelector('#title')
         var form = document.querySelector('.needs-validation')
         // clear validate
@@ -90,22 +91,27 @@ const CreateStudySet = () => {
         titleEl.classList.remove('is-invalid')
         setError('')
 
-        event.preventDefault()
         if (!form.checkValidity()) {
             form.classList.add('was-validated')
             titleEl.classList.add('is-invalid')
         }
-        if (cards.length == 0) {
+        if (cards.length === 0) {
             setError('You must have at least one cards to save your set.')
         } else {
-            // navigate('/set/' + id)
+            const emptyCards = (
+                await StudySetService.checkStudySet(studySet.id)
+            ).data
+            if (emptyCards.length === 0) {
+                // navigate('/set/' + id)
+            } else {
+                setError('Your card can not be empty. Please try again')
+            }
         }
     }
 
     const handleDelete = async (event) => {
         try {
             var cardEl = event.target.closest('.card')
-            console.log(cardEl.id)
             await CardService.deleteCard(cardEl.id)
             var array = [...cards]
             var index = cardEl.getAttribute('index')

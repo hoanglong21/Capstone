@@ -1,8 +1,20 @@
+import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+
 import avatar from '../../assets/images/avatar-default.jpg'
 import { SearchIcon } from '../../components/icons'
 import './StudySetList.css'
 
 const StudySetList = () => {
+    const { userToken } = useSelector((state) => state.auth)
+
+    const [sets, setSets] = useState([])
+
+    useEffect(() => {
+        const fetchData = () => {}
+        fetchData()
+    }, [])
+
     return (
         <div className="container mt-4 mb-5">
             <div className="sets-search mb-4 d-flex align-items-center">
