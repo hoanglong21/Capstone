@@ -27,6 +27,7 @@ import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
 import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import UpdateStudySet from './pages/studySet/UpdateStudySet'
 
 const App = () => {
     const token = useSelector((state) => state.auth.userToken)
@@ -46,6 +47,10 @@ const App = () => {
                         <Route
                             path="create-set/:id"
                             element={<CreateStudySet />}
+                        />
+                        <Route
+                            path="sets/:id/edit"
+                            element={<UpdateStudySet />}
                         />
                         <Route path="set/:id" element={<StudySet />} />
                         <Route
@@ -77,10 +82,10 @@ const App = () => {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path='/forgot' element={<ForgotPassword />} />
-                <Route path='/reset' element={<ResetPassword />} />
+                <Route path="/forgot" element={<ForgotPassword />} />
+                <Route path="/reset" element={<ResetPassword />} />
             </Routes>
         </BrowserRouter>
     )
 }
-export default App;
+export default App

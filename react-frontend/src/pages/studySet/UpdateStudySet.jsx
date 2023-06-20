@@ -11,7 +11,7 @@ import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
 
-const CreateStudySet = () => {
+const UpdateStudySet = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
@@ -292,4 +292,4 @@ const CreateStudySet = () => {
         </div>
     )
 }
-export default CreateStudySet
+export default UpdateStudySet
