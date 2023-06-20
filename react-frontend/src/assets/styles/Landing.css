@@ -1,0 +1,71 @@
+video{
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.landing__ti h2, .section-title{
+  margin-top: 100px;
+}
+
+.landing__ti .lead {
+  margin-top: 20px;
+  margin-left: 120px;
+  margin-right: 120px;
+  font-weight: 400;
+}
+
+.landing__content{
+  align-items: center;
+  display: flex;
+  margin-left: 150px;
+  margin-right: 150px;
+  margin-top: 70px;
+}
+
+.landing-image img{
+  margin-left: 5.375rem;
+  width: 500px;
+  height: 342px;
+}
+
+.landing-image2 img{
+  margin-right: 5.375rem;
+  width: 500px;
+  height: 500px;
+}
+
+.landing-description2{
+  font-size: 1.1rem;
+}
+
+.landing__btn{
+  text-decoration: none;
+  padding: 15px 20px;
+  background-color: #423ED8;
+  color: #f0f0f0;
+  font-size: 1.2rem;
+  font-weight: 400;
+  border-radius: 15px;
+}
+
+.landing__link{
+  margin-top: 50px;
+}
+
+.landing__contact{
+  text-align: center;
+}
+
+.landing__footer{
+  width: 100%;
+  height: 100vh;
+  background-color: #DBDFFF;
+  margin-top: 50px;
+}
+
+
+
+
+
+
