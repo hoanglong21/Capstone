@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
-import { login, register as userRegister } from '../features/auth/authAction'
+import { register as userRegister } from '../features/auth/authAction'
 
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
-import AuthService from '../services/AuthService'
+import { reset } from '../features/auth/authSlice'
 
 const Register = () => {
     const navigate = useNavigate()
@@ -23,6 +23,11 @@ const Register = () => {
     useEffect(() => {
         if (userToken) navigate('/')
     }, [navigate, userToken])
+
+    // reset state
+    useEffect(() => {
+        dispatch(reset())
+    }, [])
 
     const submitForm = async (data) => {
         const usernameEl = document.querySelector('#username')

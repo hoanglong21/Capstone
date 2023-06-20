@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import avatar from '../../assets/images/avatar-default.jpg'
 import { SearchIcon } from '../../components/icons'
 import './StudySetList.css'
+import jwtDecode from 'jwt-decode'
+import StudySetService from '../../services/StudySetService'
 
 const StudySetList = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -11,7 +13,10 @@ const StudySetList = () => {
     const [sets, setSets] = useState([])
 
     useEffect(() => {
-        const fetchData = () => {}
+        const fetchData = async () => {
+            const username = jwtDecode(userToken).sub
+            setSets((await StudySetService.getAllStudySetByUser(username)).data)
+        }
         fetchData()
     }, [])
 

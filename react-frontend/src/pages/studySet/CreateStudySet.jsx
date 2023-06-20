@@ -104,7 +104,12 @@ const CreateStudySet = () => {
             if (emptyCards.length === 0) {
                 // navigate('/set/' + id)
             } else {
-                setError('Your card can not be empty. Please try again')
+                setError(
+                    `<p class="mb-0">Your card can not be empty. Please review your set.</p>
+                    <a href="#${emptyCards[0]}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                    Go to empty card.
+                    </a>`
+                )
             }
         }
     }
@@ -184,9 +189,11 @@ const CreateStudySet = () => {
                 <div className="container mt-4">
                     {/* error message */}
                     {error && (
-                        <div className="alert alert-danger" role="alert">
-                            {error}
-                        </div>
+                        <div
+                            className="alert alert-danger"
+                            role="alert"
+                            dangerouslySetInnerHTML={{ __html: error }}
+                        ></div>
                     )}
                     {/* Study set */}
                     <div className="row">

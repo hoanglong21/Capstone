@@ -22,12 +22,17 @@ const checkStudySet = (id) => {
     return axios.get(API_BASE_URL + '/checkstudyset/' + id)
 }
 
+const getAllStudySetByUser = (username) => {
+    return axios.get(API_BASE_URL + '/studysetAuthor/' + username)
+}
+
 const StudySetService = {
     createStudySet,
     updateStudySet,
     deleteStudySet,
     getStudySetById,
     checkStudySet,
+    getAllStudySetByUser,
 }
 
 export default StudySetService
