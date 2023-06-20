@@ -4,9 +4,11 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
 import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
+import com.capstone.project.model.User;
 import com.capstone.project.repository.CardRepository;
 import com.capstone.project.repository.ContentRepository;
 import com.capstone.project.repository.StudySetRepository;
+import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.CardService;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,15 @@ public class StudySetServiceImpl implements StudySetService {
     private final CardRepository cardRepository;
     private final ContentRepository contentRepository;
     private final CardService cardService;
+
+    private final UserRepository userRepository;
     @Autowired
-    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService) {
+    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService, UserRepository userRepository) {
         this.studySetRepository = studySetRepository;
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
         this.cardService = cardService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -127,5 +132,20 @@ public class StudySetServiceImpl implements StudySetService {
             }
         }
         return listCardIds;
+    }
+
+    @Override
+    public List<StudySet> getAllStudySetByUser(String username) {
+        User user = null;
+        try {
+            user = userRepository.findUserByUsername(username);
+            if (user == null) {
+                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+            }
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+        }
+        List<StudySet> studySets = studySetRepository.findStudySetByAuthor_id(user.getId());
+        return  studySets;
     }
 }
