@@ -220,4 +220,64 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
+    @Override
+    public Boolean resetPassword(String username, String pin, String password) {
+        User user = userRepository.findUserByUsername(username);
+        if (user != null && user.getPin().equals(pin)) {
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean sendResetPasswordEmail(String username) {
+        try {
+            User user = userRepository.findUserByUsername(username);
+            // for current version only
+            String siteURL = "http://localhost:3000/";
+
+            // end of current version
+            String toAddress = user.getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            String subject = "Reset Your Password with NihongoLevelUp";
+            String content = "Dear [[name]],<br><br>"
+                    + "We have received a request to reset your password for your NihongoLevelUp account. To proceed with resetting your password, please click the button below:"
+                    + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Reset Password</a><br><br>"
+                    + "If you did not initiate this request, please ignore this email. Otherwise, please use the link above to update your password.<br><br>"
+                    + "Thank you,<br>"
+                    + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+
+            content = content.replace("[[name]]", user.getFirst_name() + " " + user.getLast_name());
+
+            // pin update
+            String pin = UUID.randomUUID().toString();
+            user.setPin(pin);
+            userRepository.save(user);
+            // end of pin update
+
+            String resetURL = siteURL + "reset?username=" + username +  "&pin=" + user.getPin();
+            content = content.replace("[[URL]]", resetURL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

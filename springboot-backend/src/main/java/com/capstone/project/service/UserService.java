@@ -22,4 +22,7 @@ public interface UserService {
     Boolean verifyAccount(String token);
 
     Boolean sendVerificationEmail(String username);
+
+    Boolean resetPassword(String username, String pin, String password);
+    Boolean sendResetPasswordEmail(String username);
 }

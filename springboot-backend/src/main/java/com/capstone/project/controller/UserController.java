@@ -2,6 +2,9 @@ package com.capstone.project.controller;
 
 import com.capstone.project.model.User;
 import com.capstone.project.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +62,15 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/sendverify")
+    public ResponseEntity<Boolean> sendVerificationEmail(@RequestParam("username") String username) {
+        if(userService.sendVerificationEmail(username)) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
+
     @GetMapping("/verify")
     public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
         if (userService.verifyAccount(token)) {
@@ -68,9 +80,27 @@ public class UserController {
         }
     }
 
-    @GetMapping("/sendverify")
-    public ResponseEntity<Boolean> sendVerificationEmail(@RequestParam("username") String username) {
-        if(userService.sendVerificationEmail(username)) {
+    @GetMapping("/sendreset")
+    public ResponseEntity<Boolean> sendResetPasswordEmail(@RequestParam("username") String username) {
+        if(userService.sendResetPasswordEmail(username)) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<Boolean> resetPassword(@RequestParam("username") String username, @RequestParam("pin") String pin, @RequestBody String requestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String password = jsonNode.get("password").asText();
+
+        if(userService.resetPassword(username, pin, password)) {
             return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.badRequest().body(false);
