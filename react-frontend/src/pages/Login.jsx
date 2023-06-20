@@ -8,6 +8,7 @@ import { login } from '../features/auth/authAction'
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
 import { useState } from 'react'
+import { reset } from '../features/auth/authSlice'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -23,6 +24,11 @@ const Login = () => {
             navigate('/')
         }
     }, [navigate, userToken])
+
+    // reset state
+    useEffect(() => {
+        dispatch(reset())
+    }, [])
 
     const submitForm = (data) => {
         var form = document.querySelector('.needs-validation')

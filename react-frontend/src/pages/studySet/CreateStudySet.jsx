@@ -82,7 +82,8 @@ const CreateStudySet = () => {
         }
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
+        event.preventDefault()
         const titleEl = document.querySelector('#title')
         var form = document.querySelector('.needs-validation')
         // clear validate
@@ -90,22 +91,32 @@ const CreateStudySet = () => {
         titleEl.classList.remove('is-invalid')
         setError('')
 
-        event.preventDefault()
         if (!form.checkValidity()) {
             form.classList.add('was-validated')
             titleEl.classList.add('is-invalid')
         }
-        if (cards.length == 0) {
+        if (cards.length === 0) {
             setError('You must have at least one cards to save your set.')
         } else {
-            // navigate('/set/' + id)
+            const emptyCards = (
+                await StudySetService.checkStudySet(studySet.id)
+            ).data
+            if (emptyCards.length === 0) {
+                // navigate('/set/' + id)
+            } else {
+                setError(
+                    `<p class="mb-0">Your card can not be empty. Please review your set.</p>
+                    <a href="#${emptyCards[0]}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                    Go to empty card.
+                    </a>`
+                )
+            }
         }
     }
 
     const handleDelete = async (event) => {
         try {
             var cardEl = event.target.closest('.card')
-            console.log(cardEl.id)
             await CardService.deleteCard(cardEl.id)
             var array = [...cards]
             var index = cardEl.getAttribute('index')
@@ -178,9 +189,11 @@ const CreateStudySet = () => {
                 <div className="container mt-4">
                     {/* error message */}
                     {error && (
-                        <div className="alert alert-danger" role="alert">
-                            {error}
-                        </div>
+                        <div
+                            className="alert alert-danger"
+                            role="alert"
+                            dangerouslySetInnerHTML={{ __html: error }}
+                        ></div>
                     )}
                     {/* Study set */}
                     <div className="row">
