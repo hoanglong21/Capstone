@@ -58,4 +58,22 @@ public class UserController {
         response.put("success", success);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
+        if (userService.verifyAccount(token)) {
+            return ResponseEntity.ok("successfully");
+        } else {
+            return ResponseEntity.badRequest().body("failed");
+        }
+    }
+
+    @GetMapping("/sendverify")
+    public ResponseEntity<Boolean> sendVerificationEmail(@RequestParam("username") String username) {
+        if(userService.sendVerificationEmail(username)) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
 }

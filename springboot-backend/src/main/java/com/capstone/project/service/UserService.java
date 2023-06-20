@@ -18,4 +18,8 @@ public interface UserService {
     Boolean deleteUser(String username);
 
     Boolean recoverUser(String username);
+
+    Boolean verifyAccount(String token);
+
+    Boolean sendVerificationEmail(String username);
 }

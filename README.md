@@ -20,5 +20,7 @@
 	Front-end (AWS Hosting): https://main.d3epy9zsaktp6t.amplifyapp.com
 	Back-end (AWS Hosting): http://capstone.us-east-1.elasticbeanstalk.com
 	(Demo Back-end: http://capstone.us-east-1.elasticbeanstalk.com/api/v1/kanjivg/人) 
+
+	For env file: https://drive.google.com/drive/folders/1ylk6j-H1gzI6i3yzTEoKWblDl2sgri7W?usp=sharing
 </body>
 </html>

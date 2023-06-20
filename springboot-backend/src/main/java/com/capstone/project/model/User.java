@@ -63,4 +63,7 @@ public class User {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date deleted_date;
+
+    @Column(unique = true)
+    private String token;
 }
