@@ -23,6 +23,9 @@
     --pink-red-51: #f60f10;
     --pink-red-71: #ec7e7f;
 
+    --red-71: #fa8072;
+    --red-64: #ff6347;
+
     --yellow-56: #ffcd1f;
     --yellow-69: #ffdc62;
     --yellow-87: #ffeebc;
@@ -34,6 +37,7 @@
 
     --text-primary: var(--cyan-blue-26);
     --text-light: var(--blue-42);
+    --text-bold: var(--blue-20);
 
     --header-bg-color: white;
 
@@ -51,8 +55,8 @@
     --btn-warning-color: var(--blue-20);
     --btn-warning-bg: var(--yellow-56);
     --btn-warning-bg-hover: var(--yellow-69);
-    --btn-danger: var(--red-68);
-    --btn-danger-hover: var(--red-74);
+    --btn-danger: var(--red-64);
+    --btn-danger-hover: var(--red-71);
     --btn-info: var(--cyan-27);
     --btn-info-bg: var(--cyan-82);
     --btn-info-bg-hover: white;
@@ -296,7 +300,7 @@ svg {
 }
 
 .was-validated .form-select:valid:not([multiple]):not([size]) {
-    --bs-form-select-bg-icon: url('');
+    --bs-form-select-bg-icon: initial;
 }
 
 .form-select.is-valid:focus,

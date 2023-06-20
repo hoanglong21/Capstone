@@ -221,7 +221,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.success").value(isDeleteSuccess));
     }
 
-    @Order(8)
+    @Order(6)
     @ParameterizedTest(name = "{index} => username={0}, email={1}, status={2}, isBannedDateMoreThan7Days={3}")
     @CsvSource({
             "test_long, test_long@gmail.com, active, false",
