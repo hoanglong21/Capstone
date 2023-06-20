@@ -26,6 +26,7 @@ import NoClass from './pages/NoClass'
 import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import UpdateClassroom from './pages/UpdateClassroom'
 
 const App = () => {
     const token = useSelector((state) => state.auth.userToken)
@@ -79,6 +80,7 @@ const App = () => {
                 <Route path='/reset' element={<ResetPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/createclass" element={<CreateClassroom />} />
+                <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/mainclass" element={<MainClass />} />
                 <Route path="/noclass" element={<NoClass />} />
             </Routes>
