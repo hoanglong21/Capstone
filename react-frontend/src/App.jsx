@@ -48,7 +48,7 @@ const App = () => {
                             element={<CreateStudySet />}
                         />
                         <Route
-                            path="sets/:id/edit"
+                            path="edit-set/:id"
                             element={<UpdateStudySet />}
                         />
                         <Route path="sets/:id" element={<StudySet />} />
