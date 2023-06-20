@@ -34,6 +34,7 @@
 
     --text-primary: var(--cyan-blue-26);
     --text-light: var(--blue-42);
+    --text-bold: var(--blue-20);
 
     --header-bg-color: white;
 
