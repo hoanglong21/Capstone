@@ -24,8 +24,10 @@ import LibraryLayout from './components/layouts/LibraryLayout'
 import StudySetList from './pages/studySet/StudySetList'
 import NoClass from './pages/NoClass'
 import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
+import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import UpdateStudySet from './pages/studySet/UpdateStudySet'
 import UpdateClassroom from './pages/UpdateClassroom'
 
 const App = () => {
@@ -48,6 +50,11 @@ const App = () => {
                             element={<CreateStudySet />}
                         />
                         <Route
+                            path="sets/:id/edit"
+                            element={<UpdateStudySet />}
+                        />
+                        <Route path="set/:id" element={<StudySet />} />
+                        <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
                         />
@@ -55,17 +62,6 @@ const App = () => {
                             path="video-chat/:call"
                             element={<VideoChatContainer />}
                         />
-                        <Route path="/flashcard" element={<Flashcard />} />
-                        <Route
-                            path="/createclass"
-                            element={<CreateClassroom />}
-                        />
-                        <Route path="/joinclass" element={<JoinClass />} />
-                        <Route
-                            path="/insideclass"
-                            element={<InsideClassroom />}
-                        />
-                        <Route path="/mainclass" element={<MainClass />} />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
                         <Route path="voice" element={<SpeechToText />} />
@@ -76,8 +72,8 @@ const App = () => {
 
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path='/forgot' element={<ForgotPassword />} />
-                <Route path='/reset' element={<ResetPassword />} />
+                <Route path="/forgot" element={<ForgotPassword />} />
+                <Route path="/reset" element={<ResetPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/createclass" element={<CreateClassroom />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
@@ -87,4 +83,4 @@ const App = () => {
         </BrowserRouter>
     )
 }
-export default App;
+export default App

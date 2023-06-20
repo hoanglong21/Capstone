@@ -10,9 +10,19 @@ const updateCard = (id, cardDetails) => {
     return axios.post(API_BASE_URL + '/cards/' + id, cardDetails)
 }
 
+const getAllByStudySetId = (studySetId) => {
+    return axios.get(API_BASE_URL + '/cardbystudysetid?id=' + studySetId)
+}
+
+const deleteCard = (id) => {
+    return axios.delete(API_BASE_URL + '/cards/' + id)
+}
+
 const CardService = {
     createCard,
     updateCard,
+    getAllByStudySetId,
+    deleteCard,
 }
 
 export default CardService

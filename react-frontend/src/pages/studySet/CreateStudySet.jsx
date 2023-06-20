@@ -1,30 +1,38 @@
 import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
+
+import { Card } from '../../components/Card'
+import CardService from '../../services/CardService'
+import StudySetService from '../../services/StudySetService'
 
 import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
-import { Card } from '../../components/Card'
-import { useParams } from 'react-router-dom'
-import CardService from '../../services/CardService'
-import ContentService from '../../services/ContentService'
-import StudySetService from '../../services/StudySetService'
 
 const CreateStudySet = () => {
+    const navigate = useNavigate()
+
     const { id } = useParams()
 
     const [isScroll, setIsScroll] = useState(false)
     const [studySet, setStudySet] = useState({})
     const [cards, setCards] = useState([])
+    const [error, setError] = useState('')
+    const [showDiscardMess, setShowDiscardMess] = useState(false)
 
+    // fetch data
     useEffect(() => {
         const fetchData = async () => {
             setStudySet((await StudySetService.getStudySetById(id)).data)
+            setCards((await CardService.getAllByStudySetId(id)).data)
         }
         fetchData()
-    }, [])
+    }, [id])
 
+    // handle sticky header
     useEffect(() => {
-        // handle sticky header
         const handleScroll = () => {
             setIsScroll(window.scrollY > 96)
         }
@@ -32,63 +40,82 @@ const CreateStudySet = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    // handle reload page
     useEffect(() => {
-        // handle reload page
         window.addEventListener('beforeunload', handleReload)
         return () => {
             window.removeEventListener('beforeunload', handleReload)
         }
     }, [])
 
+    // toggle discard toast
+    useEffect(() => {
+        setShowDiscardMess(sessionStorage.getItem('isReload', 'true'))
+        console.log(sessionStorage.getItem('isReload', 'true'))
+    }, [])
+
+    const toggleShowDiscardMess = () => {
+        setShowDiscardMess(!showDiscardMess)
+        sessionStorage.clear()
+    }
+
     const handleReload = (event) => {
         event.preventDefault()
+        sessionStorage.setItem('isReload', 'true')
         return false
     }
 
     const handleAddCard = async () => {
-        const card = (
-            await CardService.createCard({
-                picture: '',
-                audio: '',
-                studySet: {
-                    id: studySet.id,
-                },
-            })
-        ).data
-        const term = (
-            await ContentService.createContent({
-                card: {
-                    id: card.id,
-                },
-                field: {
-                    id: 1,
-                },
-                content: '',
-            })
-        ).data
-        const definition = (
-            await ContentService.createContent({
-                card: {
-                    id: card.id,
-                },
-                field: {
-                    id: 2,
-                },
-                content: '',
-            })
-        ).data
-        setCards([...cards, { ...card, contents: [term, definition] }])
+        try {
+            const card = (
+                await CardService.createCard({
+                    picture: '',
+                    audio: '',
+                    studySet: {
+                        id: studySet.id,
+                    },
+                })
+            ).data
+            setCards([...cards, card])
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleSubmit = (event) => {
+        const titleEl = document.querySelector('#title')
+        var form = document.querySelector('.needs-validation')
+        // clear validate
+        form.classList.remove('was-validated')
+        titleEl.classList.remove('is-invalid')
+        setError('')
+
         event.preventDefault()
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated')
+            titleEl.classList.add('is-invalid')
+        }
+        if (cards.length == 0) {
+            setError('You must have at least one cards to save your set.')
+        } else {
+            // navigate('/set/' + id)
+        }
     }
 
-    const handleDelete = (event) => {
-        var array = [...cards]
-        var index = event.target.closest('.card').id
-        array.splice(index, 1)
-        setCards([...array])
+    const handleDelete = async (event) => {
+        try {
+            var cardEl = event.target.closest('.card')
+            console.log(cardEl.id)
+            await CardService.deleteCard(cardEl.id)
+            var array = [...cards]
+            var index = cardEl.getAttribute('index')
+            if (index > -1) {
+                array.splice(index, 1)
+            }
+            setCards([...array])
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleChange = (event) => {
@@ -96,12 +123,41 @@ const CreateStudySet = () => {
     }
 
     const doUpdate = async () => {
-        await StudySetService.updateStudySet(studySet.id, studySet)
+        try {
+            await StudySetService.updateStudySet(studySet.id, studySet)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleDiscard = async () => {
+        try {
+            const newStudySet = (
+                await StudySetService.createStudySet({
+                    user: {
+                        id: studySet.user.id,
+                    },
+                    title: '',
+                    description: '',
+                    deleted: false,
+                    public: true,
+                    studySetType: {
+                        id: 1,
+                    },
+                    deleted_date: '',
+                })
+            ).data
+            await StudySetService.deleteStudySet(studySet.id)
+            navigate('/create-set/' + newStudySet.id)
+            toggleShowDiscardMess()
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
         <div>
-            <form className="mt-2">
+            <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div
                     className={`p-3 sticky-top sticky-header ${
@@ -120,18 +176,29 @@ const CreateStudySet = () => {
                     </div>
                 </div>
                 <div className="container mt-4">
+                    {/* error message */}
+                    {error && (
+                        <div className="alert alert-danger" role="alert">
+                            {error}
+                        </div>
+                    )}
                     {/* Study set */}
                     <div className="row">
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Title</label>
                             <input
                                 placeholder="Enter your title"
+                                id="title"
                                 name="title"
                                 className={`form-control ${styles.formControl}`}
                                 value={studySet.title}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
+                                required
                             />
+                            <div className="invalid-feedback">
+                                Please enter a title to create your set.
+                            </div>
                         </div>
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Access</label>
@@ -163,7 +230,7 @@ const CreateStudySet = () => {
                     {/* Card */}
                     {cards.map((card, index) => (
                         <Card
-                            key={index}
+                            key={card.id}
                             index={index}
                             card={card}
                             handleDelete={handleDelete}
@@ -186,6 +253,42 @@ const CreateStudySet = () => {
                     </div>
                 </div>
             </form>
+            {/* discard message */}
+            <ToastContainer
+                className="p-3 mt-5 opacity-75 position-sticky"
+                position="bottom-start"
+                style={{ zIndex: 9999 }}
+            >
+                <Toast
+                    show={showDiscardMess}
+                    onClose={toggleShowDiscardMess}
+                    delay={10000}
+                    className="toast align-items-center text-bg-dark border-0"
+                    autohide
+                >
+                    <Toast.Body className="d-flex flex-column p-3">
+                        <div className="d-flex justify-content-between">
+                            <span className="me-auto">
+                                This is an auto-saved set.
+                            </span>
+                            <button
+                                type="button"
+                                className="btn-close btn-close-white"
+                                data-bs-dismiss="toast"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div>
+                            <button
+                                className="btn text-white"
+                                onClick={handleDiscard}
+                            >
+                                Discard it
+                            </button>
+                        </div>
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
         </div>
     )
 }

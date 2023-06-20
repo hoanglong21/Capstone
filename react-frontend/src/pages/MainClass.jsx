@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import '../assets/styles/Classroom.css'
 import { AiOutlineUser } from 'react-icons/ai'
-import Header from '../components/header/Header'
 
 const MainClass = ({}) => {
     const [showInput, setShowInput] = useState(false)

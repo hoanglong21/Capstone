@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { uploadFile, deleteFile } from '../features/fileManagement'
+import { uploadFile, deleteFileByUrl } from '../features/fileManagement'
 
 import { DeleteIcon, ImageIcon, MicIcon } from './icons'
 import TextEditor from './TextEditor'
@@ -10,11 +10,50 @@ import CardService from '../services/CardService'
 
 export const Card = (props) => {
     const [card, setCard] = useState(props.card)
-    const [term, setTerm] = useState(card.contents[0])
-    const [definition, setDefinition] = useState(card.contents[1])
+    const [term, setTerm] = useState({})
+    const [definition, setDefinition] = useState({})
 
+    //fetch data
     useEffect(() => {
-        // ignore error
+        const fetchData = async () => {
+            const contents = (await ContentService.getAllByCardId(card.id)).data
+            if (contents.length == 0) {
+                setTerm(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 1,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setDefinition(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 2,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+            } else {
+                setTerm(contents[0])
+                setDefinition(contents[1])
+            }
+        }
+        fetchData()
+    }, [])
+
+    // ignore error
+    useEffect(() => {
         window.addEventListener('error', (e) => {
             if (e.message === 'ResizeObserver loop limit exceeded') {
                 const resizeObserverErrDiv = document.getElementById(
@@ -46,7 +85,7 @@ export const Card = (props) => {
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {
-                // deleteFile(urlOld)
+                deleteFileByUrl(urlOld)
             }
             doUpdateCard(tempCard)
         }
@@ -54,11 +93,11 @@ export const Card = (props) => {
 
     const handleDeleteFile = (event) => {
         const name = event.target.name
-        const urlOld = String(card[name])
+        const urlOld = card[name]
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
         if (urlOld) {
-            // deleteFile(urlOld)
+            deleteFileByUrl(urlOld)
         }
         doUpdateCard(tempCard)
     }
@@ -80,7 +119,11 @@ export const Card = (props) => {
     }
 
     return (
-        <div className={`card ${styles.card} mb-3`} id={props.index}>
+        <div
+            className={`card ${styles.card} mb-3`}
+            index={props.index}
+            id={card.id}
+        >
             <div
                 className={`card-header ${styles.card_header} d-flex justify-content-between align-items-center mb-1 px-4`}
             >

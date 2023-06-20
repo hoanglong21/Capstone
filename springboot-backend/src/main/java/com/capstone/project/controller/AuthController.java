@@ -45,10 +45,10 @@ public class AuthController {
                 String jwtToken = jwtService.generateToken(authRequest.getUsername());
                 return ResponseEntity.ok(jwtToken);
             } else {
-                return ResponseEntity.badRequest().body("The login details you provided are incorrect. please try again.");
+                return ResponseEntity.badRequest().body("The login details you provided are incorrect. Please try again.");
             }
         } catch (BadCredentialsException e) {
-            return ResponseEntity.badRequest().body("The login details you provided are incorrect. please try again.");
+            return ResponseEntity.badRequest().body("The login details you provided are incorrect. Please try again.");
         }
     }
 

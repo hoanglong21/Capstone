@@ -41,6 +41,7 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state) => {
                 state.loading = false
                 state.success = true // registration successful
+                state.error = null
             })
             .addCase(register.rejected, (state, { payload }) => {
                 state.loading = false
@@ -54,6 +55,7 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state) => {
                 state.loading = false
                 state.userToken = localStorage.getItem('userToken')
+                state.error = null
             })
             .addCase(login.rejected, (state, { payload }) => {
                 state.loading = false
