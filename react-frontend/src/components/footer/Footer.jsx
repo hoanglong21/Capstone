@@ -2,11 +2,11 @@ import { useSelector } from 'react-redux'
 import './Footer.css'
 
 const Footer = () => {
-    const isLogged = useSelector((state) => state.auth.token)
+    const { userToken } = useSelector((state) => state.auth)
 
     return (
         <footer>
-            {isLogged ? (
+            {userToken ? (
                 <div className="footer border-top p-3 px-4 d-flex justify-content-between">
                     <div className="d-flex column-gap-3">
                         <a className="footer-link" href="">
