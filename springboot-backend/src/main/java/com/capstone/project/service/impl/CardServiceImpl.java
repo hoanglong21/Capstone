@@ -98,7 +98,7 @@ public class CardServiceImpl implements CardService {
             e.printStackTrace();
             return true;
         }
-        if (card.getAudio() == null && card.getPicture() == null) {
+        if ((card.getAudio() == null||card.getAudio().equals(""))  && (card.getPicture() == null||card.getPicture().equals(""))) {
             for (Content content : contentRepository.getContentByCardId(card.getId())) {
                 if (content.getContent()==null||content.getContent().equals("")) {
                     return true;
