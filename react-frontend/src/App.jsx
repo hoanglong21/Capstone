@@ -48,10 +48,10 @@ const App = () => {
                             element={<CreateStudySet />}
                         />
                         <Route
-                            path="sets/:id/edit"
+                            path="edit-set/:id"
                             element={<UpdateStudySet />}
                         />
-                        <Route path="set/:id" element={<StudySet />} />
+                        <Route path="sets/:id" element={<StudySet />} />
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
