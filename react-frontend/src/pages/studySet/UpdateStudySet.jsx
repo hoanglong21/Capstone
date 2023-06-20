@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import ToastContainer from 'react-bootstrap/ToastContainer'
-import Toast from 'react-bootstrap/Toast'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { Card } from '../../components/Card'
 import CardService from '../../services/CardService'
@@ -20,7 +18,6 @@ const UpdateStudySet = () => {
     const [studySet, setStudySet] = useState({})
     const [cards, setCards] = useState([])
     const [error, setError] = useState('')
-    const [showDiscardMess, setShowDiscardMess] = useState(false)
 
     // fetch data
     useEffect(() => {
@@ -40,31 +37,6 @@ const UpdateStudySet = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
-    // handle reload page
-    useEffect(() => {
-        window.addEventListener('beforeunload', handleReload)
-        return () => {
-            window.removeEventListener('beforeunload', handleReload)
-        }
-    }, [])
-
-    // toggle discard toast
-    useEffect(() => {
-        setShowDiscardMess(sessionStorage.getItem('isReload', 'true'))
-        console.log(sessionStorage.getItem('isReload', 'true'))
-    }, [])
-
-    const toggleShowDiscardMess = () => {
-        setShowDiscardMess(!showDiscardMess)
-        sessionStorage.clear()
-    }
-
-    const handleReload = (event) => {
-        event.preventDefault()
-        sessionStorage.setItem('isReload', 'true')
-        return false
-    }
-
     const handleAddCard = async () => {
         try {
             const card = (
@@ -82,7 +54,8 @@ const UpdateStudySet = () => {
         }
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
+        event.preventDefault()
         const titleEl = document.querySelector('#title')
         var form = document.querySelector('.needs-validation')
         // clear validate
@@ -90,22 +63,32 @@ const UpdateStudySet = () => {
         titleEl.classList.remove('is-invalid')
         setError('')
 
-        event.preventDefault()
         if (!form.checkValidity()) {
             form.classList.add('was-validated')
             titleEl.classList.add('is-invalid')
         }
-        if (cards.length == 0) {
+        if (cards.length === 0) {
             setError('You must have at least one cards to save your set.')
         } else {
-            // navigate('/set/' + id)
+            const emptyCards = (
+                await StudySetService.checkStudySet(studySet.id)
+            ).data
+            if (emptyCards.length === 0) {
+                // navigate('/set/' + id)
+            } else {
+                setError(
+                    `<p class="mb-0">Your card can not be empty. Please review your set.</p>
+                    <a href="#${emptyCards[0]}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                    Go to empty card.
+                    </a>`
+                )
+            }
         }
     }
 
     const handleDelete = async (event) => {
         try {
             var cardEl = event.target.closest('.card')
-            console.log(cardEl.id)
             await CardService.deleteCard(cardEl.id)
             var array = [...cards]
             var index = cardEl.getAttribute('index')
@@ -130,31 +113,6 @@ const UpdateStudySet = () => {
         }
     }
 
-    const handleDiscard = async () => {
-        try {
-            const newStudySet = (
-                await StudySetService.createStudySet({
-                    user: {
-                        id: studySet.user.id,
-                    },
-                    title: '',
-                    description: '',
-                    deleted: false,
-                    public: true,
-                    studySetType: {
-                        id: 1,
-                    },
-                    deleted_date: '',
-                })
-            ).data
-            await StudySetService.deleteStudySet(studySet.id)
-            navigate('/create-set/' + newStudySet.id)
-            toggleShowDiscardMess()
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     return (
         <div>
             <form className="mt-2 needs-validation" noValidate>
@@ -165,22 +123,33 @@ const UpdateStudySet = () => {
                     }`}
                 >
                     <div className="container d-flex justify-content-between">
-                        <h3 className="fw-bold">Create a new study set</h3>
+                        <Link
+                            to={`/sets/${studySet.id}`}
+                            className={CardStyles.card_button}
+                            style={{
+                                backgroundColor: 'inherit',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            BACK TO SET
+                        </Link>
                         <button
                             type="submit"
                             className="btn btn-primary"
                             onClick={handleSubmit}
                         >
-                            Create
+                            Done
                         </button>
                     </div>
                 </div>
                 <div className="container mt-4">
                     {/* error message */}
                     {error && (
-                        <div className="alert alert-danger" role="alert">
-                            {error}
-                        </div>
+                        <div
+                            className="alert alert-danger"
+                            role="alert"
+                            dangerouslySetInnerHTML={{ __html: error }}
+                        ></div>
                     )}
                     {/* Study set */}
                     <div className="row">
@@ -253,42 +222,6 @@ const UpdateStudySet = () => {
                     </div>
                 </div>
             </form>
-            {/* discard message */}
-            <ToastContainer
-                className="p-3 mt-5 opacity-75 position-sticky"
-                position="bottom-start"
-                style={{ zIndex: 9999 }}
-            >
-                <Toast
-                    show={showDiscardMess}
-                    onClose={toggleShowDiscardMess}
-                    delay={10000}
-                    className="toast align-items-center text-bg-dark border-0"
-                    autohide
-                >
-                    <Toast.Body className="d-flex flex-column p-3">
-                        <div className="d-flex justify-content-between">
-                            <span className="me-auto">
-                                This is an auto-saved set.
-                            </span>
-                            <button
-                                type="button"
-                                className="btn-close btn-close-white"
-                                data-bs-dismiss="toast"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div>
-                            <button
-                                className="btn text-white"
-                                onClick={handleDiscard}
-                            >
-                                Discard it
-                            </button>
-                        </div>
-                    </Toast.Body>
-                </Toast>
-            </ToastContainer>
         </div>
     )
 }
