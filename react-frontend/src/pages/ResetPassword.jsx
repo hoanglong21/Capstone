@@ -20,7 +20,7 @@ const ResetPassword = () => {
               <div className="form-group mb-3">
                 <label className={styles.formLabel}>New Password</label>
                 <input
-                  placeholder="Your email address"
+                  placeholder="Your new password"
                   name="password"
                   id="password"
                   className={`form-control ${styles.formControl}`}
@@ -30,7 +30,7 @@ const ResetPassword = () => {
               <div className="form-group mb-3">
                 <label className={styles.formLabel}>Confirm New Password</label>
                 <input
-                  placeholder="Your email address"
+                  placeholder="Confirm your new password"
                   name="rePassword"
                   id="rePassword"
                   className={`form-control ${styles.formControl}`}

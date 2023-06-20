@@ -75,6 +75,19 @@ const Landing = () => {
             </p>
             <p></p>
           </div>
+          <div className="landing__link">
+            <div className="landing__container">
+              <Link
+                className="landing__btn"
+                role="button"
+                tabindex="0"
+                to="/sets"
+                onclick="return true"
+              >
+                <span>Explore More</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       <div className="section-title">
@@ -84,9 +97,9 @@ const Landing = () => {
           that can provide everything you need about Japanese
         </p>
         <div className="landing__contact text-center">
-        <a className="btn btn-primary mt-4" href="/">
+        <a className="landing__btn" href="/">
           {" "}
-          <i class="uil uil-phone"></i> Contact us
+          <span>Contact us</span>
         </a>
         </div>
       </div>
