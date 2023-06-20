@@ -2,12 +2,16 @@ import React from "react";
 import "../assets/styles/Landing.css";
 import video from "../assets/video/learn once, use anywhere.mp4";
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from 'react';
 
 const Landing = () => {
+  const vidRef=useRef();
+
+  useEffect(() => { vidRef.current.play(); },[]);
   return (
     <>
       <div className="landing__video">
-        <video classsName="landing__iframe" src={video} autoplay loop playsinline></video>
+        <video controls muted="true" autoPlay={true} loop src={video} ref={ vidRef }/>
       </div>
       <div className="landing__ti text-center">
         <h2 className="heading__line">What is NihongoLevelUp?</h2>
