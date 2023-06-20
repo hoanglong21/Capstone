@@ -76,4 +76,9 @@ public class StudySetController {
         response.put("hard deleted", deleted);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/checkstudyset/{id}")
+    public ResponseEntity<List<Integer>> checkStudySet(@PathVariable int id) {
+        return ResponseEntity.ok(studySetService.checkBlankCard(id));
+    }
 }
