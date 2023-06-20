@@ -65,5 +65,7 @@ public class User {
     private Date deleted_date;
 
     @Column(unique = true)
-    private String token;
+    private String token; // for verify
+
+    private String pin; // for reset password
 }
