@@ -51,7 +51,7 @@ const App = () => {
                             path="edit-set/:id"
                             element={<UpdateStudySet />}
                         />
-                        <Route path="sets/:id" element={<StudySet />} />
+                        <Route path="set/:id" element={<StudySet />} />
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}

@@ -18,7 +18,7 @@ const StudySetList = () => {
             setSets((await StudySetService.getAllStudySetByUser(username)).data)
         }
         fetchData()
-    }, [])
+    }, [userToken])
 
     return (
         <div className="container mt-4 mb-5">
@@ -32,38 +32,26 @@ const StudySetList = () => {
                 <SearchIcon />
             </div>
             <div className="sets-list">
-                <div className="set-item mb-3">
-                    <div className="set-body d-flex mb-2">
-                        <div className="term-count me-4">100 terms</div>
-                        <a className="set-author d-flex">
-                            <div className="author-avatar">
-                                <img
-                                    src={avatar}
-                                    alt="author avatar"
-                                    className="w-100"
-                                />
-                            </div>
-                            <span className="author-username ms-2">tuyet</span>
-                        </a>
+                {sets.map((set) => (
+                    <div key={set.id} className="set-item mb-3">
+                        <div className="set-body d-flex mb-2">
+                            <div className="term-count me-4">100 terms</div>
+                            <a className="set-author d-flex">
+                                <div className="author-avatar">
+                                    <img
+                                        src={avatar}
+                                        alt="author avatar"
+                                        className="w-100"
+                                    />
+                                </div>
+                                <span className="author-username ms-2">
+                                    {set.user.username}
+                                </span>
+                            </a>
+                        </div>
+                        <div className="set-title">{set.title}</div>
                     </div>
-                    <div className="set-title">MLN</div>
-                </div>
-                <div className="set-item">
-                    <div className="set-body d-flex mb-2">
-                        <div className="term-count me-4">100 terms</div>
-                        <a className="set-author d-flex">
-                            <div className="author-avatar">
-                                <img
-                                    src={avatar}
-                                    alt="author avatar"
-                                    className="w-100"
-                                />
-                            </div>
-                            <span className="author-username ms-2">tuyet</span>
-                        </a>
-                    </div>
-                    <div className="set-title">MLN</div>
-                </div>
+                ))}
             </div>
         </div>
     )
