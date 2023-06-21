@@ -167,7 +167,7 @@ const CreateStudySet = () => {
     }
 
     return (
-        <div>
+        <div className="flex-grow-1">
             <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div

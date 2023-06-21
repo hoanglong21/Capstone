@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 
 const LibraryLayout = () => {
     return (
-        <div>
+        <div className="flex-grow-1">
             <div className="border-bottom bg-white p-2 pb-0">
                 <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
                     <li>
