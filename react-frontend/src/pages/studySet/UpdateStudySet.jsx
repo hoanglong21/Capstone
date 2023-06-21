@@ -103,7 +103,7 @@ const UpdateStudySet = () => {
     }
 
     return (
-        <div className="flex-grow-1">
+        <div>
             <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div

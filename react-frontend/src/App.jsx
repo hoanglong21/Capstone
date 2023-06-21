@@ -27,6 +27,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import UpdateStudySet from './pages/studySet/UpdateStudySet'
 import UpdateClassroom from './pages/UpdateClassroom'
+import ChangePassword from './pages/account/ChangePassword'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -39,6 +40,10 @@ const App = () => {
                     <Route element={<ProtectedRoute />}>
                         <Route path="account" element={<AccountLayout />}>
                             <Route index element={<Profile />} />
+                            <Route
+                                path="change-password"
+                                element={<ChangePassword />}
+                            />
                         </Route>
                         <Route path="sets" element={<LibraryLayout />}>
                             <Route index element={<StudySetList />} />

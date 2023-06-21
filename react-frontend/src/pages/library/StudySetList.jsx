@@ -36,7 +36,7 @@ const StudySetList = () => {
                     <div key={set.id} className="set-item mb-3">
                         <div className="set-body d-flex mb-2">
                             <div className="term-count me-4">100 terms</div>
-                            <a className="set-author d-flex">
+                            <a className="set-author d-flex" href="#">
                                 <div className="author-avatar">
                                     <img
                                         src={avatar}

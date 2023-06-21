@@ -25,7 +25,7 @@
 }
 
 .card-account__sidebar-link:hover,
-.card-account__sidebar-link--active {
+.card-account__sidebar-link.active {
     color: var(--sidebar-link-hover);
     background-color: var(--sidebar-link-bg);
 }
