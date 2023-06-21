@@ -102,7 +102,7 @@ const CreateStudySet = () => {
                 await StudySetService.checkStudySet(studySet.id)
             ).data
             if (emptyCards.length === 0) {
-                // navigate('/set/' + id)
+                navigate('/set/' + id)
             } else {
                 setError(
                     `<p class="mb-0">Your card can not be empty. Please review your set.</p>

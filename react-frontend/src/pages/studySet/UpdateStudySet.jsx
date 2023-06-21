@@ -98,7 +98,7 @@ const UpdateStudySet = () => {
         if (cards.length == 0) {
             setError('You must have at least one cards to save your set.')
         } else {
-            // navigate('/set/' + id)
+            navigate('/set/' + id)
         }
     }
 
