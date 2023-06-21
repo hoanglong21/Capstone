@@ -220,7 +220,7 @@ const Header = () => {
                                             </div>
                                             <div className="flex-grow-1 ms-3">
                                                 <p className="fw-semibold">
-                                                    TuyetNTA
+                                                    {userInfo.username}
                                                 </p>
                                                 <p
                                                     className="text-truncate"
@@ -228,7 +228,7 @@ const Header = () => {
                                                         maxWidth: '8rem',
                                                     }}
                                                 >
-                                                    tuyetnta@gmail.com
+                                                    {userInfo.email}
                                                 </p>
                                             </div>
                                         </div>
