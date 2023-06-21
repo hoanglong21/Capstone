@@ -109,17 +109,11 @@ const Landing = () => {
                 <h4 className="title mb-4 text-center">
                     Have Question ? Get in touch!
                 </h4>
-                <p className="text-muted para-desc mx-auto text-center">
+                <p className="text-muted para-desc mx-auto text-center" style={{fontSize: '1.2rem'}}>
                     Start working with{' '}
                     <span className="text-primary fw-bold">NihongoLevelUp</span>{' '}
                     that can provide everything you need about Japanese
                 </p>
-                <div className="landing__contact text-center">
-                    <a className="landing__btn" href="/">
-                        {' '}
-                        <span>Contact us</span>
-                    </a>
-                </div>
             </div>
             <div className="row" style={{marginTop: '100px', width: '1140px', height: '477px', marginLeft: '90px'}}>
         <div className="col-12 col-md-6 col-lg-4">
