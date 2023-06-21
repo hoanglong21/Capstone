@@ -29,13 +29,13 @@ import UpdateStudySet from './pages/studySet/UpdateStudySet'
 import UpdateClassroom from './pages/UpdateClassroom'
 
 const App = () => {
-    const token = useSelector((state) => state.auth.userToken)
+    const { userToken } = useSelector((state) => state.auth)
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
-                    <Route index element={token ? <Home /> : <Landing />} />
+                    <Route index element={userToken ? <Home /> : <Landing />} />
                     <Route element={<ProtectedRoute />}>
                         <Route path="account" element={<AccountLayout />}>
                             <Route index element={<Profile />} />
