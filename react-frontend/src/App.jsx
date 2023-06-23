@@ -27,18 +27,24 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import UpdateStudySet from './pages/studySet/UpdateStudySet'
 import UpdateClassroom from './pages/UpdateClassroom'
+import ChangePassword from './pages/account/ChangePassword'
+import NotFound from './pages/notFound/NotFound'
 
 const App = () => {
-    const token = useSelector((state) => state.auth.userToken)
+    const { userToken } = useSelector((state) => state.auth)
 
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
-                    <Route index element={token ? <Home /> : <Landing />} />
+                    <Route index element={userToken ? <Home /> : <Landing />} />
                     <Route element={<ProtectedRoute />}>
                         <Route path="account" element={<AccountLayout />}>
                             <Route index element={<Profile />} />
+                            <Route
+                                path="change-password"
+                                element={<ChangePassword />}
+                            />
                         </Route>
                         <Route path="sets" element={<LibraryLayout />}>
                             <Route index element={<StudySetList />} />
@@ -51,7 +57,7 @@ const App = () => {
                             path="edit-set/:id"
                             element={<UpdateStudySet />}
                         />
-                        <Route path="sets/:id" element={<StudySet />} />
+                        <Route path="set/:id" element={<StudySet />} />
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
@@ -66,6 +72,7 @@ const App = () => {
                         <Route path="draw" element={<Draw />} />
                         <Route path="to-speech" element={<TextToSpeech />} />
                     </Route>
+                    <Route path="*" element={<NotFound />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />

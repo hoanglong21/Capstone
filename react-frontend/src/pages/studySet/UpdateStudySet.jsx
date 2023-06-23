@@ -25,6 +25,7 @@ const UpdateStudySet = () => {
             setStudySet((await StudySetService.getStudySetById(id)).data)
             setCards((await CardService.getAllByStudySetId(id)).data)
         }
+        setError('')
         fetchData()
     }, [id])
 
@@ -102,7 +103,7 @@ const UpdateStudySet = () => {
     }
 
     return (
-        <div className="flex-grow-1">
+        <div>
             <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div
@@ -167,8 +168,10 @@ const UpdateStudySet = () => {
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                             >
-                                <option value={true}>Public</option>
-                                <option value={false}>Private</option>
+                                <option value={1} selected>
+                                    Public
+                                </option>
+                                <option value={0}>Private</option>
                             </select>
                         </div>
                     </div>

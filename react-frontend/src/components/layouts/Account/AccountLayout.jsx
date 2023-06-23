@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 import './AccountLayout.css'
 
 const AccountLayout = () => {
@@ -8,23 +8,39 @@ const AccountLayout = () => {
             <div className="card-account__container">
                 <div className="d-flex">
                     <div className="card-account__sidebar d-flex flex-column border-end pe-4">
-                        <Link
-                            className="card-account__sidebar-link card-account__sidebar-link--active mb-1"
+                        <NavLink
+                            className={
+                                'card-account__sidebar-link mb-2 ' +
+                                +(({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                            end
                             to="."
                         >
                             My Profile
-                        </Link>
-                        <Link className="card-account__sidebar-link mb-1">
+                        </NavLink>
+                        <NavLink
+                            className={
+                                'card-account__sidebar-link mb-2 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                            to="notification"
+                        >
                             Notification
-                        </Link>
-                        <Link className="card-account__sidebar-link mb-1">
+                        </NavLink>
+                        <NavLink
+                            to="change-password"
+                            className={
+                                'card-account__sidebar-link mb-2 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
                             Change Password
-                        </Link>
-                        <Link className="card-account__sidebar-link card-account__sidebar-link--warning">
+                        </NavLink>
+                        <a className="card-account__sidebar-link card-account__sidebar-link--warning mt-3">
                             Delete Account
-                        </Link>
+                        </a>
                     </div>
-                    <div className="card-account__body flex-shrink-1">
+                    <div className="card-account__body flex-grow-1">
                         <Outlet />
                     </div>
                 </div>
