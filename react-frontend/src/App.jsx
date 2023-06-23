@@ -28,6 +28,7 @@ import ResetPassword from './pages/ResetPassword'
 import UpdateStudySet from './pages/studySet/UpdateStudySet'
 import UpdateClassroom from './pages/UpdateClassroom'
 import ChangePassword from './pages/account/ChangePassword'
+import NotFound from './pages/notFound/NotFound'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -71,6 +72,7 @@ const App = () => {
                         <Route path="draw" element={<Draw />} />
                         <Route path="to-speech" element={<TextToSpeech />} />
                     </Route>
+                    <Route path="*" element={<NotFound />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />

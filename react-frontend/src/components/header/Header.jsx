@@ -66,6 +66,8 @@ const Header = () => {
                 })
             ).data
             navigate('create-set/' + studySet.id)
+        } else {
+            navigate('create-set/0')
         }
     }
 
