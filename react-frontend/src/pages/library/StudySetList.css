@@ -38,6 +38,11 @@
     line-height: 1.29;
 }
 
+.set-item a {
+    text-decoration: none;
+    color: var(--text-bold);
+}
+
 .set-author {
     text-decoration: none;
     color: var(--text-bold);
