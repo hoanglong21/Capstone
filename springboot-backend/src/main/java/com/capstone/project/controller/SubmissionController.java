@@ -23,25 +23,30 @@ public class SubmissionController {
     }
 
     @GetMapping("/submissions")
-    public List<Submission> getAllSubmission() {
-        return submissionService.getAllSubmission();
+    public ResponseEntity<List<Submission>> getAllSubmission() {
+        return ResponseEntity.ok(submissionService.getAllSubmission());
+    }
+
+    @GetMapping("/submissionsbyassignmentid/{id}")
+    public ResponseEntity<List<Submission>> getAllSubmissionByAssignmentId(@PathVariable int id) {
+        return ResponseEntity.ok(submissionService.getAllSubmissionByAssignmentId(id));
     }
 
     @PostMapping("/submissions")
-    public Submission createSubmission(@RequestBody Submission submission) throws ParseException {
-        return submissionService.createSubmission(submission);
+    public ResponseEntity<Submission> createSubmission(@RequestBody Submission submission) throws ParseException {
+        return ResponseEntity.ok(submissionService.createSubmission(submission));
     }
 
 
 
     @GetMapping("/submissions/{id}")
-    public Submission getSubmissionById(@PathVariable int id) {
-        return submissionService.getSubmissionById(id);
+    public ResponseEntity<Submission> getSubmissionById(@PathVariable int id) {
+        return ResponseEntity.ok(submissionService.getSubmissionById(id));
     }
 
     @PutMapping("/submissions/{id}")
-    Submission updateSubmission(@RequestBody Submission submission, @PathVariable int id) {
-        return submissionService.updateSubmission(id,submission);
+    public ResponseEntity<Submission> updateSubmission(@RequestBody Submission submission, @PathVariable int id) {
+        return ResponseEntity.ok(submissionService.updateSubmission(id,submission));
     }
 
     @DeleteMapping("/submissions/{id}")
