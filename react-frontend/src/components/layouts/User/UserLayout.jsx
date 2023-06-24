@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import './AccountLayout.css'
+import './UserLayout.css'
 
 const AccountLayout = () => {
     return (
@@ -25,7 +25,7 @@ const AccountLayout = () => {
                             }
                             to="notification"
                         >
-                            Notification
+                            Notifications
                         </NavLink>
                         <NavLink
                             to="change-password"

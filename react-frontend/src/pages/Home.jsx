@@ -8,11 +8,11 @@ function Home() {
                 <input
                     type="text"
                     alt="enter search"
-                    autocomplete="off"
+                    autoComplete="off"
                     id="search-text-box"
                     focus-me=""
-                    autofocus=""
-                    class="bg-w-gray"
+                    autoFocus=""
+                    className="bg-w-gray"
                     placeholder="日本, Japanese, Nhật Bản"
                 ></input>
             </div>
