@@ -2,7 +2,9 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
+import com.capstone.project.model.Content;
 import com.capstone.project.repository.CardRepository;
+import com.capstone.project.repository.ContentRepository;
 import com.capstone.project.repository.StudySetRepository;
 import com.capstone.project.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,12 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
 
+    private final ContentRepository contentRepository;
+
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository) {
+    public CardServiceImpl(CardRepository cardRepository, ContentRepository contentRepository) {
         this.cardRepository = cardRepository;
+        this.contentRepository = contentRepository;
     }
 
     @Override
@@ -76,7 +81,31 @@ public class CardServiceImpl implements CardService {
             e.printStackTrace();
             return false;
         }
+        for (Content content: contentRepository.getContentByCardId(card.getId())) {
+            contentRepository.delete(content);
+        }
         cardRepository.delete(card);
         return true;
     }
+
+    @Override
+    public Boolean checkBlank(int id) {
+        Card card;
+        try {
+            card = cardRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
+        }catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return true;
+        }
+        if ((card.getAudio() == null||card.getAudio().equals(""))  && (card.getPicture() == null||card.getPicture().equals(""))) {
+            for (Content content : contentRepository.getContentByCardId(card.getId())) {
+                if (content.getContent()==null||content.getContent().equals("")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

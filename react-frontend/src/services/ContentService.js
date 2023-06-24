@@ -10,9 +10,14 @@ const updateContent = (id, contentDetails) => {
     return axios.put(API_BASE_URL + '/contents/' + id, contentDetails)
 }
 
+const getAllByCardId = (cardId) => {
+    return axios.get(API_BASE_URL + '/contentbycardid?id=' + cardId)
+}
+
 const ContentService = {
     createContent,
     updateContent,
+    getAllByCardId,
 }
 
 export default ContentService

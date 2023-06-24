@@ -6,7 +6,7 @@ import com.capstone.project.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
@@ -221,7 +221,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.success").value(isDeleteSuccess));
     }
 
-    @Order(8)
+    @Order(6)
     @ParameterizedTest(name = "{index} => username={0}, email={1}, status={2}, isBannedDateMoreThan7Days={3}")
     @CsvSource({
             "test_long, test_long@gmail.com, active, false",

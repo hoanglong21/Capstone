@@ -45,6 +45,7 @@ const Header = () => {
     const handleLogout = () => {
         dispatch(logout())
         toggleShowLogoutMess()
+        navigate('/')
     }
 
     const handleAddStudySet = async () => {
@@ -54,7 +55,7 @@ const Header = () => {
                     user: {
                         id: userInfo.id,
                     },
-                    title: 'Draft',
+                    title: '',
                     description: '',
                     deleted: false,
                     public: true,
@@ -221,7 +222,7 @@ const Header = () => {
                                             </div>
                                             <div className="flex-grow-1 ms-3">
                                                 <p className="fw-semibold">
-                                                    TuyetNTA
+                                                    {userInfo.username}
                                                 </p>
                                                 <p
                                                     className="text-truncate"
@@ -229,7 +230,7 @@ const Header = () => {
                                                         maxWidth: '8rem',
                                                     }}
                                                 >
-                                                    tuyetnta@gmail.com
+                                                    {userInfo.email}
                                                 </p>
                                             </div>
                                         </div>
@@ -318,7 +319,7 @@ const Header = () => {
                                     type="button"
                                     className="btn btn-warning"
                                 >
-                                    Sign-up
+                                    Sign up
                                 </button>
                             </Link>
                         </>
@@ -329,7 +330,7 @@ const Header = () => {
             <ToastContainer
                 className="p-3 mt-5"
                 position="top-end"
-                style={{ zIndex: 1 }}
+                style={{ zIndex: 9999 }}
             >
                 <Toast
                     show={showLogoutMess}

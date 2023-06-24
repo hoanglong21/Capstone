@@ -9,11 +9,14 @@ public interface CardService {
 
     List<Card> getAllByStudySetId(int id);
 
-    Card createCard( Card card);
+    Card createCard(Card card);
 
-    Card getCardById( int id);
+    Card getCardById(int id);
 
-    Card updateCard ( int id, Card cardDetails);
+    Card updateCard (int id, Card cardDetails);
 
-    Boolean deleteCard ( int id);
+    Boolean deleteCard (int id);
+
+    Boolean checkBlank(int id);
+
 }

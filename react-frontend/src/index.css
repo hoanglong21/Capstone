@@ -23,8 +23,12 @@
     --pink-red-51: #f60f10;
     --pink-red-71: #ec7e7f;
 
+    --red-71: #fa8072;
+    --red-64: #ff6347;
+
     --yellow-56: #ffcd1f;
     --yellow-69: #ffdc62;
+    --yellow-87: #ffeebc;
 
     /* ===== Project color definitions ===== */
     --bg-color: var(--blue-97);
@@ -33,6 +37,7 @@
 
     --text-primary: var(--cyan-blue-26);
     --text-light: var(--blue-42);
+    --text-bold: var(--blue-20);
 
     --header-bg-color: white;
 
@@ -50,8 +55,8 @@
     --btn-warning-color: var(--blue-20);
     --btn-warning-bg: var(--yellow-56);
     --btn-warning-bg-hover: var(--yellow-69);
-    --btn-danger: var(--red-68);
-    --btn-danger-hover: var(--red-74);
+    --btn-danger: var(--red-64);
+    --btn-danger-hover: var(--red-71);
     --btn-info: var(--cyan-27);
     --btn-info-bg: var(--cyan-82);
     --btn-info-bg-hover: white;
@@ -67,6 +72,7 @@
     --form-border: var(--blue-88);
     --form-border-focus: var(--yellow-56);
     --form-label-hover: var(--yellow-56);
+    --form-check-shadow: var(--yellow-87);
 
     --upload-hover: var(--yellow-56);
     --upload-border: var(--blue-88);
@@ -101,7 +107,12 @@ code {
 }
 
 .text-primary,
-h1 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--text-primary) !important;
 }
 
@@ -246,4 +257,68 @@ input::placeholder {
 
 svg {
     pointer-events: none;
+}
+
+.form-control.is-valid:focus,
+.was-validated :valid.form-control {
+    border-color: var(--form-border);
+    background-image: inherit;
+    box-shadow: inherit;
+}
+
+.form-check-input.is-valid,
+.was-validated .form-check-input:valid {
+    border-color: var(--form-border);
+}
+
+.form-check-input.is-valid:checked,
+.was-validated .form-check-input:valid:checked {
+    background-color: var(--form-border-focus);
+    border-color: var(--form-border-focus);
+}
+
+.form-check-input:checked,
+.form-check-input.is-valid ~ .form-check-label {
+    color: var(--text-light);
+    border-color: var(--form-border-focus);
+    background-color: var(--form-border-focus);
+}
+
+.was-validated .form-check-input:valid ~ .form-check-label {
+    color: var(--text-light);
+    border-color: var(--form-border-focus);
+}
+
+.form-check-input.is-valid:focus,
+.was-validated .form-check-input:valid:focus {
+    box-shadow: 0 0 0 0.25rem var(--form-check-shadow);
+}
+
+.form-control.is-valid:focus,
+.was-validated .form-control:valid:focus {
+    box-shadow: 0 0 0 0.25rem var(--form-check-shadow);
+}
+
+.form-select.is-valid,
+.was-validated .form-select:valid {
+    border-color: var(--form-border);
+}
+
+.was-validated .form-select:valid:not([multiple]):not([size]) {
+    --bs-form-select-bg-icon: initial;
+}
+
+.form-select.is-valid:focus,
+.was-validated .form-select:valid:focus {
+    box-shadow: 0 0 0 0.25rem var(--form-check-shadow);
+    border-color: var(--form-border-focus);
+}
+
+.was-validated :valid.form-control.is-invalid {
+    border-color: var(--bs-form-invalid-border-color);
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url(data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 12 12%27 width=%2712%27 height=%2712%27 fill=%27none%27 stroke=%27%23dc3545%27%3e%3ccircle cx=%276%27 cy=%276%27 r=%274.5%27/%3e%3cpath stroke-linejoin=%27round%27 d=%27M5.8 3.6h.4L6 6.5z%27/%3e%3ccircle cx=%276%27 cy=%278.2%27 r=%27.6%27 fill=%27%23dc3545%27 stroke=%27none%27/%3e%3c/svg%3e);
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
 }

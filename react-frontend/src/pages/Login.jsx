@@ -7,24 +7,51 @@ import { login } from '../features/auth/authAction'
 
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
+import { useState } from 'react'
+import { reset } from '../features/auth/authSlice'
 
 const Login = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const { register, handleSubmit } = useForm()
-    const { loading, userInfo, error } = useSelector((state) => state.auth)
+    const { loading, userToken, error } = useSelector((state) => state.auth)
+
+    const [emptyMess, setEmptyMess] = useState('')
 
     useEffect(() => {
-        if (userInfo) {
+        if (userToken) {
             navigate('/')
         }
-    }, [navigate, userInfo])
+    }, [navigate, userToken])
+
+    // reset state
+    useEffect(() => {
+        dispatch(reset())
+    }, [])
 
     const submitForm = (data) => {
         var form = document.querySelector('.needs-validation')
-        form.classList.add('was-validated')
+        const usernameEl = document.getElementById('username')
+        const passwordEl = document.getElementById('password')
+        // clear validation
+        form.classList.remove('was-validated')
+        usernameEl.classList.remove('is-invalid')
+        passwordEl.classList.remove('is-invalid')
+        setEmptyMess('')
+
         if (!form.checkValidity()) {
+            form.classList.add('was-validated')
+            if (!data.username || !data.password) {
+                setEmptyMess('Please complete all the fields.')
+                if (!data.username) {
+                    usernameEl.classList.add('is-invalid')
+                }
+                if (!data.password) {
+                    passwordEl.classList.add('is-invalid')
+                }
+            }
+
             return
         }
         dispatch(login(data))
@@ -33,7 +60,7 @@ const Login = () => {
     return (
         <div className="login bg-white h-100 p-5">
             <div className="row px-4">
-                <div className="col d-flex align-items-start">
+                <div className="col d-flex align-items-start p-5">
                     <img src={logo} className="w-100" alt="" />
                 </div>
                 <div className="col-6 mt-4 me-5 pe-5">
@@ -52,12 +79,12 @@ const Login = () => {
                             noValidate
                         >
                             {/* error message */}
-                            {error && (
+                            {(emptyMess || error) && (
                                 <div
                                     className="alert alert-danger"
                                     role="alert"
                                 >
-                                    {error}
+                                    {emptyMess || error}
                                 </div>
                             )}
                             {/* username/email */}

@@ -24,6 +24,11 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        reset: (state) => {
+            state.loading = false
+            state.error = null
+            state.success = null
+        },
         logout: (state) => {
             localStorage.removeItem('userToken') // deletes token from storage
             state.loading = false
@@ -41,6 +46,7 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state) => {
                 state.loading = false
                 state.success = true // registration successful
+                state.error = null
             })
             .addCase(register.rejected, (state, { payload }) => {
                 state.loading = false
@@ -54,6 +60,7 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state) => {
                 state.loading = false
                 state.userToken = localStorage.getItem('userToken')
+                state.error = null
             })
             .addCase(login.rejected, (state, { payload }) => {
                 state.loading = false
@@ -62,6 +69,6 @@ export const authSlice = createSlice({
     },
 })
 
-export const { logout } = authSlice.actions
+export const { reset, logout } = authSlice.actions
 
 export default authSlice.reducer

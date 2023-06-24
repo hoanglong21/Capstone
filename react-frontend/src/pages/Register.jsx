@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
@@ -7,50 +7,70 @@ import { register as userRegister } from '../features/auth/authAction'
 
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
+import { reset } from '../features/auth/authSlice'
 
 const Register = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const { loading, userInfo, error, success } = useSelector(
+    const { loading, userToken, error, success } = useSelector(
         (state) => state.auth
     )
     const { register, handleSubmit } = useForm()
 
+    const [emptyMess, setEmptyMess] = useState('')
+
     useEffect(() => {
-        // redirect user to login page if registration was successful
-        if (success) navigate('/login')
-        // redirect authenticated user to profile screen
-        if (userInfo) navigate('/')
-        // set error validation
-    }, [navigate, userInfo, success])
+        if (userToken) navigate('/')
+    }, [navigate, userToken])
+
+    // reset state
+    useEffect(() => {
+        dispatch(reset())
+    }, [])
 
     const submitForm = async (data) => {
-        // clear error validation
-        document.querySelector('#username').classList.remove('is-invalid')
-        document.querySelector('#email').classList.remove('is-invalid')
-
+        const usernameEl = document.querySelector('#username')
+        const emailEl = document.querySelector('#email')
+        const emailInvalidEl = document.querySelector('#email-invalid')
         var form = document.querySelector('.needs-validation')
-        form.classList.add('was-validated')
+        // clear validation
+        form.classList.remove('was-validated')
+        usernameEl.classList.remove('is-invalid')
+        emailInvalidEl.classList.remove('d-none')
+
+        setEmptyMess('')
+
         if (!form.checkValidity()) {
+            form.classList.add('was-validated')
+            if (
+                !data.username ||
+                !data.first_name ||
+                !data.last_name ||
+                !data.email ||
+                !data.password
+            ) {
+                setEmptyMess('Please complete all the fields.')
+                if (!data.email) {
+                    emailInvalidEl.classList.add('d-none')
+                }
+            }
             return
         }
         dispatch(userRegister(data))
 
         if (error === 'Username already registered') {
-            form.classList.remove('was-validated')
-            document.querySelector('#username').classList.add('is-invalid')
+            usernameEl.classList.add('is-invalid')
         }
         if (error === 'Email already registered') {
-            form.classList.remove('was-validated')
-            document.querySelector('#email').classList.add('is-invalid')
+            emailEl.classList.add('is-invalid')
         }
     }
 
     return (
         <div className="bg-white p-5">
             <div className="row">
-                <div className="col d-flex align-items-start">
+                <div className="col d-flex align-items-start p-5">
                     <img src={logo} className="w-100" alt="" />
                 </div>
                 <div className="col-6 pe-5">
@@ -68,9 +88,19 @@ const Register = () => {
                         noValidate
                     >
                         {/* error message */}
-                        {error && (
+                        {(emptyMess || error) && (
                             <div className="alert alert-danger" role="alert">
-                                {error}
+                                {emptyMess || error}
+                            </div>
+                        )}
+                        {/* success message */}
+                        {success && (
+                            <div className="alert alert-success" role="alert">
+                                Registered successfully. Please{' '}
+                                <Link to="/login" className="link-success">
+                                    Login
+                                </Link>{' '}
+                                to continue.
                             </div>
                         )}
                         {/* username */}
@@ -84,9 +114,6 @@ const Register = () => {
                                 {...register('username')}
                                 required
                             />
-                            <div className="invalid-feedback">
-                                Please use a valid username
-                            </div>
                         </div>
                         {/* First name */}
                         <div className="form-group mb-4">
@@ -96,6 +123,7 @@ const Register = () => {
                             <input
                                 placeholder="Type your first name"
                                 name="first_name"
+                                id="first_name"
                                 className={`form-control ${styles.formControl}`}
                                 {...register('first_name')}
                                 required
@@ -109,6 +137,7 @@ const Register = () => {
                             <input
                                 placeholder="Type your last name"
                                 name="last_name"
+                                id="last_name"
                                 className={`form-control ${styles.formControl}`}
                                 {...register('last_name')}
                                 required
@@ -126,8 +155,11 @@ const Register = () => {
                                 {...register('email')}
                                 required
                             />
-                            <div className="invalid-feedback">
-                                Please use a valid email address
+                            <div
+                                className="invalid-feedback"
+                                id="email-invalid"
+                            >
+                                Please enter a valid email
                             </div>
                         </div>
                         {/* Password */}
@@ -137,6 +169,7 @@ const Register = () => {
                                 type="password"
                                 placeholder="Enter your password"
                                 name="password"
+                                id="password"
                                 className={`form-control ${styles.formControl}`}
                                 {...register('password')}
                                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
@@ -168,13 +201,13 @@ const Register = () => {
                             <div className="form-check form-check-inline me-5">
                                 <input
                                     type="radio"
-                                    className="form-check-input"
+                                    className={`form-check-input ${styles.formCheckInput}`}
                                     name="role"
                                     id="learner"
                                     value="ROLE_LEARNER"
                                     autoComplete="off"
                                     {...register('role')}
-                                    required
+                                    checked
                                 />
                                 <label
                                     className="form-check-label"
@@ -186,13 +219,12 @@ const Register = () => {
                             <div className="form-check mb-4 form-check-inline">
                                 <input
                                     type="radio"
-                                    className="form-check-input"
+                                    className={`form-check-input ${styles.formCheckInput}`}
                                     name="role"
                                     id="tutor"
                                     value="ROLE_TUTOR"
                                     autoComplete="off"
                                     {...register('role')}
-                                    required
                                 />
                                 <label
                                     className="form-check-label"
