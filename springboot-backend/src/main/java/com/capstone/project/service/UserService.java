@@ -24,5 +24,10 @@ public interface UserService {
     Boolean sendVerificationEmail(String username);
 
     Boolean resetPassword(String username, String pin, String password);
+
     Boolean sendResetPasswordEmail(String username);
+
+    Boolean checkMatchPassword(String username, String checkPassword);
+
+    Boolean changePassword(String username, String password);
 }

@@ -14,9 +14,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.findUserByUsername(username);
             if (user == null) {
-                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+                throw new ResourceNotFroundException("User not exist with username:" + username);
             }
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
@@ -99,7 +98,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.findUserByUsername(username);
             if (user == null) {
-                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+                throw new ResourceNotFroundException("User not exist with username:" + username);
             }
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
@@ -117,7 +116,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.findUserByUsername(username);
             if (user == null) {
-                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+                throw new ResourceNotFroundException("User not exist with username:" + username);
             }
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
@@ -135,7 +134,7 @@ public class UserServiceImpl implements UserService {
         try {
             user = userRepository.findUserByUsername(username);
             if (user == null) {
-                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
+                throw new ResourceNotFroundException("User not exist with username:" + username);
             }
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
@@ -283,5 +282,37 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public Boolean checkMatchPassword(String username, String checkPassword) {
+        User user = null;
+        try {
+            user = userRepository.findUserByUsername(username);
+            if (user == null) {
+                throw new ResourceNotFroundException("User not exist with username:" + username);
+            }
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        if(passwordEncoder.matches(checkPassword, user.getPassword())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean changePassword(String username, String password) {
+        try {
+            User user = userRepository.findUserByUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
     }
 }
