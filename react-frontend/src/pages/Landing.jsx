@@ -115,7 +115,7 @@ const Landing = () => {
                     that can provide everything you need about Japanese
                 </p>
             </div>
-            <div className="row" style={{marginTop: '100px', width: '1140px', height: '477px', marginLeft: '90px'}}>
+            <div className="row" style={{marginTop: '100px', width: '80%', height: '40%', marginLeft: 'auto', marginRight: 'auto'}}>
         <div className="col-12 col-md-6 col-lg-4">
           <div className="single-blog wow fadeIn res-margin" data-wow-duration="2s">
             <div className="blog-thumb">
