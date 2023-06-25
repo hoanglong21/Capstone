@@ -31,6 +31,7 @@ import ChangePassword from './pages/user/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/user/Notifications'
 import Term from './components/footer/Term'
+import Privacy from './components/footer/Privacy'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -80,6 +81,7 @@ const App = () => {
                     </Route>
                     <Route path="*" element={<NotFound />} />
                     <Route path="term" element={<Term/>}/>
+                    <Route path="privacy" element={<Privacy/>}/>
                 </Route>
 
                 <Route path="/login" element={<Login />} />
