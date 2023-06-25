@@ -1,15 +1,83 @@
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+
+import { updateUser } from '../../../features/user/userAction'
+
 import avatar from '../../../assets/images/avatar-default.jpg'
 import { EditIcon } from '../../../components/icons'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
 
 const Profile = () => {
+    const dispatch = useDispatch()
+
+    const { userInfo } = useSelector((state) => state.user)
+
+    const [newUser, setNewUser] = useState({})
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState(false)
+
+    useEffect(() => {
+        setNewUser({ ...userInfo })
+    }, [userInfo])
+
+    const handleChange = (event) => {
+        setNewUser({ ...newUser, [event.target.name]: event.target.value })
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        var form = document.querySelector('.needs-validation')
+        const firstNameEl = document.getElementById('first_name')
+        const lastNameEl = document.getElementById('last_name')
+        // clear validation
+        form.classList.remove('was-validated')
+        firstNameEl.classList.remove('is_invalid')
+        lastNameEl.classList.remove('is_invalid')
+        setError('')
+        setSuccess(false)
+
+        form.classList.add('was-validated')
+
+        if (!form.checkValidity()) {
+            if (!newUser.first_name) {
+                setError("First name can't be blank.")
+                firstNameEl.classList.add('is_invalid')
+            } else if (!newUser.last_name) {
+                setError("Last name can't be blank.")
+                lastNameEl.classList.add('is_invalid')
+            }
+        } else {
+            dispatch(updateUser(newUser))
+            setSuccess(true)
+            // auto hide after 5s
+            setTimeout(function () {
+                setSuccess(false)
+            }, 5000)
+        }
+    }
+
     return (
         <div className="mx-5 px-3">
             <h4>My Profile</h4>
-            <form className="row g-4 mt-4">
+            <form className="row g-4 mt-3 needs-validation" noValidate>
+                {/* error message */}
+                {error && (
+                    <div
+                        className="alert alert-danger"
+                        role="alert"
+                        dangerouslySetInnerHTML={{ __html: error }}
+                    ></div>
+                )}
+                {/* success message */}
+                {success && (
+                    <div className="alert alert-success" role="alert">
+                        Your changes have been successfully saved!
+                    </div>
+                )}
+                {/* avatar */}
                 <div className="col-12">
-                    <div className="userAvatar mx-auto">
+                    <div className="userAvatar mx-auto mb-2">
                         <img src={avatar} alt="" className="h-100" />
                         <button type="button" className="btn btn-primary p-0">
                             <EditIcon size="0.75rem" />
@@ -23,7 +91,7 @@ const Profile = () => {
                         id="username"
                         name="username"
                         type="text"
-                        value="tuyet"
+                        value={newUser.username}
                         className="form-control-plaintext p-0"
                         readOnly
                         required
@@ -36,7 +104,7 @@ const Profile = () => {
                         id="username"
                         name="username"
                         type="email"
-                        value="tuyetnta@gmail.com"
+                        value={newUser.email}
                         className="form-control-plaintext p-0"
                         readOnly
                         required
@@ -49,9 +117,10 @@ const Profile = () => {
                         id="first_name"
                         name="first_name"
                         type="text"
-                        value="Tuyet"
+                        value={newUser.first_name}
                         className={`form-control ${FormStyles.formControl}`}
                         required
+                        onChange={handleChange}
                     />
                 </div>
                 {/* Last name */}
@@ -61,9 +130,10 @@ const Profile = () => {
                         id="last_name"
                         name="last_name"
                         type="text"
-                        value="Nguyen"
+                        value={newUser.last_name}
                         className={`form-control ${FormStyles.formControl}`}
                         required
+                        onChange={handleChange}
                     />
                 </div>
                 {/* DOB  */}
@@ -75,18 +145,21 @@ const Profile = () => {
                         id="dob"
                         name="dob"
                         type="date"
+                        value={newUser.dob}
                         className={`form-control ${FormStyles.formControl}`}
+                        onChange={handleChange}
                     />
                 </div>
                 {/* Phone */}
                 <div className="form-group col-6">
                     <label className={FormStyles.formLabel}>Phone</label>
                     <input
-                        id="last_name"
-                        name="last_name"
+                        id="phone"
+                        name="phone"
                         type="phone"
-                        value="0914065298"
+                        value={newUser.phone}
                         className={`form-control ${FormStyles.formControl}`}
+                        onChange={handleChange}
                     />
                 </div>
                 {/* Gender */}
@@ -102,7 +175,8 @@ const Profile = () => {
                             id="male"
                             value="male"
                             autoComplete="off"
-                            checked
+                            checked={newUser.gender === 'male' ? true : false}
+                            onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="male">
                             Male
@@ -116,6 +190,8 @@ const Profile = () => {
                             id="female"
                             value="female"
                             autoComplete="off"
+                            checked={newUser.gender === 'female' ? true : false}
+                            onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="female">
                             Female
@@ -129,6 +205,8 @@ const Profile = () => {
                             id="other"
                             value="other"
                             autoComplete="off"
+                            checked={newUser.gender === 'other' ? true : false}
+                            onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="other">
                             Other
@@ -142,8 +220,9 @@ const Profile = () => {
                         id="address"
                         name="address"
                         type="text"
-                        value="0914065298"
+                        value={newUser.address}
                         className={`form-control ${FormStyles.formControl}`}
+                        onChange={handleChange}
                     />
                 </div>
                 {/* Bio */}
@@ -152,9 +231,18 @@ const Profile = () => {
                     <textarea
                         id="bio"
                         name="bio"
-                        value="0914065298"
+                        value={newUser.bio}
                         className={`form-control ${FormStyles.formControl}`}
+                        onChange={handleChange}
                     />
+                </div>
+                <div className="col-12">
+                    <button
+                        className="btn btn-primary px-4 mt-1"
+                        onClick={handleSubmit}
+                    >
+                        Save
+                    </button>
                 </div>
             </form>
         </div>

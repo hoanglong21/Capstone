@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 
 const ChangePassword = () => {
-    const dispatch = useDispatch()
-
     const { userInfo } = useSelector((state) => state.user)
 
     const [error, setError] = useState('')
@@ -29,17 +27,15 @@ const ChangePassword = () => {
 
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
-            if (!currentPass || !newPass || !confirmPass) {
-                setError('Please complete all the fields.')
-                if (!currentPass) {
-                    currentPassEl.classList.add('is-invalid')
-                }
-                if (!newPass) {
-                    newPassEl.classList.add('is-invalid')
-                }
-                if (!confirmPass) {
-                    confirmPassEl.classList.add('is-invalid')
-                }
+            setError('Please complete all the fields.')
+            if (!currentPass) {
+                currentPassEl.classList.add('is-invalid')
+            }
+            if (!newPass) {
+                newPassEl.classList.add('is-invalid')
+            }
+            if (!confirmPass) {
+                confirmPassEl.classList.add('is-invalid')
             }
             // } else if (currentPass !== userInfo.password) {
             //     setError('Your current password is incorrect.')

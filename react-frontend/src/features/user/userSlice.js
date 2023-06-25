@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getUser } from './userAction'
+import { getUser, updateUser } from './userAction'
 
 const initialState = {
     userInfo: {},
@@ -10,9 +10,13 @@ const userSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers(builder) {
-        builder.addCase(getUser.fulfilled, (state, { payload }) => {
-            state.userInfo = payload
-        })
+        builder
+            .addCase(getUser.fulfilled, (state, { payload }) => {
+                state.userInfo = payload
+            })
+            .addCase(updateUser.fulfilled, (state, { payload }) => {
+                state.userInfo = payload
+            })
     },
 })
 
