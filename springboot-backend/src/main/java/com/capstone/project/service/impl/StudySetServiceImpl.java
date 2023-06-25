@@ -1,5 +1,6 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
 import com.capstone.project.model.Content;
@@ -147,5 +148,10 @@ public class StudySetServiceImpl implements StudySetService {
         }
         List<StudySet> studySets = studySetRepository.findStudySetByAuthor_id(user.getId());
         return  studySets;
+    }
+
+    @Override
+    public List<StudySetResponse> getCustomList(boolean isDeleted, boolean isPublic, boolean isDraft) {
+        return studySetRepository.getCustomList(isDeleted, isPublic, isDraft);
     }
 }
