@@ -25,6 +25,7 @@ const UpdateStudySet = () => {
             setStudySet((await StudySetService.getStudySetById(id)).data)
             setCards((await CardService.getAllByStudySetId(id)).data)
         }
+        setError('')
         fetchData()
     }, [id])
 
@@ -70,19 +71,7 @@ const UpdateStudySet = () => {
         if (cards.length === 0) {
             setError('You must have at least one cards to save your set.')
         } else {
-            const emptyCards = (
-                await StudySetService.checkStudySet(studySet.id)
-            ).data
-            if (emptyCards.length === 0) {
-                // navigate('/set/' + id)
-            } else {
-                setError(
-                    `<p class="mb-0">Your card can not be empty. Please review your set.</p>
-                    <a href="#${emptyCards[0]}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                    Go to empty card.
-                    </a>`
-                )
-            }
+            navigate('/set/' + id)
         }
     }
 
@@ -114,7 +103,7 @@ const UpdateStudySet = () => {
     }
 
     return (
-        <div className="flex-grow-1">
+        <div>
             <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div
@@ -179,8 +168,10 @@ const UpdateStudySet = () => {
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                             >
-                                <option value={true}>Public</option>
-                                <option value={false}>Private</option>
+                                <option value={1} selected>
+                                    Public
+                                </option>
+                                <option value={0}>Private</option>
                             </select>
                         </div>
                     </div>

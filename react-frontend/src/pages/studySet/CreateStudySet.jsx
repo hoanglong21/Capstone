@@ -28,6 +28,7 @@ const CreateStudySet = () => {
             setStudySet((await StudySetService.getStudySetById(id)).data)
             setCards((await CardService.getAllByStudySetId(id)).data)
         }
+        setError('')
         fetchData()
     }, [id])
 
@@ -90,6 +91,7 @@ const CreateStudySet = () => {
         form.classList.remove('was-validated')
         titleEl.classList.remove('is-invalid')
         setError('')
+        console.log(studySet)
 
         if (!form.checkValidity()) {
             form.classList.add('was-validated')
@@ -167,7 +169,7 @@ const CreateStudySet = () => {
     }
 
     return (
-        <div className="flex-grow-1">
+        <div>
             <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div
@@ -218,13 +220,15 @@ const CreateStudySet = () => {
                             <select
                                 className={`form-select ${styles.formSelect}`}
                                 aria-label="public"
-                                name="public"
+                                name="_public"
                                 value={studySet.public}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                             >
-                                <option value={true}>Public</option>
-                                <option value={false}>Private</option>
+                                <option value={1} selected>
+                                    Public
+                                </option>
+                                <option value={0}>Private</option>
                             </select>
                         </div>
                     </div>
