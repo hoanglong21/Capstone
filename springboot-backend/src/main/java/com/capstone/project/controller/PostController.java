@@ -25,24 +25,24 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/post")
-    public List<Post> getAllClass() {
-        return postService.getAllPost();
+    @GetMapping("/postbyclassid/{id}")
+    public ResponseEntity<List<Post>> getAllPostByClassId(@PathVariable int id) {
+        return ResponseEntity.ok(postService.getAllPostByClassId(id));
     }
 
     @PostMapping("/post")
-    public Post createPost(@RequestBody Post post)  {
-        return postService.createPost(post);
+    public ResponseEntity<Post> createPost(@RequestBody Post post)  {
+        return ResponseEntity.ok(postService.createPost(post));
     }
 
     @GetMapping("/post/{id}")
-    public Post getPostById(@PathVariable int id) {
-        return postService.getPostById(id);
+    public ResponseEntity<Post> getPostById(@PathVariable int id) {
+        return ResponseEntity.ok(postService.getPostById(id));
     }
 
     @PutMapping("/post/{id}")
-    Post updatePost(@RequestBody Post posts, @PathVariable int id) {
-        return postService.updatePost(posts,id);
+    public ResponseEntity<Post> updatePost(@RequestBody Post posts, @PathVariable int id) {
+        return ResponseEntity.ok(postService.updatePost(posts,id));
     }
 
     @DeleteMapping("/post/{id}")

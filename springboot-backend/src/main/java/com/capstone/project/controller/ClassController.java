@@ -23,25 +23,25 @@ public class ClassController {
     }
 
     @GetMapping("/class")
-    public List<Class> getAllClass() {
-        return classService.getAllClass();
+    public ResponseEntity<List<Class>> getAllClass() {
+        return ResponseEntity.ok(classService.getAllClass());
     }
 
     @PostMapping("/class")
-    public Class createClassroom(@RequestBody Class classroom) throws ParseException {
-        return classService.createClassroom(classroom);
+    public ResponseEntity<Class> createClassroom(@RequestBody Class classroom) throws ParseException {
+        return ResponseEntity.ok(classService.createClassroom(classroom));
     }
 
 
 
     @GetMapping("/class/{id}")
-    public Class getClassroomById(@PathVariable int id) {
-        return classService.getClassroomById(id);
+    public ResponseEntity<Class> getClassroomById(@PathVariable int id) {
+        return ResponseEntity.ok(classService.getClassroomById(id));
     }
 
     @PutMapping("/class/{id}")
-    Class updateClassroom(@RequestBody Class classrooms, @PathVariable int id) {
-        return classService.updateClassroom(classrooms,id);
+    public ResponseEntity<Class> updateClassroom(@RequestBody Class classrooms, @PathVariable int id) {
+        return ResponseEntity.ok(classService.updateClassroom(classrooms,id));
     }
 
     @DeleteMapping("/class/{id}")

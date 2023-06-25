@@ -21,14 +21,24 @@ public class AttachmentController {
         this.attachmentService = attachmentService;
     }
 
+
     @GetMapping("/attachments")
-    public List<Attachment> getAllAttachments() {
-        return attachmentService.getAllAttachments();
+    public ResponseEntity<List<Attachment>> getAllAttachments() {
+        return ResponseEntity.ok( attachmentService.getAllAttachment());
+    }
+    @GetMapping("/attachmentsbysubmissionid/{id}")
+    public ResponseEntity<List<Attachment>> getAllAttachmentsBySubmissionId(@PathVariable int id) {
+       return ResponseEntity.ok( attachmentService.getAllAttachmentBySubmissionId(id));
+    }
+
+    @GetMapping("/attachmentsbyassignmentid/{id}")
+    public ResponseEntity<List<Attachment>> getAllAttachmentsByAssignmentId(@PathVariable int id) {
+        return ResponseEntity.ok( attachmentService.getAllAttachmentByAssignmentId(id));
     }
 
     @PostMapping("/attachments")
-    public Attachment createAttachment(@RequestBody Attachment attachment) {
-        return attachmentService.createAttachment(attachment);
+    public ResponseEntity<Attachment> createAttachment(@RequestBody Attachment attachment) {
+        return ResponseEntity.ok(attachmentService.createAttachment(attachment));
     }
 
     @GetMapping("/attachments/{id}")

@@ -6,7 +6,9 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface AssignmentService {
+
     List<Assignment> getAllAssignment();
+    List<Assignment> getAllAssignmentByClassId(int id);
 
     Assignment createAssignment(Assignment assignment) throws ParseException;
 

@@ -30,9 +30,15 @@ public class AssignmentServiceImpl implements AssignmentService {
         this.attachmentRepository = attachmentRepository;
     }
 
+
     @Override
     public List<Assignment> getAllAssignment() {
         return assignmentRepository.findAll();
+    }
+
+    @Override
+    public List<Assignment> getAllAssignmentByClassId(int id) {
+        return assignmentRepository.getAssignmentByClassroomId(id);
     }
 
     @Override

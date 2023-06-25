@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface AttachmentService {
 
-    List<Attachment> getAllAttachments();
+    List<Attachment> getAllAttachment();
+    List<Attachment> getAllAttachmentBySubmissionId(int id);
+    List<Attachment> getAllAttachmentByAssignmentId(int id);
 
     Attachment createAttachment( Attachment attachment);
 

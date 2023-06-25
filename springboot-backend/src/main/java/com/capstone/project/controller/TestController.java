@@ -24,27 +24,27 @@ public class TestController {
     }
 
     @GetMapping("/test")
-    public List<Test> getAllTest(){
-        return testService.getAllTest();
+    public ResponseEntity<List<Test>> getAllTest(){
+        return ResponseEntity.ok(testService.getAllTest());
     }
     @GetMapping("/test/{id}")
-    public Test getTestById(@PathVariable int id){
-        return testService.getTestById(id);
+    public ResponseEntity<Test> getTestById(@PathVariable int id){
+        return ResponseEntity.ok(testService.getTestById(id));
     }
 
     @PostMapping("/test")
-    public Test createTest( @RequestBody Test test) throws ParseException {
+    public ResponseEntity<Test> createTest( @RequestBody Test test) throws ParseException {
         Date currentDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String formattedDate = dateFormat.format(currentDate);
         Date parsedDate = dateFormat.parse(formattedDate);
         test.setCreated_date(parsedDate);
-        return testService.createTest(test);
+        return ResponseEntity.ok(testService.createTest(test));
     }
     @PutMapping ("/test/{id}")
-    public Test updateTest(@PathVariable int id,@RequestBody Test test) throws ParseException {
+    public ResponseEntity<Test> updateTest(@PathVariable int id,@RequestBody Test test) throws ParseException {
 
-        return testService.updateTest(id,test);
+        return ResponseEntity.ok(testService.updateTest(id,test));
     }
 
     @DeleteMapping("/test/{id}")

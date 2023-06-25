@@ -18,10 +18,22 @@ public class AttachmentImpl implements AttachmentService {
         this.attachmentRepository = attachmentRepository;
     }
 
+
     @Override
-    public List<Attachment> getAllAttachments() {
+    public List<Attachment> getAllAttachment() {
         return attachmentRepository.findAll();
     }
+
+    @Override
+    public List<Attachment> getAllAttachmentBySubmissionId(int id) {
+        return attachmentRepository.getAttachmentBySubmissionId(id);
+    }
+
+    @Override
+    public List<Attachment> getAllAttachmentByAssignmentId(int id) {
+        return attachmentRepository.getAttachmentByAssignmentId(id);
+    }
+
 
     @Override
     public Attachment createAttachment(Attachment attachment) {
