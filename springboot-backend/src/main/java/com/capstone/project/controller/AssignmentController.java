@@ -26,31 +26,36 @@ public class AssignmentController {
         this.assignmentService = assignmentService;
     }
 
+
     @GetMapping("/assignments")
-    public List<Assignment> getAllAssignment() {
-        return assignmentService.getAllAssignment();
+    public ResponseEntity<List<Assignment>> getAllAssignment() {
+        return ResponseEntity.ok(assignmentService.getAllAssignment());
+    }
+    @GetMapping("/assignmentsbyclassid/{id}")
+    public ResponseEntity<List<Assignment>> getAllAssignmentByClassId(@PathVariable int id) {
+        return ResponseEntity.ok(assignmentService.getAllAssignmentByClassId(id));
     }
 
     @GetMapping("/assignments/{id}")
-    public Assignment getAssignmentById(@PathVariable int id) {
-        return assignmentService.getAssignmentById(id);
+    public ResponseEntity<Assignment> getAssignmentById(@PathVariable int id) {
+        return ResponseEntity.ok(assignmentService.getAssignmentById(id));
     }
 
     @PostMapping("/assignments")
-    public Assignment createAssignment(@RequestBody Assignment assignment) throws ParseException {
+    public ResponseEntity<Assignment> createAssignment(@RequestBody Assignment assignment) throws ParseException {
         Date currentDate = new Date();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         String formattedDate = dateFormat.format(currentDate);
         Date parsedDate = dateFormat.parse(formattedDate);
         assignment.setCreated_date(parsedDate);
         assignment.setStart_date(parsedDate);
-        return assignmentService.createAssignment(assignment);
+        return ResponseEntity.ok(assignmentService.createAssignment(assignment));
     }
 
     @PutMapping ("/assignments/{id}")
-    public Assignment updateAssignment(@PathVariable int id, @RequestBody Assignment assignment) throws ParseException {
+    public ResponseEntity<Assignment> updateAssignment(@PathVariable int id, @RequestBody Assignment assignment) throws ParseException {
 
-        return assignmentService.updateAssignment(id,assignment);
+        return ResponseEntity.ok(assignmentService.updateAssignment(id,assignment));
     }
 
     @DeleteMapping("/assignments/{id}")

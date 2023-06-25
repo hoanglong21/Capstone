@@ -6,7 +6,7 @@ import com.capstone.project.model.Post;
 import java.util.List;
 
 public interface PostService {
-    List<Post> getAllPost();
+    List<Post> getAllPostByClassId(int id);
 
     Post getPostById(int id);
 

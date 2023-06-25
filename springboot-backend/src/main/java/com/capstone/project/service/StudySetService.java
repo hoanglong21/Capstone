@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.model.StudySet;
 
 import java.util.List;
@@ -23,4 +24,6 @@ public interface StudySetService {
     List<Integer> checkBlankCard(int id);
 
     List<StudySet> getAllStudySetByUser(String username);
+
+    List<StudySetResponse> getCustomList(boolean isDeleted, boolean isPublic, boolean isDraft);
 }

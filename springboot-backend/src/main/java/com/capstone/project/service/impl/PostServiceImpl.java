@@ -17,19 +17,15 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
-    private final ClassRepository classRepository;
-    private final UserRepository userRepository;
-
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, ClassRepository classRepository, UserRepository userRepository) {
+    public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
-        this.classRepository = classRepository;
-        this.userRepository = userRepository;
     }
 
+
     @Override
-    public List<Post> getAllPost() {
-        return postRepository.findAll();
+    public List<Post> getAllPostByClassId(int id) {
+        return postRepository.getPostByClassroomId(id);
     }
 
     @Override
@@ -59,7 +55,6 @@ public class PostServiceImpl implements PostService {
             e.printStackTrace();
         }
         post.setContent(posts.getContent());
-        post.setUser(userRepository.findUserById(posts.getUser().getId()));
         return postRepository.save(post);
     }
 

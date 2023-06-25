@@ -11,4 +11,5 @@ import java.util.List;
 public interface AttachmentRepository extends JpaRepository<Attachment,Integer> {
 
     List<Attachment> getAttachmentBySubmissionId(int id);
+    List<Attachment> getAttachmentByAssignmentId(int id);
 }

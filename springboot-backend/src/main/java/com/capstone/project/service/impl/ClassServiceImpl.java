@@ -20,12 +20,10 @@ import java.util.Random;
 public class ClassServiceImpl implements ClassService {
 
     private final ClassRepository classRepository;
-    private final UserRepository userRepository;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, UserRepository userRepository) {
+    public ClassServiceImpl(ClassRepository classRepository) {
         this.classRepository = classRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
