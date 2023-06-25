@@ -106,4 +106,37 @@ public class UserController {
             return ResponseEntity.badRequest().body(false);
         }
     }
+
+    @PostMapping("/checkpassword")
+    public ResponseEntity<Boolean> checkMatchPassword(@RequestParam("username") String username, @RequestBody String requestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String password = jsonNode.get("password").asText();
+
+        return ResponseEntity.ok(userService.checkMatchPassword(username, password));
+    }
+
+    @PostMapping("/changepassword")
+    public ResponseEntity<Boolean> changePassword(@RequestParam("username") String username, @RequestBody String requestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String password = jsonNode.get("password").asText();
+
+        if(userService.changePassword(username, password)) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.badRequest().body(false);
+        }
+    }
+
 }
