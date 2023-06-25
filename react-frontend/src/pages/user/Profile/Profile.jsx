@@ -55,7 +55,6 @@ const Profile = () => {
             setTimeout(function () {
                 setSuccess(false)
             }, 5000)
-            console.log(newUser)
         }
     }
 
@@ -63,7 +62,7 @@ const Profile = () => {
         return num.toString().padStart(2, '0')
     }
 
-    function timestampToDate(timestamp) {
+    function formatDate(timestamp) {
         let date = new Date(timestamp)
         return (
             date.getFullYear() +
@@ -162,7 +161,7 @@ const Profile = () => {
                         id="dob"
                         name="dob"
                         type="date"
-                        value={timestampToDate(newUser.dob)}
+                        value={formatDate(newUser.dob)}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={handleChange}
                     />
