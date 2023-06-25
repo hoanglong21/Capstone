@@ -49,26 +49,16 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public StudySet getStudySetById(int id) {
-        StudySet studySet = null;
-        try {
-            studySet = studySetRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
+    public StudySet getStudySetById(int id) throws ResourceNotFroundException {
+        StudySet studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
         return studySet;
     }
 
     @Override
-    public StudySet updateStudySet(int id, StudySet studySetDetails) {
-        StudySet studySet = null;
-        try {
-            studySet = studySetRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
+    public StudySet updateStudySet(int id, StudySet studySetDetails) throws ResourceNotFroundException {
+        StudySet  studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
         studySet.setTitle(studySetDetails.getTitle());
         studySet.setDescription(studySetDetails.getDescription());
         studySet.set_deleted(studySetDetails.is_deleted());
@@ -80,15 +70,9 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Boolean deleteStudySet(int id) {
-        StudySet studySet;
-        try {
-            studySet = studySetRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public Boolean deleteStudySet(int id) throws ResourceNotFroundException {
+        StudySet studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
         studySet.set_deleted(true);
         studySet.setDeleted_date(new Date());
         studySetRepository.save(studySet);
@@ -96,15 +80,9 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Boolean deleteHardStudySet(int id) {
-        StudySet studySet;
-        try {
-            studySet = studySetRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public Boolean deleteHardStudySet(int id) throws ResourceNotFroundException {
+        StudySet studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
 
         // delete all the cards and contents associated with the study set
         for (Card card : cardRepository.getCardByStudySetId(studySet.getId())) {
@@ -118,14 +96,9 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<Integer> checkBlankCard(int id) {
-        StudySet studySet = null;
-        try {
-            studySet = studySetRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
+    public List<Integer> checkBlankCard(int id) throws ResourceNotFroundException {
+        StudySet studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
         List<Integer> listCardIds = new ArrayList<>();
         for (Card card : cardRepository.getCardByStudySetId(studySet.getId())) {
             if(cardService.checkBlank(card.getId())) {
@@ -136,15 +109,10 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<StudySet> getAllStudySetByUser(String username) {
-        User user = null;
-        try {
-            user = userRepository.findUserByUsername(username);
-            if (user == null) {
-                throw new ResourceNotFroundException("Studyset not exist with username:" + username);
-            }
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
+    public List<StudySet> getAllStudySetByUser(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("Studyset not exist with author: " + username);
         }
         List<StudySet> studySets = studySetRepository.findStudySetByAuthor_id(user.getId());
         return  studySets;

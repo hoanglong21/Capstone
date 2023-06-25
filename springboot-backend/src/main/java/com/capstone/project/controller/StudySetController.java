@@ -1,6 +1,7 @@
 package com.capstone.project.controller;
 
 import com.capstone.project.dto.StudySetResponse;
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
 import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
@@ -26,70 +27,71 @@ public class StudySetController {
     }
 
     @GetMapping("/studysets")
-    public List<StudySet> getAllStudySets() {
-        return studySetService.getAllStudySets();
+    public ResponseEntity<?> getAllStudySets() {
+        return ResponseEntity.ok(studySetService.getAllStudySets());
     }
 
     @PostMapping("/studysets")
-    public StudySet createStudySet(@RequestBody StudySet studySet) {
-        return studySetService.createStudySet(studySet);
+    public ResponseEntity<?> createStudySet(@RequestBody StudySet studySet) {
+        return ResponseEntity.ok(studySetService.createStudySet(studySet));
     }
 
-    /*
-        // add example
-    {
-        "title": "set2",
-        "description": "this is the set",
-        "deleted": true,
-        "public": false,
-        "studySetType": {
-            "id": 1
-        },
-        "user": {
-            "id": 1
-        }
-    }*/
-
     @GetMapping("/studysets/{id}")
-    public ResponseEntity<StudySet> getStudySetById(@PathVariable int id) {
-        StudySet studySet = studySetService.getStudySetById(id);
-        return ResponseEntity.ok(studySet);
+    public ResponseEntity<?> getStudySetById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(studySetService.getStudySetById(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/studysets/{id}")
-    public ResponseEntity<StudySet> updateStudySet(@PathVariable int id, @RequestBody StudySet studySetDetails) {
-        StudySet updateStudySet = studySetService.updateStudySet(id, studySetDetails);
-        return ResponseEntity.ok(updateStudySet);
+    public ResponseEntity<?> updateStudySet(@PathVariable int id, @RequestBody StudySet studySetDetails) {
+        try {
+            return ResponseEntity.ok(studySetService.updateStudySet(id, studySetDetails));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/studysets/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteStudySet(@PathVariable int id) {
-        boolean deleted = studySetService.deleteStudySet(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteStudySet(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(studySetService.deleteStudySet(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/deletestudysets/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteHardStudySet(@PathVariable int id) {
-        boolean deleted = studySetService.deleteHardStudySet(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("hard deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteHardStudySet(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(studySetService.deleteHardStudySet(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/checkstudyset/{id}")
-    public ResponseEntity<List<Integer>> checkStudySet(@PathVariable int id) {
-        return ResponseEntity.ok(studySetService.checkBlankCard(id));
+    public ResponseEntity<?> checkStudySet(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(studySetService.checkBlankCard(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/studysetAuthor/{username}")
-    public ResponseEntity<List<StudySet>> getAllStudySetByUser(@PathVariable String username) {
-        return ResponseEntity.ok(studySetService.getAllStudySetByUser(username));
+    public ResponseEntity<?> getAllStudySetByUser(@PathVariable String username) {
+        try {
+            return ResponseEntity.ok(studySetService.getAllStudySetByUser(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/getstudysets")
-    public ResponseEntity<List<StudySetResponse>> getCustomList(@RequestParam boolean is_deleted, @RequestParam boolean is_public, @RequestParam boolean is_draft) {
+    public ResponseEntity<?> getCustomList(@RequestParam boolean is_deleted, @RequestParam boolean is_public, @RequestParam boolean is_draft) {
         return ResponseEntity.ok(studySetService.getCustomList(is_deleted, is_public, is_draft));
     }
 }

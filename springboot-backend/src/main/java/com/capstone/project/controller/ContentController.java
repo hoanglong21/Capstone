@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Content;
 import com.capstone.project.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +23,39 @@ public class ContentController {
     }
 
     @GetMapping("/contentbycardid")
-    public ResponseEntity<List<Content>> getAllByCardId(@RequestParam int id) {
+    public ResponseEntity<?> getAllByCardId(@RequestParam int id) {
         return ResponseEntity.ok(contentService.getAllByCardId(id));
     }
 
     @PostMapping("/contents")
-    public ResponseEntity<Content> createContent(@RequestBody Content content) {
+    public ResponseEntity<?> createContent(@RequestBody Content content) {
         return ResponseEntity.ok(contentService.createContent(content));
     }
 
     @GetMapping("/contents/{id}")
-    public ResponseEntity<Content> getContentById(@PathVariable int id) {
-        return ResponseEntity.ok(contentService.getContentById(id));
+    public ResponseEntity<?> getContentById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(contentService.getContentById(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/contents/{id}")
-    public ResponseEntity<Content> updateContent(@PathVariable int id, @RequestBody Content contentDetails) {
-        Content updateContent = contentService.updateContent(id, contentDetails);
-        return ResponseEntity.ok(updateContent);
+    public ResponseEntity<?> updateContent(@PathVariable int id, @RequestBody Content contentDetails) {
+        try {
+            return ResponseEntity.ok(contentService.updateContent(id, contentDetails));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/contents/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteContent(@PathVariable int id) {
-        boolean deleted = contentService.deleteContent(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteContent(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(contentService.deleteContent(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

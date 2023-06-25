@@ -30,41 +30,25 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public Content getContentById(int id) {
-        Content content = null;
-        try {
-            content = contentRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Content not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
+    public Content getContentById(int id) throws ResourceNotFroundException {
+        Content content = contentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Content not exist with id: " + id));
         return content;
     }
 
     @Override
-    public Content updateContent(int id, Content contentDetails) {
-        Content content = null;
-        try {
-            content = contentRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Content not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
+    public Content updateContent(int id, Content contentDetails) throws ResourceNotFroundException {
+        Content content = contentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Content not exist with id: " + id));
         content.setContent(contentDetails.getContent());
         Content updateContent = contentRepository.save(content);
         return updateContent;
     }
 
     @Override
-    public Boolean deleteContent(int id) {
-        Content content = null;
-        try {
-            content = contentRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Content not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public Boolean deleteContent(int id) throws ResourceNotFroundException {
+        Content content = contentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Content not exist with id: " + id));
         contentRepository.delete(content);
         return true;
     }
