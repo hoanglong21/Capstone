@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface SubmissionService {
 
+    List<Submission> getAllSubmissionByAssignmentId(int id);
     List<Submission> getAllSubmission();
 
     Submission createSubmission( Submission submission) throws ParseException;

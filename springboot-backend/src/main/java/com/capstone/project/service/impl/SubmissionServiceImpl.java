@@ -26,9 +26,15 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
+    public List<Submission> getAllSubmissionByAssignmentId(int id) {
+        return submissionRepository.getSubmissionByAssignmentId(id);
+    }
+
+    @Override
     public List<Submission> getAllSubmission() {
         return submissionRepository.findAll();
     }
+
 
     @Override
     public Submission createSubmission(Submission submission) throws ParseException {

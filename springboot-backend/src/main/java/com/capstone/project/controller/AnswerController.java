@@ -23,29 +23,29 @@ public class AnswerController {
     }
 
     @GetMapping("/answers")
-    public List<Answer> getAllAnswer() {
-        return answerService.getAllAnswers();
+    public ResponseEntity<List<Answer>> getAllAnswer() {
+        return ResponseEntity.ok(answerService.getAllAnswers());
     }
 
     @GetMapping("/answersbyquestionid")
-    public List<Answer> getAllByQuestionId(@RequestParam int id) {
-        return answerService.getAllByQuestionId(id);
+    public ResponseEntity<List<Answer>> getAllByQuestionId(@RequestParam int id) {
+        return ResponseEntity.ok(answerService.getAllByQuestionId(id));
     }
 
     @GetMapping("/answers/{id}")
-    public Answer getAnswerById(@PathVariable int id) {
-        return answerService.getAnswerById(id);
+    public ResponseEntity<Answer> getAnswerById(@PathVariable int id) {
+        return ResponseEntity.ok( answerService.getAnswerById(id));
     }
 
     @PostMapping("/answers")
-    public Answer createAnswer(@RequestBody Answer answer) {
-        return answerService.createAnswer(answer);
+    public ResponseEntity<Answer> createAnswer(@RequestBody Answer answer) {
+        return ResponseEntity.ok(answerService.createAnswer(answer));
     }
 
 
     @PutMapping("/answers/{id}")
-    public Answer updateAnswer(@PathVariable int id, @RequestBody Answer answer) {
-        return answerService.updateAnswer(id,answer);
+    public ResponseEntity<Answer> updateAnswer(@PathVariable int id, @RequestBody Answer answer) {
+        return ResponseEntity.ok(answerService.updateAnswer(id,answer));
     }
 
 
