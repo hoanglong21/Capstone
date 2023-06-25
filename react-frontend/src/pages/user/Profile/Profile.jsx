@@ -47,6 +47,7 @@ const Profile = () => {
                 setError("Last name can't be blank.")
                 lastNameEl.classList.add('is_invalid')
             }
+            console.log(newUser)
         } else {
             dispatch(updateUser(newUser))
             setSuccess(true)
@@ -54,7 +55,23 @@ const Profile = () => {
             setTimeout(function () {
                 setSuccess(false)
             }, 5000)
+            console.log(newUser)
         }
+    }
+
+    function padTo2Digits(num) {
+        return num.toString().padStart(2, '0')
+    }
+
+    function timestampToDate(timestamp) {
+        let date = new Date(timestamp)
+        return (
+            date.getFullYear() +
+            '-' +
+            padTo2Digits(date.getMonth() + 1) +
+            '-' +
+            padTo2Digits(date.getDate())
+        )
     }
 
     return (
@@ -101,8 +118,8 @@ const Profile = () => {
                 <div className="form-group col-6">
                     <label className={FormStyles.formLabel}>Email</label>
                     <input
-                        id="username"
-                        name="username"
+                        id="email"
+                        name="email"
                         type="email"
                         value={newUser.email}
                         className="form-control-plaintext p-0"
@@ -145,7 +162,7 @@ const Profile = () => {
                         id="dob"
                         name="dob"
                         type="date"
-                        value={newUser.dob}
+                        value={timestampToDate(newUser.dob)}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={handleChange}
                     />
