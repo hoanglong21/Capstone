@@ -12,7 +12,7 @@ const Footer = () => {
                         <a className="footer-link" href="#">
                             Privacy
                         </a>
-                        <a className="footer-link" href="#">
+                        <a className="footer-link" href="term">
                             Terms
                         </a>
                     </div>
