@@ -1,10 +1,11 @@
 import React from "react";
+import "../footer/Footer.css"
 
 function Term() {
   return (
-    <div>
+    <div className="term__full">
+      <h1 className="term__service">Term Of Service</h1>
       <div className="term__container">
-        <h1 className="term__service">Term Of Service</h1>
         <p className="term__intro">
           The ("<strong>NihongoLevelUp</strong>") website and its applications
           are a hosted service operated by NihongoLevelUp Teams, Inc. ("
