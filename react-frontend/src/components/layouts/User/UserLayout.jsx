@@ -6,8 +6,8 @@ const AccountLayout = () => {
         <div className="container mt-4 mb-5">
             <h3>Account Settings</h3>
             <div className="card-account__container">
-                <div className="d-flex">
-                    <div className="card-account__sidebar d-flex flex-column border-end pe-4">
+                <div className="row">
+                    <div className="card-account__sidebar d-flex flex-column border-end pe-4 col-3 col-xl-2">
                         <NavLink
                             className={
                                 'card-account__sidebar-link mb-2 ' +
@@ -40,7 +40,7 @@ const AccountLayout = () => {
                             Delete Account
                         </a>
                     </div>
-                    <div className="card-account__body flex-grow-1">
+                    <div className="card-account__body col">
                         <Outlet />
                     </div>
                 </div>

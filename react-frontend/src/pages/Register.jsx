@@ -48,7 +48,8 @@ const Register = () => {
                 !data.first_name ||
                 !data.last_name ||
                 !data.email ||
-                !data.password
+                !data.password ||
+                !data.role
             ) {
                 setEmptyMess('Please complete all the fields.')
                 if (!data.email) {
@@ -207,7 +208,7 @@ const Register = () => {
                                     value="ROLE_LEARNER"
                                     autoComplete="off"
                                     {...register('role')}
-                                    checked
+                                    required
                                 />
                                 <label
                                     className="form-check-label"
@@ -225,6 +226,7 @@ const Register = () => {
                                     value="ROLE_TUTOR"
                                     autoComplete="off"
                                     {...register('role')}
+                                    required
                                 />
                                 <label
                                     className="form-check-label"
