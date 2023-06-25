@@ -5,6 +5,7 @@ import {
     uploadBytesResumable,
     getDownloadURL,
     deleteObject,
+    listAll
 } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -36,7 +37,7 @@ export const uploadFile = (file) => {
         contentType: 'image/jpeg',
     }
 
-    const storageRef = ref(storage, 'images/' + file.name)
+    const storageRef = ref(storage, 'files/' + file.name)
 
     const uploadTask = uploadBytesResumable(storageRef, file, metadata)
 
@@ -77,7 +78,7 @@ export const uploadFile = (file) => {
 
 export const deleteFile = (fileName) => {
     // Create a reference to the file to delete
-    const fileRef = ref(storage, `images/${fileName}`)
+    const fileRef = ref(storage, `files/${fileName}`)
 
     // Delete the file
     deleteObject(fileRef)
@@ -91,7 +92,7 @@ export const deleteFile = (fileName) => {
 
 export const deleteFileByUrl = (url) => {
     // Get the file path from the URL
-    const pathStartIndex = url.indexOf('/images')
+    const pathStartIndex = url.indexOf('/files')
     const pathEndIndex = url.indexOf('?')
     const filePath = decodeURIComponent(
         url.substring(pathStartIndex + 1, pathEndIndex)
@@ -109,3 +110,26 @@ export const deleteFileByUrl = (url) => {
             console.error(`Error deleting ${filePath}: ${error}`)
         })
 }
+
+export const getAll = (folderName) => {
+    const listRef = ref(storage, folderName);
+
+    // Find all the prefixes and items.
+    listAll(listRef)
+      .then((res) => {
+        res.prefixes.forEach((folderRef) => {
+          // All the prefixes under listRef.
+          // You may call listAll() recursively on them.
+        });
+        res.items.forEach((itemRef) => {
+          // All the items under listRef.
+        //   console.log(itemRef)
+        getDownloadURL(itemRef).then((downloadURL) => {
+            console.log('File: ', downloadURL)
+        })
+        });
+      }).catch((error) => {
+        // Uh-oh, an error occurred!
+        console.log(error)
+      });
+  };
