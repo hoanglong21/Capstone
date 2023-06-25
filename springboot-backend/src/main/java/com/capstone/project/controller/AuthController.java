@@ -34,6 +34,8 @@ public class AuthController {
             return ResponseEntity.ok(createdUser);
         } catch (DuplicateValueException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

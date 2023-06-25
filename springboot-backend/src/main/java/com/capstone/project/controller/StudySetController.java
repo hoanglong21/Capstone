@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.model.Card;
 import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
@@ -85,5 +86,10 @@ public class StudySetController {
     @GetMapping("/studysetAuthor/{username}")
     public ResponseEntity<List<StudySet>> getAllStudySetByUser(@PathVariable String username) {
         return ResponseEntity.ok(studySetService.getAllStudySetByUser(username));
+    }
+
+    @GetMapping("/getstudysets")
+    public ResponseEntity<List<StudySetResponse>> getCustomList(@RequestParam boolean is_deleted, @RequestParam boolean is_public, @RequestParam boolean is_draft) {
+        return ResponseEntity.ok(studySetService.getCustomList(is_deleted, is_public, is_draft));
     }
 }
