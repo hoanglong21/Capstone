@@ -8,3 +8,14 @@ export const getUser = createAsyncThunk('user/getUser', async (userToken) => {
     const response = await UserService.getUser(username)
     return response.data
 })
+
+export const updateUser = createAsyncThunk(
+    'user/updateUser',
+    async (userDetails) => {
+        const response = await UserService.updateUser(
+            userDetails.username,
+            userDetails
+        )
+        return response.data
+    }
+)

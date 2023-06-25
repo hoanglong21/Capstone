@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         user.setEmail(userDetails.getEmail());
-        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+//        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         user.setBio(userDetails.getBio());
         user.setDob(userDetails.getDob());
         user.setAvatar(userDetails.getAvatar());

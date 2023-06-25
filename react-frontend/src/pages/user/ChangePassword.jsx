@@ -2,19 +2,23 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import UserService from '../../services/UserService'
+
 import FormStyles from '../../assets/styles/Form.module.css'
+import { changePassword, getUser } from '../../features/user/userAction'
 
 const ChangePassword = () => {
     const dispatch = useDispatch()
 
     const { userInfo } = useSelector((state) => state.user)
 
-    const [error, setError] = useState('')
     const [currentPass, setCurrentPass] = useState('')
     const [newPass, setNewPass] = useState('')
     const [confirmPass, setConfirmPass] = useState('')
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState(false)
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         var form = document.querySelector('.needs-validation')
         const currentPassEl = document.getElementById('currentPass')
@@ -29,21 +33,26 @@ const ChangePassword = () => {
 
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
-            if (!currentPass || !newPass || !confirmPass) {
-                setError('Please complete all the fields.')
-                if (!currentPass) {
-                    currentPassEl.classList.add('is-invalid')
-                }
-                if (!newPass) {
-                    newPassEl.classList.add('is-invalid')
-                }
-                if (!confirmPass) {
-                    confirmPassEl.classList.add('is-invalid')
-                }
+            setError('Please complete all the fields.')
+            if (!currentPass) {
+                currentPassEl.classList.add('is-invalid')
             }
-            // } else if (currentPass !== userInfo.password) {
-            //     setError('Your current password is incorrect.')
-            //     currentPassEl.classList.add('is-invalid')
+            if (!newPass) {
+                newPassEl.classList.add('is-invalid')
+            }
+            if (!confirmPass) {
+                confirmPassEl.classList.add('is-invalid')
+            }
+        } else if (
+            !(
+                await UserService.checkMatchPassword(
+                    userInfo.username,
+                    currentPass
+                )
+            ).data
+        ) {
+            setError('Your current password is incorrect.')
+            currentPassEl.classList.add('is-invalid')
         } else if (currentPass === newPass) {
             setError(
                 'Your new password cannot be the same as your old password. Please enter a different password.'
@@ -71,6 +80,14 @@ const ChangePassword = () => {
             setError('The password confirmation does not match.')
             newPassEl.classList.add('is-invalid')
             confirmPassEl.classList.add('is-invalid')
+        } else {
+            await UserService.changePassword(userInfo.username, newPass)
+            dispatch(getUser(userInfo.token))
+            setSuccess(true)
+            // auto hide after 5s
+            setTimeout(function () {
+                setSuccess(false)
+            }, 5000)
         }
     }
 
@@ -85,6 +102,12 @@ const ChangePassword = () => {
                         role="alert"
                         dangerouslySetInnerHTML={{ __html: error }}
                     ></div>
+                )}
+                {/* success message */}
+                {success && (
+                    <div className="alert alert-success" role="alert">
+                        Your changes have been successfully saved!
+                    </div>
                 )}
                 <div className="form-group mb-3">
                     <label className={FormStyles.formLabel}>
