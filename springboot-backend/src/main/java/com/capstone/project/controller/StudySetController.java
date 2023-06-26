@@ -91,7 +91,9 @@ public class StudySetController {
     }
 
     @GetMapping("/getstudysets")
-    public ResponseEntity<?> getCustomList(@RequestParam boolean is_deleted, @RequestParam boolean is_public, @RequestParam boolean is_draft) {
-        return ResponseEntity.ok(studySetService.getCustomList(is_deleted, is_public, is_draft));
+    public ResponseEntity<?> getCustomList(@RequestParam(value = "deleted", required = false) Boolean isDeleted,
+                                           @RequestParam(value = "public", required = false) Boolean isPublic,
+                                           @RequestParam(value = "draft", required = false) Boolean isDraft) {
+        return ResponseEntity.ok(studySetService.getCustomList(isDeleted, isPublic, isDraft));
     }
 }
