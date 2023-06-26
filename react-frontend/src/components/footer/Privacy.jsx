@@ -1,9 +1,10 @@
 import React from "react";
+import "../footer/Footer.css"
 
 function Privacy() {
   return (
     <div className="privacy__content">
-      <h1 className="privacy__header">Nihongo Level Up Privacy Policy</h1>
+      <h2 className="privacy__header">Nihongo Level Up Privacy Policy</h2>
       <div className="privacy__container">
         <p className="privacy__paragraph">
           NihongoLevelUp, Inc. is dedicated to helping people around the world
