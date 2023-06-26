@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getUser } from '../features/user/userAction';
 
-export default function CreateClassroom() {
+export default function CreateClassroom({close}) {
     let navigate = useNavigate()
     const dispatch = useDispatch()
     const { userToken } = useSelector((state) => state.auth)
@@ -43,7 +43,7 @@ export default function CreateClassroom() {
     <div className="createClass__form">
       <div className="createClass__form__inputs">
         <p className="createClass__title">Create Classroom</p>
-        <Link to="/" className="createClass__close">&times;</Link>
+        <a onClick={close} className="createClass__close">&times;</a>
         <form onSubmit={(e) => onSubmit(e)}>
           <fieldset className="createClass__form__input">
             <input className="createClass__input" type={"text"} name="class_name" placeholder='Class Name' value={class_name} required onChange={(e) => onInputChange(e)} />
