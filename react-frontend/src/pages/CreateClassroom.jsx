@@ -35,8 +35,8 @@ export default function CreateClassroom({close}) {
 
     const onSubmit = async (e) => {
         e.preventDefault()
-        await axios.post('http://localhost:8080/joinclass', classroom)
-        navigate('/')
+        await axios.post('http://localhost:8080/api/v1/class', classroom)
+        navigate('/insideclass')
     }
 
   return (

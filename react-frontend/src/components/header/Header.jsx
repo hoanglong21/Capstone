@@ -26,6 +26,7 @@ import {
 } from "../icons";
 import "./Header.css";
 import CreateClassroom from "../../pages/CreateClassroom";
+import JoinClass from "../../pages/JoinClass";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -170,13 +171,16 @@ const Header = () => {
                 </li>
               )}
               <li>
-                <Link
-                  className="dropdown-item py-2 px-2"
-                  type="button"
-                  to="joinclass"
-                >
-                  <span className="align-middle fw-semibold">Join Class</span>
-                </Link>
+              <Popup
+                    modal
+                    trigger={
+                      <button className="dropdown-item py-2 px-2" type="button">
+                        <span className="align-middle fw-semibold">Join Class</span>
+                      </button>
+                    }
+                  >
+                    {close => <JoinClass close={close} />}
+                  </Popup>
               </li>
             </ul>
           </div>
