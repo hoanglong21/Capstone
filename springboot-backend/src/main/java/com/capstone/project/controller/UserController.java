@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 import com.capstone.project.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,73 +25,84 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}")
-    public ResponseEntity<User> getUser(@PathVariable("username") String username) {
-        return ResponseEntity.ok(userService.getUserByUsername(username));
+    public ResponseEntity<?> getUser(@PathVariable("username") String username) {
+        try {
+            return ResponseEntity.ok(userService.getUserByUsername(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/users/{username}")
-    public ResponseEntity<User> updateUser(@PathVariable("username") String username, @RequestBody User userDetails) {
-        return ResponseEntity.ok(userService.updateUser(username, userDetails));
+    public ResponseEntity<?> updateUser(@PathVariable("username") String username, @RequestBody User userDetails) {
+        try {
+            return ResponseEntity.ok(userService.updateUser(username, userDetails));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/otherusers/{except}")
-    public List<String> findAllNameExcept(@PathVariable("except") String username) {
-        return userService.findAllNameExcept(username);
+    public ResponseEntity<?> findAllNameExcept(@PathVariable("except") String username) {
+        return ResponseEntity.ok(userService.findAllNameExcept(username));
     }
 
     @GetMapping("/users/{username}/ban")
-    public ResponseEntity<Map<String, Boolean>> banUser(@PathVariable("username") String username) {
-        boolean success = userService.banUser(username);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", success);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> banUser(@PathVariable("username") String username) {
+        try {
+            return ResponseEntity.ok(userService.banUser(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/users/{username}/delete")
-    public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable("username") String username) {
-        boolean success = userService.deleteUser(username);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", success);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
+        try {
+            return ResponseEntity.ok(userService.deleteUser(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/users/{username}/recover")
-    public ResponseEntity<Map<String, Boolean>> recoverUser(@PathVariable("username") String username) {
-        boolean success = userService.recoverUser(username);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", success);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> recoverUser(@PathVariable("username") String username) {
+        try {
+            return ResponseEntity.ok(userService.recoverUser(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/sendverify")
-    public ResponseEntity<Boolean> sendVerificationEmail(@RequestParam("username") String username) {
-        if(userService.sendVerificationEmail(username)) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
+    public ResponseEntity<?> sendVerificationEmail(@RequestParam("username") String username) {
+        try {
+            return ResponseEntity.ok(userService.sendVerificationEmail(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyAccount(@RequestParam("token") String token) {
-        if (userService.verifyAccount(token)) {
-            return ResponseEntity.ok("successfully");
-        } else {
-            return ResponseEntity.badRequest().body("failed");
+    public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
+        try {
+            return ResponseEntity.ok(userService.verifyAccount(token));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @GetMapping("/sendreset")
-    public ResponseEntity<Boolean> sendResetPasswordEmail(@RequestParam("username") String username) {
-        if(userService.sendResetPasswordEmail(username)) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
+    public ResponseEntity<?> sendResetPasswordEmail(@RequestParam("username") String username) {
+        try {
+            return ResponseEntity.ok(userService.sendResetPasswordEmail(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PostMapping("/reset")
-    public ResponseEntity<Boolean> resetPassword(@RequestParam("username") String username, @RequestParam("pin") String pin, @RequestBody String requestBody) {
+    public ResponseEntity<?> resetPassword(@RequestParam("username") String username, @RequestParam("pin") String pin, @RequestBody String requestBody) {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = null;
         try {
@@ -100,10 +112,47 @@ public class UserController {
         }
         String password = jsonNode.get("password").asText();
 
-        if(userService.resetPassword(username, pin, password)) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.badRequest().body(false);
+        try {
+            return ResponseEntity.ok(userService.resetPassword(username, pin, password));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/checkpassword")
+    public ResponseEntity<?> checkMatchPassword(@RequestParam("username") String username, @RequestBody String requestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String password = jsonNode.get("password").asText();
+
+        try {
+            return ResponseEntity.ok(userService.checkMatchPassword(username, password));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/changepassword")
+    public ResponseEntity<?> changePassword(@RequestParam("username") String username, @RequestBody String requestBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = objectMapper.readTree(requestBody);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String password = jsonNode.get("password").asText();
+
+        try {
+            return ResponseEntity.ok(userService.changePassword(username, password));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

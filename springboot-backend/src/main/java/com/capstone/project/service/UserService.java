@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 
 import java.util.List;
@@ -9,20 +10,25 @@ public interface UserService {
 
     List<String> findAllNameExcept(String username);
 
-    User getUserByUsername(String username);
+    User getUserByUsername(String username) throws ResourceNotFroundException;
 
-    User updateUser(String username, User userDetails);
+    User updateUser(String username, User userDetails) throws ResourceNotFroundException;
 
-    Boolean banUser(String username);
+    Boolean banUser(String username) throws ResourceNotFroundException;
 
-    Boolean deleteUser(String username);
+    Boolean deleteUser(String username) throws ResourceNotFroundException;
 
-    Boolean recoverUser(String username);
+    Boolean recoverUser(String username) throws ResourceNotFroundException;
 
-    Boolean verifyAccount(String token);
+    Boolean verifyAccount(String token) throws ResourceNotFroundException;
 
-    Boolean sendVerificationEmail(String username);
+    Boolean sendVerificationEmail(String username) throws ResourceNotFroundException;
 
-    Boolean resetPassword(String username, String pin, String password);
-    Boolean sendResetPasswordEmail(String username);
+    Boolean resetPassword(String username, String pin, String password) throws ResourceNotFroundException;
+
+    Boolean sendResetPasswordEmail(String username) throws ResourceNotFroundException;
+
+    Boolean checkMatchPassword(String username, String checkPassword) throws ResourceNotFroundException;
+
+    Boolean changePassword(String username, String password) throws ResourceNotFroundException;
 }

@@ -7,8 +7,8 @@
 <body>
 	<h1>Capstone configuration</h1>
 
-	Java: 17.0.7
-	OpenJDK: 17.0.
+	Java: 20.0.1
+	OpenJDK: 20.0.1
 	SpringBoot: 3.0.6
 	MySQL Server: 8.0.27
 	Node: 14.18.0

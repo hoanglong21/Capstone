@@ -115,7 +115,7 @@ const Landing = () => {
                     that can provide everything you need about Japanese
                 </p>
             </div>
-            <div className="row" style={{marginTop: '100px', width: '1140px', height: '477px', marginLeft: '90px'}}>
+            <div className="row" style={{marginTop: '100px', width: '80%', height: '40%', marginLeft: 'auto', marginRight: 'auto'}}>
         <div className="col-12 col-md-6 col-lg-4">
           <div className="single-blog wow fadeIn res-margin" data-wow-duration="2s">
             <div className="blog-thumb">
@@ -131,11 +131,10 @@ const Landing = () => {
                 </li>
               </ul>
               <h3 className="blog-title my-3">
-                <a href="/">Blog Title Here</a>
+                <a href="/">Rate For 5 Stars</a>
               </h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Ratione obcaecati, animi vitae recusandae, praesentium quae.
+              NihongoLevelUp has been supporting my success since GCSE. Flashcards available on the go are single handedly getting me through university. Wish the website to grow more and more.
               </p>
               <a href="/" className="blog-btn mt-3">
                 Read More
@@ -160,11 +159,10 @@ const Landing = () => {
                 </li>
               </ul>
               <h3 className="blog-title my-3">
-                <a href="/">Blog Title Here</a>
+                <a href="/">A Nice Website For Learning</a>
               </h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Ratione obcaecati, animi vitae recusandae, praesentium quae.
+              “NihongoLevelUp has allowed me to transition my studying from passive to active recall. This has allowed me to memorise information faster than simply re-reading notes.”
               </p>
               <a href="/" className="blog-btn mt-3">
                 Read More
@@ -189,11 +187,10 @@ const Landing = () => {
                 </li>
               </ul>
               <h3 className="blog-title my-3">
-                <a href="/">Blog Title Here</a>
+                <a href="/">Good Learning</a>
               </h3>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Ratione obcaecati, animi vitae recusandae, praesentium quae.
+              Flashcards, Learn and Test can be used to practise active recall helping you to retain information for longer. Flashcards available on the go are single handedly getting me through university.
               </p>
               <a href="/" className="blog-btn mt-3">
                 Read More
