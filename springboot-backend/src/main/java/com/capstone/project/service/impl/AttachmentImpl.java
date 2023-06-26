@@ -41,41 +41,25 @@ public class AttachmentImpl implements AttachmentService {
     }
 
     @Override
-    public Attachment getAttachmentById(int id) {
-        Attachment attachment = null;
-        try {
-            attachment = attachmentRepository.findById(id)
+    public Attachment getAttachmentById(int id) throws ResourceNotFroundException {
+        Attachment attachment = attachmentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Attachment not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return attachment;
     }
 
     @Override
-    public Attachment updateAttachment(int id, Attachment attachment) {
-        Attachment attachment_new = null;
-        try {
-            attachment_new = attachmentRepository.findById(id)
+    public Attachment updateAttachment(int id, Attachment attachment) throws ResourceNotFroundException {
+        Attachment attachment_new = attachmentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Attachment not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         attachment_new.setFile(attachment.getFile());
         attachment_new.setAttachmentType(attachment.getAttachmentType());
         return attachmentRepository.save(attachment_new);
     }
 
     @Override
-    public Boolean deleteAttachment(int id) {
-        Attachment attachment = null;
-        try {
-            attachment = attachmentRepository.findById(id)
+    public Boolean deleteAttachment(int id) throws ResourceNotFroundException {
+        Attachment attachment = attachmentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Attachment not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
-        }
         attachmentRepository.delete(attachment);
         return true;
     }
