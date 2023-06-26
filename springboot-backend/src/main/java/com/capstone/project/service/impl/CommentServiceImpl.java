@@ -50,14 +50,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment getCommentById(int id) {
-        Comment comment = null;
-        try {
-            comment = commentRepository.findById(id)
+    public Comment getCommentById(int id) throws ResourceNotFroundException {
+        Comment comment = commentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Comment not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return comment;
     }
 
@@ -68,27 +63,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment updateComment(Comment comment, int id) {
-        Comment comment_new = null;
-        try {
-            comment_new = commentRepository.findById(id)
+    public Comment updateComment(Comment comment, int id) throws ResourceNotFroundException {
+        Comment comment_new = commentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Comment not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         comment_new.setContent(comment.getContent());
         return commentRepository.save(comment_new);
     }
 
     @Override
-    public Boolean deleteComment(int id) {
-        Comment comment = null;
-        try {
-            comment = commentRepository.findById(id)
+    public Boolean deleteComment(int id) throws ResourceNotFroundException {
+        Comment comment = commentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Comment not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         commentRepository.delete(comment);
         return true;
     }

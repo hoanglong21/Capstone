@@ -36,41 +36,25 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
-    public Answer getAnswerById(int id) {
-        Answer answer = null;
-        try {
-            answer = answerRepository.findById(id)
+    public Answer getAnswerById(int id) throws ResourceNotFroundException {
+        Answer answer = answerRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Answer not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return answer;
     }
 
     @Override
-    public Answer updateAnswer(int id, Answer answer) {
-        Answer answer_new = null;
-        try {
-            answer_new = answerRepository.findById(id)
+    public Answer updateAnswer(int id, Answer answer) throws ResourceNotFroundException {
+        Answer answer_new = answerRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Answer not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         answer_new.setContent(answer.getContent());
         answer_new.set_true(answer.is_true());
         return answerRepository.save(answer_new);
     }
 
     @Override
-    public Boolean deleteAnswer(int id) {
-        Answer answer;
-        try {
-            answer = answerRepository.findById(id)
+    public Boolean deleteAnswer(int id) throws ResourceNotFroundException {
+        Answer answer = answerRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Answer not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
-        }
         answerRepository.delete(answer);
         return true;
     }

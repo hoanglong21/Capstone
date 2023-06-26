@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Answer;
 import java.util.List;
 
@@ -11,9 +12,9 @@ public interface AnswerService {
 
     Answer createAnswer( Answer answer);
 
-    Answer getAnswerById( int id);
+    Answer getAnswerById( int id) throws ResourceNotFroundException;
 
-    Answer updateAnswer ( int id, Answer answer);
+    Answer updateAnswer ( int id, Answer answer) throws ResourceNotFroundException;
 
-    Boolean deleteAnswer ( int id);
+    Boolean deleteAnswer ( int id) throws ResourceNotFroundException;
 }

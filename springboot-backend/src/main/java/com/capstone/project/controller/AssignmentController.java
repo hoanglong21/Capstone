@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Assignment;
 import com.capstone.project.model.Card;
 import com.capstone.project.service.AssignmentService;
@@ -28,42 +29,44 @@ public class AssignmentController {
 
 
     @GetMapping("/assignments")
-    public ResponseEntity<List<Assignment>> getAllAssignment() {
+    public ResponseEntity<?> getAllAssignment() {
         return ResponseEntity.ok(assignmentService.getAllAssignment());
     }
     @GetMapping("/assignmentsbyclassid/{id}")
-    public ResponseEntity<List<Assignment>> getAllAssignmentByClassId(@PathVariable int id) {
+    public ResponseEntity<?> getAllAssignmentByClassId(@PathVariable int id) {
         return ResponseEntity.ok(assignmentService.getAllAssignmentByClassId(id));
     }
 
     @GetMapping("/assignments/{id}")
-    public ResponseEntity<Assignment> getAssignmentById(@PathVariable int id) {
-        return ResponseEntity.ok(assignmentService.getAssignmentById(id));
+    public ResponseEntity<?> getAssignmentById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(assignmentService.getAssignmentById(id));
+        } catch (ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/assignments")
-    public ResponseEntity<Assignment> createAssignment(@RequestBody Assignment assignment) throws ParseException {
-        Date currentDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        String formattedDate = dateFormat.format(currentDate);
-        Date parsedDate = dateFormat.parse(formattedDate);
-        assignment.setCreated_date(parsedDate);
-        assignment.setStart_date(parsedDate);
+    public ResponseEntity<?> createAssignment(@RequestBody Assignment assignment){
         return ResponseEntity.ok(assignmentService.createAssignment(assignment));
     }
 
     @PutMapping ("/assignments/{id}")
-    public ResponseEntity<Assignment> updateAssignment(@PathVariable int id, @RequestBody Assignment assignment) throws ParseException {
-
-        return ResponseEntity.ok(assignmentService.updateAssignment(id,assignment));
+    public ResponseEntity<?> updateAssignment(@PathVariable int id, @RequestBody Assignment assignment){
+         try {
+             return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment));
+         } catch (ResourceNotFroundException e){
+             return ResponseEntity.badRequest().body(e.getMessage());
+}
     }
 
     @DeleteMapping("/assignments/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteAssignment(@PathVariable int id) {
-        boolean deleted = assignmentService.deleteAssignment(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteAssignment(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(assignmentService.deleteAssignment(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

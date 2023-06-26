@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Test;
 import com.capstone.project.service.TestService;
 import org.springframework.http.ResponseEntity;
@@ -24,35 +25,38 @@ public class TestController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<List<Test>> getAllTest(){
+    public ResponseEntity<?> getAllTest(){
         return ResponseEntity.ok(testService.getAllTest());
     }
     @GetMapping("/test/{id}")
-    public ResponseEntity<Test> getTestById(@PathVariable int id){
-        return ResponseEntity.ok(testService.getTestById(id));
+    public ResponseEntity<?> getTestById(@PathVariable int id){
+        try {
+            return ResponseEntity.ok(testService.getTestById(id));
+        } catch (ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/test")
-    public ResponseEntity<Test> createTest( @RequestBody Test test) throws ParseException {
-        Date currentDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        String formattedDate = dateFormat.format(currentDate);
-        Date parsedDate = dateFormat.parse(formattedDate);
-        test.setCreated_date(parsedDate);
+    public ResponseEntity<?> createTest( @RequestBody Test test) {
         return ResponseEntity.ok(testService.createTest(test));
     }
     @PutMapping ("/test/{id}")
-    public ResponseEntity<Test> updateTest(@PathVariable int id,@RequestBody Test test) throws ParseException {
-
-        return ResponseEntity.ok(testService.updateTest(id,test));
+    public ResponseEntity<?> updateTest(@PathVariable int id,@RequestBody Test test) throws ParseException {
+         try {
+             return ResponseEntity.ok(testService.updateTest(id, test));
+         } catch (ResourceNotFroundException e){
+             return ResponseEntity.badRequest().body(e.getMessage());
+         }
     }
 
     @DeleteMapping("/test/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteTest(@PathVariable int id) {
-        boolean deleted = testService.deleteTest(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteTest(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(testService.deleteTest(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }
