@@ -1,7 +1,9 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.Comment;
 import com.capstone.project.model.Post;
+import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.repository.PostRepository;
 import com.capstone.project.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,12 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
 
 
@@ -53,6 +57,9 @@ public class PostServiceImpl implements PostService {
     public Boolean deletePost(int id) throws ResourceNotFroundException {
         Post post = postRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Post not exist with id: " + id));
+        for(Comment comment : commentRepository.getCommentByPostId(post.getId())){
+            commentRepository.delete(comment);
+        }
         postRepository.delete(post);
         return true;
     }
