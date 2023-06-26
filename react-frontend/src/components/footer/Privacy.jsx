@@ -62,6 +62,7 @@ function Privacy() {
         <p className="privacy__paragraph1">Visitors can always refrain from supplying certain information, but it may prevent them from engaging in certain Quizlet services which require that information.</p>
         <h4 className="privacy__info">Information You Provide to Enhance Your Experience</h4>
         <p className="privacy__paragraph1">You can choose to provide us with additional information in order to obtain a better user experience when using the Service. This additional information will be processed with your consent and/or to provide you with services you request. This information includes your survey responses, participation in contests, promotions or other marketing efforts, suggestions for improvements, referrals, or any other actions on the Service.</p>
+        
       </div>
     </div>
   );
