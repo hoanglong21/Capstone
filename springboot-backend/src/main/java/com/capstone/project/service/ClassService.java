@@ -16,4 +16,5 @@ public interface ClassService {
     Class updateClassroom( Class classrooms,  int id) throws ResourceNotFroundException;
 
     Boolean deleteClass( int id) throws ResourceNotFroundException;
+    Boolean deleteHardClass( int id) throws ResourceNotFroundException;
 }
