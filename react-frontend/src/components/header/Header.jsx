@@ -206,7 +206,7 @@ const Header = () => {
                                     aria-expanded="false"
                                 >
                                     <img
-                                        src={avatar}
+                                        src={userInfo.avatar}
                                         alt="avatar"
                                         className="avatar"
                                     />
@@ -216,7 +216,7 @@ const Header = () => {
                                         <div className="dropdown-header d-flex align-items-center">
                                             <div className="flex-shrink-0">
                                                 <img
-                                                    src={avatar}
+                                                    src={userInfo.avatar}
                                                     alt="avatar"
                                                     className="avatar"
                                                 />

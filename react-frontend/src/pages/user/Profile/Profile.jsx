@@ -4,7 +4,6 @@ import { getAll } from '../../../features/fileManagement'
 
 import { updateUser } from '../../../features/user/userAction'
 
-import avatar from '../../../assets/images/avatar-default.jpg'
 import { EditIcon } from '../../../components/icons'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
@@ -92,7 +91,7 @@ const Profile = () => {
     return (
         <div className="mx-5 px-3">
             <h4>My Profile</h4>
-            <form className="row g-4 mt-3 needs-validation" noValidate>
+            <form className="row g-4 needs-validation" noValidate>
                 {/* error message */}
                 {error && (
                     <div
