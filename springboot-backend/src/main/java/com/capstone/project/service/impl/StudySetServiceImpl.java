@@ -12,6 +12,9 @@ import com.capstone.project.repository.StudySetRepository;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.CardService;
 import com.capstone.project.service.StudySetService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class StudySetServiceImpl implements StudySetService {
     private final ContentRepository contentRepository;
     private final CardService cardService;
 
+    @PersistenceContext
+    private EntityManager em;
     private final UserRepository userRepository;
     @Autowired
     public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService, UserRepository userRepository) {
@@ -119,7 +124,39 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<StudySetResponse> getCustomList(boolean isDeleted, boolean isPublic, boolean isDraft) {
-        return studySetRepository.getCustomList(isDeleted, isPublic, isDraft);
+    public List<StudySetResponse> getCustomList(Boolean isDeleted, Boolean isPublic, Boolean isDraft) {
+        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
+                "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count FROM studyset s WHERE 1=1";
+        if (isPublic != null) {
+            query += " AND s.is_public = :isPublic";
+        }
+
+        if (isDraft != null) {
+            query += " AND s.is_draft = :isDraft";
+        }
+
+        if (isDeleted != null) {
+            query += " AND s.is_deleted = :isDeleted";
+        }
+
+        Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
+        if (isPublic != null) {
+            q.setParameter("isPublic", isPublic);
+        }
+
+        if (isDraft != null) {
+            q.setParameter("isDraft", isDraft);
+        }
+
+        if (isDeleted != null) {
+            q.setParameter("isDeleted", isDeleted);
+        }
+
+        return q.getResultList();
+    }
+
+    @Override
+    public List<StudySetResponse> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft) {
+        return null;
     }
 }
