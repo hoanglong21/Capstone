@@ -17,3 +17,19 @@
     width: 1.5rem;
     height: 1.5rem;
 }
+
+.avatarModal .modal-dialog {
+    max-width: 70vw;
+}
+
+.modal-heading p {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.row > .avatarItem {
+    padding: 0.3rem;
+    cursor: pointer;
+}

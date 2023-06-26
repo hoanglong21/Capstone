@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
+import { getAll } from '../../../features/fileManagement'
 
 import { updateUser } from '../../../features/user/userAction'
 
@@ -16,10 +17,19 @@ const Profile = () => {
     const [newUser, setNewUser] = useState({})
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
+    const [defaultAvatars, setDefaultAvatars] = useState([])
 
     useEffect(() => {
         setNewUser({ ...userInfo })
     }, [userInfo])
+
+    useEffect(() => {
+        async function fetchAvatar() {
+            let temp = await getAll('system/default_avatar')
+            setDefaultAvatars(temp)
+        }
+        fetchAvatar()
+    }, [])
 
     const handleChange = (event) => {
         setNewUser({ ...newUser, [event.target.name]: event.target.value })
@@ -73,6 +83,12 @@ const Profile = () => {
         )
     }
 
+    const handleSelectAvatar = (avatarURL) => () => {
+        console.log(avatarURL)
+        setNewUser({ ...newUser, avatar: avatarURL })
+        document.getElementById('toggleModal').click()
+    }
+
     return (
         <div className="mx-5 px-3">
             <h4>My Profile</h4>
@@ -94,7 +110,7 @@ const Profile = () => {
                 {/* avatar */}
                 <div className="col-12">
                     <div className="userAvatar mx-auto mb-2">
-                        <img src={avatar} alt="" className="h-100" />
+                        <img src={newUser.avatar} alt="" className="h-100" />
                         <button
                             type="button"
                             className="btn btn-primary p-0"
@@ -268,7 +284,7 @@ const Profile = () => {
             </form>
             {/* Avatar Modal */}
             <div
-                className="modal fade"
+                className="avatarModal modal fade"
                 id="avatarModal"
                 data-bs-backdrop="static"
                 data-bs-keyboard="false"
@@ -278,22 +294,37 @@ const Profile = () => {
             >
                 <div className="modal-dialog">
                     <div className="modal-content">
-                        <div className="modal-header">
-                            <h1
-                                className="modal-title fs-5"
-                                id="avatarModalLabel"
-                            >
-                                Profile Picture
-                            </h1>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
                         <div className="modal-body">
-                            <h2>Choose your profile picture</h2>
+                            <div className="d-flex modal-heading justify-content-between align-items-center">
+                                <p className="">Choose your profile picture</p>
+                                <button
+                                    id="toggleModal"
+                                    type="button"
+                                    className="btn-close me-1 mt-1"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div className="defaultAvatar mt-3 row m-0">
+                                {defaultAvatars.map((avatarURL, index) => (
+                                    <button
+                                        key={index}
+                                        className="btn avatarItem col-1"
+                                        onClick={handleSelectAvatar(avatarURL)}
+                                    >
+                                        <img
+                                            src={avatarURL}
+                                            alt=""
+                                            className="w-100"
+                                        />
+                                    </button>
+                                ))}
+                                <div className="col-12 mt-4 p-0 text-center mb-2">
+                                    <button className="btn btn-info">
+                                        Upload your own photo
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

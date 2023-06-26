@@ -56,6 +56,7 @@ export const uploadFile = (file, folderName) => {
                 case 'running':
                     console.log('Upload is running')
                     break
+                default:
             }
         },
         (error) => {
@@ -111,26 +112,21 @@ export const deleteFileByUrl = (url, folderName) => {
         })
 }
 
-export const getAll = (folderName) => {
+export const getAll = async (folderName) => {
     const listRef = ref(storage, folderName)
-
-    // Find all the prefixes and items.
-    listAll(listRef)
-        .then((res) => {
-            res.prefixes.forEach((folderRef) => {
-                // All the prefixes under listRef.
-                // You may call listAll() recursively on them.
-            })
-            res.items.forEach((itemRef) => {
-                // All the items under listRef.
-                //   console.log(itemRef)
-                getDownloadURL(itemRef).then((downloadURL) => {
-                    console.log('File: ', downloadURL)
-                })
-            })
-        })
-        .catch((error) => {
-            // Uh-oh, an error occurred!
-            console.log(error)
-        })
+    let data = []
+    try {
+        const res = await listAll(listRef)
+        // for (let folderRef of res.prefixes) {
+        // All the prefixes under listRef.
+        // You may call listAll() recursively on them.
+        // }
+        for (let itemRef of res.items) {
+            const downloadURL = await getDownloadURL(itemRef)
+            data.push(downloadURL)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+    return data
 }

@@ -29,11 +29,11 @@ const getAllStudySetByUser = (username) => {
 const getCustomList = (is_deleted, is_public, is_draft) => {
     return axios.get(
         API_BASE_URL +
-            '/getstudysets?is_deleted=' +
+            '/getstudysets?deleted=' +
             is_deleted +
-            '&is_public=' +
+            '&public=' +
             is_public +
-            '&is_draft=' +
+            '&draft=' +
             is_draft
     )
 }

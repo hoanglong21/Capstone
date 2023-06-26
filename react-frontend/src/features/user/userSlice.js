@@ -1,8 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { changePassword, getUser, updateUser } from './userAction'
+import {
+    getUser,
+    updateUser,
+} from './userAction'
 
 const initialState = {
     userInfo: {},
+    defaultAvatar: [],
 }
 
 const userSlice = createSlice({

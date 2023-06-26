@@ -1,4 +1,8 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import {
+    BrowserRouter,
+    Route,
+    Routes,
+} from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import Register from './pages/Register'
@@ -41,7 +45,10 @@ const App = () => {
                     <Route index element={userToken ? <Home /> : <Landing />} />
                     <Route element={<ProtectedRoute />}>
                         <Route path="account" element={<AccountLayout />}>
-                            <Route index element={<Profile />} />
+                            <Route
+                                index
+                                element={<Profile />}
+                            />
                             <Route
                                 path="notification"
                                 element={<Notifications />}

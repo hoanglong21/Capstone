@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react'
 import {
     uploadFile,
     deleteFileByUrl,
-    deleteFileByUrlNew,
-    uploadFileNew,
 } from '../../features/fileManagement'
 import ContentService from '../../services/ContentService'
 import CardService from '../../services/CardService'
