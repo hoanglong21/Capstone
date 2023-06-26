@@ -10,13 +10,6 @@ import java.util.Date;
 import java.util.Set;
 
 
-@NamedNativeQuery(
-        name = "StudySetResponseCustomList",
-        query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
-                "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count FROM studyset s " +
-                "WHERE s.is_deleted = :isDeleted AND s.is_public = :isPublic AND s.is_draft = :isDraft",
-        resultSetMapping = "StudySetResponseCustomListMapping"
-)
 @SqlResultSetMapping(
         name = "StudySetResponseCustomListMapping",
         classes = @ConstructorResult(

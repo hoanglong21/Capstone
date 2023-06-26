@@ -145,7 +145,12 @@ public class UserServiceImplTest {
 
         when(userRepository.findUserByUsername("long")).thenReturn(user);
 
-        User result = userServiceImpl.getUserByUsername("long");
+        User result = null;
+        try {
+            result = userServiceImpl.getUserByUsername("long");
+        } catch (ResourceNotFroundException e) {
+            throw new RuntimeException(e);
+        }
 
         assertThat(result.getUsername()).isEqualTo(username);
         assertThat(result.getFirst_name()).isEqualTo(first_name);
@@ -218,7 +223,12 @@ public class UserServiceImplTest {
         when(userRepository.findUserByUsername("long")).thenReturn(user);
         when(userRepository.save(any(User.class))).thenReturn(userDetails);
 
-        User updatedUser = userServiceImpl.updateUser("long", userDetails);
+        User updatedUser = null;
+        try {
+            updatedUser = userServiceImpl.updateUser("long", userDetails);
+        } catch (ResourceNotFroundException e) {
+            throw new RuntimeException(e);
+        }
 
         assertThat(updatedUser.getUsername()).isEqualTo(username);
         assertThat(updatedUser.getFirst_name()).isEqualTo(first_name);
@@ -252,7 +262,11 @@ public class UserServiceImplTest {
 
         when(userRepository.findUserByUsername(username)).thenReturn(user);
 
-        Assertions.assertThat(userServiceImpl.banUser(username)).isTrue();
+        try {
+            Assertions.assertThat(userServiceImpl.banUser(username)).isTrue();
+        } catch (ResourceNotFroundException e) {
+            throw new RuntimeException(e);
+        }
         Assertions.assertThat(user.getStatus()).isEqualTo("banned");
         Assertions.assertThat(user.getBanned_date()).isNotNull();
     }
@@ -273,7 +287,11 @@ public class UserServiceImplTest {
 
         when(userRepository.findUserByUsername("long")).thenReturn(user);
 
-        Assertions.assertThat(userServiceImpl.deleteUser("long")).isTrue();
+        try {
+            Assertions.assertThat(userServiceImpl.deleteUser("long")).isTrue();
+        } catch (ResourceNotFroundException e) {
+            throw new RuntimeException(e);
+        }
         Assertions.assertThat(user.getStatus()).isEqualTo("deleted");
         Assertions.assertThat(user.getDeleted_date()).isNotNull();
     }
@@ -303,10 +321,18 @@ public class UserServiceImplTest {
         when(userRepository.findUserByUsername(username)).thenReturn(user);
 
         if(isBannedDateMoreThan7Days) {
-            Assertions.assertThat(userServiceImpl.recoverUser(username)).isTrue();
+            try {
+                Assertions.assertThat(userServiceImpl.recoverUser(username)).isTrue();
+            } catch (ResourceNotFroundException e) {
+                throw new RuntimeException(e);
+            }
             Assertions.assertThat(user.getStatus()).isEqualTo("active");
         } else {
-            Assertions.assertThat(userServiceImpl.recoverUser(username)).isFalse();
+            try {
+                Assertions.assertThat(userServiceImpl.recoverUser(username)).isFalse();
+            } catch (ResourceNotFroundException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

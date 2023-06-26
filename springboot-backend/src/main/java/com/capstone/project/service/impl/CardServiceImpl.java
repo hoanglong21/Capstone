@@ -42,45 +42,27 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Card getCardById(int id) {
-        Card card = null;
-        try {
-            card = cardRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
+    public Card getCardById(int id) throws ResourceNotFroundException {
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
         return card;
     }
 
     @Override
-    public Card updateCard(int id, Card cardDetails) {
-        Card card = null;
-        try {
-            card = cardRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
-
+    public Card updateCard(int id, Card cardDetails) throws ResourceNotFroundException {
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
         card.setPicture(cardDetails.getPicture());
         card.setAudio(cardDetails.getAudio());
-//        card.setStudySet(studySetRepository.findStudySetById(cardDetails.getStudySet().getId()));
 
         Card updateCard = cardRepository.save(card);
         return updateCard;
     }
 
     @Override
-    public Boolean deleteCard(int id) {
-        Card card;
-        try {
-            card = cardRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
-        }
+    public Boolean deleteCard(int id) throws ResourceNotFroundException {
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
         for (Content content: contentRepository.getContentByCardId(card.getId())) {
             contentRepository.delete(content);
         }
@@ -89,15 +71,9 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Boolean checkBlank(int id) {
-        Card card;
-        try {
-            card = cardRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
-        }catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return true;
-        }
+    public Boolean checkBlank(int id) throws ResourceNotFroundException {
+        Card card = cardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
         if ((card.getAudio() == null||card.getAudio().equals(""))  && (card.getPicture() == null||card.getPicture().equals(""))) {
             for (Content content : contentRepository.getContentByCardId(card.getId())) {
                 if (content.getContent()==null||content.getContent().equals("")) {

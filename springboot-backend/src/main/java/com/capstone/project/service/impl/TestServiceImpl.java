@@ -38,50 +38,32 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Test createTest(Test test) {
+        test.setCreated_date(new Date());
         return testRepository.save(test);
     }
 
     @Override
-    public Test getTestById(int id) {
-        Test test = null;
-        try{
-            test = testRepository.findById(id)
+    public Test getTestById(int id) throws ResourceNotFroundException {
+        Test test =  testRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return test;
     }
 
     @Override
-    public Test updateTest(int id, Test test) throws ParseException {
-        Test testclass = null;
-        try{
-            testclass = testRepository.findById(id)
+    public Test updateTest(int id, Test test) throws ResourceNotFroundException {
+        Test testclass = testRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         testclass.setTitle(test.getTitle());
         testclass.setDescription(test.getDescription());
         testclass.setDuration(test.getDuration());
-        Date currentDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        String formattedDate = dateFormat.format(currentDate);
-        Date parsedDate = dateFormat.parse(formattedDate);
-        testclass.setModified_date(parsedDate);
+        testclass.setModified_date(new Date());
         return testRepository.save(testclass);
     }
 
     @Override
-    public Boolean deleteTest(int id) {
-        Test testclass = null;
-        try{
-            testclass = testRepository.findById(id)
+    public Boolean deleteTest(int id) throws ResourceNotFroundException {
+        Test testclass = testRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         for (Question question : questionRepository.getQuestionByTestId(testclass.getId())) {
             for (Answer answer : answerRepository.getAnswerByQuestionId(question.getId())) {
                   answerRepository.delete(answer);

@@ -1,4 +1,5 @@
 package com.capstone.project.service;
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Comment;
 
 import java.text.ParseException;
@@ -12,11 +13,11 @@ public interface CommentService {
     List<Comment> getAllCommentByStudySetId(int id);
     List<Comment> getAllCommentByTestId(int id);
 
-    Comment getCommentById(int id);
+    Comment getCommentById(int id) throws ResourceNotFroundException;
 
     Comment createComment(Comment comment);
 
-    Comment updateComment( Comment comment,  int id);
+    Comment updateComment( Comment comment,  int id) throws ResourceNotFroundException;
 
-    Boolean deleteComment (int id);
+    Boolean deleteComment (int id) throws ResourceNotFroundException;
 }

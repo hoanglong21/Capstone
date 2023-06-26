@@ -1,5 +1,5 @@
 package com.capstone.project.controller;
-
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Answer;
 import com.capstone.project.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,37 +23,46 @@ public class AnswerController {
     }
 
     @GetMapping("/answers")
-    public ResponseEntity<List<Answer>> getAllAnswer() {
+    public ResponseEntity<?> getAllAnswer() {
         return ResponseEntity.ok(answerService.getAllAnswers());
     }
 
     @GetMapping("/answersbyquestionid")
-    public ResponseEntity<List<Answer>> getAllByQuestionId(@RequestParam int id) {
+    public ResponseEntity<?> getAllByQuestionId(@RequestParam int id) {
         return ResponseEntity.ok(answerService.getAllByQuestionId(id));
     }
 
     @GetMapping("/answers/{id}")
-    public ResponseEntity<Answer> getAnswerById(@PathVariable int id) {
-        return ResponseEntity.ok( answerService.getAnswerById(id));
+    public ResponseEntity<?> getAnswerById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(answerService.getAnswerById(id));
+        }catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/answers")
-    public ResponseEntity<Answer> createAnswer(@RequestBody Answer answer) {
+    public ResponseEntity<?> createAnswer(@RequestBody Answer answer) {
         return ResponseEntity.ok(answerService.createAnswer(answer));
     }
 
 
     @PutMapping("/answers/{id}")
-    public ResponseEntity<Answer> updateAnswer(@PathVariable int id, @RequestBody Answer answer) {
-        return ResponseEntity.ok(answerService.updateAnswer(id,answer));
+    public ResponseEntity<?> updateAnswer(@PathVariable int id, @RequestBody Answer answer) {
+        try {
+            return ResponseEntity.ok(answerService.updateAnswer(id, answer));
+        }catch (ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 
     @DeleteMapping("/answers/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteAnswer(@PathVariable int id) {
-        boolean deleted = answerService.deleteAnswer(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteAnswer(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(answerService.deleteAnswer(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

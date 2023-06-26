@@ -28,10 +28,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        if (user.getEmail()==null||user.getEmail().equals("")) {
-            // TODO need test
-            throw new IllegalArgumentException("Email cannot be null or empty");
-        }
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new DuplicateValueException("Username already registered");
         }
@@ -59,23 +55,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+    public User getUserByUsername(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username: " + username);
+        }
+        return user;
     }
 
     @Override
-    public User updateUser(String username, User userDetails) {
-        User user = null;
-        try {
-            user = userRepository.findUserByUsername(username);
-            if (user == null) {
-                throw new ResourceNotFroundException("User not exist with username:" + username);
-            }
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
+    public User updateUser(String username, User userDetails) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username: " + username);
         }
         user.setEmail(userDetails.getEmail());
-//        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         user.setBio(userDetails.getBio());
         user.setDob(userDetails.getDob());
         user.setAvatar(userDetails.getAvatar());
@@ -93,16 +87,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean banUser(String username) {
-        User user = null;
-        try {
-            user = userRepository.findUserByUsername(username);
-            if (user == null) {
-                throw new ResourceNotFroundException("User not exist with username:" + username);
-            }
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
+    public Boolean banUser(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username: " + username);
         }
         user.setStatus("banned");
         user.setBanned_date(new Date());
@@ -111,16 +99,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUser(String username) {
-        User user = null;
-        try {
-            user = userRepository.findUserByUsername(username);
-            if (user == null) {
-                throw new ResourceNotFroundException("User not exist with username:" + username);
-            }
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
+    public Boolean deleteUser(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username: " + username);
         }
         user.setStatus("deleted");
         user.setDeleted_date(new Date());
@@ -129,16 +111,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean recoverUser(String username) {
-        User user;
-        try {
-            user = userRepository.findUserByUsername(username);
-            if (user == null) {
-                throw new ResourceNotFroundException("User not exist with username:" + username);
-            }
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
+    public Boolean recoverUser(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username: " + username);
         }
         Date today = new Date();
         Date banned_date = user.getBanned_date();
@@ -162,22 +138,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean verifyAccount(String token) {
+    public Boolean verifyAccount(String token) throws ResourceNotFroundException {
         User user = userRepository.findUserByToken(token);
-        if (user != null) {
-            // mark account as verified and log user in
-            user.setStatus("active");
-            userRepository.save(user);
-            return true;
-        } else {
-            return false;
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with token: " + token);
         }
+        user.setStatus("active");
+        userRepository.save(user);
+        return true;
     }
 
     @Override
-    public Boolean sendVerificationEmail(String username) {
+    public Boolean sendVerificationEmail(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with token: " + username);
+        }
         try {
-            User user = userRepository.findUserByUsername(username);
             // for current version only
             String siteURL = "http://localhost:8080/api/v1/";
 
@@ -225,9 +202,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean resetPassword(String username, String pin, String password) {
+    public Boolean resetPassword(String username, String pin, String password) throws ResourceNotFroundException {
         User user = userRepository.findUserByUsername(username);
-        if (user != null && user.getPin().equals(pin)) {
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username: " + username);
+        }
+        if (user.getPin().equals(pin)) {
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
             return true;
@@ -237,9 +217,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean sendResetPasswordEmail(String username) {
+    public Boolean sendResetPasswordEmail(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with token: " + username);
+        }
         try {
-            User user = userRepository.findUserByUsername(username);
             // for current version only
             String siteURL = "http://localhost:3000/";
 
@@ -285,16 +268,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean checkMatchPassword(String username, String checkPassword) {
-        User user = null;
-        try {
-            user = userRepository.findUserByUsername(username);
-            if (user == null) {
-                throw new ResourceNotFroundException("User not exist with username:" + username);
-            }
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
+    public Boolean checkMatchPassword(String username, String checkPassword) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username:" + username);
         }
         if(passwordEncoder.matches(checkPassword, user.getPassword())) {
             return true;
@@ -304,9 +281,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean changePassword(String username, String password) {
+    public Boolean changePassword(String username, String password) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with token: " + username);
+        }
         try {
-            User user = userRepository.findUserByUsername(username);
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
             return true;

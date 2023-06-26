@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Comment;
 import com.capstone.project.model.Content;
 import com.capstone.project.service.CommentService;
@@ -25,51 +26,59 @@ public class CommentController {
 
 
     @GetMapping("/comments")
-    public ResponseEntity<List<Comment>> getAllComment(){
+    public ResponseEntity<?> getAllComment(){
         return ResponseEntity.ok(commentService.getAllComment());
     }
     @GetMapping("/commentbypostid/{id}")
-    public ResponseEntity<List<Comment>> getAllCommentByPostId(@PathVariable int id){
+    public ResponseEntity<?> getAllCommentByPostId(@PathVariable int id){
             return ResponseEntity.ok(commentService.getAllCommentByPostId(id));
     }
 
     @GetMapping("/commentbyrootid/{id}")
-    public ResponseEntity<List<Comment>> getAllCommentByRootId(@PathVariable int id){
+    public ResponseEntity<?> getAllCommentByRootId(@PathVariable int id){
         return ResponseEntity.ok(commentService.getAllCommentByRootId(id));
     }
 
     @GetMapping("/commentbystudysetid/{id}")
-    public ResponseEntity<List<Comment>> getAllCommentByStudysetId(@PathVariable int id){
+    public ResponseEntity<?> getAllCommentByStudysetId(@PathVariable int id){
         return ResponseEntity.ok(commentService.getAllCommentByStudySetId(id));
     }
 
     @GetMapping("/commentbytestid/{id}")
-    public ResponseEntity<List<Comment>> getAllCommentByTestId(@PathVariable int id){
+    public ResponseEntity<?> getAllCommentByTestId(@PathVariable int id){
         return ResponseEntity.ok(commentService.getAllCommentByTestId(id));
     }
 
     @GetMapping("/comments/{id}")
-    public ResponseEntity<Comment> getCommentById(@PathVariable int id){
-        return ResponseEntity.ok(commentService.getCommentById(id));
+    public ResponseEntity<?> getCommentById(@PathVariable int id){
+        try {
+            return ResponseEntity.ok(commentService.getCommentById(id));
+        } catch (ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/comments")
-    public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
+    public ResponseEntity<?> createComment(@RequestBody Comment comment) {
         return ResponseEntity.ok(commentService.createComment(comment));
     }
 
     @PutMapping("/comments/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable int id, @RequestBody Comment comment) {
-        Comment comment_updated = commentService.updateComment(comment,id);
-        return ResponseEntity.ok(comment_updated);
+    public ResponseEntity<?> updateComment(@PathVariable int id, @RequestBody Comment comment) {
+       try {
+           return ResponseEntity.ok(commentService.updateComment(comment, id));
+       } catch (ResourceNotFroundException e){
+           return ResponseEntity.badRequest().body(e.getMessage());
+       }
     }
 
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteComment(@PathVariable int id) {
-        boolean deleted = commentService.deleteComment(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteComment(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(commentService.deleteComment(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

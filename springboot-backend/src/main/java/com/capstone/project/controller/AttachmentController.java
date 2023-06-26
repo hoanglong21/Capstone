@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Attachment;
 import com.capstone.project.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,42 +24,50 @@ public class AttachmentController {
 
 
     @GetMapping("/attachments")
-    public ResponseEntity<List<Attachment>> getAllAttachments() {
+    public ResponseEntity<?> getAllAttachments() {
         return ResponseEntity.ok( attachmentService.getAllAttachment());
     }
     @GetMapping("/attachmentsbysubmissionid/{id}")
-    public ResponseEntity<List<Attachment>> getAllAttachmentsBySubmissionId(@PathVariable int id) {
+    public ResponseEntity<?> getAllAttachmentsBySubmissionId(@PathVariable int id) {
        return ResponseEntity.ok( attachmentService.getAllAttachmentBySubmissionId(id));
     }
 
     @GetMapping("/attachmentsbyassignmentid/{id}")
-    public ResponseEntity<List<Attachment>> getAllAttachmentsByAssignmentId(@PathVariable int id) {
+    public ResponseEntity<?> getAllAttachmentsByAssignmentId(@PathVariable int id) {
         return ResponseEntity.ok( attachmentService.getAllAttachmentByAssignmentId(id));
+    }
+    @GetMapping("/attachments/{id}")
+    public ResponseEntity<?> getAttachmentById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(attachmentService.getAttachmentById(id));
+        } catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/attachments")
-    public ResponseEntity<Attachment> createAttachment(@RequestBody Attachment attachment) {
+    public ResponseEntity<?> createAttachment(@RequestBody Attachment attachment) {
         return ResponseEntity.ok(attachmentService.createAttachment(attachment));
     }
 
-    @GetMapping("/attachments/{id}")
-    public ResponseEntity<Attachment> getAttachmentById(@PathVariable int id) {
-        Attachment attachment = attachmentService.getAttachmentById(id);
-        return ResponseEntity.ok(attachment);
-    }
+
 
     @PutMapping("/attachments/{id}")
-    public ResponseEntity<Attachment> updateAttachment(@PathVariable int id, @RequestBody Attachment attachment) {
-        Attachment attachment_new = attachmentService.updateAttachment(id,attachment);
-        return ResponseEntity.ok(attachment_new);
+    public ResponseEntity<?> updateAttachment(@PathVariable int id, @RequestBody Attachment attachment) {
+           try {
+               return ResponseEntity.ok(attachmentService.updateAttachment(id, attachment));
+           } catch (ResourceNotFroundException e){
+               return ResponseEntity.badRequest().body(e.getMessage());
+           }
     }
 
     @DeleteMapping("/attachments/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteAttachment(@PathVariable int id) {
-        boolean deleted = attachmentService.deleteAttachment(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteAttachment(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(attachmentService.deleteAttachment(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }
