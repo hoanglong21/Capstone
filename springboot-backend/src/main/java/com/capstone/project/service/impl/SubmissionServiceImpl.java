@@ -43,40 +43,25 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Submission getSubmissionById(int id) {
-        Submission submission = null;
-        try {
-            submission = submissionRepository.findById(id)
+    public Submission getSubmissionById(int id) throws ResourceNotFroundException {
+        Submission submission = submissionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Submission not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return submission;
     }
 
     @Override
-    public Submission updateSubmission(int id, Submission submission) {
-        Submission submission_new = null;
-        try {
-            submission_new = submissionRepository.findById(id)
+    public Submission updateSubmission(int id, Submission submission) throws ResourceNotFroundException {
+        Submission submission_new  = submissionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Submission not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
        submission_new.setDescription(submission.getDescription());
         submission_new.setModified_date(new Date());
         return submissionRepository.save(submission_new);
     }
 
     @Override
-    public Boolean deleteSubmission(int id) {
-        Submission submission_new = null;
-        try {
-            submission_new = submissionRepository.findById(id)
+    public Boolean deleteSubmission(int id) throws ResourceNotFroundException {
+        Submission submission_new  = submissionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Submission not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
             for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission_new.getId())) {
                 attachmentRepository.delete(attachment);
             }

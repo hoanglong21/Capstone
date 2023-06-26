@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Class;
 import com.capstone.project.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,33 +24,42 @@ public class ClassController {
     }
 
     @GetMapping("/class")
-    public ResponseEntity<List<Class>> getAllClass() {
+    public ResponseEntity<?> getAllClass() {
         return ResponseEntity.ok(classService.getAllClass());
     }
 
     @PostMapping("/class")
-    public ResponseEntity<Class> createClassroom(@RequestBody Class classroom) throws ParseException {
+    public ResponseEntity<?> createClassroom(@RequestBody Class classroom) throws ParseException {
         return ResponseEntity.ok(classService.createClassroom(classroom));
     }
 
 
 
     @GetMapping("/class/{id}")
-    public ResponseEntity<Class> getClassroomById(@PathVariable int id) {
+    public ResponseEntity<?> getClassroomById(@PathVariable int id) {
+    try {
         return ResponseEntity.ok(classService.getClassroomById(id));
+    } catch(ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     @PutMapping("/class/{id}")
-    public ResponseEntity<Class> updateClassroom(@RequestBody Class classrooms, @PathVariable int id) {
-        return ResponseEntity.ok(classService.updateClassroom(classrooms,id));
+    public ResponseEntity<?> updateClassroom(@RequestBody Class classrooms, @PathVariable int id) {
+    try {
+        return ResponseEntity.ok(classService.updateClassroom(classrooms, id));
+    } catch (ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     @DeleteMapping("/class/{id}")
-        public ResponseEntity<Map<String, Boolean>> deleteClass(@PathVariable int id) {
-            boolean deleted = classService.deleteClass(id);
-            Map<String, Boolean> response = new HashMap<>();
-            response.put("deleted", deleted);
-            return ResponseEntity.ok(response);
+        public ResponseEntity<?> deleteClass(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(classService.deleteClass(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         }
 
 }

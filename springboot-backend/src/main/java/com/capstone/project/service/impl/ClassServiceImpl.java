@@ -32,27 +32,17 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Class getClassroomById(int id) {
-        Class classroom = null;
-        try {
-            classroom = classRepository.findById(id)
+    public Class getClassroomById(int id) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return classroom;
     }
 
     @Override
-    public Class createClassroom(Class classroom) throws ParseException {
-        Date currentDate = new Date();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-        String formattedDate = dateFormat.format(currentDate);
-        Date parsedDate = dateFormat.parse(formattedDate);
+    public Class createClassroom(Class classroom){
         String classCode = generateClassCode();
         classroom.setClass_code(classCode);
-        classroom.setCreated_date(parsedDate);
-
+        classroom.setCreated_date(new Date());
         return classRepository.save(classroom);
     }
     private String generateClassCode() {
@@ -71,14 +61,9 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Class updateClassroom(Class classrooms, int id) {
-        Class classroom = null;
-        try {
-            classroom = classRepository.findById(id)
+    public Class updateClassroom(Class classrooms, int id) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         classroom.setClass_name(classrooms.getClass_name());
         classroom.setDescription(classrooms.getDescription());
         classroom.setDeleted_date(classrooms.getDeleted_date());
@@ -87,17 +72,12 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Boolean deleteClass(int id) {
-        Class classroom;
-        try {
-            classroom = classRepository.findById(id)
+    public Boolean deleteClass(int id) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-            return false;
-        }
         classroom.set_deleted(true);
         classroom.setDeleted_date(new Date());
+        classRepository.save(classroom);
         return true;
     }
 }

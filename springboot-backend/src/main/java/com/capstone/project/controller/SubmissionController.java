@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Class;
 import com.capstone.project.model.Submission;
 import com.capstone.project.service.SubmissionService;
@@ -23,37 +24,46 @@ public class SubmissionController {
     }
 
     @GetMapping("/submissions")
-    public ResponseEntity<List<Submission>> getAllSubmission() {
+    public ResponseEntity<?> getAllSubmission() {
         return ResponseEntity.ok(submissionService.getAllSubmission());
     }
 
     @GetMapping("/submissionsbyassignmentid/{id}")
-    public ResponseEntity<List<Submission>> getAllSubmissionByAssignmentId(@PathVariable int id) {
+    public ResponseEntity<?> getAllSubmissionByAssignmentId(@PathVariable int id) {
         return ResponseEntity.ok(submissionService.getAllSubmissionByAssignmentId(id));
     }
 
     @PostMapping("/submissions")
-    public ResponseEntity<Submission> createSubmission(@RequestBody Submission submission) throws ParseException {
+    public ResponseEntity<?> createSubmission(@RequestBody Submission submission) throws ParseException {
         return ResponseEntity.ok(submissionService.createSubmission(submission));
     }
 
 
 
     @GetMapping("/submissions/{id}")
-    public ResponseEntity<Submission> getSubmissionById(@PathVariable int id) {
+    public ResponseEntity<?> getSubmissionById(@PathVariable int id) {
+    try {
         return ResponseEntity.ok(submissionService.getSubmissionById(id));
+    } catch (ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     @PutMapping("/submissions/{id}")
-    public ResponseEntity<Submission> updateSubmission(@RequestBody Submission submission, @PathVariable int id) {
-        return ResponseEntity.ok(submissionService.updateSubmission(id,submission));
+    public ResponseEntity<?> updateSubmission(@RequestBody Submission submission, @PathVariable int id) {
+    try {
+        return ResponseEntity.ok(submissionService.updateSubmission(id, submission));
+    } catch (ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     @DeleteMapping("/submissions/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteSubmission(@PathVariable int id) {
-        boolean deleted = submissionService.deleteSubmission(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deleteSubmission(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(submissionService.deleteSubmission(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

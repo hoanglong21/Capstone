@@ -42,26 +42,16 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question getQuestionById(int id) {
-        Question question = null;
-        try {
-            question = questionRepository.findById(id)
+    public Question getQuestionById(int id) throws ResourceNotFroundException {
+        Question question = questionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Question not exist with id: " + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return question;
     }
 
     @Override
-    public Question updateQuestion(int id, Question question) {
-        Question question_new = null;
-        try {
-            question_new = questionRepository.findById(id)
+    public Question updateQuestion(int id, Question question) throws ResourceNotFroundException {
+        Question question_new = questionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Question not exist with id: " + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         question_new.setNum_choice(question.getNum_choice());
         question_new.setQuestion(question.getQuestion());
         question_new.setQuestionType(question.getQuestionType());
@@ -69,18 +59,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Boolean deleteQuestion(int id) {
-        Question question = null;
-        try {
-            question = questionRepository.findById(id)
+    public Boolean deleteQuestion(int id) throws ResourceNotFroundException {
+        Question question  = questionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Question not exist with id:" + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         for (Answer answer : answerRepository.getAnswerByQuestionId(question.getId())) {
              answerRepository.delete(answer);
         }
-
         questionRepository.delete(question);
         return true;
     }

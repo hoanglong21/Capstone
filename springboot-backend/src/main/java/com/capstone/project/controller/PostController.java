@@ -1,5 +1,6 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Class;
 import com.capstone.project.model.Post;
 import com.capstone.project.service.PostService;
@@ -25,31 +26,46 @@ public class PostController {
         this.postService = postService;
     }
 
+
+    @GetMapping("/post")
+    public ResponseEntity<?> getAllPost() {
+        return ResponseEntity.ok(postService.getAllPost());
+    }
+
     @GetMapping("/postbyclassid/{id}")
-    public ResponseEntity<List<Post>> getAllPostByClassId(@PathVariable int id) {
+    public ResponseEntity<?> getAllPostByClassId(@PathVariable int id) {
         return ResponseEntity.ok(postService.getAllPostByClassId(id));
     }
 
     @PostMapping("/post")
-    public ResponseEntity<Post> createPost(@RequestBody Post post)  {
+    public ResponseEntity<?> createPost(@RequestBody Post post)  {
         return ResponseEntity.ok(postService.createPost(post));
     }
 
     @GetMapping("/post/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable int id) {
+    public ResponseEntity<?> getPostById(@PathVariable int id) {
+    try {
         return ResponseEntity.ok(postService.getPostById(id));
+    } catch (ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<Post> updatePost(@RequestBody Post posts, @PathVariable int id) {
-        return ResponseEntity.ok(postService.updatePost(posts,id));
+    public ResponseEntity<?> updatePost(@RequestBody Post posts, @PathVariable int id) {
+    try {
+        return ResponseEntity.ok(postService.updatePost(posts, id));
+    } catch (ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     @DeleteMapping("/post/{id}")
-    public ResponseEntity<Map<String, Boolean>> deletePost(@PathVariable int id) {
-        boolean deleted = postService.deletePost(id);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", deleted);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> deletePost(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(postService.deletePost(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

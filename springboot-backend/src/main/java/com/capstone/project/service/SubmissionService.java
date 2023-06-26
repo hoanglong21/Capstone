@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.StudySet;
 import com.capstone.project.model.Submission;
 
@@ -13,10 +14,10 @@ public interface SubmissionService {
 
     Submission createSubmission( Submission submission) throws ParseException;
 
-    Submission getSubmissionById ( int id);
+    Submission getSubmissionById ( int id) throws ResourceNotFroundException;
 
-    Submission updateSubmission( int id, Submission submission);
+    Submission updateSubmission( int id, Submission submission) throws ResourceNotFroundException;
 
-    Boolean deleteSubmission( int id);
+    Boolean deleteSubmission( int id) throws ResourceNotFroundException;
 
 }
