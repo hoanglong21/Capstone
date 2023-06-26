@@ -26,6 +26,18 @@ const getAllStudySetByUser = (username) => {
     return axios.get(API_BASE_URL + '/studysetAuthor/' + username)
 }
 
+const getCustomList = (is_deleted, is_public, is_draft) => {
+    return axios.get(
+        API_BASE_URL +
+            '/getstudysets?is_deleted=' +
+            is_deleted +
+            '&is_public=' +
+            is_public +
+            '&is_draft=' +
+            is_draft
+    )
+}
+
 const StudySetService = {
     createStudySet,
     updateStudySet,
@@ -33,6 +45,7 @@ const StudySetService = {
     getStudySetById,
     checkStudySet,
     getAllStudySetByUser,
+    getCustomList,
 }
 
 export default StudySetService

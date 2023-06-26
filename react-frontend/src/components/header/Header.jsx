@@ -57,8 +57,9 @@ const Header = () => {
                     },
                     title: '',
                     description: '',
-                    deleted: false,
-                    public: true,
+                    _deleted: false,
+                    _public: true,
+                    _draft: true,
                     studySetType: {
                         id: 1,
                     },

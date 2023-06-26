@@ -25,7 +25,6 @@ import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
 import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
-import UpdateStudySet from './pages/studySet/UpdateStudySet'
 import UpdateClassroom from './pages/UpdateClassroom'
 import ChangePassword from './pages/user/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
@@ -61,7 +60,7 @@ const App = () => {
                         />
                         <Route
                             path="edit-set/:id"
-                            element={<UpdateStudySet />}
+                            element={<CreateStudySet />}
                         />
                         <Route path="set/:id" element={<StudySet />} />
                         <Route
@@ -79,7 +78,7 @@ const App = () => {
                         <Route path="to-speech" element={<TextToSpeech />} />
                     </Route>
                     <Route path="*" element={<NotFound />} />
-                    <Route path="term" element={<Term/>}/>
+                    <Route path="term" element={<Term />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />

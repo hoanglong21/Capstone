@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 
-import { Card } from '../../components/Card'
+import { Card } from './Card'
 import CardService from '../../services/CardService'
 import StudySetService from '../../services/StudySetService'
 
@@ -62,7 +62,9 @@ const CreateStudySet = () => {
 
     const handleReload = (event) => {
         event.preventDefault()
-        sessionStorage.setItem('isReload', 'true')
+        if (studySet._draft) {
+            sessionStorage.setItem('isReload', 'true')
+        }
         return false
     }
 
@@ -104,7 +106,9 @@ const CreateStudySet = () => {
                 await StudySetService.checkStudySet(studySet.id)
             ).data
             if (emptyCards.length === 0) {
-                // navigate('/set/' + id)
+                setStudySet({ ...studySet, _draft: false })
+                await StudySetService.updateStudySet(studySet.id, studySet)
+                navigate('/set/' + id)
             } else {
                 setError(
                     `<p class="mb-0">Your card can not be empty. Please review your set.</p>

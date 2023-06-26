@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react'
 
-import { uploadFile, deleteFileByUrl } from '../features/fileManagement'
+import {
+    uploadFile,
+    deleteFileByUrl,
+    deleteFileByUrlNew,
+    uploadFileNew,
+} from '../../features/fileManagement'
+import ContentService from '../../services/ContentService'
+import CardService from '../../services/CardService'
 
-import { DeleteIcon, ImageIcon, MicIcon } from './icons'
-import TextEditor from './TextEditor'
-import styles from '../assets/styles/Card.module.css'
-import ContentService from '../services/ContentService'
-import CardService from '../services/CardService'
+import { DeleteIcon, ImageIcon, MicIcon } from '../../components/icons'
+import TextEditor from '../../components/TextEditor'
+import styles from '../../assets/styles/Card.module.css'
 
 export const Card = (props) => {
     const [card, setCard] = useState(props.card)
@@ -17,7 +22,7 @@ export const Card = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             const contents = (await ContentService.getAllByCardId(card.id)).data
-            if (contents.length == 0) {
+            if (contents.length === 0) {
                 setTerm(
                     (
                         await ContentService.createContent({
@@ -76,28 +81,29 @@ export const Card = (props) => {
         await CardService.updateCard(tempCard.id, tempCard)
     }
 
-    const handleChangeFile = async (event) => {
+    const handleChangeFile = async (event, folderName) => {
+        console.log(folderName)
         const file = event.target.files[0]
         const name = event.target.name
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file)
+            const url = await uploadFile(file, folderName)
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {
-                deleteFileByUrl(urlOld)
+                deleteFileByUrl(urlOld, folderName)
             }
             doUpdateCard(tempCard)
         }
     }
 
-    const handleDeleteFile = (event) => {
+    const handleDeleteFile = (event, folderName) => {
         const name = event.target.name
         const urlOld = card[name]
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
         if (urlOld) {
-            deleteFileByUrl(urlOld)
+            deleteFileByUrl(urlOld, folderName)
         }
         doUpdateCard(tempCard)
     }
@@ -138,7 +144,9 @@ export const Card = (props) => {
                             accept="image/*"
                             name="picture"
                             className={styles.file_upload}
-                            onChange={handleChangeFile}
+                            onChange={(event) =>
+                                handleChangeFile(event, 'Image')
+                            }
                         />
                         <label htmlFor={`uploadImage${props.index}`}>
                             <ImageIcon className="ms-3 icon-warning" />
@@ -151,7 +159,9 @@ export const Card = (props) => {
                             accept="audio/*"
                             name="audio"
                             className={styles.file_upload}
-                            onChange={handleChangeFile}
+                            onChange={(event) =>
+                                handleChangeFile(event, 'Audio')
+                            }
                         />
                         <label htmlFor={`uploadAudio${props.index}`}>
                             <MicIcon className="ms-3 icon-warning" />
