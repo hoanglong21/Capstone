@@ -317,19 +317,6 @@
     font-size: 30px;
 }
 
-.inside__close {
-    color: #f0f0f0;
-    font-size: 40px;
-    text-decoration: none;
-    position: absolute;
-    top: 0px;
-    right: 20px;
-    transition: all 200ms;
-    border: none;
-    background-color: transparent;
-    background-repeat: no-repeat;
-}
-
 .main__wrapper {
     margin: 0 auto;
     display: flex;

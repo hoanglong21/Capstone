@@ -36,7 +36,7 @@ export default function CreateClassroom({close}) {
     const onSubmit = async (e) => {
         e.preventDefault()
         await axios.post('http://localhost:8080/api/v1/class', classroom)
-        navigate('/insideclass')
+        navigate('/sets/classes')
     }
 
   return (
@@ -48,15 +48,9 @@ export default function CreateClassroom({close}) {
           <fieldset className="createClass__form__input">
             <input className="createClass__input" type={"text"} name="class_name" placeholder='Class Name' value={class_name} required onChange={(e) => onInputChange(e)} />
           </fieldset>
-          {/* <fieldset className="createClass__form__input">
-            <input className="createClass__input" type={"text"} name="tutor" placeholder='Tutor Guide' value={tutor} required onChange={(e) => onInputChange(e)} />
-          </fieldset> */}
           <fieldset className="createClass__form__input">
             <input className="createClass__input" type={"text"} name="description" placeholder='Class Description' value={description} required onChange={(e) => onInputChange(e)} />
           </fieldset>
-          {/* <fieldset className="createClass__form__input">
-            <input className="createClass__input" type={"date"} name="createDate" placeholder='Create Date' value={createDate} required onChange={(e) => onInputChange(e)} />
-          </fieldset> */}
           <div className="createClass__submit">
             <button type="submit">Submit</button>
           </div>
