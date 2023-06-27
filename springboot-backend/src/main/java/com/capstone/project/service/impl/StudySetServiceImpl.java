@@ -62,7 +62,7 @@ public class StudySetServiceImpl implements StudySetService {
 
     @Override
     public StudySet updateStudySet(int id, StudySet studySetDetails) throws ResourceNotFroundException {
-        StudySet  studySet = studySetRepository.findById(id)
+        StudySet studySet = studySetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
         studySet.setTitle(studySetDetails.getTitle());
         studySet.setDescription(studySetDetails.getDescription());
