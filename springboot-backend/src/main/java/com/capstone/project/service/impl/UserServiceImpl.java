@@ -19,12 +19,16 @@ import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final JavaMailSender mailSender;
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JavaMailSender mailSender;
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, JavaMailSender mailSender) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+    }
 
     @Override
     public User createUser(User user) {
@@ -64,12 +68,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String username, User userDetails) throws ResourceNotFroundException {
+    public User updateUser(String username, User userDetails) throws ResourceNotFroundException, DuplicateValueException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
         }
-        user.setEmail(userDetails.getEmail());
+
         user.setBio(userDetails.getBio());
         user.setDob(userDetails.getDob());
         user.setAvatar(userDetails.getAvatar());

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import '../assets/styles/Classroom.css'
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-export default function UpdateClassroom() {
+export default function UpdateClassroom({close}) {
     let navigate = useNavigate()
 
     const [classroom, setClassroom] = useState({
@@ -29,7 +29,7 @@ export default function UpdateClassroom() {
     <div className="createClass__form">
       <div className="createClass__form__inputs">
         <p className="createClass__title">Update Classroom</p>
-        <Link to="/" className="createClass__close">&times;</Link>
+        <a onClick={close} className="createClass__close">&times;</a>
         <form onSubmit={(e) => onSubmit(e)}>
           <fieldset className="createClass__form__input">
             <input className="createClass__input" type={"text"} name="className" placeholder='Class Name' value={className} required onChange={(e) => onInputChange(e)} />

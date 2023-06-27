@@ -4,13 +4,15 @@ import Toast from 'react-bootstrap/Toast'
 import { useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import { useEffect } from 'react'
+import Popup from 'reactjs-popup'
 
 import StudySetService from '../../services/StudySetService'
 import { logout } from '../../features/auth/authSlice'
 import { getUser } from '../../features/user/userAction'
 
+import CreateClassroom from '../../pages/CreateClassroom'
+import JoinClass from '../../pages/JoinClass'
 import logo from '../../assets/images/logo-2.png'
-import avatar from '../../assets/images/avatar-default.jpg'
 import {
     HomeIcon,
     TranslateIcon,
@@ -23,6 +25,7 @@ import {
     DictIcon,
     LibraryIcon,
 } from '../icons'
+
 import './Header.css'
 
 const Header = () => {
@@ -57,8 +60,9 @@ const Header = () => {
                     },
                     title: '',
                     description: '',
-                    deleted: false,
-                    public: true,
+                    _deleted: false,
+                    _public: true,
+                    _draft: true,
                     studySetType: {
                         id: 1,
                     },
@@ -94,7 +98,7 @@ const Header = () => {
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
-                        >
+                        > 
                             <HomeIcon className="mx-2" />
                             <span className="align-middle">Home</span>
                         </NavLink>
@@ -162,26 +166,41 @@ const Header = () => {
                             </li>
                             {userInfo?.role !== 'ROLE_LEARNER' && (
                                 <li>
-                                    <button
-                                        className="dropdown-item py-2 px-2"
-                                        type="button"
+                                    <Popup
+                                        modal
+                                        trigger={
+                                            <button
+                                                className="dropdown-item py-2 px-2"
+                                                type="button"
+                                            >
+                                                <span className="align-middle fw-semibold">
+                                                    Class
+                                                </span>
+                                            </button>
+                                        }
                                     >
-                                        <span className="align-middle fw-semibold">
-                                            Class
-                                        </span>
-                                    </button>
+                                        {(close) => (
+                                            <CreateClassroom close={close} />
+                                        )}
+                                    </Popup>
                                 </li>
                             )}
                             <li>
-                                <Link
-                                    className="dropdown-item py-2 px-2"
-                                    type="button"
-                                    to="joinclass"
+                                <Popup
+                                    modal
+                                    trigger={
+                                        <button
+                                            className="dropdown-item py-2 px-2"
+                                            type="button"
+                                        >
+                                            <span className="align-middle fw-semibold">
+                                                Join Class
+                                            </span>
+                                        </button>
+                                    }
                                 >
-                                    <span className="align-middle fw-semibold">
-                                        Join Class
-                                    </span>
-                                </Link>
+                                    {(close) => <JoinClass close={close} />}
+                                </Popup>
                             </li>
                         </ul>
                     </div>
@@ -205,7 +224,7 @@ const Header = () => {
                                     aria-expanded="false"
                                 >
                                     <img
-                                        src={avatar}
+                                        src={userInfo.avatar}
                                         alt="avatar"
                                         className="avatar"
                                     />
@@ -215,7 +234,7 @@ const Header = () => {
                                         <div className="dropdown-header d-flex align-items-center">
                                             <div className="flex-shrink-0">
                                                 <img
-                                                    src={avatar}
+                                                    src={userInfo.avatar}
                                                     alt="avatar"
                                                     className="avatar"
                                                 />

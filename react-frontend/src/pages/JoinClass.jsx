@@ -2,16 +2,16 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../assets/styles/Classroom.css'
 
-const JoinClass = () => {
+const JoinClass = ({close}) => {
     const [classCode, setClassCode] = useState('')
     const [error, setError] = useState()
     return (
         <div className="joinClass">
             <div className="joinClass__wrapper">
                 <div className="joinClass__wraper2">
-                    <Link to="/" className="closeJoin">
+                    <a onClick={close} className="closeJoin">
                         &times;
-                    </Link>
+                    </a>
                     <div className="joinClass__topHead">Join Class</div>
                 </div>
                 <button className="joinClass__btn" onClick={'/'}>

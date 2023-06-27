@@ -11,11 +11,19 @@ export const getUser = createAsyncThunk('user/getUser', async (userToken) => {
 
 export const updateUser = createAsyncThunk(
     'user/updateUser',
-    async (userDetails) => {
-        const response = await UserService.updateUser(
-            userDetails.username,
-            userDetails
-        )
-        return response.data
+    async (userDetails, { rejectWithValue }) => {
+        try {
+            const response = await UserService.updateUser(
+                userDetails.username,
+                userDetails
+            )
+            return response.data
+        } catch (error) {
+            if (error.response && error.response.data) {
+                return rejectWithValue(error.response.data)
+            } else {
+                return rejectWithValue(error.message)
+            }
+        }
     }
 )

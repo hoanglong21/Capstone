@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import './UserLayout.css'
+import './SettingsLayout.css'
 
 const AccountLayout = () => {
     return (
