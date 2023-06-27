@@ -19,12 +19,16 @@ import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final JavaMailSender mailSender;
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private JavaMailSender mailSender;
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, JavaMailSender mailSender) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+    }
 
     @Override
     public User createUser(User user) {

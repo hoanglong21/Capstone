@@ -23,15 +23,14 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackRepository feedbackRepository;
     private final UserRepository userRepository;
     private FeedbackTypeRepository feedbackTypeRepository;
+    private final JavaMailSender mailSender;
 
     @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
-    public FeedbackServiceImpl(FeedbackRepository feedbackRepository, UserRepository userRepository, FeedbackTypeRepository feedbackTypeRepository) {
+    public FeedbackServiceImpl(FeedbackRepository feedbackRepository, UserRepository userRepository, FeedbackTypeRepository feedbackTypeRepository, JavaMailSender mailSender) {
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.feedbackTypeRepository = feedbackTypeRepository;
+        this.mailSender = mailSender;
     }
 
     @Override
