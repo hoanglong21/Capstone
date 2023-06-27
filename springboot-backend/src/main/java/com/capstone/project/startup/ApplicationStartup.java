@@ -1,13 +1,7 @@
 package com.capstone.project.startup;
 
-import com.capstone.project.model.FeedbackType;
-import com.capstone.project.model.Field;
-import com.capstone.project.model.StudySetType;
-import com.capstone.project.model.User;
-import com.capstone.project.repository.FeedbackTypeRepository;
-import com.capstone.project.repository.FieldRepository;
-import com.capstone.project.repository.StudySetTypeRepository;
-import com.capstone.project.repository.UserRepository;
+import com.capstone.project.model.*;
+import com.capstone.project.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -29,6 +23,15 @@ public class ApplicationStartup implements ApplicationRunner {
     private FeedbackTypeRepository feedbackTypeRepository;
 
     @Autowired
+    private CommentTypeRepository commentTypeRepository;
+
+    @Autowired
+    private QuestionTypeRepository questionTypeRepository;
+
+    @Autowired
+    private AttachmentTypeRepository attachmentTypeRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -36,6 +39,7 @@ public class ApplicationStartup implements ApplicationRunner {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
 
     @Override
     @Transactional
@@ -63,6 +67,39 @@ public class ApplicationStartup implements ApplicationRunner {
                 feedbackTypes.add(feedbackType);
             }
             feedbackTypeRepository.saveAll(feedbackTypes);
+        }
+
+        if (commentTypeRepository.count() == 0) {
+            List<String> defaultNames = Arrays.asList("post", "studyset", "test");
+            List<CommentType> commentTypes = new ArrayList<>();
+            for (String name : defaultNames) {
+                CommentType commentType = new CommentType();
+                commentType.setName(name);
+                commentTypes.add(commentType);
+            }
+            commentTypeRepository.saveAll(commentTypes);
+        }
+
+        if (questionTypeRepository.count() == 0) {
+            List<String> defaultNames = Arrays.asList("written", "multiple choice", "true_false");
+            List<QuestionType> questionTypes = new ArrayList<>();
+            for (String name : defaultNames) {
+                QuestionType questionType = new QuestionType();
+                questionType.setName(name);
+                questionTypes.add(questionType);
+            }
+            questionTypeRepository.saveAll(questionTypes);
+        }
+
+        if (attachmentTypeRepository.count() == 0) {
+            List<String> defaultNames = Arrays.asList("assignment", "submission");
+            List<AttachmentType> attachmentTypes = new ArrayList<>();
+            for (String name : defaultNames) {
+                AttachmentType attachmentType = new AttachmentType();
+                attachmentType.setName(name);
+                attachmentTypes.add(attachmentType);
+            }
+            attachmentTypeRepository.saveAll(attachmentTypes);
         }
 
         if(fieldRepository.count() == 0) {
