@@ -1,24 +1,34 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.dto.ChangePasswordRequest;
+import com.capstone.project.dto.UserRequest;
+import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 import com.capstone.project.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
 public class UserController {
     private final UserService userService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -34,12 +44,24 @@ public class UserController {
     }
 
     @PutMapping("/users/{username}")
-    public ResponseEntity<?> updateUser(@PathVariable("username") String username, @RequestBody User userDetails) {
-        try {
-            return ResponseEntity.ok(userService.updateUser(username, userDetails));
-        } catch (ResourceNotFroundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<?> updateUser(@PathVariable("username") String username, @Valid @RequestBody UserRequest userRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            User userDetails = modelMapper.map(userRequest, User.class);
+            try {
+                return ResponseEntity.ok(userService.updateUser(username, userDetails));
+            } catch (ResourceNotFroundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            } catch (DuplicateValueException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
+
     }
 
     @GetMapping("/otherusers/{except}")
@@ -102,56 +124,57 @@ public class UserController {
     }
 
     @PostMapping("/reset")
-    public ResponseEntity<?> resetPassword(@RequestParam("username") String username, @RequestParam("pin") String pin, @RequestBody String requestBody) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = objectMapper.readTree(requestBody);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        String password = jsonNode.get("password").asText();
-
-        try {
-            return ResponseEntity.ok(userService.resetPassword(username, pin, password));
-        } catch (ResourceNotFroundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<?> resetPassword(@RequestParam("username") String username, @RequestParam("pin") String pin,
+                                           @Valid @RequestBody ChangePasswordRequest changePasswordRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            try {
+                return ResponseEntity.ok(userService.resetPassword(username, pin, changePasswordRequest.getPassword()));
+            } catch (ResourceNotFroundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
     }
 
     @PostMapping("/checkpassword")
-    public ResponseEntity<?> checkMatchPassword(@RequestParam("username") String username, @RequestBody String requestBody) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = objectMapper.readTree(requestBody);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+    public ResponseEntity<?> checkMatchPassword(@RequestParam("username") String username,
+                                                @Valid @RequestBody ChangePasswordRequest changePasswordRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            try {
+                return ResponseEntity.ok(userService.checkMatchPassword(username, changePasswordRequest.getPassword()));
+            } catch (ResourceNotFroundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
-        String password = jsonNode.get("password").asText();
 
-        try {
-            return ResponseEntity.ok(userService.checkMatchPassword(username, password));
-        } catch (ResourceNotFroundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     @PostMapping("/changepassword")
-    public ResponseEntity<?> changePassword(@RequestParam("username") String username, @RequestBody String requestBody) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = objectMapper.readTree(requestBody);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        String password = jsonNode.get("password").asText();
-
-        try {
-            return ResponseEntity.ok(userService.changePassword(username, password));
-        } catch (ResourceNotFroundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<?> changePassword(@RequestParam("username") String username,
+                                            @Valid @RequestBody ChangePasswordRequest changePasswordRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            try {
+                return ResponseEntity.ok(userService.changePassword(username, changePasswordRequest.getPassword()));
+            } catch (ResourceNotFroundException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
     }
 

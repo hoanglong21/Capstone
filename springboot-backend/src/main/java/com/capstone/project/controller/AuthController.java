@@ -7,6 +7,7 @@ import com.capstone.project.model.User;
 import com.capstone.project.service.JwtService;
 import com.capstone.project.service.UserService;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,8 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
     private JwtService jwtService;
     @Autowired
     private UserService userService;
@@ -43,23 +46,10 @@ public class AuthController {
                     .collect(Collectors.toList());
             return ResponseEntity.badRequest().body(errors);
         } else {
-            try {
-                User user = User.builder()
-                        .username(userRequest.getUsername())
-                        .first_name(userRequest.getFirst_name())
-                        .last_name(userRequest.getLast_name())
-                        .gender(userRequest.getGender())
-                        .dob(userRequest.getDob())
-                        .email(userRequest.getEmail())
-                        .phone(userRequest.getPhone())
-                        .password(userRequest.getPassword())
-                        .role(userRequest.getRole())
-                        .address(userRequest.getAddress())
-                        .bio(userRequest.getBio())
-                        .status(userRequest.getStatus())
-                        .avatar(userRequest.getAvatar())
-                        .build();
 
+            User user = modelMapper.map(userRequest, User.class);
+
+            try {
                 User createdUser = userService.createUser(user);
                 return ResponseEntity.ok(createdUser);
             } catch (DuplicateValueException e) {
@@ -68,7 +58,7 @@ public class AuthController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<String> AuthenticateAndGetToken(@RequestBody AuthenticationRequest authRequest) {
+    public ResponseEntity<?> AuthenticateAndGetToken(@RequestBody AuthenticationRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             if (authentication.isAuthenticated()) {

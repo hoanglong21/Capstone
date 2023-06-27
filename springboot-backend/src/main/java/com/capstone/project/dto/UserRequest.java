@@ -36,6 +36,9 @@ public class UserRequest {
     private String phone;
 
     @NotBlank(message = "Password cannot be empty")
+    @Pattern(regexp = ".*[a-z].*", message = "Password must contain at least one lowercase letter")
+    @Pattern(regexp = ".*[A-Z].*", message = "Password must contain at least one uppercase letter")
+    @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one digit (number)")
     @Length(min = 8, message = "Password at least 8 characters")
     private String password;
     private String role;

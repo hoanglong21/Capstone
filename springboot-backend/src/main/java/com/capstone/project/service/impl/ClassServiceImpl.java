@@ -1,17 +1,13 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
-import com.capstone.project.model.StudySet;
-import com.capstone.project.repository.ClassRepository;
-import com.capstone.project.repository.UserRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -20,10 +16,20 @@ import java.util.Random;
 public class ClassServiceImpl implements ClassService {
 
     private final ClassRepository classRepository;
+    private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
+    private final AssignmentRepository assignmentRepository;
+    private final AttachmentRepository attachmentRepository;
+    private final SubmissionRepository submissionRepository;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository) {
         this.classRepository = classRepository;
+        this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.assignmentRepository = assignmentRepository;
+        this.attachmentRepository = attachmentRepository;
+        this.submissionRepository = submissionRepository;
     }
 
     @Override
@@ -80,5 +86,30 @@ public class ClassServiceImpl implements ClassService {
         classRepository.save(classroom);
         return true;
     }
+
+    @Override
+    public Boolean deleteHardClass(int id) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
+        for(Post post : postRepository.getPostByClassroomId(classroom.getId())){
+            for(Comment comment : commentRepository.getCommentByPostId(post.getId())){
+                commentRepository.delete(comment);
+            }
+            postRepository.delete(post);
+        }
+        for(Assignment assignment : assignmentRepository.getAssignmentByClassroomId(classroom.getId())){
+            for(Submission submission : submissionRepository.getSubmissionByAssignmentId(assignment.getId())){
+                for(Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())){
+                    attachmentRepository.delete(attachment);
+                }
+                submissionRepository.delete(submission);
+            }
+            assignmentRepository.delete(assignment);
+        }
+        classRepository.delete(classroom);
+        return true;
+    }
+
+
 }
 

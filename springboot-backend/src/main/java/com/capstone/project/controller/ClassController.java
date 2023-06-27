@@ -62,4 +62,13 @@ public class ClassController {
         }
         }
 
+    @DeleteMapping("/deleteclass/{id}")
+    public ResponseEntity<?> deleteHardClass(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(classService.deleteHardClass(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
