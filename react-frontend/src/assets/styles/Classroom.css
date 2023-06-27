@@ -41,6 +41,7 @@
     font-weight: bold;
     text-decoration: none;
     color: #333;
+    cursor: pointer;
 }
 
 .createClass__input,
@@ -200,6 +201,7 @@
     font-weight: 200;
     text-decoration: none;
     color: #80868b;
+    cursor: pointer;
 }
 
 .logout {

@@ -28,6 +28,7 @@
     "react-router-dom": "^6.11.1",
     "react-scripts": "5.0.1",
     "react-speech-recognition": "^3.10.0",
+    "reactjs-popup": "^2.0.5",
     "reactstrap": "^9.2.0",
     "redux": "^4.2.1",
     "save": "^2.9.0",
