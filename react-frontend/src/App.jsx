@@ -69,6 +69,7 @@ const App = () => {
           <Route path="privacy" element={<Privacy />} />
           <Route path="/joinclass" element={<JoinClass />} />
           <Route path="/insideclass" element={<InsideClassroom />} />
+          <Route path="/mainclass/:id" element={<MainClass />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
@@ -78,7 +79,6 @@ const App = () => {
         <Route path="/flashcard" element={<Flashcard />} />
         <Route path="/createclass" element={<CreateClassroom />} />
         <Route path="/updateclass" element={<UpdateClassroom />} />
-        <Route path="/mainclass" element={<MainClass />} />
         <Route path="/noclass" element={<NoClass />} />
       </Routes>
     </BrowserRouter>
