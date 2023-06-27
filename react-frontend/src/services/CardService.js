@@ -7,7 +7,7 @@ const createCard = (card) => {
 }
 
 const updateCard = (id, cardDetails) => {
-    return axios.post(API_BASE_URL + '/cards/' + id, cardDetails)
+    return axios.put(API_BASE_URL + '/cards/' + id, cardDetails)
 }
 
 const getAllByStudySetId = (studySetId) => {
