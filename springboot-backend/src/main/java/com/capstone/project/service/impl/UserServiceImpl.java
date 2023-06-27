@@ -64,12 +64,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(String username, User userDetails) throws ResourceNotFroundException {
+    public User updateUser(String username, User userDetails) throws ResourceNotFroundException, DuplicateValueException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
         }
-        user.setEmail(userDetails.getEmail());
+
         user.setBio(userDetails.getBio());
         user.setDob(userDetails.getDob());
         user.setAvatar(userDetails.getAvatar());

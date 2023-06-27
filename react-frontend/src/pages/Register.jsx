@@ -8,6 +8,7 @@ import { register as userRegister } from '../features/auth/authAction'
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
 import { reset } from '../features/auth/authSlice'
+import { getAll } from '../features/fileManagement'
 
 const Register = () => {
     const navigate = useNavigate()
@@ -56,9 +57,10 @@ const Register = () => {
                     emailInvalidEl.classList.add('d-none')
                 }
             }
-            return
+        } else {
+            const defaultAvatar = await getAll('system/default_avatar')
+            dispatch(userRegister({ ...data, avatar: defaultAvatar[0] }))
         }
-        dispatch(userRegister(data))
 
         if (error === 'Username already registered') {
             usernameEl.classList.add('is-invalid')
