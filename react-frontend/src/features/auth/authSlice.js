@@ -1,6 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
-import UserService from '../../services/UserService'
 import { register, login } from './authAction'
 
 // initialize userToken from local storage
@@ -14,11 +13,6 @@ const initialState = {
     error: null,
     success: null,
 }
-
-export const fetchUser = createAsyncThunk('/', async (id) => {
-    const response = await UserService.getUser(id)
-    return response.data
-})
 
 export const authSlice = createSlice({
     name: 'auth',

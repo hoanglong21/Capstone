@@ -5,8 +5,9 @@
 }
 
 .userAvatar img {
-    border-radius: 100%;
-    overflow: hidden;
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
 }
 
 .userAvatar button {
@@ -32,4 +33,19 @@
 .row > .avatarItem {
     padding: 0.3rem;
     cursor: pointer;
+}
+
+.avatarItem img {
+    border-radius: 50%;
+    width: 4.5rem;
+    height: 4.5rem;
+}
+
+.avatarUpload {
+    opacity: 0;
+    display: none;
+}
+
+.avatarModal label {
+    padding: 0.4rem 0.75rem;
 }

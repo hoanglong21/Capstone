@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-    uploadFile,
-    deleteFileByUrl,
-} from '../../features/fileManagement'
+import { uploadFile, deleteFileByUrl } from '../../features/fileManagement'
 import ContentService from '../../services/ContentService'
 import CardService from '../../services/CardService'
 
@@ -53,7 +50,7 @@ export const Card = (props) => {
             }
         }
         fetchData()
-    }, [])
+    }, [card.id])
 
     // ignore error
     useEffect(() => {
@@ -80,7 +77,6 @@ export const Card = (props) => {
     }
 
     const handleChangeFile = async (event, folderName) => {
-        console.log(folderName)
         const file = event.target.files[0]
         const name = event.target.name
         if (file) {
@@ -143,7 +139,7 @@ export const Card = (props) => {
                             name="picture"
                             className={styles.file_upload}
                             onChange={(event) =>
-                                handleChangeFile(event, 'Image')
+                                handleChangeFile(event, 'image')
                             }
                         />
                         <label htmlFor={`uploadImage${props.index}`}>
@@ -158,7 +154,7 @@ export const Card = (props) => {
                             name="audio"
                             className={styles.file_upload}
                             onChange={(event) =>
-                                handleChangeFile(event, 'Audio')
+                                handleChangeFile(event, 'audio')
                             }
                         />
                         <label htmlFor={`uploadAudio${props.index}`}>
@@ -218,7 +214,9 @@ export const Card = (props) => {
                                     type="button"
                                     name="picture"
                                     className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
-                                    onClick={handleDeleteFile}
+                                    onClick={(event) =>
+                                        handleDeleteFile(event, 'image')
+                                    }
                                 >
                                     <DeleteIcon size="1.25rem" />
                                 </button>
@@ -231,7 +229,9 @@ export const Card = (props) => {
                                     type="button"
                                     name="audio"
                                     className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
-                                    onClick={handleDeleteFile}
+                                    onClick={(event) =>
+                                        handleDeleteFile(event, 'audio')
+                                    }
                                 >
                                     <DeleteIcon size="1.25rem" />
                                 </button>

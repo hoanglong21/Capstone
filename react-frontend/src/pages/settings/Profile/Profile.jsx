@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { getAll } from '../../../features/fileManagement'
+import {
+    deleteFileByUrl,
+    getAll,
+    uploadFile,
+} from '../../../features/fileManagement'
 
 import { updateUser } from '../../../features/user/userAction'
 
@@ -11,27 +15,68 @@ import './Profile.css'
 const Profile = () => {
     const dispatch = useDispatch()
 
-    const { userInfo } = useSelector((state) => state.user)
+    const { userInfo, error, success } = useSelector((state) => state.user)
 
     const [newUser, setNewUser] = useState({})
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState(false)
+    const [errorMess, setErrorMess] = useState('')
+    const [successMess, setSuccessMess] = useState(false)
     const [defaultAvatars, setDefaultAvatars] = useState([])
+    const [userAvatars, setUserAvatars] = useState([])
+    const [loading, setLoading] = useState(false)
 
+    // fetch user state
     useEffect(() => {
         setNewUser({ ...userInfo })
     }, [userInfo])
 
+    // fetch avatar
     useEffect(() => {
         async function fetchAvatar() {
-            let temp = await getAll('system/default_avatar')
-            setDefaultAvatars(temp)
+            setLoading(true)
+            // fetch default avatar
+            const tempDefault = await getAll('system/default_avatar')
+            setDefaultAvatars(tempDefault)
+            // fetch user avatar
+            const tempUser = await getAll('files/image/avatar')
+            setUserAvatars(tempUser)
+            setLoading(false)
         }
         fetchAvatar()
     }, [])
 
+    // hide success mess
+    useEffect(() => {
+        if (success) {
+            setSuccessMess(true)
+            setTimeout(function () {
+                setSuccessMess(false)
+            }, 5000)
+        }
+    }, [success])
+
     const handleChange = (event) => {
         setNewUser({ ...newUser, [event.target.name]: event.target.value })
+    }
+
+    const handleSelectAvatar = (avatarURL) => () => {
+        setNewUser({ ...newUser, avatar: avatarURL })
+        document.getElementById('toggleModal').click()
+    }
+
+    const handleUploadAvatar = async (event) => {
+        const file = event.target.files[0]
+        if (file) {
+            await uploadFile(file, 'image/avatar')
+            // add to userAvatars
+            setLoading(true)
+            const tempUser = await getAll('files/image/avatar')
+            setUserAvatars(tempUser)
+            setLoading(false)
+        }
+    }
+
+    const handleDeleteAvatar = (avatarUrl) => {
+        deleteFileByUrl(avatarUrl, 'image/avatar')
     }
 
     const handleSubmit = (event) => {
@@ -43,27 +88,22 @@ const Profile = () => {
         form.classList.remove('was-validated')
         firstNameEl.classList.remove('is_invalid')
         lastNameEl.classList.remove('is_invalid')
-        setError('')
-        setSuccess(false)
+        setErrorMess('')
+        setSuccessMess(false)
 
         form.classList.add('was-validated')
 
         if (!form.checkValidity()) {
             if (!newUser.first_name) {
-                setError("First name can't be blank.")
+                setErrorMess("First name can't be blank.")
                 firstNameEl.classList.add('is_invalid')
             } else if (!newUser.last_name) {
-                setError("Last name can't be blank.")
+                setErrorMess("Last name can't be blank.")
                 lastNameEl.classList.add('is_invalid')
             }
             console.log(newUser)
         } else {
             dispatch(updateUser(newUser))
-            setSuccess(true)
-            // auto hide after 5s
-            setTimeout(function () {
-                setSuccess(false)
-            }, 5000)
         }
     }
 
@@ -82,33 +122,30 @@ const Profile = () => {
         )
     }
 
-    const handleSelectAvatar = (avatarURL) => () => {
-        console.log(avatarURL)
-        setNewUser({ ...newUser, avatar: avatarURL })
-        document.getElementById('toggleModal').click()
-    }
-
     return (
         <div className="mx-5 px-3">
             <h4>My Profile</h4>
             <form className="row g-4 needs-validation" noValidate>
                 {/* error message */}
-                {error && (
+                {(errorMess || error) && (
                     <div
-                        className="alert alert-danger"
+                        className="alert alert-danger col-12 mb-0"
                         role="alert"
-                        dangerouslySetInnerHTML={{ __html: error }}
+                        dangerouslySetInnerHTML={{ __html: errorMess || error }}
                     ></div>
                 )}
-                {/* success message */}
-                {success && (
-                    <div className="alert alert-success" role="alert">
+                {/* successMess message */}
+                {successMess && (
+                    <div
+                        className="alert alert-success col-12 mb-0"
+                        role="alert"
+                    >
                         Your changes have been successfully saved!
                     </div>
                 )}
                 {/* avatar */}
                 <div className="col-12">
-                    <div className="userAvatar mx-auto mb-2">
+                    <div className="userAvatar mx-auto">
                         <img src={newUser.avatar} alt="" className="h-100" />
                         <button
                             type="button"
@@ -181,7 +218,7 @@ const Profile = () => {
                         id="dob"
                         name="dob"
                         type="date"
-                        value={formatDate(newUser.dob)}
+                        value={newUser.dob ? formatDate(newUser.dob) : null}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={handleChange}
                     />
@@ -305,22 +342,55 @@ const Profile = () => {
                                 ></button>
                             </div>
                             <div className="defaultAvatar mt-3 row m-0">
-                                {defaultAvatars.map((avatarURL, index) => (
-                                    <button
-                                        key={index}
-                                        className="btn avatarItem col-1"
-                                        onClick={handleSelectAvatar(avatarURL)}
+                                {loading ? (
+                                    <div
+                                        className="spinner-border text-secondary mx-auto"
+                                        role="status"
                                     >
-                                        <img
-                                            src={avatarURL}
-                                            alt=""
-                                            className="w-100"
-                                        />
-                                    </button>
-                                ))}
+                                        <span className="visually-hidden">
+                                            LoadingUpload...
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        {defaultAvatars.map((avatarURL) => (
+                                            <button
+                                                key={avatarURL}
+                                                className="btn avatarItem col-1"
+                                                onClick={handleSelectAvatar(
+                                                    avatarURL
+                                                )}
+                                            >
+                                                <img src={avatarURL} alt="" />
+                                            </button>
+                                        ))}
+                                        {userAvatars.map((avatarURL) => (
+                                            <button
+                                                key={avatarURL}
+                                                className="btn avatarItem col-1"
+                                                onClick={handleSelectAvatar(
+                                                    avatarURL
+                                                )}
+                                            >
+                                                <img src={avatarURL} alt="" />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+
                                 <div className="col-12 mt-4 p-0 text-center mb-2">
-                                    <button className="btn btn-info">
-                                        Upload your own photo
+                                    <input
+                                        type="file"
+                                        id="uploadAvatar"
+                                        accept="image/*"
+                                        name="picture"
+                                        className="avatarUpload"
+                                        onChange={handleUploadAvatar}
+                                    />
+                                    <button className="btn btn-info p-0">
+                                        <label htmlFor="uploadAvatar">
+                                            Upload your own avatar
+                                        </label>
                                     </button>
                                 </div>
                             </div>

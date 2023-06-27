@@ -30,51 +30,51 @@ if (!firebase.apps.length) {
 
 const storage = getStorage(firebaseApp)
 
-export const uploadFile = (file, folderName) => {
-    // Create the file metadata
-    /** @type {any} */
-    const metadata = {
-        contentType: 'image/jpeg',
-    }
-
-    const storageRef = ref(storage, 'files/' + folderName + '/' + file.name)
-
-    const uploadTask = uploadBytesResumable(storageRef, file, metadata)
-
-    // Listen for state changes, errors, and completion of the upload.
-    uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            console.log('Upload is ' + progress + '% done')
-            switch (snapshot.state) {
-                case 'paused':
-                    console.log('Upload is paused')
-                    break
-                case 'running':
-                    console.log('Upload is running')
-                    break
-                default:
-            }
-        },
-        (error) => {
-            // A full list of error codes is available at
-            // https://firebase.google.com/docs/storage/web/handle-errors
-            switch (error.code) {
-                default:
-                    break
-            }
-        },
-        () => {
-            // Upload completed successfully, now we can get the download URL
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                console.log('File available at', downloadURL)
-            })
+export const uploadFile = async (file, folderName) => {
+    return new Promise(function (resolve, reject) {
+        const metadata = {
+            contentType: 'image/jpeg',
         }
-    )
-    return getDownloadURL(uploadTask.snapshot.ref)
+        const storageRef = ref(storage, 'files/' + folderName + '/' + file.name)
+        const uploadTask = uploadBytesResumable(storageRef, file, metadata)
+
+        uploadTask.on(
+            'state_changed',
+            function (snapshot) {
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                console.log('Upload is ' + progress + '% done')
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused')
+                        break
+                    case 'running':
+                        console.log('Upload is running')
+                        break
+                    default:
+                        break
+                }
+            },
+            function error(err) {
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                    default:
+                        break
+                }
+                reject()
+            },
+            function complete() {
+                // Upload completed successfully, now we can get the download URL
+                getDownloadURL(uploadTask.snapshot.ref).then(function (
+                    downloadURL
+                ) {
+                    resolve(downloadURL)
+                })
+            }
+        )
+    })
 }
 
 export const deleteFile = (fileName, folderName) => {
