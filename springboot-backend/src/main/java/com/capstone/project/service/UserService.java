@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 
@@ -12,7 +13,7 @@ public interface UserService {
 
     User getUserByUsername(String username) throws ResourceNotFroundException;
 
-    User updateUser(String username, User userDetails) throws ResourceNotFroundException;
+    User updateUser(String username, User userDetails) throws ResourceNotFroundException, DuplicateValueException;
 
     Boolean banUser(String username) throws ResourceNotFroundException;
 
