@@ -30,15 +30,25 @@
     margin: 0;
 }
 
-.row > .avatarItem {
-    padding: 0.3rem;
+.avatarItem {
     cursor: pointer;
+    position: relative;
+}
+
+.avatarItem .btn {
+    padding: 0.3rem;
 }
 
 .avatarItem img {
     border-radius: 50%;
     width: 4.5rem;
     height: 4.5rem;
+}
+
+.avatarItem .btn-del {
+    position: absolute;
+    bottom: -30;
+    right: 2;
 }
 
 .avatarUpload {

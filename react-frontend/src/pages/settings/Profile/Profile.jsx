@@ -8,9 +8,10 @@ import {
 
 import { updateUser } from '../../../features/user/userAction'
 
-import { EditIcon } from '../../../components/icons'
+import { DeleteIcon, EditIcon } from '../../../components/icons'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
+import { reset } from '../../../features/user/userSlice'
 
 const Profile = () => {
     const dispatch = useDispatch()
@@ -44,6 +45,11 @@ const Profile = () => {
         fetchAvatar()
     }, [])
 
+    // reset state
+    useEffect(() => {
+        dispatch(reset())
+    }, [])
+
     // hide success mess
     useEffect(() => {
         if (success) {
@@ -67,7 +73,7 @@ const Profile = () => {
         const file = event.target.files[0]
         if (file) {
             await uploadFile(file, 'image/avatar')
-            // add to userAvatars
+            // reload userAvatars
             setLoading(true)
             const tempUser = await getAll('files/image/avatar')
             setUserAvatars(tempUser)
@@ -75,8 +81,13 @@ const Profile = () => {
         }
     }
 
-    const handleDeleteAvatar = (avatarUrl) => {
-        deleteFileByUrl(avatarUrl, 'image/avatar')
+    const handleDeleteAvatar = (avatarUrl) => async () => {
+        await deleteFileByUrl(avatarUrl, 'image/avatar')
+        // reload userAvatars
+        setLoading(true)
+        const tempUser = await getAll('files/image/avatar')
+        setUserAvatars(tempUser)
+        setLoading(false)
     }
 
     const handleSubmit = (event) => {
@@ -354,26 +365,45 @@ const Profile = () => {
                                 ) : (
                                     <div>
                                         {defaultAvatars.map((avatarURL) => (
-                                            <button
-                                                key={avatarURL}
-                                                className="btn avatarItem col-1"
-                                                onClick={handleSelectAvatar(
-                                                    avatarURL
-                                                )}
-                                            >
-                                                <img src={avatarURL} alt="" />
-                                            </button>
+                                            <div className="avatarItem col-1 d-inline">
+                                                <button
+                                                    key={avatarURL}
+                                                    className="btn "
+                                                    onClick={handleSelectAvatar(
+                                                        avatarURL
+                                                    )}
+                                                >
+                                                    <img
+                                                        src={avatarURL}
+                                                        alt=""
+                                                    />
+                                                </button>
+                                            </div>
                                         ))}
                                         {userAvatars.map((avatarURL) => (
-                                            <button
-                                                key={avatarURL}
-                                                className="btn avatarItem col-1"
-                                                onClick={handleSelectAvatar(
-                                                    avatarURL
-                                                )}
-                                            >
-                                                <img src={avatarURL} alt="" />
-                                            </button>
+                                            <div className="col-1 avatarItem d-inline">
+                                                <button
+                                                    key={avatarURL}
+                                                    className="btn"
+                                                    onClick={handleSelectAvatar(
+                                                        avatarURL
+                                                    )}
+                                                >
+                                                    <img
+                                                        src={avatarURL}
+                                                        alt=""
+                                                    />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-danger btn-del p-1 rounded-circle"
+                                                    onClick={handleDeleteAvatar(
+                                                        avatarURL
+                                                    )}
+                                                >
+                                                    <DeleteIcon size="0.85rem" />
+                                                </button>
+                                            </div>
                                         ))}
                                     </div>
                                 )}

@@ -91,9 +91,9 @@ export const deleteFile = (fileName, folderName) => {
         })
 }
 
-export const deleteFileByUrl = (url, folderName) => {
+export const deleteFileByUrl = async (url, folderName) => {
     // Get the file path from the URL
-    const pathStartIndex = url.indexOf('/files' + folderName)
+    const pathStartIndex = url.indexOf('/files/' + folderName)
     const pathEndIndex = url.indexOf('?')
     const filePath = decodeURIComponent(
         url.substring(pathStartIndex + 1, pathEndIndex)
@@ -103,13 +103,12 @@ export const deleteFileByUrl = (url, folderName) => {
     const fileRef = ref(storage, filePath)
 
     // Delete the file
-    deleteObject(fileRef)
-        .then(() => {
-            console.log(`${filePath} has been deleted successfully.`)
-        })
-        .catch((error) => {
-            console.error(`Error deleting ${filePath}: ${error}`)
-        })
+    try {
+        await deleteObject(fileRef)
+        console.log(`${filePath} has been deleted successfully.`)
+    } catch (error) {
+        console.error(`Error deleting ${filePath}: ${error}`)
+    }
 }
 
 export const getAll = async (folderName) => {
