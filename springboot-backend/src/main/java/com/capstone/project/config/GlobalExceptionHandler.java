@@ -1,4 +1,4 @@
-package com.capstone.project.controller;
+package com.capstone.project.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

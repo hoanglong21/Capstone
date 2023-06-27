@@ -61,7 +61,6 @@ public class UserController {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
-
     }
 
     @GetMapping("/otherusers/{except}")

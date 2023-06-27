@@ -1,8 +1,10 @@
 package com.capstone.project.startup;
 
+import com.capstone.project.model.FeedbackType;
 import com.capstone.project.model.Field;
 import com.capstone.project.model.StudySetType;
 import com.capstone.project.model.User;
+import com.capstone.project.repository.FeedbackTypeRepository;
 import com.capstone.project.repository.FieldRepository;
 import com.capstone.project.repository.StudySetTypeRepository;
 import com.capstone.project.repository.UserRepository;
@@ -22,6 +24,9 @@ public class ApplicationStartup implements ApplicationRunner {
 
     @Autowired
     private StudySetTypeRepository studysetTypeRepository;
+
+    @Autowired
+    private FeedbackTypeRepository feedbackTypeRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -45,6 +50,19 @@ public class ApplicationStartup implements ApplicationRunner {
                 studysetTypes.add(studysetType);
             }
             studysetTypeRepository.saveAll(studysetTypes);
+        }
+
+        if (feedbackTypeRepository.count() == 0) {
+            List<String> defaultNames = Arrays.asList("sexual content", "violent or repulsive content", "hateful or abusive",
+                    "harassment or bullying", "harmful or dangerous acts", "misinformation", "child abuse", "promotes terrorism",
+                    "spam or misleading", "infringes rights", "caption issue", "suggestions");
+            List<FeedbackType> feedbackTypes = new ArrayList<>();
+            for (String name : defaultNames) {
+                FeedbackType feedbackType = new FeedbackType();
+                feedbackType.setName(name);
+                feedbackTypes.add(feedbackType);
+            }
+            feedbackTypeRepository.saveAll(feedbackTypes);
         }
 
         if(fieldRepository.count() == 0) {
