@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import jwtDecode from 'jwt-decode'
 import { Link, useNavigate } from 'react-router-dom'
 
-import StudySetService from '../../services/StudySetService'
+import StudySetService from '../../../services/StudySetService'
 
-import avatar from '../../assets/images/avatar-default.jpg'
-import empty from '../../assets/images/empty-state.png'
-import { SearchIcon } from '../../components/icons'
+import avatar from '../../../assets/images/avatar-default.jpg'
+import empty from '../../../assets/images/empty-state.png'
+import { SearchIcon } from '../../../components/icons'
 import './StudySetList.css'
 
 const StudySetList = () => {

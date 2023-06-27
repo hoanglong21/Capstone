@@ -98,7 +98,7 @@ const Header = () => {
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
-                        >
+                        > 
                             <HomeIcon className="mx-2" />
                             <span className="align-middle">Home</span>
                         </NavLink>

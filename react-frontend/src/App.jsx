@@ -16,20 +16,24 @@ import CreateClassroom from './pages/CreateClassroom'
 import CreateStudySet from './pages/studySet/CreateStudySet'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
-import AccountLayout from './components/layouts/User/UserLayout'
-import Profile from './pages/user/Profile/Profile'
-import LibraryLayout from './components/layouts/LibraryLayout'
-import StudySetList from './pages/library/StudySetList'
+import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
+import Profile from './pages/settings/Profile/Profile'
+import LibraryLayout from './pages/library/LibraryLayout'
+import StudySetList from './pages/library/StudySetList/StudySetList'
 import NoClass from './pages/NoClass'
-import ProtectedRoute from './components/layouts/ProtectedRoute/ProtectedRoute'
+import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
 import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import UpdateClassroom from './pages/UpdateClassroom'
-import ChangePassword from './pages/user/ChangePassword'
+import ChangePassword from './pages/settings/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
-import Notifications from './pages/user/Notifications'
+import Notifications from './pages/settings/Notifications'
 import Term from './components/footer/Term'
+import Privacy from './components/footer/Privacy'
+import JoinClass from './pages/JoinClass'
+import InsideClassroom from './pages/InsideClassroom'
+import ClassList from './pages/library/ClassList'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -51,8 +55,9 @@ const App = () => {
                                 element={<ChangePassword />}
                             />
                         </Route>
-                        <Route path="sets" element={<LibraryLayout />}>
-                            <Route index element={<StudySetList />} />
+                        <Route element={<LibraryLayout />}>
+                            <Route path="sets" element={<StudySetList />} />
+                            <Route path="classes" element={<ClassList />} />
                         </Route>
                         <Route
                             path="create-set/:id"
@@ -79,8 +84,8 @@ const App = () => {
                     </Route>
                     <Route path="term" element={<Term />} />
                     <Route path="privacy" element={<Privacy />} />
-                    <Route path="/joinclass" element={<JoinClass />} />
-                    <Route path="/insideclass" element={<InsideClassroom />} />
+                    <Route path="joinclass" element={<JoinClass />} />
+                    <Route path="insideclass" element={<InsideClassroom />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
 
