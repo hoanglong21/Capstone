@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface StudySetRepository extends JpaRepository<StudySet, Integer> {
-    StudySet findStudySetById(int id);
 
     @Query(value = "SELECT * FROM studyset WHERE author_id = :id", nativeQuery = true)
     List<StudySet> findStudySetByAuthor_id(int id);

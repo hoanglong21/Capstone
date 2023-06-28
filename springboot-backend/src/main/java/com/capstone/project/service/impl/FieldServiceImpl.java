@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Field;
 import com.capstone.project.repository.FieldRepository;
 import com.capstone.project.service.FieldService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +12,7 @@ public class FieldServiceImpl implements FieldService {
 
     private final FieldRepository fieldRepository;
 
+    @Autowired
     public FieldServiceImpl(FieldRepository fieldRepository) {
         this.fieldRepository = fieldRepository;
     }
