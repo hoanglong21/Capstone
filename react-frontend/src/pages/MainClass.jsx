@@ -1,17 +1,53 @@
 import React, { useState } from 'react'
 import '../assets/styles/Classroom.css'
 import { AiOutlineUser } from 'react-icons/ai'
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getUser } from '../features/user/userAction';
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
-const MainClass = ({}) => {
+const MainClass = ({classData}) => {
     const [showInput, setShowInput] = useState(false)
     const [inputValue, setInput] = useState('')
     const [image, setImage] = useState(null)
+    const dispatch = useDispatch()
+    const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
+
+    useEffect(() => {
+      if (userToken) {
+          dispatch(getUser(userToken))
+      }
+  }, [userToken, dispatch])
 
     const handleChange = (e) => {
         if (e.target.files[0]) {
             setImage(e.target.files[0])
         }
     }
+
+    const [classroom, setClassroom] = useState({
+        id: "",
+        class_code: "",
+        class_name: "",
+        description: "",
+        user: {
+            id: userInfo.id,
+            username: userInfo.username,
+        },
+      });
+    
+      const { id } = useParams();
+    
+      useEffect(() => {
+        loadClass();
+      }, []);
+    
+      const loadClass = async () => {
+        const result = await axios.get(`http://localhost:8080/api/v1/class/${id}`);
+        setClassroom(result.data);
+      };
 
     return (
         <>
@@ -23,15 +59,14 @@ const MainClass = ({}) => {
                                 <div className="main__emptyStyles" />
                             </div>
                             <div className="main__text">
-                                <h1 className="main__heading main__overflow">
-                                    Class Name
-                                </h1>
+                                <p className="main__heading main__overflow">
+                                    Class Name: {classroom.class_name}
+                                </p>
                                 <div className="main__section main__overflow">
-                                    Class Description
+                                    Class Description: {classroom.description}
                                 </div>
                                 <div className="main__wrapper2">
-                                    <em className="main__code">Class Code :</em>
-                                    <div className="main__id">ClassID </div>
+                                    <em className="main__code">Class Code : {classroom.class_code}</em>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +121,7 @@ const MainClass = ({}) => {
                                         >
                                             <AiOutlineUser />
                                             <div>
-                                                Announce Something to class
+                                                Announce something to class
                                             </div>
                                         </div>
                                     )}

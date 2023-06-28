@@ -2,6 +2,11 @@ video {
   width: 100%;
   /* height: 100%; */
   object-fit: fill;
+  pointer-events: none;
+}
+
+video::-webkit-media-controls {
+  display: none !important;
 }
 
 .landing__ti h2,

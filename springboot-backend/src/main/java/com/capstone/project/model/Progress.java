@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "progress")
+@Table(name = "progress", uniqueConstraints = @UniqueConstraint(columnNames={"user_id", "card_id"}))
 public class Progress {
 
     @Id
