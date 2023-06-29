@@ -43,29 +43,27 @@ const CreateStudySet = () => {
 
     // handle reload page
     useEffect(() => {
+        const handleReload = (event) => {
+            event.preventDefault()
+            if (studySet._draft) {
+                sessionStorage.setItem('isReload', 'true')
+            }
+            return false
+        }
         window.addEventListener('beforeunload', handleReload)
         return () => {
             window.removeEventListener('beforeunload', handleReload)
         }
-    }, [])
+    }, [studySet._draft])
 
     // toggle discard toast
     useEffect(() => {
-        setShowDiscardMess(sessionStorage.getItem('isReload', 'true'))
-        console.log(sessionStorage.getItem('isReload', 'true'))
+        setShowDiscardMess(sessionStorage.getItem('isReload'))
     }, [])
 
     const toggleShowDiscardMess = () => {
         setShowDiscardMess(!showDiscardMess)
         sessionStorage.clear()
-    }
-
-    const handleReload = (event) => {
-        event.preventDefault()
-        if (studySet._draft) {
-            sessionStorage.setItem('isReload', 'true')
-        }
-        return false
     }
 
     const handleAddCard = async () => {

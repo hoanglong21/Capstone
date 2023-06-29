@@ -22,11 +22,16 @@ export const changePassword = (username, newPassword) => {
     })
 }
 
+export const deleteUser = (username) => {
+    return axios.delete(API_BASE_URL + '/users/' + username + '/delete')
+}
+
 const UserService = {
     getUser,
     updateUser,
     checkMatchPassword,
     changePassword,
+    deleteUser,
 }
 
 export default UserService

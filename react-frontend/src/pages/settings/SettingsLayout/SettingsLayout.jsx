@@ -7,7 +7,7 @@ const AccountLayout = () => {
             <h3>Account Settings</h3>
             <div className="card-account__container">
                 <div className="row">
-                    <div className="card-account__sidebar d-flex flex-column border-end pe-4 col-3 col-xl-2">
+                    <div className="card-account__sidebar d-flex flex-column border-end pe-4 col-4 col-lg-3 col-xxl-2">
                         <NavLink
                             className={
                                 'card-account__sidebar-link mb-2 ' +
@@ -28,6 +28,15 @@ const AccountLayout = () => {
                             Notifications
                         </NavLink>
                         <NavLink
+                            to="change-language"
+                            className={
+                                'card-account__sidebar-link mb-2 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            Language
+                        </NavLink>
+                        <NavLink
                             to="change-password"
                             className={
                                 'card-account__sidebar-link mb-2 ' +
@@ -36,9 +45,15 @@ const AccountLayout = () => {
                         >
                             Change Password
                         </NavLink>
-                        <a className="card-account__sidebar-link card-account__sidebar-link--warning mt-3">
+                        <NavLink
+                            to="delete-account"
+                            className={
+                                'card-account__sidebar-link card-account__sidebar-link--warning mt-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
                             Delete Account
-                        </a>
+                        </NavLink>
                     </div>
                     <div className="card-account__body col">
                         <Outlet />
