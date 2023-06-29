@@ -34,6 +34,8 @@ import Privacy from './components/footer/Privacy'
 import JoinClass from './pages/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
 import Language from './pages/settings/Language'
+import DeleteAccount from './pages/settings/DeleteAccount'
+import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -58,9 +60,13 @@ const App = () => {
                                 path="change-language"
                                 element={<Language />}
                             />
+                            <Route
+                                path="delete-account"
+                                element={<DeleteAccount />}
+                            />
                         </Route>
-                        <Route path="sets" element={<LibraryLayout />}>
-                            <Route index element={<StudySetList />} />
+                        <Route element={<LibraryLayout />}>
+                            <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
                         </Route>
                         <Route
@@ -82,11 +88,15 @@ const App = () => {
                         <Route path="draw" element={<Draw />} />
                         <Route path="to-speech" element={<TextToSpeech />} />
                     </Route>
-                    <Route path="*" element={<NotFound />} />
                     <Route path="term" element={<Term />} />
                     <Route path="privacy" element={<Privacy />} />
                     <Route path="/joinclass" element={<JoinClass />} />
                     <Route path="/mainclass/:id" element={<MainClass />} />
+                    <Route
+                        path="account-deleted"
+                        element={<AccountDeleted />}
+                    />
+                    <Route path="*" element={<NotFound />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />

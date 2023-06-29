@@ -45,9 +45,15 @@ const AccountLayout = () => {
                         >
                             Language
                         </NavLink>
-                        <a className="card-account__sidebar-link card-account__sidebar-link--warning mt-3">
+                        <NavLink
+                            to="delete-account"
+                            className={
+                                'card-account__sidebar-link card-account__sidebar-link--warning mt-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
                             Delete Account
-                        </a>
+                        </NavLink>
                     </div>
                     <div className="card-account__body col">
                         <Outlet />

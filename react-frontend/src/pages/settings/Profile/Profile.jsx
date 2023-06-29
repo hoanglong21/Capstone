@@ -45,12 +45,12 @@ const Profile = () => {
             setLoading(false)
         }
         fetchAvatar()
-    }, [])
+    }, [newUser.username])
 
     // reset state
     useEffect(() => {
         dispatch(reset())
-    }, [])
+    }, [dispatch])
 
     // hide success mess
     useEffect(() => {
