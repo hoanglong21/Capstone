@@ -38,7 +38,9 @@ const Profile = () => {
             const tempDefault = await getAll('system/default_avatar')
             setDefaultAvatars(tempDefault)
             // fetch user avatar
-            const tempUser = await getAll('files/image/avatar')
+            const tempUser = await getAll(
+                `files/image/avatar/${newUser.username}`
+            )
             setUserAvatars(tempUser)
             setLoading(false)
         }
@@ -72,10 +74,12 @@ const Profile = () => {
     const handleUploadAvatar = async (event) => {
         const file = event.target.files[0]
         if (file) {
-            await uploadFile(file, 'image/avatar')
+            await uploadFile(file, `image/avatar/${newUser.username}`)
             // reload userAvatars
             setLoading(true)
-            const tempUser = await getAll('files/image/avatar')
+            const tempUser = await getAll(
+                `files/image/avatar/${newUser.username}`
+            )
             setUserAvatars(tempUser)
             setLoading(false)
         }
@@ -85,7 +89,7 @@ const Profile = () => {
         await deleteFileByUrl(avatarUrl, 'image/avatar')
         // reload userAvatars
         setLoading(true)
-        const tempUser = await getAll('files/image/avatar')
+        const tempUser = await getAll(`files/image/avatar/${newUser.username}`)
         setUserAvatars(tempUser)
         setLoading(false)
     }
