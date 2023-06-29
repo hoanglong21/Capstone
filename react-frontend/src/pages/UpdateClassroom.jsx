@@ -7,13 +7,11 @@ export default function UpdateClassroom({close}) {
     let navigate = useNavigate()
 
     const [classroom, setClassroom] = useState({
-        className: '',
-        tutor: '',
-        classDescription: '',
-        createDate: '',
+        class_name: '',
+        description: '',
     })
 
-    const { className, tutor, classDescription, createDate } = classroom
+    const {class_name, description } = classroom
 
     const onInputChange = (e) => {
         setClassroom({ ...classroom, [e.target.name]: e.target.value })
@@ -21,8 +19,8 @@ export default function UpdateClassroom({close}) {
 
     const onSubmit = async (e) => {
         e.preventDefault()
-        await axios.post('http://localhost:8080', classroom)
-        navigate('/')
+        await axios.post('http://localhost:8080/api/v1/class', classroom)
+        navigate('/sets/classes')
     }
 
   return (
@@ -32,16 +30,10 @@ export default function UpdateClassroom({close}) {
         <a onClick={close} className="createClass__close">&times;</a>
         <form onSubmit={(e) => onSubmit(e)}>
           <fieldset className="createClass__form__input">
-            <input className="createClass__input" type={"text"} name="className" placeholder='Class Name' value={className} required onChange={(e) => onInputChange(e)} />
+            <input className="createClass__input" type={"text"} name="className" placeholder='Class Name' value={class_name} required onChange={(e) => onInputChange(e)} />
           </fieldset>
           <fieldset className="createClass__form__input">
-            <input className="createClass__input" type={"text"} name="tutor" placeholder='Tutor Guide' value={tutor} required onChange={(e) => onInputChange(e)} />
-          </fieldset>
-          <fieldset className="createClass__form__input">
-            <input className="createClass__input" type={"text"} name="classDescription" placeholder='Class Description' value={classDescription} required onChange={(e) => onInputChange(e)} />
-          </fieldset>
-          <fieldset className="createClass__form__input">
-            <input className="createClass__input" type={"date"} name="createDate" placeholder='Create Date' value={createDate} required onChange={(e) => onInputChange(e)} />
+            <input className="createClass__input" type={"text"} name="classDescription" placeholder='Class Description' value={description} required onChange={(e) => onInputChange(e)} />
           </fieldset>
           <div className="createClass__submit">
             <button type="submit">Update</button>
