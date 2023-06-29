@@ -73,6 +73,10 @@ const App = () => {
                             path="create-set/:id"
                             element={<CreateStudySet />}
                         />
+                        <Route
+                            path="set/:id/edit"
+                            element={<CreateStudySet />}
+                        />
                         <Route path="set/:id" element={<StudySet />} />
                         <Route
                             path="video-chat"

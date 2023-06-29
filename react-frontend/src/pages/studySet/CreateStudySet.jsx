@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 
@@ -179,16 +179,38 @@ const CreateStudySet = () => {
                         isScroll ? 'scroll-shadows' : ''
                     }`}
                 >
-                    <div className="container d-flex justify-content-between">
-                        <h3 className="fw-bold">Create a new study set</h3>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            onClick={handleSubmit}
-                        >
-                            Create
-                        </button>
-                    </div>
+                    {studySet._draft ? (
+                        <div className="container d-flex justify-content-between">
+                            <h3 className="fw-bold">Create a new study set</h3>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Create
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="container d-flex justify-content-between">
+                            <Link
+                                to={`/sets/${studySet.id}`}
+                                className={CardStyles.card_button}
+                                style={{
+                                    backgroundColor: 'inherit',
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                BACK TO SET
+                            </Link>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Done
+                            </button>
+                        </div>
+                    )}
                 </div>
                 <div className="container mt-4">
                     {/* error message */}
