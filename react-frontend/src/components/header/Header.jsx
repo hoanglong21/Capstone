@@ -278,6 +278,9 @@ const Header = () => {
                                         <button
                                             className="dropdown-item py-2 px-3"
                                             type="button"
+                                            onClick={() => {
+                                                navigate('setting')
+                                            }}
                                         >
                                             <SettingIcon
                                                 className="me-3"
@@ -291,7 +294,9 @@ const Header = () => {
                                     <li>
                                         <button
                                             className="dropdown-item py-2 px-3"
-                                            type="button"
+                                            type="button" onClick={() => {
+                                                navigate('helpcenter')
+                                            }}
                                         >
                                             <HelpIcon
                                                 className="me-3"
