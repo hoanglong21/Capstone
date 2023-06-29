@@ -28,15 +28,6 @@ const AccountLayout = () => {
                             Notifications
                         </NavLink>
                         <NavLink
-                            to="change-password"
-                            className={
-                                'card-account__sidebar-link mb-2 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            Change Password
-                        </NavLink>
-                        <NavLink
                             to="change-language"
                             className={
                                 'card-account__sidebar-link mb-2 ' +
@@ -44,6 +35,15 @@ const AccountLayout = () => {
                             }
                         >
                             Language
+                        </NavLink>
+                        <NavLink
+                            to="change-password"
+                            className={
+                                'card-account__sidebar-link mb-2 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            Change Password
                         </NavLink>
                         <NavLink
                             to="delete-account"

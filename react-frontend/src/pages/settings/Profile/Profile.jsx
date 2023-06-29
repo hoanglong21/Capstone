@@ -251,7 +251,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Gender */}
-                <div className="form-group col-12">
+                <div className="form-group col-6">
                     <label className={`d-block ${FormStyles.formLabel}`}>
                         Gender
                     </label>
@@ -300,6 +300,22 @@ const Profile = () => {
                             Other
                         </label>
                     </div>
+                </div>
+                {/* Role */}
+                <div className="form-group col-6">
+                    <label className={FormStyles.formLabel}>Role</label>
+                    <input
+                        name="role"
+                        type="text"
+                        value={
+                            newUser.role === 'ROLE_LEARNER'
+                                ? 'Learner'
+                                : 'Tutor'
+                        }
+                        className="form-control-plaintext p-0"
+                        readOnly
+                        required
+                    />
                 </div>
                 {/* Address */}
                 <div className="form-group col-12">
