@@ -12,7 +12,7 @@ public interface SubmissionService {
     List<Submission> getAllSubmissionByAssignmentId(int id);
     List<Submission> getAllSubmission();
 
-    Submission createSubmission( Submission submission) throws ParseException;
+    Submission createSubmission( Submission submission);
 
     Submission getSubmissionById ( int id) throws ResourceNotFroundException;
 

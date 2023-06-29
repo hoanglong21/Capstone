@@ -17,7 +17,6 @@ com\capstone\project\model\Progress.class
 com\capstone\project\controller\ClassController.class
 com\capstone\project\repository\EmployeeRepository.class
 com\capstone\project\model\Card.class
-com\capstone\project\service\VocabularyParse.class
 com\capstone\project\service\JwtService.class
 com\capstone\project\service\impl\EmployeeServiceImpl.class
 com\capstone\project\model\Content.class
