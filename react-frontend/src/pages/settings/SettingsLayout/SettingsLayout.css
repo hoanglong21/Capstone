@@ -4,6 +4,7 @@
     --sidebar-link-bg: var(--blue-96);
     --sidebar-link--warning: var(--pink-red-71);
     --sidebar-link-hover--warning: var(--pink-red-51);
+    --sidebar-link-bg-hover--warning: var(--red-94);
 }
 
 .card-account__container {
@@ -37,4 +38,9 @@
 .card-account__sidebar-link:hover.card-account__sidebar-link--warning {
     color: var(--sidebar-link-hover--warning);
     background-color: inherit;
+}
+
+.card-account__sidebar-link.active.card-account__sidebar-link--warning {
+    color: var(--sidebar-link-hover--warning);
+    background-color: var(--sidebar-link-bg-hover--warning);
 }

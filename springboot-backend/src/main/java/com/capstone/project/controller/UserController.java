@@ -1,6 +1,7 @@
 package com.capstone.project.controller;
 
 import com.capstone.project.dto.ChangePasswordRequest;
+import com.capstone.project.dto.CheckPasswordRequest;
 import com.capstone.project.dto.UserRequest;
 import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
@@ -75,7 +76,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/{username}/delete")
+    @DeleteMapping("/users/{username}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
         try {
             return ResponseEntity.ok(userService.deleteUser(username));
@@ -140,7 +141,7 @@ public class UserController {
 
     @PostMapping("/checkpassword")
     public ResponseEntity<?> checkMatchPassword(@RequestParam("username") String username,
-                                                @Valid @RequestBody ChangePasswordRequest changePasswordRequest, BindingResult result) {
+                                                @Valid @RequestBody CheckPasswordRequest checkPasswordRequest, BindingResult result) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -149,7 +150,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(errors);
         } else {
             try {
-                return ResponseEntity.ok(userService.checkMatchPassword(username, changePasswordRequest.getPassword()));
+                return ResponseEntity.ok(userService.checkMatchPassword(username, checkPasswordRequest.getPassword()));
             } catch (ResourceNotFroundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }

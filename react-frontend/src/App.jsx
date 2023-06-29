@@ -33,6 +33,11 @@ import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
 import JoinClass from './pages/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
+import HelpCenter from './pages/HelpCenter'
+import SendFeedback from './pages/SendFeedback'
+import Language from './pages/settings/Language'
+import DeleteAccount from './pages/settings/DeleteAccount'
+import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -44,14 +49,28 @@ const App = () => {
           <Route index element={userToken ? <Home /> : <Landing />} />
           <Route element={<ProtectedRoute />}>
             <Route path="account" element={<AccountLayout />}>
-              <Route index element={<Profile />} />
-              <Route path="notification" element={<Notifications />} />
-              <Route path="change-password" element={<ChangePassword />} />
-            </Route>
-            <Route path="sets" element={<LibraryLayout />}>
-              <Route index element={<StudySetList />} />
-              <Route path='classes' element={<ClassList />} />
-            </Route>
+                            <Route index element={<Profile />} />
+                            <Route
+                                path="notification"
+                                element={<Notifications />}
+                            />
+                            <Route
+                                path="change-password"
+                                element={<ChangePassword />}
+                            />
+                            <Route
+                                path="change-language"
+                                element={<Language />}
+                            />
+                            <Route
+                                path="delete-account"
+                                element={<DeleteAccount />}
+                            />
+                        </Route>
+            <Route element={<LibraryLayout />}>
+                            <Route path="sets" element={<StudySetList />} />
+                            <Route path="classes" element={<ClassList />} />
+                        </Route>
             <Route path="create-set/:id" element={<CreateStudySet />} />
             <Route path="set/:id" element={<StudySet />} />
             <Route path="video-chat" element={<VideoChatContainer />} />
@@ -62,23 +81,28 @@ const App = () => {
             <Route path="draw" element={<Draw />} />
             <Route path="to-speech" element={<TextToSpeech />} />
           </Route>
-          <Route path="*" element={<NotFound />} />
           <Route path="term" element={<Term />} />
           <Route path="privacy" element={<Privacy />} />
           <Route path="/joinclass" element={<JoinClass />} />
           <Route path="/mainclass/:id" element={<MainClass />} />
+          <Route path="/helpcenter" element={<HelpCenter />} />
+          <Route path="/helpcenter/sendfeedback"  element={<SendFeedback />} />
+            <Route
+                        path="account-deleted"
+                        element={<AccountDeleted />}
+                    />
+          <Route path="*" element={<NotFound />} />
         </Route>
-
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot" element={<ForgotPassword />} />
-        <Route path="/reset" element={<ResetPassword />} />
-        <Route path="/flashcard" element={<Flashcard />} />
-        <Route path="/createclass" element={<CreateClassroom />} />
-        <Route path="/updateclass" element={<UpdateClassroom />} />
-        <Route path="/noclass" element={<NoClass />} />
-      </Routes>
-    </BrowserRouter>
-  );
-};
-export default App;
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot" element={<ForgotPassword />} />
+                <Route path="/reset" element={<ResetPassword />} />
+                <Route path="/flashcard" element={<Flashcard />} />
+                <Route path="/createclass" element={<CreateClassroom />} />
+                <Route path="/updateclass" element={<UpdateClassroom />} />
+                <Route path="/noclass" element={<NoClass />} />
+            </Routes>
+        </BrowserRouter>
+    )
+}
+export default App
