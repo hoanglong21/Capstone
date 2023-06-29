@@ -40,6 +40,6 @@ select.formSelect {
 }
 
 select.formSelect:focus {
-    box-shadow: none;
+    box-shadow: 0 0 0 0.25rem var(--form-check-shadow);
     border-color: var(--form-border-focus);
 }

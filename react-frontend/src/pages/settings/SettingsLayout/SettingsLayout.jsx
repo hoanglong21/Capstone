@@ -36,6 +36,15 @@ const AccountLayout = () => {
                         >
                             Change Password
                         </NavLink>
+                        <NavLink
+                            to="change-language"
+                            className={
+                                'card-account__sidebar-link mb-2 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            Language
+                        </NavLink>
                         <a className="card-account__sidebar-link card-account__sidebar-link--warning mt-3">
                             Delete Account
                         </a>
