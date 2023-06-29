@@ -1,19 +1,29 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.dto.AttachmentRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Attachment;
 import com.capstone.project.service.AttachmentService;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
 public class AttachmentController {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     private final AttachmentService attachmentService;
 
@@ -46,19 +56,42 @@ public class AttachmentController {
     }
 
     @PostMapping("/attachments")
-    public ResponseEntity<?> createAttachment(@RequestBody Attachment attachment) {
-        return ResponseEntity.ok(attachmentService.createAttachment(attachment));
+    public ResponseEntity<?> createAttachment(@Valid @RequestBody AttachmentRequest attachmentRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            Attachment attachment = modelMapper.map(attachmentRequest,Attachment.class);
+            try{
+                return ResponseEntity.ok(attachmentService.createAttachment(attachment));
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+
     }
 
 
 
     @PutMapping("/attachments/{id}")
-    public ResponseEntity<?> updateAttachment(@PathVariable int id, @RequestBody Attachment attachment) {
-           try {
-               return ResponseEntity.ok(attachmentService.updateAttachment(id, attachment));
-           } catch (ResourceNotFroundException e){
-               return ResponseEntity.badRequest().body(e.getMessage());
-           }
+    public ResponseEntity<?> updateAttachment(@PathVariable int id,@Valid @RequestBody AttachmentRequest attachmentRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            Attachment attachment = modelMapper.map(attachmentRequest,Attachment.class);
+            try {
+                return ResponseEntity.ok(attachmentService.updateAttachment(id, attachment));
+            } catch (ResourceNotFroundException e){
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
     }
 
     @DeleteMapping("/attachments/{id}")
