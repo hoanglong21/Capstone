@@ -14,7 +14,7 @@ public interface TestService {
 
     Test getTestById ( int id) throws ResourceNotFroundException;
 
-    Test updateTest( int id, Test test) throws ParseException, ResourceNotFroundException;
+    Test updateTest( int id, Test test) throws ResourceNotFroundException;
 
     Boolean deleteTest( int id) throws ResourceNotFroundException;
 }

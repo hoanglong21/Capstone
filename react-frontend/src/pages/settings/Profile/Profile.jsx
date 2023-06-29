@@ -38,17 +38,19 @@ const Profile = () => {
             const tempDefault = await getAll('system/default_avatar')
             setDefaultAvatars(tempDefault)
             // fetch user avatar
-            const tempUser = await getAll('files/image/avatar')
+            const tempUser = await getAll(
+                `files/image/avatar/${newUser.username}`
+            )
             setUserAvatars(tempUser)
             setLoading(false)
         }
         fetchAvatar()
-    }, [])
+    }, [newUser.username])
 
     // reset state
     useEffect(() => {
         dispatch(reset())
-    }, [])
+    }, [dispatch])
 
     // hide success mess
     useEffect(() => {
@@ -72,10 +74,12 @@ const Profile = () => {
     const handleUploadAvatar = async (event) => {
         const file = event.target.files[0]
         if (file) {
-            await uploadFile(file, 'image/avatar')
+            await uploadFile(file, `image/avatar/${newUser.username}`)
             // reload userAvatars
             setLoading(true)
-            const tempUser = await getAll('files/image/avatar')
+            const tempUser = await getAll(
+                `files/image/avatar/${newUser.username}`
+            )
             setUserAvatars(tempUser)
             setLoading(false)
         }
@@ -85,7 +89,7 @@ const Profile = () => {
         await deleteFileByUrl(avatarUrl, 'image/avatar')
         // reload userAvatars
         setLoading(true)
-        const tempUser = await getAll('files/image/avatar')
+        const tempUser = await getAll(`files/image/avatar/${newUser.username}`)
         setUserAvatars(tempUser)
         setLoading(false)
     }
@@ -247,7 +251,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Gender */}
-                <div className="form-group col-12">
+                <div className="form-group col-6">
                     <label className={`d-block ${FormStyles.formLabel}`}>
                         Gender
                     </label>
@@ -296,6 +300,22 @@ const Profile = () => {
                             Other
                         </label>
                     </div>
+                </div>
+                {/* Role */}
+                <div className="form-group col-6">
+                    <label className={FormStyles.formLabel}>Role</label>
+                    <input
+                        name="role"
+                        type="text"
+                        value={
+                            newUser.role === 'ROLE_LEARNER'
+                                ? 'Learner'
+                                : 'Tutor'
+                        }
+                        className="form-control-plaintext p-0"
+                        readOnly
+                        required
+                    />
                 </div>
                 {/* Address */}
                 <div className="form-group col-12">

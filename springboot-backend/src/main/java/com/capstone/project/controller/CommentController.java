@@ -1,21 +1,30 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.dto.CommentRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Comment;
 import com.capstone.project.model.Content;
 import com.capstone.project.service.CommentService;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
 public class CommentController {
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     private final CommentService commentService;
 
@@ -59,17 +68,41 @@ public class CommentController {
     }
 
     @PostMapping("/comments")
-    public ResponseEntity<?> createComment(@RequestBody Comment comment) {
-        return ResponseEntity.ok(commentService.createComment(comment));
+    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest commentRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+                 Comment comment = modelMapper.map(commentRequest,Comment.class);
+                 try{
+                     return ResponseEntity.ok(commentService.createComment(comment));
+                 } catch (Exception e) {
+                     return ResponseEntity.badRequest().body(e.getMessage());
+                 }
+        }
+
     }
 
     @PutMapping("/comments/{id}")
-    public ResponseEntity<?> updateComment(@PathVariable int id, @RequestBody Comment comment) {
-       try {
-           return ResponseEntity.ok(commentService.updateComment(comment, id));
-       } catch (ResourceNotFroundException e){
-           return ResponseEntity.badRequest().body(e.getMessage());
-       }
+    public ResponseEntity<?> updateComment(@PathVariable int id,@Valid @RequestBody CommentRequest commentRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            Comment comment = modelMapper.map(commentRequest,Comment.class);
+            try {
+                return ResponseEntity.ok(commentService.updateComment(comment, id));
+            } catch (ResourceNotFroundException e){
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+
     }
 
     @DeleteMapping("/comments/{id}")

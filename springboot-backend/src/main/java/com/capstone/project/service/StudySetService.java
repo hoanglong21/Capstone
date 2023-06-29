@@ -4,7 +4,9 @@ import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.StudySet;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface StudySetService {
 
@@ -28,5 +30,5 @@ public interface StudySetService {
 
     List<StudySetResponse> getCustomList(Boolean isDeleted, Boolean isPublic, Boolean isDraft); // old
 
-    List<StudySetResponse> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft);
+    Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException;
 }

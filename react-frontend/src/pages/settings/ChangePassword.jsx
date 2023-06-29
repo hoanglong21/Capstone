@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import UserService from '../../services/UserService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
-import { changePassword, getUser } from '../../features/user/userAction'
+import { getUser } from '../../features/user/userAction'
 
 const ChangePassword = () => {
     const dispatch = useDispatch()
