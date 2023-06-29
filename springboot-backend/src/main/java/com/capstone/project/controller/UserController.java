@@ -75,7 +75,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/users/{username}/delete")
+    @GetMapping("/users/{username}/delete")
     public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
         try {
             return ResponseEntity.ok(userService.deleteUser(username));
