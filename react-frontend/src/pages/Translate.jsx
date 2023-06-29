@@ -40,7 +40,9 @@ function Translate() {
                 name="sourceLang"
                 type="select"
                 value={sourceLang}
-              ></Input>
+              >
+                {/* <option value={code}>{language}</option> */}
+              </Input>
               <Button
                 className="secondary mx-3"
                 outline
@@ -53,7 +55,9 @@ function Translate() {
                 name="targetLang"
                 type="select"
                 value={targetLang}
-              ></Input>
+              >
+                {/* <option value={code}>{language}</option> */}
+              </Input>
             </div>
           </CardHeader>
           {/*  */}
