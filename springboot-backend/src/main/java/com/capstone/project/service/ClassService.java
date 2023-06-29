@@ -5,6 +5,7 @@ import com.capstone.project.model.Class;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface ClassService {
     List<Class> getAllClass();
@@ -17,4 +18,6 @@ public interface ClassService {
 
     Boolean deleteClass( int id) throws ResourceNotFroundException;
     Boolean deleteHardClass( int id) throws ResourceNotFroundException;
+
+    Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException;
 }
