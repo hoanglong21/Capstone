@@ -34,6 +34,7 @@ import Privacy from './components/footer/Privacy'
 import JoinClass from './pages/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
 import HelpCenter from './pages/HelpCenter'
+import SendFeedback from './pages/SendFeedback'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -69,6 +70,7 @@ const App = () => {
           <Route path="/joinclass" element={<JoinClass />} />
           <Route path="/mainclass/:id" element={<MainClass />} />
           <Route path="/helpcenter" element={<HelpCenter />} />
+          <Route path="/helpcenter/sendfeedback"  element={<SendFeedback />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
