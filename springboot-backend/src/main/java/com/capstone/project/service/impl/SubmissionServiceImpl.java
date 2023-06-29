@@ -37,7 +37,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 
     @Override
-    public Submission createSubmission(Submission submission) throws ParseException {
+    public Submission createSubmission(Submission submission){
         submission.setCreated_date( new Date());
         return submissionRepository.save(submission);
     }
