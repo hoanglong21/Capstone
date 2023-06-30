@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+
+import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import './CreateClass.css'
-import ClassService from '../../services/ClassService'
-import { getUser } from '../../features/user/userAction'
 
 export default function CreateClass() {
     let navigate = useNavigate()
@@ -26,8 +26,10 @@ export default function CreateClass() {
                 },
             })
         }
-        fetchData()
-    }, [])
+        if (userInfo) {
+            fetchData()
+        }
+    }, [userInfo])
 
     const handleChange = (event) => {
         setNewClass({ ...newClass, [event.target.name]: event.target.value })
@@ -49,7 +51,7 @@ export default function CreateClass() {
                 classNameEl.classList.add('is-invalid')
             } else {
                 await ClassService.createClassroom(newClass)
-                navigate('/sets/classes')
+                navigate('/classes')
             }
         } catch (error) {
             if (error.response && error.response.data) {

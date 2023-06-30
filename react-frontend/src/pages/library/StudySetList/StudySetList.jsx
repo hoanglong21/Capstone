@@ -1,11 +1,9 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import jwtDecode from 'jwt-decode'
 import { Link, useNavigate } from 'react-router-dom'
 
 import StudySetService from '../../../services/StudySetService'
 
-import avatar from '../../../assets/images/avatar-default.jpg'
 import empty from '../../../assets/images/empty-state.png'
 import { SearchIcon } from '../../../components/icons'
 import './StudySetList.css'
@@ -76,9 +74,42 @@ const StudySetList = () => {
                     <h3>You have no sets yet</h3>
                     <p>Sets you create or study will be shown here</p>
                     <div>
-                        <button className="btn btn-primary">
-                            Create a set
-                        </button>
+                        <div className="dropdown">
+                            <button
+                                className="btn btn-primary dropdown-toggle"
+                                type="button"
+                                id="createSetBtn"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Create a set
+                            </button>
+                            <ul
+                                className="dropdown-menu"
+                                aria-labelledby="createSetBtn"
+                            >
+                                <li>
+                                    <button
+                                        className="dropdown-item m-0"
+                                        onClick={() => {
+                                            navigate('/create-vocab')
+                                        }}
+                                    >
+                                        Vocabulary
+                                    </button>
+                                </li>
+                                <li>
+                                    <a className="dropdown-item" href="#">
+                                        Kanji
+                                    </a>
+                                </li>
+                                <li>
+                                    <a className="dropdown-item" href="#">
+                                        Grammar
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             ) : (
@@ -101,7 +132,7 @@ const StudySetList = () => {
                             <div key={set.id} className="set-item mb-3">
                                 <Link to={`/set/${set.id}`}>
                                     <div className="set-body row mb-2">
-                                        <div className="term-count col-2">
+                                        <div className="term-count col-1">
                                             {set.count} terms
                                         </div>
                                         <div
@@ -110,9 +141,9 @@ const StudySetList = () => {
                                         >
                                             <div className="author-avatar">
                                                 <img
-                                                    src={avatar}
+                                                    src={userInfo.avatar}
                                                     alt="author avatar"
-                                                    className="w-100"
+                                                    className="w-100 h-100"
                                                 />
                                             </div>
                                             <span className="author-username ms-2">

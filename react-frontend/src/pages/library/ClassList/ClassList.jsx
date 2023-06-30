@@ -1,59 +1,67 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import Popup from 'reactjs-popup'
-import Swal from 'sweetalert2'
-import axios from 'axios'
-import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { getUser } from '../../../features/user/userAction'
-import { useParams } from 'react-router-dom'
-import { SearchIcon } from '../../../components/icons'
+
+import { ClassIcon, SearchIcon } from '../../../components/icons'
+
 import '../../../assets/styles/Classroom.css'
-import './Class.css'
-import UpdateClassroom from '../../UpdateClassroom'
+import './ClassList.css'
+import ClassService from '../../../services/ClassService'
 
 const ClassList = () => {
-    const dispatch = useDispatch()
-    const { userToken } = useSelector((state) => state.auth)
+    const navigate = useNavigate()
+
+    const { userInfo } = useSelector((state) => state.user)
+
+    const [classes, setClasses] = useState([])
+    const [search, setSearch] = useState('')
+    const [isEmpty, setIsEmpty] = useState(false)
 
     useEffect(() => {
-        if (userToken) {
-            dispatch(getUser(userToken))
-        }
-    }, [userToken, dispatch])
-
-    const [classroom, setClassroom] = useState([])
-
-    const { id } = useParams()
-    useEffect(() => {
-        loadClassroom()
-    }, [])
-
-    const loadClassroom = async () => {
-        const result = await axios.get('http://localhost:8080/api/v1/class')
-        setClassroom(result.data)
-    }
-
-    const DeleteClass = async (id) => {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                Swal.fire('Deleted!', 'Your class has been deleted.', 'success')
-                await axios.delete(`http://localhost:8080/api/v1/class/${id}`)
-                loadClassroom()
+        const fetchData = async () => {
+            const temp = (
+                await ClassService.getFilterList(
+                    '',
+                    '',
+                    `=${userInfo.username}`,
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            if (temp.length === 0) {
+                setIsEmpty(true)
             }
-        })
+            setClasses(temp)
+        }
+        if (userInfo.username) {
+            fetchData()
+        }
+    }, [userInfo])
+
+    const handleSearch = async (event) => {
+        const temp = event.target.value
+        setSearch(temp)
+        setClasses(
+            (
+                await ClassService.getFilterList(
+                    '',
+                    `${temp ? '=' + temp : ''}`,
+                    `=${userInfo.username}`,
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+        )
     }
+
     return (
-        <div className="classListContainer container mt-4 mb-5">
-            {classroom.length === 0 ? (
+        <div className="container mt-4 mb-5">
+            {isEmpty ? (
                 <div className="noClass__container">
                     <img
                         className="noClass__img"
@@ -81,74 +89,55 @@ const ClassList = () => {
                     <div className="sets-search mb-4 d-flex align-items-center">
                         <input
                             className="search-control flex-grow-1"
-                            placeholder="Search your class"
+                            placeholder="Search your sets"
                             type="text"
-                            value=""
+                            value={search}
+                            onChange={handleSearch}
                         ></input>
                         <SearchIcon />
                     </div>
-                    <div className="set-list">
-                        {classroom.map((classroom) => (
+                    <div className="sets-list">
+                        {classes.length === 0 && (
+                            <p>No classes matching {search} found</p>
+                        )}
+                        {classes.map((classroom) => (
                             <div key={classroom.id} className="set-item mb-3">
-                                <Link to={`/mainclass/${classroom.id}`}>
-                                    <div className="set-body d-flex mb-2">
-                                        <div className="term-count me-4">
-                                            {classroom.description}
+                                <Link to={`/class/${classroom.id}`}>
+                                    <div className="set-body row mb-2">
+                                        <div className="term-count col-1">
+                                            {classroom.users.length} member
                                         </div>
-                                        <div className="author-username ms-2">
-                                            <p className="description ms-2">
-                                                {classroom.class_name}
-                                            </p>
-                                            <span style={{ color: '#2BC2FC' }}>
-                                                Created By{' '}
+                                        <div className="term-count col-1">
+                                            {classroom.studySets.length} sets
+                                        </div>
+                                        <div
+                                            className="set-author col d-flex "
+                                            href="#"
+                                        >
+                                            <div className="author-avatar">
+                                                <img
+                                                    src={userInfo.avatar}
+                                                    alt="author avatar"
+                                                    className="w-100 h-100"
+                                                />
+                                            </div>
+                                            <span className="author-username ms-2">
+                                                {userInfo.username}
                                             </span>
-                                            {classroom.user.username}
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="set-title col-2 d-flex align-items-center">
+                                            <ClassIcon className="me-2" />
+                                            {classroom.class_name}
+                                        </div>
+                                        <div className="col d-flex align-items-center">
+                                            <p className="set-description m-0">
+                                                {classroom.description}
+                                            </p>
                                         </div>
                                     </div>
                                 </Link>
-                                <button
-                                    className="inside__close"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    &#8801;
-                                </button>
-                                <ul className="dropdown-menu dropdown-menu-end p-2">
-                                    <li>
-                                        <Popup
-                                            modal
-                                            trigger={
-                                                <button
-                                                    className="dropdown-item py-2 px-2"
-                                                    type="button"
-                                                >
-                                                    <span className="align-middle fw-semibold">
-                                                        Update Classroom
-                                                    </span>
-                                                </button>
-                                            }
-                                        >
-                                            {(close) => (
-                                                <UpdateClassroom
-                                                    close={close}
-                                                />
-                                            )}
-                                        </Popup>
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-2 px-2"
-                                            onClick={() =>
-                                                DeleteClass(classroom.id)
-                                            }
-                                        >
-                                            <span className="align-middle fw-semibold">
-                                                Delete Classroom
-                                            </span>
-                                        </button>
-                                    </li>
-                                </ul>
                             </div>
                         ))}
                     </div>

@@ -47,7 +47,6 @@ const CreateVocab = () => {
                 ).data
                 if (listSets.totalItems > 0) {
                     temp = listSets.list[0]
-                    toggleShowDiscardMess()
                 } else {
                     temp = (
                         await StudySetService.createStudySet({
@@ -74,7 +73,7 @@ const CreateVocab = () => {
         if (userInfo.username) {
             fetchData()
         }
-    }, [userInfo])
+    }, [userInfo.username])
 
     // handle sticky header
     useEffect(() => {
