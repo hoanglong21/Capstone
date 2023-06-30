@@ -4,6 +4,7 @@ import com.capstone.project.model.Comment;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface CommentService {
 
@@ -20,4 +21,6 @@ public interface CommentService {
     Comment updateComment( Comment comment,  int id) throws ResourceNotFroundException;
 
     Boolean deleteComment (int id) throws ResourceNotFroundException;
+
+    Map<String, Object> getFilterComment( String search, String author, int typeid,int postid,int testid,int studysetid,int rootid, int page, int size) throws ResourceNotFroundException;
 }

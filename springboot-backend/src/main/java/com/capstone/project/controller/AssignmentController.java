@@ -9,17 +9,16 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -55,6 +54,7 @@ public class AssignmentController {
         }
     }
 
+//    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/assignments")
     public ResponseEntity<?> createAssignment(@Valid @RequestBody AssignmentRequest assignmentRequest, BindingResult result){
         if (result.hasErrors()) {
@@ -74,6 +74,8 @@ public class AssignmentController {
 
     }
 
+
+//    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PutMapping ("/assignments/{id}")
     public ResponseEntity<?> updateAssignment(@PathVariable int id, @Valid @RequestBody AssignmentRequest assignmentRequest,BindingResult result){
         if (result.hasErrors()) {
@@ -93,11 +95,28 @@ public class AssignmentController {
 
     }
 
+    //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @DeleteMapping("/assignments/{id}")
     public ResponseEntity<?> deleteAssignment(@PathVariable int id) {
         try {
             return ResponseEntity.ok(assignmentService.deleteAssignment(id));
         } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filterassignment")
+    public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
+                                           @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
+                                           @RequestParam(value = "classid", required = false) Optional<Integer> classid,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+
+        try{
+            return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,from,to,classid.orElse(0),page,size));
+        }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

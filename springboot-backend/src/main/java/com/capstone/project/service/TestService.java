@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface TestService {
     List<Test> getAllTest();
@@ -17,4 +18,6 @@ public interface TestService {
     Test updateTest( int id, Test test) throws ResourceNotFroundException;
 
     Boolean deleteTest( int id) throws ResourceNotFroundException;
+
+    Map<String, Object> getFilterTest(String search, String author, int duration, int page, int size) throws ResourceNotFroundException;
 }

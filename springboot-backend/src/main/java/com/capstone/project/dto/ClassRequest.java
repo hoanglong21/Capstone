@@ -27,10 +27,8 @@ public class ClassRequest {
     private String class_name;
 
 
-    @NotBlank(message = "Description cannot be empty")
 //    @Pattern(regexp = "[^\\s].*[^\\s]", message = "Description must not start or end with whitespace")
     @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Description can only contain letters, numbers, and spaces")
-    @Length(min = 5, message = "Description at least 5 characters")
     private String description;
 
     // Custom getter for class_name

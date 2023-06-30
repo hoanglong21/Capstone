@@ -5,6 +5,7 @@ import com.capstone.project.model.Class;
 import com.capstone.project.model.Post;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PostService {
 
@@ -19,4 +20,6 @@ public interface PostService {
     Post updatePost( Post posts,  int id) throws ResourceNotFroundException;
 
     Boolean deletePost( int id) throws ResourceNotFroundException;
+
+    Map<String, Object> getFilterPost(String search, String author, int classid, int page, int size) throws ResourceNotFroundException;
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -93,6 +94,20 @@ public class QuestionController {
         try {
             return ResponseEntity.ok(questionService.deleteQuestion(id));
         } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filterquestion")
+    public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "typeid", required = false) Optional<Integer> typeid,
+                                           @RequestParam(value = "testid", required = false) Optional<Integer> testid,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "1") int size) {
+
+        try{
+            return ResponseEntity.ok(questionService.getFilterQuestion(search,typeid.orElse(0),testid.orElse(0),page,size));
+        }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

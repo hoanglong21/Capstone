@@ -2,7 +2,6 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.CommentType;
-import com.capstone.project.model.StudySetType;
 import com.capstone.project.repository.CommentTypeRepository;
 import com.capstone.project.service.CommentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,15 @@ public class CommentTypeServiceImpl implements CommentTypeService {
                     .orElseThrow(() -> new ResourceNotFroundException("CommentType not exist with id: " + id));
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
+        }
+        return commentType;
+    }
+
+    @Override
+    public CommentType getCommentTypeByName(String name) throws ResourceNotFroundException {
+        CommentType commentType = commentTypeRepository.findCommentTypeByName(name);
+        if (commentType == null){
+            throw new ResourceNotFroundException("CommentType not exist with name: " + name);
         }
         return commentType;
     }
