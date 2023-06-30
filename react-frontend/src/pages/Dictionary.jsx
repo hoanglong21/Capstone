@@ -13,15 +13,15 @@ function Dictionary() {
 
         <div className="justify-center mt-4">
           <div className="text-center form-inline">
-            <form class="form-inline w-50" style={{ display: "inline-flex" }}>
+            <form className="form-inline w-50" style={{ display: "inline-flex" }}>
               <input
-                class="form-control mr-sm-2"
+                className="form-control mr-sm-2"
                 type="search"
                 placeholder="日本, Japanese, Nhật Bản"
                 aria-label="Search"
               />
               <button
-                class="btn btn-primary my-2 my-sm-0"
+                className="btn btn-primary my-2 my-sm-0"
                 type="submit"
                 style={{ marginLeft: "1rem" }}
               >

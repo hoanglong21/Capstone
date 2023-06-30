@@ -20,26 +20,14 @@ class Flashcards extends React.Component {
       <div className="flashcard">
         <header className="flashcard__header">
           <div className="flashcard__container">
-            <div class="dropdown flashcard__1">
-              <button
-                class="btn btn-primary dropdown-toggle"
-                type="button"
-                id="dropdownMenu2"
-                data-toggle="dropdown"
-              >
-                Dropdown
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                <button class="dropdown-item" type="button">
-                  Action
-                </button>
-                <button class="dropdown-item" type="button">
-                  Another action
-                </button>
-                <button class="dropdown-item" type="button">
-                  Something else here
-                </button>
-              </div>
+            <div className="flashcard__1">
+              <select name="option" id="option">
+                <option value="Flashcard" selected>
+                  Flashcard
+                </option>
+                <option value="Back to Home">Back to Home</option>
+                <option value="Quiz">Quiz</option>
+              </select>
             </div>
             <div className="flashcard__2">
               <h3 className="flashcard__progress">1 / 408</h3>
@@ -50,12 +38,13 @@ class Flashcards extends React.Component {
               </h3>
             </div>
             <div className="flashcard__3">
-              <div className="flashcard__option">
-                <button>Option</button>
-              </div>
-              <div className="flashcard__close">
-                <Link>&times;</Link>
-              </div>
+              <button
+                type="button"
+                className="flashcard__close"
+                aria-label="Back to Study Set"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
           </div>
         </header>
