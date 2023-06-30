@@ -91,29 +91,37 @@ const CreateVocab = () => {
         form.classList.remove('was-validated')
         titleEl.classList.remove('is-invalid')
         setError('')
-        console.log(studySet)
 
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated')
-            titleEl.classList.add('is-invalid')
-        }
-        if (cards.length === 0) {
-            setError('You must have at least one cards to save your set.')
-        } else {
-            const emptyCards = (
-                await StudySetService.checkStudySet(studySet.id)
-            ).data
-            if (emptyCards.length === 0) {
-                setStudySet({ ...studySet, _draft: false })
-                await StudySetService.updateStudySet(studySet.id, studySet)
-                navigate('/set/' + id)
+        try {
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated')
+                titleEl.classList.add('is-invalid')
+            }
+            if (cards.length === 0) {
+                setError('You must have at least one cards to save your set.')
             } else {
-                setError(
-                    `<p class="mb-0">Your card can not be empty. Please review your set.</p>
+                const emptyCards = (
+                    await StudySetService.checkStudySet(studySet.id)
+                ).data
+                if (emptyCards.length === 0) {
+                    setStudySet({ ...studySet, _draft: false })
+                    console.log(studySet)
+                    await StudySetService.updateStudySet(studySet.id, studySet)
+                    // navigate('/set/' + id)
+                } else {
+                    setError(
+                        `<p class="mb-0">Your card can not be empty. Please review your set.</p>
                     <a href="#${emptyCards[0]}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                     Go to empty card.
                     </a>`
-                )
+                    )
+                }
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
             }
         }
     }
