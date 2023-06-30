@@ -70,11 +70,11 @@ const App = () => {
                             <Route path="classes" element={<ClassList />} />
                         </Route>
                         <Route
-                            path="create-vocab/:id"
+                            path="create-vocab"
                             element={<CreateVocab />}
                         />
                         <Route
-                            path="vocab/:id/edit"
+                            path="edit-vocab/:id"
                             element={<CreateVocab />}
                         />
                         <Route

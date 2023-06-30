@@ -97,26 +97,23 @@ const Profile = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
         var form = document.querySelector('.needs-validation')
-        const firstNameEl = document.getElementById('first_name')
-        const lastNameEl = document.getElementById('last_name')
+        // const firstNameEl = document.getElementById('first_name')
+        // const lastNameEl = document.getElementById('last_name')
         // clear validation
         form.classList.remove('was-validated')
-        firstNameEl.classList.remove('is_invalid')
-        lastNameEl.classList.remove('is_invalid')
+        // firstNameEl.classList.remove('is_invalid')
+        // lastNameEl.classList.remove('is_invalid')
         setErrorMess('')
         setSuccessMess(false)
 
         form.classList.add('was-validated')
-
-        if (!form.checkValidity()) {
-            if (!newUser.first_name) {
-                setErrorMess("First name can't be blank.")
-                firstNameEl.classList.add('is_invalid')
-            } else if (!newUser.last_name) {
-                setErrorMess("Last name can't be blank.")
-                lastNameEl.classList.add('is_invalid')
-            }
-            console.log(newUser)
+        console.log(form.checkValidity())
+        if (!newUser.first_name) {
+            setErrorMess("First name can't be blank.")
+            // firstNameEl.classList.add('is_invalid')
+        } else if (!newUser.last_name) {
+            setErrorMess("Last name can't be blank.")
+            // lastNameEl.classList.add('is_invalid')
         } else {
             dispatch(updateUser(newUser))
         }
@@ -179,10 +176,9 @@ const Profile = () => {
                         id="username"
                         name="username"
                         type="text"
-                        value={newUser.username}
+                        value={newUser.username || ''}
                         className="form-control-plaintext p-0"
                         readOnly
-                        required
                     />
                 </div>
                 {/* Email */}
@@ -192,10 +188,9 @@ const Profile = () => {
                         id="email"
                         name="email"
                         type="email"
-                        value={newUser.email}
+                        value={newUser.email || ''}
                         className="form-control-plaintext p-0"
                         readOnly
-                        required
                     />
                 </div>
                 {/* First name */}
@@ -205,10 +200,10 @@ const Profile = () => {
                         id="first_name"
                         name="first_name"
                         type="text"
-                        value={newUser.first_name}
+                        value={newUser.first_name || ''}
                         className={`form-control ${FormStyles.formControl}`}
-                        required
                         onChange={handleChange}
+                        required
                     />
                 </div>
                 {/* Last name */}
@@ -218,10 +213,10 @@ const Profile = () => {
                         id="last_name"
                         name="last_name"
                         type="text"
-                        value={newUser.last_name}
+                        value={newUser.last_name || ''}
                         className={`form-control ${FormStyles.formControl}`}
-                        required
                         onChange={handleChange}
+                        required
                     />
                 </div>
                 {/* DOB  */}
@@ -233,7 +228,9 @@ const Profile = () => {
                         id="dob"
                         name="dob"
                         type="date"
-                        value={newUser.dob ? formatDate(newUser.dob) : null}
+                        value={
+                            newUser.dob ? formatDate(newUser.dob) : undefined
+                        }
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={handleChange}
                     />
@@ -245,7 +242,7 @@ const Profile = () => {
                         id="phone"
                         name="phone"
                         type="phone"
-                        value={newUser.phone}
+                        value={newUser.phone || ''}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={handleChange}
                     />
@@ -314,7 +311,6 @@ const Profile = () => {
                         }
                         className="form-control-plaintext p-0"
                         readOnly
-                        required
                     />
                 </div>
                 {/* Address */}
@@ -324,7 +320,7 @@ const Profile = () => {
                         id="address"
                         name="address"
                         type="text"
-                        value={newUser.address}
+                        value={newUser.address || ''}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={handleChange}
                     />
@@ -335,7 +331,7 @@ const Profile = () => {
                     <textarea
                         id="bio"
                         name="bio"
-                        value={newUser.bio}
+                        value={newUser.bio || ''}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={handleChange}
                     />
@@ -384,24 +380,32 @@ const Profile = () => {
                                     </div>
                                 ) : (
                                     <div>
-                                        {defaultAvatars.map((avatarURL) => (
-                                            <div className="avatarItem col-1 d-inline">
-                                                <button
-                                                    key={avatarURL}
-                                                    className="btn "
-                                                    onClick={handleSelectAvatar(
-                                                        avatarURL
-                                                    )}
+                                        {defaultAvatars.map(
+                                            (avatarURL, index) => (
+                                                <div
+                                                    key={`defaultAvatars${index}`}
+                                                    className="avatarItem col-1 d-inline"
                                                 >
-                                                    <img
-                                                        src={avatarURL}
-                                                        alt=""
-                                                    />
-                                                </button>
-                                            </div>
-                                        ))}
-                                        {userAvatars.map((avatarURL) => (
-                                            <div className="col-1 avatarItem d-inline">
+                                                    <button
+                                                        key={avatarURL}
+                                                        className="btn "
+                                                        onClick={handleSelectAvatar(
+                                                            avatarURL
+                                                        )}
+                                                    >
+                                                        <img
+                                                            src={avatarURL}
+                                                            alt=""
+                                                        />
+                                                    </button>
+                                                </div>
+                                            )
+                                        )}
+                                        {userAvatars.map((avatarURL, index) => (
+                                            <div
+                                                key={`userAvatars${index}`}
+                                                className="col-1 avatarItem d-inline"
+                                            >
                                                 <button
                                                     key={avatarURL}
                                                     className="btn"

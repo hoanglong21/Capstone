@@ -102,7 +102,7 @@ const StudySetList = () => {
                                 <Link to={`/set/${set.id}`}>
                                     <div className="set-body row mb-2">
                                         <div className="term-count col-1">
-                                            100 terms
+                                            {set.count} terms
                                         </div>
                                         <div
                                             className="set-author col d-flex "
@@ -122,6 +122,7 @@ const StudySetList = () => {
                                     </div>
                                     <div className="row">
                                         <div className="set-title col-1">
+                                            {set._draft && '(Draft) '}
                                             {set.title}
                                         </div>
                                         <div className="col d-flex align-items-center">
