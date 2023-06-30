@@ -38,8 +38,7 @@ const CreateVocab = () => {
                         '',
                         '=1',
                         '',
-                        // `=${userInfo.username}`,
-                        `=thao`,
+                        `=${userInfo.username}`,
                         '',
                         '',
                         '',
@@ -73,7 +72,7 @@ const CreateVocab = () => {
         }
         setError('')
         fetchData()
-    }, [id])
+    }, [userInfo])
 
     // handle sticky header
     useEffect(() => {

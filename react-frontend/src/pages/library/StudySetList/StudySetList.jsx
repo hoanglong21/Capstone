@@ -14,7 +14,6 @@ const StudySetList = () => {
     const navigate = useNavigate()
 
     const { userInfo } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
 
     const [sets, setSets] = useState([])
     const [search, setSearch] = useState('')
@@ -22,14 +21,13 @@ const StudySetList = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const username = jwtDecode(userToken).sub
             const temp = (
                 await StudySetService.getFilterList(
                     '',
                     '',
                     '',
                     '',
-                    `=${username}`,
+                    `=${userInfo.username}`,
                     '',
                     '',
                     '',
@@ -42,7 +40,7 @@ const StudySetList = () => {
             setSets(temp)
         }
         fetchData()
-    }, [])
+    }, [userInfo])
 
     const handleSearch = async (event) => {
         const temp = event.target.value
