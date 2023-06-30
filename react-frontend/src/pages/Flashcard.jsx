@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import "../assets/styles/Flashcard.css";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-class Flashcards extends React.Component{
+class Flashcards extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -21,27 +21,36 @@ class Flashcards extends React.Component{
         <header className="flashcard__header">
           <div className="flashcard__container">
             <div className="flashcard__1">
-              <h5>Flashcard</h5>
+              <select name="option" id="option">
+                <option value="Flashcard" selected>
+                  Flashcard
+                </option>
+                <option value="Back to Home">Back to Home</option>
+                <option value="Quiz">Quiz</option>
+              </select>
             </div>
             <div className="flashcard__2">
-			<h3 className="flashcard__progress">1 / 408</h3>
-			<h3 className="flashcard__code" >
-				<a className="flashcard__link" href="/">
-					JPD113
-				</a>
-			</h3>
-			</div>
+              <h3 className="flashcard__progress">1 / 408</h3>
+              <h3 className="flashcard__code">
+                <a className="flashcard__link" href="/">
+                  JPD113
+                </a>
+              </h3>
+            </div>
             <div className="flashcard__3">
-				<div className="flashcard__option">
-					<button>Option</button>
-				</div>
-				<div className="flashcard__close">
-				    <Link>&times;</Link>
-				</div>
-			</div>
+              <button
+                type="button"
+                className="flashcard__close"
+                aria-label="Back to Study Set"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           </div>
         </header>
-		<Flashcard cards={this.state.cards} />
+        <main className="flashcard__main">
+          <Flashcard cards={this.state.cards} />
+        </main>
       </div>
     );
   }

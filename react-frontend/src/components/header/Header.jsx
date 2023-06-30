@@ -10,7 +10,7 @@ import StudySetService from '../../services/StudySetService'
 import { logout } from '../../features/auth/authSlice'
 import { getUser } from '../../features/user/userAction'
 
-import CreateClassroom from '../../pages/CreateClassroom'
+import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/JoinClass'
 import logo from '../../assets/images/logo-2.png'
 import {
@@ -51,27 +51,11 @@ const Header = () => {
         navigate('/')
     }
 
-    const handleAddStudySet = async () => {
+    const handleAddSetVocab = async () => {
         if (userToken) {
-            const studySet = (
-                await StudySetService.createStudySet({
-                    user: {
-                        id: userInfo.id,
-                    },
-                    title: '',
-                    description: '',
-                    _deleted: false,
-                    _public: true,
-                    _draft: true,
-                    studySetType: {
-                        id: 1,
-                    },
-                    deleted_date: '',
-                })
-            ).data
-            navigate('create-set/' + studySet.id)
+            navigate('create-vocab')
         } else {
-            navigate('create-set/0')
+            navigate('vocab/0/edit')
         }
     }
 
@@ -98,14 +82,14 @@ const Header = () => {
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
-                        > 
+                        >
                             <HomeIcon className="mx-2" />
                             <span className="align-middle">Home</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink
-                            to="search"
+                            to="dictionary"
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -154,35 +138,52 @@ const Header = () => {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <button
+                                <a
                                     className="dropdown-item py-2 px-2"
                                     type="button"
-                                    onClick={handleAddStudySet}
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="true"
                                 >
                                     <span className="align-middle fw-semibold">
                                         Study Set
                                     </span>
-                                </button>
+                                </a>
+                                <ul
+                                    className="dropdown-menu dropdown-submenu dropdown-submenu-left"
+                                    aria-labelledby="dropdownMenuButton"
+                                >
+                                    <li>
+                                        <button
+                                            className="dropdown-item"
+                                            onClick={handleAddSetVocab}
+                                        >
+                                            Vocabulary
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a className="dropdown-item" href="#">
+                                            Kanji
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a className="dropdown-item" href="#">
+                                            Grammar
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             {userInfo?.role !== 'ROLE_LEARNER' && (
                                 <li>
-                                    <Popup
-                                        modal
-                                        trigger={
-                                            <button
-                                                className="dropdown-item py-2 px-2"
-                                                type="button"
-                                            >
-                                                <span className="align-middle fw-semibold">
-                                                    Class
-                                                </span>
-                                            </button>
-                                        }
+                                    <button
+                                        className="dropdown-item py-2 px-2"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#createModal"
                                     >
-                                        {(close) => (
-                                            <CreateClassroom close={close} />
-                                        )}
-                                    </Popup>
+                                        <span className="align-middle fw-semibold">
+                                            Class
+                                        </span>
+                                    </button>
                                 </li>
                             )}
                             <li>
@@ -294,7 +295,8 @@ const Header = () => {
                                     <li>
                                         <button
                                             className="dropdown-item py-2 px-3"
-                                            type="button" onClick={() => {
+                                            type="button"
+                                            onClick={() => {
                                                 navigate('helpcenter')
                                             }}
                                         >
@@ -365,6 +367,8 @@ const Header = () => {
                     <Toast.Body>You have been logged out</Toast.Body>
                 </Toast>
             </ToastContainer>
+            {/* Create class modal */}
+            <CreateClass />
         </header>
     )
 }

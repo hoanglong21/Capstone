@@ -15,9 +15,10 @@ const Login = () => {
     const dispatch = useDispatch()
 
     const { register, handleSubmit } = useForm()
-    const { loading, userToken, error } = useSelector((state) => state.auth)
+    const { userToken, error } = useSelector((state) => state.auth)
 
     const [emptyMess, setEmptyMess] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (userToken) {
@@ -38,6 +39,7 @@ const Login = () => {
         form.classList.remove('was-validated')
         usernameEl.classList.remove('is-invalid')
         passwordEl.classList.remove('is-invalid')
+        dispatch(reset())
         setEmptyMess('')
 
         if (!form.checkValidity()) {
@@ -51,10 +53,11 @@ const Login = () => {
                     passwordEl.classList.add('is-invalid')
                 }
             }
-
             return
         }
+        setLoading(true)
         dispatch(login(data))
+        setLoading(false)
     }
 
     return (

@@ -12,17 +12,14 @@ import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
-import CreateClassroom from './pages/CreateClassroom'
-import CreateStudySet from './pages/studySet/CreateStudySet'
+import CreateVocab from './pages/vocab/CreateVocab'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
 import LibraryLayout from './pages/library/LibraryLayout'
 import StudySetList from './pages/library/StudySetList/StudySetList'
-import NoClass from './pages/NoClass'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
-import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import UpdateClassroom from './pages/UpdateClassroom'
@@ -38,17 +35,19 @@ import SendFeedback from './pages/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
+import Translate from './pages/Translate'
+import Dictionary from './pages/Dictionary'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={userToken ? <Home /> : <Landing />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="account" element={<AccountLayout />}>
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Layout />}>
+                    <Route index element={userToken ? <Home /> : <Landing />} />
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="account" element={<AccountLayout />}>
                             <Route index element={<Profile />} />
                             <Route
                                 path="notification"
@@ -67,40 +66,56 @@ const App = () => {
                                 element={<DeleteAccount />}
                             />
                         </Route>
-            <Route element={<LibraryLayout />}>
+                        <Route element={<LibraryLayout />}>
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
                         </Route>
-            <Route path="create-set/:id" element={<CreateStudySet />} />
-            <Route path="set/:id" element={<StudySet />} />
-            <Route path="video-chat" element={<VideoChatContainer />} />
-            <Route path="video-chat/:call" element={<VideoChatContainer />} />
-            <Route path="chat" element={<ChatContainer />} />
-            <Route path="gpt" element={<GPTContainer />} />
-            <Route path="voice" element={<SpeechToText />} />
-            <Route path="draw" element={<Draw />} />
-            <Route path="to-speech" element={<TextToSpeech />} />
-          </Route>
-          <Route path="term" element={<Term />} />
-          <Route path="privacy" element={<Privacy />} />
-          <Route path="/joinclass" element={<JoinClass />} />
-          <Route path="/mainclass/:id" element={<MainClass />} />
-          <Route path="/helpcenter" element={<HelpCenter />} />
-          <Route path="/helpcenter/sendfeedback"  element={<SendFeedback />} />
-            <Route
+                        <Route
+                            path="create-vocab"
+                            element={<CreateVocab />}
+                        />
+                        <Route
+                            path="edit-vocab/:id"
+                            element={<CreateVocab />}
+                        />
+                        <Route
+                            path="video-chat"
+                            element={<VideoChatContainer />}
+                        />
+                        <Route
+                            path="video-chat/:call"
+                            element={<VideoChatContainer />}
+                        />
+                        <Route path="chat" element={<ChatContainer />} />
+                        <Route path="gpt" element={<GPTContainer />} />
+                        <Route path="voice" element={<SpeechToText />} />
+                        <Route path="draw" element={<Draw />} />
+                        <Route path="to-speech" element={<TextToSpeech />} />
+                    </Route>
+                    <Route path="term" element={<Term />} />
+                    <Route path="privacy" element={<Privacy />} />
+                    <Route path="/joinclass" element={<JoinClass />} />
+                    <Route path="/mainclass/:id" element={<MainClass />} />
+                    <Route
                         path="account-deleted"
                         element={<AccountDeleted />}
                     />
-          <Route path="*" element={<NotFound />} />
-        </Route>
+                    <Route path="/helpcenter" element={<HelpCenter />} />
+                    <Route
+                        path="/helpcenter/sendfeedback"
+                        element={<SendFeedback />}
+                    />
+                    <Route path="/translate" element={<Translate />} />
+                    <Route path="*" element={<NotFound />} />
+                    <Route path="/dictionary" element={<Dictionary />} />
+                </Route>
+
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot" element={<ForgotPassword />} />
                 <Route path="/reset" element={<ResetPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/createclass" element={<CreateClassroom />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
-                <Route path="/noclass" element={<NoClass />} />
             </Routes>
         </BrowserRouter>
     )

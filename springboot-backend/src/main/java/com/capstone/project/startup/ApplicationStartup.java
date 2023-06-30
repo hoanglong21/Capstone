@@ -46,7 +46,7 @@ public class ApplicationStartup implements ApplicationRunner {
 //    @PostConstruct
     public void run(ApplicationArguments args) throws Exception {
         if (studysetTypeRepository.count() == 0) {
-            List<String> defaultNames = Arrays.asList("normal", "kanji", "grammar");
+            List<String> defaultNames = Arrays.asList("vocabulary", "kanji", "grammar");
             List<StudySetType> studysetTypes = new ArrayList<>();
             for (String name : defaultNames) {
                 StudySetType studysetType = new StudySetType();
@@ -106,6 +106,7 @@ public class ApplicationStartup implements ApplicationRunner {
             List<Field> fields = Arrays.asList(
                     new Field(1, "term"),
                     new Field(1, "definition"),
+                    new Field(1, "example"),
                     new Field(2, "character"),
                     new Field(2, "name"),
                     new Field(2, "gradeLevel"),
@@ -116,6 +117,7 @@ public class ApplicationStartup implements ApplicationRunner {
                     new Field(2, "kunyomi"),
                     new Field(2, "meanings"),
                     new Field(2, "strokeOrder"),
+                    new Field(2, "example"),
                     new Field(3, "title"),
                     new Field(3, "jlptLevel"),
                     new Field(3, "meaning"),

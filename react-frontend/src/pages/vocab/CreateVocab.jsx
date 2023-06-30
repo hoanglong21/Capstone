@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 
 import { Card } from './Card'
+import { useSelector } from 'react-redux'
+
 import CardService from '../../services/CardService'
 import StudySetService from '../../services/StudySetService'
 
@@ -11,10 +13,11 @@ import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
 
-const CreateStudySet = () => {
+const CreateVocab = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
+    const { userInfo } = useSelector((state) => state.user)
 
     const [isScroll, setIsScroll] = useState(false)
     const [studySet, setStudySet] = useState({})
@@ -25,15 +28,56 @@ const CreateStudySet = () => {
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            setStudySet((await StudySetService.getStudySetById(id)).data)
-            setCards((await CardService.getAllByStudySetId(id)).data)
+            let temp = {}
+            if (id) {
+                temp = (await StudySetService.getStudySetById(id)).data
+            } else {
+                const listSets = (
+                    await StudySetService.getFilterList(
+                        '',
+                        '',
+                        '=1',
+                        '',
+                        `=${userInfo?.username}`,
+                        '',
+                        '',
+                        '',
+                        ''
+                    )
+                ).data
+                if (listSets.totalItems > 0) {
+                    temp = listSets.list[0]
+                } else {
+                    temp = (
+                        await StudySetService.createStudySet({
+                            user: {
+                                id: userInfo.id,
+                            },
+                            title: '',
+                            description: '',
+                            _deleted: false,
+                            _public: true,
+                            _draft: true,
+                            studySetType: {
+                                id: 1,
+                            },
+                            deleted_date: '',
+                        })
+                    ).data
+                }
+            }
+            setStudySet(temp)
+            setCards((await CardService.getAllByStudySetId(temp.id)).data)
         }
         setError('')
-        fetchData()
-    }, [id])
+        if (userInfo.username) {
+            fetchData()
+        }
+    }, [userInfo.username])
 
     // handle sticky header
     useEffect(() => {
+        setError('')
         const handleScroll = () => {
             setIsScroll(window.scrollY > 96)
         }
@@ -58,7 +102,7 @@ const CreateStudySet = () => {
 
     // toggle discard toast
     useEffect(() => {
-        setShowDiscardMess(sessionStorage.getItem('isReload'))
+        setShowDiscardMess(sessionStorage.getItem('isReload') === 'true')
     }, [])
 
     const toggleShowDiscardMess = () => {
@@ -79,7 +123,11 @@ const CreateStudySet = () => {
             ).data
             setCards([...cards, card])
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -91,29 +139,37 @@ const CreateStudySet = () => {
         form.classList.remove('was-validated')
         titleEl.classList.remove('is-invalid')
         setError('')
-        console.log(studySet)
 
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated')
-            titleEl.classList.add('is-invalid')
-        }
-        if (cards.length === 0) {
-            setError('You must have at least one cards to save your set.')
-        } else {
-            const emptyCards = (
-                await StudySetService.checkStudySet(studySet.id)
-            ).data
-            if (emptyCards.length === 0) {
-                setStudySet({ ...studySet, _draft: false })
-                await StudySetService.updateStudySet(studySet.id, studySet)
-                navigate('/set/' + id)
+        try {
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated')
+                titleEl.classList.add('is-invalid')
+            }
+            if (cards.length === 0) {
+                setError('You must have at least one cards to save your set.')
             } else {
-                setError(
-                    `<p class="mb-0">Your card can not be empty. Please review your set.</p>
+                const emptyCards = (
+                    await StudySetService.checkStudySet(studySet.id)
+                ).data
+                if (emptyCards.length === 0) {
+                    setStudySet({ ...studySet, _draft: false })
+                    console.log(studySet)
+                    await StudySetService.updateStudySet(studySet.id, studySet)
+                    // navigate('/set/' + id)
+                } else {
+                    setError(
+                        `<p class="mb-0">Your card can not be empty. Please review your set.</p>
                     <a href="#${emptyCards[0]}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                     Go to empty card.
                     </a>`
-                )
+                    )
+                }
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
             }
         }
     }
@@ -129,7 +185,11 @@ const CreateStudySet = () => {
             }
             setCards([...array])
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -139,9 +199,14 @@ const CreateStudySet = () => {
 
     const doUpdate = async () => {
         try {
+            console.log(studySet)
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -166,7 +231,11 @@ const CreateStudySet = () => {
             navigate('/create-set/' + newStudySet.id)
             toggleShowDiscardMess()
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -179,16 +248,38 @@ const CreateStudySet = () => {
                         isScroll ? 'scroll-shadows' : ''
                     }`}
                 >
-                    <div className="container d-flex justify-content-between">
-                        <h3 className="fw-bold">Create a new study set</h3>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            onClick={handleSubmit}
-                        >
-                            Create
-                        </button>
-                    </div>
+                    {studySet._draft ? (
+                        <div className="container d-flex justify-content-between">
+                            <h3 className="fw-bold">Create a new study set</h3>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Create
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="container d-flex justify-content-between">
+                            <Link
+                                to={`/sets/${studySet.id}`}
+                                className={CardStyles.card_button}
+                                style={{
+                                    backgroundColor: 'inherit',
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                BACK TO SET
+                            </Link>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Done
+                            </button>
+                        </div>
+                    )}
                 </div>
                 <div className="container mt-4">
                     {/* error message */}
@@ -201,6 +292,7 @@ const CreateStudySet = () => {
                     )}
                     {/* Study set */}
                     <div className="row">
+                        {/* title */}
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Title</label>
                             <input
@@ -208,7 +300,7 @@ const CreateStudySet = () => {
                                 id="title"
                                 name="title"
                                 className={`form-control ${styles.formControl}`}
-                                value={studySet.title}
+                                value={studySet.title || ''}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                                 required
@@ -217,30 +309,30 @@ const CreateStudySet = () => {
                                 Please enter a title to create your set.
                             </div>
                         </div>
+                        {/* is_public */}
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Access</label>
                             <select
                                 className={`form-select ${styles.formSelect}`}
                                 aria-label="public"
                                 name="_public"
-                                value={studySet.public}
+                                value={studySet._public}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                             >
-                                <option value={1} selected>
-                                    Public
-                                </option>
-                                <option value={0}>Private</option>
+                                <option value={true}>Public</option>
+                                <option value={false}>Private</option>
                             </select>
                         </div>
                     </div>
+                    {/* description */}
                     <div className="form-group mb-5">
                         <label className={styles.formLabel}>Description</label>
                         <textarea
                             className={`form-control ${styles.formControl}`}
                             placeholder="Add a description..."
                             name="description"
-                            value={studySet.description}
+                            value={studySet.description || ''}
                             onChange={handleChange}
                             onBlur={doUpdate}
                             rows="3"
@@ -311,4 +403,4 @@ const CreateStudySet = () => {
         </div>
     )
 }
-export default CreateStudySet
+export default CreateVocab
