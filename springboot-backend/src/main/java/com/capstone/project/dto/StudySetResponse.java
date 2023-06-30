@@ -27,5 +27,7 @@ public class StudySetResponse {
     private Date deleted_date;
     private int count;
 
+    private String author;
+
 }
 

@@ -24,7 +24,8 @@ import java.util.Set;
                         @ColumnResult(name = "type_id", type = Integer.class),
                         @ColumnResult(name = "author_id", type = Integer.class),
                         @ColumnResult(name = "deleted_date", type = Date.class),
-                        @ColumnResult(name = "count", type = Integer.class)
+                        @ColumnResult(name = "count", type = Integer.class),
+                        @ColumnResult(name = "author", type = String.class)
                 }
         )
 )
