@@ -88,3 +88,7 @@
     text-overflow: ellipsis;
     word-break: normal;
 }
+
+.set-description {
+    font-weight: 400;
+}

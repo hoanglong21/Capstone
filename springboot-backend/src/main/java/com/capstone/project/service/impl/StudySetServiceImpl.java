@@ -69,6 +69,7 @@ public class StudySetServiceImpl implements StudySetService {
         studySet.setDescription(studySetDetails.getDescription());
         studySet.set_deleted(studySetDetails.is_deleted());
         studySet.set_public(studySetDetails.is_public());
+        studySet.set_draft(studySetDetails.is_draft());
         studySet.setDeleted_date(studySetDetails.getDeleted_date());
 
         StudySet updateStudySet = studySetRepository.save(studySet);

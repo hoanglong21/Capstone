@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 
@@ -11,7 +11,7 @@ import styles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
 
-const CreateStudySet = () => {
+const CreateVocab = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
@@ -91,29 +91,37 @@ const CreateStudySet = () => {
         form.classList.remove('was-validated')
         titleEl.classList.remove('is-invalid')
         setError('')
-        console.log(studySet)
 
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated')
-            titleEl.classList.add('is-invalid')
-        }
-        if (cards.length === 0) {
-            setError('You must have at least one cards to save your set.')
-        } else {
-            const emptyCards = (
-                await StudySetService.checkStudySet(studySet.id)
-            ).data
-            if (emptyCards.length === 0) {
-                setStudySet({ ...studySet, _draft: false })
-                await StudySetService.updateStudySet(studySet.id, studySet)
-                navigate('/set/' + id)
+        try {
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated')
+                titleEl.classList.add('is-invalid')
+            }
+            if (cards.length === 0) {
+                setError('You must have at least one cards to save your set.')
             } else {
-                setError(
-                    `<p class="mb-0">Your card can not be empty. Please review your set.</p>
+                const emptyCards = (
+                    await StudySetService.checkStudySet(studySet.id)
+                ).data
+                if (emptyCards.length === 0) {
+                    setStudySet({ ...studySet, _draft: false })
+                    console.log(studySet)
+                    await StudySetService.updateStudySet(studySet.id, studySet)
+                    // navigate('/set/' + id)
+                } else {
+                    setError(
+                        `<p class="mb-0">Your card can not be empty. Please review your set.</p>
                     <a href="#${emptyCards[0]}" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
                     Go to empty card.
                     </a>`
-                )
+                    )
+                }
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
             }
         }
     }
@@ -179,16 +187,38 @@ const CreateStudySet = () => {
                         isScroll ? 'scroll-shadows' : ''
                     }`}
                 >
-                    <div className="container d-flex justify-content-between">
-                        <h3 className="fw-bold">Create a new study set</h3>
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            onClick={handleSubmit}
-                        >
-                            Create
-                        </button>
-                    </div>
+                    {studySet._draft ? (
+                        <div className="container d-flex justify-content-between">
+                            <h3 className="fw-bold">Create a new study set</h3>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Create
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="container d-flex justify-content-between">
+                            <Link
+                                to={`/sets/${studySet.id}`}
+                                className={CardStyles.card_button}
+                                style={{
+                                    backgroundColor: 'inherit',
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                BACK TO SET
+                            </Link>
+                            <button
+                                type="submit"
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Done
+                            </button>
+                        </div>
+                    )}
                 </div>
                 <div className="container mt-4">
                     {/* error message */}
@@ -311,4 +341,4 @@ const CreateStudySet = () => {
         </div>
     )
 }
-export default CreateStudySet
+export default CreateVocab

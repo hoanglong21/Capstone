@@ -4,22 +4,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 
 import { register as userRegister } from '../features/auth/authAction'
+import { reset } from '../features/auth/authSlice'
+import { getAll } from '../features/fileManagement'
 
 import logo from '../assets/images/logo-1.png'
 import styles from '../assets/styles/Form.module.css'
-import { reset } from '../features/auth/authSlice'
-import { getAll } from '../features/fileManagement'
 
 const Register = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const { loading, userToken, error, success } = useSelector(
-        (state) => state.auth
-    )
+    const { userToken, error, success } = useSelector((state) => state.auth)
     const { register, handleSubmit } = useForm()
 
     const [emptyMess, setEmptyMess] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (userToken) navigate('/')
@@ -39,7 +38,7 @@ const Register = () => {
         form.classList.remove('was-validated')
         usernameEl.classList.remove('is-invalid')
         emailInvalidEl.classList.remove('d-none')
-
+        dispatch(reset())
         setEmptyMess('')
 
         if (!form.checkValidity()) {
@@ -58,15 +57,16 @@ const Register = () => {
                 }
             }
         } else {
+            setLoading(true)
             const defaultAvatar = await getAll('system/default_avatar')
             dispatch(userRegister({ ...data, avatar: defaultAvatar[0] }))
-        }
-
-        if (error === 'Username already registered') {
-            usernameEl.classList.add('is-invalid')
-        }
-        if (error === 'Email already registered') {
-            emailEl.classList.add('is-invalid')
+            setLoading(false)
+            if (error === 'Username already registered') {
+                usernameEl.classList.add('is-invalid')
+            }
+            if (error === 'Email already registered') {
+                emailEl.classList.add('is-invalid')
+            }
         }
     }
 
