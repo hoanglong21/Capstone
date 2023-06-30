@@ -51,27 +51,11 @@ const Header = () => {
         navigate('/')
     }
 
-    const handleAddStudySet = async () => {
+    const handleAddSetVocab = async () => {
         if (userToken) {
-            const studySet = (
-                await StudySetService.createStudySet({
-                    user: {
-                        id: userInfo.id,
-                    },
-                    title: '',
-                    description: '',
-                    _deleted: false,
-                    _public: true,
-                    _draft: true,
-                    studySetType: {
-                        id: 1,
-                    },
-                    deleted_date: '',
-                })
-            ).data
-            navigate('create-set/' + studySet.id)
+            navigate('create-vocab')
         } else {
-            navigate('create-set/0')
+            navigate('vocab/0/edit')
         }
     }
 
@@ -154,15 +138,39 @@ const Header = () => {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>
-                                <button
+                                <a
                                     className="dropdown-item py-2 px-2"
                                     type="button"
-                                    onClick={handleAddStudySet}
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="true"
                                 >
                                     <span className="align-middle fw-semibold">
                                         Study Set
                                     </span>
-                                </button>
+                                </a>
+                                <ul
+                                    className="dropdown-menu dropdown-submenu dropdown-submenu-left"
+                                    aria-labelledby="dropdownMenuButton"
+                                >
+                                    <li>
+                                        <button
+                                            className="dropdown-item"
+                                            onClick={handleAddSetVocab}
+                                        >
+                                            Vocabulary
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a className="dropdown-item" href="#">
+                                            Kanji
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a className="dropdown-item" href="#">
+                                            Grammar
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             {userInfo?.role !== 'ROLE_LEARNER' && (
                                 <li>

@@ -12,6 +12,7 @@ export const Card = (props) => {
     const [card, setCard] = useState(props.card)
     const [term, setTerm] = useState({})
     const [definition, setDefinition] = useState({})
+    const [example, setExample] = useState({})
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
 
@@ -46,9 +47,23 @@ export const Card = (props) => {
                         })
                     ).data
                 )
+                setExample(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 3,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
             } else {
                 setTerm(contents[0])
                 setDefinition(contents[1])
+                setExample(contents[2])
             }
         }
         fetchData()
@@ -106,14 +121,6 @@ export const Card = (props) => {
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
-    }
-
-    const handleChangeTerm = (event, editor) => {
-        setTerm({ ...term, content: editor.getData() })
-    }
-
-    const handleChangeDefinition = (event, editor) => {
-        setDefinition({ ...definition, content: editor.getData() })
     }
 
     const doUpdateTerm = async () => {
@@ -178,11 +185,13 @@ export const Card = (props) => {
             </div>
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
-                    <div className="col pe-4">
+                    <div className="col-6 pe-4">
                         <TextEditor
                             name="term"
                             data={term.content}
-                            onChange={handleChangeTerm}
+                            onChange={(event, editor) => {
+                                setTerm({ ...term, content: editor.getData() })
+                            }}
                             onBlur={doUpdateTerm}
                         />
                         <span
@@ -191,17 +200,40 @@ export const Card = (props) => {
                             TERM
                         </span>
                     </div>
-                    <div className="col ps-4">
+                    <div className="col-6 ps-4">
                         <TextEditor
                             name="definition"
                             data={definition.content}
-                            onChange={handleChangeDefinition}
+                            onChange={(event, editor) => {
+                                setDefinition({
+                                    ...definition,
+                                    content: editor.getData(),
+                                })
+                            }}
                             onBlur={doUpdateDefinition}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
                             DEFINITION
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="example"
+                            data={example.content}
+                            onChange={(event, editor) => {
+                                setExample({
+                                    ...example,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={doUpdateDefinition}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            EXAMPLE
                         </span>
                     </div>
                 </div>

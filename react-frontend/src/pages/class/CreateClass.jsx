@@ -61,7 +61,7 @@ export default function CreateClass() {
     }
 
     return (
-        <div className="modal createClassModal" tabindex="-1" id="createModal">
+        <div className="modal createClassModal" tabIndex="-1" id="createModal">
             <div className="modal-dialog">
                 <div className="modal-content p-2">
                     <div className="modal-header border-0">
@@ -87,30 +87,30 @@ export default function CreateClass() {
                                 </div>
                             )}
                             {/* Class name */}
-                            <div class="form-floating mb-3">
+                            <div className="form-floating mb-3">
                                 <input
                                     id="class_name"
                                     name="class_name"
                                     type="text"
-                                    value={newClass.class_name}
+                                    value={newClass.class_name || ''}
                                     className={`form-control ${FormStyles.formControl}`}
                                     placeholder="Enter a class name"
                                     onChange={handleChange}
                                     required
                                 />
-                                <label for="class_name">Class name</label>
+                                <label htmlFor="class_name">Class name</label>
                             </div>
                             {/* Description */}
-                            <div class="form-floating mb-3">
+                            <div className="form-floating mb-3">
                                 <input
                                     name="description"
                                     type="text"
-                                    value={newClass.description}
+                                    value={newClass.description || ''}
                                     className={`form-control ${FormStyles.formControl}`}
                                     placeholder="Enter a description"
                                     onChange={handleChange}
                                 />
-                                <label for="description">Description</label>
+                                <label htmlFor="description">Description</label>
                             </div>
                             <div className="text-end">
                                 <button

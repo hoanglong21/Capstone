@@ -4,6 +4,8 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 
 import { Card } from './Card'
+import { useSelector } from 'react-redux'
+
 import CardService from '../../services/CardService'
 import StudySetService from '../../services/StudySetService'
 
@@ -15,6 +17,7 @@ const CreateVocab = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
+    const { userInfo } = useSelector((state) => state.user)
 
     const [isScroll, setIsScroll] = useState(false)
     const [studySet, setStudySet] = useState({})
@@ -25,15 +28,57 @@ const CreateVocab = () => {
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            setStudySet((await StudySetService.getStudySetById(id)).data)
-            setCards((await CardService.getAllByStudySetId(id)).data)
+            let temp = {}
+            if (id) {
+                temp = (await StudySetService.getStudySetById(id)).data
+            } else {
+                const listSets = (
+                    await StudySetService.getFilterList(
+                        '',
+                        '',
+                        '=1',
+                        '',
+                        `=${userInfo?.username}`,
+                        '',
+                        '',
+                        '',
+                        ''
+                    )
+                ).data
+                if (listSets.totalItems > 0) {
+                    temp = listSets.list[0]
+                    toggleShowDiscardMess()
+                } else {
+                    temp = (
+                        await StudySetService.createStudySet({
+                            user: {
+                                id: userInfo.id,
+                            },
+                            title: '',
+                            description: '',
+                            _deleted: false,
+                            _public: true,
+                            _draft: true,
+                            studySetType: {
+                                id: 1,
+                            },
+                            deleted_date: '',
+                        })
+                    ).data
+                }
+            }
+            setStudySet(temp)
+            setCards((await CardService.getAllByStudySetId(temp.id)).data)
         }
         setError('')
-        fetchData()
-    }, [id])
+        if (userInfo.username) {
+            fetchData()
+        }
+    }, [userInfo])
 
     // handle sticky header
     useEffect(() => {
+        setError('')
         const handleScroll = () => {
             setIsScroll(window.scrollY > 96)
         }
@@ -58,7 +103,7 @@ const CreateVocab = () => {
 
     // toggle discard toast
     useEffect(() => {
-        setShowDiscardMess(sessionStorage.getItem('isReload'))
+        setShowDiscardMess(sessionStorage.getItem('isReload') === 'true')
     }, [])
 
     const toggleShowDiscardMess = () => {
@@ -79,7 +124,11 @@ const CreateVocab = () => {
             ).data
             setCards([...cards, card])
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -137,7 +186,11 @@ const CreateVocab = () => {
             }
             setCards([...array])
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -147,9 +200,14 @@ const CreateVocab = () => {
 
     const doUpdate = async () => {
         try {
+            console.log(studySet)
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -174,7 +232,11 @@ const CreateVocab = () => {
             navigate('/create-set/' + newStudySet.id)
             toggleShowDiscardMess()
         } catch (error) {
-            console.log(error)
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
         }
     }
 
@@ -231,6 +293,7 @@ const CreateVocab = () => {
                     )}
                     {/* Study set */}
                     <div className="row">
+                        {/* title */}
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Title</label>
                             <input
@@ -238,7 +301,7 @@ const CreateVocab = () => {
                                 id="title"
                                 name="title"
                                 className={`form-control ${styles.formControl}`}
-                                value={studySet.title}
+                                value={studySet.title || ''}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                                 required
@@ -247,30 +310,30 @@ const CreateVocab = () => {
                                 Please enter a title to create your set.
                             </div>
                         </div>
+                        {/* is_public */}
                         <div className="form-group mb-3 col-6">
                             <label className={styles.formLabel}>Access</label>
                             <select
                                 className={`form-select ${styles.formSelect}`}
                                 aria-label="public"
                                 name="_public"
-                                value={studySet.public}
+                                value={studySet._public}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                             >
-                                <option value={1} selected>
-                                    Public
-                                </option>
-                                <option value={0}>Private</option>
+                                <option value={true}>Public</option>
+                                <option value={false}>Private</option>
                             </select>
                         </div>
                     </div>
+                    {/* description */}
                     <div className="form-group mb-5">
                         <label className={styles.formLabel}>Description</label>
                         <textarea
                             className={`form-control ${styles.formControl}`}
                             placeholder="Add a description..."
                             name="description"
-                            value={studySet.description}
+                            value={studySet.description || ''}
                             onChange={handleChange}
                             onBlur={doUpdate}
                             rows="3"
