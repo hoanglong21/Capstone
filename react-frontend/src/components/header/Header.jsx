@@ -89,7 +89,7 @@ const Header = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="search"
+                            to="dictionary"
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
