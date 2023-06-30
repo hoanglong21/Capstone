@@ -1,4 +1,4 @@
-*{
+.classListContainer {
     font-size: 1rem;
 }
 .classes-search {
@@ -28,12 +28,12 @@
     outline: 0;
 }
 
-.author-username{
+.author-username {
     display: block;
 }
 
 .inside__close {
-    color: #282E3E;
+    color: #282e3e;
     font-size: 30px;
     text-decoration: none;
     position: relative;

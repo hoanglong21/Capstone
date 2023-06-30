@@ -57,12 +57,12 @@ const StudySetList = () => {
                         {sets.map((set) => (
                             <div key={set.id} className="set-item mb-3">
                                 <Link to={`/set/${set.id}`}>
-                                    <div className="set-body d-flex mb-2">
-                                        <div className="term-count me-4">
+                                    <div className="set-body row mb-2">
+                                        <div className="term-count col-1">
                                             100 terms
                                         </div>
                                         <a
-                                            className="set-author d-flex"
+                                            className="set-author col d-flex "
                                             href="#"
                                         >
                                             <div className="author-avatar">
@@ -77,7 +77,16 @@ const StudySetList = () => {
                                             </span>
                                         </a>
                                     </div>
-                                    <div className="set-title">{set.title}</div>
+                                    <div className="row">
+                                        <div className="set-title col-1">
+                                            {set.title}
+                                        </div>
+                                        <div className="col d-flex align-items-center">
+                                            <p className="set-description m-0">
+                                                {set.description}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </Link>
                             </div>
                         ))}
