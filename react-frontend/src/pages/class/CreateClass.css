@@ -1,0 +1,16 @@
+.createClassModal.modal {
+    margin-top: 3rem;
+    --bs-modal-width: 50vw;
+}
+
+.createClassTitle {
+    font-size: 2rem;
+    letter-spacing: normal;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.createClass-btn.btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}

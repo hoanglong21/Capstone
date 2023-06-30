@@ -12,7 +12,6 @@ import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
-import CreateClassroom from './pages/CreateClassroom'
 import CreateVocab from './pages/vocab/CreateVocab'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
@@ -20,7 +19,6 @@ import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
 import LibraryLayout from './pages/library/LibraryLayout'
 import StudySetList from './pages/library/StudySetList/StudySetList'
-import NoClass from './pages/NoClass'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
@@ -115,9 +113,7 @@ const App = () => {
                 <Route path="/forgot" element={<ForgotPassword />} />
                 <Route path="/reset" element={<ResetPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/createclass" element={<CreateClassroom />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
-                <Route path="/noclass" element={<NoClass />} />
             </Routes>
         </BrowserRouter>
     )
