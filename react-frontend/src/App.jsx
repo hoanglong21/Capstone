@@ -38,6 +38,7 @@ import SendFeedback from './pages/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
+import Translate from './pages/Translate'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -102,8 +103,15 @@ const App = () => {
                         path="account-deleted"
                         element={<AccountDeleted />}
                     />
+                    <Route path="/helpcenter" element={<HelpCenter />} />
+                    <Route
+                        path="/helpcenter/sendfeedback"
+                        element={<SendFeedback />}
+                    />
+                    <Route path="/translate" element={<Translate />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
+
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot" element={<ForgotPassword />} />
