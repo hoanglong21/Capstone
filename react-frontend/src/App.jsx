@@ -13,7 +13,7 @@ import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateClassroom from './pages/CreateClassroom'
-import CreateStudySet from './pages/studySet/CreateStudySet'
+import CreateVocab from './pages/vocab/CreateVocab'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
@@ -22,7 +22,6 @@ import LibraryLayout from './pages/library/LibraryLayout'
 import StudySetList from './pages/library/StudySetList/StudySetList'
 import NoClass from './pages/NoClass'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
-import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import UpdateClassroom from './pages/UpdateClassroom'
@@ -73,14 +72,13 @@ const App = () => {
                             <Route path="classes" element={<ClassList />} />
                         </Route>
                         <Route
-                            path="create-set/:id"
-                            element={<CreateStudySet />}
+                            path="create-vocab/:id"
+                            element={<CreateVocab />}
                         />
                         <Route
-                            path="set/:id/edit"
-                            element={<CreateStudySet />}
+                            path="vocab/:id/edit"
+                            element={<CreateVocab />}
                         />
-                        <Route path="set/:id" element={<StudySet />} />
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
