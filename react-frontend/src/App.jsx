@@ -36,6 +36,7 @@ import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 import Translate from './pages/Translate'
+import Dictionary from './pages/Dictionary'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -106,6 +107,7 @@ const App = () => {
                     />
                     <Route path="/translate" element={<Translate />} />
                     <Route path="*" element={<NotFound />} />
+                    <Route path="/dictionary" element={<Dictionary />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />
