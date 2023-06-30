@@ -30,7 +30,7 @@ body {
     top: 0px;
     left: 0px;
     right: 0px;
-    height: 4rem;
+    height: 5rem;
     z-index: 1;
   }
 
@@ -117,15 +117,6 @@ body {
     vertical-align: middle;
     font-size: 1.5rem;
   }
-  
-  .noselect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
 
   .flashcard {
     border: 1px solid #ccc;
@@ -143,3 +134,26 @@ body {
     margin-top: 10px;
   }
   
+
+  .flashcard__close span{
+    font-size: 2.1rem;
+    border-color:#F0F0F0;
+    cursor: pointer;
+    padding: 0.6875rem;
+    height: 2rem;
+    width: 2rem;
+  }
+ 
+  .flashcard__close{
+    border-radius: 5px;
+    border: #f5f5f5;
+  }
+
+  .flashcard__3{
+     margin-top: 10px;
+  }
+
+
+  .flashcard__close:hover{
+    background-color: #C3C3C2;
+  }
