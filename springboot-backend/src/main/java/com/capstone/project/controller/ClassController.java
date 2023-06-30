@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,11 +34,14 @@ public class ClassController {
         this.classService = classService;
     }
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/class")
     public ResponseEntity<?> getAllClass() {
         return ResponseEntity.ok(classService.getAllClass());
     }
 
+
+//    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/class")
     public ResponseEntity<?> createClassroom(@Valid @RequestBody ClassRequest classRequest, BindingResult result) throws ParseException {
         if (result.hasErrors()) {
@@ -56,7 +61,7 @@ public class ClassController {
     }
 
 
-
+//    @PreAuthorize("hasRole('ROLE_TUTOR') or hasRole('ROLE_LEARNER')" )
     @GetMapping("/class/{id}")
     public ResponseEntity<?> getClassroomById(@PathVariable int id) {
     try {
@@ -66,6 +71,8 @@ public class ClassController {
     }
     }
 
+
+//    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PutMapping("/class/{id}")
     public ResponseEntity<?> updateClassroom(@Valid @RequestBody  ClassRequest classRequest, @PathVariable int id,BindingResult result) {
         if (result.hasErrors()) {
@@ -84,6 +91,8 @@ public class ClassController {
         }
     }
 
+
+//    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @DeleteMapping("/class/{id}")
         public ResponseEntity<?> deleteClass(@PathVariable int id) {
         try {
@@ -93,6 +102,7 @@ public class ClassController {
         }
         }
 
+//    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @DeleteMapping("/deleteclass/{id}")
     public ResponseEntity<?> deleteHardClass(@PathVariable int id) {
         try {
@@ -100,6 +110,24 @@ public class ClassController {
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+
+//    @PreAuthorize("hasRole('ROLE_TUTOR') or hasRole('ROLE_LEARNER')" )
+    @GetMapping("/filterclass")
+    public ResponseEntity<?> getFilterList(@RequestParam(value = "deleted", required = false) Boolean isDeleted,
+                                           @RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
+                                           @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "4") int size) {
+
+    try{
+        return ResponseEntity.ok(classService.getFilterClass(isDeleted,search,author,from,to,page,size));
+    }catch (ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
 }
