@@ -38,7 +38,7 @@ const CreateVocab = () => {
                         '',
                         '=1',
                         '',
-                        `=${userInfo.username}`,
+                        `=${userInfo?.username}`,
                         '',
                         '',
                         '',
@@ -71,7 +71,9 @@ const CreateVocab = () => {
             setCards((await CardService.getAllByStudySetId(temp.id)).data)
         }
         setError('')
-        fetchData()
+        if (userInfo.username) {
+            fetchData()
+        }
     }, [userInfo])
 
     // handle sticky header
@@ -101,7 +103,7 @@ const CreateVocab = () => {
 
     // toggle discard toast
     useEffect(() => {
-        setShowDiscardMess(sessionStorage.getItem('isReload'))
+        setShowDiscardMess(sessionStorage.getItem('isReload') === 'true')
     }, [])
 
     const toggleShowDiscardMess = () => {
@@ -299,7 +301,7 @@ const CreateVocab = () => {
                                 id="title"
                                 name="title"
                                 className={`form-control ${styles.formControl}`}
-                                value={studySet.title}
+                                value={studySet.title || ''}
                                 onChange={handleChange}
                                 onBlur={doUpdate}
                                 required
@@ -331,7 +333,7 @@ const CreateVocab = () => {
                             className={`form-control ${styles.formControl}`}
                             placeholder="Add a description..."
                             name="description"
-                            value={studySet.description}
+                            value={studySet.description || ''}
                             onChange={handleChange}
                             onBlur={doUpdate}
                             rows="3"

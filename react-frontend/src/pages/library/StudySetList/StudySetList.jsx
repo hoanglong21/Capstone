@@ -39,7 +39,9 @@ const StudySetList = () => {
             }
             setSets(temp)
         }
-        fetchData()
+        if (userInfo.username) {
+            fetchData()
+        }
     }, [userInfo])
 
     const handleSearch = async (event) => {
@@ -99,7 +101,7 @@ const StudySetList = () => {
                             <div key={set.id} className="set-item mb-3">
                                 <Link to={`/set/${set.id}`}>
                                     <div className="set-body row mb-2">
-                                        <div className="term-count col-1">
+                                        <div className="term-count col-2">
                                             {set.count} terms
                                         </div>
                                         <div
@@ -119,9 +121,10 @@ const StudySetList = () => {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="set-title col-1">
-                                            {set._draft && '(Draft) '}
-                                            {set.title}
+                                        <div className="set-title col-2">
+                                            {set._draft
+                                                ? `(Draft) ${set.title}`
+                                                : set.title}
                                         </div>
                                         <div className="col d-flex align-items-center">
                                             <p className="set-description m-0">
