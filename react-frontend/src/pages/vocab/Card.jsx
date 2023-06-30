@@ -12,6 +12,8 @@ export const Card = (props) => {
     const [card, setCard] = useState(props.card)
     const [term, setTerm] = useState({})
     const [definition, setDefinition] = useState({})
+    const [loadingPicture, setLoadingPicture] = useState(false)
+    const [loadingAudio, setLoadingAudio] = useState(false)
 
     //fetch data
     useEffect(() => {
@@ -77,8 +79,9 @@ export const Card = (props) => {
     }
 
     const handleChangeFile = async (event, folderName) => {
-        const file = event.target.files[0]
         const name = event.target.name
+        name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
+        const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
             const url = await uploadFile(file, folderName)
@@ -89,10 +92,12 @@ export const Card = (props) => {
             }
             doUpdateCard(tempCard)
         }
+        name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
     const handleDeleteFile = (event, folderName) => {
         const name = event.target.name
+        name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         const urlOld = card[name]
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
@@ -100,6 +105,7 @@ export const Card = (props) => {
             deleteFileByUrl(urlOld, folderName)
         }
         doUpdateCard(tempCard)
+        name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
     const handleChangeTerm = (event, editor) => {
@@ -200,43 +206,67 @@ export const Card = (props) => {
                     </div>
                 </div>
             </div>
-            {(card.picture || card.audio) && (
+            {(loadingPicture || loadingAudio || card.picture || card.audio) && (
                 <div className={`card-footer ${styles.card_footer} p-3`}>
                     <div className="row">
-                        {card.picture && (
-                            <div className="col-6 d-flex align-items-center">
-                                <img
-                                    src={card.picture}
-                                    className={styles.image_upload}
-                                    alt="user upload"
-                                />
-                                <button
-                                    type="button"
-                                    name="picture"
-                                    className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
-                                    onClick={(event) =>
-                                        handleDeleteFile(event, 'image')
-                                    }
+                        <div className="col-6 d-flex flex-column align-items-center">
+                            {loadingPicture && (
+                                <div
+                                    className="spinner-border text-secondary mb-3"
+                                    role="status"
                                 >
-                                    <DeleteIcon size="1.25rem" />
-                                </button>
-                            </div>
-                        )}
-                        {card.audio && (
-                            <div className="col-6 d-flex align-items-center ">
-                                <audio controls src={card.audio}></audio>
-                                <button
-                                    type="button"
-                                    name="audio"
-                                    className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
-                                    onClick={(event) =>
-                                        handleDeleteFile(event, 'audio')
-                                    }
+                                    <span className="visually-hidden">
+                                        LoadingUpload...
+                                    </span>
+                                </div>
+                            )}
+                            {!loadingPicture && card.picture && (
+                                <div className="d-flex align-self-start align-items-center">
+                                    <img
+                                        src={card.picture}
+                                        className={styles.image_upload}
+                                        alt="user upload"
+                                    />
+                                    <button
+                                        type="button"
+                                        name="picture"
+                                        className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
+                                        onClick={(event) =>
+                                            handleDeleteFile(event, 'image')
+                                        }
+                                    >
+                                        <DeleteIcon size="1.25rem" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <div className="col-6 d-flex flex-column align-items-center">
+                            {loadingAudio && (
+                                <div
+                                    className="spinner-border text-secondary mb-3"
+                                    role="status"
                                 >
-                                    <DeleteIcon size="1.25rem" />
-                                </button>
-                            </div>
-                        )}
+                                    <span className="visually-hidden">
+                                        LoadingUpload...
+                                    </span>
+                                </div>
+                            )}
+                            {!loadingAudio && card.audio && (
+                                <div className="d-flex align-self-start align-items-center">
+                                    <audio controls src={card.audio}></audio>
+                                    <button
+                                        type="button"
+                                        name="audio"
+                                        className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
+                                        onClick={(event) =>
+                                            handleDeleteFile(event, 'audio')
+                                        }
+                                    >
+                                        <DeleteIcon size="1.25rem" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}

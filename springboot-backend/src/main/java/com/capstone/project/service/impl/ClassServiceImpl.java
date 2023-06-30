@@ -1,19 +1,25 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.dto.ClassRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
+import com.capstone.project.service.UserService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.Query;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ClassServiceImpl implements ClassService {
+
+    @PersistenceContext
+    private EntityManager em;
 
     private final ClassRepository classRepository;
     private final PostRepository postRepository;
@@ -22,14 +28,17 @@ public class ClassServiceImpl implements ClassService {
     private final AttachmentRepository attachmentRepository;
     private final SubmissionRepository submissionRepository;
 
+    private final UserService userService;
+
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.assignmentRepository = assignmentRepository;
         this.attachmentRepository = attachmentRepository;
         this.submissionRepository = submissionRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -108,6 +117,64 @@ public class ClassServiceImpl implements ClassService {
         }
         classRepository.delete(classroom);
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
+        int offset = (page - 1) * size;
+
+        String query ="SELECT * FROM class WHERE 1=1";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (isDeleted != null && isDeleted) {
+            query += " AND is_deleted = :isDeleted";
+            parameters.put("isDeleted", true);
+
+        }
+
+        if (author != null && !author.isEmpty()) {
+            query += " AND author_id = :authorId";
+            User user = userService.getUserByUsername(author);
+            parameters.put("authorId", user.getId());
+        }
+
+        if (search != null && !search.isEmpty()) {
+            query += " AND (class_name LIKE :search OR description LIKE :search)";
+            parameters.put("search", "%" + search + "%");
+        }
+
+        if ((isDeleted == null || isDeleted)) {
+            if (from != null) {
+                query += " AND deleted_date >= :from";
+                parameters.put("from", from);
+            }
+            if (to != null) {
+                query += " AND deleted_date <= :to";
+                parameters.put("to", to);
+            }
+        }
+
+        Query q = em.createNativeQuery(query, Class.class);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<Class> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+
+        return response;
     }
 
 

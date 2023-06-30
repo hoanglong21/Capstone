@@ -1,50 +1,3 @@
-.createClass__form {
-    background: #e7e7e7;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.3);
-    transition: opacity 500ms;
-    /* visibility: hidden;
-    opacity: 0; */
-}
-
-.createClass__form:target {
-    visibility: visible;
-    opacity: 1;
-}
-
-.createClass__form__inputs {
-    margin: 70px auto;
-    padding: 20px;
-    background: #e7e7e7;
-    border-radius: 15px;
-    width: 50%;
-    position: relative;
-    transition: all 5s ease-in-out;
-}
-
-.createClass__title {
-    font-size: 30px;
-    text-align: center;
-}
-
-.createClass__close {
-    position: absolute;
-    top: 15px;
-    right: 30px;
-    transition: all 200ms;
-    font-size: 35px;
-    font-weight: bold;
-    text-decoration: none;
-    color: #333;
-    cursor: pointer;
-}
-
-.createClass__input,
 .joinClass__code {
     width: 100%;
     padding: 10px;
@@ -54,28 +7,6 @@
     margin-top: 6px;
     margin-bottom: 16px;
     font-size: 18px;
-}
-
-.createClass__submit {
-    background-color: #2b7dea;
-    color: #fff;
-    padding: 15px 50px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    width: 30%;
-    margin: 0 auto;
-}
-
-.createClass__submit button {
-    background-color: #2b7dea;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-align: center;
 }
 
 .joinClass {
@@ -363,12 +294,13 @@
     padding: 1.5rem;
 }
 .main__heading {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size: 2.25rem;
     font-weight: 500;
     line-height: 2.75rem;
     margin: 0;
-    color:#fff;
+    color: #fff;
 }
 .main__overflow {
     text-overflow: ellipsis;
@@ -469,24 +401,24 @@
     border-radius: 5px;
 }
 
-.noClass__img{
+.noClass__img {
     margin-top: 100px;
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 15%;
 }
-.noClass__message{
+.noClass__message {
     text-align: center;
     margin-top: 10px;
     font-weight: 600;
     font-size: 1rem;
-    font-family: "Google Sans",Roboto,Arial,sans-serif;
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
     line-height: 1.25rem;
     color: #3c4043;
 }
 
-.noClass__link1{
+.noClass__link1 {
     color: #1a73e8;
     text-decoration: none;
     font-weight: 500;
@@ -496,7 +428,7 @@
     margin-right: 20px;
 }
 
-.noClass__link2{
+.noClass__link2 {
     background-color: #1a73e8;
     color: #f0f0f0;
     text-decoration: none;
@@ -508,7 +440,7 @@
     display: inline;
 }
 
-.noClass__link{
+.noClass__link {
     text-align: center;
     margin: 0 auto;
 }

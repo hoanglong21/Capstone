@@ -10,7 +10,7 @@ import StudySetService from '../../services/StudySetService'
 import { logout } from '../../features/auth/authSlice'
 import { getUser } from '../../features/user/userAction'
 
-import CreateClassroom from '../../pages/CreateClassroom'
+import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/JoinClass'
 import logo from '../../assets/images/logo-2.png'
 import {
@@ -98,7 +98,7 @@ const Header = () => {
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
-                        > 
+                        >
                             <HomeIcon className="mx-2" />
                             <span className="align-middle">Home</span>
                         </NavLink>
@@ -166,23 +166,16 @@ const Header = () => {
                             </li>
                             {userInfo?.role !== 'ROLE_LEARNER' && (
                                 <li>
-                                    <Popup
-                                        modal
-                                        trigger={
-                                            <button
-                                                className="dropdown-item py-2 px-2"
-                                                type="button"
-                                            >
-                                                <span className="align-middle fw-semibold">
-                                                    Class
-                                                </span>
-                                            </button>
-                                        }
+                                    <button
+                                        className="dropdown-item py-2 px-2"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#createModal"
                                     >
-                                        {(close) => (
-                                            <CreateClassroom close={close} />
-                                        )}
-                                    </Popup>
+                                        <span className="align-middle fw-semibold">
+                                            Class
+                                        </span>
+                                    </button>
                                 </li>
                             )}
                             <li>
@@ -294,7 +287,8 @@ const Header = () => {
                                     <li>
                                         <button
                                             className="dropdown-item py-2 px-3"
-                                            type="button" onClick={() => {
+                                            type="button"
+                                            onClick={() => {
                                                 navigate('helpcenter')
                                             }}
                                         >
@@ -365,6 +359,8 @@ const Header = () => {
                     <Toast.Body>You have been logged out</Toast.Body>
                 </Toast>
             </ToastContainer>
+            {/* Create class modal */}
+            <CreateClass />
         </header>
     )
 }

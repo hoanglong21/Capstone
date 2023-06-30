@@ -13,21 +13,60 @@ import './StudySetList.css'
 const StudySetList = () => {
     const navigate = useNavigate()
 
+    const { userInfo } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
 
     const [sets, setSets] = useState([])
+    const [search, setSearch] = useState('')
+    const [isEmpty, setIsEmpty] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
             const username = jwtDecode(userToken).sub
-            setSets((await StudySetService.getAllStudySetByUser(username)).data)
+            const temp = (
+                await StudySetService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    '',
+                    `=${username}`,
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            if (temp.length === 0) {
+                setIsEmpty(true)
+            }
+            setSets(temp)
         }
         fetchData()
-    }, [userToken])
+    }, [])
+
+    const handleSearch = async (event) => {
+        const temp = event.target.value
+        setSearch(temp)
+        setSets(
+            (
+                await StudySetService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    `${temp ? '=' + temp : ''}`,
+                    `=${userInfo.username}`,
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+        )
+    }
 
     return (
         <div className="container mt-4 mb-5">
-            {sets.length === 0 ? (
+            {isEmpty ? (
                 <div className="setsEmpty d-flex flex-column align-items-center justify-content-center">
                     <img
                         src={empty}
@@ -49,20 +88,24 @@ const StudySetList = () => {
                             className="search-control flex-grow-1"
                             placeholder="Search your sets"
                             type="text"
-                            value=""
+                            value={search}
+                            onChange={handleSearch}
                         ></input>
                         <SearchIcon />
                     </div>
                     <div className="sets-list">
+                        {sets.length === 0 && (
+                            <p>No sets matching {search} found</p>
+                        )}
                         {sets.map((set) => (
                             <div key={set.id} className="set-item mb-3">
                                 <Link to={`/set/${set.id}`}>
-                                    <div className="set-body d-flex mb-2">
-                                        <div className="term-count me-4">
+                                    <div className="set-body row mb-2">
+                                        <div className="term-count col-1">
                                             100 terms
                                         </div>
-                                        <a
-                                            className="set-author d-flex"
+                                        <div
+                                            className="set-author col d-flex "
                                             href="#"
                                         >
                                             <div className="author-avatar">
@@ -73,11 +116,20 @@ const StudySetList = () => {
                                                 />
                                             </div>
                                             <span className="author-username ms-2">
-                                                {set.user.username}
+                                                {userInfo.username}
                                             </span>
-                                        </a>
+                                        </div>
                                     </div>
-                                    <div className="set-title">{set.title}</div>
+                                    <div className="row">
+                                        <div className="set-title col-1">
+                                            {set.title}
+                                        </div>
+                                        <div className="col d-flex align-items-center">
+                                            <p className="set-description m-0">
+                                                {set.description}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </Link>
                             </div>
                         ))}

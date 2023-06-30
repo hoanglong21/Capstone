@@ -1,5 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import Register from './pages/Register'
 import Login from './pages/Login'
@@ -12,17 +12,14 @@ import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
-import CreateClassroom from './pages/CreateClassroom'
-import CreateStudySet from './pages/studySet/CreateStudySet'
+import CreateVocab from './pages/vocab/CreateVocab'
 import MainClass from './pages/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
 import LibraryLayout from './pages/library/LibraryLayout'
 import StudySetList from './pages/library/StudySetList/StudySetList'
-import NoClass from './pages/NoClass'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
-import StudySet from './pages/studySet/StudySet'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import UpdateClassroom from './pages/UpdateClassroom'
@@ -41,7 +38,7 @@ import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 import Translate from './pages/Translate'
 
 const App = () => {
-  const { userToken } = useSelector((state) => state.auth);
+    const { userToken } = useSelector((state) => state.auth)
 
     return (
         <BrowserRouter>
@@ -73,10 +70,13 @@ const App = () => {
                             <Route path="classes" element={<ClassList />} />
                         </Route>
                         <Route
-                            path="create-set/:id"
-                            element={<CreateStudySet />}
+                            path="create-vocab/:id"
+                            element={<CreateVocab />}
                         />
-                        <Route path="set/:id" element={<StudySet />} />
+                        <Route
+                            path="vocab/:id/edit"
+                            element={<CreateVocab />}
+                        />
                         <Route
                             path="video-chat"
                             element={<VideoChatContainer />}
@@ -99,22 +99,23 @@ const App = () => {
                         path="account-deleted"
                         element={<AccountDeleted />}
                     />
-                    <Route path="*" element={<NotFound />} />
                     <Route path="/helpcenter" element={<HelpCenter />} />
-                    <Route path="/helpcenter/sendfeedback"  element={<SendFeedback />} />
-                    <Route path="/translate" element={<Translate/>}/>
+                    <Route
+                        path="/helpcenter/sendfeedback"
+                        element={<SendFeedback />}
+                    />
+                    <Route path="/translate" element={<Translate />} />
+                    <Route path="*" element={<NotFound />} />
                 </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot" element={<ForgotPassword />} />
-        <Route path="/reset" element={<ResetPassword />} />
-        <Route path="/flashcard" element={<Flashcard />} />
-        <Route path="/createclass" element={<CreateClassroom />} />
-        <Route path="/updateclass" element={<UpdateClassroom />} />
-        <Route path="/noclass" element={<NoClass />} />
-      </Routes>
-    </BrowserRouter>
-  );
-};
-export default App;
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot" element={<ForgotPassword />} />
+                <Route path="/reset" element={<ResetPassword />} />
+                <Route path="/flashcard" element={<Flashcard />} />
+                <Route path="/updateclass" element={<UpdateClassroom />} />
+            </Routes>
+        </BrowserRouter>
+    )
+}
+export default App
