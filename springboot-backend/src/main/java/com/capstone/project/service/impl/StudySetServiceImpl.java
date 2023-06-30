@@ -12,6 +12,7 @@ import com.capstone.project.repository.StudySetRepository;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.CardService;
 import com.capstone.project.service.StudySetService;
+import com.capstone.project.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -19,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class StudySetServiceImpl implements StudySetService {
@@ -30,17 +29,19 @@ public class StudySetServiceImpl implements StudySetService {
     private final CardRepository cardRepository;
     private final ContentRepository contentRepository;
     private final CardService cardService;
+    private final UserService userService;
 
     @PersistenceContext
     private EntityManager em;
     private final UserRepository userRepository;
     @Autowired
-    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService, UserRepository userRepository) {
+    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService, UserRepository userRepository, UserService userService) {
         this.studySetRepository = studySetRepository;
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
         this.cardService = cardService;
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -120,7 +121,7 @@ public class StudySetServiceImpl implements StudySetService {
             throw new ResourceNotFroundException("Studyset not exist with author: " + username);
         }
         List<StudySet> studySets = studySetRepository.findStudySetByAuthor_id(user.getId());
-        return  studySets;
+        return studySets;
     }
 
     @Override
@@ -156,7 +157,79 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<StudySetResponse> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft) {
-        return null;
+    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
+        int offset = (page - 1) * size;
+
+        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
+                "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count FROM studyset s WHERE 1=1";
+        Boolean conditionFirst = false;
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (isDeleted != null && isDeleted) {
+            query += " AND s.is_deleted = :isDeleted";
+            parameters.put("isDeleted", true);
+            conditionFirst = true;
+        }
+
+        if (isPublic != null && isPublic) {
+            if (conditionFirst) {
+                query += " OR s.is_public = :isPublic";
+            } else {
+                query += " AND s.is_public = :isPublic";
+                conditionFirst = true;
+            }
+            parameters.put("isPublic", true);
+        }
+
+        if (isDraft != null && isDraft) {
+            if (conditionFirst) {
+                query += " OR s.is_draft = :isDraft";
+            } else {
+                query += " AND s.is_draft = :isDraft";
+            }
+            parameters.put("isDraft", true);
+        }
+
+        if (search != null && !search.isEmpty()) {
+            query += " AND (s.title LIKE :search OR s.description LIKE :search)";
+            parameters.put("search", "%" + search + "%");
+        }
+
+        if ((isDeleted == null || isDeleted)) {
+            if (from != null) {
+                query += " AND s.deleted_date >= :from";
+                parameters.put("from", from);
+            }
+            if (to != null) {
+                query += " AND s.deleted_date <= :to";
+                parameters.put("to", to);
+            }
+        }
+
+        if (author != null && !author.isEmpty()) {
+            query += " AND s.author_id = :authorId";
+            User user = userService.getUserByUsername(author);
+            parameters.put("authorId", user.getId());
+        }
+
+        Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<StudySetResponse> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+
+        return response;
     }
 }

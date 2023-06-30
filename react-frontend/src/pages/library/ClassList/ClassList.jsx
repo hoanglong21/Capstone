@@ -34,7 +34,7 @@ const ClassList = () => {
     setClassroom(result.data);
   };
 
-  const DeleteClass = () => {
+  const DeleteClass = async (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -43,9 +43,11 @@ const ClassList = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
         Swal.fire("Deleted!", "Your class has been deleted.", "success");
+        await axios.delete(`http://localhost:8080/api/v1/class/${id}`);
+        loadClassroom();
       }
     });
   };
@@ -113,7 +115,7 @@ const ClassList = () => {
                 <li>
                   <button
                     className="dropdown-item py-2 px-2"
-                    onClick={DeleteClass}
+                    onClick={() => DeleteClass(classroom.id)}
                   >
                     <span className="align-middle fw-semibold">
                       Delete Classroom

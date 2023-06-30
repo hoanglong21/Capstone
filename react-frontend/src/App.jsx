@@ -33,6 +33,8 @@ import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
 import JoinClass from './pages/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
+import HelpCenter from './pages/HelpCenter'
+import SendFeedback from './pages/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
@@ -102,7 +104,6 @@ const App = () => {
                     />
                     <Route path="*" element={<NotFound />} />
                 </Route>
-
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/forgot" element={<ForgotPassword />} />

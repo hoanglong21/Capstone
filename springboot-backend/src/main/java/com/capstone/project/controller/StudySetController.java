@@ -7,9 +7,11 @@ import com.capstone.project.model.Content;
 import com.capstone.project.model.StudySet;
 import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,5 +97,22 @@ public class StudySetController {
                                            @RequestParam(value = "public", required = false) Boolean isPublic,
                                            @RequestParam(value = "draft", required = false) Boolean isDraft) {
         return ResponseEntity.ok(studySetService.getCustomList(isDeleted, isPublic, isDraft));
+    }
+
+    @GetMapping("/filterstudysets")
+    public ResponseEntity<?> getFilterList(@RequestParam(value = "deleted", required = false) Boolean isDeleted,
+                                           @RequestParam(value = "public", required = false) Boolean isPublic,
+                                           @RequestParam(value = "draft", required = false) Boolean isDraft,
+                                           @RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
+                                           @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+        try {
+            return ResponseEntity.ok(studySetService.getFilterList(isDeleted, isPublic, isDraft, search, author, from, to, page, size));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

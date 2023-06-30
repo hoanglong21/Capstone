@@ -5,6 +5,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^38.0.1",
     "@ckeditor/ckeditor5-react": "^6.0.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -33,6 +34,7 @@
     "redux": "^4.2.1",
     "save": "^2.9.0",
     "sweetalert2": "^11.7.12",
+    "tailwindcss": "^3.3.2",
     "video-react": "^0.16.0",
     "web-vitals": "^2.1.4"
   },
