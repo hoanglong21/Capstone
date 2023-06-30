@@ -163,3 +163,14 @@ body {
     margin-top: auto;
     margin-bottom: auto;
   }
+
+  .flashcard__1 select{
+    height: 50px;
+    background: #E0E0E0;
+    color: #000;
+    border: #148FDE;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-family: monospace;
+  }

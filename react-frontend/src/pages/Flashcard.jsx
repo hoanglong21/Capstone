@@ -21,7 +21,13 @@ class Flashcards extends React.Component {
         <header className="flashcard__header">
           <div className="flashcard__container">
             <div className="flashcard__1">
-              <h5>Flashcard</h5>
+              <select name="option" id="option">
+                <option value="Flashcard" selected>
+                  Flashcard
+                </option>
+                <option value="Back to Home">Back to Home</option>
+                <option value="Quiz">Quiz</option>
+              </select>
             </div>
             <div className="flashcard__2">
               <h3 className="flashcard__progress">1 / 408</h3>
@@ -32,7 +38,11 @@ class Flashcards extends React.Component {
               </h3>
             </div>
             <div className="flashcard__3">
-              <button type="button" className="flashcard__close" aria-label="Back to Study Set">
+              <button
+                type="button"
+                className="flashcard__close"
+                aria-label="Back to Study Set"
+              >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
