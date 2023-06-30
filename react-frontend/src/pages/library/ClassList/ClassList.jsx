@@ -64,7 +64,11 @@ const ClassList = () => {
                         One more class to get started
                     </p>
                     <div className="noClass__link">
-                        <Link className="noClass__link1" to="/createclass">
+                        <Link
+                            className="noClass__link1"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createModal"
+                        >
                             Create Class
                         </Link>
                         <Link className="noClass__link2" to="/joinclass">
