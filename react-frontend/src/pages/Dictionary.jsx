@@ -17,7 +17,7 @@ function Dictionary() {
               <input
                 class="form-control mr-sm-2"
                 type="search"
-                placeholder="Search..."
+                placeholder="日本, Japanese, Nhật Bản"
                 aria-label="Search"
               />
               <button
