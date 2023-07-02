@@ -117,7 +117,6 @@ const App = () => {
                 <Route path="/reset" element={<ResetPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
-                <Route path="/post" element={<PostInClass />} />
             </Routes>
         </BrowserRouter>
     )
