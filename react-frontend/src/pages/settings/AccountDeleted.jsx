@@ -1,7 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 
-import illustration from '../../assets/images/bye.jpg'
-import './AccountDeleted.css'
 import { useEffect } from 'react'
 
 const AccountDeleted = () => {
@@ -16,13 +14,7 @@ const AccountDeleted = () => {
     }, [])
 
     return (
-        <div
-            className="pt-5 accountDeleted d-flex flex-column align-items-center"
-            style={{
-                backgroundImage: `url(${illustration})`,
-                minHeight: '90vh',
-            }}
-        >
+        <div>
             <h1>Account Deleted</h1>
             <p>
                 Your account has been completely deleted and you have been
@@ -32,7 +24,7 @@ const AccountDeleted = () => {
             <p>You are always welcome to join Nihongo Level Up again.</p>
             <div>
                 <button
-                    className="btn btn-info mt-5 px-5"
+                    className="btn btn-info mt-4 px-5"
                     onClick={() => {
                         navigate('/')
                     }}

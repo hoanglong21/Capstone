@@ -10,6 +10,12 @@ textarea.formControl {
     border: 1px solid var(--form-border);
 }
 
+input.formControl_noLabel {
+    padding: 0.25rem 1rem;
+    height: 3rem;
+    font-weight: 500;
+}
+
 input.formControl:focus,
 textarea.formControl:focus {
     box-shadow: none;
@@ -23,6 +29,10 @@ input.formCheckInput:focus {
 
 button.btn {
     padding: 0.7rem 0;
+}
+
+button.btnLarge {
+    padding: 1.25rem 2rem;
 }
 
 label.labelRadio {

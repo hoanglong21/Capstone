@@ -1,7 +1,9 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.model.Grammar;
 import com.capstone.project.model.Kanji;
 import com.capstone.project.model.Vocabulary;
+import com.capstone.project.service.GrammarParser;
 import com.capstone.project.service.KanjiParser;
 import com.capstone.project.service.KanjivgFinder;
 import com.capstone.project.service.VocabularyParser;
@@ -25,6 +27,9 @@ public class DictionaryController {
     @Autowired
     private KanjivgFinder kanjivgFinder;
 
+    @Autowired
+    private GrammarParser grammarParser;
+
     @GetMapping("/kanji")
     public List<Kanji> getAllKanji(@RequestParam(defaultValue = "1") int page,
                                    @RequestParam(defaultValue = "3") int size) {
@@ -46,5 +51,11 @@ public class DictionaryController {
     @GetMapping("/kanjivg/{char}")
     public String getKanjivg(@PathVariable("char") char character) {
         return kanjivgFinder.getSvgFile(character);
+    }
+
+    @GetMapping("/grammar")
+    public List<Grammar> getAllGrammar(@RequestParam(defaultValue = "1") int page,
+                                       @RequestParam(defaultValue = "3") int size) {
+        return grammarParser.getAllGrammars(page, size);
     }
 }
