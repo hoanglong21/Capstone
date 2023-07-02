@@ -68,7 +68,7 @@
     --link-primary: var(--cyan-blue-51);
     --link-primary-hover: var(--blue-magenta-55);
 
-    --form-text: var(--blue-13);
+    --form-text: var(--blue-20);
     --form-placeholder: rgba(var(--blue-13), 0.3);
     --form-border: var(--blue-88);
     --form-border-focus: var(--yellow-56);

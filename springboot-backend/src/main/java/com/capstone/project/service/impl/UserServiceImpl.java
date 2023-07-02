@@ -237,7 +237,7 @@ public class UserServiceImpl implements UserService {
 
             String subject = "Reset Your Password with NihongoLevelUp";
             String content = "Dear [[name]],<br><br>"
-                    + "We have received a request to reset your password for your NihongoLevelUp account. To proceed with resetting your password, please click the button below:"
+                    + "<p>We have received a request to reset your password for your NihongoLevelUp account. To proceed with resetting your password, please click the button below:</p>"
                     + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Reset Password</a><br><br>"
                     + "If you did not initiate this request, please ignore this email. Otherwise, please use the link above to update your password.<br><br>"
                     + "Thank you,<br>"
@@ -259,7 +259,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             // end of pin update
 
-            String resetURL = siteURL + "reset?username=" + username +  "&pin=" + user.getPin();
+            String resetURL = siteURL + "reset-password?username=" + username +  "&pin=" + user.getPin();
             content = content.replace("[[URL]]", resetURL);
 
             helper.setText(content, true);
