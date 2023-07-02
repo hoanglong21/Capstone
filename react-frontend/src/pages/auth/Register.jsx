@@ -7,7 +7,6 @@ import { register as userRegister } from '../../features/auth/authAction'
 import { reset } from '../../features/auth/authSlice'
 import { getAll } from '../../features/fileManagement'
 
-import logo from '../../assets/images/logo-1.png'
 import styles from '../../assets/styles/Form.module.css'
 
 const Register = () => {
@@ -22,7 +21,7 @@ const Register = () => {
 
     useEffect(() => {
         if (userToken) navigate('/')
-    }, [navigate, userToken])
+    }, [userToken])
 
     // reset state
     useEffect(() => {

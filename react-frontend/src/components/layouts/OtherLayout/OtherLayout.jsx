@@ -6,7 +6,6 @@ import './OtherLayout.css'
 const OtherLayout = () => {
     return (
         <div
-            className="d-flex flex-column align-items-center"
             style={{
                 backgroundImage: `url(${illustration})`,
                 backgroundSize: 'cover',
@@ -14,7 +13,7 @@ const OtherLayout = () => {
                 padding: '0 2.5rem',
             }}
         >
-            <div className="otherContainer">
+            <div className="otherContainer mx-auto">
                 <Outlet />
             </div>
         </div>

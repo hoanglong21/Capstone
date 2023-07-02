@@ -73,7 +73,7 @@ const CreateVocab = () => {
         if (userInfo.username) {
             fetchData()
         }
-    }, [userInfo.username, id, userInfo.id])
+    }, [userInfo])
 
     // handle sticky header
     useEffect(() => {

@@ -23,7 +23,7 @@ const Login = () => {
         if (userToken) {
             navigate('/')
         }
-    }, [navigate, userToken])
+    }, [userToken])
 
     // reset state
     useEffect(() => {
