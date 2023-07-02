@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -90,6 +87,20 @@ public class TestController {
         try {
             return ResponseEntity.ok(testService.deleteTest(id));
         } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filtertest")
+    public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "duration", required = false) Optional<Integer> duration,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+
+        try{
+            return ResponseEntity.ok(testService.getFilterTest(search,author,duration.orElse(0),page,size));
+        }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

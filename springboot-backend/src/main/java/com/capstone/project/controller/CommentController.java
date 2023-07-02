@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -110,6 +112,24 @@ public class CommentController {
         try {
             return ResponseEntity.ok(commentService.deleteComment(id));
         } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/filtercomment")
+    public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "typeid", required = false) Optional<Integer> typeid,
+                                           @RequestParam(value = "postid", required = false) Optional<Integer> postid,
+                                           @RequestParam(value = "testid", required = false) Optional<Integer> testid,
+                                           @RequestParam(value = "studysetid", required = false) Optional<Integer> studysetid,
+                                           @RequestParam(value = "rootid", required = false) Optional<Integer> roottid,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+
+        try{
+            return ResponseEntity.ok(commentService.getFilterComment(search,author,typeid.orElse(0),postid.orElse(0),testid.orElse(0),studysetid.orElse(0),roottid.orElse(0),page,size));
+        }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

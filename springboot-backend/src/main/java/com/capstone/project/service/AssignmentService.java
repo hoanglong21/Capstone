@@ -5,6 +5,7 @@ import com.capstone.project.model.Assignment;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface AssignmentService {
 
@@ -18,4 +19,6 @@ public interface AssignmentService {
     Assignment updateAssignment( int id, Assignment assignment) throws ResourceNotFroundException;
 
     Boolean deleteAssignment(int id) throws ResourceNotFroundException;
+
+    Map<String, Object> getFilterAssignment( String search, String author, String from, String to,int classid, int page, int size) throws ResourceNotFroundException;
 }

@@ -2,6 +2,7 @@ package com.capstone.project.dto;
 
 import com.capstone.project.model.Class;
 import com.capstone.project.model.User;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -29,6 +30,12 @@ public class AssignmentRequest {
     private String title;
 
 
+
+    @FutureOrPresent
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date start_date;
+
+
     @FutureOrPresent
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date due_date;
@@ -36,11 +43,6 @@ public class AssignmentRequest {
 
     @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
-
-
-    @FutureOrPresent
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date start_date;
 
 
     public String getTitle() {
@@ -57,5 +59,10 @@ public class AssignmentRequest {
             return StringUtils.normalizeSpace(description.trim());
         }
         return description;
+    }
+
+    @AssertTrue(message = "Due date must be greater than or equal to start date")
+    public boolean isDueDateValid() {
+        return due_date == null || start_date == null || due_date.compareTo(start_date) >= 0;
     }
 }

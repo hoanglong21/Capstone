@@ -1,29 +1,39 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Answer;
-import com.capstone.project.model.Attachment;
-import com.capstone.project.model.Question;
-import com.capstone.project.model.Submission;
+import com.capstone.project.model.*;
 import com.capstone.project.repository.AnswerRepository;
 import com.capstone.project.repository.QuestionRepository;
 import com.capstone.project.service.QuestionService;
+import com.capstone.project.service.QuestionTypeService;
+import com.capstone.project.service.TestService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
+    @PersistenceContext
+    private EntityManager em;
     private final QuestionRepository questionRepository;
 
     private final AnswerRepository answerRepository;
+    private final QuestionTypeService questionTypeService;
+    private final TestService testService;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, AnswerRepository answerRepository) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, AnswerRepository answerRepository, QuestionTypeService questionTypeService, TestService testService) {
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.questionTypeService = questionTypeService;
+        this.testService = testService;
     }
 
     @Override
@@ -67,5 +77,54 @@ public class QuestionServiceImpl implements QuestionService {
         }
         questionRepository.delete(question);
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getFilterQuestion(String search, int typeid, int testid, int page, int size) throws ResourceNotFroundException {
+        int offset = (page - 1) * size;
+
+        String query ="SELECT * FROM question WHERE 1=1";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+
+        if (search != null && !search.isEmpty()) {
+            query += " AND question LIKE :search ";
+            parameters.put("search", "%" + search + "%");
+        }
+
+        if (typeid != 0) {
+            query += " AND type_id = :typeId";
+            QuestionType questionType = questionTypeService.getQuestionTypeById(typeid);
+            parameters.put("typeId", questionType.getId());
+        }
+
+        if (testid != 0) {
+            query += " AND test_id = :testId";
+           Test test = testService.getTestById(testid);
+            parameters.put("testId", test.getId());
+        }
+
+
+        Query q = em.createNativeQuery(query, Question.class);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<Question> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+
+        return response;
     }
 }
