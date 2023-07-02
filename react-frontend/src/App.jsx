@@ -37,6 +37,7 @@ import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
+import PostInClass from './pages/PostInClass'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -116,6 +117,7 @@ const App = () => {
                 <Route path="/reset" element={<ResetPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
+                <Route path="/post" element={<PostInClass />} />
             </Routes>
         </BrowserRouter>
     )

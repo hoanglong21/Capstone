@@ -86,7 +86,7 @@ function Dictionary() {
             </div>
           <h6 className="text-2xl font-bold mt-4">Synonym:</h6>
           <div className="meaning">
-              <li>ABC</li>
+              <li>ABC 도레미만큼 착했던 나</li>
               <hr />
             </div>
         </div>
