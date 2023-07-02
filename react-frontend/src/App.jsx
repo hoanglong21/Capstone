@@ -39,6 +39,7 @@ import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
 import AuthLayout from './pages/auth/AuthLayout'
 import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
+import PostInClass from './pages/PostInClass'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
