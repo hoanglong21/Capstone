@@ -26,12 +26,17 @@ export const deleteUser = (username) => {
     return axios.delete(API_BASE_URL + '/users/' + username + '/delete')
 }
 
+export const sendResetPasswordEmail = (username) => {
+    return axios.get(API_BASE_URL + '/sendreset?username=' + username)
+}
+
 const UserService = {
     getUser,
     updateUser,
     checkMatchPassword,
     changePassword,
     deleteUser,
+    sendResetPasswordEmail,
 }
 
 export default UserService

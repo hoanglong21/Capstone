@@ -158,7 +158,7 @@ const ChangePassword = () => {
                 <p className="mt-3">
                     If you forgot your password, you can{' '}
                     <Link
-                        to=""
+                        to="/forgotten"
                         className="link-primary link-underline-opacity-0 link-underline-opacity-75-hover"
                     >
                         Reset your password

@@ -97,23 +97,22 @@ const Profile = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
         var form = document.querySelector('.needs-validation')
-        // const firstNameEl = document.getElementById('first_name')
-        // const lastNameEl = document.getElementById('last_name')
+        const firstNameEl = document.getElementById('first_name')
+        const lastNameEl = document.getElementById('last_name')
         // clear validation
         form.classList.remove('was-validated')
-        // firstNameEl.classList.remove('is_invalid')
-        // lastNameEl.classList.remove('is_invalid')
+        firstNameEl.classList.remove('is_invalid')
+        lastNameEl.classList.remove('is_invalid')
         setErrorMess('')
         setSuccessMess(false)
 
         form.classList.add('was-validated')
-        console.log(form.checkValidity())
         if (!newUser.first_name) {
             setErrorMess("First name can't be blank.")
-            // firstNameEl.classList.add('is_invalid')
+            firstNameEl.classList.add('is_invalid')
         } else if (!newUser.last_name) {
             setErrorMess("Last name can't be blank.")
-            // lastNameEl.classList.add('is_invalid')
+            lastNameEl.classList.add('is_invalid')
         } else {
             dispatch(updateUser(newUser))
         }
