@@ -37,6 +37,7 @@ import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
+import PostInClass from './pages/PostInClass'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)

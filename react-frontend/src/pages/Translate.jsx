@@ -29,7 +29,7 @@ function Translate() {
     <div className="d-block w-100 vh-100 p-3">
       <div className="h-50 d-flex flex-column justify-content-center align-items-center">
         {/*  */}
-        <div className="display-6 text-center mb-4">Translate</div>
+        <h4 className="text-3xl font-bold text-center text-black my-3">Translate</h4>
         {/*  */}
         <Card className="h-100 w-100">
           {/*  */}
