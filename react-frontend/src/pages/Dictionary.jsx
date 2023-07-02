@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink} from 'react-router-dom'
 
 function Dictionary() {
   return (
@@ -31,7 +32,45 @@ function Dictionary() {
           </div>
         </div>
       </div>
-      <div className="container mx-auto p-4 max-w-2xl">
+      <div className="flex-grow-1">
+            <div className="border-bottom bg-white p-2 pb-0">
+                <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
+                    <li>
+                        <NavLink
+                            to="/kanji"
+                            className={
+                                'nav-link sub-nav-link px-3 me-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <span className="align-middle">Kanji</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/grammar"
+                            className={
+                                'nav-link px-3 sub-nav-link me-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <span className="align-middle">Grammar</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/vocab"
+                            className={
+                                'nav-link px-3 sub-nav-link me-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <span className="align-middle">Vocabulary</span>
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+            <div className="container mx-auto p-4 max-w-2xl">
         <div>
           <h6 className="text-2xl font-bold mt-4">Meaning & Definitions:</h6>
           <div>
@@ -52,6 +91,7 @@ function Dictionary() {
             </div>
         </div>
       </div>
+        </div>
     </div>
   );
 }
