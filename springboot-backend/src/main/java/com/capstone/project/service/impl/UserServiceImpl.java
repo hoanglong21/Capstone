@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean sendResetPasswordEmail(String username) throws ResourceNotFroundException {
+    public String sendResetPasswordEmail(String username) throws ResourceNotFroundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             user = userRepository.findUserByEmail(username);
@@ -268,10 +268,28 @@ public class UserServiceImpl implements UserService {
             helper.setText(content, true);
 
             mailSender.send(message);
-            return true;
+            return hideEmail(user.getEmail());
         } catch (Exception e) {
-            return false;
+            return "Error occur";
         }
+    }
+
+    public static String hideEmail(String email) {
+        String[] strings = email.split("@");
+
+        int part1 = (int) Math.floor((double) strings[0].length()/3);
+        int part2 = (int) Math.ceil((double) strings[0].length()/2);
+        int domain1 = (int) Math.floor((double) strings[1].length()/3);
+        int domain2 = (int) Math.ceil((double) strings[1].length()/2);
+        StringBuilder hiddenPart1 = new StringBuilder(strings[0]);
+        for(int i = part1; i <= part2; i++) {
+            hiddenPart1.setCharAt(i, '*');
+        }
+        StringBuilder hiddenPart2 = new StringBuilder(strings[1]);
+        for(int i = domain1; i <= domain2; i++) {
+            hiddenPart2.setCharAt(i, '*');
+        }
+        return hiddenPart1.toString() + "@" + hiddenPart2.toString();
     }
 
     @Override
@@ -302,4 +320,5 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
 }

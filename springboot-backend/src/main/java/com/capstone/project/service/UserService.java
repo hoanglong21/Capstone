@@ -27,7 +27,7 @@ public interface UserService {
 
     Boolean resetPassword(String username, String pin, String password) throws ResourceNotFroundException;
 
-    Boolean sendResetPasswordEmail(String username) throws ResourceNotFroundException;
+    String sendResetPasswordEmail(String username) throws ResourceNotFroundException;
 
     Boolean checkMatchPassword(String username, String checkPassword) throws ResourceNotFroundException;
 
