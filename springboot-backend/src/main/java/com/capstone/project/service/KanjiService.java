@@ -94,7 +94,6 @@ public class KanjiService {
                 kanjiList.add(kanji);
             }
 
-            // Return the sublist of kanjis based on the requested page number and size
             return kanjiList;
         } catch (Exception e) {
             e.printStackTrace();
