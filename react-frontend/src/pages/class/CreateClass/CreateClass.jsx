@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import ClassService from '../../services/ClassService'
+import ClassService from '../../../services/ClassService'
 
-import FormStyles from '../../assets/styles/Form.module.css'
+import FormStyles from '../../../assets/styles/Form.module.css'
 import './CreateClass.css'
 
 export default function CreateClass() {
@@ -14,8 +14,10 @@ export default function CreateClass() {
 
     const [newClass, setNewClass] = useState({})
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        setError('')
         const fetchData = () => {
             setNewClass({
                 class_name: '',
@@ -26,7 +28,7 @@ export default function CreateClass() {
                 },
             })
         }
-        if (userInfo) {
+        if (userInfo.username) {
             fetchData()
         }
     }, [userInfo])
@@ -37,6 +39,7 @@ export default function CreateClass() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setLoading(true)
         var form = document.querySelector('.needs-validation')
         const classNameEl = document.getElementById('class_name')
         // clear validation
@@ -45,21 +48,26 @@ export default function CreateClass() {
         setError('')
 
         form.classList.add('was-validated')
-        try {
-            if (!form.checkValidity()) {
-                setError('Class name cannot be empty.')
-                classNameEl.classList.add('is-invalid')
-            } else {
-                await ClassService.createClassroom(newClass)
-                navigate('/classes')
+        if (!form.checkValidity()) {
+            setError('Class name cannot be empty.')
+            classNameEl.classList.add('is-invalid')
+        } else {
+            let temp = {}
+            try {
+                temp = (await ClassService.createClassroom(newClass)).data
+                setNewClass(temp)
+                navigate(`/class/${temp.id}`)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    setError(error.response.data)
+                } else {
+                    setError(error.message)
+                }
             }
-        } catch (error) {
-            if (error.response && error.response.data) {
-                setError(error.response.data)
-            } else {
-                setError(error.message)
-            }
+            document.getElementById('closeModal').click()
         }
+
+        setLoading(false)
     }
 
     return (
@@ -71,6 +79,7 @@ export default function CreateClass() {
                             Create a new class
                         </h5>
                         <button
+                            id="closeModal"
                             type="button"
                             className="btn-close"
                             data-bs-dismiss="modal"
@@ -118,8 +127,21 @@ export default function CreateClass() {
                                 <button
                                     className="btn btn-primary createClass-btn mt-3"
                                     onClick={handleSubmit}
+                                    disabled={loading}
                                 >
-                                    Create class
+                                    {loading ? (
+                                        <div
+                                            className="spinner-border text-secondary mx-auto mb-1"
+                                            role="status"
+                                            id="loading"
+                                        >
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        'Create class'
+                                    )}
                                 </button>
                             </div>
                         </form>

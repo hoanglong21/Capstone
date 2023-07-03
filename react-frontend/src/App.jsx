@@ -13,7 +13,7 @@ import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateVocab from './pages/vocab/CreateVocab'
-import MainClass from './pages/MainClass'
+import MainClass from './pages/class/MainClass/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -95,7 +95,7 @@ const App = () => {
                     <Route path="term" element={<Term />} />
                     <Route path="privacy" element={<Privacy />} />
                     <Route path="/joinclass" element={<JoinClass />} />
-                    <Route path="/mainclass/:id" element={<MainClass />} />
+                    <Route path="/class/:id" element={<MainClass />} />
 
                     <Route path="/helpcenter" element={<HelpCenter />} />
                     <Route
@@ -103,7 +103,6 @@ const App = () => {
                         element={<SendFeedback />}
                     />
                     <Route path="/translate" element={<Translate />} />
-                    <Route path="*" element={<NotFound />} />
                     <Route path="/dictionary" element={<Dictionary />} />
 
                     <Route element={<OtherLayout />}>
@@ -112,8 +111,13 @@ const App = () => {
                             path="/account-deleted"
                             element={<AccountDeleted />}
                         />
-                        <Route path="/reset-password" element={<ResetPassword />} />
+                        <Route
+                            path="/reset-password"
+                            element={<ResetPassword />}
+                        />
                     </Route>
+
+                    <Route path="*" element={<NotFound />} />
                 </Route>
 
                 <Route element={<AuthLayout />}>

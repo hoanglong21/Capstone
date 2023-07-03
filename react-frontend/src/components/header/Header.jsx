@@ -10,7 +10,7 @@ import StudySetService from '../../services/StudySetService'
 import { logout } from '../../features/auth/authSlice'
 import { getUser } from '../../features/user/userAction'
 
-import CreateClass from '../../pages/class/CreateClass'
+import CreateClass from '../../pages/class/CreateClass/CreateClass'
 import JoinClass from '../../pages/JoinClass'
 import logo from '../../assets/images/logo-2.png'
 import {
@@ -56,6 +56,14 @@ const Header = () => {
             navigate('create-vocab')
         } else {
             navigate('vocab/0/edit')
+        }
+    }
+
+    const handleAddClass = () => {
+        if (userInfo.username) {
+            document.getElementById('toggleCreateModal').click()
+        } else {
+            navigate('/login')
         }
     }
 
@@ -172,11 +180,21 @@ const Header = () => {
                                     </li>
                                 </ul>
                             </li>
-                            {userInfo?.role !== 'ROLE_LEARNER' && (
+                            {(!userInfo ||
+                                userInfo.role !== 'ROLE_LEARNER') && (
                                 <li>
                                     <button
                                         className="dropdown-item py-2 px-2"
                                         type="button"
+                                        onClick={handleAddClass}
+                                    >
+                                        <span className="align-middle fw-semibold">
+                                            Class
+                                        </span>
+                                    </button>
+                                    <button
+                                        id="toggleCreateModal"
+                                        className="d-none"
                                         data-bs-toggle="modal"
                                         data-bs-target="#createModal"
                                     >

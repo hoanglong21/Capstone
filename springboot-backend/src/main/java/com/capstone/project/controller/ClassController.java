@@ -121,7 +121,7 @@ public class ClassController {
                                            @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
                                            @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                           @RequestParam(value = "size", required = false, defaultValue = "4") int size) {
+                                           @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
 
     try{
         return ResponseEntity.ok(classService.getFilterClass(isDeleted,search,author,from,to,page,size));
