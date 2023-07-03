@@ -20,7 +20,7 @@ public class SubmissionRequest {
     private Assignment assignment;
 
 
-    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Description can only contain letters, numbers, and spaces")
+    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,+&()-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
     public String getDescription() {

@@ -38,6 +38,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateValueException("Email already registered");
         }
+        if (userRepository.existsByPhone(user.getPhone())) {
+            throw new DuplicateValueException("Phone already registered");
+        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         String uniqueToken;
@@ -72,6 +75,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
+        }
+        if (userDetails.getPhone() != user.getPhone() && userRepository.existsByPhone(userDetails.getPhone())) {
+            throw new DuplicateValueException("Phone already registered");
         }
 
         user.setBio(userDetails.getBio());
@@ -221,10 +227,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean sendResetPasswordEmail(String username) throws ResourceNotFroundException {
+    public String sendResetPasswordEmail(String username) throws ResourceNotFroundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            throw new ResourceNotFroundException("User not exist with token: " + username);
+            user = userRepository.findUserByEmail(username);
+            if(user == null) {
+                throw new ResourceNotFroundException("User not exist with username or email: " + username);
+            }
         }
         try {
             // for current version only
@@ -237,7 +246,7 @@ public class UserServiceImpl implements UserService {
 
             String subject = "Reset Your Password with NihongoLevelUp";
             String content = "Dear [[name]],<br><br>"
-                    + "We have received a request to reset your password for your NihongoLevelUp account. To proceed with resetting your password, please click the button below:"
+                    + "<p>We have received a request to reset your password for your NihongoLevelUp account. To proceed with resetting your password, please click the button below:</p>"
                     + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Reset Password</a><br><br>"
                     + "If you did not initiate this request, please ignore this email. Otherwise, please use the link above to update your password.<br><br>"
                     + "Thank you,<br>"
@@ -259,16 +268,34 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             // end of pin update
 
-            String resetURL = siteURL + "reset?username=" + username +  "&pin=" + user.getPin();
+            String resetURL = siteURL + "reset-password?username=" + username +  "&pin=" + user.getPin();
             content = content.replace("[[URL]]", resetURL);
 
             helper.setText(content, true);
 
             mailSender.send(message);
-            return true;
+            return hideEmail(user.getEmail());
         } catch (Exception e) {
-            return false;
+            return "Error occur";
         }
+    }
+
+    public static String hideEmail(String email) {
+        String[] strings = email.split("@");
+
+        int part1 = (int) Math.floor((double) strings[0].length()/3);
+        int part2 = (int) Math.ceil((double) strings[0].length()/2);
+        int domain1 = (int) Math.floor((double) strings[1].length()/3);
+        int domain2 = (int) Math.ceil((double) strings[1].length()/2);
+        StringBuilder hiddenPart1 = new StringBuilder(strings[0]);
+        for(int i = part1; i <= part2; i++) {
+            hiddenPart1.setCharAt(i, '*');
+        }
+        StringBuilder hiddenPart2 = new StringBuilder(strings[1]);
+        for(int i = domain1; i <= domain2; i++) {
+            hiddenPart2.setCharAt(i, '*');
+        }
+        return hiddenPart1.toString() + "@" + hiddenPart2.toString();
     }
 
     @Override
@@ -299,4 +326,5 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
 }

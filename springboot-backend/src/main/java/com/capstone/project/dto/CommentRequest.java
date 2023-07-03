@@ -18,9 +18,9 @@ public class CommentRequest {
     private User user;
 
 
-    @NotBlank(message = "Content cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Content can only contain letters, numbers, and spaces")
-    @Length(min = 3, message = "Content must have at least 3 characters")
+    @NotBlank(message = "Comment cannot be empty")
+//    @Pattern(regexp = "[a-zA-Z0-9\\s.,?+&\\[\\]()\\-]+", message = "Comment can only contain letters, numbers, and spaces")
+    @Length(min = 1, message = "Comment must have at least 1 characters")
     private String content;
 
     private Comment root;

@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import Register from './pages/Register'
-import Login from './pages/Login'
+import Register from './pages/auth/Register'
+import Login from './pages/auth/Login'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import SpeechToText from './components/InputModel/SpeechToText'
@@ -19,8 +19,8 @@ import Profile from './pages/settings/Profile/Profile'
 import LibraryLayout from './pages/library/LibraryLayout'
 import StudySetList from './pages/library/StudySetList/StudySetList'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
-import ForgotPassword from './pages/ForgotPassword'
-import ResetPassword from './pages/ResetPassword'
+import ForgotPassword from './pages/auth/ForgotPassword'
+import ResetPassword from './pages/auth/ResetPassword'
 import UpdateClassroom from './pages/UpdateClassroom'
 import ChangePassword from './pages/settings/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
@@ -33,13 +33,16 @@ import HelpCenter from './pages/HelpCenter'
 import SendFeedback from './pages/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
-import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
+import AccountDeleted from './pages/settings/AccountDeleted'
 import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
 import Home from '../src/pages/home/Home'
 import UpdatePost from './pages/UpdatePost'
 import ClassListForHome from './pages/home/ClassListForHome'
 import StudySetForHome from './pages/home/StudySetForHome'
+import AuthLayout from './pages/auth/AuthLayout'
+import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
+import PostInClass from './pages/PostInClass'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -73,10 +76,7 @@ const App = () => {
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
                         </Route>
-                        <Route
-                            path="create-vocab"
-                            element={<CreateVocab />}
-                        />
+                        <Route path="create-vocab" element={<CreateVocab />} />
                         <Route
                             path="edit-vocab/:id"
                             element={<CreateVocab />}
@@ -99,10 +99,7 @@ const App = () => {
                     <Route path="privacy" element={<Privacy />} />
                     <Route path="/joinclass" element={<JoinClass />} />
                     <Route path="/mainclass/:id" element={<MainClass />} />
-                    <Route
-                        path="account-deleted"
-                        element={<AccountDeleted />}
-                    />
+
                     <Route path="/helpcenter" element={<HelpCenter />} />
                     <Route
                         path="/helpcenter/sendfeedback"
@@ -113,12 +110,22 @@ const App = () => {
                     <Route path="/dictionary" element={<Dictionary />} />
                     <Route path="/class" element={<ClassListForHome />} />
                     <Route path="/set" element={<StudySetForHome />} />
+
+                    <Route element={<OtherLayout />}>
+                        <Route path="/forgotten" element={<ForgotPassword />} />
+                        <Route
+                            path="/account-deleted"
+                            element={<AccountDeleted />}
+                        />
+                        <Route path="/reset-password" element={<ResetPassword />} />
+                    </Route>
                 </Route>
 
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/forgot" element={<ForgotPassword />} />
-                <Route path="/reset" element={<ResetPassword />} />
+                <Route element={<AuthLayout />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                </Route>
+
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/updatepost" element={<UpdatePost />} />
