@@ -21,7 +21,7 @@ public class QuestionRequest {
     private int id;
 
     @NotBlank(message = "Question cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Question can only contain letters, numbers, and spaces")
+    @Pattern(regexp = "[a-zA-Z0-9\\s.,?&!:\\[\\]()\\-]+", message = "Question can only contain letters, numbers, and spaces")
     @Length(min = 5, message = "Question must have at least 5 characters")
     private String question;
 
