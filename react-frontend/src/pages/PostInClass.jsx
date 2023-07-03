@@ -1,6 +1,7 @@
 import React from "react";
 import img from "../assets/images/avatar-default.jpg";
 import content from "../assets/images/blog_1.jpg";
+import DeletePost from "./DeletePost";
 
 function PostInClass() {
   return (
@@ -84,7 +85,9 @@ function PostInClass() {
           </svg>
         </div>
       </div>
+      <DeletePost/>
     </div>
+    
   );
 }
 export default PostInClass;
