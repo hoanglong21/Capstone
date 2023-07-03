@@ -10,8 +10,6 @@ import './ClassList.css'
 import ClassService from '../../../services/ClassService'
 
 const ClassList = () => {
-    const navigate = useNavigate()
-
     const { userInfo } = useSelector((state) => state.user)
 
     const [classes, setClasses] = useState([])

@@ -27,10 +27,9 @@ import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/settings/Notifications'
 import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
-import JoinClass from './pages/class/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
 import HelpCenter from './pages/help/HelpCenter'
-import SendFeedback from './pages/help/SendFeedback'
+import SendFeedback from './pages/help/sendFeedback/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
@@ -72,7 +71,7 @@ const App = () => {
                                 element={<DeleteAccount />}
                             />
                         </Route>
-                        <Route path='library' element={<LibraryLayout />}>
+                        <Route path="library" element={<LibraryLayout />}>
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
                         </Route>

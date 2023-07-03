@@ -17,7 +17,6 @@ export default function CreateClass() {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        setError('')
         const fetchData = () => {
             setNewClass({
                 class_name: '',
@@ -32,6 +31,10 @@ export default function CreateClass() {
             fetchData()
         }
     }, [userInfo])
+
+    useEffect(() => {
+        setError('')
+    }, [])
 
     const handleChange = (event) => {
         setNewClass({ ...newClass, [event.target.name]: event.target.value })

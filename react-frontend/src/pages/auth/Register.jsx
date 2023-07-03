@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 
 import { register as userRegister } from '../../features/auth/authAction'
 import { reset } from '../../features/auth/authSlice'
-import { getAll } from '../../features/fileManagement'
 
 import styles from '../../assets/styles/Form.module.css'
 
@@ -57,8 +56,7 @@ const Register = () => {
             }
         } else {
             setLoading(true)
-            const defaultAvatar = await getAll('system/default_avatar')
-            dispatch(userRegister({ ...data, avatar: defaultAvatar[0] }))
+            dispatch(userRegister({ ...data }))
             setLoading(false)
             if (error === 'Username already registered') {
                 usernameEl.classList.add('is-invalid')

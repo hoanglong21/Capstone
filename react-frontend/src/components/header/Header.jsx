@@ -23,6 +23,7 @@ import {
     DictIcon,
     LibraryIcon,
 } from '../icons'
+import defaultAvatar from '../../assets/images/default_avatar.png'
 
 import './Header.css'
 
@@ -245,7 +246,11 @@ const Header = () => {
                                     aria-expanded="false"
                                 >
                                     <img
-                                        src={userInfo.avatar}
+                                        src={
+                                            userInfo.avatar
+                                                ? userInfo.avatar
+                                                : defaultAvatar
+                                        }
                                         alt="avatar"
                                         className="avatar"
                                     />
@@ -255,7 +260,11 @@ const Header = () => {
                                         <div className="dropdown-header d-flex align-items-center">
                                             <div className="flex-shrink-0">
                                                 <img
-                                                    src={userInfo.avatar}
+                                                    src={
+                                                        userInfo.avatar
+                                                            ? userInfo.avatar
+                                                            : defaultAvatar
+                                                    }
                                                     alt="avatar"
                                                     className="avatar"
                                                 />
