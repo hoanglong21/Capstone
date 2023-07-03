@@ -224,7 +224,10 @@ public class UserServiceImpl implements UserService {
     public Boolean sendResetPasswordEmail(String username) throws ResourceNotFroundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            throw new ResourceNotFroundException("User not exist with token: " + username);
+            user = userRepository.findUserByEmail(username);
+            if(user == null) {
+                throw new ResourceNotFroundException("User not exist with username or email: " + username);
+            }
         }
         try {
             // for current version only
