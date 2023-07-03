@@ -454,10 +454,9 @@
 .post {
   background-color: #fff;
   border: 0.0625rem solid #dadce0;
-  -webkit-border-radius: 0.5rem;
-  border-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
   overflow: hidden;
-  margin-bottom: 1.5rem;
 }
 .post__top {
   display: flex;
@@ -475,16 +474,18 @@
 .post__content {
   margin: 10px 15px;
 }
-.post__top > img {
+.post__top > img, .comment__top > img {
     height: 50px;
     width: 50px;
     border-radius: 9999px;
+    margin-left: 10px;
   }
 
 .post__img{
     height: 150px;
     width: 150px;
     margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 .post__nameAndDate {
@@ -512,4 +513,29 @@
 .post__button button{
   background-color: white;
   border: none;
+}
+
+.comment__content{
+  border: 0.0625rem solid #dadce0;
+  border-radius: 5px;
+  margin-left: 10px;
+  height: 35px;
+  width: 85%;
+  color: #DADCE0;
+  margin-top: 20px;
+}
+
+.comment{
+  height: 70px;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  border: 0.0625rem solid #dadce0;
+  border-top: 0px;
+  background-color: #ffffff;
+  margin-bottom: 100px;
+}
+
+.comment svg{
+  margin-left: 10px;
+  font-size: 2.5rem;
 }

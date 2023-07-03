@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,25 +44,26 @@ public class AuthControllerTest {
     void setUp() {
         objectMapper = new ObjectMapper();
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new AuthController(userService)).build();
+        modelMapper = Mockito.mock(ModelMapper.class);
+        mockMvc = MockMvcBuilders.standaloneSetup(new AuthController(userService, modelMapper)).build();
     }
 
     @Order(1)
     @ParameterizedTest(name = "{index} =>  username={0}, first_name={1}, last_name={2}, email={3}, password={4}, role={5}")
     @CsvSource({
-            "test_long01", "Do Hoang", "long", "testlong01@gmail.com", "Long123456", "ROLE_LEARNER",
-            "", "Do Hoang", "long", "testlong02@gmail.com", "Long123456", "ROLE_LEARNER",
-            "test_long 03", "Do Hoang", "long", "testlong03@gmail.com", "Long123456", "ROLE_LEARNER",
-            "test_long04", "", "long", "testlong04@gmail.com", "Long123456", "ROLE_LEARNER",
-            "test_long05", "   Do      hOAng   ", "Long", "testlong05@gmail.com", "Long123456", "ROLE_LEARNER",
-            "test_long06", "Do Hoang", "", "testlong06@gmail.com", "Long123456", "ROLE_LEARNER",
-            "test_long07", "Do Hoang", "   loNg   ", "testlong07@gmail.com", "Long123456", "ROLE_LEARNER",
-            "test_long08", "Do Hoang", "long", "", "testLong123456", "ROLE_LEARNER",
-            "test_long09", "Do Hoang", "long", "testlong09    @gmail.com", "Long123456", "ROLE_LEARNER",
-            "test_long010", "Do Hoang", "long", "testlong10@gmail.com", "", "ROLE_LEARNER",
-            "test_long011", "Do Hoang", "long", "testlong11@gmail.com", "123", "ROLE_LEARNER",
-            "test_long012", "Do Hoang", "long", "testlong12@gmail.com", "Long123456", "",
-            "test_long013", "Do Hoang", "long", "testlong13@gmail.com", "Long123456", "ROLE_RANDOM",
+            "test_long01, Do Hoang, long, testlong01@gmail.com, Long123456, ROLE_LEARNER",
+            ", Do Hoang, long, testlong02@gmail.com, Long123456, ROLE_LEARNER",
+            "test_long 03, Do Hoang, long, testlong03@gmail.com, Long123456, ROLE_LEARNER",
+            "test_long04, , long, testlong04@gmail.com, Long123456, ROLE_LEARNER",
+            "test_long05,   Do      hOAng   , Long, testlong05@gmail.com, Long123456, ROLE_LEARNER",
+            "test_long06, Do Hoang, , testlong06@gmail.com, Long123456, ROLE_LEARNER",
+            "test_long07, Do Hoang,   loNg   , testlong07@gmail.com, Long123456, ROLE_LEARNER",
+            "test_long08, Do Hoang, long, , testLong123456, ROLE_LEARNER",
+            "test_long09, Do Hoang, long, testlong09    @gmail.com, Long123456, ROLE_LEARNER",
+            "test_long010, Do Hoang, long, testlong10@gmail.com, , ROLE_LEARNER",
+            "test_long011, Do Hoang, long, testlong11@gmail.com, 123, ROLE_LEARNER",
+            "test_long012, Do Hoang, long, testlong12@gmail.com, Long123456, ",
+            "test_long013, Do Hoang, long, testlong13@gmail.com, Long123456, ROLE_RANDOM"
     })
     void testRegister(String username, String first_name, String last_name, String email, String password, String role) {
         RegisterRequest registerRequest = new RegisterRequest(username, first_name, last_name, email, password, role);

@@ -30,15 +30,15 @@ import java.util.stream.Collectors;
 public class AuthController {
 
     private final UserService userService;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     @Autowired
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/register")
