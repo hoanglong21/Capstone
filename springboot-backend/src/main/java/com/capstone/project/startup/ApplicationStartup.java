@@ -2,6 +2,7 @@ package com.capstone.project.startup;
 
 import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
+import com.capstone.project.service.KanjiService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -40,6 +41,12 @@ public class ApplicationStartup implements ApplicationRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    public KanjiService kanjiService;
+
+    public KanjiService getKanjiService() {
+        return kanjiService;
+    }
 
     @Override
     @Transactional
@@ -134,6 +141,12 @@ public class ApplicationStartup implements ApplicationRunner {
             admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRole("ROLE_ADMIN");
             userRepository.save(admin);
+        }
+
+        Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
+        kanjiService.getAllKanji();
+        if(kanjiService.getKanjiList().size()>0) {
+            System.out.println("Kanji is ready");
         }
     }
 }

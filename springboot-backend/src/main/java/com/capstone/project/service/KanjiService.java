@@ -5,16 +5,21 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class KanjiParser {
+public class KanjiService {
 
     KanjivgFinder kanjivgFinder;
     private List<Kanji> kanjiList = new ArrayList<>();
 
-    public List<Kanji> getAllKanji(int page, int size) {
+    public List<Kanji> getKanjiList() {
+        return kanjiList;
+    }
+
+    public List<Kanji> getAllKanji() {
         try {
             // Load the XML file
             ClassLoader classLoader = getClass().getClassLoader();
@@ -28,11 +33,8 @@ public class KanjiParser {
             // Extract information from the XML elements
             NodeList nodeList = doc.getElementsByTagName("character");
 
-            // Calculate the start and end index of the sublist to return
-            int startIndex = (page - 1) * size;
-            int endIndex = Math.min(startIndex + size, nodeList.getLength());
 
-            for (int i = startIndex; i < endIndex; i++) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
                 Kanji kanji = new Kanji();
                 Node node = nodeList.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
@@ -93,11 +95,74 @@ public class KanjiParser {
             }
 
             // Return the sublist of kanjis based on the requested page number and size
-            return kanjiList.subList(startIndex, endIndex);
+            return kanjiList;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    public List<Kanji> searchAndPaginate(String query, int page, int pageSize) {
+        List<Kanji> results = new ArrayList<>();
+
+        // Perform search based on the query
+        for (Kanji kanji : kanjiList) {
+            if (matchesQuery(kanji, query)) {
+                results.add(kanji);
+            }
+        }
+
+        // Apply pagination
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, results.size());
+
+        return results.subList(startIndex, endIndex);
+    }
+
+    private boolean matchesQuery(Kanji kanji, String query) {
+        if(query==null || query.equals("")) {
+            return true;
+        }
+        String lowercaseQuery = query.toLowerCase();
+
+        // Check if the query matches any property of the Kanji object
+        if (kanji.getCharacter().toLowerCase().contains(lowercaseQuery)) {
+            return true;
+        }
+
+        for (String reading : kanji.getReadingVietnam()) {
+            //ignore accented Vietnamese
+            if (normalizeString(reading).contains(normalizeString(query))) {
+                return true;
+            }
+        }
+
+        for (String reading : kanji.getReadingJapaneseOn()) {
+            if (reading.toLowerCase().contains(lowercaseQuery)) {
+                return true;
+            }
+        }
+
+        for (String reading : kanji.getReadingJapaneseKun()) {
+            if (reading.toLowerCase().contains(lowercaseQuery)) {
+                return true;
+            }
+        }
+
+        for (String meaning : kanji.getMeanings()) {
+            if (meaning.toLowerCase().contains(lowercaseQuery)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String normalizeString(String input) {
+        return Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .toLowerCase();
+    }
+
 }
+
+

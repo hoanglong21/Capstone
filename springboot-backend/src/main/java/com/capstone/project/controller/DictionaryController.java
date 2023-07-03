@@ -1,12 +1,13 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.ProjectApplication;
 import com.capstone.project.model.Grammar;
 import com.capstone.project.model.Kanji;
 import com.capstone.project.model.Vocabulary;
 import com.capstone.project.service.GrammarParser;
-import com.capstone.project.service.KanjiParser;
 import com.capstone.project.service.KanjivgFinder;
 import com.capstone.project.service.VocabularyParser;
+import com.capstone.project.startup.ApplicationStartup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +20,6 @@ public class DictionaryController {
 
 
     @Autowired
-    private KanjiParser kanjiParser;
-
-    @Autowired
     private VocabularyParser vocabularyParse;
 
     @Autowired
@@ -30,10 +28,14 @@ public class DictionaryController {
     @Autowired
     private GrammarParser grammarParser;
 
+    @Autowired
+    private ApplicationStartup applicationStartup;
+
     @GetMapping("/kanji")
-    public List<Kanji> getAllKanji(@RequestParam(defaultValue = "1") int page,
-                                   @RequestParam(defaultValue = "3") int size) {
-        return kanjiParser.getAllKanji(page, size);
+    public List<Kanji> getKanji(@RequestParam(defaultValue = "1") int page,
+                                @RequestParam(defaultValue = "3") int size,
+                                @RequestParam(defaultValue = "") String search) {
+        return applicationStartup.getKanjiService().searchAndPaginate(search, page, size);
     }
 
     @GetMapping("/vocabulary")
