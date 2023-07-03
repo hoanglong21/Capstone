@@ -1,4 +1,6 @@
 import React from "react";
+import img from "../assets/images/avatar-default.jpg"
+import content from "../assets/images/blog_1.jpg"
 
 function PostInClass() {
   return (
@@ -6,7 +8,7 @@ function PostInClass() {
       <div className="post">
         <div className="post__container">
           <div className="post__top">
-            <img src={"../assets/images/avatar-default.jpg"} alt="" />
+            <img src={img} alt="" />
           </div>
           <div className="post__nameAndDate">
             <div className="post__name">Creator</div>
@@ -64,11 +66,11 @@ function PostInClass() {
         <div className="post__container">
           <p className="post__content">Content</p>
         </div>
-        <img className="post__img" src={"/"} alt={""} />
+        <img className="post__img" src={content} alt={""} />
       </div>
       <div className="comment">
         <div className="comment__top">
-          <img src={"../assets/images/avatar-default.jpg"} alt="" />
+          <img src={img} alt="" />
           <input type="text" className="comment__content" />
           <svg
             xmlns="http://www.w3.org/2000/svg"
