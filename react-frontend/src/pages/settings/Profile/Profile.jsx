@@ -7,11 +7,12 @@ import {
 } from '../../../features/fileManagement'
 
 import { updateUser } from '../../../features/user/userAction'
+import { reset } from '../../../features/user/userSlice'
 
 import { DeleteIcon, EditIcon } from '../../../components/icons'
+import defaultAvatar from '../../../assets/images/default_avatar.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
-import { reset } from '../../../features/user/userSlice'
 
 const Profile = () => {
     const dispatch = useDispatch()
@@ -157,7 +158,13 @@ const Profile = () => {
                 {/* avatar */}
                 <div className="col-12">
                     <div className="userAvatar mx-auto">
-                        <img src={newUser.avatar} alt="" className="h-100" />
+                        <img
+                            src={
+                                newUser.avatar ? newUser.avatar : defaultAvatar
+                            }
+                            alt=""
+                            className="h-100"
+                        />
                         <button
                             type="button"
                             className="btn btn-primary p-0"

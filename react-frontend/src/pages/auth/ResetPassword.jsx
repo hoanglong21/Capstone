@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
-import FormStyles from '../../assets/styles/Form.module.css'
 import UserService from '../../services/UserService'
+
+import FormStyles from '../../assets/styles/Form.module.css'
 
 const ResetPassword = () => {
     const navigate = useNavigate()

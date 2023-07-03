@@ -7,7 +7,7 @@ const LibraryLayout = () => {
                 <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
                     <li>
                         <NavLink
-                            to="/sets"
+                            to="sets"
                             className={
                                 'nav-link sub-nav-link px-3 me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -18,7 +18,7 @@ const LibraryLayout = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="/classes"
+                            to="classes"
                             className={
                                 'nav-link px-3 sub-nav-link me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))

@@ -10,53 +10,41 @@ import './ClassList.css'
 import ClassService from '../../../services/ClassService'
 
 const ClassList = () => {
-    const navigate = useNavigate()
-
     const { userInfo } = useSelector((state) => state.user)
 
     const [classes, setClasses] = useState([])
     const [search, setSearch] = useState('')
     const [isEmpty, setIsEmpty] = useState(false)
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const temp = (
-                await ClassService.getFilterList(
-                    '',
-                    '',
-                    `=${userInfo.username}`,
-                    '',
-                    '',
-                    '',
-                    ''
-                )
-            ).data.list
-            if (temp.length === 0) {
-                setIsEmpty(true)
-            }
-            setClasses(temp)
+    const fetchData = async (search) => {
+        setIsEmpty(false)
+        const temp = (
+            await ClassService.getFilterList(
+                '',
+                `${search ? '=' + search : ''}`,
+                `=${userInfo.username}`,
+                '',
+                '',
+                '',
+                ''
+            )
+        ).data.list
+        if (temp.length === 0) {
+            setIsEmpty(true)
         }
+        setClasses(temp)
+    }
+
+    useEffect(() => {
         if (userInfo.username) {
-            fetchData()
+            fetchData('')
         }
     }, [userInfo])
 
     const handleSearch = async (event) => {
         const temp = event.target.value
         setSearch(temp)
-        setClasses(
-            (
-                await ClassService.getFilterList(
-                    '',
-                    `${temp ? '=' + temp : ''}`,
-                    `=${userInfo.username}`,
-                    '',
-                    '',
-                    '',
-                    ''
-                )
-            ).data.list
-        )
+        fetchData(temp)
     }
 
     return (

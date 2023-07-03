@@ -160,10 +160,7 @@ const ForgotPassword = () => {
         return (
             <div className="container">
                 <h2>Check your email!</h2>
-                <p>
-                    We've sent an email to{' '}
-                    {hideEmail(email ? 'tuyetntahe153175@fpt.edu.vn' : '')}
-                </p>
+                <p>We've sent an email to {hideEmail(email)}</p>
                 <p>
                     Please check your spam folder if you don't see the email in
                     your inbox.

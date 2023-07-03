@@ -12,7 +12,7 @@ import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateVocab from './pages/vocab/CreateVocab'
-import MainClass from './pages/MainClass'
+import MainClass from './pages/class/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -27,10 +27,9 @@ import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/settings/Notifications'
 import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
-import JoinClass from './pages/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
-import HelpCenter from './pages/HelpCenter'
-import SendFeedback from './pages/SendFeedback'
+import HelpCenter from './pages/help/HelpCenter'
+import SendFeedback from './pages/help/sendFeedback/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
@@ -72,7 +71,7 @@ const App = () => {
                                 element={<DeleteAccount />}
                             />
                         </Route>
-                        <Route element={<LibraryLayout />}>
+                        <Route path="library" element={<LibraryLayout />}>
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
                         </Route>
@@ -97,16 +96,14 @@ const App = () => {
                     </Route>
                     <Route path="term" element={<Term />} />
                     <Route path="privacy" element={<Privacy />} />
-                    <Route path="/joinclass" element={<JoinClass />} />
-                    <Route path="/mainclass/:id" element={<MainClass />} />
+                    <Route path="/class/:id" element={<MainClass />} />
 
-                    <Route path="/helpcenter" element={<HelpCenter />} />
+                    <Route path="help-center" element={<HelpCenter />} />
                     <Route
-                        path="/helpcenter/sendfeedback"
+                        path="help-center/send-feedback"
                         element={<SendFeedback />}
                     />
                     <Route path="/translate" element={<Translate />} />
-                    <Route path="*" element={<NotFound />} />
                     <Route path="/dictionary" element={<Dictionary />} />
                     <Route path="/class" element={<ClassListForHome />} />
                     <Route path="/set" element={<StudySetForHome />} />
@@ -117,8 +114,13 @@ const App = () => {
                             path="/account-deleted"
                             element={<AccountDeleted />}
                         />
-                        <Route path="/reset-password" element={<ResetPassword />} />
+                        <Route
+                            path="/reset-password"
+                            element={<ResetPassword />}
+                        />
                     </Route>
+
+                    <Route path="*" element={<NotFound />} />
                 </Route>
 
                 <Route element={<AuthLayout />}>
