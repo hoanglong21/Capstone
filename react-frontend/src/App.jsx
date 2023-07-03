@@ -7,7 +7,6 @@ import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import SpeechToText from './components/InputModel/SpeechToText'
 import Layout from './components/layouts/Layout'
-import Home from './pages/Home'
 import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
@@ -37,6 +36,10 @@ import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
 import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
+import Home from '../src/pages/home/Home'
+import UpdatePost from './pages/UpdatePost'
+import ClassListForHome from './pages/home/ClassListForHome'
+import StudySetForHome from './pages/home/StudySetForHome'
 import AuthLayout from './pages/auth/AuthLayout'
 import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
 import PostInClass from './pages/PostInClass'
@@ -105,6 +108,8 @@ const App = () => {
                     <Route path="/translate" element={<Translate />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="/dictionary" element={<Dictionary />} />
+                    <Route path="/class" element={<ClassListForHome />} />
+                    <Route path="/set" element={<StudySetForHome />} />
 
                     <Route element={<OtherLayout />}>
                         <Route path="/forgotten" element={<ForgotPassword />} />
@@ -123,6 +128,7 @@ const App = () => {
 
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
+                <Route path="/updatepost" element={<UpdatePost />} />
             </Routes>
         </BrowserRouter>
     )
