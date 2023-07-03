@@ -1,10 +1,14 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import "../../assets/styles/Home.css"
+import banner from "../../assets/images/home.jpg"
 
 function Home() {
   return (
     <>
+     <div className="container mt-4 mb-5">
       <div className="dictionary_header bg-light">
+      {/* <img className="img_left" src={banner} alt=""/> */}
         <div className="container mx-auto py-8">
           <div className="justify-center mt-4">
             <div className="text-center form-inline">
@@ -56,8 +60,8 @@ function Home() {
               </li>
             </ul>
           </div>
-          <div className="container mx-auto p-4 max-w-2xl"></div>
         </div>
+      </div>
       </div>
     </>
   );
