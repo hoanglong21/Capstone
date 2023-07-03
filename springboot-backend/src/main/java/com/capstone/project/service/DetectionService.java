@@ -3,15 +3,9 @@ package com.capstone.project.service;
 
 import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
-import io.grpc.netty.shaded.io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.languagetool.AnalyzedSentence;
-import org.languagetool.AnalyzedTokenReadings;
-import org.languagetool.JLanguageTool;
-import org.languagetool.Language;
-import org.languagetool.language.identifier.LanguageIdentifier;
-import org.languagetool.rules.RuleMatch;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -44,12 +38,13 @@ public class DetectionService {
     }
 
     public String detectGrammar(String text) throws Exception {
+        Dotenv dotenv = Dotenv.load();
         String url = "https://api.openai.com/v1/chat/completions";
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
 
         con.setRequestMethod("POST");
         con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", "Bearer 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");
+        con.setRequestProperty("Authorization", "Bearer " + dotenv.get("OPENAI_API_KEY"));
 
         JSONObject data = new JSONObject();
         data.put("model", "gpt-3.5-turbo");

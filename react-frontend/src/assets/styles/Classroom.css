@@ -484,6 +484,7 @@
 .post__img{
     height: 150px;
     width: 150px;
+    margin-left: 20px;
 }
 
 .post__nameAndDate {
@@ -498,4 +499,17 @@
   color: #424242;
   font-size: 14px;
   margin-top: 2px;
+}
+
+.post__container .post__button {
+  color: black;
+  position: absolute;
+  margin-left: 55%;
+  background-color: white;
+  border: none;
+}
+
+.post__button button{
+  background-color: white;
+  border: none;
 }

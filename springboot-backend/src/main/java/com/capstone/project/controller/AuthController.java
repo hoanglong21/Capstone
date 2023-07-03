@@ -1,6 +1,7 @@
 package com.capstone.project.controller;
 
 import com.capstone.project.dto.AuthenticationRequest;
+import com.capstone.project.dto.RegisterRequest;
 import com.capstone.project.dto.UserRequest;
 import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.model.User;
@@ -28,17 +29,20 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/auth/")
 public class AuthController {
 
+    private final UserService userService;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
     private JwtService jwtService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private AuthenticationManager authenticationManager;
 
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
+
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserRequest userRequest, BindingResult result) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody RegisterRequest registerRequest, BindingResult result) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -47,7 +51,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body(errors);
         } else {
 
-            User user = modelMapper.map(userRequest, User.class);
+            User user = modelMapper.map(registerRequest, User.class);
 
             try {
                 User createdUser = userService.createUser(user);

@@ -79,7 +79,7 @@ const VideoChatContainer = () => {
     remoteVideo = document.getElementById('remoteVideo');
     hangupButton = document.getElementById('hangupButton');
 
-    let string = localStorage.getItem("token");
+    let string = localStorage.getItem("userToken");
     // console.log(string)
     if (string == null) {
       // TODO navigation

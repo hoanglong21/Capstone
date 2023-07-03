@@ -38,6 +38,9 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateValueException("Email already registered");
         }
+        if (userRepository.existsByPhone(user.getPhone())) {
+            throw new DuplicateValueException("Phone already registered");
+        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         String uniqueToken;
@@ -72,6 +75,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
+        }
+        if (userDetails.getPhone() != user.getPhone() && userRepository.existsByPhone(userDetails.getPhone())) {
+            throw new DuplicateValueException("Phone already registered");
         }
 
         user.setBio(userDetails.getBio());
