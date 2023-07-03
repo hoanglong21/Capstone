@@ -3,6 +3,7 @@ package com.capstone.project.startup;
 import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.KanjiService;
+import com.capstone.project.service.VocabularyService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -44,8 +45,15 @@ public class ApplicationStartup implements ApplicationRunner {
     @Autowired
     public KanjiService kanjiService;
 
+    @Autowired
+    public VocabularyService vocabularyService;
+
     public KanjiService getKanjiService() {
         return kanjiService;
+    }
+
+    public VocabularyService getVocabularyService() {
+        return vocabularyService;
     }
 
     @Override
@@ -143,10 +151,20 @@ public class ApplicationStartup implements ApplicationRunner {
             userRepository.save(admin);
         }
 
+        // Kanji Dictionary
         Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
         kanjiService.getAllKanji();
         if(kanjiService.getKanjiList().size()>0) {
             System.out.println("Kanji is ready");
         }
+        // End OF Kanji Dictionary
+
+        // Vocabulary Dictionary
+        Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
+        vocabularyService.getAllVocabulary();
+        if(vocabularyService.getVocabularyList().size()>0) {
+            System.out.println("Vocabulary is ready");
+        }
+        // End OF Vocabulary Dictionary
     }
 }

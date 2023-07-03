@@ -6,7 +6,6 @@ import com.capstone.project.model.Kanji;
 import com.capstone.project.model.Vocabulary;
 import com.capstone.project.service.GrammarParser;
 import com.capstone.project.service.KanjivgFinder;
-import com.capstone.project.service.VocabularyParser;
 import com.capstone.project.startup.ApplicationStartup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/")
 public class DictionaryController {
-
-
-    @Autowired
-    private VocabularyParser vocabularyParse;
 
     @Autowired
     private KanjivgFinder kanjivgFinder;
@@ -39,9 +34,10 @@ public class DictionaryController {
     }
 
     @GetMapping("/vocabulary")
-    public List<Vocabulary> getAllVocabulary( @RequestParam(defaultValue = "1") int page,
-                                              @RequestParam(defaultValue = "3") int size) {
-        return vocabularyParse.getAllVocabulary(page, size);
+    public List<Vocabulary> getVocabulary( @RequestParam(defaultValue = "1") int page,
+                                           @RequestParam(defaultValue = "3") int size,
+                                           @RequestParam(defaultValue = "") String search) {
+        return applicationStartup.getVocabularyService().searchAndPaginate(search, page, size);
     }
 
     @GetMapping("/radical/{number}")
