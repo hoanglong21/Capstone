@@ -37,6 +37,9 @@ import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
 import Home from '../src/pages/home/Home'
+import UpdatePost from './pages/UpdatePost'
+import ClassListForHome from './pages/home/ClassListForHome'
+import StudySetForHome from './pages/home/StudySetForHome'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -108,6 +111,8 @@ const App = () => {
                     <Route path="/translate" element={<Translate />} />
                     <Route path="*" element={<NotFound />} />
                     <Route path="/dictionary" element={<Dictionary />} />
+                    <Route path="/class" element={<ClassListForHome />} />
+                    <Route path="/set" element={<StudySetForHome />} />
                 </Route>
 
                 <Route path="/login" element={<Login />} />
@@ -116,6 +121,7 @@ const App = () => {
                 <Route path="/reset" element={<ResetPassword />} />
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
+                <Route path="/updatepost" element={<UpdatePost />} />
             </Routes>
         </BrowserRouter>
     )

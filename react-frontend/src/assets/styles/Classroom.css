@@ -500,3 +500,16 @@
   font-size: 14px;
   margin-top: 2px;
 }
+
+.post__container .post__button {
+  color: black;
+  position: absolute;
+  margin-left: 55%;
+  background-color: white;
+  border: none;
+}
+
+.post__button button{
+  background-color: white;
+  border: none;
+}
