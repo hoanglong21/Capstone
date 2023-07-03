@@ -6,9 +6,9 @@ import banner from "../../assets/images/home.jpg"
 function Home() {
   return (
     <>
+    <img className="img_left" src={banner} alt=""/>
      <div className="container mt-4 mb-5">
       <div className="dictionary_header bg-light">
-      {/* <img className="img_left" src={banner} alt=""/> */}
         <div className="container mx-auto py-8">
           <div className="justify-center mt-4">
             <div className="text-center form-inline">
