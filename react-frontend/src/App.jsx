@@ -7,7 +7,6 @@ import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import SpeechToText from './components/InputModel/SpeechToText'
 import Layout from './components/layouts/Layout'
-import Home from './pages/Home'
 import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
@@ -37,7 +36,7 @@ import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/AccountDeleted/AccountDeleted'
 import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
-import PostInClass from './pages/PostInClass'
+import Home from '../src/pages/home/Home'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)

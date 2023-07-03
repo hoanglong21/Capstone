@@ -484,6 +484,7 @@
 .post__img{
     height: 150px;
     width: 150px;
+    margin-left: 20px;
 }
 
 .post__nameAndDate {

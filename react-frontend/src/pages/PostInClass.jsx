@@ -15,8 +15,8 @@ function PostInClass() {
         </div>
         <div className="post__container">
           <p className="post__content">Content</p>
-          <img className="post__img" src={"/"} alt={""} />
         </div>
+        <img className="post__img" src={"/"} alt={""} />
       </div>
     </div>
   );
