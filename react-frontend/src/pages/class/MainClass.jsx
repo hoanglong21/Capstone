@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { AiOutlineUser } from 'react-icons/ai'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { getUser } from '../../../features/user/userAction'
+import { getUser } from '../../features/user/userAction'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import PostInClass from '../../PostInClass'
+import PostInClass from '../PostInClass'
 
-import '../../../assets/styles/Classroom.css'
+import '../../assets/styles/Classroom.css'
 
 const MainClass = ({ classData }) => {
     const [showInput, setShowInput] = useState(false)
