@@ -30,8 +30,8 @@ import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
 import JoinClass from './pages/class/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
-import HelpCenter from './pages/HelpCenter'
-import SendFeedback from './pages/SendFeedback'
+import HelpCenter from './pages/help/HelpCenter'
+import SendFeedback from './pages/help/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
@@ -94,12 +94,11 @@ const App = () => {
                     </Route>
                     <Route path="term" element={<Term />} />
                     <Route path="privacy" element={<Privacy />} />
-                    <Route path="/joinclass" element={<JoinClass />} />
                     <Route path="/class/:id" element={<MainClass />} />
 
-                    <Route path="/helpcenter" element={<HelpCenter />} />
+                    <Route path="help-center" element={<HelpCenter />} />
                     <Route
-                        path="/helpcenter/sendfeedback"
+                        path="help-center/send-feedback"
                         element={<SendFeedback />}
                     />
                     <Route path="/translate" element={<Translate />} />

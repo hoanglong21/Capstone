@@ -317,7 +317,7 @@ const Header = () => {
                                             className="dropdown-item py-2 px-3"
                                             type="button"
                                             onClick={() => {
-                                                navigate('helpcenter')
+                                                navigate('help-center')
                                             }}
                                         >
                                             <HelpIcon
