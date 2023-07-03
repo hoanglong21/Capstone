@@ -72,7 +72,7 @@ const ChatContainer = () => {
     // This code will run only once after initial render
     // Set the value after the initial render here
     // myUsername = prompt("Enter your name");
-    let string = localStorage.getItem("token");
+    let string = localStorage.getItem("userToken");
     if (string == null) {
       // TODO navigation
       
