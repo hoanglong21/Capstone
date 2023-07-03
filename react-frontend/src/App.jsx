@@ -13,7 +13,7 @@ import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateVocab from './pages/vocab/CreateVocab'
-import MainClass from './pages/class/MainClass/MainClass'
+import MainClass from './pages/class/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -28,7 +28,7 @@ import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/settings/Notifications'
 import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
-import JoinClass from './pages/JoinClass'
+import JoinClass from './pages/class/JoinClass'
 import ClassList from './pages/library/ClassList/ClassList'
 import HelpCenter from './pages/HelpCenter'
 import SendFeedback from './pages/SendFeedback'
@@ -69,7 +69,7 @@ const App = () => {
                                 element={<DeleteAccount />}
                             />
                         </Route>
-                        <Route element={<LibraryLayout />}>
+                        <Route path='library' element={<LibraryLayout />}>
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
                         </Route>

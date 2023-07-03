@@ -4,14 +4,12 @@ import Toast from 'react-bootstrap/Toast'
 import { useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import { useEffect } from 'react'
-import Popup from 'reactjs-popup'
 
-import StudySetService from '../../services/StudySetService'
 import { logout } from '../../features/auth/authSlice'
 import { getUser } from '../../features/user/userAction'
 
-import CreateClass from '../../pages/class/CreateClass/CreateClass'
-import JoinClass from '../../pages/JoinClass'
+import CreateClass from '../../pages/class/CreateClass'
+import JoinClass from '../../pages/class/JoinClass'
 import logo from '../../assets/images/logo-2.png'
 import {
     HomeIcon,
@@ -62,6 +60,14 @@ const Header = () => {
     const handleAddClass = () => {
         if (userInfo.username) {
             document.getElementById('toggleCreateModal').click()
+        } else {
+            navigate('/login')
+        }
+    }
+
+    const handleJoinClass = () => {
+        if (userInfo.username) {
+            document.getElementById('toggleJoinModal').click()
         } else {
             navigate('/login')
         }
@@ -121,7 +127,7 @@ const Header = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="sets"
+                            to="library/sets"
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -197,29 +203,25 @@ const Header = () => {
                                         className="d-none"
                                         data-bs-toggle="modal"
                                         data-bs-target="#createModal"
-                                    >
-                                        <span className="align-middle fw-semibold">
-                                            Class
-                                        </span>
-                                    </button>
+                                    ></button>
                                 </li>
                             )}
                             <li>
-                                <Popup
-                                    modal
-                                    trigger={
-                                        <button
-                                            className="dropdown-item py-2 px-2"
-                                            type="button"
-                                        >
-                                            <span className="align-middle fw-semibold">
-                                                Join Class
-                                            </span>
-                                        </button>
-                                    }
+                                <button
+                                    className="dropdown-item py-2 px-2"
+                                    type="button"
+                                    onClick={handleJoinClass}
                                 >
-                                    {(close) => <JoinClass close={close} />}
-                                </Popup>
+                                    <span className="align-middle fw-semibold">
+                                        Join Class
+                                    </span>
+                                </button>
+                                <button
+                                    id="toggleJoinModal"
+                                    className="d-none"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#joinModal"
+                                ></button>
                             </li>
                         </ul>
                     </div>
@@ -387,6 +389,8 @@ const Header = () => {
             </ToastContainer>
             {/* Create class modal */}
             <CreateClass />
+            {/* Join class modal */}
+            <JoinClass />
         </header>
     )
 }

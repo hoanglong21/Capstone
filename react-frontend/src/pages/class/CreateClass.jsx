@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import ClassService from '../../../services/ClassService'
+import ClassService from '../../services/ClassService'
 
-import FormStyles from '../../../assets/styles/Form.module.css'
-import './CreateClass.css'
+import FormStyles from '../../assets/styles/Form.module.css'
+import '../../assets/styles/popup.css'
 
 export default function CreateClass() {
     let navigate = useNavigate()
@@ -52,9 +52,8 @@ export default function CreateClass() {
             setError('Class name cannot be empty.')
             classNameEl.classList.add('is-invalid')
         } else {
-            let temp = {}
             try {
-                temp = (await ClassService.createClassroom(newClass)).data
+                const temp = (await ClassService.createClassroom(newClass)).data
                 setNewClass(temp)
                 navigate(`/class/${temp.id}`)
             } catch (error) {
@@ -71,11 +70,11 @@ export default function CreateClass() {
     }
 
     return (
-        <div className="modal createClassModal" tabIndex="-1" id="createModal">
+        <div className="modal fade classModal" tabIndex="-1" id="createModal">
             <div className="modal-dialog">
                 <div className="modal-content p-2">
                     <div className="modal-header border-0">
-                        <h5 className="modal-title createClassTitle">
+                        <h5 className="modal-title classModalTitle">
                             Create a new class
                         </h5>
                         <button
@@ -125,7 +124,7 @@ export default function CreateClass() {
                             </div>
                             <div className="text-end">
                                 <button
-                                    className="btn btn-primary createClass-btn mt-3"
+                                    className="btn btn-primary classModalBtn mt-3"
                                     onClick={handleSubmit}
                                     disabled={loading}
                                 >
