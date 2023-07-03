@@ -2,6 +2,7 @@ package com.capstone.project.startup;
 
 import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
+import com.capstone.project.service.GrammarService;
 import com.capstone.project.service.KanjiService;
 import com.capstone.project.service.VocabularyService;
 import jakarta.transaction.Transactional;
@@ -48,12 +49,19 @@ public class ApplicationStartup implements ApplicationRunner {
     @Autowired
     public VocabularyService vocabularyService;
 
+    @Autowired
+    public GrammarService grammarService;
+
     public KanjiService getKanjiService() {
         return kanjiService;
     }
 
     public VocabularyService getVocabularyService() {
         return vocabularyService;
+    }
+
+    public GrammarService getGrammarService() {
+        return grammarService;
     }
 
     @Override
@@ -155,7 +163,7 @@ public class ApplicationStartup implements ApplicationRunner {
         Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
         kanjiService.getAllKanji();
         if(kanjiService.getKanjiList().size()>0) {
-            System.out.println("Kanji is ready");
+            System.out.println("Kanji Dictionary is ready");
         }
         // End OF Kanji Dictionary
 
@@ -163,8 +171,16 @@ public class ApplicationStartup implements ApplicationRunner {
         Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
         vocabularyService.getAllVocabulary();
         if(vocabularyService.getVocabularyList().size()>0) {
-            System.out.println("Vocabulary is ready");
+            System.out.println("Vocabulary Dictionary is ready");
         }
         // End OF Vocabulary Dictionary
+
+        // Grammar Dictionary
+        Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
+        grammarService.getAllGrammars();
+        if(grammarService.getGrammarList().size()>0) {
+            System.out.println("Grammar Dictionary is ready");
+        }
+        // End OF Grammar Dictionary
     }
 }

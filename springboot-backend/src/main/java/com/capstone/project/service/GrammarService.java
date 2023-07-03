@@ -1,6 +1,7 @@
 package com.capstone.project.service;
 
 import com.capstone.project.model.Grammar;
+import com.capstone.project.model.Kanji;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,14 +13,21 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.InputStream;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
-public class GrammarParser {
+public class GrammarService {
     private List<Grammar> grammarList = new ArrayList<>();
 
-    public List<Grammar> getAllGrammars(int page, int size) {
+    public List<Grammar> getGrammarList() {
+        return grammarList;
+    }
+
+    public List<Grammar> getAllGrammars() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream("Lgrammar.xml");
@@ -34,10 +42,8 @@ public class GrammarParser {
             doc.getDocumentElement().normalize();
 
             NodeList nodeList = doc.getElementsByTagName("grammar");
-            int startIndex = (page - 1) * size;
-            int endIndex = Math.min(startIndex + size, nodeList.getLength());
 
-            for(int i = startIndex; i < endIndex; i++) {
+            for(int i = 0; i < nodeList.getLength(); i++) {
                 Grammar grammar = new Grammar();
                 Node node = nodeList.item(i);
                 if(node.getNodeType() == Node.ELEMENT_NODE) {
@@ -79,12 +85,59 @@ public class GrammarParser {
                 }
             }
 
-            // Return the sublist for the specified page and size
-            return grammarList.subList(startIndex, endIndex);
-
+            return grammarList;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+    public List<Grammar> searchAndPaginate(String query, int level, int page, int pageSize) {
+        List<Grammar> results = new ArrayList<>();
+
+        // Perform search based on the query
+        for (Grammar grammar : grammarList) {
+            if (matchesQuery(grammar, level, query)) {
+                results.add(grammar);
+            }
+        }
+
+        // Apply pagination
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, results.size());
+
+        return results.subList(startIndex, endIndex);
+    }
+
+    private boolean matchesQuery(Grammar grammar, int level, String query) {
+        if(level!=0 && !(grammar.getLevel().contains(String.valueOf(level)))) {
+            return false;
+        }
+
+        if(query==null || query.equals("")) {
+            return true;
+        }
+
+        String lowercaseQuery = query.toLowerCase();
+
+        // Check if the query matches any property of the Kanji object
+        if (searchWithParenthesis(lowercaseQuery, grammar.getTitle().toLowerCase())
+                && (level ==0 || grammar.getLevel().contains(String.valueOf(level)))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private String normalizeString(String input) {
+        return Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .toLowerCase();
+    }
+
+    public boolean searchWithParenthesis(String userInput, String target) {
+        return target.contains(userInput) || target.replaceAll("\\([^()]*\\)", "").contains(userInput) ||
+                target.replace("(", "").replace(")", "").contains(userInput);
+    }
+
 }

@@ -18,5 +18,6 @@ public class Kanji {
     private List<String> readingJapaneseOn;
     private List<String> readingJapaneseKun;
     private List<String> meanings;
+//    private List<String> meaningsVietnamese;
     private String svgFile;
 }

@@ -45,10 +45,10 @@ public class TranslateService {
                 String translation = firstSentence.get("trans").getAsString();
                 return translation;
             } else {
-                throw new ResourceNotFroundException("No translation found.");
+                return "No translation found.";
             }
         } else {
-            throw new Exception("GET request failed with response code: " + responseCode);
+            return "No translation found.";
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.capstone.project.service;
 
 import com.capstone.project.model.Kanji;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
@@ -18,6 +19,9 @@ public class KanjiService {
     public List<Kanji> getKanjiList() {
         return kanjiList;
     }
+
+//    @Autowired
+//    private TranslateService translateService;
 
     public List<Kanji> getAllKanji() {
         try {
@@ -62,6 +66,7 @@ public class KanjiService {
                     List<String> readingJapaneseOn = new ArrayList<>();
                     List<String> readingJapaneseKun = new ArrayList<>();
                     List<String> meanings = new ArrayList<>();
+                    List<String> meaningsVietnamese = new ArrayList<>();
                     for (int j = 0; j < radicalsList.getLength(); j++) {
                         String radical = radicalsList.item(j).getTextContent();
                         char kanjiCharacter = (char) (0x2F00 + Integer.parseInt(radical) - 1);
@@ -83,6 +88,8 @@ public class KanjiService {
                         String attributeValue = meaning.getAttribute("m_lang");
                         if (attributeValue.equals("")) {
                             meanings.add(meaningsList.item(j).getTextContent());
+                            //add Vietnamese
+//                            meaningsVietnamese.add(translateService.translate(meaningsList.item(j).getTextContent(), "vi"));
                         }
                     }
                     kanji.setRadicals(radicals);
@@ -90,6 +97,7 @@ public class KanjiService {
                     kanji.setReadingJapaneseOn(readingJapaneseOn);
                     kanji.setReadingJapaneseKun(readingJapaneseKun);
                     kanji.setMeanings(meanings);
+//                    kanji.setMeaningsVietnamese(meaningsVietnamese);
                 }
                 kanjiList.add(kanji);
             }
