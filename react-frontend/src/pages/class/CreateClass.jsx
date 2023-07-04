@@ -32,10 +32,6 @@ export default function CreateClass() {
         }
     }, [userInfo])
 
-    useEffect(() => {
-        setError('')
-    }, [])
-
     const handleChange = (event) => {
         setNewClass({ ...newClass, [event.target.name]: event.target.value })
     }
@@ -58,7 +54,11 @@ export default function CreateClass() {
             try {
                 const temp = (await ClassService.createClassroom(newClass)).data
                 setNewClass(temp)
+                document.getElementById('closeModal').click()
                 navigate(`/class/${temp.id}`)
+
+                setError('')
+                classNameEl.classList.remove('is-invalid')
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)
@@ -66,7 +66,6 @@ export default function CreateClass() {
                     setError(error.message)
                 }
             }
-            document.getElementById('closeModal').click()
         }
 
         setLoading(false)
@@ -115,11 +114,12 @@ export default function CreateClass() {
                             </div>
                             {/* Description */}
                             <div className="form-floating mb-3">
-                                <input
+                                <textarea
                                     name="description"
                                     type="text"
                                     value={newClass.description || ''}
                                     className={`form-control ${FormStyles.formControl}`}
+                                    style={{ height: '6rem' }}
                                     placeholder="Enter a description"
                                     onChange={handleChange}
                                 />
