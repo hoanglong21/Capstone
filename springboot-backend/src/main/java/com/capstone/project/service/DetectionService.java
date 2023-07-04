@@ -7,6 +7,8 @@ import com.capstone.project.model.VocabularyTokenizer;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.languagetool.language.Japanese;
+import org.languagetool.language.identifier.LanguageIdentifier;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -18,6 +20,11 @@ import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.languagetool.JLanguageTool;
+import org.languagetool.Language;
+import org.languagetool.rules.RuleMatch;
+import org.languagetool.language.identifier.LanguageIdentifier;
 
 @Service
 public class DetectionService {
@@ -126,6 +133,31 @@ public class DetectionService {
                 .reduce((a, b) -> a + b).get();
 
         return new JSONObject(output).getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
+    }
+
+    public List<String> grammarCheck(String inputText) {
+        List<String> errors = new ArrayList<>();
+
+        // Create a language tool instance for Japanese
+        JLanguageTool languageTool = new JLanguageTool(new Japanese());
+
+        try {
+            // Perform grammar check on the input text
+            List<RuleMatch> matches = languageTool.check(inputText);
+
+            // Extract error details from matches and add them to the errors list
+            for (RuleMatch match : matches) {
+                String errorMessage = String.format("Error at line %d: %s", match.getLine(), match.getMessage());
+                errors.add(errorMessage);
+            }
+        } catch (Exception e) {
+            // Handle any exceptions that may occur during grammar checking
+            e.printStackTrace();
+            // Add a generic error message to the errors list
+            errors.add("Error occurred during grammar checking.");
+        }
+
+        return errors;
     }
 
 }
