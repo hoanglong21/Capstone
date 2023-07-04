@@ -1,6 +1,6 @@
 package com.capstone.project.service.impl;
 
-import com.capstone.project.dto.ClassRequest;
+import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
@@ -27,17 +27,19 @@ public class ClassServiceImpl implements ClassService {
     private final AssignmentRepository assignmentRepository;
     private final AttachmentRepository attachmentRepository;
     private final SubmissionRepository submissionRepository;
+    private final UserRepository userRepository;
 
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.assignmentRepository = assignmentRepository;
         this.attachmentRepository = attachmentRepository;
         this.submissionRepository = submissionRepository;
+        this.userRepository = userRepository;
         this.userService = userService;
     }
 
@@ -56,7 +58,7 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Class createClassroom(Class classroom){
         String classCode = generateClassCode();
-        classroom.setClass_code(classCode);
+        classroom.setClasscode(classCode);
         classroom.setCreated_date(new Date());
         return classRepository.save(classroom);
     }
@@ -175,6 +177,32 @@ public class ClassServiceImpl implements ClassService {
         response.put("totalItems", totalItems);
 
         return response;
+    }
+
+    @Override
+    public Boolean joinClass(String classCode, String username) throws ResourceNotFroundException {
+
+        Class classroom = classRepository.findByClasscode(classCode);
+        if (classroom == null) {
+            throw new ResourceNotFroundException("Class not exist with code: " +classCode);
+        }
+
+
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with username: " +username);
+        }
+
+
+        if (classroom.getUsers().contains(user)) {
+            throw new DuplicateValueException("You are already in the class ");
+        }
+
+        // add user to classroom
+        classroom.getUsers().add(user);
+        classRepository.save(classroom);
+
+        return true;
     }
 
 

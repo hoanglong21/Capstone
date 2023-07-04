@@ -24,7 +24,7 @@ public class TestRequest {
 
     private User user;
 
-    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,+-]+", message = "Description can only contain letters, numbers, and spaces")
+    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,:+-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
     @Min(value = 5, message = "min duration is 5")
