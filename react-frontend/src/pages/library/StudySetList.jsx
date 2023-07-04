@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import StudySetService from '../../services/StudySetService'
 
@@ -11,20 +11,39 @@ import '../../assets/styles/StudySetList.css'
 
 const StudySetList = () => {
     const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
 
     const { userInfo } = useSelector((state) => state.user)
 
     const [sets, setSets] = useState([])
-    const [search, setSearch] = useState('')
     const [isEmpty, setIsEmpty] = useState(false)
 
-    const fetchData = async (search) => {
+    const fetchData = async (searchKey) => {
         const temp = (
             await StudySetService.getFilterList(
                 '',
                 '',
                 '',
-                `${search ? '=' + search : ''}`,
+                `${searchKey ? '=' + searchKey : ''}`,
+                `=${userInfo.username}`,
+                '',
+                '',
+                '',
+                ''
+            )
+        ).data.list
+        setSets(temp)
+    }
+
+    const checkEmpty = async () => {
+        const temp = (
+            await StudySetService.getFilterList(
+                '',
+                '',
+                '',
+                '',
                 `=${userInfo.username}`,
                 '',
                 '',
@@ -35,20 +54,19 @@ const StudySetList = () => {
         if (temp.length === 0) {
             setIsEmpty(true)
         }
-        setSets(temp)
     }
 
     useEffect(() => {
         if (userInfo.username) {
-            fetchData('')
+            checkEmpty()
         }
     }, [userInfo])
 
-    const handleSearch = async (event) => {
-        const temp = event.target.value
-        setSearch(temp)
-        fetchData(temp)
-    }
+    useEffect(() => {
+        if (userInfo.username) {
+            fetchData(search ? search : '')
+        }
+    }, [userInfo, search])
 
     return (
         <div className="container mt-4 mb-5">
@@ -108,7 +126,11 @@ const StudySetList = () => {
                             placeholder="Search your sets"
                             type="text"
                             value={search}
-                            onChange={handleSearch}
+                            onChange={(event) =>
+                                setSearchParams({
+                                    search: event.target.value,
+                                })
+                            }
                         ></input>
                         <SearchIcon />
                     </div>
