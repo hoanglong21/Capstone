@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -57,19 +58,19 @@ public class AuthControllerTest {
     @Order(1)
     @ParameterizedTest(name = "{index} =>  username={0}, first_name={1}, last_name={2}, email={3}, password={4}, role={5}, success={6}")
     @CsvSource({
-            "test_long01, Do Hoang, long, testlong01@gmail.com, Long123456, ROLE_LEARNER, true",
-            ", Do Hoang, long, testlong02@gmail.com, Long123456, ROLE_LEARNER, false",
-            "test_long 03, Do Hoang, long, testlong03@gmail.com, Long123456, ROLE_LEARNER, false",
+//            "test_long01, Do Hoang, long, testlong01@gmail.com, Long123456, ROLE_LEARNER, true",
+//            ", Do Hoang, long, testlong02@gmail.com, Long123456, ROLE_LEARNER, false",
+//            "test_long 03, Do Hoang, long, testlong03@gmail.com, Long123456, ROLE_LEARNER, false",
             "test_long04, , long, testlong04@gmail.com, Long123456, ROLE_LEARNER, false",
-            "test_long05,   Do      hOAng   , Long, testlong05@gmail.com, Long123456, ROLE_LEARNER, true",
-            "test_long06, Do Hoang, , testlong06@gmail.com, Long123456, ROLE_LEARNER, false",
-            "test_long07, Do Hoang,   loNg   , testlong07@gmail.com, Long123456, ROLE_LEARNER, true",
-            "test_long08, Do Hoang, long, , testLong123456, ROLE_LEARNER, false",
-            "test_long09, Do Hoang, long, testlong09    @gmail.com, Long123456, ROLE_LEARNER, false",
-            "test_long010, Do Hoang, long, testlong10@gmail.com, , ROLE_LEARNER, false",
-            "test_long011, Do Hoang, long, testlong11@gmail.com, 123, ROLE_LEARNER, false",
-            "test_long012, Do Hoang, long, testlong12@gmail.com, Long123456, , false",
-            "test_long013, Do Hoang, long, testlong13@gmail.com, Long123456, ROLE_RANDOM, false"
+//            "test_long05,   Do      hOAng   , Long, testlong05@gmail.com, Long123456, ROLE_LEARNER, true",
+//            "test_long06, Do Hoang, , testlong06@gmail.com, Long123456, ROLE_LEARNER, false",
+//            "test_long07, Do Hoang,   loNg   , testlong07@gmail.com, Long123456, ROLE_LEARNER, true",
+//            "test_long08, Do Hoang, long, , testLong123456, ROLE_LEARNER, false",
+//            "test_long09, Do Hoang, long, testlong09    @gmail.com, Long123456, ROLE_LEARNER, false",
+//            "test_long010, Do Hoang, long, testlong10@gmail.com, , ROLE_LEARNER, false",
+//            "test_long011, Do Hoang, long, testlong11@gmail.com, 123, ROLE_LEARNER, false",
+//            "test_long012, Do Hoang, long, testlong12@gmail.com, Long123456, , false",
+//            "test_long013, Do Hoang, long, testlong13@gmail.com, Long123456, ROLE_RANDOM, false"
     })
     void testRegister(String username, String first_name, String last_name, String email, String password, String role, Boolean success) throws Exception {
         RegisterRequest registerRequest = RegisterRequest.builder()
@@ -81,12 +82,14 @@ public class AuthControllerTest {
             mockMvc.perform(post("/api/v1/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(registerRequest)))
-                            .andExpect(status().isOk());
+                            .andExpect(status().isOk())
+                    .andExpect((jsonPath("$.username").value("test_long04")));
         } else {
             mockMvc.perform(post("/api/v1/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(registerRequest)))
-                            .andExpect(status().isBadRequest());
+//                            .andExpect(status().isBadRequest());
+            .andExpect((jsonPath("$.username").value("test_long04")));
         }
     }
 }

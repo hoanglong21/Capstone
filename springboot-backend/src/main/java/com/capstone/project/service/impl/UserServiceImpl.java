@@ -38,9 +38,6 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new DuplicateValueException("Email already registered");
         }
-        if (userRepository.existsByPhone(user.getPhone())) {
-            throw new DuplicateValueException("Phone already registered");
-        }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         String uniqueToken;
