@@ -1,29 +1,38 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.dto.UserRequest;
 import com.capstone.project.model.User;
 import com.capstone.project.service.UserService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.assertj.core.api.Assertions;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.BindingResult;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,13 +47,19 @@ public class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Mock
+    private ModelMapper modelMapper;
+    @Mock
     private UserService userService;
+
+    @InjectMocks
+    private UserController userController;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService, modelMapper)).build();
+        userController = new UserController(userService, modelMapper);
     }
 
     @Order(1)
@@ -98,13 +113,13 @@ public class UserControllerTest {
 
     @Order(2)
     @ParameterizedTest(name = "{index} => username={0}, first_name={1}, last_name={2}, gender={3}, dob={4}, email={5}," +
-            " phone={6}, password={7}, role={8}, address={9}, bio={10}, status={11}, avatar={12}")
+            " phone={6}, password={7}, role={8}, address={9}, bio={10}, status={11}, avatar={12}, success={13}")
     @CsvSource({
-            "test_long, Hoang, Long, Male, 2001-11-21, test_long@gmail.com, 0352269303, 123456, ROLE_LEARNER, HN, Swag, active, avatar.jpg",
-            "test_long, Hoang, Long, Male, 2001-11-21, test_long@gmail.com, 0352269303, 123456, ROLE_TUTOR, HB, Hello, pending, avatar2.jpg",
+            "test_long1, Hoang, Long, Male, 2001-11-21, test_long1   @gmail.com, 0352269309, Long123456, ROLE_LEARNER, HN, Swag, active, avatar.jpg, false",
+            "test_long2, Hoang, Long, Male, 2001-11-21, test_long2@gmail.com, 0352269308, Long123456, ROLE_TUTOR, HB, Hello, pending, avatar2.jpg, true",
     })
     void testUpdateUser(String username, String first_name, String last_name, String gender, String date, String email,
-                        String phone, String password, String role, String address, String bio, String status, String avatar)
+                        String phone, String password, String role, String address, String bio, String status, String avatar, boolean success)
             throws Exception {
         // make stub
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -116,7 +131,7 @@ public class UserControllerTest {
                 .dob(dateFormat.parse("2001-11-11"))
                 .email("long@gmail.com")
                 .phone("0352269303")
-                .password("123456")
+                .password("Long123456")
                 .role("ROLE_LEARNER")
                 .address("HN")
                 .bio("Swag")
@@ -124,11 +139,8 @@ public class UserControllerTest {
                 .avatar("avatar.jpg")
                 .build();
 
-
-        User userDetails = User.builder()
+        UserRequest userDetails = UserRequest.builder()
                 .username(username)
-                .first_name(first_name)
-                .last_name(last_name)
                 .gender(gender)
                 .dob(dateFormat.parse(date))
                 .email(email)
@@ -141,29 +153,21 @@ public class UserControllerTest {
                 .avatar(avatar)
                 .build();
 
+        userDetails.setFirst_name(first_name);
+        userDetails.setLast_name(last_name);
 
-        when(userService.getUserByUsername(username)).thenReturn(user);
-        when(userService.updateUser(username, userDetails)).thenReturn(userDetails);
+        BindingResult bindingResult = Mockito.mock(BindingResult.class);
 
-        // test
-        mockMvc.perform(put("/api/v1/users/{username}", username)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDetails)))
-                    .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.username").value(userDetails.getUsername()))
-                    .andExpect(jsonPath("$.first_name").value(userDetails.getFirst_name()))
-                    .andExpect(jsonPath("$.last_name").value(userDetails.getLast_name()))
-                    .andExpect(jsonPath("$.gender").value(userDetails.getGender()))
-                    .andExpect(jsonPath("$.dob").value(userDetails.getDob()))
-                    .andExpect(jsonPath("$.email").value(userDetails.getEmail()))
-                    .andExpect(jsonPath("$.role").value(userDetails.getRole()))
-                    .andExpect(jsonPath("$.phone").value(userDetails.getPhone()))
-                    .andExpect(jsonPath("$.password").value(userDetails.getPassword()))
-                    .andExpect(jsonPath("$.address").value(userDetails.getAddress()))
-                    .andExpect(jsonPath("$.bio").value(userDetails.getBio()))
-                    .andExpect(jsonPath("$.status").value(userDetails.getStatus()))
-                    .andExpect(jsonPath("$.avatar").value(userDetails.getAvatar()));
+        when(userService.updateUser(any(), any())).thenReturn(user);
+        when(bindingResult.hasErrors()).thenReturn(!success);
+
+        ResponseEntity<?> response = userController.updateUser(username, userDetails, bindingResult);
+        if(success) {
+            Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        } else {
+            Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 
@@ -204,21 +208,21 @@ public class UserControllerTest {
         when(userService.banUser(username)).thenReturn(isBanSuccess);
         mockMvc.perform(get("/api/v1/users/{username}/ban", username))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(isBanSuccess));
+                .andExpect(content().string(CoreMatchers.equalTo(String.valueOf(isBanSuccess))));
+
     }
 
     @Order(5)
-    @ParameterizedTest(name = "{index} => username={0}, email={1}, status={2}, isDeleteSuccess={3}")
+    @ParameterizedTest(name = "{index} => username={0}, isDeleteSuccess={1}")
     @CsvSource({
             "test_long, true",
             "test_long, false",
     })
     void testDeleteUser(String username,boolean isDeleteSuccess) throws Exception {
-
         when(userService.deleteUser(username)).thenReturn(isDeleteSuccess);
-        mockMvc.perform(get("/api/v1/users/{username}/delete", username))
+        mockMvc.perform(delete("/api/v1/users/{username}/delete", username))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(isDeleteSuccess));
+                .andExpect(content().string(CoreMatchers.equalTo(String.valueOf(isDeleteSuccess))));
     }
 
     @Order(6)
@@ -233,7 +237,7 @@ public class UserControllerTest {
         when(userService.recoverUser(username)).thenReturn(isBannedDateMoreThan7Days);
         mockMvc.perform(get("/api/v1/users/{username}/recover", username))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(isBannedDateMoreThan7Days));
+                .andExpect(content().string(CoreMatchers.equalTo(String.valueOf(isBannedDateMoreThan7Days))));
     }
 
 

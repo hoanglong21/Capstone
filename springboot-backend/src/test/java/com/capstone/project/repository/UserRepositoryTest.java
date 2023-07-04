@@ -154,7 +154,7 @@ public class UserRepositoryTest {
     @ParameterizedTest(name = "{index} => phone = {0}, expected={1}")
     @CsvSource({
             "03052269303, true",
-            "0000000000, false",
+            "01010101010, false",
     })
     public void testExistsByPhone(String phone, boolean expected) {
         List<User> userList = Arrays.asList(
