@@ -2,6 +2,7 @@ import React from "react";
 import img from "../assets/images/avatar-default.jpg";
 import content from "../assets/images/blog_1.jpg";
 import DeletePost from "./DeletePost";
+import UpdatePost from "./UpdatePost";
 
 function PostInClass() {
   return (
@@ -86,6 +87,7 @@ function PostInClass() {
         </div>
       </div>
       <DeletePost/>
+      <UpdatePost/>
     </div>
     
   );
