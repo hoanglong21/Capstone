@@ -150,7 +150,12 @@ const StudySetList = () => {
                                                 : set.title}
                                         </div>
                                         <div className="col d-flex align-items-center">
-                                            <p className="set-description m-0">
+                                            <p
+                                                className="set-description m-0"
+                                                style={{
+                                                    whiteSpace: 'pre-wrap',
+                                                }}
+                                            >
                                                 {set.description}
                                             </p>
                                         </div>

@@ -1,11 +1,12 @@
 import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 import '../../assets/styles/Home.css'
 import banner from '../../assets/images/home.jpg'
-import { useState } from 'react'
 
 function Home() {
-    const [search, setSearch] = useState()
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
 
     return (
         <>
@@ -25,9 +26,11 @@ function Home() {
                                         placeholder="Study set, Class"
                                         aria-label="Search"
                                         value={search}
-                                        onChange={(event) => {
-                                            setSearch(event.target.value)
-                                        }}
+                                        onChange={(event) =>
+                                            setSearchParams({
+                                                search: event.target.value,
+                                            })
+                                        }
                                     />
                                     <button
                                         className="btn btn-primary my-2 my-sm-0"
@@ -45,7 +48,10 @@ function Home() {
                             <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
                                 <li>
                                     <NavLink
-                                        to="/"
+                                        to={{
+                                            pathname: '/',
+                                            search: `?${searchParams.toString()}`,
+                                        }}
                                         className={
                                             'nav-link sub-nav-link px-3 me-3 ' +
                                             (({ isActive }) =>
@@ -59,7 +65,10 @@ function Home() {
                                 </li>
                                 <li>
                                     <NavLink
-                                        to="/classes"
+                                        to={{
+                                            pathname: '/classes',
+                                            search: `?${searchParams.toString()}`,
+                                        }}
                                         className={
                                             'nav-link px-3 sub-nav-link me-3 ' +
                                             (({ isActive }) =>

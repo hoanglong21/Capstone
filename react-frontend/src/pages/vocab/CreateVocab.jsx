@@ -155,6 +155,10 @@ const CreateVocab = () => {
                     console.log(studySet)
                     await StudySetService.updateStudySet(studySet.id, studySet)
                     // navigate('/set/' + id)
+
+                    form.classList.remove('was-validated')
+                    titleEl.classList.remove('is-invalid')
+                    setError('')
                 } else {
                     setError(
                         `<p class="mb-0">Your card can not be empty. Please review your set.</p>
@@ -329,12 +333,12 @@ const CreateVocab = () => {
                         <label className={styles.formLabel}>Description</label>
                         <textarea
                             className={`form-control ${styles.formControl}`}
+                            style={{ height: '6rem' }}
                             placeholder="Add a description..."
                             name="description"
                             value={studySet.description || ''}
                             onChange={handleChange}
                             onBlur={doUpdate}
-                            rows="3"
                         ></textarea>
                     </div>
                     {/* Card */}

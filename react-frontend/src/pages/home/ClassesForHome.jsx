@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 
@@ -11,19 +11,22 @@ import '../../assets/styles/Classroom.css'
 import '../../assets/styles/ClassList.css'
 
 const ClassesForHome = () => {
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
+
     const { userInfo } = useSelector((state) => state.user)
 
     const [classes, setClasses] = useState([])
-    const [search, setSearch] = useState('')
     const [isEmpty, setIsEmpty] = useState(false)
 
-    const fetchData = async (search) => {
+    const fetchData = async (searchKey) => {
         setIsEmpty(false)
         const temp = (
             await ClassService.getFilterList(
                 '',
-                `${search ? '=' + search : ''}`,
-                `=${userInfo.username}`,
+                `${searchKey ? '=' + searchKey : ''}`,
+                '',
                 '',
                 '',
                 '',
@@ -38,15 +41,9 @@ const ClassesForHome = () => {
 
     useEffect(() => {
         if (userInfo.username) {
-            fetchData('')
+            fetchData(search ? search : '')
         }
-    }, [userInfo])
-
-    const handleSearch = async (event) => {
-        const temp = event.target.value
-        setSearch(temp)
-        fetchData(temp)
-    }
+    }, [userInfo, search])
 
     return (
         <div className="mt-4 mb-5">
@@ -90,7 +87,10 @@ const ClassesForHome = () => {
                                     {classroom.class_name}
                                 </div>
                                 <div className="col d-flex align-items-center">
-                                    <p className="set-description m-0">
+                                    <p
+                                        className="set-description m-0"
+                                        style={{ whiteSpace: 'pre-wrap' }}
+                                    >
                                         {classroom.description}
                                     </p>
                                 </div>

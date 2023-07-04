@@ -8,7 +8,7 @@ input.formControl,
 textarea.formControl {
     color: var(--form-text);
     border: 1px solid var(--form-border);
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 input.formControl_noLabel {

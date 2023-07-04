@@ -58,6 +58,13 @@ const Register = () => {
             setLoading(true)
             dispatch(userRegister({ ...data }))
             setLoading(false)
+            // clear validation
+            form.classList.remove('was-validated')
+            usernameEl.classList.remove('is-invalid')
+            emailInvalidEl.classList.remove('d-none')
+            dispatch(reset())
+            setEmptyMess('')
+            
             if (error === 'Username already registered') {
                 usernameEl.classList.add('is-invalid')
             }

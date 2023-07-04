@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import StudySetService from '../../services/StudySetService'
 
@@ -10,21 +10,23 @@ import '../../assets/styles/StudySetList.css'
 
 function SetsForHome() {
     const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
 
     const { userInfo } = useSelector((state) => state.user)
 
     const [sets, setSets] = useState([])
-    const [search, setSearch] = useState('')
     const [isEmpty, setIsEmpty] = useState(false)
 
-    const fetchData = async (search) => {
+    const fetchData = async (searchKey) => {
         const temp = (
             await StudySetService.getFilterList(
                 '',
                 '',
                 '',
-                `${search ? '=' + search : ''}`,
-                `${search ? '=' + search : ''}`,
+                `${searchKey ? '=' + searchKey : ''}`,
+                '',
                 '',
                 '',
                 '',
@@ -39,15 +41,10 @@ function SetsForHome() {
 
     useEffect(() => {
         if (userInfo.username) {
-            fetchData('')
+            fetchData(search ? search : '')
         }
-    }, [userInfo])
+    }, [userInfo, search])
 
-    const handleSearch = async (event) => {
-        const temp = event.target.value
-        setSearch(temp)
-        fetchData(temp)
-    }
     return (
         <div className="mt-4 mb-5">
             <div className="sets-list">

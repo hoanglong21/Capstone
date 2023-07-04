@@ -125,7 +125,12 @@ const ClassList = () => {
                                             {classroom.class_name}
                                         </div>
                                         <div className="col d-flex align-items-center">
-                                            <p className="set-description m-0">
+                                            <p
+                                                className="set-description m-0"
+                                                style={{
+                                                    whiteSpace: 'pre-wrap',
+                                                }}
+                                            >
                                                 {classroom.description}
                                             </p>
                                         </div>
