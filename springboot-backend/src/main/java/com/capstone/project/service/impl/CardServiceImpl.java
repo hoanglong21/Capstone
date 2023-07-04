@@ -74,11 +74,16 @@ public class CardServiceImpl implements CardService {
     public Boolean checkBlank(int id) throws ResourceNotFroundException {
         Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
+        int count = 0;
         if ((card.getAudio() == null||card.getAudio().equals(""))  && (card.getPicture() == null||card.getPicture().equals(""))) {
-            for (Content content : contentRepository.getContentByCardId(card.getId())) {
+            List<Content> contents = contentRepository.getContentByCardId(card.getId();
+            for (Content content : contents) {
                 if (content.getContent()==null||content.getContent().equals("")) {
-                    return true;
+                    count += 1;
                 }
+            }
+            if(count==contents.size()) {
+                return true;
             }
         }
         return false;

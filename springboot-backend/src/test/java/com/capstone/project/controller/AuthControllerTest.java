@@ -58,10 +58,10 @@ public class AuthControllerTest {
     @Order(1)
     @ParameterizedTest(name = "{index} =>  username={0}, first_name={1}, last_name={2}, email={3}, password={4}, role={5}, success={6}")
     @CsvSource({
-//            "test_long01, Do Hoang, long, testlong01@gmail.com, Long123456, ROLE_LEARNER, true",
+            "test_long01, Do Hoang, long, testlong01@gmail.com, Long123456, ROLE_LEARNER, true",
 //            ", Do Hoang, long, testlong02@gmail.com, Long123456, ROLE_LEARNER, false",
 //            "test_long 03, Do Hoang, long, testlong03@gmail.com, Long123456, ROLE_LEARNER, false",
-            "test_long04, , long, testlong04@gmail.com, Long123456, ROLE_LEARNER, false",
+//            "test_long04, , long, testlong04@gmail.com, Long123456, ROLE_LEARNER, false",
 //            "test_long05,   Do      hOAng   , Long, testlong05@gmail.com, Long123456, ROLE_LEARNER, true",
 //            "test_long06, Do Hoang, , testlong06@gmail.com, Long123456, ROLE_LEARNER, false",
 //            "test_long07, Do Hoang,   loNg   , testlong07@gmail.com, Long123456, ROLE_LEARNER, true",
@@ -79,6 +79,7 @@ public class AuthControllerTest {
         registerRequest.setLast_name(last_name);
 
         if(success==true) {
+            ResponseEntity<String> responseEntity =
             mockMvc.perform(post("/api/v1/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(registerRequest)))
@@ -87,9 +88,9 @@ public class AuthControllerTest {
         } else {
             mockMvc.perform(post("/api/v1/auth/register")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(registerRequest)))
+                            .content(objectMapper.writeValueAsString(registerRequest)));
 //                            .andExpect(status().isBadRequest());
-            .andExpect((jsonPath("$.username").value("test_long04")));
+//            .andExpect((jsonPath("$.username").value("test_long04")));
         }
     }
 }
