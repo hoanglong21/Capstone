@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 
-import { ClassIcon, SearchIcon } from '../../../components/icons'
+import ClassService from '../../services/ClassService'
 
-import '../../../assets/styles/Classroom.css'
-import './ClassList.css'
-import ClassService from '../../../services/ClassService'
+import { ClassIcon, SearchIcon } from '../../components/icons'
+import defaultAvatar from '../../assets/images/default_avatar.png'
+import '../../assets/styles/Classroom.css'
+import '../../assets/styles/ClassList.css'
 
 const ClassList = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -22,7 +23,7 @@ const ClassList = () => {
             await ClassService.getFilterList(
                 '',
                 `${search ? '=' + search : ''}`,
-                `=${userInfo.username}`,
+                `${search ? '=' + search : ''}`,
                 '',
                 '',
                 '',
@@ -104,7 +105,11 @@ const ClassList = () => {
                                         >
                                             <div className="author-avatar">
                                                 <img
-                                                    src={userInfo.avatar}
+                                                    src={
+                                                        userInfo.avatar
+                                                            ? userInfo.avatar
+                                                            : defaultAvatar
+                                                    }
                                                     alt="author avatar"
                                                     className="w-100 h-100"
                                                 />

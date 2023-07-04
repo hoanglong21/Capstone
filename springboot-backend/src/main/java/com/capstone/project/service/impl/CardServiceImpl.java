@@ -76,7 +76,7 @@ public class CardServiceImpl implements CardService {
                 .orElseThrow(() -> new ResourceNotFroundException("Card not exist with id: " + id));
         int count = 0;
         if ((card.getAudio() == null||card.getAudio().equals(""))  && (card.getPicture() == null||card.getPicture().equals(""))) {
-            List<Content> contents = contentRepository.getContentByCardId(card.getId();
+            List<Content> contents = contentRepository.getContentByCardId(card.getId());
             for (Content content : contents) {
                 if (content.getContent()==null||content.getContent().equals("")) {
                     count += 1;

@@ -141,11 +141,10 @@ const CreateVocab = () => {
         setError('')
 
         try {
-            if (!form.checkValidity()) {
-                form.classList.add('was-validated')
+            form.classList.add('was-validated')
+            if (!studySet.title) {
                 titleEl.classList.add('is-invalid')
-            }
-            if (cards.length === 0) {
+            } else if (cards.length === 0) {
                 setError('You must have at least one cards to save your set.')
             } else {
                 const emptyCards = (

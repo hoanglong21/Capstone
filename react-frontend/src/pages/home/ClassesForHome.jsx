@@ -1,0 +1,105 @@
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+
+import ClassService from '../../services/ClassService'
+
+import { ClassIcon } from '../../components/icons'
+import defaultAvatar from '../../assets/images/default_avatar.png'
+import '../../assets/styles/Classroom.css'
+import '../../assets/styles/ClassList.css'
+
+const ClassesForHome = () => {
+    const { userInfo } = useSelector((state) => state.user)
+
+    const [classes, setClasses] = useState([])
+    const [search, setSearch] = useState('')
+    const [isEmpty, setIsEmpty] = useState(false)
+
+    const fetchData = async (search) => {
+        setIsEmpty(false)
+        const temp = (
+            await ClassService.getFilterList(
+                '',
+                `${search ? '=' + search : ''}`,
+                `=${userInfo.username}`,
+                '',
+                '',
+                '',
+                ''
+            )
+        ).data.list
+        if (temp.length === 0) {
+            setIsEmpty(true)
+        }
+        setClasses(temp)
+    }
+
+    useEffect(() => {
+        if (userInfo.username) {
+            fetchData('')
+        }
+    }, [userInfo])
+
+    const handleSearch = async (event) => {
+        const temp = event.target.value
+        setSearch(temp)
+        fetchData(temp)
+    }
+
+    return (
+        <div className="mt-4 mb-5">
+            <div className="sets-list">
+                {classes.length === 0 && (
+                    <p>No classes matching {search} found</p>
+                )}
+                {classes.map((classroom) => (
+                    <div key={classroom.id} className="set-item mb-3">
+                        <Link to={`/class/${classroom.id}`}>
+                            <div className="set-body row mb-2">
+                                <div className="term-count col-1">
+                                    {classroom.users.length} member
+                                </div>
+                                <div className="term-count col-1">
+                                    {classroom.studySets.length} sets
+                                </div>
+                                <div
+                                    className="set-author col d-flex "
+                                    href="#"
+                                >
+                                    <div className="author-avatar">
+                                        <img
+                                            src={
+                                                userInfo.avatar
+                                                    ? userInfo.avatar
+                                                    : defaultAvatar
+                                            }
+                                            alt="author avatar"
+                                            className="w-100 h-100"
+                                        />
+                                    </div>
+                                    <span className="author-username ms-2">
+                                        {userInfo.username}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="set-title col-2 d-flex align-items-center">
+                                    <ClassIcon className="me-2" />
+                                    {classroom.class_name}
+                                </div>
+                                <div className="col d-flex align-items-center">
+                                    <p className="set-description m-0">
+                                        {classroom.description}
+                                    </p>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+                ))}
+            </div>
+        </div>
+    )
+}
+export default ClassesForHome
