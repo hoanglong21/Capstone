@@ -59,6 +59,23 @@ function Home() {
                                         }
                                     >
                                         <span className="align-middle">
+                                            All
+                                        </span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to={{
+                                            pathname: '/sets',
+                                            search: `?${searchParams.toString()}`,
+                                        }}
+                                        className={
+                                            'nav-link sub-nav-link px-3 me-3 ' +
+                                            (({ isActive }) =>
+                                                isActive ? 'active' : '')
+                                        }
+                                    >
+                                        <span className="align-middle">
                                             Study Sets
                                         </span>
                                     </NavLink>
@@ -77,6 +94,23 @@ function Home() {
                                     >
                                         <span className="align-middle">
                                             Classes
+                                        </span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to={{
+                                            pathname: '/users',
+                                            search: `?${searchParams.toString()}`,
+                                        }}
+                                        className={
+                                            'nav-link px-3 sub-nav-link me-3 ' +
+                                            (({ isActive }) =>
+                                                isActive ? 'active' : '')
+                                        }
+                                    >
+                                        <span className="align-middle">
+                                            Users
                                         </span>
                                     </NavLink>
                                 </li>

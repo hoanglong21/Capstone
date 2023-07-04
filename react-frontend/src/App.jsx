@@ -42,6 +42,8 @@ import SetsForHome from './pages/home/SetsForHome'
 import AuthLayout from './pages/auth/AuthLayout'
 import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
 import PostInClass from './pages/PostInClass'
+import UsersForHome from './pages/home/UsersForHome'
+import AllForHome from './pages/home/AllForHome'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -51,8 +53,10 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Layout />}>
                     <Route path="" element={userToken ? <Home /> : <Landing />}>
-                        <Route index element={<SetsForHome />} />
+                        <Route index element={<AllForHome />} />
+                        <Route path="sets" element={<SetsForHome />} />
                         <Route path="classes" element={<ClassesForHome />} />
+                        <Route path="users" element={<UsersForHome />} />
                     </Route>
                     <Route element={<ProtectedRoute />}>
                         <Route path="account" element={<AccountLayout />}>
