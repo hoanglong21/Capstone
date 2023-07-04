@@ -47,17 +47,20 @@ public class RegisterRequest {
     private String role;
 
     public void setFirst_name(String first_name) {
-        String formattedFirstName = first_name.trim().replaceAll("\\s+", " ");
-        this.first_name = Arrays.stream(formattedFirstName.split("\\s"))
-                .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
-                .collect(Collectors.joining(" "));
+        if(first_name!=null){
+            String formattedFirstName = first_name.trim().replaceAll("\\s+", " ");
+            this.first_name = Arrays.stream(formattedFirstName.split("\\s"))
+                    .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
+                    .collect(Collectors.joining(" "));
+        }
     }
 
     public void setLast_name(String last_name) {
-        String formattedFirstName = last_name.trim().replaceAll("\\s+", " ");
-        this.last_name = Arrays.stream(formattedFirstName.split("\\s"))
-                .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
-                .collect(Collectors.joining(" "));
+        if(last_name!=null){
+            String formattedFirstName = last_name.trim().replaceAll("\\s+", " ");
+            this.last_name = Arrays.stream(formattedFirstName.split("\\s"))
+                    .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
+                    .collect(Collectors.joining(" "));
+        }
     }
-
 }

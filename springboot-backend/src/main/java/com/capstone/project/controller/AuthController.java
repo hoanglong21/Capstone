@@ -61,6 +61,7 @@ public class AuthController {
             }
         }
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> AuthenticateAndGetToken(@RequestBody AuthenticationRequest authRequest) {
         try {

@@ -28,6 +28,6 @@ public class StudySetResponse {
     private int count;
 
     private String author;
-
+    private String avatar;
 }
 

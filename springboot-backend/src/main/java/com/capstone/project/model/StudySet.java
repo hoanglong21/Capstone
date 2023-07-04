@@ -46,6 +46,7 @@ public class StudySet {
 
     private String title;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     private boolean is_deleted; // delete 1 or not 0
