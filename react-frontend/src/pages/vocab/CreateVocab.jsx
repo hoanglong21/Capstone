@@ -141,11 +141,10 @@ const CreateVocab = () => {
         setError('')
 
         try {
-            if (!form.checkValidity()) {
-                form.classList.add('was-validated')
+            form.classList.add('was-validated')
+            if (!studySet.title) {
                 titleEl.classList.add('is-invalid')
-            }
-            if (cards.length === 0) {
+            } else if (cards.length === 0) {
                 setError('You must have at least one cards to save your set.')
             } else {
                 const emptyCards = (
@@ -156,6 +155,10 @@ const CreateVocab = () => {
                     console.log(studySet)
                     await StudySetService.updateStudySet(studySet.id, studySet)
                     // navigate('/set/' + id)
+
+                    form.classList.remove('was-validated')
+                    titleEl.classList.remove('is-invalid')
+                    setError('')
                 } else {
                     setError(
                         `<p class="mb-0">Your card can not be empty. Please review your set.</p>
@@ -330,12 +333,12 @@ const CreateVocab = () => {
                         <label className={styles.formLabel}>Description</label>
                         <textarea
                             className={`form-control ${styles.formControl}`}
+                            style={{ height: '6rem' }}
                             placeholder="Add a description..."
                             name="description"
                             value={studySet.description || ''}
                             onChange={handleChange}
                             onBlur={doUpdate}
-                            rows="3"
                         ></textarea>
                     </div>
                     {/* Card */}

@@ -1,13 +1,20 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 const LibraryLayout = () => {
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
+
     return (
         <div className="flex-grow-1">
             <div className="border-bottom bg-white p-2 pb-0">
                 <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
                     <li>
                         <NavLink
-                            to="sets"
+                            to={{
+                                pathname: 'sets',
+                                search: `?${searchParams.toString()}`,
+                            }}
                             className={
                                 'nav-link sub-nav-link px-3 me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -18,7 +25,10 @@ const LibraryLayout = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="classes"
+                            to={{
+                                pathname: 'classes',
+                                search: `?${searchParams.toString()}`,
+                            }}
                             className={
                                 'nav-link px-3 sub-nav-link me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))

@@ -37,11 +37,6 @@ const SendFeedback = () => {
         }
     }, [userInfo])
 
-    useEffect(() => {
-        setError('')
-        setSuccess(false)
-    }, [])
-
     const handleSubmit = async (event) => {
         event.preventDefault()
         setLoading(true)
@@ -63,10 +58,14 @@ const SendFeedback = () => {
                 contentEl.classList.add('is-invalid')
             }
         } else {
-            console.log('dfdfd')
             try {
                 await FeedbackService.createFeedback(feedback)
                 setSuccess(true)
+                // clear validation
+                form.classList.remove('was-validated')
+                titleEl.classList.remove('is-invalid')
+                contentEl.classList.remove('is-invalid')
+                setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)

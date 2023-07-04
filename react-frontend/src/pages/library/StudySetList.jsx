@@ -1,66 +1,72 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
-import StudySetService from '../../../services/StudySetService'
+import StudySetService from '../../services/StudySetService'
 
-import empty from '../../../assets/images/empty-state.png'
-import { SearchIcon } from '../../../components/icons'
-import './StudySetList.css'
+import empty from '../../assets/images/empty-state.png'
+import defaultAvatar from '../../assets/images/default_avatar.png'
+import { SearchIcon } from '../../components/icons'
+import '../../assets/styles/StudySetList.css'
 
 const StudySetList = () => {
     const navigate = useNavigate()
+    const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
 
     const { userInfo } = useSelector((state) => state.user)
 
     const [sets, setSets] = useState([])
-    const [search, setSearch] = useState('')
     const [isEmpty, setIsEmpty] = useState(false)
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const temp = (
-                await StudySetService.getFilterList(
-                    '',
-                    '',
-                    '',
-                    '',
-                    `=${userInfo.username}`,
-                    '',
-                    '',
-                    '',
-                    ''
-                )
-            ).data.list
-            if (temp.length === 0) {
-                setIsEmpty(true)
-            }
-            setSets(temp)
+    const fetchData = async (searchKey) => {
+        const temp = (
+            await StudySetService.getFilterList(
+                '',
+                '',
+                '',
+                `${searchKey ? '=' + searchKey : ''}`,
+                `=${userInfo.username}`,
+                '',
+                '',
+                '',
+                ''
+            )
+        ).data.list
+        setSets(temp)
+    }
+
+    const checkEmpty = async () => {
+        const temp = (
+            await StudySetService.getFilterList(
+                '',
+                '',
+                '',
+                '',
+                `=${userInfo.username}`,
+                '',
+                '',
+                '',
+                ''
+            )
+        ).data.list
+        if (temp.length === 0) {
+            setIsEmpty(true)
         }
+    }
+
+    useEffect(() => {
         if (userInfo.username) {
-            fetchData()
+            checkEmpty()
         }
     }, [userInfo])
 
-    const handleSearch = async (event) => {
-        const temp = event.target.value
-        setSearch(temp)
-        setSets(
-            (
-                await StudySetService.getFilterList(
-                    '',
-                    '',
-                    '',
-                    `${temp ? '=' + temp : ''}`,
-                    `=${userInfo.username}`,
-                    '',
-                    '',
-                    '',
-                    ''
-                )
-            ).data.list
-        )
-    }
+    useEffect(() => {
+        if (userInfo.username) {
+            fetchData(search ? search : '')
+        }
+    }, [userInfo, search])
 
     return (
         <div className="container mt-4 mb-5">
@@ -120,7 +126,11 @@ const StudySetList = () => {
                             placeholder="Search your sets"
                             type="text"
                             value={search}
-                            onChange={handleSearch}
+                            onChange={(event) =>
+                                setSearchParams({
+                                    search: event.target.value,
+                                })
+                            }
                         ></input>
                         <SearchIcon />
                     </div>
@@ -132,7 +142,7 @@ const StudySetList = () => {
                             <div key={set.id} className="set-item mb-3">
                                 <Link to={`/set/${set.id}`}>
                                     <div className="set-body row mb-2">
-                                        <div className="term-count col-1">
+                                        <div className="term-count col-2">
                                             {set.count} terms
                                         </div>
                                         <div
@@ -141,7 +151,11 @@ const StudySetList = () => {
                                         >
                                             <div className="author-avatar">
                                                 <img
-                                                    src={userInfo.avatar}
+                                                    src={
+                                                        userInfo.avatar
+                                                            ? userInfo.avatar
+                                                            : defaultAvatar
+                                                    }
                                                     alt="author avatar"
                                                     className="w-100 h-100"
                                                 />
@@ -158,7 +172,12 @@ const StudySetList = () => {
                                                 : set.title}
                                         </div>
                                         <div className="col d-flex align-items-center">
-                                            <p className="set-description m-0">
+                                            <p
+                                                className="set-description m-0"
+                                                style={{
+                                                    whiteSpace: 'pre-wrap',
+                                                }}
+                                            >
                                                 {set.description}
                                             </p>
                                         </div>

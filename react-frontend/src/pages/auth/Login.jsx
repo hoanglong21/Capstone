@@ -25,11 +25,6 @@ const Login = () => {
         }
     }, [userToken])
 
-    // reset state
-    useEffect(() => {
-        dispatch(reset())
-    }, [])
-
     const submitForm = (data) => {
         var form = document.querySelector('.needs-validation')
         const usernameEl = document.getElementById('username')
@@ -56,6 +51,12 @@ const Login = () => {
         }
         setLoading(true)
         dispatch(login(data))
+        
+        form.classList.remove('was-validated')
+        usernameEl.classList.remove('is-invalid')
+        passwordEl.classList.remove('is-invalid')
+        dispatch(reset())
+        setEmptyMess('')
         setLoading(false)
     }
 

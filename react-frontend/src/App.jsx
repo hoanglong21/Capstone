@@ -17,7 +17,7 @@ import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
 import LibraryLayout from './pages/library/LibraryLayout'
-import StudySetList from './pages/library/StudySetList/StudySetList'
+import StudySetList from './pages/library/StudySetList'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
@@ -27,7 +27,7 @@ import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/settings/Notifications'
 import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
-import ClassList from './pages/library/ClassList/ClassList'
+import ClassList from './pages/library/ClassList'
 import HelpCenter from './pages/help/HelpCenter'
 import SendFeedback from './pages/help/sendFeedback/SendFeedback'
 import Language from './pages/settings/Language'
@@ -37,11 +37,13 @@ import Translate from './pages/Translate'
 import Dictionary from './pages/Dictionary'
 import Home from '../src/pages/home/Home'
 import UpdatePost from './pages/UpdatePost'
-import ClassListForHome from './pages/home/ClassListForHome'
-import StudySetForHome from './pages/home/StudySetForHome'
+import ClassesForHome from './pages/home/ClassesForHome'
+import SetsForHome from './pages/home/SetsForHome'
 import AuthLayout from './pages/auth/AuthLayout'
 import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
 import PostInClass from './pages/PostInClass'
+import UsersForHome from './pages/home/UsersForHome'
+import AllForHome from './pages/home/AllForHome'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -50,7 +52,12 @@ const App = () => {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
-                    <Route index element={userToken ? <Home /> : <Landing />} />
+                    <Route path="" element={userToken ? <Home /> : <Landing />}>
+                        <Route index element={<AllForHome />} />
+                        <Route path="sets" element={<SetsForHome />} />
+                        <Route path="classes" element={<ClassesForHome />} />
+                        <Route path="users" element={<UsersForHome />} />
+                    </Route>
                     <Route element={<ProtectedRoute />}>
                         <Route path="account" element={<AccountLayout />}>
                             <Route index element={<Profile />} />
@@ -105,8 +112,6 @@ const App = () => {
                     />
                     <Route path="/translate" element={<Translate />} />
                     <Route path="/dictionary" element={<Dictionary />} />
-                    <Route path="/class" element={<ClassListForHome />} />
-                    <Route path="/set" element={<StudySetForHome />} />
 
                     <Route element={<OtherLayout />}>
                         <Route path="/forgotten" element={<ForgotPassword />} />
