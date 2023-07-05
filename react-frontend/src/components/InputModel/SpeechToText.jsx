@@ -1,34 +1,66 @@
-import React from 'react';
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { useEffect } from 'react'
+import SpeechRecognition, {
+    useSpeechRecognition,
+} from 'react-speech-recognition'
+import { MicIconSolid, StopIconSolid } from '../icons'
 
-const SpeechToText = () => {
-  const {
-    transcript,
-    listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition
-  } = useSpeechRecognition({
-    // Set language code to Japanese
-    language: 'ja',
-    // Display final result only
-    interimResults: false
-  });
+const SpeechToText = ({
+    language,
+    handleSpeechToText,
+    refresh,
+    stateChanger,
+}) => {
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition,
+    } = useSpeechRecognition({
+        // Set language code to Japanese
+        language: language,
+        // Display final result only
+        interimResults: false,
+    })
 
-  const startListening = () => SpeechRecognition.startListening({ continuous: true, language: 'ja' });
+    useEffect(() => {
+        if (refresh) {
+            resetTranscript()
+            stateChanger(false)
+        }
+    }, [refresh])
 
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
+    const startListening = () =>
+        SpeechRecognition.startListening({
+            continuous: true,
+            language: language,
+        })
 
-  return (
-    <div>
-      <p>Microphone: {listening ? 'on' : 'off'}</p>
-      <button onClick={startListening}>Start</button>
-      <button onClick={SpeechRecognition.stopListening}>Stop</button>
-      <button onClick={resetTranscript}>Reset</button>
-      <p>{transcript}</p>
-    </div>
-  );
-};
+    if (!browserSupportsSpeechRecognition) {
+        return <span>Browser doesn't support speech recognition.</span>
+    }
 
-export default SpeechToText;
+    return (
+        <div>
+            {listening ? (
+                <button
+                    className="btn btn-outline-danger rounded-circle p-2"
+                    onClick={() => {
+                        SpeechRecognition.stopListening()
+                        handleSpeechToText(transcript)
+                    }}
+                >
+                    <StopIconSolid />
+                </button>
+            ) : (
+                <button
+                    className="btn btn-outline-secondary rounded-circle p-2"
+                    onClick={startListening}
+                >
+                    <MicIconSolid />
+                </button>
+            )}
+        </div>
+    )
+}
+
+export default SpeechToText
