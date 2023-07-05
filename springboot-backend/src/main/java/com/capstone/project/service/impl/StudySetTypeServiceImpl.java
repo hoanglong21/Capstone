@@ -5,7 +5,10 @@ import com.capstone.project.model.StudySetType;
 import com.capstone.project.repository.StudySetTypeRepository;
 import com.capstone.project.service.StudySetTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class StudySetTypeServiceImpl implements StudySetTypeService {
@@ -27,5 +30,10 @@ public class StudySetTypeServiceImpl implements StudySetTypeService {
             e.printStackTrace();
         }
         return studySetType;
+    }
+
+    @Override
+    public List<StudySetType> getAll() {
+        return studysetTypeRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 }
