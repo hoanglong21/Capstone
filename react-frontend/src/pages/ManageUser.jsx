@@ -3,6 +3,7 @@ import SidebarforAdmin from "./SidebarforAdmin";
 
 function ManageUser() {
   return (
+    <>
     <div className="container">
       <h3 className="mt-5 mb-4 text-bold text-black">Management Users</h3>
       <div className="table-responsive">
@@ -23,7 +24,7 @@ function ManageUser() {
               <td>abc@gmail.com</td>
               <td>0123456789</td>
               <td>
-              <button type="button" className="btn btn-primary me-3">View Details</button>
+              <button type="button" className="btn btn-primary me-3" >View Details</button>
               <button type="button" className="btn btn-success me-3">Unban</button>
               <button type="button" className="btn btn-danger ">Ban</button>
               </td>
@@ -32,6 +33,7 @@ function ManageUser() {
         </table>
       </div>
     </div>
+    </>
   );
 }
 export default ManageUser;
