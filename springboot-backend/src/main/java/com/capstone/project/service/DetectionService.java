@@ -3,7 +3,11 @@ package com.capstone.project.service;
 
 import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.VocabularyTokenizer;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,9 +18,13 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,7 +107,7 @@ public class DetectionService {
         }
     }
 
-    private  String ConvertDetectGrammar(String text) throws Exception {
+    private String ConvertDetectGrammar(String text) throws Exception {
         Dotenv dotenv = Dotenv.load();
         String url = "https://api.openai.com/v1/chat/completions";
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
@@ -135,29 +143,70 @@ public class DetectionService {
         return new JSONObject(output).getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
     }
 
-    public List<String> grammarCheck(String inputText) {
-        List<String> errors = new ArrayList<>();
+    public String grammarCheck(String text) throws Exception {
+        Dotenv dotenv = Dotenv.load();
+        String preUrl = "https://api.sapling.ai/api/v1/edits";
+        URL url = new URL(preUrl);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
 
-        // Create a language tool instance for Japanese
-        JLanguageTool languageTool = new JLanguageTool(new Japanese());
+        connection.setDoOutput(true); // Enable output for POST request
+        connection.setRequestProperty("Content-Type", "application/json");
 
-        try {
-            // Perform grammar check on the input text
-            List<RuleMatch> matches = languageTool.check(inputText);
+        String requestBody = "{\n" +
+                "    \"key\":\"" + dotenv.get("SAPLING_API_KEY") + "\", \n" +
+                "    \"text\":\"" + text + "\", \n" +
+                "    \"lang\": \"jp\",\n" +
+                "    \"session_id\": \"test session\"\n" +
+                "}";
+        //TODO EACH MONTH CHANGE SAPLING_API_KEY AND MAKE IT RUN WITH MULTIPLE KEY (5)
+        OutputStream outputStream = connection.getOutputStream();
+        outputStream.write(requestBody.getBytes());
+        outputStream.flush();
+        outputStream.close();
 
-            // Extract error details from matches and add them to the errors list
-            for (RuleMatch match : matches) {
-                String errorMessage = String.format("Error at line %d: %s", match.getLine(), match.getMessage());
-                errors.add(errorMessage);
+        int responseCode = connection.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
             }
-        } catch (Exception e) {
-            // Handle any exceptions that may occur during grammar checking
-            e.printStackTrace();
-            // Add a generic error message to the errors list
-            errors.add("Error occurred during grammar checking.");
-        }
+            in.close();
 
-        return errors;
+            // Parse the JSON response
+            JsonParser parser = new JsonParser();
+            JsonObject jsonResponse = parser.parse(response.toString()).getAsJsonObject();
+
+            // Extract the "trans" value
+            JsonArray edits = jsonResponse.getAsJsonArray("edits");
+
+            StringBuilder result = new StringBuilder();
+
+            for (int i=0; i<edits.size(); i++) {
+                JsonObject edit = edits.get(i).getAsJsonObject();
+                int start = Integer.parseInt(edit.get("start").getAsString());
+                int end = Integer.parseInt(edit.get("end").getAsString());
+                String replacement = edit.get("replacement").getAsString();
+                String sentence = edit.get("sentence").getAsString();
+                String outcome = sentence.substring(0, start) + replacement + sentence.substring(end);
+                if(result.toString().equals("")) {
+                    result.append(outcome);
+                } else {
+                    result.append(outcome + "\n");
+                }
+            }
+
+            if(!result.toString().equals("")){
+                return result.toString();
+            } else {
+                return "No grammar error";
+            }
+        } else {
+            throw new Exception("GET request failed with response code: " + responseCode);
+        }
     }
 
 }
