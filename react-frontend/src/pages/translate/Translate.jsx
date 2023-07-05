@@ -3,9 +3,10 @@ import { useState } from 'react'
 import TranslateService from '../../services/TranslateService'
 import DetectionService from '../../services/DetectionService'
 
-import { ExchangeIcon, TranslateIcon } from '../../components/icons'
+import { CloseIcon, ExchangeIcon, TranslateIcon } from '../../components/icons'
 import './Translate.css'
 import { useEffect } from 'react'
+import SpeechToText from '../../components/InputModel/SpeechToText'
 
 function Translate() {
     const [origText, setOrigText] = useState('')
@@ -14,7 +15,7 @@ function Translate() {
     const [transLang, setTransLang] = useState('vi')
     const [loadingTrans, setLoadingTrans] = useState(false)
 
-    const [isSwitch, setIsSwitch] = useState(false)
+    const [isTriggerTrans, setIsTriggerTrans] = useState(false)
 
     const [grammarCheck, setGrammarCheck] = useState('')
     const [loadingCheck, setLoadingCheck] = useState(false)
@@ -24,6 +25,8 @@ function Translate() {
 
     const [openAI, setOpenAI] = useState('')
     const [loadingOpenAI, setLoadingOpenAI] = useState(false)
+
+    const [isClearVoice, setIsClearVoice] = useState(false)
 
     const [error, setError] = useState('')
 
@@ -146,11 +149,11 @@ function Translate() {
     }
 
     useEffect(() => {
-        if (isSwitch) {
+        if (isTriggerTrans) {
             translate()
-            setIsSwitch(false)
+            setIsTriggerTrans(false)
         }
-    }, [isSwitch])
+    }, [isTriggerTrans])
 
     const autoGrow = (event) => {
         event.target.style.height = '5px'
@@ -162,7 +165,18 @@ function Translate() {
         setTransLang(origLang)
         setOrigText(transText)
         setTransText('')
-        setIsSwitch(true)
+        setIsTriggerTrans(true)
+    }
+
+    const handleClear = () => {
+        setOrigText('')
+        setTransText('')
+        setIsClearVoice(true)
+    }
+
+    const handleVoice = (text) => {
+        setOrigText(text)
+        setIsTriggerTrans(true)
     }
 
     return (
@@ -201,7 +215,7 @@ function Translate() {
                             switchLanguage()
                         }}
                     >
-                        <ExchangeIcon size="1.375rem" />{' '}
+                        <ExchangeIcon size="1.375rem" />
                     </button>
                     <div className="flex-fill d-flex justify-content-center">
                         <select
@@ -223,23 +237,35 @@ function Translate() {
                         </select>
                     </div>
                 </div>
-                <div className="card-body d-flex p-0">
-                    <textarea
-                        className="form-control translateInput"
-                        id="floatingTextarea"
-                        value={origText}
-                        onInput={autoGrow}
-                        onChange={(event) => {
-                            setOrigText(event.target.value)
-                        }}
-                    ></textarea>
-                    <textarea
-                        className="form-control translateInput"
-                        id="floatingTextarea"
-                        value={transText}
-                        onInput={autoGrow}
-                        disabled
-                    ></textarea>
+                <div className="card-body row p-0">
+                    <div className="col d-flex">
+                        <textarea
+                            className="form-control translateInput py-2 ps-3 pe-1"
+                            id="floatingTextarea"
+                            value={origText}
+                            onInput={autoGrow}
+                            onChange={(event) => {
+                                setOrigText(event.target.value)
+                            }}
+                        ></textarea>
+                        {origText && (
+                            <button
+                                className="btn transClearButton p-0 mt-2 align-self-start"
+                                onClick={handleClear}
+                            >
+                                <CloseIcon />
+                            </button>
+                        )}
+                    </div>
+                    <div className="col">
+                        <textarea
+                            className="form-control translateInput"
+                            id="floatingTextarea"
+                            value={transText}
+                            onInput={autoGrow}
+                            disabled
+                        ></textarea>
+                    </div>
                 </div>
                 <div className="card-footer d-flex justify-content-between">
                     <button
@@ -270,6 +296,14 @@ function Translate() {
                             </div>
                         )}
                     </button>
+                    <div>
+                        <SpeechToText
+                            language={origLang}
+                            handleSpeechToText={handleVoice}
+                            refresh={isClearVoice}
+                            stateChanger={setIsClearVoice}
+                        />
+                    </div>
                     <div>{origText.length} / 5000</div>
                 </div>
             </div>

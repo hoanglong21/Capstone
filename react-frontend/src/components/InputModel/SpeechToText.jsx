@@ -1,8 +1,14 @@
+import { useEffect } from 'react'
 import SpeechRecognition, {
     useSpeechRecognition,
 } from 'react-speech-recognition'
 
-const SpeechToText = () => {
+const SpeechToText = ({
+    language,
+    handleSpeechToText,
+    refresh,
+    stateChanger,
+}) => {
     const {
         transcript,
         listening,
@@ -10,13 +16,23 @@ const SpeechToText = () => {
         browserSupportsSpeechRecognition,
     } = useSpeechRecognition({
         // Set language code to Japanese
-        language: 'ja',
+        language: language,
         // Display final result only
         interimResults: false,
     })
 
+    useEffect(() => {
+        if (refresh) {
+            resetTranscript()
+            stateChanger(false)
+        }
+    }, [refresh])
+
     const startListening = () =>
-        SpeechRecognition.startListening({ continuous: true, language: 'ja' })
+        SpeechRecognition.startListening({
+            continuous: true,
+            language: language,
+        })
 
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>
@@ -26,9 +42,14 @@ const SpeechToText = () => {
         <div>
             <p>Microphone: {listening ? 'on' : 'off'}</p>
             <button onClick={startListening}>Start</button>
-            <button onClick={SpeechRecognition.stopListening}>Stop</button>
-            <button onClick={resetTranscript}>Reset</button>
-            <p>{transcript}</p>
+            <button
+                onClick={(event) => {
+                    SpeechRecognition.stopListening()
+                    handleSpeechToText(transcript)
+                }}
+            >
+                Stop
+            </button>
         </div>
     )
 }
