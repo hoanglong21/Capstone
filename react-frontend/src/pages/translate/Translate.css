@@ -18,7 +18,7 @@
 .translateContainer .selectLang {
     text-align: center;
     cursor: pointer;
-    width: 25%;
+    width: 50%;
 }
 
 .translateContainer .selectLang:focus {
