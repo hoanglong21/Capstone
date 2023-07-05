@@ -3,7 +3,7 @@ package com.capstone.project.controller;
 import com.capstone.project.model.Grammar;
 import com.capstone.project.model.Kanji;
 import com.capstone.project.model.Vocabulary;
-import com.capstone.project.service.KanjivgFinder;
+import com.capstone.project.service.KanjivgFinderService;
 import com.capstone.project.startup.ApplicationStartup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import java.util.List;
 public class DictionaryController {
 
     @Autowired
-    private KanjivgFinder kanjivgFinder;
+    private KanjivgFinderService kanjivgFinder;
 
 
     @Autowired
