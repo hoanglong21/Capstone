@@ -10,7 +10,7 @@ function SidebarforAdmin() {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column">
+        <div className="header__admin col-4 col-md-2 min-vh-100 d-flex justify-content-between flex-column">
           <div>
             <Link
               href=""
@@ -83,23 +83,21 @@ function SidebarforAdmin() {
             </Link>
           </div>
         </div>
-      </div>
-      <div className="">
-      <nav class="navbar bg-light">
-        <div class="container-fluid">
-          <form class="d-flex" role="search">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
+        <div className="col-8">
+          <nav className="navbar bg-light ">
+            <form className="d-flex w-50" role="search">
+              <input
+                class="form-control ms-3 me-2"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              />
+              <button class="btn btn-primary" type="submit">
+                Search
+              </button>
+            </form>
+          </nav>
         </div>
-      </nav>
       </div>
     </div>
   );
