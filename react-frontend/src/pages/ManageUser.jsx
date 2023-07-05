@@ -1,7 +1,9 @@
 import React from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
+import { useNavigate } from "react-router-dom";
 
 function ManageUser() {
+  const navigate = useNavigate();
   return (
     <>
     <div className="container">
@@ -24,7 +26,9 @@ function ManageUser() {
               <td>abc@gmail.com</td>
               <td>0123456789</td>
               <td>
-              <button type="button" className="btn btn-primary me-3" >View Details</button>
+              <button type="button" className="btn btn-primary me-3" onClick={() => {
+                    navigate("viewdetailuser");
+                  }}>View Details</button>
               <button type="button" className="btn btn-success me-3">Unban</button>
               <button type="button" className="btn btn-danger ">Ban</button>
               </td>

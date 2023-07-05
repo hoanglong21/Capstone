@@ -46,6 +46,7 @@ import UsersForHome from './pages/home/UsersForHome'
 import AllForHome from './pages/home/AllForHome'
 import ManageUser from './pages/ManageUser'
 import SidebarforAdmin from './pages/SidebarforAdmin'
+import ViewDetailsUser from './pages/ViewDetailsUser'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -140,6 +141,7 @@ const App = () => {
                 <Route path="/updatepost" element={<UpdatePost />} />
                 <Route path="/manageuser" element={<ManageUser />} />
                 <Route path="/sidebar" element={<SidebarforAdmin />}/>
+                <Route path="/manageuser/viewdetailuser" element={<ViewDetailsUser/>} />
             </Routes>
         </BrowserRouter>
     )
