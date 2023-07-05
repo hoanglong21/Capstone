@@ -44,6 +44,8 @@ import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
 import PostInClass from './pages/PostInClass'
 import UsersForHome from './pages/home/UsersForHome'
 import AllForHome from './pages/home/AllForHome'
+import ManageUser from './pages/ManageUser'
+import SidebarforAdmin from './pages/SidebarforAdmin'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -136,6 +138,8 @@ const App = () => {
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/updatepost" element={<UpdatePost />} />
+                <Route path="/manageuser" element={<ManageUser />} />
+                <Route path="/sidebar" element={<SidebarforAdmin />}/>
             </Routes>
         </BrowserRouter>
     )
