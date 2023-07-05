@@ -5,9 +5,9 @@ import TranslateService from '../../services/TranslateService'
 import DetectionService from '../../services/DetectionService'
 
 import SpeechToText from '../../components/InputModel/SpeechToText'
+import Draw from '../../components/InputModel/draw/Draw'
 import { CloseIcon, ExchangeIcon, TranslateIcon } from '../../components/icons'
 import './Translate.css'
-import Draw from '../../components/InputModel/Draw'
 
 function Translate() {
     const [origText, setOrigText] = useState('')
@@ -184,6 +184,10 @@ function Translate() {
         setIsTriggerTrans(true)
     }
 
+    const handleDraw = (text) => {
+        setOrigText(origText + text)
+    }
+
     return (
         <div className="translateContainer mx-auto mt-4 mb-5">
             {/* error message */}
@@ -301,14 +305,14 @@ function Translate() {
                             </div>
                         )}
                     </button>
-                    <div>
+                    <div className="d-flex">
                         <SpeechToText
                             language={origLang}
                             handleSpeechToText={handleVoice}
                             refresh={isClearVoice}
                             stateChanger={setIsClearVoice}
                         />
-                        <Draw />
+                        <Draw className="ms-1" handleHandWriting={handleDraw} />
                     </div>
                     <div>{origText.length} / 5000</div>
                 </div>
