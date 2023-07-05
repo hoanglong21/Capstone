@@ -5,9 +5,7 @@ import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
-import SpeechToText from './components/InputModel/SpeechToText'
 import Layout from './components/layouts/Layout'
-import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
@@ -33,7 +31,7 @@ import SendFeedback from './pages/help/sendFeedback/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
-import Translate from './pages/Translate'
+import Translate from './pages/translate/Translate'
 import Dictionary from './pages/Dictionary'
 import Home from '../src/pages/home/Home'
 import UpdatePost from './pages/UpdatePost'
@@ -97,8 +95,6 @@ const App = () => {
                         />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
-                        <Route path="voice" element={<SpeechToText />} />
-                        <Route path="draw" element={<Draw />} />
                         <Route path="to-speech" element={<TextToSpeech />} />
                     </Route>
                     <Route path="term" element={<Term />} />
