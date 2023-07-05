@@ -20,7 +20,7 @@ const JoinClass = () => {
         e.preventDefault()
         setLoading(true)
         var form = document.querySelector('.needs-validation')
-        const classCodeEl = document.getElementById('class_code')
+        const classCodeEl = document.getElementById('classCode')
         // clear validation
         form.classList.remove('was-validated')
         classCodeEl.classList.remove('is-invalid')
@@ -34,7 +34,7 @@ const JoinClass = () => {
                 const temp = (
                     await ClassService.joinClass(classCode, userInfo.username)
                 ).data
-                navigate(`/class/${temp.id}`)
+                // navigate(`/class/${temp.id}`)
                 document.getElementById('closeModal').click()
                 // clear validation
                 form.classList.remove('was-validated')
@@ -83,8 +83,8 @@ const JoinClass = () => {
                             {/* Class code */}
                             <div className="form-floating mb-3">
                                 <input
-                                    id="class_code"
-                                    name="class_code"
+                                    id="classCode"
+                                    name="classCode"
                                     type="text"
                                     className={`form-control ${FormStyles.formControl}`}
                                     placeholder="Enter a class code"
@@ -94,7 +94,7 @@ const JoinClass = () => {
                                     }}
                                     required
                                 />
-                                <label htmlFor="class_code">Class code</label>
+                                <label htmlFor="classCode">Class code</label>
                             </div>
                             <div className="text-end">
                                 <button

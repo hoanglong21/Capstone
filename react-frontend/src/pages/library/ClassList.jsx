@@ -79,16 +79,20 @@ const ClassList = () => {
                         One more class to get started
                     </p>
                     <div className="noClass__link">
-                        <Link
+                        <a
                             className="noClass__link1"
                             data-bs-toggle="modal"
                             data-bs-target="#createModal"
                         >
                             Create Class
-                        </Link>
-                        <Link className="noClass__link2" to="/joinclass">
+                        </a>
+                        <a
+                            className="noClass__link2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#joinModal"
+                        >
                             Join Class
-                        </Link>
+                        </a>
                     </div>
                 </div>
             ) : (
@@ -98,7 +102,7 @@ const ClassList = () => {
                             className="search-control flex-grow-1"
                             placeholder="Search your classes"
                             type="text"
-                            value={search}
+                            value={search || ''}
                             onChange={(event) =>
                                 setSearchParams({
                                     search: event.target.value,

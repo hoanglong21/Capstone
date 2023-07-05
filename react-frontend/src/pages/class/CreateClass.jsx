@@ -56,9 +56,10 @@ export default function CreateClass() {
                 setNewClass(temp)
                 document.getElementById('closeModal').click()
                 navigate(`/class/${temp.id}`)
-
-                setError('')
+                // clear validation
+                form.classList.remove('was-validated')
                 classNameEl.classList.remove('is-invalid')
+                setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)

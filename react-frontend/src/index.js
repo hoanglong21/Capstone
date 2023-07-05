@@ -6,8 +6,8 @@ import { store } from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.json'
 import 'bootstrap/dist/js/bootstrap.bundle'
-import './index.css'
 
+import './index.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
