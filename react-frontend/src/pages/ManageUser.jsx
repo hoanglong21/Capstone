@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function ManageUser() {
   const navigate = useNavigate();
+
   return (
     <>
     <div className="container">
@@ -30,7 +31,9 @@ function ManageUser() {
                     navigate("viewdetailuser");
                   }}>View Details</button>
               <button type="button" className="btn btn-success me-3">Unban</button>
-              <button type="button" className="btn btn-danger ">Ban</button>
+              <button type="button" className="btn btn-danger " onClick={() => {
+                    navigate("banuser");
+                  }}>Ban</button>
               </td>
             </tr>
           </tbody>
