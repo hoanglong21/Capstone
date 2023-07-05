@@ -1,29 +1,43 @@
-import React, { useState } from "react";
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { SpeakIconSolid } from '../icons'
 
-function TextToSpeech() {
-  const [text, setText] = useState("");
+function TextToSpeech({ className, text, language, disabled }) {
+    const [lang, setLang] = useState('ja-JP')
 
-  function handleClick() {
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = text;
+    useEffect(() => {
+        if (language === 'ja') {
+            setLang('ja-JP')
+        }
+        if (language === 'en') {
+            setLang('en-GB')
+        }
+    }, [language])
 
-      // Set the default voice to a Japanese voice
-    const japaneseVoice = window.speechSynthesis.getVoices().find(voice => voice.lang === 'ja-JP');
-    msg.voice = japaneseVoice;
+    function handleClick() {
+        const msg = new SpeechSynthesisUtterance()
+        msg.text = text
 
-    window.speechSynthesis.speak(msg);
-  }
+        // Set the default voice to a Japanese voice
+        const japaneseVoice = window.speechSynthesis
+            .getVoices()
+            .find((voice) => voice.lang === lang)
+        msg.voice = japaneseVoice
 
-  return (
-    <div>
-      <input
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        placeholder="Enter text to speak"
-      />
-      <button onClick={handleClick}>Speak</button>
-    </div>
-  );
+        window.speechSynthesis.speak(msg)
+    }
+
+    return (
+        <div className={className}>
+            <button
+                className="btn btn-outline-secondary rounded-circle p-2"
+                onClick={handleClick}
+                disabled={disabled}
+            >
+                <SpeakIconSolid />
+            </button>
+        </div>
+    )
 }
 
-export default TextToSpeech;
+export default TextToSpeech

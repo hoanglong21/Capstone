@@ -7,7 +7,7 @@ import { DrawIconSolid } from '../../icons/index.jsx'
 import './Draw.css'
 
 var canvas
-const Draw = ({ className, handleHandWriting }) => {
+const Draw = ({ className, handleHandWriting, disabled }) => {
     const [show, setShow] = useState(false)
     const [results, setResults] = useState([])
 
@@ -43,6 +43,7 @@ const Draw = ({ className, handleHandWriting }) => {
                 className={`btn ${
                     show ? 'btn-outline-primary' : 'btn-outline-secondary'
                 } rounded-circle p-2`}
+                disabled={disabled}
                 onClick={handleClick}
             >
                 <DrawIconSolid />

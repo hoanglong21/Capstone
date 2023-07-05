@@ -8,6 +8,7 @@ import SpeechToText from '../../components/InputModel/SpeechToText'
 import Draw from '../../components/InputModel/draw/Draw'
 import { CloseIcon, ExchangeIcon, TranslateIcon } from '../../components/icons'
 import './Translate.css'
+import TextToSpeech from '../../components/InputModel/TextToSpeech'
 
 function Translate() {
     const [origText, setOrigText] = useState('')
@@ -49,7 +50,6 @@ function Translate() {
             setLoadingTrans(true)
             setLoadingCheck(true)
             setLoadingAnalysis(true)
-            setLoadingOpenAI(true)
             let resTrans = ''
             try {
                 resTrans = (
@@ -123,30 +123,6 @@ function Translate() {
                 return
             }
             setLoadingAnalysis(false)
-            // openAI
-            try {
-                if (origLang === 'ja') {
-                    const resOrigOpenAI = (
-                        await DetectionService.detectGrammar(origText, 'en')
-                    ).data
-                    setOpenAI(resOrigOpenAI)
-                }
-                if (transLang === 'ja') {
-                    const resTransOpenAI = (
-                        await DetectionService.detectGrammar(resTrans, 'en')
-                    ).data
-                    setOpenAI(resTransOpenAI)
-                }
-            } catch (error) {
-                setLoadingOpenAI(false)
-                if (error.response && error.response.data) {
-                    setOpenAI(error.response.data)
-                } else {
-                    setOpenAI(error.message)
-                }
-                return
-            }
-            setLoadingOpenAI(false)
         }
     }
 
@@ -186,6 +162,33 @@ function Translate() {
 
     const handleDraw = (text) => {
         setOrigText(origText + text)
+    }
+
+    const handleOpenAI = async () => {
+        setLoadingOpenAI(true)
+        try {
+            if (origLang === 'ja') {
+                const resOrigOpenAI = (
+                    await DetectionService.detectGrammar(origText, 'english')
+                ).data
+                setOpenAI(resOrigOpenAI)
+            }
+            if (transLang === 'ja') {
+                const resTransOpenAI = (
+                    await DetectionService.detectGrammar(transText, 'english')
+                ).data
+                setOpenAI(resTransOpenAI)
+            }
+        } catch (error) {
+            setLoadingOpenAI(false)
+            if (error.response && error.response.data) {
+                setOpenAI(error.response.data)
+            } else {
+                setOpenAI(error.message)
+            }
+            return
+        }
+        setLoadingOpenAI(false)
     }
 
     return (
@@ -246,75 +249,110 @@ function Translate() {
                         </select>
                     </div>
                 </div>
-                <div className="card-body row p-0">
-                    <div className="col d-flex">
-                        <textarea
-                            className="form-control translateInput py-2 ps-3 pe-1"
-                            id="floatingTextarea"
-                            value={origText}
-                            onInput={autoGrow}
-                            onChange={(event) => {
-                                setOrigText(event.target.value)
-                            }}
-                        ></textarea>
-                        {origText && (
-                            <button
-                                className="btn transClearButton p-0 mt-2 align-self-start"
-                                onClick={handleClear}
-                            >
-                                <CloseIcon />
-                            </button>
-                        )}
-                    </div>
-                    <div className="col">
-                        <textarea
-                            className="form-control translateInput"
-                            id="floatingTextarea"
-                            value={transText}
-                            onInput={autoGrow}
-                            disabled
-                        ></textarea>
+                <div className="card-body p-0">
+                    <div className="row">
+                        <div className="col d-flex">
+                            <textarea
+                                className="form-control translateInput py-2 ps-3 pe-1"
+                                id="floatingTextarea"
+                                value={origText}
+                                onInput={autoGrow}
+                                onChange={(event) => {
+                                    setOrigText(event.target.value)
+                                }}
+                            ></textarea>
+                            {origText && (
+                                <button
+                                    className="btn transClearButton p-0 mt-2 align-self-start"
+                                    onClick={handleClear}
+                                >
+                                    <CloseIcon />
+                                </button>
+                            )}
+                        </div>
+                        <div className="col">
+                            <textarea
+                                className="form-control translateInput"
+                                id="floatingTextarea"
+                                value={transText}
+                                onInput={autoGrow}
+                                disabled
+                            ></textarea>
+                        </div>
                     </div>
                 </div>
-                <div className="card-footer d-flex justify-content-between">
-                    <button
-                        id="translateButton"
-                        className="btn btn-primary btn-sm d-flex align-items-center justify-content-center"
-                        style={{ minWidth: '7rem', minHeight: '2.3rem' }}
-                        onClick={translate}
-                        disabled={loadingTrans}
-                    >
-                        {loadingTrans ? (
-                            <div>
-                                <span
-                                    className="spinner-border spinner-border-sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                ></span>
-                                <span className="visually-hidden">
-                                    Loading...
-                                </span>
-                            </div>
-                        ) : (
+                <div className="card-footer">
+                    <div className="row">
+                        <div className="col d-flex justify-content-between">
                             <div className="d-flex align-items-center">
-                                <TranslateIcon
-                                    size="1.1rem"
-                                    strokeWidth="1.75"
+                                <SpeechToText
+                                    language={origLang}
+                                    handleSpeechToText={handleVoice}
+                                    refresh={isClearVoice}
+                                    stateChanger={setIsClearVoice}
                                 />
-                                <span className="ms-1">Translate</span>
+                                <Draw
+                                    className="ms-1"
+                                    handleHandWriting={handleDraw}
+                                    disabled={origLang !== 'ja'}
+                                />
+                                {origText.length > 0 && (
+                                    <TextToSpeech
+                                        className="ms-1"
+                                        text={origText}
+                                        language={origLang}
+                                        disabled={origLang === 'vi'}
+                                    />
+                                )}
                             </div>
-                        )}
-                    </button>
-                    <div className="d-flex">
-                        <SpeechToText
-                            language={origLang}
-                            handleSpeechToText={handleVoice}
-                            refresh={isClearVoice}
-                            stateChanger={setIsClearVoice}
-                        />
-                        <Draw className="ms-1" handleHandWriting={handleDraw} />
+                            <div className="d-flex align-items-center">
+                                <div>{origText.length} / 5000</div>
+                                <button
+                                    id="translateButton"
+                                    className="btn btn-primary btn-sm ms-2 d-flex align-items-center justify-content-center"
+                                    style={{
+                                        minWidth: '7rem',
+                                        minHeight: '2.3rem',
+                                    }}
+                                    onClick={translate}
+                                    disabled={loadingTrans}
+                                >
+                                    {loadingTrans ? (
+                                        <div>
+                                            <span
+                                                className="spinner-border spinner-border-sm"
+                                                role="status"
+                                                aria-hidden="true"
+                                            ></span>
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <div className="d-flex align-items-center">
+                                            <TranslateIcon
+                                                size="1.1rem"
+                                                strokeWidth="1.75"
+                                            />
+                                            <span className="ms-1">
+                                                Translate
+                                            </span>
+                                        </div>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                        <div className="col">
+                            {transText.length > 0 && (
+                                <TextToSpeech
+                                    className="ms-1"
+                                    text={transText}
+                                    language={transLang}
+                                    disabled={transLang === 'vi'}
+                                />
+                            )}
+                        </div>
                     </div>
-                    <div>{origText.length} / 5000</div>
                 </div>
             </div>
             <div className="accordion mt-4" id="accordion">
@@ -440,17 +478,31 @@ function Translate() {
                         style={{ whiteSpace: 'pre-wrap' }}
                     >
                         <div className="accordion-body">
-                            {loadingOpenAI ? (
-                                <div className="text-center">
-                                    <div
-                                        className="spinner-border"
-                                        role="status"
-                                    >
-                                        <span className="visually-hidden">
-                                            Loading...
-                                        </span>
-                                    </div>
-                                </div>
+                            {!openAI ? (
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={handleOpenAI}
+                                    style={{
+                                        minWidth: '8.4rem',
+                                        minHeight: '2.5rem',
+                                    }}
+                                    disabled={!origText || loadingOpenAI}
+                                >
+                                    {loadingOpenAI ? (
+                                        <div>
+                                            <span
+                                                className="spinner-border spinner-border-sm"
+                                                role="status"
+                                                aria-hidden="true"
+                                            ></span>
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        'Run detection'
+                                    )}
+                                </button>
                             ) : (
                                 openAI
                             )}
