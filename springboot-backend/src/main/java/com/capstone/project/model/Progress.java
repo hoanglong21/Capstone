@@ -2,6 +2,7 @@ package com.capstone.project.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "progress", uniqueConstraints = @UniqueConstraint(columnNames={"user_id", "card_id"}))
 public class Progress {
 
