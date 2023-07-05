@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/popup.css'
-import ClassService from '../../services/ClassService'
 
 const JoinClass = () => {
+    const navigate = useNavigate()
+
+    const { userInfo } = useSelector((state) => state.user)
+
     const [classCode, setClassCode] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
@@ -18,15 +25,22 @@ const JoinClass = () => {
         form.classList.remove('was-validated')
         classCodeEl.classList.remove('is-invalid')
         setError('')
-
         form.classList.add('was-validated')
-        if (!form.checkValidity()) {
+        if (!classCode) {
             setError('Class code cannot be empty.')
             classCodeEl.classList.add('is-invalid')
         } else {
             try {
-                // const temp = (await ClassService.createClassroom(newClass)).data
-                // navigate(`/class/${temp.id}`)
+                const temp = (
+                    await ClassService.joinClass(classCode, userInfo.username)
+                ).data
+                navigate(`/class/${temp.id}`)
+                document.getElementById('closeModal').click()
+                // clear validation
+                form.classList.remove('was-validated')
+                classCodeEl.classList.remove('is-invalid')
+                setClassCode('')
+                setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)
@@ -34,7 +48,6 @@ const JoinClass = () => {
                     setError(error.message)
                 }
             }
-            document.getElementById('closeModal').click()
         }
 
         setLoading(false)
@@ -67,7 +80,7 @@ const JoinClass = () => {
                                     {error}
                                 </div>
                             )}
-                            {/* Class name */}
+                            {/* Class code */}
                             <div className="form-floating mb-3">
                                 <input
                                     id="class_code"
@@ -75,6 +88,10 @@ const JoinClass = () => {
                                     type="text"
                                     className={`form-control ${FormStyles.formControl}`}
                                     placeholder="Enter a class code"
+                                    value={classCode || ''}
+                                    onChange={(event) => {
+                                        setClassCode(event.target.value)
+                                    }}
                                     required
                                 />
                                 <label htmlFor="class_code">Class code</label>
