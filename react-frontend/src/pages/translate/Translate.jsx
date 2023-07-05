@@ -1,12 +1,13 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
 
 import TranslateService from '../../services/TranslateService'
 import DetectionService from '../../services/DetectionService'
 
+import SpeechToText from '../../components/InputModel/SpeechToText'
 import { CloseIcon, ExchangeIcon, TranslateIcon } from '../../components/icons'
 import './Translate.css'
-import { useEffect } from 'react'
-import SpeechToText from '../../components/InputModel/SpeechToText'
+import Draw from '../../components/InputModel/Draw'
 
 function Translate() {
     const [origText, setOrigText] = useState('')
@@ -41,6 +42,7 @@ function Translate() {
     const translate = async () => {
         setGrammarCheck('')
         setAnalysis([])
+        setOpenAI('')
         setLoadingOpenAI('')
         if (origText.length > 0 && origText.length <= 5000) {
             // translate
@@ -171,6 +173,9 @@ function Translate() {
     const handleClear = () => {
         setOrigText('')
         setTransText('')
+        setGrammarCheck('')
+        setAnalysis([])
+        setOpenAI('')
         setIsClearVoice(true)
     }
 
@@ -303,6 +308,7 @@ function Translate() {
                             refresh={isClearVoice}
                             stateChanger={setIsClearVoice}
                         />
+                        <Draw />
                     </div>
                     <div>{origText.length} / 5000</div>
                 </div>

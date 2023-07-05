@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import SpeechRecognition, {
     useSpeechRecognition,
 } from 'react-speech-recognition'
+import { MicIconSolid, StopIconSolid } from '../icons'
 
 const SpeechToText = ({
     language,
@@ -40,16 +41,24 @@ const SpeechToText = ({
 
     return (
         <div>
-            <p>Microphone: {listening ? 'on' : 'off'}</p>
-            <button onClick={startListening}>Start</button>
-            <button
-                onClick={(event) => {
-                    SpeechRecognition.stopListening()
-                    handleSpeechToText(transcript)
-                }}
-            >
-                Stop
-            </button>
+            {listening ? (
+                <button
+                    className="btn btn-outline-danger rounded-circle p-2"
+                    onClick={() => {
+                        SpeechRecognition.stopListening()
+                        handleSpeechToText(transcript)
+                    }}
+                >
+                    <StopIconSolid />
+                </button>
+            ) : (
+                <button
+                    className="btn btn-outline-secondary rounded-circle p-2"
+                    onClick={startListening}
+                >
+                    <MicIconSolid />
+                </button>
+            )}
         </div>
     )
 }
