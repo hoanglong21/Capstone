@@ -41,7 +41,7 @@ public class AssignmentRequest {
     private Date due_date;
 
 
-    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,]+", message = "Description can only contain letters, numbers, and spaces")
+    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,:]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
 

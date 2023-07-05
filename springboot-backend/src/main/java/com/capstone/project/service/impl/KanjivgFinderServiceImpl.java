@@ -1,16 +1,14 @@
-package com.capstone.project.service;
+package com.capstone.project.service.impl;
 
+import com.capstone.project.service.KanjivgFinderService;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Service
-public class KanjivgFinder {
-    public static String getSvgFile(char kanji) {
+public class KanjivgFinderServiceImpl implements KanjivgFinderService {
+    public String getSvgFile(char kanji) {
         int kcode = String.valueOf(kanji).codePointAt(0);
         String hex = Integer.toHexString(kcode);
         int zeros = 5 - hex.length();

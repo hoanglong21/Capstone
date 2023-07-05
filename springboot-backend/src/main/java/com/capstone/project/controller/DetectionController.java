@@ -27,4 +27,13 @@ public class DetectionController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("grammarcheck")
+    public ResponseEntity<?> grammarCheck(@RequestParam("text") String text) {
+        try {
+            return ResponseEntity.ok(detectionService.grammarCheck(text));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

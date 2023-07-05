@@ -20,4 +20,6 @@ public interface ClassService {
     Boolean deleteHardClass( int id) throws ResourceNotFroundException;
 
     Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException;
+
+    Boolean joinClass(String classCode, String username) throws ResourceNotFroundException;
 }
