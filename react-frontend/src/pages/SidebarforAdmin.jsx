@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getUser } from "../features/user/userAction";
 import { useState } from "react";
+import ManageUser from "./ManageUser"
 
 function SidebarforAdmin() {
   const dispatch = useDispatch();
@@ -220,6 +221,7 @@ function SidebarforAdmin() {
               </li>
             </ul>
           </div>
+          {/* <ManageUser/> */}
         </div>
       </div>
     </div>
