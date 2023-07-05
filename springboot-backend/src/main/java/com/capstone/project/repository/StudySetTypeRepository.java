@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudySetTypeRepository extends JpaRepository<StudySetType, Integer> {
 
-    StudySetType findStudySetTypeById(int id);
 }
