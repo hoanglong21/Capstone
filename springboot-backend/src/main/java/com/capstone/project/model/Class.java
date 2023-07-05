@@ -30,7 +30,7 @@ public class Class {
     private String class_name;
 
     @Column(unique = true)
-    private String class_code;
+    private String classcode;
 
     private String description;
 

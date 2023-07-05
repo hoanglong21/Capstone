@@ -130,4 +130,13 @@ public class ClassController {
     }
     }
 
+    @PostMapping("/joinclass")
+    public ResponseEntity<?> joinClass(@RequestParam String classCode, @RequestParam String username) {
+        try {
+            return ResponseEntity.ok(classService.joinClass(classCode,username));
+        } catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
