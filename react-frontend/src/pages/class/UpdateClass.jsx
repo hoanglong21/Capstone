@@ -1,45 +1,61 @@
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/popup.css'
 
-const JoinClass = () => {
-    const navigate = useNavigate()
+const UpdateClass = ({ classroom, stateChanger }) => {
+    let navigate = useNavigate()
 
-    const { userInfo } = useSelector((state) => state.user)
-
-    const [classCode, setClassCode] = useState('')
+    const [updateClass, setUpdateClass] = useState({})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (classroom.class_name) {
+            setUpdateClass({ ...classroom })
+        }
+    }, [classroom])
+
+    const handleChange = (event) => {
+        setUpdateClass({
+            ...updateClass,
+            [event.target.name]: event.target.value,
+        })
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
         var form = document.querySelector('.needs-validation')
-        const classCodeEl = document.getElementById('classCode')
+        const classNameEl = document.getElementById('class_name')
         // clear validation
         form.classList.remove('was-validated')
-        classCodeEl.classList.remove('is-invalid')
+        classNameEl.classList.remove('is-invalid')
         setError('')
+
         form.classList.add('was-validated')
-        if (!classCode) {
-            setError('Class code cannot be empty.')
-            classCodeEl.classList.add('is-invalid')
+        if (!updateClass.class_name) {
+            setError('Class name cannot be empty.')
+            classNameEl.classList.add('is-invalid')
         } else {
             try {
                 const temp = (
-                    await ClassService.joinClass(classCode, userInfo.username)
+                    await ClassService.updateClassroom(
+                        updateClass,
+                        updateClass.id
+                    )
                 ).data
-                // navigate(`/class/${temp.id}`)
-                document.getElementById('closeJoinClassModal').click()
+                setUpdateClass(temp)
+                document.getElementById('closeUpdateClassModal').click()
+                stateChanger(temp)
                 // clear validation
                 form.classList.remove('was-validated')
-                classCodeEl.classList.remove('is-invalid')
-                setClassCode('')
+                classNameEl.classList.remove('is-invalid')
+                setUpdateClass({})
                 setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -49,6 +65,7 @@ const JoinClass = () => {
                 }
             }
         }
+
         setLoading(false)
     }
 
@@ -56,7 +73,7 @@ const JoinClass = () => {
         <div
             className="modal fade classModal"
             tabIndex="-1"
-            id="joinClassModal"
+            id="updateClassModal"
             data-bs-backdrop="static"
             data-bs-keyboard="false"
             aria-hidden="true"
@@ -65,10 +82,10 @@ const JoinClass = () => {
                 <div className="modal-content p-2">
                     <div className="modal-header border-0">
                         <h5 className="modal-title classModalTitle">
-                            Join class
+                            Edit class
                         </h5>
                         <button
-                            id="closeJoinClassModal"
+                            id="closeUpdateClassModal"
                             type="button"
                             className="btn-close"
                             data-bs-dismiss="modal"
@@ -80,7 +97,7 @@ const JoinClass = () => {
                                 document
                                     .getElementById('class_name')
                                     .classList.remove('is-invalid')
-                                setClassCode('')
+                                setUpdateClass({})
                                 setError('')
                             }}
                         ></button>
@@ -96,28 +113,52 @@ const JoinClass = () => {
                                     {error}
                                 </div>
                             )}
-                            {/* Class code */}
+                            {/* Class name */}
                             <div className="form-floating mb-3">
                                 <input
-                                    id="classCode"
-                                    name="classCode"
+                                    id="class_name"
+                                    name="class_name"
                                     type="text"
+                                    value={updateClass.class_name || ''}
                                     className={`form-control ${FormStyles.formControl}`}
-                                    placeholder="Enter a class code"
-                                    value={classCode || ''}
-                                    onChange={(event) => {
-                                        setClassCode(event.target.value)
-                                    }}
+                                    placeholder="Enter a class name"
+                                    onChange={handleChange}
                                     required
                                 />
-                                <label htmlFor="classCode">Class code</label>
+                                <label htmlFor="class_name">Class name</label>
+                            </div>
+                            {/* Description */}
+                            <div className="form-floating mb-3">
+                                <textarea
+                                    name="description"
+                                    type="text"
+                                    value={updateClass.description || ''}
+                                    className={`form-control ${FormStyles.formControl}`}
+                                    style={{ height: '6rem' }}
+                                    placeholder="Enter a description"
+                                    onChange={handleChange}
+                                />
+                                <label htmlFor="description">Description</label>
                             </div>
                             <div className="text-end">
                                 <button
                                     className="btn btn-primary classModalBtn mt-3"
                                     onClick={handleSubmit}
+                                    disabled={loading}
                                 >
-                                    Join
+                                    {loading ? (
+                                        <div
+                                            className="spinner-border text-secondary mx-auto mb-1"
+                                            role="status"
+                                            id="loading"
+                                        >
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        'Save'
+                                    )}
                                 </button>
                             </div>
                         </form>
@@ -127,4 +168,5 @@ const JoinClass = () => {
         </div>
     )
 }
-export default JoinClass
+
+export default UpdateClass
