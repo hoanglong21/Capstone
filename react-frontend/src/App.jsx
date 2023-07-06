@@ -10,7 +10,7 @@ import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateVocab from './pages/vocab/CreateVocab'
-import MainClass from './pages/class/MainClass'
+import MainClass from './pages/class/mainClass/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -138,10 +138,13 @@ const App = () => {
                 <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/updatepost" element={<UpdatePost />} />
                 <Route path="/manageuser" element={<ManageUser />} />
-                <Route path="/sidebar" element={<SidebarforAdmin />}/>
-                <Route path="/manageuser/viewdetailuser" element={<ViewDetailsUser/>} />
-                <Route path="/banuser" element={<BanUser/>} />
-                <Route path="/unbanuser" element={<UnBanUser/>} />
+                <Route path="/sidebar" element={<SidebarforAdmin />} />
+                <Route
+                    path="/manageuser/viewdetailuser"
+                    element={<ViewDetailsUser />}
+                />
+                <Route path="/banuser" element={<BanUser />} />
+                <Route path="/unbanuser" element={<UnBanUser />} />
             </Routes>
         </BrowserRouter>
     )

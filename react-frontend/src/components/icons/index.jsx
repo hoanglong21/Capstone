@@ -584,3 +584,128 @@ export const SpeakIconSolid = ({ className, size = '1.5rem' }) => {
         </svg>
     )
 }
+
+export const OptionHorIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+            />
+        </svg>
+    )
+}
+
+export const ReportIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.7',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+            />
+        </svg>
+    )
+}
+
+export const OptionVerIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z"
+            />
+        </svg>
+    )
+}
+
+export const CopyIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+            />
+        </svg>
+    )
+}
+
+export const ResetIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+            />
+        </svg>
+    )
+}

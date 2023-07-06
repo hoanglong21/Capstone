@@ -16,6 +16,10 @@ const joinClass = (classCode, username) => {
     )
 }
 
+const getClassroomById = (id) => {
+    return axios.get(API_BASE_URL + '/class/' + id)
+}
+
 const getFilterList = (is_deleted, search, author, from, to, page, size) => {
     return axios.get(
         API_BASE_URL +
@@ -38,6 +42,7 @@ const ClassService = {
     createClassroom,
     getFilterList,
     joinClass,
+    getClassroomById,
 }
 
 export default ClassService
