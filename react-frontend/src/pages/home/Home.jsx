@@ -25,7 +25,7 @@ function Home() {
                                         type="search"
                                         placeholder="Study set, Class"
                                         aria-label="Search"
-                                        value={search}
+                                        value={search || ''}
                                         onChange={(event) =>
                                             setSearchParams({
                                                 search: event.target.value,
