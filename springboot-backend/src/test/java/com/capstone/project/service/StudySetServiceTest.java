@@ -92,7 +92,7 @@ public class StudySetServiceTest {
 
             // test
             StudySet createdStudySet = studySetServiceImpl.createStudySet(studySet);
-            assertThat(studySet.toString()).isEqualTo(createdStudySet.toString());
+            assertThat(studySet).isEqualTo(createdStudySet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,7 +134,7 @@ public class StudySetServiceTest {
 
             // test
             StudySet createdStudySet = studySetServiceImpl.updateStudySet(1, studySetDetails);
-            assertThat(createdStudySet.toString()).isEqualTo(studySetDetails.toString());
+            assertThat(createdStudySet).isEqualTo(studySetDetails);
         } catch (Exception e) {
             e.printStackTrace();
         }

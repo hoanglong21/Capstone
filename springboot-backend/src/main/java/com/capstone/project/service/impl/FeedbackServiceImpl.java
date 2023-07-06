@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,6 +42,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public Feedback createFeedback(Feedback feedback) {
         sendFeedbackEmail(feedback);
+        feedback.setCreated_date(new Date());
         return feedbackRepository.save(feedback);
     }
 
