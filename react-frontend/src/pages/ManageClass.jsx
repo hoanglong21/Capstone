@@ -1,13 +1,10 @@
-import React from "react";
+import React from 'react'
 import SidebarforAdmin from "./SidebarforAdmin";
-import { useNavigate } from "react-router-dom";
-import BanUser from "./BanUser";
-import UnBanUser from "./UnBanUser";
 import HeaderAdmin from "./HeaderAdmin";
+import { useNavigate } from "react-router-dom";
 
-function ManageUser() {
-  const navigate = useNavigate();
-
+function ManageClass() {
+    const navigate = useNavigate();
   return (
     <div className="container-fluid">
       <div className="row">
@@ -20,10 +17,10 @@ function ManageUser() {
           <table className="table table-hover">
             <thead style={{backgroundColor: "#000"}}>
               <tr>
-                <th scope="col">User ID</th>
-                <th scope="col">Username - Role</th>
-                <th scope="col">Email</th>
-                <th scope="col">Phone Number</th>
+                <th scope="col">Class ID</th>
+                <th scope="col">ClassName</th>
+                <th scope="col">Tutor</th>
+                <th scope="col">Create Date</th>
                 <th scope="col">Active</th>
               </tr>
             </thead>
@@ -31,16 +28,16 @@ function ManageUser() {
               <tr>
                 <th scope="row">1</th>
                 <td>
-                  <p className="text-info mb-0">Duong</p>Learner
+                  <p className="text-info mb-0">N2</p>
                 </td>
-                <td>abc@gmail.com</td>
-                <td>0123456789</td>
+                <td>Nguyen Van A</td>
+                <td>06/07/2023</td>
                 <td>
                   <button
                     type="button"
                     className="btn btn-primary me-3"
                     onClick={() => {
-                      navigate("viewdetailuser");
+                      navigate("viewdetailclass");
                     }}
                   >
                     View Details
@@ -66,12 +63,11 @@ function ManageUser() {
             </tbody>
           </table>
         </div>
-        <BanUser />
-        <UnBanUser />
       </div>
       </div>
       </div>
       </div>
-  );
+  )
 }
-export default ManageUser;
+
+export default ManageClass
