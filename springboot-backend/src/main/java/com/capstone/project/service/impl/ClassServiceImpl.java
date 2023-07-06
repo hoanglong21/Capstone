@@ -122,7 +122,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author,String learner, String from, String to, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM class WHERE 1=1";
@@ -139,6 +139,12 @@ public class ClassServiceImpl implements ClassService {
             query += " AND author_id = :authorId";
             User user = userService.getUserByUsername(author);
             parameters.put("authorId", user.getId());
+        }
+
+        if (learner != null && !learner.isEmpty()) {
+            query += " AND EXISTS (SELECT * FROM class_learner cl WHERE cl.class_id = capstone.class.id AND cl.user_id = :userId) ";
+            User user = userService.getUserByUsername(learner);
+            parameters.put("userId", user.getId());
         }
 
         if (search != null && !search.isEmpty()) {
@@ -180,7 +186,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Boolean joinClass(String classCode, String username) throws ResourceNotFroundException {
+    public Class joinClass(String classCode, String username) throws ResourceNotFroundException {
 
         Class classroom = classRepository.findByClasscode(classCode);
         if (classroom == null) {
@@ -200,9 +206,16 @@ public class ClassServiceImpl implements ClassService {
 
         // add user to classroom
         classroom.getUsers().add(user);
-        classRepository.save(classroom);
+        return classRepository.save(classroom);
+    }
 
-        return true;
+    @Override
+    public Class ResetClassCode(int id) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
+        String newCode = generateClassCode();
+        classroom.setClasscode(newCode);
+        return classRepository.save(classroom);
     }
 
 
