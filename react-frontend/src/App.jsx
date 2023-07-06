@@ -45,6 +45,7 @@ import BanUser from './pages/BanUser'
 import UnBanUser from './pages/UnBanUser'
 import AdminDashboard from './pages/AdminDashboard'
 import SidebarforAdmin from './pages/SidebarforAdmin'
+import ViewDetailsUser from './pages/ViewDetailsUser'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
