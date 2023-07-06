@@ -6,7 +6,12 @@ import DetectionService from '../../services/DetectionService'
 
 import SpeechToText from '../../components/InputModel/SpeechToText'
 import Draw from '../../components/InputModel/draw/Draw'
-import { CloseIcon, ExchangeIcon, TranslateIcon } from '../../components/icons'
+import {
+    CloseIcon,
+    CopyIcon,
+    ExchangeIcon,
+    TranslateIcon,
+} from '../../components/icons'
 import './Translate.css'
 import TextToSpeech from '../../components/InputModel/TextToSpeech'
 
@@ -191,6 +196,10 @@ function Translate() {
         setLoadingOpenAI(false)
     }
 
+    const handleCopy = () => {
+        navigator.clipboard.writeText(transText)
+    }
+
     return (
         <div className="translateContainer mx-auto mt-4 mb-5">
             {/* error message */}
@@ -344,12 +353,20 @@ function Translate() {
                         </div>
                         <div className="col">
                             {transText.length > 0 && (
-                                <TextToSpeech
-                                    className="ms-1"
-                                    text={transText}
-                                    language={transLang}
-                                    disabled={transLang === 'vi'}
-                                />
+                                <div className="d-flex align-items-center">
+                                    <TextToSpeech
+                                        className="ms-1"
+                                        text={transText}
+                                        language={transLang}
+                                        disabled={transLang === 'vi'}
+                                    />
+                                    <button
+                                        className="btn btn-outline-secondary p-2 rounded-circle"
+                                        onClick={handleCopy}
+                                    >
+                                        <CopyIcon />
+                                    </button>
+                                </div>
                             )}
                         </div>
                     </div>
