@@ -2,11 +2,11 @@ import React from "react";
 
 function UnBanUser() {
   return (
-    <div class="modal" tabindex="-1" role="dialog" id="unbanModal">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">UNBAN USERS</h5>
+    <div className="modal" tabindex="-1" role="dialog" id="unbanModal">
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">UNBAN USERS</h5>
             <button
               type="button"
               id="closeModal"
@@ -16,16 +16,16 @@ function UnBanUser() {
             >
             </button>
           </div>
-          <div class="modal-body">
+          <div className="modal-body">
             <p>Are you sure unban user id ?</p>
           </div>
-          <div class="modal-footer">
+          <div className="modal-footer">
             <button type="button" class="btn btn-success">
               Sure!
             </button>
             <button
               type="button"
-              class="btn btn-secondary"
+              className="btn btn-secondary"
               data-bs-dismiss="modal"
               aria-label="Close"
             >

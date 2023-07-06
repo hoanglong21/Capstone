@@ -1,6 +1,7 @@
 import React from 'react'
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
+import ReplyFeedback from './ReplyFeedback';
 
 function ViewDetailFeedback() {
   return (
@@ -82,12 +83,14 @@ function ViewDetailFeedback() {
                   <button className="btn btn-secondary me-4" type="button">
                     Close
                   </button>
-                  <button className="btn btn-primary" type="button">
+                  <button className="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#replyModal">
                     Reply
                   </button>
                 </div>
               </form>
             </div>
+            <ReplyFeedback/>
           </div>
         </div>
       </div>
