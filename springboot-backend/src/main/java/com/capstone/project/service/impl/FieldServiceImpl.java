@@ -5,7 +5,10 @@ import com.capstone.project.model.Field;
 import com.capstone.project.repository.FieldRepository;
 import com.capstone.project.service.FieldService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class FieldServiceImpl implements FieldService {
@@ -27,5 +30,10 @@ public class FieldServiceImpl implements FieldService {
             e.printStackTrace();
         }
         return field;
+    }
+
+    @Override
+    public List<Field> getAll() {
+        return fieldRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 }

@@ -23,6 +23,7 @@
     --pink-red-51: #f60f10;
     --pink-red-71: #ec7e7f;
 
+    --red-56: #da4543;
     --red-71: #fa8072;
     --red-64: #ff6347;
     --red-94: #ffe4e1;
@@ -239,6 +240,10 @@ h6 {
 
 .icon-warning:hover {
     color: var(--icon-warning-hover);
+}
+
+.btn.icon-outline-secondary {
+    background-color: white;
 }
 
 input::placeholder {

@@ -5,14 +5,12 @@ import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
 import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
-import SpeechToText from './components/InputModel/SpeechToText'
 import Layout from './components/layouts/Layout'
-import Draw from './components/InputModel/Draw'
 import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateVocab from './pages/vocab/CreateVocab'
-import MainClass from './pages/class/MainClass'
+import MainClass from './pages/class/mainClass/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -21,7 +19,6 @@ import StudySetList from './pages/library/StudySetList'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
-import UpdateClassroom from './pages/UpdateClassroom'
 import ChangePassword from './pages/settings/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/settings/Notifications'
@@ -33,7 +30,7 @@ import SendFeedback from './pages/help/sendFeedback/SendFeedback'
 import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
-import Translate from './pages/Translate'
+import Translate from './pages/translate/Translate'
 import Dictionary from './pages/Dictionary'
 import Home from '../src/pages/home/Home'
 import UpdatePost from './pages/UpdatePost'
@@ -41,9 +38,14 @@ import ClassesForHome from './pages/home/ClassesForHome'
 import SetsForHome from './pages/home/SetsForHome'
 import AuthLayout from './pages/auth/AuthLayout'
 import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
-import PostInClass from './pages/PostInClass'
 import UsersForHome from './pages/home/UsersForHome'
 import AllForHome from './pages/home/AllForHome'
+import ManageUser from './pages/ManageUser'
+import BanUser from './pages/BanUser'
+import UnBanUser from './pages/UnBanUser'
+import AdminDashboard from './pages/AdminDashboard'
+import SidebarforAdmin from './pages/SidebarforAdmin'
+import ViewDetailsUser from './pages/ViewDetailsUser'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -97,8 +99,6 @@ const App = () => {
                         />
                         <Route path="chat" element={<ChatContainer />} />
                         <Route path="gpt" element={<GPTContainer />} />
-                        <Route path="voice" element={<SpeechToText />} />
-                        <Route path="draw" element={<Draw />} />
                         <Route path="to-speech" element={<TextToSpeech />} />
                     </Route>
                     <Route path="term" element={<Term />} />
@@ -134,8 +134,15 @@ const App = () => {
                 </Route>
 
                 <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/updatepost" element={<UpdatePost />} />
+                <Route path="/manageuser" element={<ManageUser />} />
+                <Route path="/sidebar" element={<SidebarforAdmin />} />
+                <Route
+                    path="/manageuser/viewdetailuser"
+                    element={<ViewDetailsUser />}
+                />
+                <Route path="/banuser" element={<BanUser />} />
+                <Route path="/unbanuser" element={<UnBanUser />} />
             </Routes>
         </BrowserRouter>
     )
