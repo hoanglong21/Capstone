@@ -1,9 +1,9 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import logo from "../assets/images/logo-1.png";
+import logo from "../../assets/images/logo-1.png";
 import { Link } from "react-router-dom";
-import "../assets/styles/sidebar.css";
+import "../../assets/styles/sidebar.css";
 
 function SidebarforAdmin() {
   return (
