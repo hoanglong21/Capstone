@@ -3,14 +3,19 @@ import SidebarforAdmin from "./SidebarforAdmin";
 import { useNavigate } from "react-router-dom";
 import BanUser from "./BanUser";
 import UnBanUser from "./UnBanUser";
+import HeaderAdmin from "./HeaderAdmin";
 
 function ManageUser() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <div className="container-fluid">
+      <div className="row">
+      <SidebarforAdmin/>
+      <div className="col-sm">
+        <HeaderAdmin/>
       <div className="container">
-        <h3 className="mt-5 mb-4 text-bold text-black">Management Users</h3>
+        <h3 className="mt-3 mb-4 text-bold text-black">Management Users</h3>
         <div className="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -64,7 +69,9 @@ function ManageUser() {
         <BanUser />
         <UnBanUser />
       </div>
-    </>
+      </div>
+      </div>
+      </div>
   );
 }
 export default ManageUser;
