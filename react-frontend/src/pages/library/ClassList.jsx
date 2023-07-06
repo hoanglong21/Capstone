@@ -82,14 +82,14 @@ const ClassList = () => {
                         <a
                             className="noClass__link1"
                             data-bs-toggle="modal"
-                            data-bs-target="#createModal"
+                            data-bs-target="#createClassModal"
                         >
                             Create Class
                         </a>
                         <a
                             className="noClass__link2"
                             data-bs-toggle="modal"
-                            data-bs-target="#joinModal"
+                            data-bs-target="#joinClassModal"
                         >
                             Join Class
                         </a>

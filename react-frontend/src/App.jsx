@@ -19,7 +19,6 @@ import StudySetList from './pages/library/StudySetList'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
-import UpdateClassroom from './pages/UpdateClassroom'
 import ChangePassword from './pages/settings/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/settings/Notifications'
@@ -135,7 +134,6 @@ const App = () => {
                 </Route>
 
                 <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/updatepost" element={<UpdatePost />} />
                 <Route path="/manageuser" element={<ManageUser />} />
                 <Route path="/sidebar" element={<SidebarforAdmin />} />

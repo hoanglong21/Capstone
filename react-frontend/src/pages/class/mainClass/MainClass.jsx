@@ -17,6 +17,7 @@ import {
     ResetIcon,
 } from '../../../components/icons'
 import './MainClass.css'
+import UpdateClass from '../UpdateClass'
 
 const MainClass = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -36,7 +37,7 @@ const MainClass = () => {
         if (userInfo.username) {
             fetchData()
         }
-    }, [userInfo])
+    }, [userInfo, id])
 
     const handleChange = (e) => {
         if (e.target.files[0]) {
@@ -56,7 +57,7 @@ const MainClass = () => {
                         {classroom.class_name}
                     </h1>
 
-                    <div class="dropdown align-self-start">
+                    <div className="dropdown align-self-start">
                         <button
                             className="btn btn-outline-secondary icon-outline-secondary "
                             type="button"
@@ -65,11 +66,13 @@ const MainClass = () => {
                         >
                             <OptionHorIcon />
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul className="dropdown-menu">
                             <li>
                                 <button
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
                                     type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#updateClassModal"
                                 >
                                     <EditIcon className="me-3" size="1.3rem" />
                                     <span className="align-middle fw-semibold">
@@ -93,7 +96,7 @@ const MainClass = () => {
                                 </button>
                             </li>
                             <li>
-                                <hr class="dropdown-divider" />
+                                <hr className="dropdown-divider" />
                             </li>
                             <li>
                                 <button
@@ -120,7 +123,7 @@ const MainClass = () => {
                         <div className="card-body">
                             <div className="card-title mainClass_sectionTitle d-flex justify-content-between align-items-center">
                                 <span>Class code</span>
-                                <div class="dropdown">
+                                <div className="dropdown">
                                     <button
                                         className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
                                         type="button"
@@ -129,7 +132,7 @@ const MainClass = () => {
                                     >
                                         <OptionVerIcon />
                                     </button>
-                                    <ul class="dropdown-menu">
+                                    <ul className="dropdown-menu">
                                         <li>
                                             <button
                                                 className="dropdown-item py-2 px-3 d-flex align-items-center"
@@ -228,6 +231,8 @@ const MainClass = () => {
                     <PostInClass />
                 </div>
             </div>
+            {/* Update class Modal */}
+            <UpdateClass classroom={classroom} stateChanger={setClassroom} />
         </div>
     )
 }
