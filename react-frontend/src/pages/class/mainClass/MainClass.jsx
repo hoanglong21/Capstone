@@ -44,6 +44,10 @@ const MainClass = () => {
         }
     }
 
+    const handleCopyCode = (event) => {
+        navigator.clipboard.writeText(classroom.classcode)
+    }
+
     return (
         <div className="mainClass__container mx-auto">
             <div className="card mt-4 mainClass__header">
@@ -130,6 +134,7 @@ const MainClass = () => {
                                             <button
                                                 className="dropdown-item py-2 px-3 d-flex align-items-center"
                                                 type="button"
+                                                onClick={handleCopyCode}
                                             >
                                                 <CopyIcon
                                                     className="me-3"

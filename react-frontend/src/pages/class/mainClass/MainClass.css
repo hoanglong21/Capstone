@@ -7,7 +7,7 @@
     max-width: 62.5rem;
 }
 
-.mainClass__wrapper .mainClass__header {
+.mainClass__container .mainClass__header {
     overflow: hidden;
     height: 15rem;
     width: 100%;
@@ -22,11 +22,11 @@
     color: #fff !important;
 }
 
-.mainClass__wrapper .btn.show {
+.mainClass__container .btn.show {
     color: initial;
 }
 
-.mainClass__wrapper .btn-del {
+.mainClass__container .btn-del {
     color: var(--btn-del);
 }
 
