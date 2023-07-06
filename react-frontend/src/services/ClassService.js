@@ -20,6 +20,10 @@ const updateClassroom = (classRequest, id) => {
     return axios.put(API_BASE_URL + '/class/' + id, classRequest)
 }
 
+const deleteClass = (id) => {
+    return axios.delete(API_BASE_URL + '/class/' + id)
+}
+
 const getClassroomById = (id) => {
     return axios.get(API_BASE_URL + '/class/' + id)
 }
@@ -48,6 +52,7 @@ const ClassService = {
     joinClass,
     getClassroomById,
     updateClassroom,
+    deleteClass,
 }
 
 export default ClassService
