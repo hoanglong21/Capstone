@@ -42,9 +42,10 @@ import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
 import UsersForHome from './pages/home/UsersForHome'
 import AllForHome from './pages/home/AllForHome'
 import ManageUser from './pages/ManageUser'
-import SidebarforAdmin from './pages/SidebarforAdmin'
 import BanUser from './pages/BanUser'
 import UnBanUser from './pages/UnBanUser'
+import AdminDashboard from './pages/AdminDashboard'
+import SidebarforAdmin from './pages/SidebarforAdmin'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -125,8 +126,6 @@ const App = () => {
                     </Route>
 
                     <Route path="*" element={<NotFound />} />
-                    <Route path="/manageuser" element={<ManageUser />} />
-                    <Route path="/sidebar" element={<SidebarforAdmin />}/>
                 </Route>
 
                 <Route element={<AuthLayout />}>
@@ -139,6 +138,9 @@ const App = () => {
                 <Route path="/updatepost" element={<UpdatePost />} />
                 <Route path="/banuser" element={<BanUser/>} />
                 <Route path="/unbanuser" element={<UnBanUser/>} />
+                <Route path="/manageusers" element={<ManageUser />} />
+                <Route path="/sidebar" element={<SidebarforAdmin />} />
+                <Route path="/dashboard" element={<AdminDashboard />} />
             </Routes>
         </BrowserRouter>
     )

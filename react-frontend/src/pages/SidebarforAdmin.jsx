@@ -18,14 +18,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getUser } from "../features/user/userAction";
 import { useState } from "react";
-import ManageUser from "./ManageUser"
+// import ManageUser from "./ManageUser"
 
 function SidebarforAdmin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { userToken } = useSelector((state) => state.auth);
-  const { userInfo } = useSelector((state) => state.user);
+  // const { userInfo } = useSelector((state) => state.user);
 
   const [showLogoutMess, setShowLogoutMess] = useState(false);
 
@@ -44,9 +44,7 @@ function SidebarforAdmin() {
   };
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="header__admin col-4 col-md-2 min-vh-100 d-flex justify-content-between flex-column">
+        <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column">
           <div>
             <Link
               href=""
@@ -119,113 +117,6 @@ function SidebarforAdmin() {
             </Link>
           </div>
         </div>
-        <div className="col-sm">
-          <nav className="navbar bg-light">
-            <form className="d-flex w-50" role="search">
-              <input
-                class="form-control ms-3 me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button class="btn btn-primary" type="submit">
-                Search
-              </button>
-            </form>
-            <button
-            type="button"
-            className="btn btn-outline-secondary icon-outline-secondary"
-          >
-            <NotifyIcon strokeWidth="2" />
-          </button>
-          <div className="dropdown d-inline-flex">
-            <button
-              className="btn btn-avatar pe-0"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img src={img} alt="avatar" className="avatar" />
-            </button>
-            <ul className="dropdown-menu dropdown-menu-end p-2">
-              <li>
-                <div className="dropdown-header d-flex align-items-center">
-                  <div className="flex-shrink-0">
-                    <img src={img} alt="avatar" className="avatar" />
-                  </div>
-                  <div className="flex-grow-1 ms-3">
-                    <p className="fw-semibold">Username</p>
-                    <p
-                      className="text-truncate"
-                      style={{
-                        maxWidth: "8rem",
-                      }}
-                    >
-                      Email
-                    </p>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <hr className="dropdown-divider" />
-              </li>
-              <li>
-                <button
-                  className="dropdown-item py-2 px-3"
-                  type="button"
-                  onClick={() => {
-                    navigate("account");
-                  }}
-                >
-                  <ProfileIcon className="me-3" strokeWidth="2" />
-                  <span className="align-middle fw-semibold">Profile</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  className="dropdown-item py-2 px-3"
-                  type="button"
-                  onClick={() => {
-                    navigate("setting");
-                  }}
-                >
-                  <SettingIcon className="me-3" strokeWidth="2" />
-                  <span className="align-middle fw-semibold">Settings</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  className="dropdown-item py-2 px-3"
-                  type="button"
-                  onClick={() => {
-                    navigate("help-center");
-                  }}
-                >
-                  <HelpIcon className="me-3" strokeWidth="2" />
-                  <span className="align-middle fw-semibold">Help Center</span>
-                </button>
-              </li>
-              <li>
-                <hr className="dropdown-divider" />
-              </li>
-              <li>
-                <button
-                  className="dropdown-item py-2 px-3"
-                  type="button"
-                  onClick={handleLogout}
-                >
-                  <LogoutIcon className="me-3" strokeWidth="2" />
-                  <span className="align-middle fw-semibold">Logout</span>
-                </button>
-              </li>
-            </ul>
-          </div>
-          </nav>
-          <hr className="text-secondary d-none d-sm-block mt-0" />
-          <ManageUser/>
-        </div>
-      </div>
-    </div>
   );
 }
 
