@@ -40,7 +40,7 @@ function ManageUser() {
                     type="button"
                     className="btn btn-primary me-3"
                     onClick={() => {
-                      navigate("viewdetailuser");
+                      navigate("/manageusers/viewdetails");
                     }}
                   >
                     View Details

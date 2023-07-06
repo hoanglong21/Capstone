@@ -140,7 +140,7 @@ const App = () => {
                 <Route path="/manageusers" element={<ManageUser />} />
                 <Route path="/sidebar" element={<SidebarforAdmin />} />
                 <Route path="/dashboard" element={<AdminDashboard />} />
-                <Route path="/manageusers/viewdetails" element={<ViewDetailsUser />} />
+                <Route path="/manageusers/viewdetails" element={<ViewDetailsUser/>} />
             </Routes>
         </BrowserRouter>
     )
