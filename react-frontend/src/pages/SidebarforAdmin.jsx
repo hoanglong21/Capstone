@@ -29,7 +29,7 @@ function SidebarforAdmin() {
               </li>
               <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
                 <Link
-                  to="/manageuser"
+                  to="/manageusers"
                   className="nav-link text-white fs-7"
                   aria-current="page"
                 >
@@ -49,7 +49,7 @@ function SidebarforAdmin() {
               </li>
               <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
                 <Link
-                  to="/manageclass"
+                  to="/managefeedback"
                   className="nav-link text-white fs-7"
                   aria-current="page"
                 >

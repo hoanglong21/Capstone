@@ -46,6 +46,8 @@ import UnBanUser from './pages/UnBanUser'
 import AdminDashboard from './pages/AdminDashboard'
 import SidebarforAdmin from './pages/SidebarforAdmin'
 import ViewDetailsUser from './pages/ViewDetailsUser'
+import ManageClass from './pages/ManageClass'
+import ViewDetailClass from './pages/ViewDetailClass'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -141,6 +143,8 @@ const App = () => {
                 <Route path="/sidebar" element={<SidebarforAdmin />} />
                 <Route path="/dashboard" element={<AdminDashboard />} />
                 <Route path="/manageusers/viewdetails" element={<ViewDetailsUser/>} />
+                <Route path="/manageclass" element={<ManageClass/>} />
+                <Route path="/manageclass/viewdetails" element={<ViewDetailClass />}/>
             </Routes>
         </BrowserRouter>
     )
