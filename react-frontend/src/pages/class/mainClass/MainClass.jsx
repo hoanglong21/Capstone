@@ -18,6 +18,7 @@ import {
 } from '../../../components/icons'
 import './MainClass.css'
 import UpdateClass from '../UpdateClass'
+import DeleteClass from '../DeleteClass'
 
 const MainClass = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -102,6 +103,8 @@ const MainClass = () => {
                                 <button
                                     className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
                                     type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteClassModal"
                                 >
                                     <DeleteIcon
                                         className="me-3"
@@ -233,6 +236,8 @@ const MainClass = () => {
             </div>
             {/* Update class Modal */}
             <UpdateClass classroom={classroom} stateChanger={setClassroom} />
+            {/* Delete class modal */}
+            <DeleteClass classroom={classroom} />
         </div>
     )
 }

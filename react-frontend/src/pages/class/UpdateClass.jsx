@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 
 import ClassService from '../../services/ClassService'
 
@@ -8,8 +6,6 @@ import FormStyles from '../../assets/styles/Form.module.css'
 import '../../assets/styles/popup.css'
 
 const UpdateClass = ({ classroom, stateChanger }) => {
-    let navigate = useNavigate()
-
     const [updateClass, setUpdateClass] = useState({})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
