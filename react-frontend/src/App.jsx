@@ -49,6 +49,7 @@ import ViewDetailsUser from "./pages/admin/ViewDetailsUser";
 import ManageClass from "./pages/admin/ManageClass";
 import ViewDetailClass from "./pages/admin/ViewDetailClass";
 import ManageFeedback from "./pages/admin/ManageFeedback";
+import ViewDetailFeedback from "./pages/admin/ViewDetailFeedback";
 
 const App = () => {
   const { userToken } = useSelector((state) => state.auth);
@@ -117,6 +118,7 @@ const App = () => {
         <Route path="/manageclass" element={<ManageClass />} />
         <Route path="/manageclass/viewdetails" element={<ViewDetailClass />} />
         <Route path="/managefeedback" element={<ManageFeedback/>} />
+        <Route path="/managefeedback/viewdetailfb" element={<ViewDetailFeedback/>} />
       </Routes>
     </BrowserRouter>
   );
