@@ -10,7 +10,7 @@ import GPTContainer from './components/Chat/GPTContainer'
 import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
 import CreateVocab from './pages/vocab/CreateVocab'
-import MainClass from './pages/class/MainClass'
+import MainClass from './pages/class/mainClass/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -19,7 +19,6 @@ import StudySetList from './pages/library/StudySetList'
 import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
-import UpdateClassroom from './pages/UpdateClassroom'
 import ChangePassword from './pages/settings/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
 import Notifications from './pages/settings/Notifications'
@@ -134,7 +133,6 @@ const App = () => {
                 </Route>
 
                 <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/updatepost" element={<UpdatePost />} />
                 <Route path="/banuser" element={<BanUser/>} />
                 <Route path="/unbanuser" element={<UnBanUser/>} />

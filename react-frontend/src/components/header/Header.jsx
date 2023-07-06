@@ -203,7 +203,7 @@ const Header = () => {
                                         id="toggleCreateModal"
                                         className="d-none"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#createModal"
+                                        data-bs-target="#createClassModal"
                                     ></button>
                                 </li>
                             )}
@@ -221,7 +221,7 @@ const Header = () => {
                                     id="toggleJoinModal"
                                     className="d-none"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#joinModal"
+                                    data-bs-target="#joinClassModal"
                                 ></button>
                             </li>
                         </ul>

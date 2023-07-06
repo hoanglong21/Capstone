@@ -54,11 +54,13 @@ export default function CreateClass() {
             try {
                 const temp = (await ClassService.createClassroom(newClass)).data
                 setNewClass(temp)
-                document.getElementById('closeModal').click()
+                document.getElementById('closeCreateClassModal').click()
                 navigate(`/class/${temp.id}`)
-
-                setError('')
+                // clear validation
+                form.classList.remove('was-validated')
                 classNameEl.classList.remove('is-invalid')
+                setNewClass({})
+                setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)
@@ -72,7 +74,14 @@ export default function CreateClass() {
     }
 
     return (
-        <div className="modal fade classModal" tabIndex="-1" id="createModal">
+        <div
+            className="modal fade classModal"
+            tabIndex="-1"
+            id="createClassModal"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            aria-hidden="true"
+        >
             <div className="modal-dialog">
                 <div className="modal-content p-2">
                     <div className="modal-header border-0">
@@ -80,11 +89,21 @@ export default function CreateClass() {
                             Create a new class
                         </h5>
                         <button
-                            id="closeModal"
+                            id="closeCreateClassModal"
                             type="button"
                             className="btn-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
+                            onClick={() => {
+                                document
+                                    .querySelector('.needs-validation')
+                                    .classList.remove('was-validated')
+                                document
+                                    .getElementById('class_name')
+                                    .classList.remove('is-invalid')
+                                setError('')
+                                setNewClass({})
+                            }}
                         ></button>
                     </div>
                     <div className="modal-body">

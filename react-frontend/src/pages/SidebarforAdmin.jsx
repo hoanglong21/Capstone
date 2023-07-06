@@ -83,4 +83,4 @@ function SidebarforAdmin() {
   );
 }
 
-export default SidebarforAdmin;
+export default SidebarforAdmin
