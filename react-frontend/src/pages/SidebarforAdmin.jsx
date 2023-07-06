@@ -2,47 +2,10 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logo from "../assets/images/logo-1.png";
-import img from "../assets/images/avatar-default.jpg"
 import { Link } from "react-router-dom";
 import "../assets/styles/sidebar.css";
-import {
-  NotifyIcon,
-  ProfileIcon,
-  SettingIcon,
-  HelpIcon,
-  LogoutIcon,
-} from "../components/icons";
-import { useNavigate } from "react-router-dom";
-import { logout } from "../features/auth/authSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { getUser } from "../features/user/userAction";
-import { useState } from "react";
-// import ManageUser from "./ManageUser"
 
 function SidebarforAdmin() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const { userToken } = useSelector((state) => state.auth);
-  // const { userInfo } = useSelector((state) => state.user);
-
-  const [showLogoutMess, setShowLogoutMess] = useState(false);
-
-  useEffect(() => {
-    if (userToken) {
-      dispatch(getUser(userToken));
-    }
-  }, [userToken, dispatch]);
-
-  const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    toggleShowLogoutMess();
-    navigate("/");
-  };
-
   return (
         <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column">
           <div>

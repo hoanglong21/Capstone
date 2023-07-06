@@ -1,9 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import logo from "../assets/images/logo-1.png";
 import img from "../assets/images/avatar-default.jpg"
-import { Link } from "react-router-dom";
 import "../assets/styles/sidebar.css";
 import {
   NotifyIcon,
@@ -18,8 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getUser } from "../features/user/userAction";
 import { useState } from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
-// import ManageUser from "./ManageUser"
 
 function HeaderAdmin() {
   const dispatch = useDispatch();
