@@ -39,12 +39,10 @@ import ClassesForHome from './pages/home/ClassesForHome'
 import SetsForHome from './pages/home/SetsForHome'
 import AuthLayout from './pages/auth/AuthLayout'
 import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
-import PostInClass from './pages/PostInClass'
 import UsersForHome from './pages/home/UsersForHome'
 import AllForHome from './pages/home/AllForHome'
 import ManageUser from './pages/ManageUser'
 import SidebarforAdmin from './pages/SidebarforAdmin'
-import ViewDetailsUser from './pages/ViewDetailsUser'
 import BanUser from './pages/BanUser'
 import UnBanUser from './pages/UnBanUser'
 
@@ -127,6 +125,8 @@ const App = () => {
                     </Route>
 
                     <Route path="*" element={<NotFound />} />
+                    <Route path="/manageuser" element={<ManageUser />} />
+                    <Route path="/sidebar" element={<SidebarforAdmin />}/>
                 </Route>
 
                 <Route element={<AuthLayout />}>
@@ -137,9 +137,6 @@ const App = () => {
                 <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/updateclass" element={<UpdateClassroom />} />
                 <Route path="/updatepost" element={<UpdatePost />} />
-                <Route path="/manageuser" element={<ManageUser />} />
-                <Route path="/sidebar" element={<SidebarforAdmin />}/>
-                <Route path="/manageuser/viewdetailuser" element={<ViewDetailsUser/>} />
                 <Route path="/banuser" element={<BanUser/>} />
                 <Route path="/unbanuser" element={<UnBanUser/>} />
             </Routes>

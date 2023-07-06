@@ -2,8 +2,8 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import logo from "../assets/images/logo-1.png";
+import img from "../assets/images/avatar-default.jpg"
 import { Link } from "react-router-dom";
-import "bootstrap/js/dist/dropdown";
 import "../assets/styles/sidebar.css";
 import {
   NotifyIcon,
@@ -132,10 +132,9 @@ function SidebarforAdmin() {
                 Search
               </button>
             </form>
-          </nav>
-          <button
+            <button
             type="button"
-            className="btn btn-outline-secondary icon-outline-secondary me-2"
+            className="btn btn-outline-secondary icon-outline-secondary"
           >
             <NotifyIcon strokeWidth="2" />
           </button>
@@ -146,13 +145,13 @@ function SidebarforAdmin() {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <img src={"/"} alt="avatar" className="avatar" />
+              <img src={img} alt="avatar" className="avatar" />
             </button>
             <ul className="dropdown-menu dropdown-menu-end p-2">
               <li>
                 <div className="dropdown-header d-flex align-items-center">
                   <div className="flex-shrink-0">
-                    <img src={"/"} alt="avatar" className="avatar" />
+                    <img src={img} alt="avatar" className="avatar" />
                   </div>
                   <div className="flex-grow-1 ms-3">
                     <p className="fw-semibold">Username</p>
@@ -221,7 +220,9 @@ function SidebarforAdmin() {
               </li>
             </ul>
           </div>
-          {/* <ManageUser/> */}
+          </nav>
+          <hr className="text-secondary d-none d-sm-block mt-0" />
+          <ManageUser/>
         </div>
       </div>
     </div>
