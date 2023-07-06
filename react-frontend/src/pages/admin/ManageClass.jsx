@@ -2,6 +2,8 @@ import React from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import { useNavigate } from "react-router-dom";
+import BanClass from "./BanClass";
+import UnbanClass from "./UnbanClass";
 
 function ManageClass() {
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ function ManageClass() {
                         type="button"
                         className="btn btn-success me-3"
                         data-bs-toggle="modal"
-                        data-bs-target="#unbanModal"
+                        data-bs-target="#unbanClassModal"
                       >
                         Unban
                       </button>
@@ -54,7 +56,7 @@ function ManageClass() {
                         type="button"
                         className="btn btn-danger "
                         data-bs-toggle="modal"
-                        data-bs-target="#banModal"
+                        data-bs-target="#banClassModal"
                       >
                         Ban
                       </button>
@@ -63,6 +65,8 @@ function ManageClass() {
                 </tbody>
               </table>
             </div>
+            <BanClass/>
+            <UnbanClass/>
           </div>
         </div>
       </div>
