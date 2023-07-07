@@ -1,7 +1,6 @@
 import React from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import "../../assets/styles/admindashboard.css";
 import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
 import CanvasJS from '@canvasjs/charts';

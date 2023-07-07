@@ -20,7 +20,7 @@ function SidebarforAdmin() {
               <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
                 <Link
                   to="/dashboard"
-                  className="nav-link text-white fs-7"
+                  className="nav-link text-white fs-7 active"
                   aria-current="page"
                 >
                   <i className="bi bi-speedometer2"></i>
