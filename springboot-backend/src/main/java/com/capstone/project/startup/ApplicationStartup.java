@@ -132,7 +132,6 @@ public class ApplicationStartup implements ApplicationRunner {
                     new Field(1, "example"),
                     new Field(2, "character"),
                     new Field(2, "name"),
-                    new Field(2, "gradeLevel"),
                     new Field(2, "strokes"),
                     new Field(2, "jlptLevel"),
                     new Field(2, "radical"),
