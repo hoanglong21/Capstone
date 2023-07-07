@@ -122,7 +122,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author,String learner, String from, String to, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM class WHERE 1=1";
@@ -136,15 +136,9 @@ public class ClassServiceImpl implements ClassService {
         }
 
         if (author != null && !author.isEmpty()) {
-            query += " AND author_id = :authorId";
+            query += " AND author_id = :authorId OR EXISTS (SELECT * FROM class_learner cl WHERE cl.class_id = capstone.class.id AND cl.user_id = :authorId)";
             User user = userService.getUserByUsername(author);
             parameters.put("authorId", user.getId());
-        }
-
-        if (learner != null && !learner.isEmpty()) {
-            query += " AND EXISTS (SELECT * FROM class_learner cl WHERE cl.class_id = capstone.class.id AND cl.user_id = :userId) ";
-            User user = userService.getUserByUsername(learner);
-            parameters.put("userId", user.getId());
         }
 
         if (search != null && !search.isEmpty()) {
@@ -199,9 +193,17 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("User not exist with username: " +username);
         }
 
+        if(classroom.getUser().getUsername().contains(username)){
+            throw new ResourceNotFroundException("You cannot join your class !");
+        }
+
 
         if (classroom.getUsers().contains(user)) {
-            throw new DuplicateValueException("You are already in the class ");
+            throw new ResourceNotFroundException("You are already in the class !");
+        }
+
+        if(classroom.is_deleted() ==true){
+            throw new ResourceNotFroundException("Class is not exist !");
         }
 
         // add user to classroom
