@@ -9,6 +9,8 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -324,9 +326,99 @@ public class UserServiceImpl implements UserService {
 
     }
 
-//    @Override
-//    public List<User> filterUser(String name, String gender, String phone, String role, String address, String bio, String status, String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted) {
-//       return userRepository.filterUser(name, gender, phone, role, address, bio, status, fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted);
-//    }
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Override
+    public Map<String, Object> filterUser(String name, String username, String email,  String gender, String phone, String role, String address, String bio, String status,
+                                 String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, int page, int size) {
+        String sql = "SELECT * FROM user WHERE 1=1";
+        List<Object> params = new ArrayList<>();
+
+        if(name!=null && !name.equals("")) {
+            sql += " AND (first_name LIKE ? OR last_name LIKE ? OR concat(first_name, ' ', last_name) LIKE ?)";
+            String nameParam = "%" + name + "%";
+            params.add(nameParam);
+            params.add(nameParam);
+            params.add(nameParam);
+        }
+        if (username != null && !username.equals("")) {
+            sql += " AND username LIKE ?";
+            params.add("%" + username + "%");
+        }
+        if (email != null && !email.equals("")) {
+            sql += " AND email LIKE ?";
+            params.add("%" + email + "%");
+        }
+        if (gender != null && !gender.equals("")) {
+            sql += " AND gender LIKE ?";
+            params.add("%" + gender + "%");
+        }
+        if (phone != null && !phone.equals("")) {
+            sql += " AND phone LIKE ?";
+            params.add("%" + phone + "%");
+        }
+        if (role != null && !role.equals("")) {
+            sql += " AND role LIKE ?";
+            params.add("%" + role + "%");
+        }
+        if (address != null && !address.equals("")) {
+            sql += " AND address LIKE ?";
+            params.add("%" + address + "%");
+        }
+        if (bio != null && !bio.equals("")) {
+            sql += " AND bio LIKE ?";
+            params.add("%" + bio + "%");
+        }
+        if (status != null && !status.equals("")) {
+            sql += " AND status LIKE ?";
+            params.add("%" + status + "%");
+        }
+        if (fromDob != null && !fromDob.equals("")) {
+            sql += " AND dob >= ?";
+            params.add(fromDob);
+        }
+        if (toDob != null && !toDob.equals("")) {
+            sql += " AND dob <= ?";
+            params.add(toDob);
+        }
+        if (fromBanned != null && !fromBanned.equals("")) {
+            sql += " AND banned_date >= ?";
+            params.add(fromBanned);
+        }
+        if (toBanned != null && !toBanned.equals("")) {
+            sql += " AND banned_date <= ?";
+            params.add(toBanned);
+        }
+        if (fromDeleted != null && !fromDeleted.equals("")) {
+            sql += " AND deleted_date >= ?";
+            params.add(fromDeleted);
+        }
+        if (toDeleted != null && !toDeleted.equals("")) {
+            sql += " AND deleted_date <= ?";
+            params.add(toDeleted);
+        }
+
+        // Count total items
+        String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS countQuery";
+        long totalItems = jdbcTemplate.queryForObject(countSql, Long.class, params.toArray());
+
+        // Apply pagination
+        int offset = (page - 1) * size;
+        sql += " LIMIT ? OFFSET ?";
+        params.add(size);
+        params.add(offset);
+
+        List<User> userList = jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(User.class));
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", userList);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return response;
+    }
 
 }

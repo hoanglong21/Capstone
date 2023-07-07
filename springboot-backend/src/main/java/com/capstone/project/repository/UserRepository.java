@@ -1,6 +1,8 @@
 package com.capstone.project.repository;
 
 import com.capstone.project.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,7 +34,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserByToken(String token);
 
-//    @Query(value = "SELECT * FROM capstone.user WHERE (username like `%:name%` or first_name like `%long2%` or last_name like `%long2%` or email like `%long2%`)", nativeQuery = true)
-//    List<User> filterUser(String name, String gender, String phone, String role, String address, String bio, String status, String fromDob, String toDob,
-//                          String fromBanned, String toBanned, String fromDeleted, String toDeleted);
 }
