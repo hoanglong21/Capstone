@@ -19,7 +19,7 @@ function SidebarforAdmin() {
             <ul className="nav nav-pills flex-column mt-3 mt-sm-0">
               <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
                 <Link
-                  to="/managedashboard"
+                  to="/dashboard"
                   className="nav-link text-white fs-7"
                   aria-current="page"
                 >
