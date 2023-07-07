@@ -158,7 +158,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
@@ -213,6 +213,11 @@ public class StudySetServiceImpl implements StudySetService {
             query += " AND s.author_id = :authorId";
             User user = userService.getUserByUsername(author);
             parameters.put("authorId", user.getId());
+        }
+
+        if (type != 0) {
+            query += " AND type_id = :typeId";
+            parameters.put("typeId", type);
         }
 
         Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");

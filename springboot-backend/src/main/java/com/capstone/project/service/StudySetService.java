@@ -30,5 +30,5 @@ public interface StudySetService {
 
     List<StudySetResponse> getCustomList(Boolean isDeleted, Boolean isPublic, Boolean isDraft); // old
 
-    Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException;
+    Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String author, String from, String to, int page, int size) throws ResourceNotFroundException;
 }

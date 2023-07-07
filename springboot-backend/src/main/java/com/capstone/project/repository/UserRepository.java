@@ -31,4 +31,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByToken(String token);
 
     User findUserByToken(String token);
+
+//    @Query(value = "SELECT * FROM studyset WHERE author_id = :id", nativeQuery = true)
+//    List<User> filterUser()
 }
