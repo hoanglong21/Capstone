@@ -13,7 +13,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GrammarServiceImpl implements GrammarService {
@@ -23,7 +25,7 @@ public class GrammarServiceImpl implements GrammarService {
         return grammarList;
     }
 
-    public List<Grammar> getAllGrammars() {
+    public List<Grammar> initGrammars() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream("Lgrammar.xml");
@@ -88,7 +90,7 @@ public class GrammarServiceImpl implements GrammarService {
         }
     }
 
-    public List<Grammar> searchAndPaginate(String query, int level, int page, int pageSize) {
+    public Map<String, Object> searchAndPaginate(String query, int level, int page, int pageSize) {
         List<Grammar> results = new ArrayList<>();
 
         // Perform search based on the query
@@ -102,7 +104,13 @@ public class GrammarServiceImpl implements GrammarService {
         int startIndex = (page - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, results.size());
 
-        return results.subList(startIndex, endIndex);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", results.subList(startIndex, endIndex));
+        response.put("currentPage", page);
+        response.put("totalItems", results.size());
+        response.put("totalPages", (int) Math.ceil((double) results.size() / pageSize));
+
+        return response;
     }
 
     private boolean matchesQuery(Grammar grammar, int level, String query) {
