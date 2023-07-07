@@ -27,6 +27,7 @@ const ClassList = () => {
                 '',
                 `${searchKey ? '=' + searchKey : ''}`,
                 `=${userInfo.username}`,
+                `=${userInfo.username}`,
                 '',
                 '',
                 '',
@@ -42,6 +43,7 @@ const ClassList = () => {
             await ClassService.getFilterList(
                 '',
                 '',
+                `=${userInfo.username}`,
                 `=${userInfo.username}`,
                 '',
                 '',

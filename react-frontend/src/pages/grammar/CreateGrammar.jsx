@@ -4,15 +4,16 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 import { useSelector } from 'react-redux'
 
+import { Card } from './Card'
+
 import CardService from '../../services/CardService'
 import StudySetService from '../../services/StudySetService'
 
-import { Card } from './Card'
 import styles from '../../assets/styles/Form.module.css'
-import '../../assets/styles/stickyHeader.css'
 import CardStyles from '../../assets/styles/Card.module.css'
+import '../../assets/styles/stickyHeader.css'
 
-const CreateVocab = () => {
+const CreateGrammar = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
@@ -33,7 +34,7 @@ const CreateVocab = () => {
             } else {
                 const listSets = (
                     await StudySetService.getFilterList(
-                        '=0',
+                        '',
                         '',
                         '=1',
                         '',
@@ -45,7 +46,6 @@ const CreateVocab = () => {
                     )
                 ).data
                 if (listSets.totalItems > 0) {
-                    setShowDiscardMess(true)
                     temp = listSets.list[0]
                 } else {
                     temp = (
@@ -59,7 +59,7 @@ const CreateVocab = () => {
                             _public: true,
                             _draft: true,
                             studySetType: {
-                                id: 1,
+                                id: 3,
                             },
                             deleted_date: '',
                         })
@@ -225,7 +225,7 @@ const CreateVocab = () => {
                     deleted: false,
                     public: true,
                     studySetType: {
-                        id: 1,
+                        id: 3,
                     },
                     deleted_date: '',
                 })
@@ -406,4 +406,4 @@ const CreateVocab = () => {
         </div>
     )
 }
-export default CreateVocab
+export default CreateGrammar

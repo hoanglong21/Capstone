@@ -110,9 +110,9 @@ const StudySetList = () => {
                                     </a>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#">
+                                    <button className="dropdown-item" onClick={navigate("/create-grammar")}>
                                         Grammar
-                                    </a>
+                                    </button>
                                 </li>
                             </ul>
                         </div>

@@ -54,12 +54,20 @@ const Header = () => {
         if (userToken) {
             navigate('create-vocab')
         } else {
-            navigate('vocab/0/edit')
+            navigate('login')
+        }
+    }
+
+    const handleAddSetGrammar = async () => {
+        if (userToken) {
+            navigate('create-grammar')
+        } else {
+            navigate('login')
         }
     }
 
     const handleAddClass = () => {
-        if (userInfo.username) {
+        if (userToken) {
             document.getElementById('toggleCreateModal').click()
         } else {
             navigate('/login')
@@ -67,7 +75,7 @@ const Header = () => {
     }
 
     const handleJoinClass = () => {
-        if (userInfo.username) {
+        if (userToken) {
             document.getElementById('toggleJoinModal').click()
         } else {
             navigate('/login')
@@ -181,9 +189,12 @@ const Header = () => {
                                         </a>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="#">
+                                        <button
+                                            className="dropdown-item"
+                                            onClick={handleAddSetGrammar}
+                                        >
                                             Grammar
-                                        </a>
+                                        </button>
                                     </li>
                                 </ul>
                             </li>
