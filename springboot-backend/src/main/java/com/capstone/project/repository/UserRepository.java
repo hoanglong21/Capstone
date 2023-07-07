@@ -32,7 +32,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserByToken(String token);
 
-    @Query(value = "SELECT * FROM capstone.user WHERE (username like %?1% or first_name like %?1% or last_name like %?1% or email like %?1%)", nativeQuery = true)
-    List<User> filterUser(String name, String username, String email, String gender, String phone, String role, String address, String bio, String status, String fromDob, String toDob,
-                          String fromBanned, String toBanned, String fromDeleted, String toDeleted);
+//    @Query(value = "SELECT * FROM capstone.user WHERE (username like `%:name%` or first_name like `%long2%` or last_name like `%long2%` or email like `%long2%`)", nativeQuery = true)
+//    List<User> filterUser(String name, String gender, String phone, String role, String address, String bio, String status, String fromDob, String toDob,
+//                          String fromBanned, String toBanned, String fromDeleted, String toDeleted);
 }

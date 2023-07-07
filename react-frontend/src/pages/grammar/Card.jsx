@@ -10,9 +10,12 @@ import styles from '../../assets/styles/Card.module.css'
 
 export const Card = (props) => {
     const [card, setCard] = useState(props.card)
-    const [term, setTerm] = useState({})
-    const [definition, setDefinition] = useState({})
+    const [title, setTitle] = useState({})
+    const [jlptLevel, setJlptLevel] = useState({})
+    const [meaning, setMeaning] = useState({})
     const [example, setExample] = useState({})
+    const [explanation, setExplanation] = useState({})
+    const [note, setNote] = useState({})
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
 
@@ -21,27 +24,40 @@ export const Card = (props) => {
         const fetchData = async () => {
             const contents = (await ContentService.getAllByCardId(card.id)).data
             if (contents.length === 0) {
-                setTerm(
+                setTitle(
                     (
                         await ContentService.createContent({
                             card: {
                                 id: card.id,
                             },
                             field: {
-                                id: 1,
+                                id: 15,
                             },
                             content: '',
                         })
                     ).data
                 )
-                setDefinition(
+                setJlptLevel(
                     (
                         await ContentService.createContent({
                             card: {
                                 id: card.id,
                             },
                             field: {
-                                id: 2,
+                                id: 16,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setMeaning(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 17,
                             },
                             content: '',
                         })
@@ -54,16 +70,43 @@ export const Card = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 3,
+                                id: 18,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setExplanation(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 19,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setNote(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 20,
                             },
                             content: '',
                         })
                     ).data
                 )
             } else {
-                setTerm(contents[0])
-                setDefinition(contents[1])
+                setTitle(contents[0])
+                setMeaning(contents[1])
                 setExample(contents[2])
+                setExplanation(contents[3])
             }
         }
         fetchData()
@@ -123,12 +166,16 @@ export const Card = (props) => {
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
-    const doUpdateTerm = async () => {
-        await ContentService.updateContent(term.id, term)
+    const doUpdateContent = async (content) => {
+        await ContentService.updateContent(content.id, content)
     }
 
-    const doUpdateDefinition = async () => {
-        await ContentService.updateContent(definition.id, definition)
+    const doUpdateTitle = async () => {
+        await ContentService.updateContent(title.id, title)
+    }
+
+    const doUpdateMeaning = async () => {
+        await ContentService.updateContent(meaning.id, meaning)
     }
 
     return (
@@ -187,35 +234,38 @@ export const Card = (props) => {
                 <div className="row px-2 py-1">
                     <div className="col-6 pe-4">
                         <TextEditor
-                            name="term"
-                            data={term.content}
+                            name="title"
+                            data={title.content}
                             onChange={(event, editor) => {
-                                setTerm({ ...term, content: editor.getData() })
+                                setTitle({
+                                    ...title,
+                                    content: editor.getData(),
+                                })
                             }}
-                            onBlur={doUpdateTerm}
+                            onBlur={doUpdateContent(title)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            TERM
+                            TITLE
                         </span>
                     </div>
                     <div className="col-6 ps-4">
                         <TextEditor
-                            name="definition"
-                            data={definition.content}
+                            name="meaning"
+                            data={meaning.content}
                             onChange={(event, editor) => {
-                                setDefinition({
-                                    ...definition,
+                                setMeaning({
+                                    ...meaning,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={doUpdateMeaning}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            DEFINITION
+                            MEANING
                         </span>
                     </div>
                     <div className="col-12 mt-4">
@@ -228,12 +278,30 @@ export const Card = (props) => {
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={doUpdateMeaning}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
                             EXAMPLE
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="example"
+                            data={example.content}
+                            onChange={(event, editor) => {
+                                setExplanation({
+                                    ...example,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={doUpdateMeaning}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            EXPLANATION
                         </span>
                     </div>
                 </div>

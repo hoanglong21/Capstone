@@ -33,6 +33,6 @@ public interface UserService {
 
     Boolean changePassword(String username, String password) throws ResourceNotFroundException;
 
-    List<User> filterUser(String name, String username, String email, String gender, String phone, String role, String address, String bio, String status,
-                          String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted);
+//    List<User> filterUser(String name, String gender, String phone, String role, String address, String bio, String status,
+//                          String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted);
 }

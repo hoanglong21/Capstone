@@ -37,7 +37,8 @@ const CreateVocab = () => {
                         '',
                         '=1',
                         '',
-                        `=${userInfo?.username}`,
+                        `=${userInfo.username}`,
+                        '=1',
                         '',
                         '',
                         '',
@@ -222,8 +223,9 @@ const CreateVocab = () => {
                     },
                     title: '',
                     description: '',
-                    deleted: false,
-                    public: true,
+                    _deleted: false,
+                    _public: true,
+                    _draft: true,
                     studySetType: {
                         id: 1,
                     },
@@ -233,6 +235,7 @@ const CreateVocab = () => {
             await StudySetService.deleteStudySet(studySet.id)
             setStudySet(newStudySet)
             setCards([])
+            toggleShowDiscardMess()
         } catch (error) {
             if (error.response && error.response.data) {
                 setError(error.response.data)

@@ -34,11 +34,12 @@ const CreateGrammar = () => {
             } else {
                 const listSets = (
                     await StudySetService.getFilterList(
-                        '',
+                        '=0',
                         '',
                         '=1',
                         '',
                         `=${userInfo?.username}`,
+                        '=3',
                         '',
                         '',
                         '',
@@ -222,8 +223,9 @@ const CreateGrammar = () => {
                     },
                     title: '',
                     description: '',
-                    deleted: false,
-                    public: true,
+                    _deleted: false,
+                    _public: true,
+                    _draft: true,
                     studySetType: {
                         id: 3,
                     },
@@ -233,6 +235,7 @@ const CreateGrammar = () => {
             await StudySetService.deleteStudySet(studySet.id)
             setStudySet(newStudySet)
             setCards([])
+            toggleShowDiscardMess()
         } catch (error) {
             if (error.response && error.response.data) {
                 setError(error.response.data)

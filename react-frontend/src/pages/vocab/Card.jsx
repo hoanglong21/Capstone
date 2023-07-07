@@ -19,54 +19,65 @@ export const Card = (props) => {
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const contents = (await ContentService.getAllByCardId(card.id)).data
-            if (contents.length === 0) {
-                setTerm(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 1,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setDefinition(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 2,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setExample(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 3,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-            } else {
-                setTerm(contents[0])
-                setDefinition(contents[1])
-                setExample(contents[2])
+            try {
+                const contents = (await ContentService.getAllByCardId(card.id))
+                    .data
+                if (contents.length === 0) {
+                    setTerm(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 1,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setDefinition(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 2,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setExample(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 3,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                } else {
+                    setTerm(contents[0])
+                    setDefinition(contents[1])
+                    setExample(contents[2])
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
         }
-        fetchData()
+        if (card) {
+            fetchData()
+        }
     }, [card.id])
 
     // ignore error
@@ -121,6 +132,18 @@ export const Card = (props) => {
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+    }
+
+    const doUpdateContent = async (content) => {
+        try {
+            await ContentService.updateContent(content.id, content)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const doUpdateTerm = async () => {
@@ -192,7 +215,7 @@ export const Card = (props) => {
                             onChange={(event, editor) => {
                                 setTerm({ ...term, content: editor.getData() })
                             }}
-                            onBlur={doUpdateTerm}
+                            onBlur={() => doUpdateContent(term)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
@@ -210,7 +233,7 @@ export const Card = (props) => {
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={() => doUpdateContent(definition)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
@@ -228,7 +251,7 @@ export const Card = (props) => {
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={() => doUpdateContent(example)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
