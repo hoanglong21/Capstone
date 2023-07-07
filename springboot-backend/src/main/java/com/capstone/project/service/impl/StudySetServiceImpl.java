@@ -126,71 +126,29 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<StudySetResponse> getCustomList(Boolean isDeleted, Boolean isPublic, Boolean isDraft) {
-        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
-                "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count FROM studyset s WHERE 1=1";
-        if (isPublic != null) {
-            query += " AND s.is_public = :isPublic";
-        }
-
-        if (isDraft != null) {
-            query += " AND s.is_draft = :isDraft";
-        }
-
-        if (isDeleted != null) {
-            query += " AND s.is_deleted = :isDeleted";
-        }
-
-        Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
-        if (isPublic != null) {
-            q.setParameter("isPublic", isPublic);
-        }
-
-        if (isDraft != null) {
-            q.setParameter("isDraft", isDraft);
-        }
-
-        if (isDeleted != null) {
-            q.setParameter("isDeleted", isDeleted);
-        }
-
-        return q.getResultList();
-    }
-
-    @Override
-    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
                 "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count, " +
                 "(SELECT username FROM capstone.user WHERE id = s.author_id) AS author, " +
                 "(SELECT avatar FROM capstone.user WHERE id = s.author_id) AS avatar FROM studyset s WHERE 1=1 ";
-        Boolean conditionFirst = false;
+
         Map<String, Object> parameters = new HashMap<>();
 
-        if (isDeleted != null && isDeleted) {
+        if (isDeleted != null) {
             query += " AND s.is_deleted = :isDeleted";
-            parameters.put("isDeleted", true);
-            conditionFirst = true;
+            parameters.put("isDeleted", isDeleted);
         }
 
-        if (isPublic != null && isPublic) {
-            if (conditionFirst) {
-                query += " OR s.is_public = :isPublic";
-            } else {
-                query += " AND s.is_public = :isPublic";
-                conditionFirst = true;
-            }
-            parameters.put("isPublic", true);
+        if (isPublic != null) {
+            query += " AND s.is_public = :isPublic";
+            parameters.put("isPublic", isPublic);
         }
 
-        if (isDraft != null && isDraft) {
-            if (conditionFirst) {
-                query += " OR s.is_draft = :isDraft";
-            } else {
-                query += " AND s.is_draft = :isDraft";
-            }
-            parameters.put("isDraft", true);
+        if (isDraft != null) {
+            query += " AND s.is_draft = :isDraft";
+            parameters.put("isDraft", isDraft);
         }
 
         if (search != null && !search.isEmpty()) {
@@ -213,6 +171,11 @@ public class StudySetServiceImpl implements StudySetService {
             query += " AND s.author_id = :authorId";
             User user = userService.getUserByUsername(author);
             parameters.put("authorId", user.getId());
+        }
+
+        if (type != 0) {
+            query += " AND type_id = :typeId";
+            parameters.put("typeId", type);
         }
 
         Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");

@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -177,4 +178,24 @@ public class UserController {
         }
     }
 
+    @GetMapping("/filterusers")
+    public ResponseEntity<?> filterUser(@RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                        @RequestParam(value = "username", required = false, defaultValue = "") String username,
+                                        @RequestParam(value = "email", required = false, defaultValue = "") String email,
+                                        @RequestParam(value = "gender", required = false, defaultValue = "") String gender,
+                                        @RequestParam(value = "phone", required = false, defaultValue = "") String phone,
+                                        @RequestParam(value = "role", required = false, defaultValue = "") String role,
+                                        @RequestParam(value = "address", required = false, defaultValue = "") String address,
+                                        @RequestParam(value = "bio", required = false, defaultValue = "") String bio,
+                                        @RequestParam(value = "status", required = false, defaultValue = "") String status,
+                                        @RequestParam(value = "fromdob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDob,
+                                        @RequestParam(value = "todob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDob,
+                                        @RequestParam(value = "frombanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromBanned,
+                                        @RequestParam(value = "tobanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toBanned,
+                                        @RequestParam(value = "fromdeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDeleted,
+                                        @RequestParam(value = "todeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDeleted,
+                                        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                        @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+        return ResponseEntity.ok(userService.filterUser(name, username, email, gender, phone, role, address, bio, status, fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted, page, size));
+    }
 }

@@ -5,6 +5,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     User createUser(User User);
@@ -32,4 +33,7 @@ public interface UserService {
     Boolean checkMatchPassword(String username, String checkPassword) throws ResourceNotFroundException;
 
     Boolean changePassword(String username, String password) throws ResourceNotFroundException;
+
+    Map<String, Object> filterUser(String name, String username, String email, String gender, String phone, String role, String address, String bio, String status,
+                                   String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, int page, int size);
 }

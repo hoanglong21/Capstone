@@ -1,9 +1,9 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import logo from "../assets/images/logo-1.png";
+import logo from "../../assets/images/logo-1.png";
 import { Link } from "react-router-dom";
-import "../assets/styles/sidebar.css";
+import "../../assets/styles/sidebar.css";
 
 function SidebarforAdmin() {
   return (
@@ -29,7 +29,7 @@ function SidebarforAdmin() {
               </li>
               <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
                 <Link
-                  to="/manageuser"
+                  to="/manageusers"
                   className="nav-link text-white fs-7"
                   aria-current="page"
                 >
@@ -49,7 +49,7 @@ function SidebarforAdmin() {
               </li>
               <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
                 <Link
-                  to="/manageclass"
+                  to="/managefeedback"
                   className="nav-link text-white fs-7"
                   aria-current="page"
                 >
