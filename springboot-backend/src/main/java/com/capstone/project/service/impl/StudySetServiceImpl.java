@@ -168,29 +168,29 @@ public class StudySetServiceImpl implements StudySetService {
         Boolean conditionFirst = false;
         Map<String, Object> parameters = new HashMap<>();
 
-        if (isDeleted != null && isDeleted) {
+        if (isDeleted != null) {
             query += " AND s.is_deleted = :isDeleted";
-            parameters.put("isDeleted", true);
+            parameters.put("isDeleted", isDeleted);
             conditionFirst = true;
         }
 
-        if (isPublic != null && isPublic) {
+        if (isPublic != null) {
             if (conditionFirst) {
                 query += " OR s.is_public = :isPublic";
             } else {
                 query += " AND s.is_public = :isPublic";
                 conditionFirst = true;
             }
-            parameters.put("isPublic", true);
+            parameters.put("isPublic", isPublic);
         }
 
-        if (isDraft != null && isDraft) {
+        if (isDraft != null) {
             if (conditionFirst) {
                 query += " OR s.is_draft = :isDraft";
             } else {
                 query += " AND s.is_draft = :isDraft";
             }
-            parameters.put("isDraft", true);
+            parameters.put("isDraft", isDraft);
         }
 
         if (search != null && !search.isEmpty()) {
