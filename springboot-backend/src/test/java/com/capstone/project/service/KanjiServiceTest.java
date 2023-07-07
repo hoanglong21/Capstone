@@ -2,7 +2,6 @@ package com.capstone.project.service;
 
 
 import com.capstone.project.model.Kanji;
-import com.capstone.project.model.Vocabulary;
 import com.capstone.project.service.impl.KanjiServiceImpl;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
