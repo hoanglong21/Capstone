@@ -10,12 +10,13 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface KanjiService {
 
     public List<Kanji> initKanji();
 
-    public List<Kanji> searchAndPaginate(String query, int page, int pageSize);
+    public Map<String, Object> searchAndPaginate(String query, int page, int pageSize);
 
     public List<Kanji> getKanjiList();
 }

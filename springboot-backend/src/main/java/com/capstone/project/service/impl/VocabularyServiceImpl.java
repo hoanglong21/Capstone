@@ -15,7 +15,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class VocabularyServiceImpl implements VocabularyService {
@@ -113,7 +115,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         }
     }
 
-    public List<Vocabulary> searchAndPaginate(String query, int page, int pageSize) {
+    public Map<String, Object> searchAndPaginate(String query, int page, int pageSize) {
         List<Vocabulary> results = new ArrayList<>();
 
         // Perform search based on the query
@@ -127,7 +129,13 @@ public class VocabularyServiceImpl implements VocabularyService {
         int startIndex = (page - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, results.size());
 
-        return results.subList(startIndex, endIndex);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", results.subList(startIndex, endIndex));
+        response.put("currentPage", page);
+        response.put("totalItems", results.size());
+        response.put("totalPages", (int) Math.ceil((double) results.size() / pageSize));
+
+        return response;
     }
 
     private boolean matchesQuery(Vocabulary vocabulary, String query) {

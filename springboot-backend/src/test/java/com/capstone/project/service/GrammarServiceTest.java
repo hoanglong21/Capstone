@@ -38,7 +38,7 @@ public class GrammarServiceTest {
             "亜亜, 1, 1, 20, false",
     })
     public void searchAndPaginate(String query, int level, int page, int pageSize, boolean greaterThanZero) {
-        List<Grammar> list = grammarService.searchAndPaginate(query, level, page, pageSize);
+        List<Grammar> list = (List<Grammar>) grammarService.searchAndPaginate(query, level, page, pageSize).get("list");
         assertThat(list.size()>0).isEqualTo(greaterThanZero);
     }
 

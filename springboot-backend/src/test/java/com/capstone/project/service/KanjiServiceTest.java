@@ -39,7 +39,7 @@ public class KanjiServiceTest {
             "亜亜, 1, 20, false",
     })
     public void searchAndPaginate(String query, int page, int pageSize, boolean greaterThanZero) {
-        List<Kanji> list = kanjiService.searchAndPaginate(query, page, pageSize);
+        List<Kanji> list = (List<Kanji>) kanjiService.searchAndPaginate(query, page, pageSize).get("list");
         assertThat(list.size()>0).isEqualTo(greaterThanZero);
     }
 

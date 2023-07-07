@@ -39,7 +39,7 @@ public class VocabularyServiceTest {
             "確実確実, 1, 20, false",
     })
     public void searchAndPaginate(String query, int page, int pageSize, boolean greaterThanZero) {
-        List<Vocabulary> list = vocabularyService.searchAndPaginate(query, page, pageSize);
+        List<Vocabulary> list = (List<Vocabulary>) vocabularyService.searchAndPaginate(query, page, pageSize).get("list");
         assertThat(list.size()>0).isEqualTo(greaterThanZero);
     }
 

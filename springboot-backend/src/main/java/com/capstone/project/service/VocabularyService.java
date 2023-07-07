@@ -5,6 +5,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -22,7 +23,7 @@ public interface VocabularyService {
 
     public List<Vocabulary> initVocabulary();
 
-    public List<Vocabulary> searchAndPaginate(String query, int page, int pageSize);
+    public Map<String, Object> searchAndPaginate(String query, int page, int pageSize);
 
     public List<Vocabulary> getVocabularyList();
 }
