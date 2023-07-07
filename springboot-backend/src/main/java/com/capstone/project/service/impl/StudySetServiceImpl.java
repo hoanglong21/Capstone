@@ -165,31 +165,21 @@ public class StudySetServiceImpl implements StudySetService {
                 "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count, " +
                 "(SELECT username FROM capstone.user WHERE id = s.author_id) AS author, " +
                 "(SELECT avatar FROM capstone.user WHERE id = s.author_id) AS avatar FROM studyset s WHERE 1=1 ";
-        Boolean conditionFirst = false;
+
         Map<String, Object> parameters = new HashMap<>();
 
         if (isDeleted != null) {
             query += " AND s.is_deleted = :isDeleted";
             parameters.put("isDeleted", isDeleted);
-            conditionFirst = true;
         }
 
         if (isPublic != null) {
-            if (conditionFirst) {
-                query += " OR s.is_public = :isPublic";
-            } else {
-                query += " AND s.is_public = :isPublic";
-                conditionFirst = true;
-            }
+            query += " AND s.is_public = :isPublic";
             parameters.put("isPublic", isPublic);
         }
 
         if (isDraft != null) {
-            if (conditionFirst) {
-                query += " OR s.is_draft = :isDraft";
-            } else {
-                query += " AND s.is_draft = :isDraft";
-            }
+            query += " AND s.is_draft = :isDraft";
             parameters.put("isDraft", isDraft);
         }
 
