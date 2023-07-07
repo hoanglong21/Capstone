@@ -8,10 +8,18 @@ import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
 import TextEditor from '../../../components/TextEditor'
 import styles from '../../../assets/styles/Card.module.css'
 
-export const VocabCard = (props) => {
+export const KanjiCard = (props) => {
     const [card, setCard] = useState(props.card)
-    const [term, setTerm] = useState({})
-    const [definition, setDefinition] = useState({})
+    const [character, setCharacter] = useState({})
+    const [name, setName] = useState({})
+    const [gradeLevel, setGradeLevel] = useState({})
+    const [strokes, setStrokes] = useState({})
+    const [jlptLevel, setJlptLevel] = useState({})
+    const [radical, setRadical] = useState({})
+    const [onyomi, setOnyomi] = useState({})
+    const [kunyomi, setKunyomi] = useState({})
+    const [meanings, setMeanings] = useState({})
+    const [strokeOrder, setStrokeOrder] = useState({})
     const [example, setExample] = useState({})
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
@@ -23,27 +31,131 @@ export const VocabCard = (props) => {
                 const contents = (await ContentService.getAllByCardId(card.id))
                     .data
                 if (contents.length === 0) {
-                    setTerm(
+                    setCharacter(
                         (
                             await ContentService.createContent({
                                 card: {
                                     id: card.id,
                                 },
                                 field: {
-                                    id: 1,
+                                    id: 4,
                                 },
                                 content: '',
                             })
                         ).data
                     )
-                    setDefinition(
+                    setName(
                         (
                             await ContentService.createContent({
                                 card: {
                                     id: card.id,
                                 },
                                 field: {
-                                    id: 2,
+                                    id: 5,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setGradeLevel(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 6,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setStrokes(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 7,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setJlptLevel(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 8,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setRadical(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 9,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setOnyomi(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 10,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setKunyomi(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 11,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setMeanings(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 12,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setStrokeOrder(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 13,
                                 },
                                 content: '',
                             })
@@ -56,16 +168,24 @@ export const VocabCard = (props) => {
                                     id: card.id,
                                 },
                                 field: {
-                                    id: 3,
+                                    id: 14,
                                 },
                                 content: '',
                             })
                         ).data
                     )
                 } else {
-                    setTerm(contents[0])
-                    setDefinition(contents[1])
-                    setExample(contents[2])
+                    setCharacter(contents[0])
+                    setName(contents[1])
+                    setGradeLevel(contents[2])
+                    setStrokes(contents[3])
+                    setJlptLevel(contents[4])
+                    setRadical(contents[5])
+                    setOnyomi(contents[6])
+                    setKunyomi(contents[7])
+                    setMeanings(contents[8])
+                    setStrokeOrder(contents[9])
+                    setExample(contents[10])
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -200,53 +320,56 @@ export const VocabCard = (props) => {
                 <div className="row px-2 py-1">
                     <div className="col-6 pe-4">
                         <TextEditor
-                            name="term"
-                            data={term?.content}
+                            name="character"
+                            data={character.content}
                             onChange={(event, editor) => {
-                                setTerm({ ...term, content: editor.getData() })
+                                setCharacter({
+                                    ...character,
+                                    content: editor.getData(),
+                                })
                             }}
-                            onBlur={() => doUpdateContent(term)}
+                            onBlur={() => doUpdateContent(character)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            TERM
+                            CHARACTER
                         </span>
                     </div>
                     <div className="col-6 ps-4">
                         <TextEditor
-                            name="definition"
-                            data={definition?.content}
+                            name="name"
+                            data={name.content}
                             onChange={(event, editor) => {
-                                setDefinition({
-                                    ...definition,
+                                setName({
+                                    ...name,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={() => doUpdateContent(definition)}
+                            onBlur={() => doUpdateContent(name)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            DEFINITION
+                            NAME
                         </span>
                     </div>
                     <div className="col-12 mt-4">
                         <TextEditor
-                            name="example"
-                            data={example?.content}
+                            name="gradeLevel"
+                            data={gradeLevel.content}
                             onChange={(event, editor) => {
-                                setExample({
-                                    ...example,
+                                setGradeLevel({
+                                    ...gradeLevel,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={() => doUpdateContent(example)}
+                            onBlur={() => doUpdateContent(gradeLevel)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            EXAMPLE
+                            GRADE LEVEL
                         </span>
                     </div>
                 </div>

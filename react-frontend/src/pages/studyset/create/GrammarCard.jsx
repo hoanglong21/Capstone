@@ -237,7 +237,7 @@ export const GrammarCard = (props) => {
                     <div className="col-9 col-xl-10 pe-4">
                         <TextEditor
                             name="title"
-                            data={title.content}
+                            data={title?.content}
                             onChange={(event, editor) => {
                                 setTitle({
                                     ...title,
@@ -258,7 +258,7 @@ export const GrammarCard = (props) => {
                                 className={`form-select ${styles.card_select}`}
                                 aria-label="level"
                                 name="jlptLevel"
-                                value={jlptLevel.content}
+                                value={jlptLevel?.content}
                                 onChange={(event) => {
                                     setJlptLevel({
                                         ...jlptLevel,
@@ -287,7 +287,7 @@ export const GrammarCard = (props) => {
                         <TextEditor
                             name="meaning"
                             className={`${styles.card_editor}`}
-                            data={meaning.content}
+                            data={meaning?.content}
                             onChange={(event, editor) => {
                                 setMeaning({
                                     ...meaning,
@@ -305,7 +305,7 @@ export const GrammarCard = (props) => {
                     <div className="col-12 mt-4">
                         <TextEditor
                             name="example"
-                            data={example.content}
+                            data={example?.content}
                             onChange={(event, editor) => {
                                 setExample({
                                     ...example,
@@ -323,7 +323,7 @@ export const GrammarCard = (props) => {
                     <div className="col-12 mt-4">
                         <TextEditor
                             name="explanation"
-                            data={explanation.content}
+                            data={explanation?.content}
                             onChange={(event, editor) => {
                                 setExplanation({
                                     ...explanation,
@@ -341,7 +341,7 @@ export const GrammarCard = (props) => {
                     <div className="col-12 mt-4">
                         <TextEditor
                             name="note"
-                            data={note.content}
+                            data={note?.content}
                             onChange={(event, editor) => {
                                 setExplanation({
                                     ...note,

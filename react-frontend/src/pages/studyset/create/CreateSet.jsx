@@ -13,6 +13,7 @@ import { GrammarCard } from './GrammarCard'
 import styles from '../../../assets/styles/Form.module.css'
 import CardStyles from '../../../assets/styles/Card.module.css'
 import '../../../assets/styles/stickyHeader.css'
+import { KanjiCard } from './KanjiCard'
 
 const CreateSet = () => {
     const navigate = useNavigate()
@@ -30,8 +31,12 @@ const CreateSet = () => {
     const [showDiscardMess, setShowDiscardMess] = useState(false)
 
     useEffect(() => {
+        setType(Number(searchParams.get('type')))
+    }, [searchParams.get('type')])
+
+    useEffect(() => {
         if (id && studySet._draft) {
-            navigate(`/create-set?type=${studySet.studySetType.id}`)
+            navigate(`/create-set?type=${type}`)
         }
     }, [studySet])
 
@@ -96,7 +101,7 @@ const CreateSet = () => {
         if (userInfo.username) {
             fetchData()
         }
-    }, [userInfo])
+    }, [userInfo, type])
 
     // handle sticky header
     useEffect(() => {
@@ -121,7 +126,7 @@ const CreateSet = () => {
         return () => {
             window.removeEventListener('beforeunload', handleReload)
         }
-    }, [studySet._draft])
+    }, [])
 
     // toggle discard toast
     useEffect(() => {
@@ -227,7 +232,6 @@ const CreateSet = () => {
 
     const doUpdate = async () => {
         try {
-            console.log(studySet)
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -373,6 +377,16 @@ const CreateSet = () => {
                         if (type === 1) {
                             return (
                                 <VocabCard
+                                    key={card.id}
+                                    index={index}
+                                    card={card}
+                                    handleDelete={handleDelete}
+                                />
+                            )
+                        }
+                        if (type === 2) {
+                            return (
+                                <KanjiCard
                                     key={card.id}
                                     index={index}
                                     card={card}
