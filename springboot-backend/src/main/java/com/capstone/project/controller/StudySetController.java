@@ -92,13 +92,6 @@ public class StudySetController {
         }
     }
 
-    @GetMapping("/getstudysets")
-    public ResponseEntity<?> getCustomList(@RequestParam(value = "deleted", required = false) Boolean isDeleted,
-                                           @RequestParam(value = "public", required = false) Boolean isPublic,
-                                           @RequestParam(value = "draft", required = false) Boolean isDraft) {
-        return ResponseEntity.ok(studySetService.getCustomList(isDeleted, isPublic, isDraft));
-    }
-
     @GetMapping("/filterstudysets")
     public ResponseEntity<?> getFilterList(@RequestParam(value = "deleted", required = false) Boolean isDeleted,
                                            @RequestParam(value = "public", required = false) Boolean isPublic,

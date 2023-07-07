@@ -126,38 +126,6 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<StudySetResponse> getCustomList(Boolean isDeleted, Boolean isPublic, Boolean isDraft) {
-        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
-                "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count FROM studyset s WHERE 1=1";
-        if (isPublic != null) {
-            query += " AND s.is_public = :isPublic";
-        }
-
-        if (isDraft != null) {
-            query += " AND s.is_draft = :isDraft";
-        }
-
-        if (isDeleted != null) {
-            query += " AND s.is_deleted = :isDeleted";
-        }
-
-        Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
-        if (isPublic != null) {
-            q.setParameter("isPublic", isPublic);
-        }
-
-        if (isDraft != null) {
-            q.setParameter("isDraft", isDraft);
-        }
-
-        if (isDeleted != null) {
-            q.setParameter("isDeleted", isDeleted);
-        }
-
-        return q.getResultList();
-    }
-
-    @Override
     public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 

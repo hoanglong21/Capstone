@@ -179,15 +179,15 @@ public class UserController {
     }
 
     @GetMapping("/filterusers")
-    public ResponseEntity<?> filterUser(@RequestParam(value = "name", required = false) String name,
-                                        @RequestParam(value = "username", required = false) String username,
-                                        @RequestParam(value = "email", required = false) String email,
-                                        @RequestParam(value = "gender", required = false) String gender,
-                                        @RequestParam(value = "phone", required = false) String phone,
-                                        @RequestParam(value = "role", required = false) String role,
-                                        @RequestParam(value = "address", required = false) String address,
-                                        @RequestParam(value = "bio", required = false) String bio,
-                                        @RequestParam(value = "status", required = false) String status,
+    public ResponseEntity<?> filterUser(@RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                        @RequestParam(value = "username", required = false, defaultValue = "") String username,
+                                        @RequestParam(value = "email", required = false, defaultValue = "") String email,
+                                        @RequestParam(value = "gender", required = false, defaultValue = "") String gender,
+                                        @RequestParam(value = "phone", required = false, defaultValue = "") String phone,
+                                        @RequestParam(value = "role", required = false, defaultValue = "") String role,
+                                        @RequestParam(value = "address", required = false, defaultValue = "") String address,
+                                        @RequestParam(value = "bio", required = false, defaultValue = "") String bio,
+                                        @RequestParam(value = "status", required = false, defaultValue = "") String status,
                                         @RequestParam(value = "fromdob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDob,
                                         @RequestParam(value = "todob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDob,
                                         @RequestParam(value = "frombanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromBanned,
@@ -196,6 +196,6 @@ public class UserController {
                                         @RequestParam(value = "todeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDeleted,
                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
-        return ResponseEntity.ok(userService.filterUser(name, username, email, gender, phone, role, address, bio, status, fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted));
+        return ResponseEntity.ok(userService.filterUser(name, username, email, gender, phone, role, address, bio, status, fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted, page, size));
     }
 }
