@@ -4,27 +4,62 @@ import HeaderAdmin from "./HeaderAdmin";
 import "../../assets/styles/admindashboard.css";
 import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
-import ApexCharts from 'apexcharts';
+import CanvasJS from '@canvasjs/charts';
 
 function AdminDashboard() {
-  var options = {
-    chart: {
-      type: 'line'
-    },
-    series: [{
-      name: 'sales',
-      data: [30,40,35,50,49,60,70,91,125]
-    }],
-    xaxis: {
-      categories: [1991,1992,1993,1994,1995,1996,1997, 1998,1999]
-    }
+  window.onload = function () {
+    var chartArea = new CanvasJS.Chart("chartContainer",
+    {
+      title: {
+        text: "Users By Month"
+      },
+        data: [
+      {
+        type: "area",
+        dataPoints: [//array
+
+        { x: new Date(2012, 0, 1), y: 2600 },
+        { x: new Date(2012, 1, 1), y: 3800 },
+        { x: new Date(2012, 2, 1), y: 4300 },
+        { x: new Date(2012, 3, 1), y: 2900 },
+        { x: new Date(2012, 4, 1), y: 4100 },
+        { x: new Date(2012, 5, 1), y: 4500 },
+        { x: new Date(2012, 6, 1), y: 8600 },
+        { x: new Date(2012, 7, 1), y: 6400 },
+        { x: new Date(2012, 8, 1), y: 5300 },
+        { x: new Date(2012, 9, 1), y: 6000 }
+        ]
+      }
+      ]
+    });
+
+    chartArea.render();
+
+    var chartPie = new CanvasJS.Chart("chartPie", {
+      theme: "light2", // "light1", "light2", "dark1", "dark2"
+      exportEnabled: true,
+      animationEnabled: true,
+      title: {
+        text: "Users Device"
+      },
+      data: [{
+        type: "pie",
+        startAngle: 25,
+        toolTipContent: "<b>{label}</b>: {y}%",
+        showInLegend: "true",
+        legendText: "{label}",
+        indexLabelFontSize: 16,
+        indexLabel: "{label} - {y}%",
+        dataPoints: [
+          { y: 55.08, label: "Chrome" },
+          { y: 30.02, label: "Microsoft Edge" },
+          { y: 15.44, label: "Others" }
+        ]
+      }]
+    });
+    chartPie.render();
   }
   
-  var chart = new ApexCharts(document.querySelector("#chart"), options);
-  
-  chart.render();
-  
-
   return (
     <div className="container-fluid">
       <div className="row">
@@ -38,7 +73,7 @@ function AdminDashboard() {
                 to="/"
                 className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
               >
-                <i className="fas fa-download fa-sm text-white-50"></i> Generate
+                <i className="bi bi-download text-white"></i> Generate
                 Report
               </Link>
             </div>
@@ -134,7 +169,7 @@ function AdminDashboard() {
           </div>
           <div className="row">
             {/*   <!-- Area Chart --> */}
-            <div className="col-xl-8 col-lg-7">
+            <div className="col-xl-7 col-lg-7">
               <div className="card shadow mb-4">
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 className="m-0 font-weight-bold text-primary">
@@ -142,35 +177,23 @@ function AdminDashboard() {
                   </h6>
                 </div>
                 <div className="card-body">
-                  <div className="chart-area" id="chart" style={{height: '300px', width: '100%'}}>
+                  <div className="chart-area" id="chartContainer" style={{height: '300px', width: '100%'}}>
                   </div>
                 </div>
               </div>
             </div>
 
             {/*  <!-- Pie Chart --> */}
-            <div className="col-xl-4 col-lg-5">
+            <div className="col-xl-5 col-lg-5">
               <div className="card shadow mb-4">
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 className="m-0 font-weight-bold text-primary">
-                    Revenue Sources
+                    User Devices
                   </h6>
                 </div>
                 {/*  <!-- Card Body --> */}
                 <div className="card-body">
-                  <div className="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
-                  </div>
-                  <div className="mt-4 text-center small">
-                    <span className="me-2">
-                    <i class="bi bi-circle-fill text-primary"></i> Direct
-                    </span>
-                    <span className="me-2">
-                      <i className="bi bi-circle-fill text-success"></i> Social
-                    </span>
-                    <span className="me-2">
-                      <i className="bi bi-circle-fill text-info"></i> Referral
-                    </span>
+                  <div id="chartPie" style={{height: '300px', width: '100%'}}>
                   </div>
                 </div>
               </div>
@@ -192,8 +215,10 @@ function AdminDashboard() {
                   </h4>
                   <div className="progress mb-4">
                     <div
-                      className="progress-bar bg-danger a2"
+                      className="progress-bar bg-danger"
                       role="progressbar"
+                      style={{width: "20%"}}
+                      aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
                     ></div>
                   </div>
                   <h4 className="small font-weight-bold">
@@ -201,23 +226,29 @@ function AdminDashboard() {
                   </h4>
                   <div className="progress mb-4">
                     <div
-                      className="progress-bar bg-warning a3"
+                      className="progress-bar bg-warning"
                       role="progressbar"
+                      style={{width: "40%"}}
+                      aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
                     ></div>
                   </div>
                   <h4 className="small font-weight-bold">
                     Customer Database <span className="float-right">60%</span>
                   </h4>
                   <div className="progress mb-4">
-                    <div className="progress-bar a7" role="progressbar"></div>
+                    <div className="progress-bar" role="progressbar"
+                    style={{width: "60%"}}
+                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <h4 className="small font-weight-bold">
                     Payout Details <span className="float-right">80%</span>
                   </h4>
                   <div className="progress mb-4">
                     <div
-                      className="progress-bar bg-info a4"
+                      className="progress-bar bg-info"
                       role="progressbar"
+                      style={{width: "80%"}}
+                      aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
                     ></div>
                   </div>
                   <h4 className="small font-weight-bold">
@@ -225,8 +256,10 @@ function AdminDashboard() {
                   </h4>
                   <div className="progress">
                     <div
-                      className="progress-bar bg-success a5"
+                      className="progress-bar bg-success"
                       role="progressbar"
+                      style={{width: "100%"}}
+                      aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
                     ></div>
                   </div>
                 </div>
