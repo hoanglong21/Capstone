@@ -1,79 +1,107 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
-
-import { Card } from './Card'
 import { useSelector } from 'react-redux'
 
-import CardService from '../../services/CardService'
-import StudySetService from '../../services/StudySetService'
+import CardService from '../../../services/CardService'
+import StudySetService from '../../../services/StudySetService'
 
-import styles from '../../assets/styles/Form.module.css'
-import '../../assets/styles/stickyHeader.css'
-import CardStyles from '../../assets/styles/Card.module.css'
+import { VocabCard } from './VocabCard'
+import { GrammarCard } from './GrammarCard'
 
-const CreateVocab = () => {
+import styles from '../../../assets/styles/Form.module.css'
+import CardStyles from '../../../assets/styles/Card.module.css'
+import '../../../assets/styles/stickyHeader.css'
+import { KanjiCard } from './KanjiCard'
+
+const CreateSet = () => {
     const navigate = useNavigate()
+
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const { id } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
+    const [type, setType] = useState(Number(searchParams.get('type')))
     const [isScroll, setIsScroll] = useState(false)
     const [studySet, setStudySet] = useState({})
     const [cards, setCards] = useState([])
     const [error, setError] = useState('')
     const [showDiscardMess, setShowDiscardMess] = useState(false)
 
+    useEffect(() => {
+        setType(Number(searchParams.get('type')))
+    }, [searchParams.get('type')])
+
+    useEffect(() => {
+        if (id && studySet._draft) {
+            navigate(`/create-set?type=${type}`)
+        }
+    }, [studySet])
+
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            let temp = {}
-            if (id) {
-                temp = (await StudySetService.getStudySetById(id)).data
-            } else {
-                const listSets = (
-                    await StudySetService.getFilterList(
-                        '',
-                        '',
-                        '=1',
-                        '',
-                        `=${userInfo?.username}`,
-                        '',
-                        '',
-                        '',
-                        ''
-                    )
-                ).data
-                if (listSets.totalItems > 0) {
-                    temp = listSets.list[0]
+            try {
+                let temp = {}
+                if (id) {
+                    temp = (await StudySetService.getStudySetById(id)).data
+                    setType(temp.studySetType.id)
                 } else {
-                    temp = (
-                        await StudySetService.createStudySet({
-                            user: {
-                                id: userInfo.id,
-                            },
-                            title: '',
-                            description: '',
-                            _deleted: false,
-                            _public: true,
-                            _draft: true,
-                            studySetType: {
-                                id: 1,
-                            },
-                            deleted_date: '',
-                        })
+                    const listSets = (
+                        await StudySetService.getFilterList(
+                            '=0',
+                            '',
+                            '=1',
+                            '',
+                            `=${userInfo?.username}`,
+                            `=${type}`,
+                            '',
+                            '',
+                            '',
+                            ''
+                        )
                     ).data
+                    if (listSets.totalItems > 0) {
+                        temp = listSets.list[0]
+                    } else {
+                        temp = (
+                            await StudySetService.createStudySet({
+                                user: {
+                                    id: userInfo.id,
+                                },
+                                title: '',
+                                description: '',
+                                _deleted: false,
+                                _public: true,
+                                _draft: true,
+                                studySetType: {
+                                    id: type,
+                                },
+                                deleted_date: '',
+                            })
+                        ).data
+                    }
+                }
+                setStudySet(temp)
+                setCards((await CardService.getAllByStudySetId(temp.id)).data)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    setError(error.response.data)
+                    if (error.response.data.includes('not exist')) {
+                        navigate('/')
+                    }
+                } else {
+                    setError(error.message)
                 }
             }
-            setStudySet(temp)
-            setCards((await CardService.getAllByStudySetId(temp.id)).data)
         }
         setError('')
         if (userInfo.username) {
             fetchData()
         }
-    }, [userInfo])
+    }, [userInfo, type])
 
     // handle sticky header
     useEffect(() => {
@@ -98,7 +126,7 @@ const CreateVocab = () => {
         return () => {
             window.removeEventListener('beforeunload', handleReload)
         }
-    }, [studySet._draft])
+    }, [])
 
     // toggle discard toast
     useEffect(() => {
@@ -152,10 +180,12 @@ const CreateVocab = () => {
                 ).data
                 if (emptyCards.length === 0) {
                     setStudySet({ ...studySet, _draft: false })
-                    console.log(studySet)
-                    await StudySetService.updateStudySet(studySet.id, studySet)
+                    await StudySetService.updateStudySet(studySet.id, {
+                        ...studySet,
+                        _draft: false,
+                    })
                     // navigate('/set/' + id)
-
+                    navigate('/')
                     form.classList.remove('was-validated')
                     titleEl.classList.remove('is-invalid')
                     setError('')
@@ -202,7 +232,6 @@ const CreateVocab = () => {
 
     const doUpdate = async () => {
         try {
-            console.log(studySet)
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -218,20 +247,22 @@ const CreateVocab = () => {
             const newStudySet = (
                 await StudySetService.createStudySet({
                     user: {
-                        id: studySet.user.id,
+                        id: userInfo.id,
                     },
                     title: '',
                     description: '',
-                    deleted: false,
-                    public: true,
+                    _deleted: false,
+                    _public: true,
+                    _draft: true,
                     studySetType: {
-                        id: 1,
+                        id: type,
                     },
                     deleted_date: '',
                 })
             ).data
             await StudySetService.deleteStudySet(studySet.id)
-            navigate('/create-set/' + newStudySet.id)
+            setStudySet(newStudySet)
+            setCards([])
             toggleShowDiscardMess()
         } catch (error) {
             if (error.response && error.response.data) {
@@ -342,15 +373,38 @@ const CreateVocab = () => {
                         ></textarea>
                     </div>
                     {/* Card */}
-                    {cards.map((card, index) => (
-                        <Card
-                            key={card.id}
-                            index={index}
-                            card={card}
-                            handleDelete={handleDelete}
-                        />
-                    ))}
-
+                    {cards.map((card, index) => {
+                        if (type === 1) {
+                            return (
+                                <VocabCard
+                                    key={card.id}
+                                    index={index}
+                                    card={card}
+                                    handleDelete={handleDelete}
+                                />
+                            )
+                        }
+                        if (type === 2) {
+                            return (
+                                <KanjiCard
+                                    key={card.id}
+                                    index={index}
+                                    card={card}
+                                    handleDelete={handleDelete}
+                                />
+                            )
+                        }
+                        if (type === 3) {
+                            return (
+                                <GrammarCard
+                                    key={card.id}
+                                    index={index}
+                                    card={card}
+                                    handleDelete={handleDelete}
+                                />
+                            )
+                        }
+                    })}
                     {/* Add button */}
                     <div className={`card ${CardStyles.card} mb-3 py-4`}>
                         <div
@@ -406,4 +460,4 @@ const CreateVocab = () => {
         </div>
     )
 }
-export default CreateVocab
+export default CreateSet

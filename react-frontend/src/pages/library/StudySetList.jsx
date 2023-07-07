@@ -98,21 +98,27 @@ const StudySetList = () => {
                                     <button
                                         className="dropdown-item m-0"
                                         onClick={() => {
-                                            navigate('/create-vocab')
+                                            navigate('/create-set/type=1')
                                         }}
                                     >
                                         Vocabulary
                                     </button>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#">
+                                    <button
+                                        className="dropdown-item"
+                                        onClick={navigate('/create-set/type=2')}
+                                    >
                                         Kanji
-                                    </a>
+                                    </button>
                                 </li>
                                 <li>
-                                    <a className="dropdown-item" href="#">
+                                    <button
+                                        className="dropdown-item"
+                                        onClick={navigate('/create-set/type=3')}
+                                    >
                                         Grammar
-                                    </a>
+                                    </button>
                                 </li>
                             </ul>
                         </div>

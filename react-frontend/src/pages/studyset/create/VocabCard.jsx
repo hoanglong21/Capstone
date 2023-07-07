@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { uploadFile, deleteFileByUrl } from '../../features/fileManagement'
-import ContentService from '../../services/ContentService'
-import CardService from '../../services/CardService'
+import { uploadFile, deleteFileByUrl } from '../../../features/fileManagement'
+import ContentService from '../../../services/ContentService'
+import CardService from '../../../services/CardService'
 
-import { DeleteIcon, ImageIcon, MicIcon } from '../../components/icons'
-import TextEditor from '../../components/TextEditor'
-import styles from '../../assets/styles/Card.module.css'
+import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
+import TextEditor from '../../../components/TextEditor'
+import styles from '../../../assets/styles/Card.module.css'
 
-export const Card = (props) => {
+export const VocabCard = (props) => {
     const [card, setCard] = useState(props.card)
     const [term, setTerm] = useState({})
     const [definition, setDefinition] = useState({})
@@ -19,78 +19,87 @@ export const Card = (props) => {
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const contents = (await ContentService.getAllByCardId(card.id)).data
-            if (contents.length === 0) {
-                setTerm(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 1,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setDefinition(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 2,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setExample(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 3,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-            } else {
-                setTerm(contents[0])
-                setDefinition(contents[1])
-                setExample(contents[2])
+            try {
+                const contents = (await ContentService.getAllByCardId(card.id))
+                    .data
+                if (contents.length === 0) {
+                    setTerm(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 1,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setDefinition(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 2,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setExample(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 3,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                } else {
+                    setTerm(contents[0])
+                    setDefinition(contents[1])
+                    setExample(contents[2])
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
         }
         fetchData()
     }, [card.id])
 
     // ignore error
-    useEffect(() => {
-        window.addEventListener('error', (e) => {
-            if (e.message === 'ResizeObserver loop limit exceeded') {
-                const resizeObserverErrDiv = document.getElementById(
-                    'webpack-dev-server-client-overlay-div'
-                )
-                const resizeObserverErr = document.getElementById(
-                    'webpack-dev-server-client-overlay'
-                )
-                if (resizeObserverErr) {
-                    resizeObserverErr.setAttribute('style', 'display: none')
-                }
-                if (resizeObserverErrDiv) {
-                    resizeObserverErrDiv.setAttribute('style', 'display: none')
-                }
-            }
-        })
-    }, [])
+    // useEffect(() => {
+    //     window.addEventListener('error', (e) => {
+    //         if (e.message === 'ResizeObserver loop limit exceeded') {
+    //             const resizeObserverErrDiv = document.getElementById(
+    //                 'webpack-dev-server-client-overlay-div'
+    //             )
+    //             const resizeObserverErr = document.getElementById(
+    //                 'webpack-dev-server-client-overlay'
+    //             )
+    //             if (resizeObserverErr) {
+    //                 resizeObserverErr.setAttribute('style', 'display: none')
+    //             }
+    //             if (resizeObserverErrDiv) {
+    //                 resizeObserverErrDiv.setAttribute('style', 'display: none')
+    //             }
+    //         }
+    //     })
+    // }, [])
 
-    const doUpdateCard = async (tempCard) => {
-        await CardService.updateCard(tempCard.id, tempCard)
+    const doUpdatecard = async (tempcard) => {
+        await CardService.updatecard(tempcard.id, tempcard)
     }
 
     const handleChangeFile = async (event, folderName) => {
@@ -100,12 +109,12 @@ export const Card = (props) => {
         if (file) {
             const urlOld = String(card[name])
             const url = await uploadFile(file, folderName)
-            const tempCard = { ...card, [name]: url }
-            setCard(tempCard)
+            const tempcard = { ...card, [name]: url }
+            setCard(tempcard)
             if (urlOld) {
                 deleteFileByUrl(urlOld, folderName)
             }
-            doUpdateCard(tempCard)
+            doUpdatecard(tempcard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
@@ -114,21 +123,25 @@ export const Card = (props) => {
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         const urlOld = card[name]
-        const tempCard = { ...card, [name]: '' }
-        setCard(tempCard)
+        const tempcard = { ...card, [name]: '' }
+        setCard(tempcard)
         if (urlOld) {
             deleteFileByUrl(urlOld, folderName)
         }
-        doUpdateCard(tempCard)
+        doUpdatecard(tempcard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
-    const doUpdateTerm = async () => {
-        await ContentService.updateContent(term.id, term)
-    }
-
-    const doUpdateDefinition = async () => {
-        await ContentService.updateContent(definition.id, definition)
+    const doUpdateContent = async (content) => {
+        try {
+            await ContentService.updateContent(content.id, content)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     return (
@@ -188,11 +201,11 @@ export const Card = (props) => {
                     <div className="col-6 pe-4">
                         <TextEditor
                             name="term"
-                            data={term.content}
+                            data={term?.content}
                             onChange={(event, editor) => {
                                 setTerm({ ...term, content: editor.getData() })
                             }}
-                            onBlur={doUpdateTerm}
+                            onBlur={() => doUpdateContent(term)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
@@ -203,14 +216,14 @@ export const Card = (props) => {
                     <div className="col-6 ps-4">
                         <TextEditor
                             name="definition"
-                            data={definition.content}
+                            data={definition?.content}
                             onChange={(event, editor) => {
                                 setDefinition({
                                     ...definition,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={() => doUpdateContent(definition)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
@@ -221,14 +234,14 @@ export const Card = (props) => {
                     <div className="col-12 mt-4">
                         <TextEditor
                             name="example"
-                            data={example.content}
+                            data={example?.content}
                             onChange={(event, editor) => {
                                 setExample({
                                     ...example,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={() => doUpdateContent(example)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}

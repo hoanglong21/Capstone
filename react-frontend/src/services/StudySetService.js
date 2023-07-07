@@ -32,6 +32,7 @@ const getFilterList = (
     is_draft,
     search,
     author,
+    type,
     from,
     to,
     page,
@@ -49,6 +50,8 @@ const getFilterList = (
             search +
             '&author' +
             author +
+            '&type' +
+            type +
             (from ? `&from${from}` : '') +
             (to ? `&to${to}` : '') +
             '&page' +
