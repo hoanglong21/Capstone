@@ -20,59 +20,77 @@ const CreateSet = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const { id } = useParams()
-    const type = Number(searchParams.get('type'))
     const { userInfo } = useSelector((state) => state.user)
 
+    const [type, setType] = useState(Number(searchParams.get('type')))
     const [isScroll, setIsScroll] = useState(false)
     const [studySet, setStudySet] = useState({})
     const [cards, setCards] = useState([])
     const [error, setError] = useState('')
     const [showDiscardMess, setShowDiscardMess] = useState(false)
 
+    useEffect(() => {
+        if (id && studySet._draft) {
+            navigate(`/create-set?type=${studySet.studySetType.id}`)
+        }
+    }, [studySet])
+
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            let temp = {}
-            if (id) {
-                temp = (await StudySetService.getStudySetById(id)).data
-            } else {
-                const listSets = (
-                    await StudySetService.getFilterList(
-                        '=0',
-                        '',
-                        '=1',
-                        '',
-                        `=${userInfo?.username}`,
-                        `=${type}`,
-                        '',
-                        '',
-                        '',
-                        ''
-                    )
-                ).data
-                if (listSets.totalItems > 0) {
-                    temp = listSets.list[0]
+            try {
+                let temp = {}
+                if (id) {
+                    temp = (await StudySetService.getStudySetById(id)).data
+                    setType(temp.studySetType.id)
                 } else {
-                    temp = (
-                        await StudySetService.createStudySet({
-                            user: {
-                                id: userInfo.id,
-                            },
-                            title: '',
-                            description: '',
-                            _deleted: false,
-                            _public: true,
-                            _draft: true,
-                            studySetType: {
-                                id: type,
-                            },
-                            deleted_date: '',
-                        })
+                    const listSets = (
+                        await StudySetService.getFilterList(
+                            '=0',
+                            '',
+                            '=1',
+                            '',
+                            `=${userInfo?.username}`,
+                            `=${type}`,
+                            '',
+                            '',
+                            '',
+                            ''
+                        )
                     ).data
+                    if (listSets.totalItems > 0) {
+                        temp = listSets.list[0]
+                    } else {
+                        temp = (
+                            await StudySetService.createStudySet({
+                                user: {
+                                    id: userInfo.id,
+                                },
+                                title: '',
+                                description: '',
+                                _deleted: false,
+                                _public: true,
+                                _draft: true,
+                                studySetType: {
+                                    id: type,
+                                },
+                                deleted_date: '',
+                            })
+                        ).data
+                    }
+                }
+                setStudySet(temp)
+                setCards((await CardService.getAllByStudySetId(temp.id)).data)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    setError(error.response.data)
+                    if (error.response.data.includes('not exist')) {
+                        navigate('/')
+                    }
+                } else {
+                    setError(error.message)
                 }
             }
-            setStudySet(temp)
-            setCards((await CardService.getAllByStudySetId(temp.id)).data)
         }
         setError('')
         if (userInfo.username) {
@@ -157,8 +175,10 @@ const CreateSet = () => {
                 ).data
                 if (emptyCards.length === 0) {
                     setStudySet({ ...studySet, _draft: false })
-                    console.log(studySet)
-                    await StudySetService.updateStudySet(studySet.id, studySet)
+                    await StudySetService.updateStudySet(studySet.id, {
+                        ...studySet,
+                        _draft: false,
+                    })
                     // navigate('/set/' + id)
                     navigate('/')
                     form.classList.remove('was-validated')
