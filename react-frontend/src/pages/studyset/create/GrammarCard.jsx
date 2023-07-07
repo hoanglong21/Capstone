@@ -31,7 +31,7 @@ export const GrammarCard = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 15,
+                                id: 14,
                             },
                             content: '',
                         })
@@ -44,7 +44,7 @@ export const GrammarCard = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 16,
+                                id: 15,
                             },
                             content: '',
                         })
@@ -57,7 +57,7 @@ export const GrammarCard = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 17,
+                                id: 16,
                             },
                             content: '',
                         })
@@ -70,7 +70,7 @@ export const GrammarCard = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 18,
+                                id: 17,
                             },
                             content: '',
                         })
@@ -83,7 +83,7 @@ export const GrammarCard = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 19,
+                                id: 18,
                             },
                             content: '',
                         })
@@ -96,7 +96,7 @@ export const GrammarCard = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 20,
+                                id: 19,
                             },
                             content: '',
                         })
@@ -115,24 +115,24 @@ export const GrammarCard = (props) => {
     }, [card.id])
 
     // ignore error
-    // useEffect(() => {
-    //     window.addEventListener('error', (e) => {
-    //         if (e.message === 'ResizeObserver loop limit exceeded') {
-    //             const resizeObserverErrDiv = document.getElementById(
-    //                 'webpack-dev-server-client-overlay-div'
-    //             )
-    //             const resizeObserverErr = document.getElementById(
-    //                 'webpack-dev-server-client-overlay'
-    //             )
-    //             if (resizeObserverErr) {
-    //                 resizeObserverErr.setAttribute('style', 'display: none')
-    //             }
-    //             if (resizeObserverErrDiv) {
-    //                 resizeObserverErrDiv.setAttribute('style', 'display: none')
-    //             }
-    //         }
-    //     })
-    // }, [])
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            if (e.message === 'ResizeObserver loop limit exceeded') {
+                const resizeObserverErrDiv = document.getElementById(
+                    'webpack-dev-server-client-overlay-div'
+                )
+                const resizeObserverErr = document.getElementById(
+                    'webpack-dev-server-client-overlay'
+                )
+                if (resizeObserverErr) {
+                    resizeObserverErr.setAttribute('style', 'display: none')
+                }
+                if (resizeObserverErrDiv) {
+                    resizeObserverErrDiv.setAttribute('style', 'display: none')
+                }
+            }
+        })
+    }, [])
 
     const doUpdateCard = async (tempCard) => {
         await CardService.updateCard(tempCard.id, tempCard)
@@ -253,30 +253,28 @@ export const GrammarCard = (props) => {
                         </span>
                     </div>
                     <div className="col-3 col-xl-2 ps-3 d-flex flex-column justify-content-end">
-                        <div className="form-group">
-                            <select
-                                className={`form-select ${styles.card_select}`}
-                                aria-label="level"
-                                name="jlptLevel"
-                                value={jlptLevel?.content}
-                                onChange={(event) => {
-                                    setJlptLevel({
-                                        ...jlptLevel,
-                                        content: event.target.value,
-                                    })
-                                }}
-                                onBlur={() => {
-                                    doUpdateContent(jlptLevel)
-                                }}
-                            >
-                                <option value="Unknown">Unknown</option>
-                                <option value="N1">N1</option>
-                                <option value="N2">N2</option>
-                                <option value="N3">N3</option>
-                                <option value="N4">N4</option>
-                                <option value="N5">N5</option>
-                            </select>
-                        </div>
+                        <select
+                            className={`form-select ${styles.card_select}`}
+                            aria-label="level"
+                            name="jlptLevel"
+                            value={jlptLevel?.content}
+                            onChange={(event) => {
+                                setJlptLevel({
+                                    ...jlptLevel,
+                                    content: event.target.value,
+                                })
+                            }}
+                            onBlur={() => {
+                                doUpdateContent(jlptLevel)
+                            }}
+                        >
+                            <option value="Unknown">Unknown</option>
+                            <option value="N1">N1</option>
+                            <option value="N2">N2</option>
+                            <option value="N3">N3</option>
+                            <option value="N4">N4</option>
+                            <option value="N5">N5</option>
+                        </select>
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >

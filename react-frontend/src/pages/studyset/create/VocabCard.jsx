@@ -79,27 +79,27 @@ export const VocabCard = (props) => {
     }, [card.id])
 
     // ignore error
-    // useEffect(() => {
-    //     window.addEventListener('error', (e) => {
-    //         if (e.message === 'ResizeObserver loop limit exceeded') {
-    //             const resizeObserverErrDiv = document.getElementById(
-    //                 'webpack-dev-server-client-overlay-div'
-    //             )
-    //             const resizeObserverErr = document.getElementById(
-    //                 'webpack-dev-server-client-overlay'
-    //             )
-    //             if (resizeObserverErr) {
-    //                 resizeObserverErr.setAttribute('style', 'display: none')
-    //             }
-    //             if (resizeObserverErrDiv) {
-    //                 resizeObserverErrDiv.setAttribute('style', 'display: none')
-    //             }
-    //         }
-    //     })
-    // }, [])
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            if (e.message === 'ResizeObserver loop limit exceeded') {
+                const resizeObserverErrDiv = document.getElementById(
+                    'webpack-dev-server-client-overlay-div'
+                )
+                const resizeObserverErr = document.getElementById(
+                    'webpack-dev-server-client-overlay'
+                )
+                if (resizeObserverErr) {
+                    resizeObserverErr.setAttribute('style', 'display: none')
+                }
+                if (resizeObserverErrDiv) {
+                    resizeObserverErrDiv.setAttribute('style', 'display: none')
+                }
+            }
+        })
+    }, [])
 
-    const doUpdatecard = async (tempcard) => {
-        await CardService.updatecard(tempcard.id, tempcard)
+    const doUpdateCard = async (tempCard) => {
+        await CardService.updateCard(tempCard.id, tempCard)
     }
 
     const handleChangeFile = async (event, folderName) => {
@@ -109,12 +109,12 @@ export const VocabCard = (props) => {
         if (file) {
             const urlOld = String(card[name])
             const url = await uploadFile(file, folderName)
-            const tempcard = { ...card, [name]: url }
-            setCard(tempcard)
+            const tempCard = { ...card, [name]: url }
+            setCard(tempCard)
             if (urlOld) {
                 deleteFileByUrl(urlOld, folderName)
             }
-            doUpdatecard(tempcard)
+            doUpdateCard(tempCard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
@@ -123,12 +123,12 @@ export const VocabCard = (props) => {
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         const urlOld = card[name]
-        const tempcard = { ...card, [name]: '' }
-        setCard(tempcard)
+        const tempCard = { ...card, [name]: '' }
+        setCard(tempCard)
         if (urlOld) {
             deleteFileByUrl(urlOld, folderName)
         }
-        doUpdatecard(tempcard)
+        doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
