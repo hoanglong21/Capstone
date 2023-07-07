@@ -28,7 +28,16 @@ const getClassroomById = (id) => {
     return axios.get(API_BASE_URL + '/class/' + id)
 }
 
-const getFilterList = (is_deleted, search, author, from, to, page, size) => {
+const getFilterList = (
+    is_deleted,
+    search,
+    author,
+    learner,
+    from,
+    to,
+    page,
+    size
+) => {
     return axios.get(
         API_BASE_URL +
             '/filterclass?deleted' +
@@ -37,6 +46,8 @@ const getFilterList = (is_deleted, search, author, from, to, page, size) => {
             search +
             '&author' +
             author +
+            '&learner' +
+            learner +
             (from ? `&from${from}` : '') +
             (to ? `&to${to}` : '') +
             '&page' +
