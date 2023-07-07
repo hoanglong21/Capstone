@@ -324,4 +324,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public List<User> filterUser(String name, String gender, String phone, String role, String address, String bio, String status, String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted) {
+        System.out.println(userRepository.filterUser(name, gender, phone, role, address, bio, status, fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted));
+    }
+
 }
