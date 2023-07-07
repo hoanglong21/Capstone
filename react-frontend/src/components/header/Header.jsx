@@ -50,17 +50,9 @@ const Header = () => {
         navigate('/')
     }
 
-    const handleAddSetVocab = async () => {
+    const handleAddStudySet = async (type) => {
         if (userToken) {
-            navigate('create-vocab')
-        } else {
-            navigate('login')
-        }
-    }
-
-    const handleAddSetGrammar = async () => {
-        if (userToken) {
-            navigate('create-grammar')
+            navigate(`create-set?type=${type}`)
         } else {
             navigate('login')
         }
@@ -178,20 +170,23 @@ const Header = () => {
                                     <li>
                                         <button
                                             className="dropdown-item"
-                                            onClick={handleAddSetVocab}
+                                            onClick={() => handleAddStudySet(1)}
                                         >
                                             Vocabulary
                                         </button>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="#">
+                                        <button
+                                            className="dropdown-item"
+                                            onClick={() => handleAddStudySet(2)}
+                                        >
                                             Kanji
-                                        </a>
+                                        </button>
                                     </li>
                                     <li>
                                         <button
                                             className="dropdown-item"
-                                            onClick={handleAddSetGrammar}
+                                            onClick={() => handleAddStudySet(3)}
                                         >
                                             Grammar
                                         </button>

@@ -1,22 +1,26 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 import { useSelector } from 'react-redux'
 
-import { Card } from './Card'
+import CardService from '../../../services/CardService'
+import StudySetService from '../../../services/StudySetService'
 
-import CardService from '../../services/CardService'
-import StudySetService from '../../services/StudySetService'
+import { VocabCard } from './VocabCard'
+import { GrammarCard } from './GrammarCard'
 
-import styles from '../../assets/styles/Form.module.css'
-import CardStyles from '../../assets/styles/Card.module.css'
-import '../../assets/styles/stickyHeader.css'
+import styles from '../../../assets/styles/Form.module.css'
+import CardStyles from '../../../assets/styles/Card.module.css'
+import '../../../assets/styles/stickyHeader.css'
 
-const CreateGrammar = () => {
+const CreateSet = () => {
     const navigate = useNavigate()
 
+    const [searchParams, setSearchParams] = useSearchParams()
+
     const { id } = useParams()
+    const type = Number(searchParams.get('type'))
     const { userInfo } = useSelector((state) => state.user)
 
     const [isScroll, setIsScroll] = useState(false)
@@ -39,7 +43,7 @@ const CreateGrammar = () => {
                         '=1',
                         '',
                         `=${userInfo?.username}`,
-                        '=3',
+                        `=${type}`,
                         '',
                         '',
                         '',
@@ -60,7 +64,7 @@ const CreateGrammar = () => {
                             _public: true,
                             _draft: true,
                             studySetType: {
-                                id: 3,
+                                id: type,
                             },
                             deleted_date: '',
                         })
@@ -227,7 +231,7 @@ const CreateGrammar = () => {
                     _public: true,
                     _draft: true,
                     studySetType: {
-                        id: 3,
+                        id: type,
                     },
                     deleted_date: '',
                 })
@@ -345,15 +349,28 @@ const CreateGrammar = () => {
                         ></textarea>
                     </div>
                     {/* Card */}
-                    {cards.map((card, index) => (
-                        <Card
-                            key={card.id}
-                            index={index}
-                            card={card}
-                            handleDelete={handleDelete}
-                        />
-                    ))}
-
+                    {cards.map((card, index) => {
+                        if (type === 1) {
+                            return (
+                                <VocabCard
+                                    key={card.id}
+                                    index={index}
+                                    card={card}
+                                    handleDelete={handleDelete}
+                                />
+                            )
+                        }
+                        if (type === 3) {
+                            return (
+                                <GrammarCard
+                                    key={card.id}
+                                    index={index}
+                                    card={card}
+                                    handleDelete={handleDelete}
+                                />
+                            )
+                        }
+                    })}
                     {/* Add button */}
                     <div className={`card ${CardStyles.card} mb-3 py-4`}>
                         <div
@@ -409,4 +426,4 @@ const CreateGrammar = () => {
         </div>
     )
 }
-export default CreateGrammar
+export default CreateSet

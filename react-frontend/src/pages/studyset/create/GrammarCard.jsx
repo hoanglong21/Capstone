@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { uploadFile, deleteFileByUrl } from '../../features/fileManagement'
-import ContentService from '../../services/ContentService'
-import CardService from '../../services/CardService'
+import { uploadFile, deleteFileByUrl } from '../../../features/fileManagement'
+import ContentService from '../../../services/ContentService'
+import CardService from '../../../services/CardService'
 
-import { DeleteIcon, ImageIcon, MicIcon } from '../../components/icons'
-import TextEditor from '../../components/TextEditor'
-import styles from '../../assets/styles/Card.module.css'
+import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
+import TextEditor from '../../../components/TextEditor'
+import styles from '../../../assets/styles/Card.module.css'
 
-export const Card = (props) => {
+export const GrammarCard = (props) => {
     const [card, setCard] = useState(props.card)
     const [title, setTitle] = useState({})
     const [jlptLevel, setJlptLevel] = useState({})
@@ -104,33 +104,35 @@ export const Card = (props) => {
                 )
             } else {
                 setTitle(contents[0])
-                setMeaning(contents[1])
-                setExample(contents[2])
-                setExplanation(contents[3])
+                setJlptLevel(contents[1])
+                setMeaning(contents[2])
+                setExample(contents[3])
+                setExplanation(contents[4])
+                setNote(contents[5])
             }
         }
         fetchData()
     }, [card.id])
 
     // ignore error
-    useEffect(() => {
-        window.addEventListener('error', (e) => {
-            if (e.message === 'ResizeObserver loop limit exceeded') {
-                const resizeObserverErrDiv = document.getElementById(
-                    'webpack-dev-server-client-overlay-div'
-                )
-                const resizeObserverErr = document.getElementById(
-                    'webpack-dev-server-client-overlay'
-                )
-                if (resizeObserverErr) {
-                    resizeObserverErr.setAttribute('style', 'display: none')
-                }
-                if (resizeObserverErrDiv) {
-                    resizeObserverErrDiv.setAttribute('style', 'display: none')
-                }
-            }
-        })
-    }, [])
+    // useEffect(() => {
+    //     window.addEventListener('error', (e) => {
+    //         if (e.message === 'ResizeObserver loop limit exceeded') {
+    //             const resizeObserverErrDiv = document.getElementById(
+    //                 'webpack-dev-server-client-overlay-div'
+    //             )
+    //             const resizeObserverErr = document.getElementById(
+    //                 'webpack-dev-server-client-overlay'
+    //             )
+    //             if (resizeObserverErr) {
+    //                 resizeObserverErr.setAttribute('style', 'display: none')
+    //             }
+    //             if (resizeObserverErrDiv) {
+    //                 resizeObserverErrDiv.setAttribute('style', 'display: none')
+    //             }
+    //         }
+    //     })
+    // }, [])
 
     const doUpdateCard = async (tempCard) => {
         await CardService.updateCard(tempCard.id, tempCard)
@@ -167,15 +169,15 @@ export const Card = (props) => {
     }
 
     const doUpdateContent = async (content) => {
-        await ContentService.updateContent(content.id, content)
-    }
-
-    const doUpdateTitle = async () => {
-        await ContentService.updateContent(title.id, title)
-    }
-
-    const doUpdateMeaning = async () => {
-        await ContentService.updateContent(meaning.id, meaning)
+        try {
+            await ContentService.updateContent(content.id, content)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     return (
@@ -232,7 +234,7 @@ export const Card = (props) => {
             </div>
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
-                    <div className="col-6 pe-4">
+                    <div className="col-9 col-xl-10 pe-4">
                         <TextEditor
                             name="title"
                             data={title.content}
@@ -242,7 +244,7 @@ export const Card = (props) => {
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateContent(title)}
+                            onBlur={() => doUpdateContent(title)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
@@ -250,9 +252,41 @@ export const Card = (props) => {
                             TITLE
                         </span>
                     </div>
-                    <div className="col-6 ps-4">
+                    <div className="col-3 col-xl-2 ps-3 d-flex flex-column justify-content-end">
+                        <div className="form-group">
+                            <select
+                                className={`form-select ${styles.card_select}`}
+                                aria-label="level"
+                                name="jlptLevel"
+                                value={jlptLevel.content}
+                                onChange={(event) => {
+                                    setJlptLevel({
+                                        ...jlptLevel,
+                                        content: event.target.value,
+                                    })
+                                }}
+                                onBlur={() => {
+                                    doUpdateContent(jlptLevel)
+                                }}
+                            >
+                                <option value="Unknown">Unknown</option>
+                                <option value="N1">N1</option>
+                                <option value="N2">N2</option>
+                                <option value="N3">N3</option>
+                                <option value="N4">N4</option>
+                                <option value="N5">N5</option>
+                            </select>
+                        </div>
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            JLPT LEVEL
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
                         <TextEditor
                             name="meaning"
+                            className={`${styles.card_editor}`}
                             data={meaning.content}
                             onChange={(event, editor) => {
                                 setMeaning({
@@ -260,7 +294,7 @@ export const Card = (props) => {
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateMeaning}
+                            onBlur={() => doUpdateContent(meaning)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
@@ -278,7 +312,7 @@ export const Card = (props) => {
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateMeaning}
+                            onBlur={() => doUpdateContent(example)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
@@ -288,20 +322,38 @@ export const Card = (props) => {
                     </div>
                     <div className="col-12 mt-4">
                         <TextEditor
-                            name="example"
-                            data={example.content}
+                            name="explanation"
+                            data={explanation.content}
                             onChange={(event, editor) => {
                                 setExplanation({
-                                    ...example,
+                                    ...explanation,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateMeaning}
+                            onBlur={() => doUpdateContent(explanation)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
                             EXPLANATION
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="note"
+                            data={note.content}
+                            onChange={(event, editor) => {
+                                setExplanation({
+                                    ...note,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(note)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            NOTE
                         </span>
                     </div>
                 </div>

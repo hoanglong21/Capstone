@@ -7,9 +7,7 @@ import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import Layout from './components/layouts/Layout'
 import GPTContainer from './components/Chat/GPTContainer'
-import TextToSpeech from './components/InputModel/TextToSpeech'
 import Flashcard from './pages/Flashcard'
-import CreateVocab from './pages/vocab/CreateVocab'
 import MainClass from './pages/class/mainClass/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
@@ -50,7 +48,7 @@ import ManageClass from './pages/admin/ManageClass'
 import ViewDetailClass from './pages/admin/ViewDetailClass'
 import ManageFeedback from './pages/admin/ManageFeedback'
 import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
-import CreateGrammar from './pages/grammar/CreateGrammar'
+import CreateSet from './pages/studyset/create/CreateSet'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -93,21 +91,9 @@ const App = () => {
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
                         </Route>
-                        {/* Vocab */}
-                        <Route path="create-vocab" element={<CreateVocab />} />
-                        <Route
-                            path="edit-vocab/:id"
-                            element={<CreateVocab />}
-                        />
-                        {/* Grammar */}
-                        <Route
-                            path="create-grammar"
-                            element={<CreateGrammar />}
-                        />
-                        <Route
-                            path="edit-grammar/:id"
-                            element={<CreateGrammar />}
-                        />
+                        {/* Study Set */}
+                        <Route path="create-set" element={<CreateSet />} />
+                        <Route path="edit-set/:id" element={<CreateSet />} />
                         {/* Class */}
                         <Route path="class/:id" element={<MainClass />} />
                         {/* Feedback */}
