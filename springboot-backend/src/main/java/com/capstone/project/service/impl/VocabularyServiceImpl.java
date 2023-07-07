@@ -25,7 +25,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         return vocabularyList;
     }
 
-    public List<Vocabulary> getAllVocabulary() {
+    public List<Vocabulary> initVocabulary() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream("OmohaDictionary.xml");

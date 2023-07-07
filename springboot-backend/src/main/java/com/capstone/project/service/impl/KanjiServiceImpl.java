@@ -28,10 +28,7 @@ public class KanjiServiceImpl implements KanjiService {
         return kanjiList;
     }
 
-//    @Autowired
-//    private TranslateService translateService;
-
-    public List<Kanji> getAllKanji() {
+    public List<Kanji> initKanji() {
         try {
             // Load the XML file
             ClassLoader classLoader = getClass().getClassLoader();

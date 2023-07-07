@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
 
 public interface VocabularyService {
 
-    public List<Vocabulary> getAllVocabulary();
+    public List<Vocabulary> initVocabulary();
 
     public List<Vocabulary> searchAndPaginate(String query, int page, int pageSize);
 

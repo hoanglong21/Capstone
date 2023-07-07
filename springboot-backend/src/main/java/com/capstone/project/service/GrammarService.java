@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 public interface GrammarService {
 
-    public List<Grammar> getAllGrammars();
+    public List<Grammar> initGrammars();
 
     public List<Grammar> searchAndPaginate(String query, int level, int page, int pageSize);
 

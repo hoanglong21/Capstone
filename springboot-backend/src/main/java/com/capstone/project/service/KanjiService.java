@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface KanjiService {
 
-    public List<Kanji> getAllKanji();
+    public List<Kanji> initKanji();
 
     public List<Kanji> searchAndPaginate(String query, int page, int pageSize);
 

@@ -23,7 +23,7 @@ public class GrammarServiceImpl implements GrammarService {
         return grammarList;
     }
 
-    public List<Grammar> getAllGrammars() {
+    public List<Grammar> initGrammars() {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream("Lgrammar.xml");
