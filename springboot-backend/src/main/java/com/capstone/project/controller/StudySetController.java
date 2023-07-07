@@ -105,12 +105,13 @@ public class StudySetController {
                                            @RequestParam(value = "draft", required = false) Boolean isDraft,
                                            @RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "type", required = false, defaultValue = "0") int type,
                                            @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
                                            @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         try {
-            return ResponseEntity.ok(studySetService.getFilterList(isDeleted, isPublic, isDraft, search, author, from, to, page, size));
+            return ResponseEntity.ok(studySetService.getFilterList(isDeleted, isPublic, isDraft, search, type, author, from, to, page, size));
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

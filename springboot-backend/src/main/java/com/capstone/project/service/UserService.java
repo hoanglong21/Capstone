@@ -32,4 +32,7 @@ public interface UserService {
     Boolean checkMatchPassword(String username, String checkPassword) throws ResourceNotFroundException;
 
     Boolean changePassword(String username, String password) throws ResourceNotFroundException;
+
+    List<User> filterUser(String name, String gender, String phone, String role, String address, String bio, String status,
+                          String fromBanned, String toBanned, String fromDeleted, String toDeleted);
 }
