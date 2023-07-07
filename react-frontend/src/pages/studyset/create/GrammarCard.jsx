@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react'
 
-import { uploadFile, deleteFileByUrl } from '../../features/fileManagement'
-import ContentService from '../../services/ContentService'
-import CardService from '../../services/CardService'
+import { uploadFile, deleteFileByUrl } from '../../../features/fileManagement'
+import ContentService from '../../../services/ContentService'
+import CardService from '../../../services/CardService'
 
-import { DeleteIcon, ImageIcon, MicIcon } from '../../components/icons'
-import TextEditor from '../../components/TextEditor'
-import styles from '../../assets/styles/Card.module.css'
+import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
+import TextEditor from '../../../components/TextEditor'
+import styles from '../../../assets/styles/Card.module.css'
 
-export const Card = (props) => {
+export const GrammarCard = (props) => {
     const [card, setCard] = useState(props.card)
-    const [term, setTerm] = useState({})
-    const [definition, setDefinition] = useState({})
+    const [title, setTitle] = useState({})
+    const [jlptLevel, setJlptLevel] = useState({})
+    const [meaning, setMeaning] = useState({})
     const [example, setExample] = useState({})
+    const [explanation, setExplanation] = useState({})
+    const [note, setNote] = useState({})
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
 
@@ -21,27 +24,40 @@ export const Card = (props) => {
         const fetchData = async () => {
             const contents = (await ContentService.getAllByCardId(card.id)).data
             if (contents.length === 0) {
-                setTerm(
+                setTitle(
                     (
                         await ContentService.createContent({
                             card: {
                                 id: card.id,
                             },
                             field: {
-                                id: 1,
+                                id: 14,
                             },
                             content: '',
                         })
                     ).data
                 )
-                setDefinition(
+                setJlptLevel(
                     (
                         await ContentService.createContent({
                             card: {
                                 id: card.id,
                             },
                             field: {
-                                id: 2,
+                                id: 15,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setMeaning(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 16,
                             },
                             content: '',
                         })
@@ -54,16 +70,45 @@ export const Card = (props) => {
                                 id: card.id,
                             },
                             field: {
-                                id: 3,
+                                id: 17,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setExplanation(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 18,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
+                setNote(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 19,
                             },
                             content: '',
                         })
                     ).data
                 )
             } else {
-                setTerm(contents[0])
-                setDefinition(contents[1])
-                setExample(contents[2])
+                setTitle(contents[0])
+                setJlptLevel(contents[1])
+                setMeaning(contents[2])
+                setExample(contents[3])
+                setExplanation(contents[4])
+                setNote(contents[5])
             }
         }
         fetchData()
@@ -123,12 +168,16 @@ export const Card = (props) => {
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
-    const doUpdateTerm = async () => {
-        await ContentService.updateContent(term.id, term)
-    }
-
-    const doUpdateDefinition = async () => {
-        await ContentService.updateContent(definition.id, definition)
+    const doUpdateContent = async (content) => {
+        try {
+            await ContentService.updateContent(content.id, content)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     return (
@@ -185,55 +234,124 @@ export const Card = (props) => {
             </div>
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
-                    <div className="col-6 pe-4">
+                    <div className="col-9 col-xl-10 pe-4">
                         <TextEditor
-                            name="term"
-                            data={term.content}
+                            name="title"
+                            data={title?.content}
                             onChange={(event, editor) => {
-                                setTerm({ ...term, content: editor.getData() })
-                            }}
-                            onBlur={doUpdateTerm}
-                        />
-                        <span
-                            className={`card-header-label ${styles.card_header_label} mt-1`}
-                        >
-                            TERM
-                        </span>
-                    </div>
-                    <div className="col-6 ps-4">
-                        <TextEditor
-                            name="definition"
-                            data={definition.content}
-                            onChange={(event, editor) => {
-                                setDefinition({
-                                    ...definition,
+                                setTitle({
+                                    ...title,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={() => doUpdateContent(title)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            DEFINITION
+                            TITLE
+                        </span>
+                    </div>
+                    <div className="col-3 col-xl-2 ps-3 d-flex flex-column justify-content-end">
+                        <select
+                            className={`form-select ${styles.card_select}`}
+                            aria-label="level"
+                            name="jlptLevel"
+                            value={jlptLevel?.content}
+                            onChange={(event) => {
+                                setJlptLevel({
+                                    ...jlptLevel,
+                                    content: event.target.value,
+                                })
+                            }}
+                            onBlur={() => {
+                                doUpdateContent(jlptLevel)
+                            }}
+                        >
+                            <option value="Unknown">Unknown</option>
+                            <option value="N1">N1</option>
+                            <option value="N2">N2</option>
+                            <option value="N3">N3</option>
+                            <option value="N4">N4</option>
+                            <option value="N5">N5</option>
+                        </select>
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            JLPT LEVEL
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="meaning"
+                            className={`${styles.card_editor}`}
+                            data={meaning?.content}
+                            onChange={(event, editor) => {
+                                setMeaning({
+                                    ...meaning,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(meaning)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            MEANING
                         </span>
                     </div>
                     <div className="col-12 mt-4">
                         <TextEditor
                             name="example"
-                            data={example.content}
+                            data={example?.content}
                             onChange={(event, editor) => {
                                 setExample({
                                     ...example,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={doUpdateDefinition}
+                            onBlur={() => doUpdateContent(example)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
                             EXAMPLE
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="explanation"
+                            data={explanation?.content}
+                            onChange={(event, editor) => {
+                                setExplanation({
+                                    ...explanation,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(explanation)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            EXPLANATION
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="note"
+                            data={note?.content}
+                            onChange={(event, editor) => {
+                                setExplanation({
+                                    ...note,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(note)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            NOTE
                         </span>
                     </div>
                 </div>

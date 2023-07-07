@@ -50,16 +50,16 @@ const Header = () => {
         navigate('/')
     }
 
-    const handleAddSetVocab = async () => {
+    const handleAddStudySet = async (type) => {
         if (userToken) {
-            navigate('create-vocab')
+            navigate(`create-set?type=${type}`)
         } else {
-            navigate('vocab/0/edit')
+            navigate('login')
         }
     }
 
     const handleAddClass = () => {
-        if (userInfo.username) {
+        if (userToken) {
             document.getElementById('toggleCreateModal').click()
         } else {
             navigate('/login')
@@ -67,7 +67,7 @@ const Header = () => {
     }
 
     const handleJoinClass = () => {
-        if (userInfo.username) {
+        if (userToken) {
             document.getElementById('toggleJoinModal').click()
         } else {
             navigate('/login')
@@ -170,20 +170,26 @@ const Header = () => {
                                     <li>
                                         <button
                                             className="dropdown-item"
-                                            onClick={handleAddSetVocab}
+                                            onClick={() => handleAddStudySet(1)}
                                         >
                                             Vocabulary
                                         </button>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="#">
+                                        <button
+                                            className="dropdown-item"
+                                            onClick={() => handleAddStudySet(2)}
+                                        >
                                             Kanji
-                                        </a>
+                                        </button>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="#">
+                                        <button
+                                            className="dropdown-item"
+                                            onClick={() => handleAddStudySet(3)}
+                                        >
                                             Grammar
-                                        </a>
+                                        </button>
                                     </li>
                                 </ul>
                             </li>

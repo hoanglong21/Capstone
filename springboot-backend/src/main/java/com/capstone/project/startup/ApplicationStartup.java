@@ -132,7 +132,6 @@ public class ApplicationStartup implements ApplicationRunner {
                     new Field(1, "example"),
                     new Field(2, "character"),
                     new Field(2, "name"),
-                    new Field(2, "gradeLevel"),
                     new Field(2, "strokes"),
                     new Field(2, "jlptLevel"),
                     new Field(2, "radical"),
@@ -161,7 +160,7 @@ public class ApplicationStartup implements ApplicationRunner {
 
         // Kanji Dictionary
         Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
-        kanjiService.getAllKanji();
+        kanjiService.initKanji();
         if(kanjiService.getKanjiList().size()>0) {
             System.out.println("Kanji Dictionary is ready");
         }
@@ -169,7 +168,7 @@ public class ApplicationStartup implements ApplicationRunner {
 
         // Vocabulary Dictionary
         Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
-        vocabularyService.getAllVocabulary();
+        vocabularyService.initVocabulary();
         if(vocabularyService.getVocabularyList().size()>0) {
             System.out.println("Vocabulary Dictionary is ready");
         }
@@ -177,7 +176,7 @@ public class ApplicationStartup implements ApplicationRunner {
 
         // Grammar Dictionary
         Thread.sleep(5000); // Delay for 5 seconds (adjust as needed)
-        grammarService.getAllGrammars();
+        grammarService.initGrammars();
         if(grammarService.getGrammarList().size()>0) {
             System.out.println("Grammar Dictionary is ready");
         }

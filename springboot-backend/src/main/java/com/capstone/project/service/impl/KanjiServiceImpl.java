@@ -15,7 +15,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class KanjiServiceImpl implements KanjiService {
@@ -28,10 +30,7 @@ public class KanjiServiceImpl implements KanjiService {
         return kanjiList;
     }
 
-//    @Autowired
-//    private TranslateService translateService;
-
-    public List<Kanji> getAllKanji() {
+    public List<Kanji> initKanji() {
         try {
             // Load the XML file
             ClassLoader classLoader = getClass().getClassLoader();
@@ -117,7 +116,7 @@ public class KanjiServiceImpl implements KanjiService {
         }
     }
 
-    public List<Kanji> searchAndPaginate(String query, int page, int pageSize) {
+    public Map<String, Object> searchAndPaginate(String query, int page, int pageSize) {
         List<Kanji> results = new ArrayList<>();
 
         // Perform search based on the query
@@ -131,7 +130,13 @@ public class KanjiServiceImpl implements KanjiService {
         int startIndex = (page - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, results.size());
 
-        return results.subList(startIndex, endIndex);
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", results.subList(startIndex, endIndex));
+        response.put("currentPage", page);
+        response.put("totalItems", results.size());
+        response.put("totalPages", (int) Math.ceil((double) results.size() / pageSize));
+
+        return response;
     }
 
     private boolean matchesQuery(Kanji kanji, String query) {

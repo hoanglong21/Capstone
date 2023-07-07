@@ -34,7 +34,7 @@ const JoinClass = () => {
                 const temp = (
                     await ClassService.joinClass(classCode, userInfo.username)
                 ).data
-                // navigate(`/class/${temp.id}`)
+                navigate(`/class/${temp.id}`)
                 document.getElementById('closeJoinClassModal').click()
                 // clear validation
                 form.classList.remove('was-validated')
