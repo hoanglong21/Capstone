@@ -17,14 +17,15 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public interface GrammarService {
 
-    public List<Grammar> getAllGrammars();
+    public List<Grammar> initGrammars();
 
-    public List<Grammar> searchAndPaginate(String query, int level, int page, int pageSize);
+    public Map<String, Object> searchAndPaginate(String query, int level, int page, int pageSize);
 
     public List<Grammar> getGrammarList();
 }

@@ -12,7 +12,6 @@ export const KanjiCard = (props) => {
     const [card, setCard] = useState(props.card)
     const [character, setCharacter] = useState({})
     const [name, setName] = useState({})
-    const [gradeLevel, setGradeLevel] = useState({})
     const [strokes, setStrokes] = useState({})
     const [jlptLevel, setJlptLevel] = useState({})
     const [radical, setRadical] = useState({})
@@ -21,8 +20,10 @@ export const KanjiCard = (props) => {
     const [meanings, setMeanings] = useState({})
     const [strokeOrder, setStrokeOrder] = useState({})
     const [example, setExample] = useState({})
+
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
+    const [loadingStrokeOrder, setLoadingStrokeOrder] = useState(false)
 
     //fetch data
     useEffect(() => {
@@ -57,7 +58,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setGradeLevel(
+                    setStrokes(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -70,7 +71,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setStrokes(
+                    setJlptLevel(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -83,7 +84,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setJlptLevel(
+                    setRadical(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -96,7 +97,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setRadical(
+                    setOnyomi(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -109,7 +110,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setOnyomi(
+                    setKunyomi(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -122,7 +123,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setKunyomi(
+                    setMeanings(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -135,7 +136,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setMeanings(
+                    setStrokeOrder(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -148,7 +149,7 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setStrokeOrder(
+                    setExample(
                         (
                             await ContentService.createContent({
                                 card: {
@@ -161,31 +162,17 @@ export const KanjiCard = (props) => {
                             })
                         ).data
                     )
-                    setExample(
-                        (
-                            await ContentService.createContent({
-                                card: {
-                                    id: card.id,
-                                },
-                                field: {
-                                    id: 14,
-                                },
-                                content: '',
-                            })
-                        ).data
-                    )
                 } else {
                     setCharacter(contents[0])
                     setName(contents[1])
-                    setGradeLevel(contents[2])
-                    setStrokes(contents[3])
-                    setJlptLevel(contents[4])
-                    setRadical(contents[5])
-                    setOnyomi(contents[6])
-                    setKunyomi(contents[7])
-                    setMeanings(contents[8])
-                    setStrokeOrder(contents[9])
-                    setExample(contents[10])
+                    setStrokes(contents[2])
+                    setJlptLevel(contents[3])
+                    setRadical(contents[4])
+                    setOnyomi(contents[5])
+                    setKunyomi(contents[6])
+                    setMeanings(contents[7])
+                    setStrokeOrder(contents[8])
+                    setExample(contents[9])
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -199,57 +186,114 @@ export const KanjiCard = (props) => {
     }, [card.id])
 
     // ignore error
-    // useEffect(() => {
-    //     window.addEventListener('error', (e) => {
-    //         if (e.message === 'ResizeObserver loop limit exceeded') {
-    //             const resizeObserverErrDiv = document.getElementById(
-    //                 'webpack-dev-server-client-overlay-div'
-    //             )
-    //             const resizeObserverErr = document.getElementById(
-    //                 'webpack-dev-server-client-overlay'
-    //             )
-    //             if (resizeObserverErr) {
-    //                 resizeObserverErr.setAttribute('style', 'display: none')
-    //             }
-    //             if (resizeObserverErrDiv) {
-    //                 resizeObserverErrDiv.setAttribute('style', 'display: none')
-    //             }
-    //         }
-    //     })
-    // }, [])
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            if (e.message === 'ResizeObserver loop limit exceeded') {
+                const resizeObserverErrDiv = document.getElementById(
+                    'webpack-dev-server-client-overlay-div'
+                )
+                const resizeObserverErr = document.getElementById(
+                    'webpack-dev-server-client-overlay'
+                )
+                if (resizeObserverErr) {
+                    resizeObserverErr.setAttribute('style', 'display: none')
+                }
+                if (resizeObserverErrDiv) {
+                    resizeObserverErrDiv.setAttribute('style', 'display: none')
+                }
+            }
+        })
+    }, [])
 
-    const doUpdatecard = async (tempcard) => {
-        await CardService.updatecard(tempcard.id, tempcard)
+    const doUpdateCard = async (tempCard) => {
+        await CardService.updateCard(tempCard.id, tempCard)
     }
 
     const handleChangeFile = async (event, folderName) => {
         const name = event.target.name
-        name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
+        // set loading
+        if (name === 'picture') {
+            setLoadingPicture(true)
+        }
+        if (name === 'audio') {
+            setLoadingAudio(true)
+        }
+        if (name === 'strokeOrder') {
+            setLoadingStrokeOrder(true)
+        }
+
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
             const url = await uploadFile(file, folderName)
-            const tempcard = { ...card, [name]: url }
-            setCard(tempcard)
-            if (urlOld) {
-                deleteFileByUrl(urlOld, folderName)
+            if (name === 'strokeOrder') {
+                // update stroke order
+                const tempStrokeOrder = { ...strokeOrder, content: url }
+                setStrokeOrder(tempStrokeOrder)
+                doUpdateContent(tempStrokeOrder)
+            } else {
+                // update card
+                const tempCard = { ...card, [name]: url }
+                setCard(tempCard)
+                if (urlOld) {
+                    deleteFileByUrl(urlOld, folderName)
+                }
+                doUpdateCard(tempCard)
             }
-            doUpdatecard(tempcard)
         }
-        name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+
+        // set loading
+        if (name === 'picture') {
+            setLoadingPicture(false)
+        }
+        if (name === 'audio') {
+            setLoadingAudio(false)
+        }
+        if (name === 'strokeOrder') {
+            setLoadingStrokeOrder(false)
+        }
     }
 
     const handleDeleteFile = (event, folderName) => {
         const name = event.target.name
-        name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+        // set loading
+        if (name === 'picture') {
+            setLoadingPicture(true)
+        }
+        if (name === 'audio') {
+            setLoadingAudio(true)
+        }
+        if (name === 'strokeOrder') {
+            setLoadingStrokeOrder(true)
+        }
+
         const urlOld = card[name]
-        const tempcard = { ...card, [name]: '' }
-        setCard(tempcard)
+        if (name === 'strokeOrder') {
+            // update stroke order
+            const tempStrokeOrder = { ...strokeOrder, content: '' }
+            setStrokeOrder(tempStrokeOrder)
+            doUpdateContent(tempStrokeOrder)
+        } else {
+            // update card
+            const tempCard = { ...card, [name]: '' }
+            setCard(tempCard)
+            doUpdateCard(tempCard)
+        }
+        // delete url
         if (urlOld) {
             deleteFileByUrl(urlOld, folderName)
         }
-        doUpdatecard(tempcard)
-        name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+
+        // set loading
+        if (name === 'picture') {
+            setLoadingPicture(false)
+        }
+        if (name === 'audio') {
+            setLoadingAudio(false)
+        }
+        if (name === 'strokeOrder') {
+            setLoadingStrokeOrder(false)
+        }
     }
 
     const doUpdateContent = async (content) => {
@@ -318,10 +362,10 @@ export const KanjiCard = (props) => {
             </div>
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
-                    <div className="col-6 pe-4">
+                    <div className="col-7 pe-4 d-flex flex-column justify-content-end">
                         <TextEditor
                             name="character"
-                            data={character.content}
+                            data={character?.content}
                             onChange={(event, editor) => {
                                 setCharacter({
                                     ...character,
@@ -336,10 +380,28 @@ export const KanjiCard = (props) => {
                             CHARACTER
                         </span>
                     </div>
-                    <div className="col-6 ps-4">
+                    <div className="col-5 ps-4 d-flex flex-column justify-content-end">
+                        <TextEditor
+                            name="radical"
+                            data={radical?.content}
+                            onChange={(event, editor) => {
+                                setRadical({
+                                    ...radical,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(radical)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            RADICAL
+                        </span>
+                    </div>
+                    <div className="col-9 mt-4 pe-4 ">
                         <TextEditor
                             name="name"
-                            data={name.content}
+                            data={name?.content}
                             onChange={(event, editor) => {
                                 setName({
                                     ...name,
@@ -354,22 +416,185 @@ export const KanjiCard = (props) => {
                             NAME
                         </span>
                     </div>
-                    <div className="col-12 mt-4">
+                    <div className="col-3 mt-4 ps-4 d-flex flex-column justify-content-end">
+                        <select
+                            className={`form-select ${styles.card_select}`}
+                            aria-label="level"
+                            name="jlptLevel"
+                            value={jlptLevel?.content}
+                            onChange={(event) => {
+                                setJlptLevel({
+                                    ...jlptLevel,
+                                    content: event.target.value,
+                                })
+                            }}
+                            onBlur={() => {
+                                doUpdateContent(jlptLevel)
+                            }}
+                        >
+                            <option value="Unknown">Unknown</option>
+                            <option value="N1">N1</option>
+                            <option value="N2">N2</option>
+                            <option value="N3">N3</option>
+                            <option value="N4">N4</option>
+                            <option value="N5">N5</option>
+                        </select>
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            JLPT LEVEL
+                        </span>
+                    </div>
+                    <div className="col-6 mt-4 d-flex flex-column justify-content-end">
                         <TextEditor
-                            name="gradeLevel"
-                            data={gradeLevel.content}
+                            name="onyomi"
+                            data={onyomi?.content}
                             onChange={(event, editor) => {
-                                setGradeLevel({
-                                    ...gradeLevel,
+                                setOnyomi({
+                                    ...onyomi,
                                     content: editor.getData(),
                                 })
                             }}
-                            onBlur={() => doUpdateContent(gradeLevel)}
+                            onBlur={() => doUpdateContent(onyomi)}
                         />
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            GRADE LEVEL
+                            ONYOMI
+                        </span>
+                    </div>
+                    <div className="col-6 mt-4 d-flex flex-column justify-content-end">
+                        <TextEditor
+                            name="kunyomi"
+                            data={kunyomi?.content}
+                            onChange={(event, editor) => {
+                                setKunyomi({
+                                    ...kunyomi,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(kunyomi)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            KUNYOMI
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="meanings"
+                            data={meanings?.content}
+                            onChange={(event, editor) => {
+                                setMeanings({
+                                    ...meanings,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(meanings)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            MEANINGS
+                        </span>
+                    </div>
+
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="example"
+                            data={example?.content}
+                            onChange={(event, editor) => {
+                                setExample({
+                                    ...example,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(example)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            EXAMPLE
+                        </span>
+                    </div>
+                    <div className="col-2 mt-4 d-flex flex-column justify-content-end">
+                        <input
+                            name="strokes"
+                            type="number"
+                            min={0}
+                            value={strokes?.content || '0'}
+                            className={`form-control ${styles.card_control}`}
+                            onChange={(event) => {
+                                setStrokes({
+                                    ...strokes,
+                                    content: event.target.value.replace(
+                                        /^0+/,
+                                        ''
+                                    ),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(strokes)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            STROKES
+                        </span>
+                    </div>
+                    <div className="col-10 mt-4 d-flex flex-column justify-content-end">
+                        {strokeOrder?.content ? (
+                            <div className={styles.card_strokeImage}>
+                                <img
+                                    className="h-100"
+                                    src={strokeOrder?.content}
+                                    alt="stroke order"
+                                />
+                                <button
+                                    type="button"
+                                    name="strokeOrder"
+                                    className={`btn btn-danger p-1 rounded-circle ${styles.card_delImage}`}
+                                    onClick={(event) =>
+                                        handleDeleteFile(event, 'image')
+                                    }
+                                >
+                                    <DeleteIcon size="1rem" />
+                                </button>
+                            </div>
+                        ) : (
+                            <label
+                                htmlFor="uploadStrokeOrder"
+                                className={`d-flex justify-content-center align-items-center ${styles.card_uploadImage}`}
+                            >
+                                <input
+                                    type="file"
+                                    id="uploadStrokeOrder"
+                                    name="strokeOrder"
+                                    className={styles.file_upload}
+                                    accept="image/*"
+                                    onChange={(event) =>
+                                        handleChangeFile(event, 'image')
+                                    }
+                                />
+                                {loadingStrokeOrder ? (
+                                    <div
+                                        className="spinner-border text-secondary"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            LoadingUpload...
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <ImageIcon className="icon-warning" />
+                                )}
+                            </label>
+                        )}
+
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            STROKE ORDER
                         </span>
                     </div>
                 </div>

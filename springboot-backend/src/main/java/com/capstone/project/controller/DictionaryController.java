@@ -6,6 +6,7 @@ import com.capstone.project.model.Vocabulary;
 import com.capstone.project.service.KanjivgFinderService;
 import com.capstone.project.startup.ApplicationStartup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,24 +35,24 @@ public class DictionaryController {
     }
 
     @GetMapping("/kanji")
-    public List<Kanji> getKanji(@RequestParam(defaultValue = "1") int page,
-                                @RequestParam(defaultValue = "3") int size,
-                                @RequestParam(defaultValue = "") String search) {
-        return applicationStartup.getKanjiService().searchAndPaginate(search, page, size);
+    public ResponseEntity<?> getKanji(@RequestParam(defaultValue = "1") int page,
+                                   @RequestParam(defaultValue = "3") int size,
+                                   @RequestParam(defaultValue = "") String search) {
+        return ResponseEntity.ok(applicationStartup.getKanjiService().searchAndPaginate(search, page, size));
     }
 
     @GetMapping("/vocabulary")
-    public List<Vocabulary> getVocabulary( @RequestParam(defaultValue = "1") int page,
+    public ResponseEntity<?> getVocabulary( @RequestParam(defaultValue = "1") int page,
                                            @RequestParam(defaultValue = "3") int size,
                                            @RequestParam(defaultValue = "") String search) {
-        return applicationStartup.getVocabularyService().searchAndPaginate(search, page, size);
+        return ResponseEntity.ok(applicationStartup.getVocabularyService().searchAndPaginate(search, page, size));
     }
 
     @GetMapping("/grammar")
-    public List<Grammar> getGrammar(@RequestParam(defaultValue = "1") int page,
+    public ResponseEntity<?> getGrammar(@RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "3") int size,
                                     @RequestParam(defaultValue = "") String search,
                                     @RequestParam(defaultValue = "0") int level) {
-        return applicationStartup.getGrammarService().searchAndPaginate(search, level, page, size);
+        return ResponseEntity.ok(applicationStartup.getGrammarService().searchAndPaginate(search, level, page, size));
     }
 }

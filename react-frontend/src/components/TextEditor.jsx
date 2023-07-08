@@ -5,8 +5,6 @@ export default function TextEditor(props) {
     const editorConfiguration = {
         toolbar: {
             items: [
-                'textPartLanguage',
-                '|',
                 'bold',
                 'italic',
                 'underline',
@@ -17,13 +15,6 @@ export default function TextEditor(props) {
                 '|',
                 'undo',
                 'redo',
-            ],
-        },
-        language: {
-            textPartLanguage: [
-                { title: 'English', languageCode: 'en' },
-                { title: 'Vietnamese', languageCode: 'vi' },
-                { title: 'Japanese', languageCode: 'ja' },
             ],
         },
     }
