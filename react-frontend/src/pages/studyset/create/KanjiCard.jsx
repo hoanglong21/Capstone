@@ -362,7 +362,7 @@ export const KanjiCard = (props) => {
             </div>
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
-                    <div className="col-7 pe-4 d-flex flex-column justify-content-end">
+                    <div className="col-12 col-lg-7 pe-lg-4 d-flex flex-column justify-content-end">
                         <TextEditor
                             name="character"
                             data={character?.content}
@@ -380,7 +380,7 @@ export const KanjiCard = (props) => {
                             CHARACTER
                         </span>
                     </div>
-                    <div className="col-5 ps-4 d-flex flex-column justify-content-end">
+                    <div className="col-12 col-lg-5 ps-lg-4 d-flex flex-column justify-content-end">
                         <TextEditor
                             name="radical"
                             data={radical?.content}
@@ -398,7 +398,7 @@ export const KanjiCard = (props) => {
                             RADICAL
                         </span>
                     </div>
-                    <div className="col-9 mt-4 pe-4 ">
+                    <div className="col-12 col-lg-9 mt-4 pe-lg-4">
                         <TextEditor
                             name="name"
                             data={name?.content}
@@ -416,7 +416,7 @@ export const KanjiCard = (props) => {
                             NAME
                         </span>
                     </div>
-                    <div className="col-3 mt-4 ps-4 d-flex flex-column justify-content-end">
+                    <div className="col-12 col-lg-3 mt-4 ps-lg-4 d-flex flex-column justify-content-end">
                         <select
                             className={`form-select ${styles.card_select}`}
                             aria-label="level"
@@ -445,7 +445,7 @@ export const KanjiCard = (props) => {
                             JLPT LEVEL
                         </span>
                     </div>
-                    <div className="col-6 mt-4 d-flex flex-column justify-content-end">
+                    <div className="col-12 col-xl-6 mt-4 pe-xl-4 d-flex flex-column justify-content-end">
                         <TextEditor
                             name="onyomi"
                             data={onyomi?.content}
@@ -463,7 +463,7 @@ export const KanjiCard = (props) => {
                             ONYOMI
                         </span>
                     </div>
-                    <div className="col-6 mt-4 d-flex flex-column justify-content-end">
+                    <div className="col-12 col-xl-6 mt-4 ps-xl-4 d-flex flex-column justify-content-end">
                         <TextEditor
                             name="kunyomi"
                             data={kunyomi?.content}
@@ -518,7 +518,7 @@ export const KanjiCard = (props) => {
                             EXAMPLE
                         </span>
                     </div>
-                    <div className="col-2 mt-4 d-flex flex-column justify-content-end">
+                    <div className="col-12 col-xl-2 mt-4 d-flex flex-column justify-content-end">
                         <input
                             name="strokes"
                             type="number"
@@ -542,14 +542,16 @@ export const KanjiCard = (props) => {
                             STROKES
                         </span>
                     </div>
-                    <div className="col-10 mt-4 d-flex flex-column justify-content-end">
+                    <div className="col-12 col-xl-10 mt-4 d-flex flex-column justify-content-end">
                         {strokeOrder?.content ? (
-                            <div className={styles.card_strokeImage}>
-                                <img
-                                    className="h-100"
-                                    src={strokeOrder?.content}
-                                    alt="stroke order"
-                                />
+                            <div className={styles.card_strokeImageWrapper}>
+                                <div className={styles.card_strokeImage}>
+                                    <img
+                                        className="h-100"
+                                        src={strokeOrder?.content}
+                                        alt="stroke order"
+                                    />
+                                </div>
                                 <button
                                     type="button"
                                     name="strokeOrder"
