@@ -29,7 +29,7 @@ import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
 import Translate from './pages/translate/Translate'
-import Dictionary from './pages/Dictionary'
+import DictionaryLayout from './pages/dictionary/DictionaryLayout'
 import Home from '../src/pages/home/Home'
 import UpdatePost from './pages/UpdatePost'
 import ClassesForHome from './pages/home/ClassesForHome'
@@ -51,6 +51,9 @@ import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
 import CreateSet from './pages/studyset/create/CreateSet'
 import DoQuiz from './pages/DoQuiz'
 import Chat from './pages/Chat'
+import VocabDict from './pages/dictionary/VocabDict'
+import GrammarDict from './pages/dictionary/GrammarDict'
+import KanjiDict from './pages/dictionary/KanjiDict'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -60,10 +63,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Layout />}>
                     {/* Home */}
-                    <Route
-                        path="/"
-                        element={userToken ? <Home /> : <Landing />}
-                    >
+                    <Route path="" element={userToken ? <Home /> : <Landing />}>
                         <Route index element={<AllForHome />} />
                         <Route path="sets" element={<SetsForHome />} />
                         <Route path="classes" element={<ClassesForHome />} />
@@ -121,7 +121,11 @@ const App = () => {
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}
-                    <Route path="dictionary" element={<Dictionary />} />
+                    <Route element={<DictionaryLayout />}>
+                        <Route path="vocab" element={<VocabDict />} />
+                        <Route path="kanji" element={<KanjiDict />} />
+                        <Route path="grammar" element={<GrammarDict />} />
+                    </Route>
                     {/* Password */}
                     <Route element={<OtherLayout />}>
                         <Route path="forgotten" element={<ForgotPassword />} />
