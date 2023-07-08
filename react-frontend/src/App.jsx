@@ -60,7 +60,10 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Layout />}>
                     {/* Home */}
-                    <Route path="" element={userToken ? <Home /> : <Landing />}>
+                    <Route
+                        path="/"
+                        element={userToken ? <Home /> : <Landing />}
+                    >
                         <Route index element={<AllForHome />} />
                         <Route path="sets" element={<SetsForHome />} />
                         <Route path="classes" element={<ClassesForHome />} />
@@ -165,7 +168,7 @@ const App = () => {
                     path="/managefeedback/viewdetailfb"
                     element={<ViewDetailFeedback />}
                 />
-                <Route path="/chatbox" element={<Chat/>} />
+                <Route path="/chatbox" element={<Chat />} />
             </Routes>
         </BrowserRouter>
     )
