@@ -6,7 +6,7 @@ function ViewKanjiDetail() {
     <div>
       <button
         type="button"
-        class="btn btn-primary"
+        className="btn btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#viewkanjiModal"
       >
@@ -14,26 +14,26 @@ function ViewKanjiDetail() {
       </button>
 
       <div
-        class="modal modal-dialog modal-xl fade"
+        className="modal modal-dialog modal-xl fade"
         id="viewkanjiModal"
         tabindex="-1"
         aria-labelledby="viewkanjiModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header text-center">
-              <h1 class="modal-title fs-4 text-center" id="viewkanjiModalLabel">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header text-center">
+              <h1 className="modal-title fs-4 text-center" id="viewkanjiModalLabel">
                 姙-NHÂM
               </h1>
               <button
                 type="button"
-                class="btn-close"
+                className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body container">
+            <div className="modal-body container">
               <div className="row">
                 <div className="col-4 ms-5 mt-5">
                   <div
@@ -73,7 +73,7 @@ function ViewKanjiDetail() {
                   </div>
                 </div>
                 <div className="col-6 ms-5 mt-5">
-                  <div class="kanji-search-block ed"
+                  <div className="kanji-search-block ed"
                       style={{
                         display: "inline-block",
                         width: "50%",
@@ -189,7 +189,7 @@ function ViewKanjiDetail() {
                         </li>
                       </ul>
                     </div>
-                    <div class="kanji-search-block ed"
+                    <div className="kanji-search-block ed"
                       style={{
                         display: "inline-block",
                         width: "50%",
@@ -199,7 +199,7 @@ function ViewKanjiDetail() {
                         float: "left",
                       }}>
                       <label>Example:</label>
-                      <ul class="kanji-search-ul example">
+                      <ul className="kanji-search-ul example">
                         <li rel="不姙" style={{cursor: 'pointer'}}>
                           <p>
                             <span>不姙</span>

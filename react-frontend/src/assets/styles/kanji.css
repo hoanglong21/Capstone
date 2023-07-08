@@ -1,3 +1,61 @@
 .kanji-search-ul > li {
-    list-style-type: square;
+  list-style-type: square;
+}
+
+.gram-dec {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 10px;
+  text-align: left;
+  color: #292929;
+  font-size: 18px;
+  line-height: 25px;
+  padding: 20px;
+  font-weight: 500;
+  background-color: #f7f7f7;
+}
+
+.gram-div {
+  display: inline-block;
+  width: 100%;
+  padding: 15px 10px;
+  line-height: 20px;
+  border-left: 3px solid #55c0f2;
+  margin-bottom: 20px;
+  background-color: #f7f7f7;
+}
+
+.gram-ul {
+  padding-left: 40px;
+  margin: 10px 0 30px;
+  list-style: none;
+}
+
+.gram-ul li {
+  line-height: 20px;
+  font-size: 18px;
+  color: #000;
+  width: 100%;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+ul li {
+  list-style-type: none;
+}
+
+.grammar-ex-japan {
+  display: block;
+  margin-top: 5px;
+}
+
+.furigana_text {
+  text-decoration: none;
+}
+
+.japan-font {
+  font-family: "HiraKakuPro-W3", "Hiragino Kaku Gothic Pro W3",
+    "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ", Meiryo,
+    "游ゴシック", YuGothic, "ＭＳ Ｐゴシック", "MS PGothic", "ＭＳ ゴシック",
+    "MS Gothic", sans-serif;
 }

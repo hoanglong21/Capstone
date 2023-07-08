@@ -53,6 +53,7 @@ import DoQuiz from './pages/DoQuiz'
 import Chat from './pages/Chat'
 import { KanjiCard } from './pages/studyset/create/KanjiCard'
 import ViewKanjiDetail from './pages/studyset/ViewKanjiDetail'
+import ViewGrammarDetail from './pages/studyset/ViewGrammarDetail'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -169,6 +170,7 @@ const App = () => {
                 />
                 <Route path="/chatbox" element={<Chat/>} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail/>} />
+                <Route path="/viewdetailgrammar" element={<ViewGrammarDetail />} />
             </Routes>
         </BrowserRouter>
     )
