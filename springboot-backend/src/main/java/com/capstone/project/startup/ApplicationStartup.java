@@ -145,7 +145,8 @@ public class ApplicationStartup implements ApplicationRunner {
                     new Field(3, "meaning"),
                     new Field(3, "example"),
                     new Field(3, "explanation"),
-                    new Field(3, "note"));
+                    new Field(3, "note"),
+                    new Field(3, "structure"));
             fieldRepository.saveAll(fields);
         }
 

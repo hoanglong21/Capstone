@@ -16,6 +16,7 @@ export const GrammarCard = (props) => {
     const [example, setExample] = useState({})
     const [explanation, setExplanation] = useState({})
     const [note, setNote] = useState({})
+    const [structure, setStructure] = useState({})
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
 
@@ -102,6 +103,19 @@ export const GrammarCard = (props) => {
                         })
                     ).data
                 )
+                setStructure(
+                    (
+                        await ContentService.createContent({
+                            card: {
+                                id: card.id,
+                            },
+                            field: {
+                                id: 20,
+                            },
+                            content: '',
+                        })
+                    ).data
+                )
             } else {
                 setTitle(contents[0])
                 setJlptLevel(contents[1])
@@ -109,6 +123,7 @@ export const GrammarCard = (props) => {
                 setExample(contents[3])
                 setExplanation(contents[4])
                 setNote(contents[5])
+                setStructure(contents[6])
             }
         }
         fetchData()
@@ -298,6 +313,25 @@ export const GrammarCard = (props) => {
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
                             MEANING
+                        </span>
+                    </div>
+                    <div className="col-12 mt-4">
+                        <TextEditor
+                            name="structure"
+                            className={`${styles.card_editor}`}
+                            data={structure?.content}
+                            onChange={(event, editor) => {
+                                setStructure({
+                                    ...structure,
+                                    content: editor.getData(),
+                                })
+                            }}
+                            onBlur={() => doUpdateContent(structure)}
+                        />
+                        <span
+                            className={`card-header-label ${styles.card_header_label} mt-1`}
+                        >
+                            STRUCTURE
                         </span>
                     </div>
                     <div className="col-12 mt-4">
