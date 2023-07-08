@@ -51,6 +51,10 @@ import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
 import CreateSet from './pages/studyset/create/CreateSet'
 import DoQuiz from './pages/DoQuiz'
 import Chat from './pages/Chat'
+import { KanjiCard } from './pages/studyset/create/KanjiCard'
+import ViewKanjiDetail from './pages/studyset/ViewKanjiDetail'
+import ViewGrammarDetail from './pages/studyset/ViewGrammarDetail'
+import ViewVocabularyDetail from './pages/studyset/ViewVocabularyDetail'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -166,6 +170,9 @@ const App = () => {
                     element={<ViewDetailFeedback />}
                 />
                 <Route path="/chatbox" element={<Chat/>} />
+                <Route path="/viewdetailkanji" element={<ViewKanjiDetail/>} />
+                <Route path="/viewdetailgrammar" element={<ViewGrammarDetail />} />
+                <Route path="/viewdetailvocab" element={<ViewVocabularyDetail />} />
             </Routes>
         </BrowserRouter>
     )
