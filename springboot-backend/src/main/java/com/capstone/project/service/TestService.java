@@ -14,6 +14,7 @@ public interface TestService {
     Test createTest(Test test);
 
     Test getTestById ( int id) throws ResourceNotFroundException;
+    List<Test> getTestByUser (String name) throws ResourceNotFroundException;
 
     Test updateTest( int id, Test test) throws ResourceNotFroundException;
 

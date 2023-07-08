@@ -29,12 +29,4 @@ public class CommentTypeServiceImpl implements CommentTypeService {
         return commentType;
     }
 
-    @Override
-    public CommentType getCommentTypeByName(String name) throws ResourceNotFroundException {
-        CommentType commentType = commentTypeRepository.findCommentTypeByName(name);
-        if (commentType == null){
-            throw new ResourceNotFroundException("CommentType not exist with name: " + name);
-        }
-        return commentType;
-    }
 }

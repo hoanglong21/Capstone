@@ -30,7 +30,7 @@ public class Comment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_date;
 
-    @ManyToOne(cascade={CascadeType.ALL})
+    @ManyToOne(cascade={CascadeType.MERGE})
     @JoinColumn(name = "root_id")
     private Comment root;
 
