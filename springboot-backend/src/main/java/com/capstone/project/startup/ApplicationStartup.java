@@ -115,7 +115,7 @@ public class ApplicationStartup implements ApplicationRunner {
         }
 
         if (attachmentTypeRepository.count() == 0) {
-            List<String> defaultNames = Arrays.asList("assignment", "submission");
+            List<String> defaultNames = Arrays.asList("assignment", "submission", "post");
             List<AttachmentType> attachmentTypes = new ArrayList<>();
             for (String name : defaultNames) {
                 AttachmentType attachmentType = new AttachmentType();

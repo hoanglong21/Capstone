@@ -9,7 +9,7 @@ import Toast from 'react-bootstrap/Toast'
 import ClassService from '../../../services/ClassService'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 
-import PostInClass from '../../PostInClass'
+import Post from '../post/Post'
 import UpdateClass from '../UpdateClass'
 import DeleteClass from '../DeleteClass'
 import PostEditor from '../../../components/textEditor/PostEditor'
@@ -24,6 +24,7 @@ import {
     ResetIcon,
     UploadIcon,
 } from '../../../components/icons'
+import defaultAvatar from '../../../assets/images/default_avatar.png'
 import './MainClass.css'
 import PostService from '../../../services/PostService'
 
@@ -33,8 +34,9 @@ const MainClass = () => {
     const { id } = useParams()
 
     const [classroom, setClassroom] = useState({})
+    const [posts, setPosts] = useState([])
 
-    const [post, setPost] = useState({})
+    const [addPost, setAddPost] = useState({})
     const [uploadFiles, setUploadFiles] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [loadingAddPost, setLoadingAddPost] = useState(false)
@@ -48,7 +50,8 @@ const MainClass = () => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
             setClassroom(tempClass)
-            setPost({
+            setPosts((await PostService.getAllPostByClassId(tempClass.id)).data)
+            setAddPost({
                 user: {
                     id: userInfo.id,
                 },
@@ -122,7 +125,7 @@ const MainClass = () => {
     const handleAddPost = async () => {
         setLoadingAddPost(true)
         try {
-            await PostService.createPost(post)
+            await PostService.createPost(addPost)
             setShowInput(false)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -139,7 +142,7 @@ const MainClass = () => {
             deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
         })
         setUploadFiles([])
-        setPost({ ...post, content: '' })
+        setAddPost({ ...addPost, content: '' })
         setShowInput(false)
     }
 
@@ -293,14 +296,15 @@ const MainClass = () => {
                     </div>
                     {/* Main */}
                     <div className="col-9">
+                        {/* Add post */}
                         <div className="card mainClass__postAddContainer mb-4">
                             {showInput ? (
                                 <div>
                                     <div className="postTextEditor">
                                         <PostEditor
                                             onChange={(event, editor) => {
-                                                setPost({
-                                                    ...post,
+                                                setAddPost({
+                                                    ...addPost,
                                                     content: editor.getData(),
                                                 })
                                             }}
@@ -377,7 +381,7 @@ const MainClass = () => {
                                                 onClick={handleAddPost}
                                                 className="btn btn-primary"
                                                 disabled={
-                                                    !post.content ||
+                                                    !addPost.content ||
                                                     loadingAddPost
                                                 }
                                             >
@@ -398,7 +402,10 @@ const MainClass = () => {
                                 </div>
                             )}
                         </div>
-                        <PostInClass />
+                        {/* Post list */}
+                        {posts.map((post) => (
+                            <Post post={post} />
+                        ))}
                     </div>
                 </div>
                 {/* Update class Modal */}
