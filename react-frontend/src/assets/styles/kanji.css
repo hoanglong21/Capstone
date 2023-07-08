@@ -59,3 +59,85 @@ ul li {
     "游ゴシック", YuGothic, "ＭＳ Ｐゴシック", "MS PGothic", "ＭＳ ゴシック",
     "MS Gothic", sans-serif;
 }
+
+#word-detail-overview p {
+    display: block;
+    text-align: center;
+    font-size: 30px;
+    color: #2326ec;
+}
+
+#word-detail-overview .romaji {
+    color: #888;
+    font-size: 16px;
+    clear: both;
+    display: block !important;
+    text-align: center;
+    margin-top: 5px;
+}
+
+#word-detail-overview .kana {
+    display: none;
+}
+
+.hkanji-wrapbtn a {
+    font-size: 18px;
+    line-height: 1.3333333;
+    color: #636363;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    position: relative;
+    outline: none;
+    text-decoration: none;
+    margin-top: -12px;
+}
+
+#word-detail-info .word-type {
+    color: #333;
+    font-size: 18px;
+    display: inline-block;
+    margin: 5px 0px;
+    background: #57545446;
+    padding: 3px 10px;
+    border-radius: 2px;
+}
+
+#word-detail-info > .ol-decimal {
+    font-size: 15px;
+    font-family: HelveticaLight;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+
+#word-detail-info > .ol-decimal > li:before {
+    padding-right: 8px;
+    color: #555;
+    list-style: none !important;
+}
+
+#word-detail-info .nvmn-meaning {
+    font-size: 19px;
+    font-weight: 600;
+}
+
+#word-detail-info > .ol-decimal li .ul-disc {
+    padding-left: 20px;
+}
+
+#word-detail-info .ul-disc {
+    margin-left: 15px;
+}
+
+#word-detail-info > .ol-decimal li .ul-disc li {
+    margin: 10px 0 10px;
+    font-size: 18px;
+    line-height: 25px;
+    color: #292929;
+    list-style: none;
+    position: relative;
+    padding-left: 15px;
+}
+

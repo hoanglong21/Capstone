@@ -52,8 +52,9 @@ function ViewGrammarDetail() {
                 <p>Thể thường +&nbsp;からこそ</p>
               </div>
               <div className="gram-div">
-                Đây là mẫu câu được dùng để nhấn mạnh nguyên nhân, lý do
+                Mục đích sử dụng: Đây là mẫu câu được dùng để nhấn mạnh nguyên nhân, lý do
               </div>
+              <p>Example: </p>
               <ul className="gram-ul">
                 <li>
                   <span className="japan-font grammar-ex-japan">
