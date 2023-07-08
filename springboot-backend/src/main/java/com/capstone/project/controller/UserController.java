@@ -176,7 +176,11 @@ public class UserController {
             return ResponseEntity.badRequest().body(errors);
         } else {
             try {
-                return ResponseEntity.ok(userService.changePassword(username, changePasswordRequest.getPassword()));
+                if(userService.changePassword(username, changePasswordRequest.getPassword())) {
+                    return ResponseEntity.ok("Change password successfully");
+                } else {
+                    return ResponseEntity.badRequest().body("Change password fail");
+                }
             } catch (ResourceNotFroundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }

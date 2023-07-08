@@ -314,7 +314,7 @@ public class UserServiceImpl implements UserService {
     public Boolean changePassword(String username, String password) throws ResourceNotFroundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            throw new ResourceNotFroundException("User not exist with token: " + username);
+            throw new ResourceNotFroundException("User not exist with username: " + username);
         }
         try {
             user.setPassword(passwordEncoder.encode(password));
