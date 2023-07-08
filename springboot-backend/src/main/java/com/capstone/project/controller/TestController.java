@@ -36,6 +36,16 @@ public class TestController {
     public ResponseEntity<?> getAllTest(){
         return ResponseEntity.ok(testService.getAllTest());
     }
+
+    @GetMapping("/testbyusername/{name}")
+    public ResponseEntity<?> getTestByUsername(@PathVariable String username){
+        try {
+            return ResponseEntity.ok(testService.getTestByUser(username));
+        } catch (ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/test/{id}")
     public ResponseEntity<?> getTestById(@PathVariable int id){
         try {

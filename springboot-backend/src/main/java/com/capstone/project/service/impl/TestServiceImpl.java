@@ -2,11 +2,7 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
-import com.capstone.project.model.Class;
-import com.capstone.project.repository.AnswerRepository;
-import com.capstone.project.repository.CommentRepository;
-import com.capstone.project.repository.QuestionRepository;
-import com.capstone.project.repository.TestRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.TestService;
 import com.capstone.project.service.UserService;
 import jakarta.persistence.EntityManager;
@@ -32,14 +28,17 @@ public class TestServiceImpl  implements TestService {
     private final CommentRepository commentRepository;
     private final UserService userService;
 
+    private final UserRepository userRepository;
+
 
     @Autowired
-    public TestServiceImpl(TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService) {
+    public TestServiceImpl(TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
         this.testRepository = testRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.commentRepository = commentRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -58,6 +57,17 @@ public class TestServiceImpl  implements TestService {
         Test test =  testRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + id));
         return test;
+    }
+
+    @Override
+    public List<Test> getTestByUser(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new ResourceNotFroundException("Test not exist with author: " + username);
+        }
+        List<Test> test = testRepository.getTestByAuthorId(user.getId());
+        return test;
+
     }
 
     @Override
