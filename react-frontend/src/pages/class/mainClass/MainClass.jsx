@@ -7,8 +7,13 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 
 import ClassService from '../../../services/ClassService'
+import { uploadFile } from '../../../features/fileManagement'
 
 import PostInClass from '../../PostInClass'
+import UpdateClass from '../UpdateClass'
+import DeleteClass from '../DeleteClass'
+import PostEditor from '../../../components/textEditor/PostEditor'
+
 import {
     CopyIcon,
     DeleteIcon,
@@ -20,9 +25,6 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './MainClass.css'
-import UpdateClass from '../UpdateClass'
-import DeleteClass from '../DeleteClass'
-import PostEditor from '../../../components/textEditor/PostEditor'
 
 const MainClass = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -30,15 +32,29 @@ const MainClass = () => {
     const { id } = useParams()
 
     const [classroom, setClassroom] = useState({})
+
+    const [post, setPost] = useState({})
+    const [uploadFiles, setUploadFiles] = useState([])
+    const [loadingUploadFile, setLoadingUploadFile] = useState(false)
+
     const [showInput, setShowInput] = useState(false)
-    const [inputValue, setInput] = useState('')
     const [image, setImage] = useState(null)
     const [showResetMess, setShowResetMess] = useState(false)
 
+    // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const res = (await ClassService.getClassroomById(id)).data
-            setClassroom(res)
+            const tempClass = (await ClassService.getClassroomById(id)).data
+            setClassroom(tempClass)
+            setPost({
+                user: {
+                    id: userInfo.id,
+                },
+                classroom: {
+                    id: tempClass.id,
+                },
+                content: '',
+            })
         }
         if (userInfo.username) {
             fetchData()
@@ -85,20 +101,23 @@ const MainClass = () => {
         setShowResetMess(!showResetMess)
     }
 
-    const handleUploadFile = async (event, folderName) => {
-        const name = event.target.name
+    const handleUploadFile = async (event) => {
+        setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
-            // const urlOld = String(card[name])
-            // const url = await uploadFile(file, folderName)
-            // const tempCard = { ...card, [name]: url }
-            // setCard(tempCard)
-            // if (urlOld) {
-            //     deleteFileByUrl(urlOld, folderName)
-            // }
-            // doUpdateCard(tempCard)
+            const url = await uploadFile(
+                file,
+                `file/class/${classroom.id}/post`
+            )
+            setUploadFiles([
+                ...uploadFiles,
+                { name: file.name, type: file.type, url },
+            ])
         }
+        setLoadingUploadFile(false)
     }
+
+    const handleAddPost = () => {}
 
     return (
         <div>
@@ -247,25 +266,55 @@ const MainClass = () => {
                             {showInput ? (
                                 <div>
                                     <div className="postTextEditor">
-                                        <PostEditor />
+                                        <PostEditor
+                                            onChange={(event, editor) => {
+                                                setPost({
+                                                    ...post,
+                                                    content: editor.getData(),
+                                                })
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="mainClass_filesUpload">
+                                        {uploadFiles.map((file, index) => (
+                                            <div className="card" key={index}>
+                                                <div className="card-body">
+                                                    <div>{file.name}</div>
+                                                    <div>{file.type}</div>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                     <div className="postUploadFile">
                                         <input
                                             type="file"
                                             id="uploadPostFile"
-                                            accept="audio/*"
-                                            name="audio"
                                             className="postUpload"
-                                            onChange={(event) =>
-                                                handleUploadFile(event, 'file')
-                                            }
+                                            onChange={handleUploadFile}
                                         />
-                                        <label
-                                            htmlFor="uploadPostFile"
-                                            className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                        <button
+                                            type="btn"
+                                            disabled={loadingUploadFile}
                                         >
-                                            <UploadIcon strokeWidth="2" />
-                                        </label>
+                                            <label
+                                                htmlFor="uploadPostFile"
+                                                className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                            >
+                                                {loadingUploadFile ? (
+                                                    <div
+                                                        className="spinner-border spinner-border-sm text-secondary"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            LoadingUpload...
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <UploadIcon strokeWidth="2" />
+                                                )}
+                                            </label>
+                                        </button>
+
                                         <div className="d-flex align-items-center">
                                             <button
                                                 onClick={() =>
@@ -277,7 +326,7 @@ const MainClass = () => {
                                             </button>
 
                                             <button
-                                                onClick={'/'}
+                                                onClick={handleAddPost}
                                                 className="btn btn-primary"
                                             >
                                                 Post
