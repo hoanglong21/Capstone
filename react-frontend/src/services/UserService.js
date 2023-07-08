@@ -30,6 +30,64 @@ export const sendResetPasswordEmail = (username) => {
     return axios.get(API_BASE_URL + '/sendreset?username=' + username)
 }
 
+export const filterUser = (
+    name,
+    username,
+    email,
+    gender,
+    phone,
+    role,
+    address,
+    bio,
+    status,
+    fromdob,
+    todob,
+    frombanned,
+    tobanned,
+    fromdeleted,
+    todeleted,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterusers?name' +
+            name +
+            '&username' +
+            username +
+            '&email' +
+            email +
+            '&gender' +
+            gender +
+            '&phone' +
+            phone +
+            '&role' +
+            role +
+            '&address' +
+            address +
+            '&bio' +
+            bio +
+            '&status' +
+            status +
+            '&fromdob' +
+            fromdob +
+            '&todob' +
+            todob +
+            '&frombanned' +
+            frombanned +
+            '&tobanned' +
+            tobanned +
+            '&fromdeleted' +
+            fromdeleted +
+            '&todeleted' +
+            todeleted +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
+
 const UserService = {
     getUser,
     updateUser,
@@ -37,6 +95,7 @@ const UserService = {
     changePassword,
     deleteUser,
     sendResetPasswordEmail,
+    filterUser,
 }
 
 export default UserService

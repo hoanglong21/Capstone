@@ -8,7 +8,7 @@ import ClassService from '../../services/ClassService'
 import { ClassIcon, SearchIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/Classroom.css'
-import '../../assets/styles/ClassList.css'
+import '../../assets/styles/LibrarySearchList.css'
 
 const ClassList = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -134,8 +134,9 @@ const ClassList = () => {
                                             <div className="author-avatar">
                                                 <img
                                                     src={
-                                                        userInfo.avatar
-                                                            ? userInfo.avatar
+                                                        classroom.user.avatar
+                                                            ? classroom.user
+                                                                  .avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
@@ -143,7 +144,7 @@ const ClassList = () => {
                                                 />
                                             </div>
                                             <span className="author-username ms-2">
-                                                {userInfo.username}
+                                                {classroom.user.username}
                                             </span>
                                         </div>
                                     </div>

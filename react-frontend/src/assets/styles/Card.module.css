@@ -56,9 +56,13 @@ input[type='number'] {
     -moz-appearance: textfield;
 }
 
-.card_strokeImage {
+.card_strokeImageWrapper {
     max-height: 10rem;
     position: relative;
+}
+
+.card_strokeImage {
+    overflow: hidden;
 }
 
 .card_delImage {

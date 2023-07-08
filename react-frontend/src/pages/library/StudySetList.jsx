@@ -7,7 +7,7 @@ import StudySetService from '../../services/StudySetService'
 import empty from '../../assets/images/empty-state.png'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import { SearchIcon } from '../../components/icons'
-import '../../assets/styles/StudySetList.css'
+import '../../assets/styles/LibrarySearchList.css'
 
 const StudySetList = () => {
     const navigate = useNavigate()
@@ -31,6 +31,7 @@ const StudySetList = () => {
                 '',
                 '',
                 '',
+                '',
                 ''
             )
         ).data.list
@@ -45,6 +46,7 @@ const StudySetList = () => {
                 '',
                 '',
                 `=${userInfo.username}`,
+                '',
                 '',
                 '',
                 '',
