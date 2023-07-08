@@ -107,7 +107,7 @@ function AllForHome() {
                         <p>No sets matching {search} found</p>
                     )}
                     {sets.map((set) => (
-                        <div className="col-12 col-md-6 col-xl-4">
+                        <div className="col-12 col-md-6 col-xl-4" key={set.id}>
                             <div key={set.id} className="set-item">
                                 <Link to={`/set/${set.id}`}>
                                     <div className="set-body">
@@ -170,7 +170,7 @@ function AllForHome() {
                         <p>No classes matching {search} found</p>
                     )}
                     {classes.map((classroom) => (
-                        <div className="col-12 col-lg-6">
+                        <div className="col-12 col-lg-6" key={classroom.id}>
                             <div key={classroom.id} className="set-item h-100">
                                 <Link to={`/class/${classroom.id}`}>
                                     <div className="set-body">

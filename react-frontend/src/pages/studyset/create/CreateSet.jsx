@@ -431,7 +431,7 @@ const CreateSet = () => {
                 <Toast
                     show={showDiscardMess}
                     onClose={toggleShowDiscardMess}
-                    delay={10000}
+                    delay={5000}
                     className="toast align-items-center text-bg-dark border-0"
                     autohide
                 >

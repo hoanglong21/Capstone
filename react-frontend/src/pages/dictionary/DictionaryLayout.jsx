@@ -1,8 +1,14 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
+
+import './dictionary.css'
 
 function DictionaryLayout() {
+    const [searchParams, setSearchParams] = useSearchParams()
+    const search = searchParams.get('search')
+
     return (
         <div className="container">
+            {/* Search */}
             <div className="mx-auto py-8">
                 <h4 className="text-3xl font-bold text-center text-black mt-3">
                     Nihongo Level Up Dictionary
@@ -21,12 +27,19 @@ function DictionaryLayout() {
                                 className="form-control mr-sm-2"
                                 type="search"
                                 placeholder="日本, Japanese, Nhật Bản"
-                                aria-label="Search"
+                                value={search || ''}
+                                onChange={(event) =>
+                                    setSearchParams({
+                                        search: event.target.value,
+                                    })
+                                }
                             />
                             <button
                                 className="btn btn-primary my-2 my-sm-0"
-                                type="submit"
                                 style={{ marginLeft: '1rem' }}
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                }}
                             >
                                 Search
                             </button>
@@ -34,6 +47,7 @@ function DictionaryLayout() {
                     </div>
                 </div>
             </div>
+            {/* Header */}
             <div className="border-bottom bg-white p-2 pb-0">
                 <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
                     <li>
@@ -71,6 +85,7 @@ function DictionaryLayout() {
                     </li>
                 </ul>
             </div>
+            {/* Content */}
             <div className="">
                 <Outlet />
             </div>
