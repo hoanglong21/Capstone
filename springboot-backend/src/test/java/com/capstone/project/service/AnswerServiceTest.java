@@ -1,8 +1,7 @@
 package com.capstone.project.service;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Answer;
-import com.capstone.project.model.Question;
+import com.capstone.project.model.*;
 import com.capstone.project.repository.AnswerRepository;
 import com.capstone.project.repository.QuestionRepository;
 import com.capstone.project.repository.TestRepository;
@@ -10,6 +9,7 @@ import com.capstone.project.repository.UserRepository;
 import static org.mockito.ArgumentMatchers.any;
 import com.capstone.project.service.impl.AnswerServiceImpl;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,12 +29,6 @@ public class AnswerServiceTest {
 
     @Mock
     private AnswerRepository answerRepository;
-
-    @Mock
-    private QuestionRepository questionRepository;
-
-    @Mock
-    private TestRepository testRepository;
 
     @InjectMocks
     private AnswerServiceImpl answerServiceImpl;
@@ -106,7 +101,7 @@ public class AnswerServiceTest {
 
     @Order(4)
     @Test
-    void deleteAnswer() {
+    void testDeleteAnswer() {
         Answer answer = Answer.builder()
                 .id(1)
                 .question(Question.builder().id(1).build())
@@ -122,5 +117,35 @@ public class AnswerServiceTest {
             e.printStackTrace();
         }
         verify(answerRepository, times(1)).delete(answer);
+    }
+
+    @Order(5)
+    @Test
+    void testGetAnswerById(){
+        Answer answer = Answer.builder()
+                .content("Banana")
+                .build();
+        when(answerRepository.findById(any())).thenReturn(Optional.ofNullable(answer));
+        try{
+            Answer getAnswer = answerServiceImpl.getAnswerById(1);
+            assertThat(getAnswer).isEqualTo(answer);
+        }catch (ResourceNotFroundException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Order(6)
+    @Test
+    void testGetAllAnswerByQuestionId() {
+        // Tạo danh sách câu trả lời
+        List<Answer> answers = new ArrayList<>();
+        Answer answer1 = Answer.builder().content("Banana").build();
+        Answer answer2 = Answer.builder().content("Apple").build();
+        answers.add(answer1);
+        answers.add(answer2);
+
+        when(answerRepository.getAnswerByQuestionId(any(Integer.class))).thenReturn(answers);
+            List<Answer> retrievedAnswers = answerServiceImpl.getAllByQuestionId(1);
+            assertThat(retrievedAnswers).isEqualTo(answers);
     }
 }
