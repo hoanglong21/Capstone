@@ -5,7 +5,7 @@ import ContentService from '../../../services/ContentService'
 import CardService from '../../../services/CardService'
 
 import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
-import TextEditor from '../../../components/TextEditor'
+import CardEditor from '../../../components/textEditor/CardEditor'
 import styles from '../../../assets/styles/Card.module.css'
 
 export const GrammarCard = (props) => {
@@ -250,14 +250,16 @@ export const GrammarCard = (props) => {
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
                     <div className="col-9 col-xl-10 pe-4">
-                        <TextEditor
+                        <CardEditor
                             name="title"
                             data={title?.content}
                             onChange={(event, editor) => {
-                                setTitle({
-                                    ...title,
-                                    content: editor.getData(),
-                                })
+                                if (title?.id) {
+                                    setTitle({
+                                        ...title,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(title)}
                         />
@@ -274,10 +276,12 @@ export const GrammarCard = (props) => {
                             name="jlptLevel"
                             value={jlptLevel?.content}
                             onChange={(event) => {
-                                setJlptLevel({
-                                    ...jlptLevel,
-                                    content: event.target.value,
-                                })
+                                if (jlptLevel?.id) {
+                                    setJlptLevel({
+                                        ...jlptLevel,
+                                        content: event.target.value,
+                                    })
+                                }
                             }}
                             onBlur={() => {
                                 doUpdateContent(jlptLevel)
@@ -297,15 +301,17 @@ export const GrammarCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="meaning"
                             className={`${styles.card_editor}`}
                             data={meaning?.content}
                             onChange={(event, editor) => {
-                                setMeaning({
-                                    ...meaning,
-                                    content: editor.getData(),
-                                })
+                                if (meaning?.id) {
+                                    setMeaning({
+                                        ...meaning,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(meaning)}
                         />
@@ -316,15 +322,17 @@ export const GrammarCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="structure"
                             className={`${styles.card_editor}`}
                             data={structure?.content}
                             onChange={(event, editor) => {
-                                setStructure({
-                                    ...structure,
-                                    content: editor.getData(),
-                                })
+                                if (structure?.id) {
+                                    setStructure({
+                                        ...structure,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(structure)}
                         />
@@ -335,14 +343,16 @@ export const GrammarCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="example"
                             data={example?.content}
                             onChange={(event, editor) => {
-                                setExample({
-                                    ...example,
-                                    content: editor.getData(),
-                                })
+                                if (example?.id) {
+                                    setExample({
+                                        ...example,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(example)}
                         />
@@ -353,14 +363,16 @@ export const GrammarCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="explanation"
                             data={explanation?.content}
                             onChange={(event, editor) => {
-                                setExplanation({
-                                    ...explanation,
-                                    content: editor.getData(),
-                                })
+                                if (explanation?.id) {
+                                    setExplanation({
+                                        ...explanation,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(explanation)}
                         />
@@ -371,14 +383,16 @@ export const GrammarCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="note"
                             data={note?.content}
                             onChange={(event, editor) => {
-                                setExplanation({
-                                    ...note,
-                                    content: editor.getData(),
-                                })
+                                if (note?.id) {
+                                    setNote({
+                                        ...note,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(note)}
                         />

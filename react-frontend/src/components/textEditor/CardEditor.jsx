@@ -1,7 +1,7 @@
 import Editor from 'ckeditor5-custom-build/build/ckeditor'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 
-export default function TextEditor(props) {
+export default function CardEditor(props) {
     const editorConfiguration = {
         toolbar: {
             items: [
@@ -17,6 +17,7 @@ export default function TextEditor(props) {
                 'redo',
             ],
         },
+        removePlugins: ['MediaEmbedToolbar'],
     }
 
     return (

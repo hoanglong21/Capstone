@@ -5,7 +5,7 @@ import ContentService from '../../../services/ContentService'
 import CardService from '../../../services/CardService'
 
 import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
-import TextEditor from '../../../components/TextEditor'
+import CardEditor from '../../../components/textEditor/CardEditor'
 import styles from '../../../assets/styles/Card.module.css'
 
 export const VocabCard = (props) => {
@@ -199,11 +199,16 @@ export const VocabCard = (props) => {
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
                     <div className="col-6 pe-4">
-                        <TextEditor
+                        <CardEditor
                             name="term"
                             data={term?.content}
                             onChange={(event, editor) => {
-                                setTerm({ ...term, content: editor.getData() })
+                                if (term?.id) {
+                                    setTerm({
+                                        ...term,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(term)}
                         />
@@ -214,14 +219,16 @@ export const VocabCard = (props) => {
                         </span>
                     </div>
                     <div className="col-6 ps-4">
-                        <TextEditor
+                        <CardEditor
                             name="definition"
                             data={definition?.content}
                             onChange={(event, editor) => {
-                                setDefinition({
-                                    ...definition,
-                                    content: editor.getData(),
-                                })
+                                if (definition?.id) {
+                                    setDefinition({
+                                        ...definition,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(definition)}
                         />
@@ -232,14 +239,16 @@ export const VocabCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="example"
                             data={example?.content}
                             onChange={(event, editor) => {
-                                setExample({
-                                    ...example,
-                                    content: editor.getData(),
-                                })
+                                if (example?.id) {
+                                    setExample({
+                                        ...example,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(example)}
                         />

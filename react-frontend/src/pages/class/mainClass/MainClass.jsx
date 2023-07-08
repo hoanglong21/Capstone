@@ -17,10 +17,12 @@ import {
     OptionVerIcon,
     ReportIcon,
     ResetIcon,
+    UploadIcon,
 } from '../../../components/icons'
 import './MainClass.css'
 import UpdateClass from '../UpdateClass'
 import DeleteClass from '../DeleteClass'
+import PostEditor from '../../../components/textEditor/PostEditor'
 
 const MainClass = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -43,6 +45,26 @@ const MainClass = () => {
         }
     }, [userInfo, id])
 
+    // ignore error
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            if (e.message === 'ResizeObserver loop limit exceeded') {
+                const resizeObserverErrDiv = document.getElementById(
+                    'webpack-dev-server-client-overlay-div'
+                )
+                const resizeObserverErr = document.getElementById(
+                    'webpack-dev-server-client-overlay'
+                )
+                if (resizeObserverErr) {
+                    resizeObserverErr.setAttribute('style', 'display: none')
+                }
+                if (resizeObserverErrDiv) {
+                    resizeObserverErrDiv.setAttribute('style', 'display: none')
+                }
+            }
+        })
+    }, [])
+
     const handleChange = (e) => {
         if (e.target.files[0]) {
             setImage(e.target.files[0])
@@ -61,6 +83,21 @@ const MainClass = () => {
 
     const toggleShowResetMess = () => {
         setShowResetMess(!showResetMess)
+    }
+
+    const handleUploadFile = async (event, folderName) => {
+        const name = event.target.name
+        const file = event.target.files[0]
+        if (file) {
+            // const urlOld = String(card[name])
+            // const url = await uploadFile(file, folderName)
+            // const tempCard = { ...card, [name]: url }
+            // setCard(tempCard)
+            // if (urlOld) {
+            //     deleteFileByUrl(urlOld, folderName)
+            // }
+            // doUpdateCard(tempCard)
+        }
     }
 
     return (
@@ -206,53 +243,57 @@ const MainClass = () => {
                     </div>
                     {/* Main */}
                     <div className="col-9">
-                        <div className="mainClass__announcementsWrapper mb-4">
-                            <div className="mainClass__ancContent">
-                                {showInput ? (
-                                    <div className="mainClass__form">
+                        <div className="card mainClass__postAddContainer mb-4">
+                            {showInput ? (
+                                <div>
+                                    <div className="postTextEditor">
+                                        <PostEditor />
+                                    </div>
+                                    <div className="postUploadFile">
                                         <input
-                                            id="filled-multiline-flexible"
-                                            placeholder="Announce something to class"
-                                            value={inputValue}
-                                            onChange={(e) =>
-                                                setInput(e.target.value)
+                                            type="file"
+                                            id="uploadPostFile"
+                                            accept="audio/*"
+                                            name="audio"
+                                            className="postUpload"
+                                            onChange={(event) =>
+                                                handleUploadFile(event, 'file')
                                             }
                                         />
-                                        <div className="mainClass__buttons">
-                                            <input
-                                                onChange={handleChange}
-                                                type="file"
-                                            />
+                                        <label
+                                            htmlFor="uploadPostFile"
+                                            className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                        >
+                                            <UploadIcon strokeWidth="2" />
+                                        </label>
+                                        <div className="d-flex align-items-center">
+                                            <button
+                                                onClick={() =>
+                                                    setShowInput(false)
+                                                }
+                                                className="btn btn-light mx-2"
+                                            >
+                                                Cancel
+                                            </button>
 
-                                            <div>
-                                                <button
-                                                    onClick={() =>
-                                                        setShowInput(false)
-                                                    }
-                                                    className="btn btn-outline-danger mx-2"
-                                                >
-                                                    Cancel
-                                                </button>
-
-                                                <button
-                                                    onClick={'/'}
-                                                    className="btn btn-outline-primary"
-                                                >
-                                                    Post
-                                                </button>
-                                            </div>
+                                            <button
+                                                onClick={'/'}
+                                                className="btn btn-primary"
+                                            >
+                                                Post
+                                            </button>
                                         </div>
                                     </div>
-                                ) : (
-                                    <div
-                                        className="mainClass__wrapper100"
-                                        onClick={() => setShowInput(true)}
-                                    >
-                                        <AiOutlineUser />
-                                        <div>Announce something to class</div>
-                                    </div>
-                                )}
-                            </div>
+                                </div>
+                            ) : (
+                                <div
+                                    className="mainClass__wrapper100"
+                                    onClick={() => setShowInput(true)}
+                                >
+                                    <AiOutlineUser />
+                                    <div>Announce something to class</div>
+                                </div>
+                            )}
                         </div>
                         <PostInClass />
                     </div>
