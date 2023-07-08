@@ -99,6 +99,7 @@
     background-color: #f8f9fa;
     border-radius: 0.25rem;
     padding: 0.625rem 1rem;
+    min-height: 10rem;
 }
 
 .postTextEditor .ck.ck-editor__editable_inline:hover {
@@ -122,12 +123,6 @@
     border: none;
 }
 
-.postUploadFile {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
 .postUpload {
     opacity: 0;
     display: none;
@@ -144,6 +139,26 @@
 
 .postUploadButton:hover {
     background-color: #f6f9fd;
+}
+
+.fileUploadName {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    letter-spacing: 0.00625rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.fileUploadType {
+    letter-spacing: 0.014rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+}
+
+.btn.fileUploadDelButton:hover {
+    color: var(--red-64);
 }
 
 .postUploadFile button {

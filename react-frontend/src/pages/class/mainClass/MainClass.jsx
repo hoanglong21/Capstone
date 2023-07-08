@@ -7,7 +7,7 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 
 import ClassService from '../../../services/ClassService'
-import { uploadFile } from '../../../features/fileManagement'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 
 import PostInClass from '../../PostInClass'
 import UpdateClass from '../UpdateClass'
@@ -25,6 +25,7 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './MainClass.css'
+import PostService from '../../../services/PostService'
 
 const MainClass = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -36,6 +37,7 @@ const MainClass = () => {
     const [post, setPost] = useState({})
     const [uploadFiles, setUploadFiles] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
+    const [loadingAddPost, setLoadingAddPost] = useState(false)
 
     const [showInput, setShowInput] = useState(false)
     const [image, setImage] = useState(null)
@@ -117,7 +119,36 @@ const MainClass = () => {
         setLoadingUploadFile(false)
     }
 
-    const handleAddPost = () => {}
+    const handleAddPost = async () => {
+        setLoadingAddPost(true)
+        try {
+            await PostService.createPost(post)
+            setShowInput(false)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingAddPost(false)
+    }
+
+    const handleCancelAddPost = () => {
+        uploadFiles.map((file) => {
+            deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
+        })
+        setUploadFiles([])
+        setPost({ ...post, content: '' })
+        setShowInput(false)
+    }
+
+    const handleDeleteFile = (file, index) => {
+        var temp = [...uploadFiles]
+        temp.splice(index, 1)
+        deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
+        setUploadFiles(temp)
+    }
 
     return (
         <div>
@@ -275,17 +306,37 @@ const MainClass = () => {
                                             }}
                                         />
                                     </div>
-                                    <div className="mainClass_filesUpload">
+                                    <div className="mainClass_filesUpload mt-3">
                                         {uploadFiles.map((file, index) => (
-                                            <div className="card" key={index}>
-                                                <div className="card-body">
-                                                    <div>{file.name}</div>
-                                                    <div>{file.type}</div>
+                                            <div
+                                                className="card mb-2"
+                                                key={index}
+                                            >
+                                                <div className="card-body d-flex justify-content-between">
+                                                    <div>
+                                                        <div className="fileUploadName">
+                                                            {file.name}
+                                                        </div>
+                                                        <div className="fileUploadType">
+                                                            {file.type}
+                                                        </div>
+                                                    </div>
+                                                    <button
+                                                        className="btn fileUploadDelButton"
+                                                        onClick={() =>
+                                                            handleDeleteFile(
+                                                                file,
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <DeleteIcon />
+                                                    </button>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="postUploadFile">
+                                    <div className="d-flex align-items-center justify-content-between mt-4">
                                         <input
                                             type="file"
                                             id="uploadPostFile"
@@ -314,12 +365,9 @@ const MainClass = () => {
                                                 )}
                                             </label>
                                         </button>
-
                                         <div className="d-flex align-items-center">
                                             <button
-                                                onClick={() =>
-                                                    setShowInput(false)
-                                                }
+                                                onClick={handleCancelAddPost}
                                                 className="btn btn-light mx-2"
                                             >
                                                 Cancel
@@ -328,8 +376,14 @@ const MainClass = () => {
                                             <button
                                                 onClick={handleAddPost}
                                                 className="btn btn-primary"
+                                                disabled={
+                                                    !post.content ||
+                                                    loadingAddPost
+                                                }
                                             >
-                                                Post
+                                                {loadingAddPost
+                                                    ? 'Posting...'
+                                                    : 'Post'}
                                             </button>
                                         </div>
                                     </div>
