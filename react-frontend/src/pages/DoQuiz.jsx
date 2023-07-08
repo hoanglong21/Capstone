@@ -1,7 +1,9 @@
 import React from 'react'
 
-export default function DoQuiz() {
+function DoQuiz() {
   return (
     <div>DoQuiz</div>
   )
 }
+
+export default DoQuiz

@@ -6,10 +6,9 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import StudySetService from '../../services/StudySetService'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
-import '../../assets/styles/StudySetList.css'
+import '../../assets/styles/LibrarySearchList.css'
 
 function SetsForHome() {
-    const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
@@ -17,15 +16,15 @@ function SetsForHome() {
     const { userInfo } = useSelector((state) => state.user)
 
     const [sets, setSets] = useState([])
-    const [isEmpty, setIsEmpty] = useState(false)
 
     const fetchData = async (searchKey) => {
         const temp = (
             await StudySetService.getFilterList(
-                '',
-                '',
-                '',
+                '=0',
+                '=1',
+                '=0',
                 `${searchKey ? '=' + searchKey : ''}`,
+                '',
                 '',
                 '',
                 '',
@@ -33,9 +32,6 @@ function SetsForHome() {
                 ''
             )
         ).data.list
-        if (temp.length === 0) {
-            setIsEmpty(true)
-        }
         setSets(temp)
     }
 

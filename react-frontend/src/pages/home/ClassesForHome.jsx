@@ -7,8 +7,7 @@ import ClassService from '../../services/ClassService'
 
 import { ClassIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
-import '../../assets/styles/Classroom.css'
-import '../../assets/styles/ClassList.css'
+import '../../assets/styles/LibrarySearchList.css'
 
 const ClassesForHome = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -18,14 +17,13 @@ const ClassesForHome = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [classes, setClasses] = useState([])
-    const [isEmpty, setIsEmpty] = useState(false)
 
     const fetchData = async (searchKey) => {
-        setIsEmpty(false)
         const temp = (
             await ClassService.getFilterList(
-                '',
+                '=0',
                 `${searchKey ? '=' + searchKey : ''}`,
+                '',
                 '',
                 '',
                 '',
@@ -33,9 +31,6 @@ const ClassesForHome = () => {
                 ''
             )
         ).data.list
-        if (temp.length === 0) {
-            setIsEmpty(true)
-        }
         setClasses(temp)
     }
 
@@ -63,13 +58,12 @@ const ClassesForHome = () => {
                                 </div>
                                 <div
                                     className="set-author col d-flex "
-                                    href="#"
                                 >
                                     <div className="author-avatar">
                                         <img
                                             src={
-                                                userInfo.avatar
-                                                    ? userInfo.avatar
+                                                classroom.user.avatar
+                                                    ? classroom.user.avatar
                                                     : defaultAvatar
                                             }
                                             alt="author avatar"
@@ -77,7 +71,7 @@ const ClassesForHome = () => {
                                         />
                                     </div>
                                     <span className="author-username ms-2">
-                                        {userInfo.username}
+                                        {classroom.user.username}
                                     </span>
                                 </div>
                             </div>

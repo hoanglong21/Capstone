@@ -49,6 +49,8 @@ import ViewDetailClass from './pages/admin/ViewDetailClass'
 import ManageFeedback from './pages/admin/ManageFeedback'
 import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
 import CreateSet from './pages/studyset/create/CreateSet'
+import DoQuiz from './pages/DoQuiz'
+import Chat from './pages/Chat'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -163,6 +165,7 @@ const App = () => {
                     path="/managefeedback/viewdetailfb"
                     element={<ViewDetailFeedback />}
                 />
+                <Route path="/chatbox" element={<Chat/>} />
             </Routes>
         </BrowserRouter>
     )
