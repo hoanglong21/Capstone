@@ -65,41 +65,82 @@ function OverViewSet() {
             <i className="bi bi-list fs-4"></i>
           </button>
           <ul className="dropdown-menu dropdown-menu-end p-2">
-              <li>
-                <button
-                  className="dropdown-item py-2 px-2"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#updateModal"
-                  aria-expanded="true"
-                >
-                  <span className="align-middle fw-semibold">
-                    Update this Set
-                  </span>
-                </button>
-              </li>
-              <li>
-                <button
-                  className="dropdown-item py-2 px-2"
-                  type="button"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteSetModal"
-                >
-                  <span className="align-middle fw-semibold">
-                    Delete this Set
-                  </span>
-                </button>
-              </li>
-            </ul>
+            <li>
+              <button
+                className="dropdown-item py-2 px-2"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#updateModal"
+                aria-expanded="true"
+              >
+                <span className="align-middle fw-semibold">
+                  Update this Set
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item py-2 px-2"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteSetModal"
+              >
+                <span className="align-middle fw-semibold">
+                  Delete this Set
+                </span>
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
 
       <div className="termsListTitle">
         <span className="term">Terms in this set (408)</span>
-        <div className="selection">
-          <button type="button">
+        <div className="selection dropdown">
+          <button type="button dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false">
             <span>Your stats</span>
+            <i class="bi bi-chevron-down fs-6 ms-2"></i>
           </button>
+          <ul className="dropdown-menu dropdown-menu-end p-2">
+            <li>
+              <button
+                className="dropdown-item py-2 px-2"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#updateModal"
+                aria-expanded="true"
+              >
+                <span className="align-middle fw-semibold">
+                  Original
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item py-2 px-2"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteSetModal"
+              >
+                <span className="align-middle fw-semibold">
+                  Alphabetical
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                className="dropdown-item py-2 px-2"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#deleteSetModal"
+              >
+                <span className="align-middle fw-semibold">
+                  Your stats
+                </span>
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -132,6 +173,13 @@ function OverViewSet() {
               những tinh hoa của lịch sử tư tưởng nhân loại và thực tiễn cách
               mạng
             </span>
+            <button
+              type="button"
+              className="btn btn-primary mt-3"
+              data-bs-toggle="modal"
+            >
+              View Details
+            </button>
           </div>
           <div className="SetPageTerm-sideContent"></div>
           <div className="SetPageTerm-side SetPageTerm-largeSide">
@@ -139,7 +187,7 @@ function OverViewSet() {
           </div>
         </div>
       </div>
-      <DeleteSet/>
+      <DeleteSet />
     </div>
   );
 }
