@@ -104,7 +104,7 @@ const Header = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="dictionary"
+                            to="vocab"
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))

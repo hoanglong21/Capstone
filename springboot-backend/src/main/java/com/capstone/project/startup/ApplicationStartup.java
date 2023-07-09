@@ -115,7 +115,7 @@ public class ApplicationStartup implements ApplicationRunner {
         }
 
         if (attachmentTypeRepository.count() == 0) {
-            List<String> defaultNames = Arrays.asList("assignment", "submission");
+            List<String> defaultNames = Arrays.asList("assignment", "submission", "post");
             List<AttachmentType> attachmentTypes = new ArrayList<>();
             for (String name : defaultNames) {
                 AttachmentType attachmentType = new AttachmentType();
@@ -145,7 +145,8 @@ public class ApplicationStartup implements ApplicationRunner {
                     new Field(3, "meaning"),
                     new Field(3, "example"),
                     new Field(3, "explanation"),
-                    new Field(3, "note"));
+                    new Field(3, "note"),
+                    new Field(3, "structure"));
             fieldRepository.saveAll(fields);
         }
 

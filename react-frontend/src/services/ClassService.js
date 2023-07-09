@@ -28,6 +28,10 @@ const getClassroomById = (id) => {
     return axios.get(API_BASE_URL + '/class/' + id)
 }
 
+const resetClassCode = (id) => {
+    return axios.post(API_BASE_URL + '/resetclasscode/' + id)
+}
+
 const getFilterList = (
     is_deleted,
     search,
@@ -64,6 +68,7 @@ const ClassService = {
     getClassroomById,
     updateClassroom,
     deleteClass,
+    resetClassCode,
 }
 
 export default ClassService

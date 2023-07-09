@@ -29,9 +29,8 @@ import Language from './pages/settings/Language'
 import DeleteAccount from './pages/settings/DeleteAccount'
 import AccountDeleted from './pages/settings/AccountDeleted'
 import Translate from './pages/translate/Translate'
-import Dictionary from './pages/Dictionary'
+import DictionaryLayout from './pages/dictionary/DictionaryLayout'
 import Home from '../src/pages/home/Home'
-import UpdatePost from './pages/UpdatePost'
 import ClassesForHome from './pages/home/ClassesForHome'
 import SetsForHome from './pages/home/SetsForHome'
 import AuthLayout from './pages/auth/AuthLayout'
@@ -51,7 +50,10 @@ import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
 import CreateSet from './pages/studyset/create/CreateSet'
 import DoQuiz from './pages/DoQuiz'
 import Chat from './pages/Chat'
-import { KanjiCard } from './pages/studyset/create/KanjiCard'
+import VocabDict from './pages/dictionary/VocabDict'
+import GrammarDict from './pages/dictionary/GrammarDict'
+import KanjiDict from './pages/dictionary/KanjiDict'
+import KanjiCard from './pages/studyset/create/KanjiCard'
 import ViewKanjiDetail from './pages/studyset/ViewKanjiDetail'
 import ViewGrammarDetail from './pages/studyset/ViewGrammarDetail'
 import ViewVocabularyDetail from './pages/studyset/ViewVocabularyDetail'
@@ -129,7 +131,11 @@ const App = () => {
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}
-                    <Route path="dictionary" element={<Dictionary />} />
+                    <Route element={<DictionaryLayout />}>
+                        <Route path="vocab" element={<VocabDict />} />
+                        <Route path="kanji" element={<KanjiDict />} />
+                        <Route path="grammar" element={<GrammarDict />} />
+                    </Route>
                     {/* Password */}
                     <Route element={<OtherLayout />}>
                         <Route path="forgotten" element={<ForgotPassword />} />
@@ -156,7 +162,6 @@ const App = () => {
                 </Route>
 
                 <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/updatepost" element={<UpdatePost />} />
                 <Route path="/banuser" element={<BanUser />} />
                 <Route path="/unbanuser" element={<UnBanUser />} />
                 <Route path="/manageusers" element={<ManageUser />} />

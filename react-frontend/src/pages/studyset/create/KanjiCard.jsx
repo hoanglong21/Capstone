@@ -5,7 +5,7 @@ import ContentService from '../../../services/ContentService'
 import CardService from '../../../services/CardService'
 
 import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
-import TextEditor from '../../../components/TextEditor'
+import CardEditor from '../../../components/textEditor/CardEditor'
 import styles from '../../../assets/styles/Card.module.css'
 
 export const KanjiCard = (props) => {
@@ -363,14 +363,16 @@ export const KanjiCard = (props) => {
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
                     <div className="col-12 col-lg-7 pe-lg-4 d-flex flex-column justify-content-end">
-                        <TextEditor
+                        <CardEditor
                             name="character"
                             data={character?.content}
                             onChange={(event, editor) => {
-                                setCharacter({
-                                    ...character,
-                                    content: editor.getData(),
-                                })
+                                if (character?.id) {
+                                    setCharacter({
+                                        ...character,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(character)}
                         />
@@ -381,14 +383,16 @@ export const KanjiCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 col-lg-5 ps-lg-4 d-flex flex-column justify-content-end">
-                        <TextEditor
+                        <CardEditor
                             name="radical"
                             data={radical?.content}
                             onChange={(event, editor) => {
-                                setRadical({
-                                    ...radical,
-                                    content: editor.getData(),
-                                })
+                                if (radical?.id) {
+                                    setRadical({
+                                        ...radical,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(radical)}
                         />
@@ -399,14 +403,16 @@ export const KanjiCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 col-lg-9 mt-4 pe-lg-4">
-                        <TextEditor
+                        <CardEditor
                             name="name"
                             data={name?.content}
                             onChange={(event, editor) => {
-                                setName({
-                                    ...name,
-                                    content: editor.getData(),
-                                })
+                                if (name?.id) {
+                                    setName({
+                                        ...name,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(name)}
                         />
@@ -423,10 +429,12 @@ export const KanjiCard = (props) => {
                             name="jlptLevel"
                             value={jlptLevel?.content}
                             onChange={(event) => {
-                                setJlptLevel({
-                                    ...jlptLevel,
-                                    content: event.target.value,
-                                })
+                                if (jlptLevel?.id) {
+                                    setJlptLevel({
+                                        ...jlptLevel,
+                                        content: event.target.value,
+                                    })
+                                }
                             }}
                             onBlur={() => {
                                 doUpdateContent(jlptLevel)
@@ -446,14 +454,16 @@ export const KanjiCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 col-xl-6 mt-4 pe-xl-4 d-flex flex-column justify-content-end">
-                        <TextEditor
+                        <CardEditor
                             name="onyomi"
                             data={onyomi?.content}
                             onChange={(event, editor) => {
-                                setOnyomi({
-                                    ...onyomi,
-                                    content: editor.getData(),
-                                })
+                                if (onyomi?.id) {
+                                    setOnyomi({
+                                        ...onyomi,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(onyomi)}
                         />
@@ -464,14 +474,16 @@ export const KanjiCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 col-xl-6 mt-4 ps-xl-4 d-flex flex-column justify-content-end">
-                        <TextEditor
+                        <CardEditor
                             name="kunyomi"
                             data={kunyomi?.content}
                             onChange={(event, editor) => {
-                                setKunyomi({
-                                    ...kunyomi,
-                                    content: editor.getData(),
-                                })
+                                if (kunyomi?.id) {
+                                    setKunyomi({
+                                        ...kunyomi,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(kunyomi)}
                         />
@@ -482,14 +494,16 @@ export const KanjiCard = (props) => {
                         </span>
                     </div>
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="meanings"
                             data={meanings?.content}
                             onChange={(event, editor) => {
-                                setMeanings({
-                                    ...meanings,
-                                    content: editor.getData(),
-                                })
+                                if (meanings?.id) {
+                                    setMeanings({
+                                        ...meanings,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(meanings)}
                         />
@@ -501,14 +515,16 @@ export const KanjiCard = (props) => {
                     </div>
 
                     <div className="col-12 mt-4">
-                        <TextEditor
+                        <CardEditor
                             name="example"
                             data={example?.content}
                             onChange={(event, editor) => {
-                                setExample({
-                                    ...example,
-                                    content: editor.getData(),
-                                })
+                                if (example?.id) {
+                                    setExample({
+                                        ...example,
+                                        content: editor.getData(),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(example)}
                         />
@@ -526,13 +542,15 @@ export const KanjiCard = (props) => {
                             value={strokes?.content || '0'}
                             className={`form-control ${styles.card_control}`}
                             onChange={(event) => {
-                                setStrokes({
-                                    ...strokes,
-                                    content: event.target.value.replace(
-                                        /^0+/,
-                                        ''
-                                    ),
-                                })
+                                if (strokes?.id) {
+                                    setStrokes({
+                                        ...strokes,
+                                        content: event.target.value.replace(
+                                            /^0+/,
+                                            ''
+                                        ),
+                                    })
+                                }
                             }}
                             onBlur={() => doUpdateContent(strokes)}
                         />

@@ -30,10 +30,10 @@ const CreateSet = () => {
     const [error, setError] = useState('')
     const [showDiscardMess, setShowDiscardMess] = useState(false)
 
-    useEffect(() => {
-        setType(Number(searchParams.get('type')))
-    }, [searchParams.get('type')])
+    // update when navigate
+    useEffect(() => {}, [])
 
+    // draft can go to edit, back to create
     useEffect(() => {
         if (id && studySet._draft) {
             navigate(`/create-set?type=${type}`)
@@ -42,7 +42,7 @@ const CreateSet = () => {
 
     // fetch data
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchData = async (tempType) => {
             try {
                 let temp = {}
                 if (id) {
@@ -56,7 +56,7 @@ const CreateSet = () => {
                             '=1',
                             '',
                             `=${userInfo?.username}`,
-                            `=${type}`,
+                            `=${tempType}`,
                             '',
                             '',
                             '',
@@ -77,7 +77,7 @@ const CreateSet = () => {
                                 _public: true,
                                 _draft: true,
                                 studySetType: {
-                                    id: type,
+                                    id: tempType,
                                 },
                                 deleted_date: '',
                             })
@@ -98,10 +98,11 @@ const CreateSet = () => {
             }
         }
         setError('')
+        setType(Number(searchParams.get('type')))
         if (userInfo.username) {
-            fetchData()
+            fetchData(Number(searchParams.get('type')))
         }
-    }, [userInfo, type])
+    }, [userInfo, searchParams.get('type')])
 
     // handle sticky header
     useEffect(() => {
@@ -430,7 +431,7 @@ const CreateSet = () => {
                 <Toast
                     show={showDiscardMess}
                     onClose={toggleShowDiscardMess}
-                    delay={10000}
+                    delay={5000}
                     className="toast align-items-center text-bg-dark border-0"
                     autohide
                 >

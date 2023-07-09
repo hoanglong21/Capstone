@@ -1,0 +1,11 @@
+.dictSection_title {
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    word-break: break-all;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.item-word {
+    border-radius: 0;
+}
