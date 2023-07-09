@@ -1,6 +1,7 @@
 import React from "react";
 import "../../assets/styles/studyset.css";
 import img from "../../assets/images/avatar-default.jpg";
+import DeleteSet from "./DeleteSet";
 
 function OverViewSet() {
   return (
@@ -54,10 +55,42 @@ function OverViewSet() {
           </a>
           <span className="userrole">Teacher</span>
         </div>
-        <div className="list-option">
-          <button type="button" className="icon">
+        <div className="list-option dropdown">
+          <button
+            type="button dropdown-toggle"
+            className="icon"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
             <i className="bi bi-list fs-4"></i>
           </button>
+          <ul className="dropdown-menu dropdown-menu-end p-2">
+              <li>
+                <button
+                  className="dropdown-item py-2 px-2"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#updateModal"
+                  aria-expanded="true"
+                >
+                  <span className="align-middle fw-semibold">
+                    Update this Set
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button
+                  className="dropdown-item py-2 px-2"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteSetModal"
+                >
+                  <span className="align-middle fw-semibold">
+                    Delete this Set
+                  </span>
+                </button>
+              </li>
+            </ul>
         </div>
       </div>
 
@@ -85,32 +118,28 @@ function OverViewSet() {
         </div>
       </div>
 
-      <div class="SetPageTerm-contentWrapper">
-        <div class="SetPageTerm-content">
-          <div class="SetPageTerm-side SetPageTerm-smallSide">
-              <span class="termText">
-                1. Câu trả lời sau đây, câu nào diễn đạt chưa chuẩn xác: <br />
-                a) Chủ nghĩa Mác là học thuyết do C.Mác sáng lập <br />
-                b) Chủ nghĩa Mác là học thuyết về sự nghiệp giải phóng giai cấp
-                vô sản và nhân dân lao động <br />
-                c) Chủ nghĩa Mác là thế giới quan và phương pháp luận chung của
-                mọi nhận thức và thực tiễn <br />
-                d) Chủ nghĩa mác là học thuyết được xây dựng trên cơ sở kế thừa
-                những tinh hoa của lịch sử tư tưởng nhân loại và thực tiễn cách
-                mạng
-              </span>
+      <div className="SetPageTerm-contentWrapper">
+        <div className="SetPageTerm-content">
+          <div className="SetPageTerm-side SetPageTerm-smallSide">
+            <span className="termText">
+              1. Câu trả lời sau đây, câu nào diễn đạt chưa chuẩn xác: <br />
+              a) Chủ nghĩa Mác là học thuyết do C.Mác sáng lập <br />
+              b) Chủ nghĩa Mác là học thuyết về sự nghiệp giải phóng giai cấp vô
+              sản và nhân dân lao động <br />
+              c) Chủ nghĩa Mác là thế giới quan và phương pháp luận chung của
+              mọi nhận thức và thực tiễn <br />
+              d) Chủ nghĩa mác là học thuyết được xây dựng trên cơ sở kế thừa
+              những tinh hoa của lịch sử tư tưởng nhân loại và thực tiễn cách
+              mạng
+            </span>
           </div>
-          <div class="SetPageTerm-sideContent"></div>
-          <div class="SetPageTerm-side SetPageTerm-largeSide">
-            <span class="TermText">C</span>
+          <div className="SetPageTerm-sideContent"></div>
+          <div className="SetPageTerm-side SetPageTerm-largeSide">
+            <span className="TermText">C</span>
           </div>
         </div>
       </div>
-      <div class="a1lo7mw1">
-        <div class="d1frrovq">
-          <div class="f1dpcrgz" data-testid="AssemblyTooltip--base"></div>
-        </div>
-      </div>
+      <DeleteSet/>
     </div>
   );
 }
