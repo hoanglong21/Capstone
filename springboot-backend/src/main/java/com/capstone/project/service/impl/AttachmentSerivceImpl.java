@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class AttachmentImpl implements AttachmentService {
+public class AttachmentSerivceImpl implements AttachmentService {
 
     private final AttachmentRepository attachmentRepository;
 
     @Autowired
-    public AttachmentImpl(AttachmentRepository attachmentRepository) {
+    public AttachmentSerivceImpl(AttachmentRepository attachmentRepository) {
         this.attachmentRepository = attachmentRepository;
     }
 
