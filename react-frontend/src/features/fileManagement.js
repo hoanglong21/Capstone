@@ -65,7 +65,7 @@ export const uploadFile = async (file, folderName) => {
                 }
                 reject()
             },
-            function complete() {
+            async function complete() {
                 // Upload completed successfully, now we can get the download URL
                 getDownloadURL(uploadTask.snapshot.ref).then(function (
                     downloadURL

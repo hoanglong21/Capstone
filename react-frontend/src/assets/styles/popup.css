@@ -37,3 +37,11 @@
 .classDeleteModal h5.modal-title {
     color: white !important;
 }
+
+.updatePostModal.modal {
+    --bs-modal-width: 60vw;
+}
+
+.updatePostModal h5.modal-title {
+    color: #0070c4 !important;
+}

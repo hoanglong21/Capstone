@@ -87,18 +87,22 @@
     height: 25vh;
 }
 
-.mainClass__announcementsWrapper {
+.mainClass__postAddContainer {
     box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302),
         0 2px 6px 2px rgba(60, 64, 67, 0.149);
-    border-radius: 0.5rem;
-    overflow: hidden;
     min-height: 4.5rem;
+    padding: 1.875rem;
 }
 
-.mainClass__ancContent {
-    padding: 30px;
-    width: 65vw;
-    color: rgba(0, 0, 0, 0.549);
+.postTextEditor .ck.ck-editor__editable_inline {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    padding: 0.625rem 1rem;
+    min-height: 10rem;
+}
+
+.postTextEditor .ck.ck-editor__editable_inline:hover {
+    background-color: #f1f3f4;
 }
 
 .mainClass__wrapper100 {
@@ -118,20 +122,45 @@
     border: none;
 }
 
-.mainClass__form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+.postUpload {
+    opacity: 0;
+    display: none;
 }
 
-.mainClass__buttons {
-    display: flex;
-    justify-content: space-between;
-    width: 50vw;
-    margin-top: 20px;
+.postUploadButton {
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    color: rgb(25, 103, 210);
+    background-color: transparent;
+    border: 0.0625rem solid #e8eaed;
 }
 
-.mainClass__buttons button {
+.postUploadButton:hover {
+    background-color: #f6f9fd;
+}
+
+.fileUploadName {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    letter-spacing: 0.00625rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.fileUploadType {
+    letter-spacing: 0.014rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+}
+
+.btn.fileUploadDelButton:hover {
+    color: var(--red-64);
+}
+
+.postUploadFile button {
     margin-right: 15px;
     border: none;
     padding: 5px 13px;

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,7 @@ public class Grammar {
     private String about;
     private String level;
     private List<String> example;
+    private List<Map<String, String>> synonyms;
+    private List<Map<String, String>> antonyms;
+    private List<Map<String, String>> details;
 }

@@ -78,7 +78,40 @@ public class GrammarServiceImpl implements GrammarService {
                                 exampleNode.getElementsByTagName("english").item(0).getTextContent());
                     }
                     grammar.setExample(exampleList);
+                    // new
+                    List<Map<String, String>> synonymsList = new ArrayList<>();
+                    NodeList synonyms = grammar_point.getElementsByTagName("synonym");
+                    for(int j = 0; j < synonyms.getLength(); j++) {
+                        Element synonymNode = (Element) synonyms.item(j);
+                        Map<String, String> sysMap = new HashMap<>();
+                        sysMap.put("text", synonymNode.getElementsByTagName("text").item(0).getTextContent());
+                        sysMap.put("explanation", synonymNode.getElementsByTagName("explanation").item(0).getTextContent());
+                        synonymsList.add(sysMap);
+                    }
+                    grammar.setSynonyms(synonymsList);
 
+                    List<Map<String, String>> antonymsList = new ArrayList<>();
+                    NodeList antonyms = grammar_point.getElementsByTagName("antonym");
+                    for(int j = 0; j < antonyms.getLength(); j++) {
+                        Element antonymNode = (Element) antonyms.item(j);
+                        Map<String, String> antoMap = new HashMap<>();
+                        antoMap.put("text", antonymNode.getElementsByTagName("text").item(0).getTextContent());
+                        antoMap.put("explanation", antonymNode.getElementsByTagName("explanation").item(0).getTextContent());
+                        antonymsList.add(antoMap);
+                    }
+                    grammar.setAntonyms(antonymsList);
+
+                    List<Map<String, String>> detailsList = new ArrayList<>();
+                    NodeList details = grammar_point.getElementsByTagName("detail");
+                    for(int j = 0; j < details.getLength(); j++) {
+                        Element antonymNode = (Element) details.item(j);
+                        Map<String, String> detailMap = new HashMap<>();
+                        detailMap.put("heading", antonymNode.getElementsByTagName("heading").item(0).getTextContent());
+                        detailMap.put("text", antonymNode.getElementsByTagName("text").item(0).getTextContent());
+                        detailsList.add(detailMap);
+                    }
+                    grammar.setDetails(detailsList);
+                    // end of new
                     grammarList.add(grammar);
                 }
             }
