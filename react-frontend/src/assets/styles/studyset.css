@@ -141,3 +141,16 @@ ul li {
     padding-left: 15px;
 }
 
+.setTitle h2, h3{
+    margin-top: 2rem;
+    margin-left: 10rem;
+    margin-bottom: 2.5rem;
+}
+
+.navbar-nav{
+  display: flex;
+  gap: 0;
+}
+
+
+
