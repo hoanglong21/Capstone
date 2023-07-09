@@ -61,6 +61,7 @@ import OverViewSet from './pages/studyset/OverViewSet'
 import ViewTest from './pages/ViewTest'
 import DoTest from './pages/DoTest'
 import ViewAssignment from './pages/ViewAssignment'
+import ManageTest from './pages/ManageTest'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -129,6 +130,7 @@ const App = () => {
                     {/* Test */}
                     <Route path="/viewtest" element={<ViewTest />} />
                     <Route path="/dotest" element={<DoTest />} />
+                    <Route path="/managetest" element={<ManageTest />} />
                     {/* Assignment */}
                     <Route path="/viewassignment" element={<ViewAssignment />} />
                     {/* Translate */}

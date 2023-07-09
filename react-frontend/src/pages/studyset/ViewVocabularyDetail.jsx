@@ -43,7 +43,7 @@ function ViewVocabularyDetail() {
                   <span class="kana japan-font">ともだち</span>
                 </p>
                 <div class="hkanji-wrapbtn text-center">
-                  <i class="bi bi-volume-down-fill fs-3 text-primary"></i>
+                  <i class="bi bi-volume-up fs-3 text-primary"></i>
                   <a
                     href="/"
                     class="sound"
