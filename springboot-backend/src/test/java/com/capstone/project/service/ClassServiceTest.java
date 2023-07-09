@@ -239,18 +239,16 @@ public class ClassServiceTest {
     })
     void testJoinClass(String code, String username) {
         try {
-            // Tạo người dùng
+
             User user = User.builder()
                     .username(username)
                     .email("quan@gmail.com")
                     .build();
             when(userRepository.findUserByUsername(username)).thenReturn(user);
 
-            // Tạo lớp học
             Class classroom = Class.builder().classcode(code).user(user).build();
             when(classRepository.findByClasscode(code)).thenReturn(classroom);
 
-            // Thực thi phương thức JoinClass
             Class joinedclass = classServiceImpl.joinClass(code, username);
 
             assertThat(joinedclass).isNotNull();
