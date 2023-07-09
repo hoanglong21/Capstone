@@ -30,8 +30,6 @@ const VocabDict = () => {
             ).data
             tempKanjiSvgs.push({ kanji: temp[0].kanji[0].charAt(i), svg: svg })
         }
-        console.log(tempKanjiSvgs)
-
         setKanjiSvgs(tempKanjiSvgs)
     }
 
@@ -52,7 +50,7 @@ const VocabDict = () => {
 
     return (
         <div>
-            <div className="row gap-3 mt-4 mb-5">
+            <div className="row mt-4 mb-5">
                 <div className="col-2 ">
                     <div className="dictResultWordList">
                         {vocabs.map((vocab, index) => (
@@ -77,7 +75,7 @@ const VocabDict = () => {
                         ))}
                     </div>
                 </div>
-                <div className="col-6">
+                <div className="col-7">
                     <div className="word-detail h-100">
                         <div className="word-detail-overview d-flex flex-column align-items-center">
                             <span className="txtKanji">{word?.kanji}</span>
@@ -95,8 +93,8 @@ const VocabDict = () => {
                             </div>
                         </div>
                         <div className="word-detail-info">
-                            {word?.sense?.map((item) => (
-                                <div className="">
+                            {word?.sense?.map((item, index) => (
+                                <div key={index}>
                                     <div className="word-type">
                                         {getDisplay(item.type)}
                                     </div>
@@ -104,20 +102,22 @@ const VocabDict = () => {
                                         - {getDisplay(item.definition)}
                                     </div>
                                     <ul className="word-examples">
-                                        {item.example.map((exampleItem) => (
-                                            <div>
-                                                <div className="wordExampleJa">
-                                                    {
-                                                        exampleItem.exampleSentenceJapanese
-                                                    }
+                                        {item.example.map(
+                                            (exampleItem, index) => (
+                                                <div key={index}>
+                                                    <div className="wordExampleJa">
+                                                        {
+                                                            exampleItem.exampleSentenceJapanese
+                                                        }
+                                                    </div>
+                                                    <div className="wordExampleVi">
+                                                        {
+                                                            exampleItem.exampleSentenceVietnamese
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <div className="wordExampleVi">
-                                                    {
-                                                        exampleItem.exampleSentenceVietnamese
-                                                    }
-                                                </div>
-                                            </div>
-                                        ))}
+                                            )
+                                        )}
                                     </ul>
                                 </div>
                             ))}
@@ -130,7 +130,7 @@ const VocabDict = () => {
                         id="accordionKanjiSvg"
                     >
                         {kanjiSvgs.map((kanjiSvg, index) => (
-                            <div className="accordion-item">
+                            <div className="accordion-item" key={index}>
                                 <h2 className="accordion-header">
                                     <button
                                         className="accordion-button collapsed"
@@ -150,7 +150,7 @@ const VocabDict = () => {
                                     <div
                                         className="svgKanji accordion-body d-flex justify-content-center"
                                         dangerouslySetInnerHTML={{
-                                            __html: kanjiSvg.svg,
+                                            __html: kanjiSvg?.svg,
                                         }}
                                     ></div>
                                 </div>

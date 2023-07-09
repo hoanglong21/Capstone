@@ -1,3 +1,4 @@
+/* Vocab */
 .dictSection_title {
     font-weight: 500;
     margin-bottom: 0.75rem;
@@ -82,3 +83,74 @@
 .wordExampleJa {
     color: #d22f0f;
 }
+/* Vocab */
+
+/* Kanji */
+.kanji-search {
+    padding: 30px;
+    background-color: white;
+}
+
+.kanji-search-header {
+    padding: 10px;
+    text-align: center;
+    line-height: 40px;
+    text-transform: uppercase;
+    font-size: 30px;
+}
+
+.kanji-search-main {
+    padding: 30px 0 40px 10px;
+}
+
+.kanji-search-block {
+    margin-bottom: 40px;
+}
+
+.kanji-search-block.ed {
+    width: 49%;
+    box-sizing: border-box;
+    margin-right: 0;
+    height: 60px;
+    float: left;
+}
+
+.kanji-search-block label {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+.kanji-search-block p {
+    font-size: 15px;
+    color: #545454;
+    line-height: 20px;
+}
+
+p.kanji-search-bold {
+    color: #ea151d;
+    font-weight: 700;
+}
+
+.kanji-search-block .ony {
+    background: #33b874;
+}
+
+.kanji-search-block .kuny {
+    background: #52b1a9;
+}
+
+.kanji-search-block .kuny,
+.kanji-search-block .ony {
+    margin-bottom: 5px;
+    margin-right: 10px;
+    display: inline-block;
+    padding: 0 5px;
+    height: 20px;
+    line-height: 20px;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 4px;
+    cursor: default;
+}
+/* Kanji */
