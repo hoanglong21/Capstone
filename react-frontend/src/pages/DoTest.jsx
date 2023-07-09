@@ -1,57 +1,58 @@
 import React from "react";
+import "../assets/styles/test.css"
 
 function DoTest() {
   return (
-    <div id="container">
+    <div className="containerTest">
       <h3>Vocabulary - Grammar Lesson 3 Test</h3>
       <p>Timing out: 20:00:00</p>
       <section>
         <form className="quizForm">
           <h5>1. What is the correct translation for "telephone"?</h5>
-          <input type="radio" className="q4" value="a" id="q1a" />
+          <input type="radio" className="answerTest" value="a" id="answerTesta" />
           a. 本
           <br />
-          <input type="radio" className="q4" value="b" id="q1b" />
+          <input type="radio" className="answerTest" value="b" id="answerTestb" />
           b. 電話
           <br />
-          <input type="radio" className="q4" value="a" id="q1c" />
+          <input type="radio" className="answerTest" value="a" id="answerTestc" />
           a. ペン
           <br />
-          <input type="radio" className="q4" value="b" id="q1d" />
+          <input type="radio" className="answerTest" value="b" id="answerTestd" />
           b. 電気
           <br />
           <h5>2. How do you say "Good morning"?</h5>
-          <input type="radio" className="q2" value="a" id="q2a" />
+          <input type="radio" className="answerTest" value="a" id="answerTesta" />
           a. おはよう<br />
-          <input type="radio" className="q2" value="b" id="q2b" />
+          <input type="radio" className="answerTest" value="b" id="answerTestb" />
           b. すみません<br />
-          <input type="radio" className="q2" value="c" id="q2c" />
+          <input type="radio" className="answerTest" value="c" id="answerTestc" />
           c. こんばんは<br />
-          <input type="radio" className="q2" value="d" id="q2d" />
+          <input type="radio" className="answerTest" value="d" id="answerTestd" />
           d. No correct answer
           <br />
           <h5>3. "Good evening" is "こんばんは"?</h5>
-          <input type="radio" className="q3" value="a" id="q3a" />
+          <input type="radio" className="answerTest" value="a" id="answerTesta" />
           a. True
           <br />
-          <input type="radio" className="q3" value="b" id="q3b" />
+          <input type="radio" className="answerTest" value="b" id="answerTestb" />
           b. False
           <br />
           <h5>4. What is the correct translation for "Please"?</h5>
-          <input type="radio" className="q4" value="a" id="q4a" />
+          <input type="radio" className="answerTest" value="a" id="answerTesta" />
           a. おねがいだから<br />
-          <input type="radio" className="q4" value="b" id="q4b" />
+          <input type="radio" className="answerTest" value="b" id="answerTestb" />
           b. しつれい<br />
-          <input type="radio" className="q5" value="c" id="q5c" />
+          <input type="radio" className="answerTest" value="c" id="answerTestc" />
           c. こんにちは<br />
-          <input type="radio" className="q5" value="d" id="q5d" />
+          <input type="radio" className="answerTest" value="d" id="answerTestd" />
           d.  No correct answer
           <br />
           <br />
           <br />
-          <input type="submit" value="Submit Answers" />
+          <input type="submit" value="Submit Answers" className="submitTest"/>
         </form>
-        <div id="results"></div>
+        <div className="results"></div>
       </section>
     </div>
   );
