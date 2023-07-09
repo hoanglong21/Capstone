@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import DoTest from "./DoTest";
 
 function ViewTest() {
-  return (
+    const navigate = useNavigate()
+  return (  
     <div className="container">
         <h3 className="text-center mt-4 fw-bold">Test Online</h3>
       <table className="table table-striped mt-5">
@@ -22,7 +25,9 @@ function ViewTest() {
             <td style={{verticalAlign: "middle"}}>20</td>
             <td style={{verticalAlign: "middle"}}>15 minutes</td>
             <td style={{verticalAlign: "middle"}}>9/7/2023</td>
-            <td><button type="submit" className="bg-primary text-white border border-primary rounded-3 py-2 px-2">Do Test</button></td>
+            <td><button type="submit" className="bg-primary text-white border border-primary rounded-3 py-2 px-2" onClick={() => {
+                          navigate("/dotest");
+                        }}>Do Test</button></td>
           </tr>
           <tr>
             <th scope="row" style={{verticalAlign: "middle"}}>2</th>
@@ -30,11 +35,14 @@ function ViewTest() {
             <td style={{verticalAlign: "middle"}}>30</td>
             <td style={{verticalAlign: "middle"}}>25 minutes</td>
             <td style={{verticalAlign: "middle"}}>9/7/2023</td>
-            <td><button type="submit" className="bg-primary text-white border border-primary rounded-3 py-2 px-2">Do Test</button></td>
+            <td><button type="submit" className="bg-primary text-white border border-primary rounded-3 py-2 px-2" onClick={() => {
+                          navigate("/dotest");
+                        }}>Do Test</button></td>
           </tr>
         </tbody>
       </table>
     </div>
+    
   );
 }
 
