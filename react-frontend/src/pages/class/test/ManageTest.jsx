@@ -3,9 +3,9 @@ import React from "react";
 function ManageTest() {
   return (
     <div className="container">
-      <div className="header">
+      <div className="header" style={{display: "flex", justifyContent: "space-between", marginTop: "2.5rem"}}>
         <h3>Management Test</h3>
-        <button type="submit" className="bg-primary text-white border border-primary rounded-3 py-2 px-2 fw-bold fs-7">Create Test</button>
+        <button type="submit" className="bg-primary text-white border border-primary rounded-3 py-2 px-2 fw-bold fs-7"><i class="bi bi-plus-square me-2"></i>Create Test</button>
       </div>
       <table className="table table-striped mt-5">
         <thead>
