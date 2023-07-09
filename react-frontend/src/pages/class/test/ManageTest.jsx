@@ -1,4 +1,5 @@
 import React from "react";
+import DeleteTest from "./DeleteTest";
 
 function ManageTest() {
   return (
@@ -46,7 +47,7 @@ function ManageTest() {
                 type="button"
                 className="btn btn-danger "
                 data-bs-toggle="modal"
-                data-bs-target="#banClassModal"
+                data-bs-target="#deleteTestModal"
               >
                 <i class="bi bi-trash-fill me-2"></i>
                 Delete
@@ -55,6 +56,7 @@ function ManageTest() {
           </tr>
         </tbody>
       </table>
+      <DeleteTest/>
     </div>
   );
 }
