@@ -1,12 +1,76 @@
 import DeletePost from '../../DeletePost'
-import UpdatePost from '../../UpdatePost'
+import CardEditor from '../../../components/textEditor/CardEditor'
 
-import img from '../../../assets/images/avatar-default.jpg'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
-import { OptionVerIcon } from '../../../components/icons'
+import {
+    DeleteIcon,
+    OptionVerIcon,
+    SendIcon,
+    UploadIcon,
+} from '../../../components/icons'
 import './post.css'
+import { useState } from 'react'
+import PostService from '../../../services/PostService'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import PostEditor from '../../../components/textEditor/PostEditor'
 
-const Post = ({ post }) => {
+const Post = ({ post, stateChanger, posts, index }) => {
+    const [showUpdate, setShowUpdate] = useState(false)
+
+    const [updatePost, setUpdatePost] = useState({ ...post })
+    const [uploadFiles, setUploadFiles] = useState([])
+    const [loadingUploadFile, setLoadingUploadFile] = useState(false)
+    const [loadingUpdatePost, setLoadingUpdatePost] = useState(false)
+
+    const handleUpdatePost = async () => {
+        setLoadingUpdatePost(true)
+        try {
+            await PostService.updatePost(updatePost.id, updatePost)
+            var tempPosts = [...posts]
+            tempPosts[index] = updatePost
+            stateChanger(tempPosts)
+            setShowUpdate(false)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingUpdatePost(false)
+    }
+    const handleUploadFile = async (event) => {
+        setLoadingUploadFile(true)
+        const file = event.target.files[0]
+        if (file) {
+            const url = await uploadFile(
+                file,
+                `file/class/${post.classroom.id}/post`
+            )
+            setUploadFiles([
+                ...uploadFiles,
+                { name: file.name, type: file.type, url },
+            ])
+        }
+        setLoadingUploadFile(false)
+    }
+
+    const handleCancelUpdatePost = () => {
+        uploadFiles.map((file) => {
+            deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
+        })
+        // setUploadFiles([])
+        setUpdatePost({ ...post })
+        setShowUpdate(false)
+    }
+
+    const handleDeleteFile = (file, index) => {
+        var temp = [...uploadFiles]
+        temp.splice(index, 1)
+        deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
+        setUploadFiles(temp)
+    }
+
     return (
         <div>
             <div className="card mb-4">
@@ -40,7 +104,9 @@ const Post = ({ post }) => {
                                 <button
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
                                     type="button"
-                                    // onClick={handleCopyCode}
+                                    onClick={() => {
+                                        setShowUpdate(true)
+                                    }}
                                 >
                                     <span className="align-middle fw-medium">
                                         Edit
@@ -53,7 +119,6 @@ const Post = ({ post }) => {
                                     type="button"
                                     // onClick={handleResetCode}
                                 >
-                                    {/* <ResetIcon className="me-3" size="1.3rem" /> */}
                                     <span className="align-middle fw-medium">
                                         Delete
                                     </span>
@@ -63,33 +128,132 @@ const Post = ({ post }) => {
                     </div>
                 </div>
                 <div className="card-body">
-                    <p className="post__content">{post.content}</p>
+                    <div className="post__content">
+                        {showUpdate ? (
+                            <div>
+                                <div className="postTextEditor">
+                                    <PostEditor
+                                        data={updatePost?.content}
+                                        onChange={(event, editor) => {
+                                            if (updatePost?.id) {
+                                                setUpdatePost({
+                                                    ...updatePost,
+                                                    content: editor.getData(),
+                                                })
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div className="mainClass_filesUpload mt-3">
+                                    {uploadFiles.map((file, index) => (
+                                        <div className="card mb-2" key={index}>
+                                            <div className="card-body d-flex justify-content-between">
+                                                <div>
+                                                    <div className="fileUploadName">
+                                                        {file.name}
+                                                    </div>
+                                                    <div className="fileUploadType">
+                                                        {file.type}
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    className="btn fileUploadDelButton"
+                                                    onClick={() =>
+                                                        handleDeleteFile(
+                                                            file,
+                                                            index
+                                                        )
+                                                    }
+                                                >
+                                                    <DeleteIcon />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="d-flex align-items-center justify-content-between mt-4">
+                                    <input
+                                        type="file"
+                                        id="uploadPostFile"
+                                        className="postUpload"
+                                        onChange={handleUploadFile}
+                                    />
+                                    <button
+                                        type="btn"
+                                        disabled={loadingUploadFile}
+                                    >
+                                        <label
+                                            htmlFor="uploadPostFile"
+                                            className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                        >
+                                            {loadingUploadFile ? (
+                                                <div
+                                                    className="spinner-border spinner-border-sm text-secondary"
+                                                    role="status"
+                                                >
+                                                    <span className="visually-hidden">
+                                                        LoadingUpload...
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <UploadIcon strokeWidth="2" />
+                                            )}
+                                        </label>
+                                    </button>
+                                    <div className="d-flex align-items-center">
+                                        <button
+                                            onClick={handleCancelUpdatePost}
+                                            className="btn btn-light mx-2"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={handleUpdatePost}
+                                            className="btn btn-primary"
+                                            disabled={
+                                                !updatePost.content ||
+                                                loadingUpdatePost
+                                            }
+                                        >
+                                            {loadingUpdatePost
+                                                ? 'Saving...'
+                                                : 'Save'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: post.content,
+                                }}
+                            ></div>
+                        )}
+                    </div>
                 </div>
                 <div className="card-footer bg-white">
-                    <div className="d-flex justify-content-between align-items-center">
-                        <div className="postAuthorImg">
-                            <img
-                                src={defaultAvatar}
-                                className="w-100 h-100"
-                                alt=""
-                            />
+                    <div className="row g-5 d-flex align-items-center">
+                        <div className="col">
+                            <div className="postAuthorImg">
+                                <img
+                                    src={defaultAvatar}
+                                    className="w-100 h-100"
+                                    alt=""
+                                />
+                            </div>
                         </div>
-                        <input type="text" className="" />
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-send"
-                            viewBox="0 0 16 16"
-                        >
-                            <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
-                        </svg>
+                        <div className="col-9">
+                            <div className="postCommentEditor">
+                                <CardEditor />
+                            </div>
+                        </div>
+                        <button className="col">
+                            <SendIcon />
+                        </button>
                     </div>
                 </div>
             </div>
             <DeletePost />
-            <UpdatePost />
         </div>
     )
 }

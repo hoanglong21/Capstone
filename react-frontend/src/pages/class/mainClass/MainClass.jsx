@@ -162,7 +162,6 @@ const MainClass = () => {
                         <h1 className="card-title mainClass__heading mainClass__overflow">
                             {classroom.class_name}
                         </h1>
-
                         <div className="dropdown align-self-start">
                             <button
                                 className="btn btn-outline-secondary icon-outline-secondary "
@@ -403,8 +402,14 @@ const MainClass = () => {
                             )}
                         </div>
                         {/* Post list */}
-                        {posts.map((post) => (
-                            <Post post={post} />
+                        {posts.map((post, index) => (
+                            <Post
+                                key={index}
+                                post={post}
+                                index={index}
+                                stateChanger={setPosts}
+                                posts={posts}
+                            />
                         ))}
                     </div>
                 </div>
