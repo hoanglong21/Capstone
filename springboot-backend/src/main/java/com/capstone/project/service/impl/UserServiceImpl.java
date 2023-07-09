@@ -75,7 +75,8 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
         }
-        if (userDetails.getPhone() != user.getPhone() && userRepository.existsByPhone(userDetails.getPhone())) {
+        
+        if (!userDetails.getPhone().equals(user.getPhone()) && userRepository.existsByPhone(userDetails.getPhone())) {
             throw new DuplicateValueException("Phone already registered");
         }
 

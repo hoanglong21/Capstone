@@ -60,6 +60,8 @@ public class UserController {
                 return ResponseEntity.ok(userService.updateUser(username, userDetails));
             } catch (ResourceNotFroundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
+            } catch (DuplicateValueException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
     }
