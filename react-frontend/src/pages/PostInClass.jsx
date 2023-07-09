@@ -21,6 +21,7 @@ function PostInClass() {
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
+              style={{ marginLeft: "-20px" }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +69,7 @@ function PostInClass() {
         <div className="post__container">
           <p className="post__content">Content</p>
         </div>
-        <img className="post__img" src={content} alt={""}/>
+        <img className="post__img" src={content} alt={""} />
       </div>
       <div className="comment">
         <div className="comment__top">
@@ -86,10 +87,9 @@ function PostInClass() {
           </svg>
         </div>
       </div>
-      <DeletePost/>
-      <UpdatePost/>
+      <DeletePost />
+      <UpdatePost />
     </div>
-    
   );
 }
 export default PostInClass;

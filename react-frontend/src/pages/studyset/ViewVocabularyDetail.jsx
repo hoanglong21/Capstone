@@ -1,5 +1,5 @@
 import React from "react";
-import "../../assets/styles/kanji.css";
+import "../../assets/styles/studyset.css";
 
 function ViewVocabularyDetail() {
   return (
