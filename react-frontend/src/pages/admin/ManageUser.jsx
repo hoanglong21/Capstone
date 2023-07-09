@@ -43,6 +43,7 @@ function ManageUser() {
                           navigate("/manageusers/viewdetails");
                         }}
                       >
+                        <i class="bi bi-info-square me-2"></i>
                         View Details
                       </button>
                       <button
@@ -51,6 +52,7 @@ function ManageUser() {
                         data-bs-toggle="modal"
                         data-bs-target="#unbanModal"
                       >
+                        <i class="bi bi-person-fill-check me-2"></i>
                         Unban
                       </button>
                       <button
@@ -59,6 +61,7 @@ function ManageUser() {
                         data-bs-toggle="modal"
                         data-bs-target="#banModal"
                       >
+                        <i class="bi bi-person-fill-slash me-2"></i>
                         Ban
                       </button>
                     </td>

@@ -40,6 +40,7 @@ function ManageFeedback() {
                           navigate("viewdetailfb");
                         }}
                       >
+                        <i class="bi bi-info-square me-2"></i>
                         View Details
                       </button>
                     </td>
