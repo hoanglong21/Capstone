@@ -60,6 +60,7 @@ import ViewVocabularyDetail from './pages/studyset/ViewVocabularyDetail'
 import OverViewSet from './pages/studyset/OverViewSet'
 import ViewTest from './pages/ViewTest'
 import DoTest from './pages/DoTest'
+import ViewAssignment from './pages/ViewAssignment'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -129,7 +130,7 @@ const App = () => {
                     <Route path="/viewtest" element={<ViewTest />} />
                     <Route path="/dotest" element={<DoTest />} />
                     {/* Assignment */}
-                    
+                    <Route path="/viewassignment" element={<ViewAssignment />} />
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}
