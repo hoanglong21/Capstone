@@ -1,5 +1,10 @@
-import DeletePost from '../../DeletePost'
+import { useState } from 'react'
+
+import PostService from '../../../services/PostService'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+
 import CardEditor from '../../../components/textEditor/CardEditor'
+import PostEditor from '../../../components/textEditor/PostEditor'
 
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import {
@@ -9,10 +14,6 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
-import { useState } from 'react'
-import PostService from '../../../services/PostService'
-import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
-import PostEditor from '../../../components/textEditor/PostEditor'
 
 const Post = ({ post, stateChanger, posts, index }) => {
     const [showUpdate, setShowUpdate] = useState(false)
@@ -62,6 +63,17 @@ const Post = ({ post, stateChanger, posts, index }) => {
         // setUploadFiles([])
         setUpdatePost({ ...post })
         setShowUpdate(false)
+    }
+
+    const handleDeletePost = async () => {
+        await PostService.deletePost(post.id)
+        uploadFiles.map((file) => {
+            deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
+        })
+        var tempPosts = [...posts]
+        tempPosts.splice(index, 1)
+        stateChanger(tempPosts)
+        document.getElementById(`closeDeletePostModal${index}`).click()
     }
 
     const handleDeleteFile = (file, index) => {
@@ -117,7 +129,8 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                 <button
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
                                     type="button"
-                                    // onClick={handleResetCode}
+                                    data-bs-toggle="modal"
+                                    data-bs-target={`#deletePostModal${index}`}
                                 >
                                     <span className="align-middle fw-medium">
                                         Delete
@@ -253,7 +266,45 @@ const Post = ({ post, stateChanger, posts, index }) => {
                     </div>
                 </div>
             </div>
-            <DeletePost />
+            {/* Delete post modal */}
+            <div className="modal fade" id={`deletePostModal${index}`}>
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">
+                                Delete Announcement?
+                            </h5>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                id={`closeDeletePostModal${index}`}
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            Comments will also be deleted
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={handleDeletePost}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

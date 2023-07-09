@@ -404,7 +404,7 @@ const MainClass = () => {
                         {/* Post list */}
                         {posts.map((post, index) => (
                             <Post
-                                key={index}
+                                key={post.id}
                                 post={post}
                                 index={index}
                                 stateChanger={setPosts}

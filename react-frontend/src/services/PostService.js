@@ -10,6 +10,10 @@ const updatePost = (id, post) => {
     return axios.put(API_BASE_URL + '/post/' + id, post)
 }
 
+const deletePost = (id) => {
+    return axios.delete(API_BASE_URL + '/post/' + id)
+}
+
 const getAllPostByClassId = (id) => {
     return axios.get(API_BASE_URL + '/postbyclassid/' + id)
 }
@@ -18,6 +22,7 @@ const PostService = {
     createPost,
     getAllPostByClassId,
     updatePost,
+    deletePost,
 }
 
 export default PostService
