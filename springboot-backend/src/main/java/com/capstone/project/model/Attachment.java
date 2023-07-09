@@ -31,4 +31,8 @@ public class Attachment {
     @ManyToOne
     @JoinColumn(name = "submission_id", referencedColumnName = "id")
     private Submission submission;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private Post post;
 }

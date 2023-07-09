@@ -57,6 +57,7 @@ import KanjiCard from './pages/studyset/create/KanjiCard'
 import ViewKanjiDetail from './pages/studyset/ViewKanjiDetail'
 import ViewGrammarDetail from './pages/studyset/ViewGrammarDetail'
 import ViewVocabularyDetail from './pages/studyset/ViewVocabularyDetail'
+import OverViewSet from './pages/studyset/OverViewSet'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -102,6 +103,7 @@ const App = () => {
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
+                        <Route path="viewset" element={<OverViewSet/>} />
                         {/* Class */}
                         <Route path="class/:id" element={<MainClass />} />
                         {/* Feedback */}
@@ -178,6 +180,7 @@ const App = () => {
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail/>} />
                 <Route path="/viewdetailgrammar" element={<ViewGrammarDetail />} />
                 <Route path="/viewdetailvocab" element={<ViewVocabularyDetail />} />
+                <Route path="/viewset" element={<OverViewSet/>} />
             </Routes>
         </BrowserRouter>
     )

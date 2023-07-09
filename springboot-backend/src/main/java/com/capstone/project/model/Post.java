@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,4 +30,8 @@ public class Post {
     private Class classroom;
 
     private String content;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_date;
 }

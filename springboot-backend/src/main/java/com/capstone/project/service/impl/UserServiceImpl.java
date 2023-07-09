@@ -52,6 +52,10 @@ public class UserServiceImpl implements UserService {
         user.setToken(uniqueToken);
         user.setStatus("pending");
 
+        // new
+        user.setCreated_date(new Date());
+        // end of new
+
         return userRepository.save(user);
     }
 
