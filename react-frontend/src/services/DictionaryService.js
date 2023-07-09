@@ -14,6 +14,10 @@ const getKanji = (page, size, search) => {
     )
 }
 
+const getKanjivg = (char) => {
+    return axios.get(API_BASE_URL + '/kanjivg/' + char)
+}
+
 const getVocabulary = (page, size, search) => {
     return axios.get(
         API_BASE_URL +
@@ -29,5 +33,6 @@ const getVocabulary = (page, size, search) => {
 const DictionaryService = {
     getKanji,
     getVocabulary,
+    getKanjivg,
 }
 export default DictionaryService

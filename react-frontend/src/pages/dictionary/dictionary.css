@@ -6,6 +6,79 @@
     margin-top: 0.5rem;
 }
 
-.item-word {
-    border-radius: 0;
+.dictResultWordList {
+    background-color: #fff;
+}
+
+.dictResultWord {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0.625rem 1.25rem;
+    font-weight: 400;
+    border-bottom: solid 1px #f7f7f7;
+    font-size: 1rem;
+}
+
+.dictResultWord.active {
+    background-color: #2bb3ff;
+    color: white;
+}
+
+.dictResultWord:hover {
+    background-color: #5dc4fd;
+    color: white;
+}
+
+.word {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wordSense {
+    font-style: normal;
+    font-size: 0.875rem;
+    padding-top: 0.1875rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.25;
+}
+
+.word-detail {
+    background-color: white;
+    padding: 0.625rem 1.25rem;
+}
+
+.word-detail-overview {
+    font-size: 1.875rem;
+    font-weight: 500;
+}
+
+.txtFurigana {
+    color: #888;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+
+.word-type {
+    font-size: 0.875rem;
+    margin: 5px 0;
+    background-color: #f1f1f1;
+    display: inline-block;
+    padding: 3px 10px;
+}
+
+.word-meaning {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-left: 2rem;
+    margin-bottom: 10px;
+}
+
+.wordExampleJa {
+    color: #d22f0f;
 }
