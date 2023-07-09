@@ -3,6 +3,7 @@ package com.capstone.project.service.impl;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
+import com.capstone.project.repository.AttachmentRepository;
 import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.repository.PostRepository;
 import com.capstone.project.service.ClassService;
@@ -14,6 +15,7 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +27,15 @@ public class PostServiceImpl implements PostService {
     private EntityManager em;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final AttachmentRepository attachmentRepository;
     private final UserService userService;
     private final ClassService classService;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, UserService userService, ClassService classService) {
+    public PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
+        this.attachmentRepository = attachmentRepository;
         this.userService = userService;
         this.classService = classService;
     }
@@ -55,8 +59,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(Post post) {
-        return postRepository.save(post);
+    public Post createPost(Post post, List<String> files, int type) {
+        post.setCreated_date(new Date());
+
+        Post savedPost = postRepository.save(post);
+
+        if (files != null && !files.isEmpty() && type != 0) {
+            for (String file : files) {
+                Attachment attachment = new Attachment();
+                AttachmentType attachmentType = new AttachmentType();
+                attachmentType.setId(type);
+                attachment.setFile(file);
+                attachment.setAttachmentType(attachmentType);
+                attachment.setPost(savedPost);
+
+                // Lưu đính kèm (Attachment)
+                Attachment savedAttachment = attachmentRepository.save(attachment);
+
+                // Cập nhật lại post_id trong đính kèm (Attachment)
+                savedAttachment.setPost(savedPost);
+                attachmentRepository.save(savedAttachment);
+            }
+        }
+        return savedPost;
     }
 
     @Override
@@ -73,6 +98,9 @@ public class PostServiceImpl implements PostService {
                     .orElseThrow(() -> new ResourceNotFroundException("Post not exist with id: " + id));
         for(Comment comment : commentRepository.getCommentByPostId(post.getId())){
             commentRepository.delete(comment);
+        }
+        for(Attachment attachment : attachmentRepository.getAttachmentByPostId(post.getId())){
+            attachmentRepository.delete(attachment);
         }
         postRepository.delete(post);
         return true;

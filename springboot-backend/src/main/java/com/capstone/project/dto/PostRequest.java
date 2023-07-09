@@ -18,9 +18,9 @@ public class PostRequest {
     private User user;
     private Class classroom;
 
-    @NotBlank(message = "Post cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s.,@!?&:;\\[\\]()\\-]+", message = "Post can only contain letters, numbers, and spaces")
-    @Length(min = 3, message = "Post must have at least 3 characters")
+   @NotBlank(message = "Post cannot be empty")
+//    @Pattern(regexp = "[a-zA-Z0-9\\s.,@!?&:;\\[\\]()\\-]+", message = "Post can only contain letters, numbers, and spaces")
+   @Length(min = 1, message = "Post must have at least 1 characters")
     private String content;
 
     public String getContent() {

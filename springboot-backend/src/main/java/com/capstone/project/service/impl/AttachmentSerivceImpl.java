@@ -34,6 +34,11 @@ public class AttachmentSerivceImpl implements AttachmentService {
         return attachmentRepository.getAttachmentByAssignmentId(id);
     }
 
+    @Override
+    public List<Attachment> getAllAttachmentByPostId(int id) {
+        return attachmentRepository.getAttachmentByPostId(id);
+    }
+
 
     @Override
     public Attachment createAttachment(Attachment attachment) {
