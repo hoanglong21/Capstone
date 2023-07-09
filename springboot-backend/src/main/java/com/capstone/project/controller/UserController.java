@@ -60,6 +60,8 @@ public class UserController {
                 return ResponseEntity.ok(userService.updateUser(username, userDetails));
             } catch (ResourceNotFroundException e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
+            } catch (DuplicateValueException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
     }
@@ -193,10 +195,10 @@ public class UserController {
                                         @RequestParam(value = "email", required = false, defaultValue = "") String email,
                                         @RequestParam(value = "gender", required = false, defaultValue = "") String gender,
                                         @RequestParam(value = "phone", required = false, defaultValue = "") String phone,
-                                        @RequestParam(value = "role", required = false, defaultValue = "") String role,
+                                        @RequestParam(value = "role", required = false, defaultValue = "") String[] role,
                                         @RequestParam(value = "address", required = false, defaultValue = "") String address,
                                         @RequestParam(value = "bio", required = false, defaultValue = "") String bio,
-                                        @RequestParam(value = "status", required = false, defaultValue = "") String status,
+                                        @RequestParam(value = "status", required = false, defaultValue = "") String[] status,
                                         @RequestParam(value = "fromdob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDob,
                                         @RequestParam(value = "todob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDob,
                                         @RequestParam(value = "frombanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromBanned,

@@ -52,6 +52,10 @@ public class UserServiceImpl implements UserService {
         user.setToken(uniqueToken);
         user.setStatus("pending");
 
+        // new
+        user.setCreated_date(new Date());
+        // end of new
+
         return userRepository.save(user);
     }
 
@@ -75,7 +79,8 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
         }
-        if (userDetails.getPhone() != user.getPhone() && userRepository.existsByPhone(userDetails.getPhone())) {
+        
+        if (!userDetails.getPhone().equals(user.getPhone()) && userRepository.existsByPhone(userDetails.getPhone())) {
             throw new DuplicateValueException("Phone already registered");
         }
 
@@ -330,7 +335,7 @@ public class UserServiceImpl implements UserService {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public Map<String, Object> filterUser(String name, String username, String email,  String gender, String phone, String role, String address, String bio, String status,
+    public Map<String, Object> filterUser(String name, String username, String email,  String gender, String phone, String[] role, String address, String bio, String[] status,
                                  String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, int page, int size) {
         String sql = "SELECT * FROM user WHERE 1=1";
         List<Object> params = new ArrayList<>();
@@ -358,9 +363,16 @@ public class UserServiceImpl implements UserService {
             sql += " AND phone LIKE ?";
             params.add("%" + phone + "%");
         }
-        if (role != null && !role.equals("")) {
-            sql += " AND role LIKE ?";
-            params.add("%" + role + "%");
+        if (role != null && role.length > 0) {
+            sql += " AND (";
+            for (int i = 0; i < role.length; i++) {
+                sql += "role LIKE ?";
+                params.add("%" + role[i] + "%");
+                if (i != role.length - 1) {
+                    sql += " OR ";
+                }
+            }
+            sql += ")";
         }
         if (address != null && !address.equals("")) {
             sql += " AND address LIKE ?";
@@ -370,9 +382,16 @@ public class UserServiceImpl implements UserService {
             sql += " AND bio LIKE ?";
             params.add("%" + bio + "%");
         }
-        if (status != null && !status.equals("")) {
-            sql += " AND status LIKE ?";
-            params.add("%" + status + "%");
+        if (status != null && status.length > 0) {
+            sql += " AND (";
+            for (int i = 0; i < status.length; i++) {
+                sql += "status LIKE ?";
+                params.add("%" + status[i] + "%");
+                if (i != status.length - 1) {
+                    sql += " OR ";
+                }
+            }
+            sql += ")";
         }
         if (fromDob != null && !fromDob.equals("")) {
             sql += " AND dob >= ?";
