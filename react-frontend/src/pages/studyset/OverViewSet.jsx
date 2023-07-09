@@ -12,6 +12,7 @@ function OverViewSet() {
         <nav className="navbar navbar-expand-sm bg-light justify-content-center">
           <ul class="StudyModesNavSectionList">
             <li class="StudyModesNavItem">
+            <i class="bi bi-union text-info fs-2"></i>
               <a
                 class="StudyModesNavItemName"
                 href="/flashcard"
@@ -20,6 +21,7 @@ function OverViewSet() {
               </a>
             </li>
             <li class="StudyModesNavItem">
+            <i class="bi bi-files text-warning fs-2"></i>
             <a
                 class="StudyModesNavItemName"
                 href="/learn"
@@ -28,9 +30,10 @@ function OverViewSet() {
               </a>
             </li>
             <li class="StudyModesNavItem">
+            <i class="bi bi-file-text-fill text-danger fs-2"></i>
             <a
                 class="StudyModesNavItemName"
-                href="/flashcard"
+                href="/test"
               >
                 Test
               </a>
