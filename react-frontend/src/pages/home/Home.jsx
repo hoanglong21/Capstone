@@ -1,7 +1,7 @@
-import React from 'react'
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
-import '../../assets/styles/Home.css'
+
 import banner from '../../assets/images/home.jpg'
+import '../../assets/styles/Home.css'
 
 function Home() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -23,7 +23,7 @@ function Home() {
                                     <input
                                         className="form-control mr-sm-2"
                                         type="search"
-                                        placeholder="Study set, Class"
+                                        placeholder="Study set, Class, User"
                                         aria-label="Search"
                                         value={search || ''}
                                         onChange={(event) =>
@@ -34,8 +34,10 @@ function Home() {
                                     />
                                     <button
                                         className="btn btn-primary my-2 my-sm-0"
-                                        type="submit"
                                         style={{ marginLeft: '1rem' }}
+                                        onClick={(event) => {
+                                            event.preventDefault()
+                                        }}
                                     >
                                         Search
                                     </button>

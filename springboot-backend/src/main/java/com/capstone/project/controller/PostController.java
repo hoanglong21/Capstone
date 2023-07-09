@@ -29,7 +29,7 @@ public class PostController {
     private ModelMapper modelMapper;
 
     private final PostService postService;
-@Autowired
+    @Autowired
     public PostController(PostService postService) {
         this.postService = postService;
     }
