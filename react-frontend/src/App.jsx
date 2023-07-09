@@ -31,7 +31,6 @@ import AccountDeleted from './pages/settings/AccountDeleted'
 import Translate from './pages/translate/Translate'
 import DictionaryLayout from './pages/dictionary/DictionaryLayout'
 import Home from '../src/pages/home/Home'
-import UpdatePost from './pages/UpdatePost'
 import ClassesForHome from './pages/home/ClassesForHome'
 import SetsForHome from './pages/home/SetsForHome'
 import AuthLayout from './pages/auth/AuthLayout'
@@ -54,6 +53,10 @@ import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
 import GrammarDict from './pages/dictionary/GrammarDict'
 import KanjiDict from './pages/dictionary/KanjiDict'
+import KanjiCard from './pages/studyset/create/KanjiCard'
+import ViewKanjiDetail from './pages/studyset/ViewKanjiDetail'
+import ViewGrammarDetail from './pages/studyset/ViewGrammarDetail'
+import ViewVocabularyDetail from './pages/studyset/ViewVocabularyDetail'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -152,7 +155,6 @@ const App = () => {
                 </Route>
 
                 <Route path="/flashcard" element={<Flashcard />} />
-                <Route path="/updatepost" element={<UpdatePost />} />
                 <Route path="/banuser" element={<BanUser />} />
                 <Route path="/unbanuser" element={<UnBanUser />} />
                 <Route path="/manageusers" element={<ManageUser />} />
@@ -172,7 +174,10 @@ const App = () => {
                     path="/managefeedback/viewdetailfb"
                     element={<ViewDetailFeedback />}
                 />
-                <Route path="/chatbox" element={<Chat />} />
+                <Route path="/chatbox" element={<Chat/>} />
+                <Route path="/viewdetailkanji" element={<ViewKanjiDetail/>} />
+                <Route path="/viewdetailgrammar" element={<ViewGrammarDetail />} />
+                <Route path="/viewdetailvocab" element={<ViewVocabularyDetail />} />
             </Routes>
         </BrowserRouter>
     )

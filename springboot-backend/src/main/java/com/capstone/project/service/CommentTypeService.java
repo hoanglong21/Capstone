@@ -6,6 +6,4 @@ import com.capstone.project.model.StudySetType;
 
 public interface CommentTypeService {
     CommentType getCommentTypeById(int id);
-
-    CommentType getCommentTypeByName (String name) throws ResourceNotFroundException;
 }

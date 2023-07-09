@@ -2,7 +2,11 @@ import React from 'react'
 
 function DoQuiz() {
   return (
-    <div>DoQuiz</div>
+    <div>
+      <div class="modal-dialog modal-lg">
+        
+      </div>
+    </div>
   )
 }
 

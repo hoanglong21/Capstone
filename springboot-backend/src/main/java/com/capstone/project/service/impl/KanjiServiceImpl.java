@@ -68,11 +68,15 @@ public class KanjiServiceImpl implements KanjiService {
                     NodeList radicalsList = character.getElementsByTagName("radical");
                     NodeList readingsList = character.getElementsByTagName("reading");
                     NodeList meaningsList = character.getElementsByTagName("meaning");
+                    // Add nanori
+                    NodeList relatesList = character.getElementsByTagName("nanori");
+                    // End of add nanori
                     List<String> radicals = new ArrayList<>();
                     List<String> readingVietnam = new ArrayList<>();
                     List<String> readingJapaneseOn = new ArrayList<>();
                     List<String> readingJapaneseKun = new ArrayList<>();
                     List<String> meanings = new ArrayList<>();
+                    List<String> relates = new ArrayList<>();
 //                    List<String> meaningsVietnamese = new ArrayList<>();
                     for (int j = 0; j < radicalsList.getLength(); j++) {
                         String radical = radicalsList.item(j).getTextContent();
@@ -99,11 +103,16 @@ public class KanjiServiceImpl implements KanjiService {
 //                            meaningsVietnamese.add(translateService.translate(meaningsList.item(j).getTextContent(), "vi"));
                         }
                     }
+                    for (int j = 0; j < relatesList.getLength(); j++) {
+                        relates.add(relatesList.item(j).getTextContent());
+                    }
+
                     kanji.setRadicals(radicals);
                     kanji.setReadingVietnam(readingVietnam);
                     kanji.setReadingJapaneseOn(readingJapaneseOn);
                     kanji.setReadingJapaneseKun(readingJapaneseKun);
                     kanji.setMeanings(meanings);
+                    kanji.setRelates(relates);
 //                    kanji.setMeaningsVietnamese(meaningsVietnamese);
                 }
                 kanjiList.add(kanji);
