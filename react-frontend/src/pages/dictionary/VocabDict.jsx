@@ -18,7 +18,8 @@ const VocabDict = () => {
             await DictionaryService.getVocabulary(
                 '=1',
                 '=10',
-                `${searchKey ? '=' + searchKey : ''}`
+                `${searchKey ? '=' + searchKey : ''}`,
+                ''
             )
         ).data.list
         setVocabs(temp)

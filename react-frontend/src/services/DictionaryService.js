@@ -30,9 +30,24 @@ const getVocabulary = (page, size, search) => {
     )
 }
 
+const getGrammar = (page, size, search, level) => {
+    return axios.get(
+        API_BASE_URL +
+            '/grammar?page' +
+            page +
+            '&size' +
+            size +
+            '&search' +
+            search +
+            '&level' +
+            level
+    )
+}
+
 const DictionaryService = {
     getKanji,
     getVocabulary,
     getKanjivg,
+    getGrammar,
 }
 export default DictionaryService
