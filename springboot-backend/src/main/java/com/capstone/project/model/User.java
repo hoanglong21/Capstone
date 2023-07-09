@@ -68,4 +68,8 @@ public class User {
     private String token; // for verify
 
     private String pin; // for reset password
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_date;
 }

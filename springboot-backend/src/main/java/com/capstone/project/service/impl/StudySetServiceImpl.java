@@ -51,6 +51,9 @@ public class StudySetServiceImpl implements StudySetService {
 
     @Override
     public StudySet createStudySet(StudySet studySet) {
+        // new
+        studySet.setCreated_date(new Date());
+        // end of new
         return studySetRepository.save(studySet);
     }
 

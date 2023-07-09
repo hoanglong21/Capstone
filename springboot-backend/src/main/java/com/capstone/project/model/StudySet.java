@@ -68,5 +68,7 @@ public class StudySet {
     @Temporal(TemporalType.DATE)
     private Date deleted_date;
 
-
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created_date;
 }
