@@ -10,26 +10,33 @@ function OverViewSet() {
       <div className="studySet__preview">
         <h3>Self-study activity</h3>
         <nav className="navbar navbar-expand-sm bg-light justify-content-center">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Flashcard
+          <ul class="StudyModesNavSectionList">
+            <li class="StudyModesNavItem">
+              <a
+                class="StudyModesNavItemName"
+                href="/flashcard"
+              >
+                Flashcards
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
+            <li class="StudyModesNavItem">
+            <a
+                class="StudyModesNavItemName"
+                href="/learn"
+              >
                 Learn
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
+            <li class="StudyModesNavItem">
+            <a
+                class="StudyModesNavItemName"
+                href="/flashcard"
+              >
                 Test
               </a>
             </li>
           </ul>
         </nav>
-
-        
       </div>
     </div>
   );
