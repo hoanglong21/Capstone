@@ -1,11 +1,11 @@
 .containerTest {
-    width: 60vw;
+    width: 70vw;
     background: white;
     color: #000;
     margin: 20px auto;
     overflow: auto;
     padding: 2.6rem;
-    border: 2px solid #B2967D;
+    border: 2px solid #EDEFF4;
   }
 
   .submitTest{
@@ -28,7 +28,10 @@
     margin: 10px 0;
     color: #000;
   }
-
-  .answerTest{
+  .testForm > input{
     margin-right: 1rem;
+  }
+
+  .testForm h5{
+    margin-top: 1rem;
   }
