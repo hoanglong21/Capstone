@@ -56,6 +56,7 @@ import ViewKanjiDetail from './pages/studyset/ViewKanjiDetail'
 import ViewGrammarDetail from './pages/studyset/ViewGrammarDetail'
 import ViewVocabularyDetail from './pages/studyset/ViewVocabularyDetail'
 import OverViewSet from './pages/studyset/OverViewSet'
+import ViewTest from './pages/ViewTest'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -121,6 +122,8 @@ const App = () => {
                             element={<VideoChatContainer />}
                         />
                     </Route>
+                    {/* Test */}
+                    <Route path="/viewtest" element={<ViewTest />} />
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}
@@ -175,7 +178,7 @@ const App = () => {
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail/>} />
                 <Route path="/viewdetailgrammar" element={<ViewGrammarDetail />} />
                 <Route path="/viewdetailvocab" element={<ViewVocabularyDetail />} />
-                <Route path="/viewset" element={<OverViewSet/>} />
+                
             </Routes>
         </BrowserRouter>
     )
