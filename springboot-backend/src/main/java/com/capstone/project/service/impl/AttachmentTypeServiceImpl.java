@@ -6,6 +6,8 @@ import com.capstone.project.repository.AttachmentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AttachmentTypeServiceImpl implements com.capstone.project.service.AttachmentTypeService {
 
@@ -27,4 +29,9 @@ public class AttachmentTypeServiceImpl implements com.capstone.project.service.A
         }
         return attachmentType;
     }
+
+    @Override
+    public List<AttachmentType> getAllType() {
+        return attachmentTypeRepository.findAll();
     }
+}

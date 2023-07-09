@@ -10,6 +10,7 @@ public interface AttachmentService {
     List<Attachment> getAllAttachment();
     List<Attachment> getAllAttachmentBySubmissionId(int id);
     List<Attachment> getAllAttachmentByAssignmentId(int id);
+    List<Attachment> getAllAttachmentByPostId(int id);
 
     Attachment createAttachment( Attachment attachment);
 

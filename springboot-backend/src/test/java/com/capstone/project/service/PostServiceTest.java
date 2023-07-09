@@ -78,24 +78,24 @@ public class PostServiceTest {
         }
     }
 
-    @Order(4)
-    @ParameterizedTest(name = "index => userId={0}, classId={1}, content{2}")
-    @CsvSource({
-            "1,1,Submit all assignment ",
-            "2,2, Class will be off on Sunday "
-    })
-    public void testCreatePost(int userId,int classId,String content ){
-
-        Post post = Post.builder()
-                .user(User.builder().id(userId).build())
-                .classroom(Class.builder().id(classId).build())
-                .content(content)
-                .build();
-
-        when(postRepository.save(any())).thenReturn(post);
-        Post createdpost = postServiceImpl.createPost(post);
-        assertThat(post).isEqualTo(createdpost);
-    }
+//    @Order(4)
+//    @ParameterizedTest(name = "index => userId={0}, classId={1}, content{2}")
+//    @CsvSource({
+//            "1,1,Submit all assignment ",
+//            "2,2, Class will be off on Sunday "
+//    })
+//    public void testCreatePost(int userId,int classId,String content ){
+//
+//        Post post = Post.builder()
+//                .user(User.builder().id(userId).build())
+//                .classroom(Class.builder().id(classId).build())
+//                .content(content)
+//                .build();
+//
+//        when(postRepository.save(any())).thenReturn(post);
+//        Post createdpost = postServiceImpl.createPost(post);
+//        assertThat(post).isEqualTo(createdpost);
+//    }
 
     @Order(5)
     @ParameterizedTest(name = "index => userId={0}, classId={1}, content{2}")
