@@ -12,11 +12,11 @@ public interface AssignmentService {
     List<Assignment> getAllAssignment();
     List<Assignment> getAllAssignmentByClassId(int id);
 
-    Assignment createAssignment(Assignment assignment) ;
+    Assignment createAssignment(Assignment assignment, List<String> file, int type);
 
-    Assignment getAssignmentById ( int id) throws ResourceNotFroundException;
+    Assignment getAssignmentById (int id) throws ResourceNotFroundException;
 
-    Assignment updateAssignment( int id, Assignment assignment) throws ResourceNotFroundException;
+    Assignment updateAssignment(int id, Assignment assignment, List<String> files, int type) throws ResourceNotFroundException;
 
     Boolean deleteAssignment(int id) throws ResourceNotFroundException;
 

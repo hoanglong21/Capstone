@@ -56,7 +56,8 @@ public class AssignmentController {
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/assignments")
-    public ResponseEntity<?> createAssignment(@Valid @RequestBody AssignmentRequest assignmentRequest, BindingResult result){
+    public ResponseEntity<?> createAssignment(@Valid @RequestBody AssignmentRequest assignmentRequest, BindingResult result,@RequestParam(value = "filename", required = false) List<String> files,
+                                              @RequestParam(value = "type", required = false) Optional<Integer> type){
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -66,7 +67,7 @@ public class AssignmentController {
         } else {
                Assignment assignment = modelMapper.map(assignmentRequest,Assignment.class);
             try {
-                return ResponseEntity.ok(assignmentService.createAssignment(assignment));
+                return ResponseEntity.ok(assignmentService.createAssignment(assignment,files,type.orElse(0)));
             } catch (Exception e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
@@ -77,7 +78,8 @@ public class AssignmentController {
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PutMapping ("/assignments/{id}")
-    public ResponseEntity<?> updateAssignment(@PathVariable int id, @Valid @RequestBody AssignmentRequest assignmentRequest,BindingResult result){
+    public ResponseEntity<?> updateAssignment(@PathVariable int id, @Valid @RequestBody AssignmentRequest assignmentRequest,@RequestParam(value = "filename", required = false) List<String> files,
+                                              @RequestParam(value = "type", required = false) Optional<Integer> type,BindingResult result){
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -87,7 +89,7 @@ public class AssignmentController {
         } else {
             Assignment assignment = modelMapper.map(assignmentRequest,Assignment.class);
             try {
-                return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment));
+                return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment,files,type.orElse(0)));
             } catch (ResourceNotFroundException e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }

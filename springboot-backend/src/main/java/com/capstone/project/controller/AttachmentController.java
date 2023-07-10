@@ -38,14 +38,20 @@ public class AttachmentController {
         return ResponseEntity.ok( attachmentService.getAllAttachment());
     }
     @GetMapping("/attachmentsbysubmissionid/{id}")
-    public ResponseEntity<?> getAllAttachmentsBySubmissionId(@PathVariable int id) {
+    public ResponseEntity<?> getAttachmentsBySubmissionId(@PathVariable int id) {
        return ResponseEntity.ok( attachmentService.getAllAttachmentBySubmissionId(id));
     }
 
     @GetMapping("/attachmentsbyassignmentid/{id}")
-    public ResponseEntity<?> getAllAttachmentsByAssignmentId(@PathVariable int id) {
+    public ResponseEntity<?> getAttachmentsByAssignmentId(@PathVariable int id) {
         return ResponseEntity.ok( attachmentService.getAllAttachmentByAssignmentId(id));
     }
+
+    @GetMapping("/attachmentsbypostid/{id}")
+    public ResponseEntity<?> getAttachmentsByPostId(@PathVariable int id) {
+        return ResponseEntity.ok( attachmentService.getAllAttachmentByPostId(id));
+    }
+
     @GetMapping("/attachments/{id}")
     public ResponseEntity<?> getAttachmentById(@PathVariable int id) {
         try {

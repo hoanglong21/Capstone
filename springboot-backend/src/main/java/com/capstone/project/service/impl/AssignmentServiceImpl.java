@@ -54,9 +54,27 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment createAssignment(Assignment assignment) {
+    public Assignment createAssignment(Assignment assignment, List<String> files, int type) {
         assignment.setCreated_date(new Date());
-        return assignmentRepository.save(assignment);
+
+        Assignment savedAssignment = assignmentRepository.save(assignment);
+
+        if (files != null && !files.isEmpty() && type != 0) {
+            for (String file : files) {
+                Attachment attachment = new Attachment();
+                attachment.setFile(file);
+
+                AttachmentType attachmentType = new AttachmentType();
+                attachmentType.setId(type);
+
+                attachment.setAttachmentType(attachmentType);
+                attachment.setAssignment(savedAssignment);
+
+                attachmentRepository.save(attachment);
+            }
+        }
+
+        return savedAssignment;
     }
 
     @Override
@@ -67,14 +85,30 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment updateAssignment(int id, Assignment assignment) throws ResourceNotFroundException {
-        Assignment assignmentclass = assignmentRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Assignment not exist with id:" + id));
-        assignmentclass.setDescription(assignment.getDescription());
-        assignmentclass.setDue_date(assignment.getDue_date());
-        assignmentclass.setModified_date(new Date());
-        assignmentclass.setTitle(assignment.getTitle());
-        return assignmentRepository.save(assignmentclass);
+    public Assignment updateAssignment(int id, Assignment assignment,List<String> files, int type) throws ResourceNotFroundException {
+        Assignment existingAssignment = assignmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Assignment does not exist with id: " + id));
+
+        existingAssignment.setDescription(assignment.getDescription());
+        existingAssignment.setDue_date(assignment.getDue_date());
+        existingAssignment.setModified_date(new Date());
+        existingAssignment.setTitle(assignment.getTitle());
+
+        if (files != null && !files.isEmpty()) {
+            for (String file : files) {
+                Attachment attachment = new Attachment();
+                attachment.setFile(file);
+
+                AttachmentType attachmentType = new AttachmentType();
+                attachmentType.setId(type);
+
+                attachment.setAttachmentType(attachmentType);
+                attachment.setAssignment(existingAssignment);
+
+                attachmentRepository.save(attachment);
+            }
+        }
+        return assignmentRepository.save(existingAssignment);
     }
 
     @Override
