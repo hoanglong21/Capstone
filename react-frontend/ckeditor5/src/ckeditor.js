@@ -4,7 +4,6 @@
  */
 import InlineEditor from '@ckeditor/ckeditor5-editor-inline/src/inlineeditor.js';
 import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment.js';
-import AutoImage from '@ckeditor/ckeditor5-image/src/autoimage.js';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat.js';
 import AutoLink from '@ckeditor/ckeditor5-link/src/autolink.js';
 import Autosave from '@ckeditor/ckeditor5-autosave/src/autosave.js';
@@ -42,7 +41,6 @@ import Link from '@ckeditor/ckeditor5-link/src/link.js';
 import LinkImage from '@ckeditor/ckeditor5-link/src/linkimage.js';
 import List from '@ckeditor/ckeditor5-list/src/list.js';
 import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js';
-import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown.js';
 import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed.js';
 import MediaEmbedToolbar from '@ckeditor/ckeditor5-media-embed/src/mediaembedtoolbar.js';
 import Mention from '@ckeditor/ckeditor5-mention/src/mention.js';
@@ -56,6 +54,7 @@ import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting.
 import SpecialCharacters from '@ckeditor/ckeditor5-special-characters/src/specialcharacters.js';
 import SpecialCharactersArrows from '@ckeditor/ckeditor5-special-characters/src/specialcharactersarrows.js';
 import SpecialCharactersCurrency from '@ckeditor/ckeditor5-special-characters/src/specialcharacterscurrency.js';
+import SpecialCharactersEssentials from '@ckeditor/ckeditor5-special-characters/src/specialcharactersessentials.js';
 import SpecialCharactersLatin from '@ckeditor/ckeditor5-special-characters/src/specialcharacterslatin.js';
 import SpecialCharactersMathematical from '@ckeditor/ckeditor5-special-characters/src/specialcharactersmathematical.js';
 import SpecialCharactersText from '@ckeditor/ckeditor5-special-characters/src/specialcharacterstext.js';
@@ -81,7 +80,6 @@ class Editor extends InlineEditor {}
 // Plugins to include in the build.
 Editor.builtinPlugins = [
 	Alignment,
-	AutoImage,
 	Autoformat,
 	AutoLink,
 	Autosave,
@@ -119,7 +117,6 @@ Editor.builtinPlugins = [
 	LinkImage,
 	List,
 	ListProperties,
-	Markdown,
 	MediaEmbed,
 	MediaEmbedToolbar,
 	Mention,
@@ -133,6 +130,7 @@ Editor.builtinPlugins = [
 	SpecialCharacters,
 	SpecialCharactersArrows,
 	SpecialCharactersCurrency,
+	SpecialCharactersEssentials,
 	SpecialCharactersLatin,
 	SpecialCharactersMathematical,
 	SpecialCharactersText,
@@ -169,45 +167,44 @@ Editor.defaultConfig = {
 			'subscript',
 			'superscript',
 			'|',
-			'fontFamily',
 			'fontSize',
-			'fontBackgroundColor',
+			'fontFamily',
 			'fontColor',
-			'highlight',
-			'|',
-			'removeFormat',
-			'selectAll',
-			'findAndReplace',
-			'|',
-			'bulletedList',
-			'numberedList',
-			'todoList',
+			'fontBackgroundColor',
 			'|',
 			'alignment',
+			'bulletedList',
+			'numberedList',
 			'outdent',
 			'indent',
 			'|',
-			'link',
 			'specialCharacters',
-			'imageUpload',
+			'horizontalLine',
+			'highlight',
+			'|',
+			'selectAll',
+			'removeFormat',
+			'findAndReplace',
+			'pageBreak',
+			'|',
+			'code',
+			'codeBlock',
+			'showBlocks',
+			'htmlEmbed',
+			'sourceEditing',
+			'|',
+			'link',
 			'imageInsert',
+			'imageUpload',
 			'blockQuote',
 			'insertTable',
 			'mediaEmbed',
 			'|',
-			'horizontalLine',
-			'code',
-			'codeBlock',
-			'|',
-			'showBlocks',
-			'sourceEditing',
-			'htmlEmbed',
+			'restrictedEditingException',
+			'todoList',
 			'|',
 			'undo',
-			'redo',
-			'|',
-			'pageBreak',
-			'restrictedEditingException'
+			'redo'
 		]
 	},
 	language: 'en',

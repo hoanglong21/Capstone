@@ -8,6 +8,7 @@ import Toast from 'react-bootstrap/Toast'
 
 import ClassService from '../../../services/ClassService'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import PostService from '../../../services/PostService'
 
 import Post from '../post/Post'
 import UpdateClass from '../UpdateClass'
@@ -24,9 +25,7 @@ import {
     ResetIcon,
     UploadIcon,
 } from '../../../components/icons'
-import defaultAvatar from '../../../assets/images/default_avatar.png'
 import './MainClass.css'
-import PostService from '../../../services/PostService'
 
 const MainClass = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -42,7 +41,6 @@ const MainClass = () => {
     const [loadingAddPost, setLoadingAddPost] = useState(false)
 
     const [showInput, setShowInput] = useState(false)
-    const [image, setImage] = useState(null)
     const [showResetMess, setShowResetMess] = useState(false)
 
     // fetch data
@@ -86,12 +84,6 @@ const MainClass = () => {
         })
     }, [])
 
-    const handleChange = (e) => {
-        if (e.target.files[0]) {
-            setImage(e.target.files[0])
-        }
-    }
-
     const handleCopyCode = (event) => {
         navigator.clipboard.writeText(classroom.classcode)
     }
@@ -125,7 +117,19 @@ const MainClass = () => {
     const handleAddPost = async () => {
         setLoadingAddPost(true)
         try {
-            await PostService.createPost(addPost)
+            var temp = ''
+            uploadFiles.forEach((uploadFile) => (temp += uploadFile.url + ','))
+            const filename = temp.substring(0, temp.length - 2)
+            const tempPost = (
+                await PostService.createPost(
+                    addPost,
+                    `${filename ? `=${filename}` : ''}`,
+                    3
+                )
+            ).data
+            setAddPost({})
+            setUploadFiles([])
+            setPosts([...posts, tempPost])
             setShowInput(false)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -138,7 +142,7 @@ const MainClass = () => {
     }
 
     const handleCancelAddPost = () => {
-        uploadFiles.map((file) => {
+        uploadFiles.forEach((file) => {
             deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
         })
         setUploadFiles([])

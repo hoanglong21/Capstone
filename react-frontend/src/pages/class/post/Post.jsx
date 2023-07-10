@@ -40,6 +40,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
         }
         setLoadingUpdatePost(false)
     }
+    
     const handleUploadFile = async (event) => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
@@ -90,7 +91,11 @@ const Post = ({ post, stateChanger, posts, index }) => {
                     <div className="d-flex align-items-center">
                         <div className="postAuthorImg">
                             <img
-                                src={post.user.avatar}
+                                src={
+                                    post.user.avatar
+                                        ? post.user.avatar
+                                        : defaultAvatar
+                                }
                                 className="w-100 h-100"
                                 alt=""
                             />
