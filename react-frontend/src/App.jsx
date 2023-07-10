@@ -58,11 +58,12 @@ import ViewGrammarDetail from "./pages/studyset/view/ViewGrammarDetail";
 import ViewVocabularyDetail from "./pages/studyset/view/ViewVocabularyDetail";
 import ViewTest from "./pages/class/test/ViewTestForLearner";
 import DoTest from "./pages/class/test/DoTest";
-import ViewAssignment from "./pages/class/assignment/ViewAssignment";
+import ViewAssignment from "./pages/class/assignment/ViewAssignmentForLearner";
 import ManageTest from "./pages/class/test/ManageTest";
 import ViewDetailTest from "./pages/class/test/ViewDetailTest";
 import CreateTest from "./pages/class/test/CreateTest";
 import ViewSet from "./pages/studyset/view/ViewSet";
+import ManageAssignment from "./pages/class/assignment/ManageAssignment";
 
 const App = () => {
   const { userToken } = useSelector((state) => state.auth);
@@ -107,6 +108,7 @@ const App = () => {
             <Route path="/createtest" element={<CreateTest />} />
             {/* Assignment */}
             <Route path="/viewassignment" element={<ViewAssignment />} />
+            <Route path="/manageassignment" element={<ManageAssignment />} />
             {/* Feedback */}
             <Route
               path="help-center/send-feedback"
@@ -120,12 +122,6 @@ const App = () => {
           </Route>
           {/* Study set */}
           <Route path="set/:id" element={<ViewSet />} />
-          {/* Test */}
-          <Route path="/viewtest" element={<ViewTest />} />
-          <Route path="/dotest" element={<DoTest />} />
-          <Route path="/managetest" element={<ManageTest />} />
-          {/* Assignment */}
-          <Route path="/viewassignment" element={<ViewAssignment />} />
           {/* Translate */}
           <Route path="translate" element={<Translate />} />
           {/* Dictionary */}
