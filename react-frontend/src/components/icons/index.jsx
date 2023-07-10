@@ -902,7 +902,7 @@ export const ArrowDownIcon = ({
     )
 }
 
-export const ArrowLeftIcon = ({
+export const ArrowLeftLongIcon = ({
     className,
     size = '1.5rem',
     strokeWidth = '1.5',
@@ -922,6 +922,100 @@ export const ArrowLeftIcon = ({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
+            />
+        </svg>
+    )
+}
+
+export const PlaySolidIcon = ({ className, size = '1.5rem' }) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width={size}
+            height={size}
+            className={className}
+        >
+            <path
+                fillRule="evenodd"
+                d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                clipRule="evenodd"
+            />
+        </svg>
+    )
+}
+
+export const ArrowLeftIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"
+            />
+        </svg>
+    )
+}
+
+export const ArrowRightIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+            />
+        </svg>
+    )
+}
+
+export const ShuffleIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"
             />
         </svg>
     )

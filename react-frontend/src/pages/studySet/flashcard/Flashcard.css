@@ -1,0 +1,158 @@
+.flashcardHeader {
+    background: #fff;
+    height: 4rem;
+    padding: 0 1.5rem;
+}
+
+.flashcardModeIcon {
+    color: #4255ff;
+}
+
+.flashcardMode {
+    min-height: 4rem;
+    cursor: pointer;
+    transition: all 0.12s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+.flashcardMode button {
+    color: #586380;
+    font-size: 1rem;
+    letter-spacing: normal;
+    line-height: 1.5;
+    font-weight: 600;
+}
+
+.flashcardMode:hover {
+    background: #f6f7fb;
+}
+
+.flashcardInfo {
+    margin: 0.75rem 0;
+}
+
+.flashcardInfo h3 {
+    font-size: 1rem;
+    letter-spacing: normal;
+    line-height: 1.5;
+    font-weight: 600;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.flashcardOptions_btn {
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    border: 0.0625rem solid #d9dde8;
+    color: #586380;
+    font-size: 0.875rem;
+    letter-spacing: normal;
+    line-height: 1.43;
+    border-radius: 0.5rem;
+    min-height: 2.5rem;
+    font-weight: 600;
+    transition: all 0.12s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+.flashcardOptions_btn:hover,
+.flashcardClose_btn:hover {
+    background: #edeff4;
+}
+
+.flashcardClose_btn {
+    padding: 0.6875rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    background: #fff;
+    color: #586380;
+    border: 0.0625rem solid #d9dde8;
+    transition: all 0.12s cubic-bezier(0.47, 0, 0.745, 0.715);
+    border-radius: 0.5rem;
+    min-height: 2.5rem;
+    font-size: 0.875rem;
+    letter-spacing: normal;
+    line-height: 1.43;
+}
+
+.flashcardMain {
+    width: 80vw;
+    margin: 1.5rem 1rem 0;
+}
+
+.flashcardContentContainer {
+    perspective: 62.5rem;
+    background-color: #fff;
+    box-shadow: 0 0.25rem 1rem 0 #2e385614;
+    border-radius: 0.5rem;
+    overflow: auto;
+    padding: 1.5rem 2rem;
+}
+
+.flashcardContentWrapper {
+    position: relative;
+    min-height: 60vh;
+    width: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.is-flipped {
+    transform: rotateY(180deg);
+}
+
+.flashcardFront,
+.flashcardBack {
+    position: absolute;
+    min-height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+}
+
+.flashcardFront {
+    font-size: 32px;
+}
+
+.flashcardFront p,
+.flashcardBack p {
+    margin: 0;
+}
+
+.flashcardBack {
+    transform: rotateY(180deg);
+}
+
+.flashcardControls {
+    margin-bottom: 1rem;
+    margin-top: 5rem;
+}
+
+.flashcardPlay_btn {
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 50%;
+    padding: 0.5rem;
+    color: #586380;
+    transition: all 0.15s;
+}
+
+.flashcardPlay_btn:hover,
+.flashCardSwitch_btn:hover {
+    background: #edeff4;
+}
+
+.flashCardSwitch_btn {
+    padding: 0.625rem;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    background: #fff;
+    color: #586380;
+    border: 0.0625rem solid #d9dde8;
+    transition: all 0.15s;
+}
+
+.flashCardSwitch_btn:disabled,
+.flashcardPlay_btn:hover:disabled {
+    color: #d9dde8;
+    cursor: default;
+    background: #fff;
+}

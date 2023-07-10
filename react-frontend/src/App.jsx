@@ -7,7 +7,7 @@ import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import Layout from './components/layouts/Layout'
 import GPTContainer from './components/Chat/GPTContainer'
-import Flashcard from './pages/studyset/Flashcard'
+import Flashcard from './pages/studySet/flashcard/Flashcard'
 import MainClass from './pages/class/mainClass/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
@@ -47,15 +47,15 @@ import ManageClass from './pages/admin/ManageClass'
 import ViewDetailClass from './pages/admin/ViewDetailClass'
 import ManageFeedback from './pages/admin/ManageFeedback'
 import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
-import CreateSet from './pages/studyset/create/CreateSet'
+import CreateSet from './pages/studySet/create/CreateSet'
 import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
 import GrammarDict from './pages/dictionary/GrammarDict'
 import KanjiDict from './pages/dictionary/KanjiDict'
-import ViewKanjiDetail from './pages/studyset/view/ViewKanjiDetail'
-import ViewGrammarDetail from './pages/studyset/view/ViewGrammarDetail'
-import ViewVocabularyDetail from './pages/studyset/view/ViewVocabularyDetail'
-import ViewSet from './pages/studyset/view/ViewSet'
+import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
+import ViewGrammarDetail from './pages/studySet/view/ViewGrammarDetail'
+import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
+import ViewSet from './pages/studySet/view/ViewSet'
 import ViewTest from './pages/class/test/ViewTest'
 import DoTest from './pages/class/test/DoTest'
 import ViewAssignment from './pages/ViewAssignment'
@@ -105,7 +105,6 @@ const App = () => {
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
-                        <Route path="flashcards/:id" element={<Flashcard />} />
                         {/* Class */}
                         <Route path="class/:id" element={<MainClass />} />
                         {/* Feedback */}
@@ -174,6 +173,10 @@ const App = () => {
                 <Route element={<AuthLayout />}>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                </Route>
+                {/* Access deny */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path="flashcards/:id" element={<Flashcard />} />
                 </Route>
 
                 <Route path="/banuser" element={<BanUser />} />

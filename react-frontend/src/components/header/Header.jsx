@@ -125,7 +125,7 @@ const Header = () => {
                             <span className="align-middle">Translate</span>
                         </NavLink>
                     </li>
-                    {userToken && (
+                    {userToken ? (
                         <li>
                             <NavLink
                                 to="/library/sets"
@@ -141,19 +141,21 @@ const Header = () => {
                                 </span>
                             </NavLink>
                         </li>
+                    ) : (
+                        <li>
+                            <NavLink
+                                to="/discovery"
+                                className={
+                                    'nav-link px-3 ' +
+                                    (({ isActive }) =>
+                                        isActive ? 'active' : '')
+                                }
+                            >
+                                <LibraryIcon className="mx-2" />
+                                <span className="align-middle">Discovery</span>
+                            </NavLink>
+                        </li>
                     )}
-                    <li>
-                        <NavLink
-                            to="/discovery"
-                            className={
-                                'nav-link px-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <LibraryIcon className="mx-2" />
-                            <span className="align-middle">Discovery</span>
-                        </NavLink>
-                    </li>
                 </ul>
 
                 <div className="d-flex align-items-center">
