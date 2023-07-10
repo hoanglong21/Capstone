@@ -18,9 +18,9 @@ public interface PostService {
 
 //    Post createPost(Post post);
 
-    Post createPost(Post post, List<String> files, int type);
+    Post createPost(Post post, List<String> file_names, int type, List<String> urls, List<String> file_types);
 
-    Post updatePost(Post posts, int id, List<String> files, int type) throws ResourceNotFroundException;
+    Post updatePost(Post posts, int id, List<String> files, int type, List<String> urls, List<String> file_types) throws ResourceNotFroundException;
 
     Boolean deletePost(int id) throws ResourceNotFroundException;
 
