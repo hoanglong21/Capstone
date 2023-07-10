@@ -8,7 +8,6 @@ import com.capstone.project.service.SubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +36,28 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 
     @Override
-    public Submission createSubmission(Submission submission){
-        submission.setCreated_date( new Date());
-        return submissionRepository.save(submission);
+    public Submission createSubmission(Submission submission,List<String> files, int type) {
+        submission.setCreated_date(new Date());
+        // Lưu submission
+        Submission savedSubmission = submissionRepository.save(submission);
+
+        if (files != null && !files.isEmpty() && type != 0) {
+            for (String file : files) {
+                if (file != null && !file.isEmpty()) {
+                    Attachment attachment = new Attachment();
+                    attachment.setFile(file);
+
+                    AttachmentType attachmentType = new AttachmentType();
+                    attachmentType.setId(type);
+
+                    attachment.setAttachmentType(attachmentType);
+                    attachment.setSubmission(savedSubmission);
+
+                    attachmentRepository.save(attachment);
+                }
+            }
+        }
+            return savedSubmission;
     }
 
     @Override
@@ -50,12 +68,29 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Submission updateSubmission(int id, Submission submission) throws ResourceNotFroundException {
-        Submission submission_new  = submissionRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Submission not exist with id:" + id));
-       submission_new.setDescription(submission.getDescription());
-        submission_new.setModified_date(new Date());
-        return submissionRepository.save(submission_new);
+    public Submission updateSubmission(int id, Submission submission, List<String> files, int type) throws ResourceNotFroundException {
+        Submission existingSubmission = submissionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Submission does not exist with id: " + id));
+
+        existingSubmission.setDescription(submission.getDescription());
+        existingSubmission.setModified_date(new Date());
+
+        if (files != null && !files.isEmpty()) {
+            for (String file : files) {
+                Attachment attachment = new Attachment();
+                attachment.setFile(file);
+
+                AttachmentType attachmentType = new AttachmentType();
+                attachmentType.setId(type);
+
+                attachment.setAttachmentType(attachmentType);
+                attachment.setSubmission(existingSubmission);
+
+                attachmentRepository.save(attachment);
+            }
+        }
+
+        return submissionRepository.save(existingSubmission);
     }
 
     @Override

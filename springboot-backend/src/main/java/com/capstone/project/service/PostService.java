@@ -20,9 +20,9 @@ public interface PostService {
 
     Post createPost(Post post, List<String> files, int type);
 
-    Post updatePost(Post posts, int id) throws ResourceNotFroundException;
+    Post updatePost(Post posts, int id, List<String> files, int type) throws ResourceNotFroundException;
 
-    Boolean deletePost( int id) throws ResourceNotFroundException;
+    Boolean deletePost(int id) throws ResourceNotFroundException;
 
     Map<String, Object> getFilterPost(String search, String author, int classid, int page, int size) throws ResourceNotFroundException;
 }

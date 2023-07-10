@@ -3,6 +3,7 @@ package com.capstone.project.controller;
 import com.capstone.project.dto.ChangePasswordRequest;
 import com.capstone.project.dto.CheckPasswordRequest;
 import com.capstone.project.dto.UserRequest;
+import com.capstone.project.dto.UserUpdateRequest;
 import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{username}")
-    public ResponseEntity<?> updateUser(@PathVariable("username") String username, @Valid @RequestBody UserRequest userRequest, BindingResult result) {
+    public ResponseEntity<?> updateUser(@PathVariable("username") String username, @Valid @RequestBody UserUpdateRequest userUpdateRequest, BindingResult result) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -55,7 +56,7 @@ public class UserController {
                     .collect(Collectors.toList());
             return ResponseEntity.badRequest().body(errors);
         } else {
-            User userDetails = modelMapper.map(userRequest, User.class);
+            User userDetails = modelMapper.map(userUpdateRequest, User.class);
             try {
                 return ResponseEntity.ok(userService.updateUser(username, userDetails));
             } catch (ResourceNotFroundException e) {
@@ -74,7 +75,11 @@ public class UserController {
     @GetMapping("/users/{username}/ban")
     public ResponseEntity<?> banUser(@PathVariable("username") String username) {
         try {
-            return ResponseEntity.ok(userService.banUser(username));
+            if(userService.banUser(username)) {
+                return ResponseEntity.ok("Banned successfully");
+            } else {
+                return ResponseEntity.badRequest().body("Ban fail");
+            }
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -92,7 +97,11 @@ public class UserController {
     @GetMapping("/users/{username}/recover")
     public ResponseEntity<?> recoverUser(@PathVariable("username") String username) {
         try {
-            return ResponseEntity.ok(userService.recoverUser(username));
+            if(userService.recoverUser(username)) {
+                return ResponseEntity.ok("Recover successfully");
+            } else {
+                return ResponseEntity.badRequest().body("Wait at least 7 days to recover");
+            }
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
