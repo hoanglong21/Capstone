@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { login } from '../../features/auth/authAction'
 import { reset } from '../../features/auth/authSlice'
 
+import { ArrowLeftIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
 
 const Login = () => {
@@ -51,7 +52,7 @@ const Login = () => {
         }
         setLoading(true)
         dispatch(login(data))
-        
+
         form.classList.remove('was-validated')
         usernameEl.classList.remove('is-invalid')
         passwordEl.classList.remove('is-invalid')
@@ -61,7 +62,10 @@ const Login = () => {
     }
 
     return (
-        <div className="mt-4 me-5 pe-5">
+        <div className="mt-4 me-5 pe-5" style={{ position: 'relative' }}>
+            <button className="backHomeBtn" onClick={() => navigate('/')}>
+                <ArrowLeftIcon />
+            </button>
             <div className="container me-5">
                 <h2>Welcome Back!</h2>
                 <h5
