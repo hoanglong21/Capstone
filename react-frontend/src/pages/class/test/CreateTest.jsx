@@ -54,7 +54,11 @@ function CreateTest() {
         <div className="row g-2">
           <div className="col-9">
             <div className="form-floating">
-              <input type="text" className="form-control" id="floatingInputGrid" />
+              <input
+                type="text"
+                className="form-control"
+                id="floatingInputGrid"
+              />
               <label for="floatingInputGrid">Question 1</label>
             </div>
           </div>
@@ -103,9 +107,23 @@ function CreateTest() {
           <input type="radio" id="False" name="group-radio" />
           <label for="False">False</label>
         </div>
+
+        <div className="col-6">
+          <label>Correct Answer</label>
+          <input
+            placeholder="Enter the correct answer: A,B,C, D?"
+            type="text"
+            className="mt-2 form-control"
+          />
+        </div>
       </div>
-      <div className="text-center mt-3">
-      <button type="submit" className="bg-primary text-white border border-primary rounded-3 py-2 px-3 fw-bold fs-7">Create Test</button>
+      <div className="text-center mt-3 mb-5">
+        <button
+          type="submit"
+          className="bg-primary text-white border border-primary rounded-3 py-2 px-4 fw-bold fs-7"
+        >
+          Create Test
+        </button>
       </div>
     </div>
   );
