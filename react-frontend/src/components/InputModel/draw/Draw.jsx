@@ -67,8 +67,9 @@ const Draw = ({ className, handleHandWriting, disabled }) => {
                     </button>
                 </div>
                 <div className="d-flex drawResult">
-                    {results?.map((word) => (
+                    {results?.map((word, index) => (
                         <button
+                            key={index}
                             className="btn"
                             onClick={() => {
                                 handleHandWriting(word)

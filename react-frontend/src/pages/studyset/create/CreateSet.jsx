@@ -30,9 +30,6 @@ const CreateSet = () => {
     const [error, setError] = useState('')
     const [showDiscardMess, setShowDiscardMess] = useState(false)
 
-    // update when navigate
-    useEffect(() => {}, [])
-
     // draft can go to edit, back to create
     useEffect(() => {
         if (id && studySet._draft) {
@@ -185,8 +182,7 @@ const CreateSet = () => {
                         ...studySet,
                         _draft: false,
                     })
-                    // navigate('/set/' + id)
-                    navigate('/')
+                    navigate('/set/' + studySet.id)
                     form.classList.remove('was-validated')
                     titleEl.classList.remove('is-invalid')
                     setError('')
@@ -297,7 +293,7 @@ const CreateSet = () => {
                     ) : (
                         <div className="container d-flex justify-content-between">
                             <Link
-                                to={`/sets/${studySet.id}`}
+                                to={`/set/${studySet.id}`}
                                 className={CardStyles.card_button}
                                 style={{
                                     backgroundColor: 'inherit',

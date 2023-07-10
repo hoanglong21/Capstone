@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import PostService from '../../../services/PostService'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
@@ -14,14 +14,27 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
+import AttachmentService from '../../../services/AttachmentService'
 
 const Post = ({ post, stateChanger, posts, index }) => {
     const [showUpdate, setShowUpdate] = useState(false)
 
     const [updatePost, setUpdatePost] = useState({ ...post })
+    const [currentFiles, setCurrentFiles] = useState([])
     const [uploadFiles, setUploadFiles] = useState([])
+    const [allFiles, setAllFiles] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [loadingUpdatePost, setLoadingUpdatePost] = useState(false)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const tempFiles = (
+                await AttachmentService.getAttachmentsByPostId(post.id)
+            ).data
+            setCurrentFiles([...currentFiles, tempFiles])
+            setAllFiles([...allFiles, tempFiles])
+        }
+    }, [post.id])
 
     const handleUpdatePost = async () => {
         setLoadingUpdatePost(true)
@@ -40,7 +53,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
         }
         setLoadingUpdatePost(false)
     }
-    
+
     const handleUploadFile = async (event) => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
@@ -61,7 +74,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
         uploadFiles.map((file) => {
             deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
         })
-        // setUploadFiles([])
+        setUploadFiles([])
         setUpdatePost({ ...post })
         setShowUpdate(false)
     }

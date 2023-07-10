@@ -165,7 +165,7 @@ const StudySetList = () => {
                                             {set.count} terms
                                         </div>
                                         <div
-                                            className="set-author col d-flex "
+                                            className="set-author col d-flex align-items-center"
                                             href="#"
                                         >
                                             <div className="author-avatar">

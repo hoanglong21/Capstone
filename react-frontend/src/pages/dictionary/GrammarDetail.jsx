@@ -127,6 +127,24 @@ const GrammarDetail = ({ grammar }) => {
                                     </div>
                                 </div>
                             </div>
+                            <div className="card grammarDetail_block py-3 px-4">
+                                <div className="card-body">
+                                    <h3 className="grammarDetail_subtitle">
+                                        Examples
+                                    </h3>
+                                    <div className="row">
+                                        {grammar?.example?.map(
+                                            (exampleItem) => (
+                                                <div className="col-4 mb-2">
+                                                    <div className="exampleItem h-100">
+                                                        {exampleItem}
+                                                    </div>
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

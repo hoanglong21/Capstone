@@ -1,9 +1,11 @@
-import DeleteSet from '../DeleteSet'
-
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import StudySetService from '../../../services/StudySetService'
+import CardService from '../../../services/CardService'
+
+import ViewCard from './ViewCard'
+import DeleteSet from '../DeleteSet'
 
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import {
@@ -17,10 +19,10 @@ import {
     ArrowDownIcon,
 } from '../../../components/icons'
 import './viewStudySet.css'
-import CardService from '../../../services/CardService'
-import ViewCard from './ViewCard'
 
 const ViewSet = () => {
+    const navigate = useNavigate()
+
     const { id } = useParams()
 
     const [studySet, setStudySet] = useState({})
@@ -36,7 +38,9 @@ const ViewSet = () => {
             ).data
             setCards(tempCards)
         }
-        fetchData()
+        if (id) {
+            fetchData()
+        }
     }, [id])
 
     return (
@@ -128,6 +132,7 @@ const ViewSet = () => {
                             <button
                                 className="dropdown-item py-2 px-3 d-flex align-items-center"
                                 type="button"
+                                onClick={() => navigate(`/edit-set/${id}`)}
                             >
                                 <EditIcon className="me-3" size="1.3rem" />
                                 <span className="align-middle fw-semibold">
@@ -139,6 +144,8 @@ const ViewSet = () => {
                             <button
                                 className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
                                 type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteSetModal"
                             >
                                 <DeleteIcon
                                     className="me-3"
@@ -206,12 +213,13 @@ const ViewSet = () => {
                     </ul>
                 </div>
             </div>
+            {/* Terms */}
             <div className="setPageTerms">
                 {cards.map((card) => (
-                    <ViewCard card={card} />
+                    <ViewCard card={card} key={card.id} />
                 ))}
             </div>
-            <DeleteSet />
+            <DeleteSet studySet={studySet} />
         </div>
     )
 }
