@@ -13,11 +13,24 @@ export default function CardEditor(props) {
                 'fontBackgroundColor',
                 'highlight',
                 '|',
+                'removeFormat',
+                {
+                    label: 'Lists',
+                    icon: false,
+                    items: ['bulletedList', 'numberedList'],
+                },
+                '|',
                 'undo',
                 'redo',
             ],
         },
-        removePlugins: ['MediaEmbedToolbar'],
+        list: {
+            properties: {
+                styles: true,
+                startIndex: true,
+                reversed: true,
+            },
+        },
     }
 
     return (

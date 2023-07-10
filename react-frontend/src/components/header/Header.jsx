@@ -1,15 +1,15 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
-import { useEffect } from 'react'
 
 import { logout } from '../../features/auth/authSlice'
 import { getUser } from '../../features/user/userAction'
 
 import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/class/JoinClass'
+
 import logo from '../../assets/images/logo-2.png'
 import {
     HomeIcon,
@@ -24,7 +24,6 @@ import {
     LibraryIcon,
 } from '../icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
-
 import './Header.css'
 
 const Header = () => {
@@ -126,16 +125,33 @@ const Header = () => {
                             <span className="align-middle">Translate</span>
                         </NavLink>
                     </li>
+                    {userToken && (
+                        <li>
+                            <NavLink
+                                to="/library/sets"
+                                className={
+                                    'nav-link px-3 ' +
+                                    (({ isActive }) =>
+                                        isActive ? 'active' : '')
+                                }
+                            >
+                                <LibraryIcon className="mx-2" />
+                                <span className="align-middle">
+                                    Your Library
+                                </span>
+                            </NavLink>
+                        </li>
+                    )}
                     <li>
                         <NavLink
-                            to="library/sets"
+                            to="/discovery"
                             className={
                                 'nav-link px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
                             <LibraryIcon className="mx-2" />
-                            <span className="align-middle">Your Library</span>
+                            <span className="align-middle">Discovery</span>
                         </NavLink>
                     </li>
                 </ul>

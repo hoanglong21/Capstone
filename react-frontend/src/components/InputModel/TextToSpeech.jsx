@@ -2,7 +2,13 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { SpeakIconSolid } from '../icons'
 
-function TextToSpeech({ className, text, language, disabled }) {
+function TextToSpeech({
+    className,
+    text,
+    language,
+    disabled,
+    size = '1.5rem',
+}) {
     const [lang, setLang] = useState('ja-JP')
 
     useEffect(() => {
@@ -30,11 +36,11 @@ function TextToSpeech({ className, text, language, disabled }) {
     return (
         <div className={className}>
             <button
-                className="btn btn-outline-secondary rounded-circle p-2"
+                className="btn btn-customLight"
                 onClick={handleClick}
                 disabled={disabled}
             >
-                <SpeakIconSolid />
+                <SpeakIconSolid size={size} />
             </button>
         </div>
     )

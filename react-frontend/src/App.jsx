@@ -64,6 +64,7 @@ import ViewAssignment from "./pages/ViewAssignment";
 import ManageTest from "./pages/class/test/ManageTest";
 import ViewDetailTest from "./pages/class/test/ViewDetailTest";
 import CreateTest from "./pages/class/test/CreateTest";
+import ViewSet from "./pages/studyset/view/ViewSet";
 
 const App = () => {
   const { userToken } = useSelector((state) => state.auth);
@@ -97,9 +98,17 @@ const App = () => {
             {/* Study Set */}
             <Route path="create-set" element={<CreateSet />} />
             <Route path="edit-set/:id" element={<CreateSet />} />
-            <Route path="viewset" element={<OverViewSet />} />
+            <Route path="flashcards/:id" element={<Flashcard />} />
             {/* Class */}
             <Route path="class/:id" element={<MainClass />} />
+            {/* Test */}
+            <Route path="/viewtest" element={<ViewTest />} />
+            <Route path="/dotest" element={<DoTest />} />
+            <Route path="/managetest" element={<ManageTest />} />
+            <Route path="/viewdetailtest" element={<ViewDetailTest />} />
+            <Route path="/createtest" element={<CreateTest />} />
+            {/* Assignment */}
+            <Route path="/viewassignment" element={<ViewAssignment />} />
             {/* Feedback */}
             <Route
               path="help-center/send-feedback"
@@ -111,12 +120,12 @@ const App = () => {
             <Route path="video-chat" element={<VideoChatContainer />} />
             <Route path="video-chat/:call" element={<VideoChatContainer />} />
           </Route>
+          {/* Study set */}
+          <Route path="set/:id" element={<ViewSet />} />
           {/* Test */}
           <Route path="/viewtest" element={<ViewTest />} />
           <Route path="/dotest" element={<DoTest />} />
           <Route path="/managetest" element={<ManageTest />} />
-          <Route path="/viewdetailtest" element={<ViewDetailTest />} />
-          <Route path="/createtest" element={<CreateTest />} />
           {/* Assignment */}
           <Route path="/viewassignment" element={<ViewAssignment />} />
           {/* Translate */}
@@ -139,6 +148,13 @@ const App = () => {
           <Route path="term" element={<Term />} />
           <Route path="privacy" element={<Privacy />} />
           <Route path="help-center" element={<HelpCenter />} />
+          {/* Discovery */}
+          <Route path="discovery" element={<Home />}>
+            <Route index element={<AllForHome />} />
+            <Route path="sets" element={<SetsForHome />} />
+            <Route path="classes" element={<ClassesForHome />} />
+            <Route path="users" element={<UsersForHome />} />
+          </Route>
         </Route>
         {/* Auth */}
         <Route element={<AuthLayout />}>
@@ -146,7 +162,6 @@ const App = () => {
           <Route path="/register" element={<Register />} />
         </Route>
 
-        <Route path="/flashcard" element={<Flashcard />} />
         <Route path="/banuser" element={<BanUser />} />
         <Route path="/unbanuser" element={<UnBanUser />} />
         <Route path="/manageusers" element={<ManageUser />} />

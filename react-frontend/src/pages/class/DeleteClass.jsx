@@ -18,13 +18,6 @@ const DeleteClass = ({ classroom }) => {
         }
     }, [classroom])
 
-    const handleChange = (event) => {
-        setDeleteClass({
-            ...deleteClass,
-            [event.target.name]: event.target.value,
-        })
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault()
         // clear validation
