@@ -36,25 +36,30 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 
     @Override
-    public Submission createSubmission(Submission submission,List<String> files, int type) {
+    public Submission createSubmission(Submission submission, List<String> file_names, int type, List<String> urls, List<String> file_types) {
         submission.setCreated_date(new Date());
-        // Lưu submission
+
         Submission savedSubmission = submissionRepository.save(submission);
 
-        if (files != null && !files.isEmpty() && type != 0) {
-            for (String file : files) {
-                if (file != null && !file.isEmpty()) {
-                    Attachment attachment = new Attachment();
-                    attachment.setFile(file);
+        if (file_names != null && urls != null && file_types != null  && type != 0) {
+            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+            for (int i = 0; i < numOfAttachments; i++) {
+                String file_name = file_names.get(i);
+                String url = urls.get(i);
+                String file_type = file_types.get(i);
 
-                    AttachmentType attachmentType = new AttachmentType();
-                    attachmentType.setId(type);
+                Attachment attachment = new Attachment();
+                attachment.setFile_name(file_name);
+                attachment.setFile_url(file_type);
+                attachment.setFile_url(url);
 
-                    attachment.setAttachmentType(attachmentType);
-                    attachment.setSubmission(savedSubmission);
+                AttachmentType attachmentType = new AttachmentType();
+                attachmentType.setId(type);
 
-                    attachmentRepository.save(attachment);
-                }
+                attachment.setAttachmentType(attachmentType);
+                attachment.setSubmission(savedSubmission);
+
+                attachmentRepository.save(attachment);
             }
         }
             return savedSubmission;
@@ -68,17 +73,24 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Submission updateSubmission(int id, Submission submission, List<String> files, int type) throws ResourceNotFroundException {
+    public Submission updateSubmission(int id, Submission submission, List<String> file_names, int type,List<String> urls, List<String> file_types) throws ResourceNotFroundException {
         Submission existingSubmission = submissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Submission does not exist with id: " + id));
 
         existingSubmission.setDescription(submission.getDescription());
         existingSubmission.setModified_date(new Date());
 
-        if (files != null && !files.isEmpty()) {
-            for (String file : files) {
+        if (file_names != null && urls != null && file_types != null  && type != 0) {
+            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+            for (int i = 0; i < numOfAttachments; i++) {
+                String file_name = file_names.get(i);
+                String url = urls.get(i);
+                String file_type = file_types.get(i);
+
                 Attachment attachment = new Attachment();
-                attachment.setFile(file);
+                attachment.setFile_name(file_name);
+                attachment.setFile_url(file_type);
+                attachment.setFile_url(url);
 
                 AttachmentType attachmentType = new AttachmentType();
                 attachmentType.setId(type);

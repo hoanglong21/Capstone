@@ -12,11 +12,11 @@ public interface SubmissionService {
     List<Submission> getAllSubmissionByAssignmentId(int id);
     List<Submission> getAllSubmission();
 
-    Submission createSubmission(Submission submission, List<String> files, int type);
+    Submission createSubmission(Submission submission, List<String> file_names, int type, List<String> urls, List<String> file_types);
 
-    Submission getSubmissionById ( int id) throws ResourceNotFroundException;
+    Submission getSubmissionById (int id) throws ResourceNotFroundException;
 
-    Submission updateSubmission(int id, Submission submission, List<String> files, int type) throws ResourceNotFroundException;
+    Submission updateSubmission(int id, Submission submission, List<String> file_names, int type, List<String> urls, List<String> file_types) throws ResourceNotFroundException;
 
     Boolean deleteSubmission(int id) throws ResourceNotFroundException;
 
