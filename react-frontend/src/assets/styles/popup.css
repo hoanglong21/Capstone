@@ -45,3 +45,22 @@
 .updatePostModal h5.modal-title {
     color: #0070c4 !important;
 }
+
+.setDeleteModal.modal {
+    margin-top: 3rem;
+    --bs-modal-width: 50vw;
+}
+
+.setModalTitle {
+    font-size: 2rem;
+    letter-spacing: normal;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.setModalHeading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.33;
+}

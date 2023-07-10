@@ -361,7 +361,7 @@ function Translate() {
                                         disabled={transLang === 'vi'}
                                     />
                                     <button
-                                        className="btn btn-outline-secondary p-2 rounded-circle"
+                                        className="btn btn-customLight p-2 rounded-circle"
                                         onClick={handleCopy}
                                     >
                                         <CopyIcon />

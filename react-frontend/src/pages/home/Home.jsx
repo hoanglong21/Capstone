@@ -1,15 +1,24 @@
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
 
 import banner from '../../assets/images/home.jpg'
 import '../../assets/styles/Home.css'
 
 function Home() {
-    const [searchParams, setSearchParams] = useSearchParams()
+    const { userToken } = useSelector((state) => state.auth)
 
+    const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
 
+    const [path, setPath] = useState('')
+
+    useEffect(() => {
+        userToken ? setPath('/') : setPath('/discovery/')
+    }, [userToken])
+
     return (
-        <>
+        <div>
             <img className="img_left" src={banner} alt="" />
             <div className="container mt-4 mb-5">
                 <div className="dictionary_header bg-light">
@@ -51,7 +60,7 @@ function Home() {
                                 <li>
                                     <NavLink
                                         to={{
-                                            pathname: '/',
+                                            pathname: path,
                                             search: `?${searchParams.toString()}`,
                                         }}
                                         className={
@@ -68,7 +77,7 @@ function Home() {
                                 <li>
                                     <NavLink
                                         to={{
-                                            pathname: '/sets',
+                                            pathname: path + 'sets',
                                             search: `?${searchParams.toString()}`,
                                         }}
                                         className={
@@ -85,7 +94,7 @@ function Home() {
                                 <li>
                                     <NavLink
                                         to={{
-                                            pathname: '/classes',
+                                            pathname: path + 'classes',
                                             search: `?${searchParams.toString()}`,
                                         }}
                                         className={
@@ -102,7 +111,7 @@ function Home() {
                                 <li>
                                     <NavLink
                                         to={{
-                                            pathname: '/users',
+                                            pathname: path + 'users',
                                             search: `?${searchParams.toString()}`,
                                         }}
                                         className={
@@ -122,7 +131,7 @@ function Home() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

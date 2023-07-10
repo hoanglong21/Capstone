@@ -89,6 +89,7 @@ const VocabDict = () => {
                                         className="ms-1"
                                         text={word?.kanji}
                                         language="ja"
+                                        size="1.25rem"
                                     />
                                 </span>
                             </div>
