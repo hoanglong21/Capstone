@@ -58,7 +58,7 @@ import ViewGrammarDetail from "./pages/studyset/view/ViewGrammarDetail";
 import ViewVocabularyDetail from "./pages/studyset/view/ViewVocabularyDetail";
 import ViewTest from "./pages/class/test/ViewTestForLearner";
 import DoTest from "./pages/class/test/DoTest";
-import ViewAssignment from "./pages/ViewAssignment";
+import ViewAssignment from "./pages/class/assignment/ViewAssignment";
 import ManageTest from "./pages/class/test/ManageTest";
 import ViewDetailTest from "./pages/class/test/ViewDetailTest";
 import CreateTest from "./pages/class/test/CreateTest";

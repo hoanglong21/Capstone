@@ -38,7 +38,6 @@ function CreateTest() {
           placeholder="Do exercise 1 to 5"
         />
       </div>
-
       <div
         className="question"
         style={{
@@ -121,6 +120,12 @@ function CreateTest() {
         <button
           type="submit"
           className="bg-primary text-white border border-primary rounded-3 py-2 px-4 fw-bold fs-7"
+        >
+          Add Question
+        </button>
+        <button
+          type="submit"
+          className="bg-info text-white border border-info rounded-3 py-2 px-4 fw-bold fs-7 ms-3"
         >
           Create Test
         </button>
