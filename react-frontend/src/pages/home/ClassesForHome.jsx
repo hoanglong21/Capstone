@@ -35,10 +35,8 @@ const ClassesForHome = () => {
     }
 
     useEffect(() => {
-        if (userInfo.username) {
-            fetchData(search ? search : '')
-        }
-    }, [userInfo, search])
+        fetchData(search ? search : '')
+    }, [search])
 
     return (
         <div className="mt-4 mb-5">
@@ -56,9 +54,7 @@ const ClassesForHome = () => {
                                 <div className="term-count col-1">
                                     {classroom.studySets.length} sets
                                 </div>
-                                <div
-                                    className="set-author col d-flex "
-                                >
+                                <div className="set-author col d-flex ">
                                     <div className="author-avatar">
                                         <img
                                             src={

@@ -43,10 +43,8 @@ function UsersForHome() {
     }
 
     useEffect(() => {
-        if (userInfo.username) {
-            fetchData(search ? search : '')
-        }
-    }, [userInfo, search])
+        fetchData(search ? search : '')
+    }, [search])
 
     return (
         <div className="mt-4 mb-5">

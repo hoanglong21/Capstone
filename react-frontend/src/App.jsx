@@ -7,7 +7,7 @@ import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import Layout from './components/layouts/Layout'
 import GPTContainer from './components/Chat/GPTContainer'
-import Flashcard from './pages/Flashcard'
+import Flashcard from './pages/studyset/Flashcard'
 import MainClass from './pages/class/mainClass/MainClass'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
@@ -105,6 +105,7 @@ const App = () => {
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
+                        <Route path="flashcards/:id" element={<Flashcard />} />
                         {/* Class */}
                         <Route path="class/:id" element={<MainClass />} />
                         {/* Feedback */}
@@ -161,6 +162,13 @@ const App = () => {
                     <Route path="term" element={<Term />} />
                     <Route path="privacy" element={<Privacy />} />
                     <Route path="help-center" element={<HelpCenter />} />
+                    {/* Discovery */}
+                    <Route path="discovery" element={<Home />}>
+                        <Route index element={<AllForHome />} />
+                        <Route path="sets" element={<SetsForHome />} />
+                        <Route path="classes" element={<ClassesForHome />} />
+                        <Route path="users" element={<UsersForHome />} />
+                    </Route>
                 </Route>
                 {/* Auth */}
                 <Route element={<AuthLayout />}>
@@ -168,7 +176,6 @@ const App = () => {
                     <Route path="/register" element={<Register />} />
                 </Route>
 
-                <Route path="/flashcard" element={<Flashcard />} />
                 <Route path="/banuser" element={<BanUser />} />
                 <Route path="/unbanuser" element={<UnBanUser />} />
                 <Route path="/manageusers" element={<ManageUser />} />
