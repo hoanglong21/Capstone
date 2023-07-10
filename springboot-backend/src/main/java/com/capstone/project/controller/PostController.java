@@ -74,7 +74,8 @@ public class PostController {
     }
 
     @PutMapping("/post/{id}")
-    public ResponseEntity<?> updatePost(@Valid @RequestBody PostRequest postRequest, @PathVariable int id,BindingResult result ) {
+    public ResponseEntity<?> updatePost(@Valid @RequestBody PostRequest postRequest, @PathVariable int id,@RequestParam(value = "filename", required = false) List<String> files,
+                                        @RequestParam(value = "type", required = false) Optional<Integer> type, BindingResult result ) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -84,7 +85,7 @@ public class PostController {
         } else {
             Post post = modelMapper.map(postRequest,Post.class);
             try {
-                return ResponseEntity.ok(postService.updatePost(post, id));
+                return ResponseEntity.ok(postService.updatePost(post, id,files,type.orElse(0)));
             } catch (ResourceNotFroundException e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
