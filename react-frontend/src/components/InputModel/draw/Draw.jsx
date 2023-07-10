@@ -41,7 +41,7 @@ const Draw = ({ className, handleHandWriting, disabled }) => {
         <div className={`${className} drawContainer`}>
             <button
                 className={`btn ${
-                    show ? 'btn-outline-primary' : 'btn-outline-secondary'
+                    show ? 'btn-outline-primary' : 'btn-customLight'
                 } rounded-circle p-2`}
                 disabled={disabled}
                 onClick={handleClick}
@@ -67,8 +67,9 @@ const Draw = ({ className, handleHandWriting, disabled }) => {
                     </button>
                 </div>
                 <div className="d-flex drawResult">
-                    {results?.map((word) => (
+                    {results?.map((word, index) => (
                         <button
+                            key={index}
                             className="btn"
                             onClick={() => {
                                 handleHandWriting(word)

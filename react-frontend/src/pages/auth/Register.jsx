@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { register as userRegister } from '../../features/auth/authAction'
 import { reset } from '../../features/auth/authSlice'
 
+import { ArrowLeftIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
 
 const Register = () => {
@@ -75,7 +76,10 @@ const Register = () => {
     }
 
     return (
-        <div className="pe-5">
+        <div className="pe-5" style={{ position: 'relative' }}>
+            <button className="backHomeBtn" onClick={() => navigate('/')}>
+                <ArrowLeftIcon />
+            </button>
             <h2>Get Started</h2>
             <h5 className="fw-normal" style={{ color: 'var(--text-light)' }}>
                 Create your account now

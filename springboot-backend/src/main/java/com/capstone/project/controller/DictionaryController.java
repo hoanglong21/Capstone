@@ -48,7 +48,7 @@ public class DictionaryController {
         return ResponseEntity.ok(applicationStartup.getVocabularyService().searchAndPaginate(search, page, size));
     }
 
-    @GetMapping("/grammar")
+        @GetMapping("/grammar")
     public ResponseEntity<?> getGrammar(@RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "3") int size,
                                     @RequestParam(defaultValue = "") String search,

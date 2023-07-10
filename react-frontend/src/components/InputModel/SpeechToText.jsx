@@ -53,7 +53,7 @@ const SpeechToText = ({
                 </button>
             ) : (
                 <button
-                    className="btn btn-outline-secondary rounded-circle p-2"
+                    className="btn btn-customLight"
                     onClick={startListening}
                 >
                     <MicIconSolid />

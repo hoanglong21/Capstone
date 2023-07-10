@@ -61,10 +61,10 @@ function AllForHome() {
                 '',
                 '',
                 '',
+                '=tutor,learner',
                 '',
                 '',
-                '',
-                '',
+                '=active,pending',
                 '',
                 '',
                 '',
@@ -79,12 +79,10 @@ function AllForHome() {
     }
 
     useEffect(() => {
-        if (userInfo.username) {
-            fetchSetsData(search ? search : '')
-            fetchClassesData(search ? search : '')
-            fetchUsersData(search ? search : '')
-        }
-    }, [userInfo, search])
+        fetchSetsData(search ? search : '')
+        fetchClassesData(search ? search : '')
+        fetchUsersData(search ? search : '')
+    }, [search])
 
     return (
         <div className="mt-4 mb-5">
