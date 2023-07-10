@@ -54,15 +54,22 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment createAssignment(Assignment assignment, List<String> files, int type) {
+    public Assignment createAssignment(Assignment assignment, List<String> file_names, int type, List<String> urls, List<String> file_types) {
         assignment.setCreated_date(new Date());
 
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
-        if (files != null && !files.isEmpty() && type != 0) {
-            for (String file : files) {
+        if (file_names != null && urls != null && file_types != null  && type != 0) {
+            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+            for (int i = 0; i < numOfAttachments; i++) {
+                String file_name = file_names.get(i);
+                String url = urls.get(i);
+                String file_type = file_types.get(i);
+
                 Attachment attachment = new Attachment();
-                attachment.setFile(file);
+                attachment.setFile_name(file_name);
+                attachment.setFile_type(file_type);
+                attachment.setFile_url(url);
 
                 AttachmentType attachmentType = new AttachmentType();
                 attachmentType.setId(type);
@@ -85,7 +92,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment updateAssignment(int id, Assignment assignment,List<String> files, int type) throws ResourceNotFroundException {
+    public Assignment updateAssignment(int id, Assignment assignment,List<String> file_names, int type,List<String>urls, List<String> file_types) throws ResourceNotFroundException {
         Assignment existingAssignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Assignment does not exist with id: " + id));
 
@@ -94,10 +101,17 @@ public class AssignmentServiceImpl implements AssignmentService {
         existingAssignment.setModified_date(new Date());
         existingAssignment.setTitle(assignment.getTitle());
 
-        if (files != null && !files.isEmpty()) {
-            for (String file : files) {
+        if (file_names != null && urls != null && file_types != null  && type != 0) {
+            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+            for (int i = 0; i < numOfAttachments; i++) {
+                String file_name = file_names.get(i);
+                String url = urls.get(i);
+                String file_type = file_types.get(i);
+
                 Attachment attachment = new Attachment();
-                attachment.setFile(file);
+                attachment.setFile_name(file_name);
+                attachment.setFile_type(file_type);
+                attachment.setFile_url(url);
 
                 AttachmentType attachmentType = new AttachmentType();
                 attachmentType.setId(type);

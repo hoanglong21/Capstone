@@ -18,7 +18,11 @@ public class Attachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String file;
+    private String file_name;
+
+    private String file_type; //extension name
+
+    private String file_url;
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)

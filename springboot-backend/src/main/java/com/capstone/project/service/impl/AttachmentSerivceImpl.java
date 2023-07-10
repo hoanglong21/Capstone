@@ -56,7 +56,9 @@ public class AttachmentSerivceImpl implements AttachmentService {
     public Attachment updateAttachment(int id, Attachment attachment) throws ResourceNotFroundException {
         Attachment attachment_new = attachmentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Attachment not exist with id: " + id));
-        attachment_new.setFile(attachment.getFile());
+        attachment_new.setFile_name(attachment_new.getFile_name());
+        attachment_new.setFile_url(attachment.getFile_url());
+        attachment_new.setFile_type(attachment.getFile_type());
         attachment_new.setAttachmentType(attachment.getAttachmentType());
         return attachmentRepository.save(attachment_new);
     }
