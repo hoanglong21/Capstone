@@ -59,7 +59,8 @@ public class StudySetController {
     @DeleteMapping("/studysets/{id}")
     public ResponseEntity<?> deleteStudySet(@PathVariable int id) {
         try {
-            return ResponseEntity.ok(studySetService.deleteStudySet(id));
+            studySetService.deleteStudySet(id);
+            return ResponseEntity.ok("Deleted successfully");
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -68,7 +69,8 @@ public class StudySetController {
     @DeleteMapping("/deletestudysets/{id}")
     public ResponseEntity<?> deleteHardStudySet(@PathVariable int id) {
         try {
-            return ResponseEntity.ok(studySetService.deleteHardStudySet(id));
+            studySetService.deleteHardStudySet(id);
+            return ResponseEntity.ok("Deleted forever successfully");
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

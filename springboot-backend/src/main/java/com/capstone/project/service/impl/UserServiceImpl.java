@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFroundException("User not exist with username: " + username);
         }
         
-        if (!userDetails.getPhone().equals(user.getPhone()) && userRepository.existsByPhone(userDetails.getPhone())) {
+        if (userDetails.getPhone()!=null &&  !userDetails.getPhone().equals("") && !userDetails.getPhone().equals(user.getPhone()) && userRepository.existsByPhone(userDetails.getPhone())) {
             throw new DuplicateValueException("Phone already registered");
         }
 
@@ -92,9 +92,9 @@ public class UserServiceImpl implements UserService {
         user.setLast_name(userDetails.getLast_name());
         user.setGender(userDetails.getGender());
         user.setPhone(userDetails.getPhone());
-        user.setGender(userDetails.getGender());
-        user.setStatus(userDetails.getStatus());
-        user.setRole(userDetails.getRole());
+
+//        user.setStatus(userDetails.getStatus());
+//        user.setRole(userDetails.getRole());
 
         User updateUser = userRepository.save(user);
         return updateUser;
