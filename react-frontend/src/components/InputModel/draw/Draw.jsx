@@ -41,7 +41,7 @@ const Draw = ({ className, handleHandWriting, disabled }) => {
         <div className={`${className} drawContainer`}>
             <button
                 className={`btn ${
-                    show ? 'btn-outline-primary' : 'btn-outline-secondary'
+                    show ? 'btn-outline-primary' : 'btn-customLight'
                 } rounded-circle p-2`}
                 disabled={disabled}
                 onClick={handleClick}

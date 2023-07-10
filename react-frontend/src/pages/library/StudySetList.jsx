@@ -70,6 +70,14 @@ const StudySetList = () => {
         }
     }, [userInfo, search])
 
+    const handleViewSet = (studySet) => {
+        if (studySet._draft) {
+            navigate(`/edit-set/${studySet.id}`)
+        } else {
+            navigate(`/set/${studySet.id}`)
+        }
+    }
+
     return (
         <div className="container mt-4 mb-5">
             {isEmpty ? (
@@ -133,7 +141,7 @@ const StudySetList = () => {
                             className="search-control flex-grow-1"
                             placeholder="Search your sets"
                             type="text"
-                            value={search}
+                            value={search || ''}
                             onChange={(event) =>
                                 setSearchParams({
                                     search: event.target.value,
@@ -148,7 +156,10 @@ const StudySetList = () => {
                         )}
                         {sets.map((set) => (
                             <div key={set.id} className="set-item mb-3">
-                                <Link to={`/set/${set.id}`}>
+                                <div
+                                    onClick={() => handleViewSet(set)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <div className="set-body row mb-2">
                                         <div className="term-count col-2">
                                             {set.count} terms
@@ -190,7 +201,7 @@ const StudySetList = () => {
                                             </p>
                                         </div>
                                     </div>
-                                </Link>
+                                </div>
                             </div>
                         ))}
                     </div>
