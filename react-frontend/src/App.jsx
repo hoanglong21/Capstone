@@ -58,10 +58,12 @@ import ViewKanjiDetail from "./pages/studyset/ViewKanjiDetail";
 import ViewGrammarDetail from "./pages/studyset/ViewGrammarDetail";
 import ViewVocabularyDetail from "./pages/studyset/ViewVocabularyDetail";
 import OverViewSet from "./pages/studyset/OverViewSet";
-import ViewTest from "./pages/class/test/ViewTest";
+import ViewTest from "./pages/class/test/ViewTestForLearner";
 import DoTest from "./pages/class/test/DoTest";
 import ViewAssignment from "./pages/ViewAssignment";
 import ManageTest from "./pages/class/test/ManageTest";
+import ViewDetailTest from "./pages/class/test/ViewDetailTest";
+import CreateTest from "./pages/class/test/CreateTest";
 
 const App = () => {
   const { userToken } = useSelector((state) => state.auth);
@@ -113,6 +115,8 @@ const App = () => {
           <Route path="/viewtest" element={<ViewTest />} />
           <Route path="/dotest" element={<DoTest />} />
           <Route path="/managetest" element={<ManageTest />} />
+          <Route path="/viewdetailtest" element={<ViewDetailTest />} />
+          <Route path="/createtest" element={<CreateTest />} />
           {/* Assignment */}
           <Route path="/viewassignment" element={<ViewAssignment />} />
           {/* Translate */}
