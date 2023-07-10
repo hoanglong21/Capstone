@@ -73,10 +73,9 @@ public class PostServiceImpl implements PostService {
                 attachment.setAttachmentType(attachmentType);
                 attachment.setPost(savedPost);
 
-                // Lưu đính kèm (Attachment)
+
                 Attachment savedAttachment = attachmentRepository.save(attachment);
 
-                // Cập nhật lại post_id trong đính kèm (Attachment)
                 savedAttachment.setPost(savedPost);
                 attachmentRepository.save(savedAttachment);
             }
@@ -85,11 +84,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(Post posts, int id) throws ResourceNotFroundException {
-        Post post = postRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFroundException("Post not exist with id:" + id));
-        post.setContent(posts.getContent());
-        return postRepository.save(post);
+    public Post updatePost(Post posts, int id,List<String> files, int type) throws ResourceNotFroundException {
+        Post existingPost = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Post does not exist with id: " + id));
+
+
+        existingPost.setContent(posts.getContent());
+
+        if (files != null && !files.isEmpty()) {
+            for (String file : files) {
+                Attachment attachment = new Attachment();
+                attachment.setFile(file);
+
+
+                AttachmentType attachmentType = new AttachmentType();
+                attachmentType.setId(type);
+
+                attachment.setAttachmentType(attachmentType);
+                attachment.setPost(existingPost);
+
+                attachmentRepository.save(attachment);
+            }
+        }
+
+        return postRepository.save(existingPost);
     }
 
     @Override
