@@ -46,7 +46,7 @@ public class PostController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult result,@RequestParam(value = "filename", required = false) List<String> files,@RequestParam(value = "type", required = false) int type)  {
+    public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult result,@RequestParam(value = "filename", required = false) List<String> files,@RequestParam(value = "type", required = false) Optional<Integer> type)  {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -56,7 +56,7 @@ public class PostController {
         } else {
             Post post = modelMapper.map(postRequest,Post.class);
             try{
-                return ResponseEntity.ok(postService.createPost(post,files,type));
+                return ResponseEntity.ok(postService.createPost(post,files,type.orElse(0)));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
