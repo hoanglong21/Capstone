@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getUser(@PathVariable("username") String username) {
         try {
             return ResponseEntity.ok(userService.getUserByUsername(username));
@@ -48,6 +50,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> updateUser(@PathVariable("username") String username, @Valid @RequestBody UserUpdateRequest userUpdateRequest, BindingResult result) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
@@ -68,11 +71,13 @@ public class UserController {
     }
 
     @GetMapping("/otherusers/{except}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> findAllNameExcept(@PathVariable("except") String username) {
         return ResponseEntity.ok(userService.findAllNameExcept(username));
     }
 
     @GetMapping("/users/{username}/ban")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> banUser(@PathVariable("username") String username) {
         try {
             if(userService.banUser(username)) {
@@ -86,6 +91,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{username}/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
         try {
             return ResponseEntity.ok(userService.deleteUser(username));
@@ -95,6 +101,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}/recover")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> recoverUser(@PathVariable("username") String username) {
         try {
             if(userService.recoverUser(username)) {
@@ -108,6 +115,7 @@ public class UserController {
     }
 
     @GetMapping("/sendverify")
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> sendVerificationEmail(@RequestParam("username") String username) {
         try {
             return ResponseEntity.ok(userService.sendVerificationEmail(username));
@@ -117,6 +125,7 @@ public class UserController {
     }
 
     @GetMapping("/verify")
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
         try {
             return ResponseEntity.ok(userService.verifyAccount(token));
@@ -126,6 +135,7 @@ public class UserController {
     }
 
     @GetMapping("/sendreset")
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> sendResetPasswordEmail(@RequestParam("username") String username) {
         try {
             return ResponseEntity.ok(userService.sendResetPasswordEmail(username));
@@ -135,6 +145,7 @@ public class UserController {
     }
 
     @PostMapping("/reset")
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> resetPassword(@RequestParam("username") String username, @RequestParam("pin") String pin,
                                            @Valid @RequestBody ChangePasswordRequest changePasswordRequest, BindingResult result) {
         if (result.hasErrors()) {
@@ -158,6 +169,7 @@ public class UserController {
     }
 
     @PostMapping("/checkpassword")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> checkMatchPassword(@RequestParam("username") String username,
                                                 @Valid @RequestBody CheckPasswordRequest checkPasswordRequest, BindingResult result) {
         if (result.hasErrors()) {
@@ -177,6 +189,7 @@ public class UserController {
     }
 
     @PostMapping("/changepassword")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> changePassword(@RequestParam("username") String username,
                                             @Valid @RequestBody ChangePasswordRequest changePasswordRequest, BindingResult result) {
         if (result.hasErrors()) {
@@ -199,6 +212,7 @@ public class UserController {
     }
 
     @GetMapping("/filterusers")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> filterUser(@RequestParam(value = "name", required = false, defaultValue = "") String name,
                                         @RequestParam(value = "username", required = false, defaultValue = "") String username,
                                         @RequestParam(value = "email", required = false, defaultValue = "") String email,

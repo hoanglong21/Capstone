@@ -9,6 +9,7 @@ import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -34,6 +35,7 @@ public class StudySetController {
     }
 
     @PostMapping("/studysets")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> createStudySet(@RequestBody StudySet studySet) {
         return ResponseEntity.ok(studySetService.createStudySet(studySet));
     }
@@ -48,6 +50,7 @@ public class StudySetController {
     }
 
     @PutMapping("/studysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> updateStudySet(@PathVariable int id, @RequestBody StudySet studySetDetails) {
         try {
             return ResponseEntity.ok(studySetService.updateStudySet(id, studySetDetails));
@@ -57,6 +60,7 @@ public class StudySetController {
     }
 
     @DeleteMapping("/studysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteStudySet(@PathVariable int id) {
         try {
             studySetService.deleteStudySet(id);
@@ -67,6 +71,7 @@ public class StudySetController {
     }
 
     @DeleteMapping("/deletestudysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteHardStudySet(@PathVariable int id) {
         try {
             studySetService.deleteHardStudySet(id);
@@ -77,6 +82,7 @@ public class StudySetController {
     }
 
     @GetMapping("/checkstudyset/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> checkStudySet(@PathVariable int id) {
         try {
             return ResponseEntity.ok(studySetService.checkBlankCard(id));
