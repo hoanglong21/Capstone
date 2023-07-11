@@ -153,58 +153,62 @@ const Stream = () => {
         <div className="row">
             {/* Side */}
             <div className="col-3">
-                <div className="card classCode_container mb-4">
-                    <div className="card-body">
-                        <div className="card-title mainClass_sectionTitle d-flex justify-content-between align-items-center">
-                            <span>Class code</span>
-                            <div className="dropdown">
-                                <button
-                                    className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    <OptionVerIcon />
-                                </button>
-                                <ul className="dropdown-menu">
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={handleCopyCode}
-                                        >
-                                            <CopyIcon
-                                                className="me-3"
-                                                size="1.3rem"
-                                            />
-                                            <span className="align-middle fw-medium">
-                                                Copy class code
-                                            </span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={handleResetCode}
-                                        >
-                                            <ResetIcon
-                                                className="me-3"
-                                                size="1.3rem"
-                                            />
-                                            <span className="align-middle fw-medium">
-                                                Reset class code
-                                            </span>
-                                        </button>
-                                    </li>
-                                </ul>
+                {/* Class code */}
+                {userInfo.role !== 'ROLE_LEANER' && (
+                    <div className="card classCode_container mb-4">
+                        <div className="card-body">
+                            <div className="card-title mainClass_sectionTitle d-flex justify-content-between align-items-center">
+                                <span>Class code</span>
+                                <div className="dropdown">
+                                    <button
+                                        className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <OptionVerIcon />
+                                    </button>
+                                    <ul className="dropdown-menu">
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                                type="button"
+                                                onClick={handleCopyCode}
+                                            >
+                                                <CopyIcon
+                                                    className="me-3"
+                                                    size="1.3rem"
+                                                />
+                                                <span className="align-middle fw-medium">
+                                                    Copy class code
+                                                </span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                                type="button"
+                                                onClick={handleResetCode}
+                                            >
+                                                <ResetIcon
+                                                    className="me-3"
+                                                    size="1.3rem"
+                                                />
+                                                <span className="align-middle fw-medium">
+                                                    Reset class code
+                                                </span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="classCode_value">
+                                {classroom?.classcode}
                             </div>
                         </div>
-                        <div className="classCode_value">
-                            {classroom?.classcode}
-                        </div>
                     </div>
-                </div>
+                )}
+                {/* Upcoming */}
                 <div className="card">
                     <div className="card-body">
                         <div className="card-title mainClass_sectionTitle">

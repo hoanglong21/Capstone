@@ -24,7 +24,7 @@ public class ContentController {
     }
 
     @GetMapping("/contentbycardid")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getAllByCardId(@RequestParam int id) {
         return ResponseEntity.ok(contentService.getAllByCardId(id));
     }
@@ -36,7 +36,7 @@ public class ContentController {
     }
 
     @GetMapping("/contents/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getContentById(@PathVariable int id) {
         try {
             return ResponseEntity.ok(contentService.getContentById(id));

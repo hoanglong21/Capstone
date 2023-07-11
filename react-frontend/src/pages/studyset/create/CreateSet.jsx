@@ -9,11 +9,11 @@ import StudySetService from '../../../services/StudySetService'
 
 import { VocabCard } from './VocabCard'
 import { GrammarCard } from './GrammarCard'
+import { KanjiCard } from './KanjiCard'
 
 import styles from '../../../assets/styles/Form.module.css'
 import CardStyles from '../../../assets/styles/Card.module.css'
 import '../../../assets/styles/stickyHeader.css'
-import { KanjiCard } from './KanjiCard'
 
 const CreateSet = () => {
     const navigate = useNavigate()

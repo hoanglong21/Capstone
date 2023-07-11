@@ -1,73 +1,177 @@
-import React from "react";
+import { Link, useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+
+import { deleteFileByUrl } from '../../../features/fileManagement'
+import ClassService from '../../../services/ClassService'
+
+import InstructionEditor from '../../../components/textEditor/InstructionEditor'
+
+import { DeleteIcon, UploadIcon } from '../../../components/icons'
 
 function CreateAssignment() {
-  return (
-    <div className="container">
-      <div className="title">
-        <h4 className="text-center mt-2 bg-info text-white w-100 py-2 pt-2">
-          Create Assignment For Learner
-        </h4>
-        <div className="form-floating mb-3 mt-5">
-          <input
-            type="text"
-            className="form-control"
-            id="floatingInput"
-            placeholder="Essay 1"
-          />
-          <label for="floatingInput">Title Assignment</label>
+    const { id } = useParams()
+    const { userInfo } = useSelector((state) => state.user)
+
+    const [classroom, setClassroom] = useState({})
+    const [loadingUploadFile, setLoadingUploadFile] = useState(false)
+    const [uploadFiles, setUploadFiles] = useState([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const tempClass = (await ClassService.getClassroomById(id)).data
+            setClassroom(tempClass)
+        }
+        if (userInfo?.id) {
+            fetchData()
+        }
+    }, [userInfo])
+
+    const handleDeleteFile = (file, index) => {
+        var temp = [...uploadFiles]
+        temp.splice(index, 1)
+        deleteFileByUrl(file.file_url, `file/class/${classroom.id}/post`)
+        setUploadFiles(temp)
+    }
+
+    return (
+        <div>
+            <div className="d-flex justify-content-between align-items-center">
+                <Link to="../assignments" className="createAssign_cancelBtn">
+                    cancel
+                </Link>
+                <div className="d-flex">
+                    <button className="createAssign_submitBtn">Assign</button>
+                    <div className="dropdown">
+                        <button
+                            className="createAssign_dropdownBtn dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        ></button>
+                        <ul className="dropdown-menu">
+                            <li>
+                                <a className="dropdown-item" href="#">
+                                    Assign
+                                </a>
+                            </li>
+                            <li>
+                                <a className="dropdown-item" href="#">
+                                    Save draft
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div className="card mt-4">
+                <div className="card-body p-4">
+                    <div className="createAssign_formGroup form-floating mb-4">
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="title"
+                            name="title"
+                            placeholder="title"
+                        />
+                        <label
+                            htmlFor="title"
+                            className="createAssign_formLabel"
+                        >
+                            Title
+                        </label>
+                    </div>
+                    <div className="createAssign_formGroup form-floating mb-4">
+                        <InstructionEditor />
+                        <label className="createAssign_formLabel createAssign_editorLabel">
+                            Instruction (Optional)
+                        </label>
+                    </div>
+                    <div className="row mb-4">
+                        <div className="col-6">
+                            <div className="createAssign_formGroup form-floating">
+                                <input
+                                    type="datetime-local"
+                                    className="form-control"
+                                    name="start_date"
+                                    id="start_date"
+                                    placeholder="start date"
+                                />
+                                <label
+                                    htmlFor="start_date"
+                                    className="createAssign_formLabel"
+                                >
+                                    Start date
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-6">
+                            <div className="createAssign_formGroup form-floating">
+                                <input
+                                    type="datetime-local"
+                                    className="form-control"
+                                    id="due_date"
+                                    name="due_date"
+                                    placeholder="due date"
+                                />
+                                <label
+                                    htmlFor="due_date"
+                                    className="createAssign_formLabel"
+                                >
+                                    Due date
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    {uploadFiles.map((file, index) => (
+                        <div className="card mb-2" key={index}>
+                            <div className="card-body d-flex justify-content-between">
+                                <a
+                                    className="text-decoration-none w-100"
+                                    href={file.file_url}
+                                    target="_blank"
+                                >
+                                    <div className="fileUploadName">
+                                        {file.file_name}
+                                    </div>
+                                    <div className="fileUploadType">
+                                        {file.file_type}
+                                    </div>
+                                </a>
+                                <button
+                                    className="btn fileUploadDelButton"
+                                    onClick={() =>
+                                        handleDeleteFile(file, index)
+                                    }
+                                >
+                                    <DeleteIcon />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                    <button type="btn" disabled={loadingUploadFile}>
+                        <label
+                            htmlFor="uploadPostFile"
+                            className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
+                        >
+                            {loadingUploadFile ? (
+                                <div
+                                    className="spinner-border spinner-border-sm text-secondary"
+                                    role="status"
+                                >
+                                    <span className="visually-hidden">
+                                        LoadingUpload...
+                                    </span>
+                                </div>
+                            ) : (
+                                <UploadIcon strokeWidth="2" />
+                            )}
+                        </label>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div className="form-floating mb-3">
-          <input
-            type="text"
-            className="form-control"
-            id="floatingInput"
-            placeholder="Write paragraph"
-          />
-          <label for="floatingInput">Assignment Description</label>
-        </div>
-        <div className="mb-3 col-6">
-          <p className="fs-7 fw-bold mb-0">Points</p>
-          <select className="form-select" aria-label="Points">
-            <option selected>No Points</option>
-            <option value="1">100</option>
-          </select>
-        </div>
-        <div className="row">
-          <div class="mb-3 col-6">
-            <p className="fs-7 fw-bold mb-0">Date Due</p>
-            <input type="date" className="form-control" />
-          </div>
-          <div class="mb-3 col-6">
-            <p className="fs-7 fw-bold mb-0">Time Due</p>
-            <input type="time" className="form-control" />
-          </div>
-        </div>
-        <div className="form-floating mb-3">
-          <input
-            type="file"
-            className="form-control"
-            id="floatingInput"
-            multiple
-          />
-          <label for="floatingInput">Attach File</label>
-        </div>
-        <div className="text-center mt-3 mb-5">
-          <button
-            type="submit"
-            className="bg-light text-dark border border-secondary rounded-3 py-2 px-4 fw-bold fs-7"
-          >
-            Discard
-          </button>
-          <button
-            type="submit"
-            className="bg-primary text-white border border-primary rounded-3 py-2 px-4 fw-bold fs-7 ms-3"
-          >
-            Create Assignment
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+    )
 }
 
-export default CreateAssignment;
+export default CreateAssignment

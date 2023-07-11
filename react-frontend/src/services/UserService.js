@@ -3,7 +3,11 @@ import axios from 'axios'
 const API_BASE_URL = 'http://localhost:8080/api/v1'
 
 export const getUser = (username) => {
-    return axios.get(API_BASE_URL + '/users/' + username)
+    return axios.get(API_BASE_URL + '/users/' + username, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 export const updateUser = (username, userDetails) => {

@@ -3,15 +3,27 @@ import axios from 'axios'
 const API_BASE_URL = 'http://localhost:8080/api/v1'
 
 const createStudySet = (studySet) => {
-    return axios.post(API_BASE_URL + '/studysets', studySet)
+    return axios.post(API_BASE_URL + '/studysets', studySet, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const updateStudySet = (id, studySetDetails) => {
-    return axios.put(API_BASE_URL + '/studysets/' + id, studySetDetails)
+    return axios.put(API_BASE_URL + '/studysets/' + id, studySetDetails, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const deleteStudySet = (id) => {
-    return axios.delete(API_BASE_URL + '/studysets/' + id)
+    return axios.delete(API_BASE_URL + '/studysets/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const getStudySetById = (id) => {
@@ -19,7 +31,11 @@ const getStudySetById = (id) => {
 }
 
 const checkStudySet = (id) => {
-    return axios.get(API_BASE_URL + '/checkstudyset/' + id)
+    return axios.get(API_BASE_URL + '/checkstudyset/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const getAllStudySetByUser = (username) => {

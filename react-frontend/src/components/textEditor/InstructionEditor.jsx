@@ -1,9 +1,8 @@
 import Editor from 'ckeditor5-custom-build/build/ckeditor'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 
-export default function PostEditor(props) {
+export default function InstructionEditor(props) {
     const editorConfiguration = {
-        placeholder: 'Announce something to your class',
         toolbar: {
             items: [
                 'undo',
