@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import DoTest from "./DoTest";
 
 function ViewTest() {
   const navigate = useNavigate();
