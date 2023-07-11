@@ -119,6 +119,7 @@ public class CommentController {
     @GetMapping("/filtercomment")
     public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "direction", required = false) String direction,
                                            @RequestParam(value = "typeid", required = false) Optional<Integer> typeid,
                                            @RequestParam(value = "postid", required = false) Optional<Integer> postid,
                                            @RequestParam(value = "testid", required = false) Optional<Integer> testid,
@@ -128,7 +129,7 @@ public class CommentController {
                                            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
 
         try{
-            return ResponseEntity.ok(commentService.getFilterComment(search,author,typeid.orElse(0),postid.orElse(0),testid.orElse(0),studysetid.orElse(0),roottid.orElse(0),page,size));
+            return ResponseEntity.ok(commentService.getFilterComment(search,author,direction,typeid.orElse(0),postid.orElse(0),testid.orElse(0),studysetid.orElse(0),roottid.orElse(0),page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
