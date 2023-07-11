@@ -36,32 +36,32 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 
     @Override
-    public Submission createSubmission(Submission submission, List<String> file_names, int type, List<String> urls, List<String> file_types) {
+    public Submission createSubmission(Submission submission) {
         submission.setCreated_date(new Date());
 
         Submission savedSubmission = submissionRepository.save(submission);
 
-        if (file_names != null && urls != null && file_types != null  && type != 0) {
-            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-            for (int i = 0; i < numOfAttachments; i++) {
-                String file_name = file_names.get(i);
-                String url = urls.get(i);
-                String file_type = file_types.get(i);
-
-                Attachment attachment = new Attachment();
-                attachment.setFile_name(file_name);
-                attachment.setFile_url(file_type);
-                attachment.setFile_url(url);
-
-                AttachmentType attachmentType = new AttachmentType();
-                attachmentType.setId(type);
-
-                attachment.setAttachmentType(attachmentType);
-                attachment.setSubmission(savedSubmission);
-
-                attachmentRepository.save(attachment);
-            }
-        }
+//        if (file_names != null && urls != null && file_types != null  && type != 0) {
+//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+//            for (int i = 0; i < numOfAttachments; i++) {
+//                String file_name = file_names.get(i);
+//                String url = urls.get(i);
+//                String file_type = file_types.get(i);
+//
+//                Attachment attachment = new Attachment();
+//                attachment.setFile_name(file_name);
+//                attachment.setFile_url(file_type);
+//                attachment.setFile_url(url);
+//
+//                AttachmentType attachmentType = new AttachmentType();
+//                attachmentType.setId(type);
+//
+//                attachment.setAttachmentType(attachmentType);
+//                attachment.setSubmission(savedSubmission);
+//
+//                attachmentRepository.save(attachment);
+//            }
+//        }
             return savedSubmission;
     }
 
@@ -73,35 +73,40 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Submission updateSubmission(int id, Submission submission, List<String> file_names, int type,List<String> urls, List<String> file_types) throws ResourceNotFroundException {
+    public Submission updateSubmission(int id, Submission submission) throws ResourceNotFroundException {
         Submission existingSubmission = submissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Submission does not exist with id: " + id));
 
         existingSubmission.setDescription(submission.getDescription());
         existingSubmission.setModified_date(new Date());
+        
+        List<Attachment> attachments = attachmentRepository.getAttachmentBySubmissionId(existingSubmission.getId());
 
-        if (file_names != null && urls != null && file_types != null  && type != 0) {
-            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-            for (int i = 0; i < numOfAttachments; i++) {
-                String file_name = file_names.get(i);
-                String url = urls.get(i);
-                String file_type = file_types.get(i);
-
-                Attachment attachment = new Attachment();
-                attachment.setFile_name(file_name);
-                attachment.setFile_url(file_type);
-                attachment.setFile_url(url);
-
-                AttachmentType attachmentType = new AttachmentType();
-                attachmentType.setId(type);
-
-                attachment.setAttachmentType(attachmentType);
-                attachment.setSubmission(existingSubmission);
-
-                attachmentRepository.save(attachment);
-            }
+        for (Attachment attachment : attachments) {
+            attachmentRepository.delete(attachment);
         }
 
+//        if (file_names != null && urls != null && file_types != null  && type != 0) {
+//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+//            for (int i = 0; i < numOfAttachments; i++) {
+//                String file_name = file_names.get(i);
+//                String url = urls.get(i);
+//                String file_type = file_types.get(i);
+//
+//                Attachment attachment = new Attachment();
+//                attachment.setFile_name(file_name);
+//                attachment.setFile_url(file_type);
+//                attachment.setFile_url(url);
+//
+//                AttachmentType attachmentType = new AttachmentType();
+//                attachmentType.setId(type);
+//
+//                attachment.setAttachmentType(attachmentType);
+//                attachment.setSubmission(existingSubmission);
+//
+//                attachmentRepository.save(attachment);
+//            }
+//        }
         return submissionRepository.save(existingSubmission);
     }
 
