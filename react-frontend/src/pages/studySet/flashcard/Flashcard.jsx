@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { useEventListener } from '@uidotdev/usehooks'
 
 import CardService from '../../../services/CardService'
 import ContentService from '../../../services/ContentService'
@@ -24,36 +23,52 @@ const Flashcard = () => {
     const { id } = useParams()
 
     const [cards, setCards] = useState([])
-    const [cardIndex, setCardIndex] = useState(0)
+    const [cardIndex, setCardIndex] = useState(null)
 
     useEffect(() => {
         const fetchData = async () => {
             const tempCards = (await CardService.getAllByStudySetId(id)).data
             setCards(tempCards)
+            setCardIndex(0)
         }
         if (id) {
             fetchData()
         }
     }, [id])
 
-    // catch press arrow event
-    // useEffect(() => {
-    //     window.addEventListener('keydown', function (event) {
-    //         if (event.code === 'ArrowLeft' && cardIndex !== 0) {
-    //             setCardIndex(cardIndex - 1)
-    //             console.log('555')
-    //         } else if (
-    //             event.code === 'ArrowRight' &&
-    //             cardIndex !== cards.length
-    //         ) {
-    //             setCardIndex(cardIndex + 1)
-    //             console.log('666')
-    //         } else if (event.code === 'Space') {
-    //             toggleFlip()
-    //             console.log('888')
-    //         }
-    //     })
-    // }, [])
+    // catch press arrow event event
+    useEffect(() => {
+        window.addEventListener(
+            'keydown',
+            (event) => {
+                // if (event.defaultPrevented) {
+                //     return // Do nothing if the event was already processed
+                // }
+                switch (event.key) {
+                    case 'ArrowLeft':
+                        const tempIndex1 = cardIndex - 1
+                        if (tempIndex1 > -1) {
+                            setCardIndex(tempIndex1)
+                        }
+                        // Do something for "left arrow" key press.
+                        break
+                    case 'ArrowRight':
+                        const tempIndex2 = cardIndex + 1
+                        if (tempIndex2 < cards.length) {
+                            setCardIndex(tempIndex2)
+                        }
+                        // Do something for "right arrow" key press.
+                        break
+                    default:
+                        return // Quit when this doesn't handle the key event.
+                }
+
+                // Cancel the default action to avoid it being handled twice
+                event.preventDefault()
+            },
+            true
+        )
+    }, [cardIndex])
 
     return (
         <div>
@@ -136,6 +151,14 @@ const Flashcard = () => {
                     </button>
                 </div>
             </div>
+            <div className="flashcardProgressContainer">
+                <div
+                    className="flashcardProgress"
+                    style={{
+                        width: `${((cardIndex + 1) / cards?.length) * 100}%`,
+                    }}
+                ></div>
+            </div>
             <div className="flashcardMain mx-auto mb-5">
                 <FlashcardItem card={cards[cardIndex]} />
                 <div className="d-flex align-items-center justify-content-between mt-4">
@@ -196,7 +219,27 @@ export const FlashcardItem = ({ card }) => {
         document.getElementById('flipElement').classList.toggle('is-flipped')
     }
 
-    useEventListener(document, 'space', toggleFlip)
+    // catch press space event
+    useEffect(() => {
+        window.addEventListener(
+            'keydown',
+            (event) => {
+                if (event.defaultPrevented) {
+                    return // Do nothing if event already handled
+                }
+                switch (event.code) {
+                    case 'Space':
+                        toggleFlip()
+                }
+                if (event.code !== 'Tab') {
+                    // Consume the event so it doesn't get handled twice,
+                    // as long as the user isn't trying to move focus away
+                    event.preventDefault()
+                }
+            },
+            true
+        )
+    }, [])
 
     return (
         <div
@@ -206,7 +249,7 @@ export const FlashcardItem = ({ card }) => {
             }}
         >
             <div className="flashcardContentWrapper" id="flipElement">
-                <div className="flashcardFront">
+                <div className="flashcardFront d-flex align-items-center justify-content-center">
                     <div
                         dangerouslySetInnerHTML={{
                             __html: contents[0]?.content,
@@ -214,11 +257,25 @@ export const FlashcardItem = ({ card }) => {
                     ></div>
                 </div>
                 <div className="flashcardBack">
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: contents[1]?.content,
-                        }}
-                    ></div>
+                    <div className="row h-100">
+                        {contents.map((contentItem, index) => {
+                            if (index > 0) {
+                                return (
+                                    <div className="col-6" key={contentItem.id}>
+                                        <div className="flashCardField_label mb-2">
+                                            {contentItem.field.name}
+                                        </div>
+                                        <div
+                                            className="flashCardField_content"
+                                            dangerouslySetInnerHTML={{
+                                                __html: contentItem?.content,
+                                            }}
+                                        ></div>
+                                    </div>
+                                )
+                            }
+                        })}
+                    </div>
                 </div>
             </div>
         </div>

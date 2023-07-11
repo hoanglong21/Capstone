@@ -73,6 +73,16 @@
     line-height: 1.43;
 }
 
+.flashcardProgressContainer {
+    height: 0.125rem;
+    background-color: none;
+}
+
+.flashcardProgress {
+    background-color: #7583ff;
+    height: 100%;
+}
+
 .flashcardMain {
     width: 80vw;
     margin: 1.5rem 1rem 0;
@@ -109,6 +119,7 @@
 
 .flashcardFront {
     font-size: 32px;
+    width: 100%;
 }
 
 .flashcardFront p,
@@ -118,6 +129,17 @@
 
 .flashcardBack {
     transform: rotateY(180deg);
+    width: 100%;
+}
+
+.flashCardField_label {
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.flashCardField_content {
+    font-size: 1rem;
 }
 
 .flashcardControls {
