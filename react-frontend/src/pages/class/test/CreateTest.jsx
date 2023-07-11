@@ -119,6 +119,12 @@ function CreateTest() {
       <div className="text-center mt-3 mb-5">
         <button
           type="submit"
+          className="bg-light text-dark border border-secondary rounded-3 py-2 px-4 fw-bold fs-7"
+        >
+          Discard
+        </button>
+        <button
+          type="submit"
           className="bg-primary text-white border border-primary rounded-3 py-2 px-4 fw-bold fs-7"
         >
           Add Question
