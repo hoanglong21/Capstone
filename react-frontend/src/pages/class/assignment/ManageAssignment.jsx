@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import DeleteAssignment from './DeleteAssignment'
 
 function ManageAssignment() {
   return (
@@ -47,7 +48,7 @@ function ManageAssignment() {
                 type="button"
                 className="btn btn-danger "
                 data-bs-toggle="modal"
-                data-bs-target="#deleteTestModal"
+                data-bs-target="#deleteAssignmentModal"
               >
                 <i class="bi bi-trash-fill me-2"></i>
                 Delete
@@ -56,6 +57,7 @@ function ManageAssignment() {
           </tr>
         </tbody>
       </table>
+      <DeleteAssignment/>
     </div>
   )
 }
