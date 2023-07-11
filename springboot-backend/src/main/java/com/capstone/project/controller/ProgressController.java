@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -24,11 +25,13 @@ public class ProgressController {
     }
 
     @GetMapping("/progresses")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getAllProgresses() {
         return ResponseEntity.ok(progressService.getAllProgresses());
     }
 
     @PostMapping("/progresses")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> createProgress(@RequestBody Progress progress) {
         try {
             return ResponseEntity.ok(progressService.createProgress(progress));
@@ -38,6 +41,7 @@ public class ProgressController {
     }
 
     @GetMapping("/progresses/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getProgressById(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(progressService.getProgressById(id));
@@ -47,6 +51,7 @@ public class ProgressController {
     }
 
     @PutMapping("/progresses/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> updateProgress(@PathVariable("id") int id, @RequestBody Progress progressDetails) {
         try {
             return ResponseEntity.ok(progressService.updateProgress(id, progressDetails));
@@ -56,6 +61,7 @@ public class ProgressController {
     }
 
     @DeleteMapping("/progresses/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteProgress(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(progressService.deleteProgress(id));

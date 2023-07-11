@@ -5,6 +5,7 @@ import com.capstone.project.model.Feedback;
 import com.capstone.project.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -20,6 +21,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/feedbacks")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getAllFeedbacks() {
         return ResponseEntity.ok(feedbackService.getAllFeedbacks());
     }
@@ -30,6 +32,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/feedbacks/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getFeedbackById(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(feedbackService.getFeedbackById(id));
@@ -39,6 +42,7 @@ public class FeedbackController {
     }
 
     @PutMapping("/feedbacks/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateFeedback(@PathVariable("id") int id, @RequestBody Feedback feedbackDetails) {
         try {
             return ResponseEntity.ok(feedbackService.updateFeedback(id, feedbackDetails));
@@ -48,6 +52,7 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/feedbacks/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteFeedback(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(feedbackService.deleteFeedback(id));
