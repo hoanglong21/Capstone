@@ -99,7 +99,7 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
-    public Map<String, Object> getFilterTest(String search, String author, int duration, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterTest(String search, String author,String direction, int duration, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="select t.id,t.created_date,t.description,t.duration,t.modified_date,t.title,t.author_id," +
@@ -123,6 +123,14 @@ public class TestServiceImpl  implements TestService {
             query += " AND t.duration = :duration";
             parameters.put("duration", duration);
         }
+
+        String direct = "desc";
+        if(direction != null && !direction.isEmpty()){
+            if (direction.equalsIgnoreCase("asc")) {
+                direct = "asc";
+            }
+        }
+        query += " ORDER BY created_date " + " " + direct;
 
 
         Query q = em.createNativeQuery(query, Test.class);
