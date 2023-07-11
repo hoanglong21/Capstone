@@ -221,7 +221,7 @@ function DoQuiz() {
           </button>
         </div>
       </div>
-      {/* IF TEST: TRUE/FALSE */}
+      {/* IF QUIZ: TRUE/FALSE */}
       <div style={{ margin: "0 auto", maxWidth: "52.5rem", padding: "0 2rem" }}>
         <article id="trueFalse-0" tabindex="-1" class="w1gd4v28 svwhkoh">
           <div class="p1tur8tp">
@@ -308,7 +308,111 @@ d) Khoa học"
           </div>
         </article>
       </div>
-      {/* IF TEST: MULTIPLE CHOICE */}
+      {/* IF QUIZ: MULTIPLE CHOICE */}
+      <div aria-label="question" role="listitem" class="qq5bf7c">
+        <div id="mcq-0" tabindex="-1" class="q1sjw0yf">
+          <article aria-live="polite" class="src0sz3 svwhkoh">
+            <div class="a1bncmms">
+              <div class="wlbcmo g8d16b6">
+                <div class="wlbcmo hn7llme">
+                  <div class="wlbcmo l3h11jy">
+                    <section class="lwajxlv">Term</section>
+                  </div>
+                  <div class="wlbcmo c8ck6sr"></div>
+                  <div class="wlbcmo rpq3rlv">
+                    <div class="r1i8yi5w"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="t4j019x" data-testid="Question Text">
+                <div class="t1gujtze c1sj1twu">
+                  <div
+                    aria-label="QN=129 Nguyên nhân sâu xa của việc ra đời của giai cấp thuộc"
+                    class="FormattedText notranslate FormattedTextWithImage-wrapper lang-vi"
+                    style={{ fontSize: "20px" }}
+                  >
+                    <div style={{ display: "block" }}>
+                      QN=129 Nguyên nhân sâu xa của việc ra đời của giai cấp
+                      thuộc
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="a12odeb9">
+              <section
+                aria-label="Select the correct definition"
+                class="l16m64a6"
+              >
+                <div
+                  aria-hidden="true"
+                  class="m1crz3gf"
+                  data-testid="multiple-choice-answer-label"
+                >
+                  Select the correct definition
+                </div>
+              </section>
+              <div class="axo6qs8" data-testid="MCQ Answers">
+                <section class="w1uwrq7e" tabindex="0">
+                  <div></div>
+                  <div
+                    aria-selected="false"
+                    class="t1d08860"
+                    data-testid="option-1"
+                  >
+                    <div class="c1sj1twu">
+                      <div
+                        aria-label="Lĩnh vực kinh tế"
+                        class="FormattedText notranslate FormattedTextWithImage-wrapper lang-vi"
+                      >
+                        Lĩnh vực kinh tế
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section class="w1uwrq7e" tabindex="0">
+                  <div></div>
+                  <div
+                    aria-selected="false"
+                    class="t1d08860"
+                    data-testid="option-2"
+                  >
+                    <div class="c1sj1twu">
+                      <div
+                        aria-label="Lĩnh vực văn hóa"
+                        class="FormattedText notranslate FormattedTextWithImage-wrapper lang-vi"
+                      >
+                        Lĩnh vực văn hóa
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section class="w1uwrq7e" tabindex="0">
+                  <div></div>
+                  <div
+                    aria-selected="false"
+                    class="t1d08860"
+                    data-testid="option-3"
+                  >
+                    <div class="c1sj1twu">
+                      <div
+                        aria-label="Lĩnh vực xã hội"
+                        class="FormattedText notranslate FormattedTextWithImage-wrapper lang-vi"
+                      >
+                        Lĩnh vực xã hội
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+            <div class="t1b9wj7u">
+              <div class="c86ukn8">1 of 20</div>
+            </div>
+          </article>
+        </div>
+      </div>
+      {/* IF QUIZ: WRITTEN */}
       
     </div>
   );
