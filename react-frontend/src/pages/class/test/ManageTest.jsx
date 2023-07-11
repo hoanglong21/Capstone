@@ -1,4 +1,6 @@
 import React from "react";
+import DeleteTest from "./DeleteTest";
+import { Link } from "react-router-dom";
 
 function ManageTest() {
   return (
@@ -30,23 +32,21 @@ function ManageTest() {
             <td style={{ verticalAlign: "middle" }}>15 minutes</td>
             <td style={{ verticalAlign: "middle" }}>9/7/2023</td>
             <td>
-              <button type="button" className="btn btn-primary me-3">
+              <Link to="/viewdetailtest" className="btn btn-primary me-3" >
               <i class="bi bi-info-square me-2"></i>View Details
-              </button>
-              <button
+              </Link>
+              <Link
                 type="button"
                 className="btn btn-success me-3"
-                data-bs-toggle="modal"
-                data-bs-target="#unbanClassModal"
               >
                 <i class="bi bi-pencil-square me-2"></i>
                 Update
-              </button>
+              </Link>
               <button
                 type="button"
                 className="btn btn-danger "
                 data-bs-toggle="modal"
-                data-bs-target="#banClassModal"
+                data-bs-target="#deleteTestModal"
               >
                 <i class="bi bi-trash-fill me-2"></i>
                 Delete
@@ -55,6 +55,7 @@ function ManageTest() {
           </tr>
         </tbody>
       </table>
+      <DeleteTest/>
     </div>
   );
 }

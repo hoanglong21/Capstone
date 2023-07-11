@@ -20,8 +20,8 @@ function ViewAssignment() {
             <th scope="col">Assignment Description</th>
             <th scope="col">Create Date</th>
             <th scope="col">Due Date</th>
+            <th scope="col">Point</th>
             <th scope="col">Action</th>
-            <th scope="col">Grade</th>
           </tr>
         </thead>
         <tbody>
@@ -35,6 +35,7 @@ function ViewAssignment() {
             </td>
             <td style={{ verticalAlign: "middle" }}>9/7/2023</td>
             <td style={{ verticalAlign: "middle" }}>11/7/2023</td>
+            <td style={{ verticalAlign: "middle" }}>No Point</td>
             <td>
               <input type="file" id="actual-btn" hidden />
               <label
@@ -46,7 +47,6 @@ function ViewAssignment() {
               <br />
               <span id="file-chosen">No file chosen</span>
             </td>
-            <td style={{ verticalAlign: "middle" }}>90/100</td>
           </tr>
         </tbody>
       </table>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import StudySetService from '../../../services/StudySetService'
@@ -60,31 +60,32 @@ const ViewSet = () => {
             {/* Modes */}
             <div className="row mb-4">
                 <div className="col-4">
-                    <div className="StudyModesItem d-flex align-items-center justify-content-center">
+                    <Link
+                        to={`/flashcards/${studySet.id}`}
+                        className="studyModesItem d-flex align-items-center justify-content-center"
+                    >
                         <StudySetSolidIcon
                             className="StudyModesIcon"
                             size="2rem"
                         />
-                        <a className="StudyModesItemName" href="/flashcard">
-                            Flashcards
-                        </a>
-                    </div>
+                        <span className="studyModesItemName">Flashcards</span>
+                    </Link>
                 </div>
                 <div className="col-4">
-                    <div className="StudyModesItem d-flex align-items-center justify-content-center">
+                    <div className="studyModesItem d-flex align-items-center justify-content-center">
                         <LearnSolidIcon
                             className="StudyModesIcon"
                             size="2rem"
                         />
-                        <a className="StudyModesItemName" href="/learn">
+                        <a className="studyModesItemName" href="/learn">
                             Learn
                         </a>
                     </div>
                 </div>
                 <div className="col-4">
-                    <div className="StudyModesItem d-flex align-items-center justify-content-center">
+                    <div className="studyModesItem d-flex align-items-center justify-content-center">
                         <TestSolidIcon className="StudyModesIcon" size="2rem" />
-                        <a className="StudyModesItemName" href="/test">
+                        <a className="studyModesItemName" href="/test">
                             Test
                         </a>
                     </div>

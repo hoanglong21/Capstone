@@ -7,8 +7,8 @@ import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import Layout from './components/layouts/Layout'
 import GPTContainer from './components/Chat/GPTContainer'
-import Flashcard from './pages/studyset/Flashcard'
-import MainClass from './pages/class/mainClass/MainClass'
+import Flashcard from './pages/studyset/flashcard/Flashcard'
+import ClassLayout from './pages/class/classLayout/ClassLayout'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -53,13 +53,17 @@ import VocabDict from './pages/dictionary/VocabDict'
 import GrammarDict from './pages/dictionary/GrammarDict'
 import KanjiDict from './pages/dictionary/KanjiDict'
 import ViewKanjiDetail from './pages/studyset/view/ViewKanjiDetail'
-import ViewGrammarDetail from './pages/studyset/view/ViewGrammarDetail'
+// import ViewGrammarDetail from './pages/studyset/view/ViewGrammarDetail'
 import ViewVocabularyDetail from './pages/studyset/view/ViewVocabularyDetail'
 import ViewSet from './pages/studyset/view/ViewSet'
-import ViewTest from './pages/class/test/ViewTest'
 import DoTest from './pages/class/test/DoTest'
-import ViewAssignment from './pages/ViewAssignment'
 import ManageTest from './pages/class/test/ManageTest'
+import Stream from './pages/class/Stream'
+import CreateTest from './pages/class/test/CreateTest'
+import ViewDetailTest from './pages/class/test/ViewDetailTest'
+import ManageAssignment from './pages/class/assignment/ManageAssignment'
+import CreateAssignment from './pages/class/assignment/CreateAssignment'
+import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -105,9 +109,23 @@ const App = () => {
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
-                        <Route path="flashcards/:id" element={<Flashcard />} />
                         {/* Class */}
-                        <Route path="class/:id" element={<MainClass />} />
+                        <Route path="class/:id" element={<ClassLayout />}>
+                            <Route index path="stream" element={<Stream />} />
+                        </Route>
+                        {/* Test */}
+                        <Route path="/dotest" element={<DoTest />} />
+                        <Route path="/managetest" element={<ManageTest />} />
+                        <Route
+                            path="/viewdetailtest"
+                            element={<ViewDetailTest />}
+                        />
+                        <Route path="/createtest" element={<CreateTest />} />
+                        {/* Assignment */}
+                        <Route path="/manageassignment" element={<ManageAssignment/>} 
+                        />
+                        <Route path="/createassignment" element={<CreateAssignment />} />
+                        <Route path="/updateassignment" element={<UpdateAssignment />} />
                         {/* Feedback */}
                         <Route
                             path="help-center/send-feedback"
@@ -127,15 +145,6 @@ const App = () => {
                     </Route>
                     {/* Study set */}
                     <Route path="set/:id" element={<ViewSet />} />
-                    {/* Test */}
-                    <Route path="/viewtest" element={<ViewTest />} />
-                    <Route path="/dotest" element={<DoTest />} />
-                    <Route path="/managetest" element={<ManageTest />} />
-                    {/* Assignment */}
-                    <Route
-                        path="/viewassignment"
-                        element={<ViewAssignment />}
-                    />
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}
@@ -175,6 +184,10 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                 </Route>
+                {/* Access deny */}
+                <Route element={<ProtectedRoute />}>
+                    <Route path="flashcards/:id" element={<Flashcard />} />
+                </Route>
 
                 <Route path="/banuser" element={<BanUser />} />
                 <Route path="/unbanuser" element={<UnBanUser />} />
@@ -197,10 +210,10 @@ const App = () => {
                 />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
-                <Route
+                {/* <Route
                     path="/viewdetailgrammar"
                     element={<ViewGrammarDetail />}
-                />
+                /> */}
                 <Route
                     path="/viewdetailvocab"
                     element={<ViewVocabularyDetail />}
