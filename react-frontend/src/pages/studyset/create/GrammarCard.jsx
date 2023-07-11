@@ -153,31 +153,31 @@ export const GrammarCard = (props) => {
         await CardService.updateCard(tempCard.id, tempCard)
     }
 
-    const handleChangeFile = async (event, folderName) => {
+    const handleChangeFile = async (event) => {
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file, folderName, file.type)
+            const url = await uploadFile(file, `card/${card.id}`, file.type)
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {
-                deleteFileByUrl(urlOld, folderName)
+                deleteFileByUrl(urlOld, `card/${card.id}`)
             }
             doUpdateCard(tempCard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
-    const handleDeleteFile = (event, folderName) => {
+    const handleDeleteFile = (event) => {
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         const urlOld = card[name]
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
         if (urlOld) {
-            deleteFileByUrl(urlOld, folderName)
+            deleteFileByUrl(urlOld, `card/${card.id}`)
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
@@ -215,9 +215,7 @@ export const GrammarCard = (props) => {
                             accept="image/*"
                             name="picture"
                             className={styles.file_upload}
-                            onChange={(event) =>
-                                handleChangeFile(event, 'image')
-                            }
+                            onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadImage${props.index}`}>
                             <ImageIcon className="ms-3 icon-warning" />
@@ -230,9 +228,7 @@ export const GrammarCard = (props) => {
                             accept="audio/*"
                             name="audio"
                             className={styles.file_upload}
-                            onChange={(event) =>
-                                handleChangeFile(event, 'audio')
-                            }
+                            onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadAudio${props.index}`}>
                             <MicIcon className="ms-3 icon-warning" />
@@ -430,7 +426,7 @@ export const GrammarCard = (props) => {
                                         name="picture"
                                         className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
                                         onClick={(event) =>
-                                            handleDeleteFile(event, 'image')
+                                            handleDeleteFile(event)
                                         }
                                     >
                                         <DeleteIcon size="1.25rem" />
@@ -457,7 +453,7 @@ export const GrammarCard = (props) => {
                                         name="audio"
                                         className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
                                         onClick={(event) =>
-                                            handleDeleteFile(event, 'audio')
+                                            handleDeleteFile(event)
                                         }
                                     >
                                         <DeleteIcon size="1.25rem" />

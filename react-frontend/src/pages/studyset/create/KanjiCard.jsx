@@ -209,7 +209,7 @@ export const KanjiCard = (props) => {
         await CardService.updateCard(tempCard.id, tempCard)
     }
 
-    const handleChangeFile = async (event, folderName) => {
+    const handleChangeFile = async (event) => {
         const name = event.target.name
         // set loading
         if (name === 'picture') {
@@ -225,7 +225,7 @@ export const KanjiCard = (props) => {
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file, folderName, file.type)
+            const url = await uploadFile(file, `card/${card.id}`, file.type)
             if (name === 'strokeOrder') {
                 // update stroke order
                 const tempStrokeOrder = { ...strokeOrder, content: url }
@@ -236,7 +236,7 @@ export const KanjiCard = (props) => {
                 const tempCard = { ...card, [name]: url }
                 setCard(tempCard)
                 if (urlOld) {
-                    deleteFileByUrl(urlOld, folderName)
+                    deleteFileByUrl(urlOld, `card/${card.id}`)
                 }
                 doUpdateCard(tempCard)
             }
@@ -254,7 +254,7 @@ export const KanjiCard = (props) => {
         }
     }
 
-    const handleDeleteFile = (event, folderName) => {
+    const handleDeleteFile = (event) => {
         const name = event.target.name
         // set loading
         if (name === 'picture') {
@@ -281,7 +281,7 @@ export const KanjiCard = (props) => {
         }
         // delete url
         if (urlOld) {
-            deleteFileByUrl(urlOld, folderName)
+            deleteFileByUrl(urlOld, `card/${card.id}`)
         }
 
         // set loading
@@ -329,7 +329,7 @@ export const KanjiCard = (props) => {
                             name="picture"
                             className={styles.file_upload}
                             onChange={(event) =>
-                                handleChangeFile(event, 'image')
+                                handleChangeFile(event)
                             }
                         />
                         <label htmlFor={`uploadImage${props.index}`}>
@@ -344,7 +344,7 @@ export const KanjiCard = (props) => {
                             name="audio"
                             className={styles.file_upload}
                             onChange={(event) =>
-                                handleChangeFile(event, 'audio')
+                                handleChangeFile(event)
                             }
                         />
                         <label htmlFor={`uploadAudio${props.index}`}>
@@ -575,7 +575,7 @@ export const KanjiCard = (props) => {
                                     name="strokeOrder"
                                     className={`btn btn-danger p-1 rounded-circle ${styles.card_delImage}`}
                                     onClick={(event) =>
-                                        handleDeleteFile(event, 'image')
+                                        handleDeleteFile(event)
                                     }
                                 >
                                     <DeleteIcon size="1rem" />
@@ -593,7 +593,7 @@ export const KanjiCard = (props) => {
                                     className={styles.file_upload}
                                     accept="image/*"
                                     onChange={(event) =>
-                                        handleChangeFile(event, 'image')
+                                        handleChangeFile(event)
                                     }
                                 />
                                 {loadingStrokeOrder ? (
@@ -645,7 +645,7 @@ export const KanjiCard = (props) => {
                                         name="picture"
                                         className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
                                         onClick={(event) =>
-                                            handleDeleteFile(event, 'image')
+                                            handleDeleteFile(event)
                                         }
                                     >
                                         <DeleteIcon size="1.25rem" />
@@ -672,7 +672,7 @@ export const KanjiCard = (props) => {
                                         name="audio"
                                         className={`btn btn-danger ms-5 p-0 rounded-circle ${styles.btn_del}`}
                                         onClick={(event) =>
-                                            handleDeleteFile(event, 'audio')
+                                            handleDeleteFile(event)
                                         }
                                     >
                                         <DeleteIcon size="1.25rem" />

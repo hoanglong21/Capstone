@@ -56,7 +56,7 @@ import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
 import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
 import ViewSet from './pages/studySet/view/ViewSet'
 import DoTest from './pages/class/test/DoTest'
-import ManageTest from './pages/class/test/ManageTest'
+import TestList from './pages/class/test/TestList'
 import Stream from './pages/class/Stream'
 import CreateTest from './pages/class/test/CreateTest'
 import ViewDetailTest from './pages/class/test/ViewDetailTest'
@@ -120,10 +120,10 @@ const App = () => {
                                 path="create-assignment"
                                 element={<CreateAssignment />}
                             />
+                            <Route path="tests" element={<TestList />} />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
-                        <Route path="/managetest" element={<ManageTest />} />
                         <Route
                             path="/viewdetailtest"
                             element={<ViewDetailTest />}
@@ -219,10 +219,6 @@ const App = () => {
                 />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
-                {/* <Route
-                    path="/viewdetailgrammar"
-                    element={<ViewGrammarDetail />}
-                /> */}
                 <Route
                     path="/viewdetailvocab"
                     element={<ViewVocabularyDetail />}
