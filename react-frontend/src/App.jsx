@@ -56,11 +56,11 @@ import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
 import ViewGrammarDetail from './pages/studySet/view/ViewGrammarDetail'
 import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
 import ViewSet from './pages/studySet/view/ViewSet'
-import ViewTest from './pages/class/test/ViewTest'
 import DoTest from './pages/class/test/DoTest'
-import ViewAssignment from './pages/ViewAssignment'
 import ManageTest from './pages/class/test/ManageTest'
 import Stream from './pages/class/Stream'
+import CreateTest from './pages/class/test/CreateTest'
+import ViewDetailTest from './pages/class/test/ViewDetailTest'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -110,6 +110,14 @@ const App = () => {
                         <Route path="class/:id" element={<ClassLayout />}>
                             <Route index path="stream" element={<Stream />} />
                         </Route>
+                        {/* Test */}
+                        <Route path="/dotest" element={<DoTest />} />
+                        <Route path="/managetest" element={<ManageTest />} />
+                        <Route
+                            path="/viewdetailtest"
+                            element={<ViewDetailTest />}
+                        />
+                        <Route path="/createtest" element={<CreateTest />} />
                         {/* Feedback */}
                         <Route
                             path="help-center/send-feedback"
@@ -129,15 +137,6 @@ const App = () => {
                     </Route>
                     {/* Study set */}
                     <Route path="set/:id" element={<ViewSet />} />
-                    {/* Test */}
-                    <Route path="/viewtest" element={<ViewTest />} />
-                    <Route path="/dotest" element={<DoTest />} />
-                    <Route path="/managetest" element={<ManageTest />} />
-                    {/* Assignment */}
-                    <Route
-                        path="/viewassignment"
-                        element={<ViewAssignment />}
-                    />
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}

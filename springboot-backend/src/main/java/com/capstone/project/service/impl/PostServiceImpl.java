@@ -59,47 +59,55 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(Post post, List<String> files, int type) {
+    public Post createPost(Post post, List<String> file_names, int type,List<String>urls, List<String> file_types) {
         post.setCreated_date(new Date());
 
         Post savedPost = postRepository.save(post);
 
-        if (files != null && !files.isEmpty() && type != 0) {
-            for (String file : files) {
+        if (file_names != null && urls != null && file_types != null && type != 0) {
+            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+            for (int i = 0; i < numOfAttachments; i++) {
+                String file_name = file_names.get(i);
+                String url = urls.get(i);
+                String file_type = file_types.get(i);
+
                 Attachment attachment = new Attachment();
+                attachment.setFile_name(file_name);
+                attachment.setFile_url(url);
+                attachment.setFile_type(file_type);
                 AttachmentType attachmentType = new AttachmentType();
                 attachmentType.setId(type);
-                attachment.setFile(file);
                 attachment.setAttachmentType(attachmentType);
                 attachment.setPost(savedPost);
 
-
-                Attachment savedAttachment = attachmentRepository.save(attachment);
-
-                savedAttachment.setPost(savedPost);
-                attachmentRepository.save(savedAttachment);
+                attachmentRepository.save(attachment);
             }
         }
+
         return savedPost;
     }
 
     @Override
-    public Post updatePost(Post posts, int id,List<String> files, int type) throws ResourceNotFroundException {
+    public Post updatePost(Post posts, int id, List<String> file_names, int type, List<String> urls, List<String> file_types) throws ResourceNotFroundException {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Post does not exist with id: " + id));
 
 
         existingPost.setContent(posts.getContent());
 
-        if (files != null && !files.isEmpty()) {
-            for (String file : files) {
+        if (file_names != null && urls != null && file_types != null && type != 0) {
+            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+            for (int i = 0; i < numOfAttachments; i++) {
+                String file_name = file_names.get(i);
+                String url = urls.get(i);
+                String file_type = file_types.get(i);
+
                 Attachment attachment = new Attachment();
-                attachment.setFile(file);
-
-
+                attachment.setFile_name(file_name);
+                attachment.setFile_url(url);
+                attachment.setFile_type(file_type);
                 AttachmentType attachmentType = new AttachmentType();
                 attachmentType.setId(type);
-
                 attachment.setAttachmentType(attachmentType);
                 attachment.setPost(existingPost);
 
