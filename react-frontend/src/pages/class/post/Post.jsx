@@ -22,28 +22,63 @@ const Post = ({ post, stateChanger, posts, index }) => {
     const [updatePost, setUpdatePost] = useState({ ...post })
     const [currentFiles, setCurrentFiles] = useState([])
     const [uploadFiles, setUploadFiles] = useState([])
-    const [allFiles, setAllFiles] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [loadingUpdatePost, setLoadingUpdatePost] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempFiles = (
-                await AttachmentService.getAttachmentsByPostId(post.id)
-            ).data
-            setCurrentFiles([...currentFiles, tempFiles])
-            setAllFiles([...allFiles, tempFiles])
+            try {
+                const tempFiles = (
+                    await AttachmentService.getAttachmentsByPostId(post.id)
+                ).data
+                setCurrentFiles([...tempFiles])
+                setUploadFiles([...tempFiles])
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
+        fetchData()
     }, [post.id])
 
     const handleUpdatePost = async () => {
         setLoadingUpdatePost(true)
         try {
-            await PostService.updatePost(updatePost.id, updatePost)
+            var tempFilenames = ''
+            var tempFileUrls = ''
+            var tempFileTypes = ''
+            uploadFiles.forEach((uploadFile) => {
+                tempFilenames += uploadFile.file_name + ','
+                tempFileUrls += uploadFile.file_url + ','
+                tempFileTypes += uploadFile.file_type + ','
+            })
+            const filenames = tempFilenames.substring(
+                0,
+                tempFilenames.length - 1
+            )
+            const fileUrls = tempFileUrls.substring(0, tempFileUrls.length - 1)
+            const fileTypes = tempFileTypes.substring(
+                0,
+                tempFileTypes.length - 1
+            )
+            const tempPost = (
+                await PostService.updatePost(
+                    updatePost.id,
+                    updatePost,
+                    `${filenames ? `=${filenames}` : ''}`,
+                    '=3',
+                    `${fileUrls ? `=${fileUrls}` : ''}`,
+                    `${fileTypes ? `=${fileTypes}` : ''}`
+                )
+            ).data
             var tempPosts = [...posts]
-            tempPosts[index] = updatePost
+            tempPosts[index] = tempPost
             stateChanger(tempPosts)
             setShowUpdate(false)
+            setCurrentFiles([...uploadFiles])
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -60,29 +95,36 @@ const Post = ({ post, stateChanger, posts, index }) => {
         if (file) {
             const url = await uploadFile(
                 file,
-                `file/class/${post.classroom.id}/post`
+                `file/class/${post.classroom.id}/post`,
+                file.type
             )
             setUploadFiles([
                 ...uploadFiles,
-                { name: file.name, type: file.type, url },
+                { file_name: file.name, file_type: file.type, file_url: url },
             ])
         }
         setLoadingUploadFile(false)
     }
 
     const handleCancelUpdatePost = () => {
-        uploadFiles.map((file) => {
-            deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
+        uploadFiles.forEach((file) => {
+            deleteFileByUrl(
+                file.file_url,
+                `file/class/${post.classroom.id}/post`
+            )
         })
-        setUploadFiles([])
+        setUploadFiles(currentFiles)
         setUpdatePost({ ...post })
         setShowUpdate(false)
     }
 
     const handleDeletePost = async () => {
         await PostService.deletePost(post.id)
-        uploadFiles.map((file) => {
-            deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
+        currentFiles.forEach((file) => {
+            deleteFileByUrl(
+                file.file_url,
+                `file/class/${post.classroom.id}/post`
+            )
         })
         var tempPosts = [...posts]
         tempPosts.splice(index, 1)
@@ -90,11 +132,16 @@ const Post = ({ post, stateChanger, posts, index }) => {
         document.getElementById(`closeDeletePostModal${index}`).click()
     }
 
-    const handleDeleteFile = (file, index) => {
+    const handleDeleteFile = (fileUrl, index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
-        deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
         setUploadFiles(temp)
+        deleteFileByUrl(fileUrl, `file/class/${post.classroom.id}/post`)
+    }
+
+    function getDate(date) {
+        var index = date.lastIndexOf('.')
+        return date.replace('T', ' ').substring(0, index)
     }
 
     return (
@@ -117,7 +164,9 @@ const Post = ({ post, stateChanger, posts, index }) => {
                             <div className="postAuthor">
                                 {post.user.username}
                             </div>
-                            <div className="postCreatedDate">Create Date</div>
+                            <div className="postCreatedDate">
+                                {getDate(post.created_date)}
+                            </div>
                         </div>
                     </div>
                     <div className="dropdown">
@@ -179,19 +228,23 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                     {uploadFiles.map((file, index) => (
                                         <div className="card mb-2" key={index}>
                                             <div className="card-body d-flex justify-content-between">
-                                                <div>
+                                                <a
+                                                    className="text-decoration-none w-100"
+                                                    href={file.file_url}
+                                                    target="_blank"
+                                                >
                                                     <div className="fileUploadName">
-                                                        {file.name}
+                                                        {file.file_name}
                                                     </div>
                                                     <div className="fileUploadType">
-                                                        {file.type}
+                                                        {file.file_type}
                                                     </div>
-                                                </div>
+                                                </a>
                                                 <button
                                                     className="btn fileUploadDelButton"
                                                     onClick={() =>
                                                         handleDeleteFile(
-                                                            file,
+                                                            file.file_url,
                                                             index
                                                         )
                                                     }
@@ -254,11 +307,35 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                 </div>
                             </div>
                         ) : (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: post.content,
-                                }}
-                            ></div>
+                            <div>
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: post.content,
+                                    }}
+                                ></div>
+                                <div className="row">
+                                    {currentFiles.map((file) => (
+                                        <div className="col-6" key={file.id}>
+                                            <a
+                                                className="card mb-2 text-decoration-none"
+                                                href={file.file_url}
+                                                target="_blank"
+                                            >
+                                                <div className="card-body d-flex justify-content-between">
+                                                    <div className="fileUploadContainer">
+                                                        <div className="fileUploadName">
+                                                            {file.file_name}
+                                                        </div>
+                                                        <div className="fileUploadType">
+                                                            {file.file_type}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>

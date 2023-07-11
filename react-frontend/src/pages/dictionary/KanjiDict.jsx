@@ -51,7 +51,7 @@ const KanjiDict = () => {
 
     return (
         <div>
-            <div className="row mt-4">
+            <div className="row mt-4 mb-5">
                 <div className="col-2">
                     <div className="dictResultWordList">
                         {kanjis.map((kanji, index) => (

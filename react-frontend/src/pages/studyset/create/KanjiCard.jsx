@@ -225,7 +225,7 @@ export const KanjiCard = (props) => {
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file, folderName)
+            const url = await uploadFile(file, folderName, file.type)
             if (name === 'strokeOrder') {
                 // update stroke order
                 const tempStrokeOrder = { ...strokeOrder, content: url }

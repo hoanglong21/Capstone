@@ -107,8 +107,11 @@ const App = () => {
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
                         {/* Class */}
-                        <Route path="class/:id" element={<ClassLayout />}>
-                            <Route index path="stream" element={<Stream />} />
+                        <Route
+                            path="class/:id/stream"
+                            element={<ClassLayout />}
+                        >
+                            <Route index element={<Stream />} />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />

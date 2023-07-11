@@ -159,7 +159,7 @@ export const GrammarCard = (props) => {
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file, folderName)
+            const url = await uploadFile(file, folderName, file.type)
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {

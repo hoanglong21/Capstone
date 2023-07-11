@@ -135,7 +135,7 @@ const ClassLayout = () => {
                     <ul className="nav">
                         <li>
                             <NavLink
-                                to="stream"
+                                to=""
                                 className={
                                     'mainClass_navlink ' +
                                     (({ isActive }) =>

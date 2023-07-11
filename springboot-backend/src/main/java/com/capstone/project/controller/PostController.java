@@ -49,7 +49,7 @@ public class PostController {
     public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult result,
                                         @RequestParam(value = "filename", required = false) List<String> files,
                                         @RequestParam(value = "type", required = false) Optional<Integer> type,
-                                        @RequestParam(value = "fileurl", required = false) List<String> url,
+                                            @RequestParam(value = "fileurl", required = false) List<String> url,
                                         @RequestParam(value = "filetype", required = false) List<String> file_type)  {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result

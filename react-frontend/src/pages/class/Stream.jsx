@@ -1,6 +1,16 @@
 import { useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+
+import ClassService from '../../services/ClassService'
+import { deleteFileByUrl, uploadFile } from '../../features/fileManagement'
+import PostService from '../../services/PostService'
+
+import Post from './post/Post'
+import PostEditor from '../../components/textEditor/PostEditor'
 
 import {
     AccountSolidIcon,
@@ -10,14 +20,6 @@ import {
     ResetIcon,
     UploadIcon,
 } from '../../components/icons'
-import ClassService from '../../services/ClassService'
-import Post from './post/Post'
-import PostEditor from '../../components/textEditor/PostEditor'
-import { deleteFileByUrl, uploadFile } from '../../features/fileManagement'
-import PostService from '../../services/PostService'
-import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
 
 const Stream = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -74,7 +76,7 @@ const Stream = () => {
     const handleDeleteFile = (file, index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
-        deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
+        deleteFileByUrl(file.file_url, `file/class/${classroom.id}/post`)
         setUploadFiles(temp)
     }
 
@@ -84,11 +86,12 @@ const Stream = () => {
         if (file) {
             const url = await uploadFile(
                 file,
-                `file/class/${classroom.id}/post`
+                `file/class/${classroom.id}/post`,
+                file.type
             )
             setUploadFiles([
                 ...uploadFiles,
-                { name: file.name, type: file.type, url },
+                { file_name: file.name, file_type: file.type, file_url: url },
             ])
         }
         setLoadingUploadFile(false)
@@ -97,14 +100,30 @@ const Stream = () => {
     const handleAddPost = async () => {
         setLoadingAddPost(true)
         try {
-            var temp = ''
-            uploadFiles.forEach((uploadFile) => (temp += uploadFile.url + ','))
-            const filename = temp.substring(0, temp.length - 2)
+            var tempFilenames = ''
+            var tempFileUrls = ''
+            var tempFileTypes = ''
+            uploadFiles.forEach((uploadFile) => {
+                tempFilenames += uploadFile.file_name + ','
+                tempFileUrls += uploadFile.file_url + ','
+                tempFileTypes += uploadFile.file_type + ','
+            })
+            const filenames = tempFilenames.substring(
+                0,
+                tempFilenames.length - 1
+            )
+            const fileUrls = tempFileUrls.substring(0, tempFileUrls.length - 1)
+            const fileTypes = tempFileTypes.substring(
+                0,
+                tempFileTypes.length - 1
+            )
             const tempPost = (
                 await PostService.createPost(
                     addPost,
-                    `${filename ? `=${filename}` : ''}`,
-                    3
+                    `${filenames ? `=${filenames}` : ''}`,
+                    '=3',
+                    `${fileUrls ? `=${fileUrls}` : ''}`,
+                    `${fileTypes ? `=${fileTypes}` : ''}`
                 )
             ).data
             setAddPost({})
@@ -123,7 +142,7 @@ const Stream = () => {
 
     const handleCancelAddPost = () => {
         uploadFiles.forEach((file) => {
-            deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
+            deleteFileByUrl(file.file_url, `file/class/${classroom.id}/post`)
         })
         setUploadFiles([])
         setAddPost({ ...addPost, content: '' })
@@ -215,14 +234,18 @@ const Stream = () => {
                                 {uploadFiles.map((file, index) => (
                                     <div className="card mb-2" key={index}>
                                         <div className="card-body d-flex justify-content-between">
-                                            <div>
+                                            <a
+                                                className="text-decoration-none w-100"
+                                                href={file.file_url}
+                                                target="_blank"
+                                            >
                                                 <div className="fileUploadName">
-                                                    {file.name}
+                                                    {file.file_name}
                                                 </div>
                                                 <div className="fileUploadType">
-                                                    {file.type}
+                                                    {file.file_type}
                                                 </div>
-                                            </div>
+                                            </a>
                                             <button
                                                 className="btn fileUploadDelButton"
                                                 onClick={() =>
