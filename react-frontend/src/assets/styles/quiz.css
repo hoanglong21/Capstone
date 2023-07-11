@@ -1,0 +1,62 @@
+.ojn81eb {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+.AssemblyInput {
+  -webkit-box-pack: center;
+  background-color: #f6f7fb;
+  border-radius: 0.5rem;
+  color: #586380;
+  display: flex;
+  flex-direction: column;
+  height: 3rem;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0.25rem 1rem;
+  position: relative;
+}
+
+.AssemblyInput-input {
+  appearance: none;
+  background-color: initial;
+  border: none;
+  box-shadow: none;
+  color: #282e3e;
+  cursor: text;
+  filter: none;
+  flex: 1 1 auto;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.form-select{
+    border: none;
+    background-color: #f6f7fb;
+    border-radius: 0.5rem;
+    color: #586380;
+    display: flex;
+    flex-direction: column;
+    padding-top: .675rem;
+    padding-bottom: .675rem;
+    padding-right: 2rem;
+    font-weight: 500;
+}
+
+.d1llavan {
+    background-color: #909092;
+    border: none;
+    height: 0.0625rem;
+    margin: 0;
+}
+
+.o5jd1da {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-check-input{
+    font-size: 1.2rem;
+}
