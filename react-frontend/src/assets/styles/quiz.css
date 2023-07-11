@@ -60,3 +60,72 @@
 .form-check-input{
     font-size: 1.2rem;
 }
+
+.w1gd4v28.svwhkoh {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto auto;
+    margin-top: 2rem;
+    position: relative;
+}
+
+.svwhkoh {
+    -webkit-box-pack: justify;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 1rem 0 #2e385614;
+    justify-content: space-between;
+    max-width: 52.5rem;
+    min-height: 29.25rem;
+    padding: 1.5rem 2rem;
+    transition: all .5s ease;
+}
+
+.p1tur8tp {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.pr2w5fu:first-child {
+    border-right: 0.125rem solid #edeff4;
+    padding-right: 1rem;
+}
+
+.pr2w5fu:last-child {
+    padding-left: 1rem;
+}
+
+.a548wz9 {
+    color: #939bb4;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.albjleu {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+}
+
+.w1uwrq7e {
+    border: 0.125rem solid #edeff4;
+    border-radius: 0.5rem;
+    color: #2e3856;
+    cursor: pointer;
+    display: grid;
+    font-size: 1rem;
+    font-weight: 400;
+    grid-template-columns: auto 1fr;
+    padding: 1rem;
+    position: relative;
+    width: 100%;
+    word-break: break-word;
+}
+
+.t1b9wj7u {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+}
+

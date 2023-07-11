@@ -148,8 +148,6 @@ const App = () => {
                     </Route>
                     {/* Study set */}
                     <Route path="set/:id" element={<ViewSet />} />
-                    {/* Quiz */}
-                    <Route path='/doquiz' element={<DoQuiz />} />
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}
@@ -223,6 +221,8 @@ const App = () => {
                     path="/viewdetailvocab"
                     element={<ViewVocabularyDetail />}
                 />
+                {/* Quiz */}
+                <Route path='/doquiz' element={<DoQuiz />} />
             </Routes>
         </BrowserRouter>
     )
