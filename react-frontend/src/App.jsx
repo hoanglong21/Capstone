@@ -66,6 +66,7 @@ import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/DoQuiz'
 import ViewAssignment from './pages/class/assignment/ViewAssignmentForLearner'
+import QuizAnswer from './pages/QuizAnswer'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -223,6 +224,7 @@ const App = () => {
                 />
                 {/* Quiz */}
                 <Route path='/doquiz' element={<DoQuiz />} />
+                <Route path='/quizanswer' element={<QuizAnswer />} />
             </Routes>
         </BrowserRouter>
     )
