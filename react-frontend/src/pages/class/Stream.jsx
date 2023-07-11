@@ -73,10 +73,9 @@ const Stream = () => {
         navigator.clipboard.writeText(classroom.classcode)
     }
 
-    const handleDeleteFile = (file, index) => {
+    const handleDeleteFile = (index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
-        deleteFileByUrl(file.file_url, `file/class/${classroom.id}/post`)
         setUploadFiles(temp)
     }
 
@@ -84,14 +83,9 @@ const Stream = () => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
-            const url = await uploadFile(
-                file,
-                `file/class/${classroom.id}/post`,
-                file.type
-            )
             setUploadFiles([
                 ...uploadFiles,
-                { file_name: file.name, file_type: file.type, file_url: url },
+                { file_name: file.name, file_type: file.type, file_url: file },
             ])
         }
         setLoadingUploadFile(false)
@@ -100,31 +94,8 @@ const Stream = () => {
     const handleAddPost = async () => {
         setLoadingAddPost(true)
         try {
-            var tempFilenames = ''
-            var tempFileUrls = ''
-            var tempFileTypes = ''
-            uploadFiles.forEach((uploadFile) => {
-                tempFilenames += uploadFile.file_name + ','
-                tempFileUrls += uploadFile.file_url + ','
-                tempFileTypes += uploadFile.file_type + ','
-            })
-            const filenames = tempFilenames.substring(
-                0,
-                tempFilenames.length - 1
-            )
-            const fileUrls = tempFileUrls.substring(0, tempFileUrls.length - 1)
-            const fileTypes = tempFileTypes.substring(
-                0,
-                tempFileTypes.length - 1
-            )
             const tempPost = (
-                await PostService.createPost(
-                    addPost,
-                    `${filenames ? `=${filenames}` : ''}`,
-                    '=3',
-                    `${fileUrls ? `=${fileUrls}` : ''}`,
-                    `${fileTypes ? `=${fileTypes}` : ''}`
-                )
+                await PostService.createPost(addPost, '', '=3', '', '')
             ).data
             setAddPost({})
             setUploadFiles([])
@@ -141,9 +112,6 @@ const Stream = () => {
     }
 
     const handleCancelAddPost = () => {
-        uploadFiles.forEach((file) => {
-            deleteFileByUrl(file.file_url, `file/class/${classroom.id}/post`)
-        })
         setUploadFiles([])
         setAddPost({ ...addPost, content: '' })
         setShowInput(false)
@@ -253,10 +221,7 @@ const Stream = () => {
                                             <button
                                                 className="btn fileUploadDelButton"
                                                 onClick={() =>
-                                                    handleDeleteFile(
-                                                        file,
-                                                        index
-                                                    )
+                                                    handleDeleteFile(index)
                                                 }
                                             >
                                                 <DeleteIcon />

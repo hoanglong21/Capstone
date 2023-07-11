@@ -25,51 +25,76 @@ function AssignmentList() {
                     Create
                 </Link>
             </div>
-            <table className="table table-striped mt-5">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Assignment Title</th>
-                        <th scope="col">Assignment Description</th>
-                        <th scope="col">Create Date</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Grade</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row" style={{ verticalAlign: 'middle' }}>
-                            1
-                        </th>
-                        <td style={{ verticalAlign: 'middle' }}>Practice 1</td>
-                        <td style={{ verticalAlign: 'middle' }}>
-                            Do exercise 1 to 5 in the grammar part
-                        </td>
-                        <td style={{ verticalAlign: 'middle' }}>9/7/2023</td>
-                        <td style={{ verticalAlign: 'middle' }}>11/7/2023</td>
-                        <td style={{ verticalAlign: 'middle' }}>100</td>
-                        <td>
-                            <Link
-                                to="/updateassignment"
-                                className="btn btn-success me-3"
-                            >
-                                <i class="bi bi-pencil-square me-2"></i>
-                                Update
-                            </Link>
-                            <button
-                                type="button"
-                                className="btn btn-danger "
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteAssignmentModal"
-                            >
-                                <i class="bi bi-trash-fill me-2"></i>
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div className="accordion mt-3" id="accordionAssignments">
+                <div className="accordion-item">
+                    <h2 className="accordion-header">
+                        <button
+                            className="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo"
+                            aria-expanded="false"
+                            aria-controls="collapseTwo"
+                        >
+                            Accordion Item #2
+                        </button>
+                    </h2>
+                    <div
+                        id="collapseTwo"
+                        className="accordion-collapse collapse"
+                        data-bs-parent="#accordionAssignments"
+                    >
+                        <div className="accordion-body">
+                            <strong>
+                                This is the second item's accordion body.
+                            </strong>{' '}
+                            It is hidden by default, until the collapse plugin
+                            adds the appropriate classes that we use to style
+                            each element. These classes control the overall
+                            appearance, as well as the showing and hiding via
+                            CSS transitions. You can modify any of this with
+                            custom CSS or overriding our default variables. It's
+                            also worth noting that just about any HTML can go
+                            within the <code>.accordion-body</code>, though the
+                            transition does limit overflow.
+                        </div>
+                    </div>
+                </div>
+                <div className="accordion-item">
+                    <h2 className="accordion-header">
+                        <button
+                            className="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree"
+                            aria-expanded="false"
+                            aria-controls="collapseThree"
+                        >
+                            Accordion Item #3
+                        </button>
+                    </h2>
+                    <div
+                        id="collapseThree"
+                        className="accordion-collapse collapse"
+                        data-bs-parent="#accordionAssignments"
+                    >
+                        <div className="accordion-body">
+                            <strong>
+                                This is the third item's accordion body.
+                            </strong>{' '}
+                            It is hidden by default, until the collapse plugin
+                            adds the appropriate classes that we use to style
+                            each element. These classes control the overall
+                            appearance, as well as the showing and hiding via
+                            CSS transitions. You can modify any of this with
+                            custom CSS or overriding our default variables. It's
+                            also worth noting that just about any HTML can go
+                            within the <code>.accordion-body</code>, though the
+                            transition does limit overflow.
+                        </div>
+                    </div>
+                </div>
+            </div>
             <DeleteAssignment />
         </div>
     )

@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { deleteFileByUrl } from '../../../features/fileManagement'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
 
 import InstructionEditor from '../../../components/textEditor/InstructionEditor'
@@ -14,6 +14,7 @@ function CreateAssignment() {
     const { userInfo } = useSelector((state) => state.user)
 
     const [classroom, setClassroom] = useState({})
+    const [assignment, setAssignment] = useState({})
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [uploadFiles, setUploadFiles] = useState([])
 
@@ -27,10 +28,21 @@ function CreateAssignment() {
         }
     }, [userInfo])
 
-    const handleDeleteFile = (file, index) => {
+    const handleUploadFile = async (event) => {
+        setLoadingUploadFile(true)
+        const file = event.target.files[0]
+        if (file) {
+            setUploadFiles([
+                ...uploadFiles,
+                { file_name: file.name, file_type: file.type, file_url: file },
+            ])
+        }
+        setLoadingUploadFile(false)
+    }
+
+    const handleDeleteFile = (index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
-        deleteFileByUrl(file.file_url, `file/class/${classroom.id}/post`)
         setUploadFiles(temp)
     }
 
@@ -140,15 +152,19 @@ function CreateAssignment() {
                                 </a>
                                 <button
                                     className="btn fileUploadDelButton"
-                                    onClick={() =>
-                                        handleDeleteFile(file, index)
-                                    }
+                                    onClick={() => handleDeleteFile(index)}
                                 >
                                     <DeleteIcon />
                                 </button>
                             </div>
                         </div>
                     ))}
+                    <input
+                        type="file"
+                        id="uploadPostFile"
+                        className="postUpload"
+                        onChange={handleUploadFile}
+                    />
                     <button type="btn" disabled={loadingUploadFile}>
                         <label
                             htmlFor="uploadPostFile"

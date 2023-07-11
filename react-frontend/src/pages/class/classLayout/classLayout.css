@@ -5,7 +5,7 @@
 
 .mainClass_container {
     max-width: 80rem;
-    padding: 2.5rem calc(50vw - 41.1875em) 2.5rem 0;
+    padding: 2.5rem 5rem;
 }
 
 .mainClassHeader_icon {
