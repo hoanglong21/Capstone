@@ -51,7 +51,7 @@ public class AssignmentServiceTest {
     @Test
     void testGetAllAssginment() {
         Assignment assignment = Assignment.builder()
-                .description("Test for all")
+                .instruction("Test for all")
                 .title("PT1").build();
         List<Assignment> assignments = List.of(assignment);
         when(assignmentRepository.findAll()).thenReturn(assignments);
@@ -62,8 +62,8 @@ public class AssignmentServiceTest {
     @Test
     void testGetAllAssginmentByClassId() {
       List<Assignment> assignments = new ArrayList<>();
-      Assignment assignment1 = Assignment.builder().description("test for all").title("assignment 1").build();
-      Assignment assignment2 = Assignment.builder().description("test for all").title("assignment 2").build();
+      Assignment assignment1 = Assignment.builder().instruction("test for all").title("assignment 1").build();
+      Assignment assignment2 = Assignment.builder().instruction("test for all").title("assignment 2").build();
       assignments.add(assignment1);
       assignments.add(assignment2);
 
@@ -102,7 +102,7 @@ public class AssignmentServiceTest {
     @Test
     void testGetAssignmentById() {
         Assignment assignment = Assignment.builder()
-                .description("test for all")
+                .instruction("test for all")
                 .title("assignment").build();
         when(assignmentRepository.findById(any())).thenReturn(Optional.ofNullable(assignment));
         try{
@@ -120,11 +120,11 @@ public class AssignmentServiceTest {
             "1,3,2023-8-9, Luyen thi JLPT N5,2023-7-1,2023-8-7,2023-8-8, On thi N3 ",
             "2,4,2023-8-9, Luyen thi JLPT N4,2023-9-9,2023-8-7,2023-8-8, On thi N3 "
     })
-    void testUpdateAssignment(int userId,int classId, String created_date,String description,String due_date,String modified_date,String start_date,String title) {
+    void testUpdateAssignment(int userId,int classId, String created_date,String instruction,String due_date,String modified_date,String start_date,String title) {
            try{
 
                Assignment assignment_new = Assignment.builder()
-                       .description("Luyen de")
+                       .instruction("Luyen de")
                        .title("Bt ngu phap N3")
                        .build();
 
@@ -132,7 +132,7 @@ public class AssignmentServiceTest {
                        .user(User.builder().id(userId).build())
                        .classroom(Class.builder().id(classId).build())
                        .created_date(dateFormat.parse(created_date))
-                       .description(description)
+                       .instruction(instruction)
                        .due_date(dateFormat.parse(due_date))
                        .modified_date(dateFormat.parse(modified_date))
                        .start_date(dateFormat.parse(start_date))
@@ -153,7 +153,7 @@ public class AssignmentServiceTest {
                 .id(1)
                 .user(User.builder().id(2).build())
                 .classroom(Class.builder().id(2).build())
-                .description("do excersices")
+                .instruction("do excersices")
                 .title("Assignment 1")
                 .build();
 
@@ -164,7 +164,7 @@ public class AssignmentServiceTest {
 
         Attachment attachment = Attachment.builder()
                 .attachmentType(AttachmentType.builder().id(1).build())
-                .file("tailieu.docx")
+                .file_url("tailieu.docx")
                 .assignment(assignment)
                 .submission(submission).build();
 

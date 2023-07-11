@@ -64,7 +64,7 @@ public class ClassServiceImpl implements ClassService {
     }
     private String generateClassCode() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        int codeLength = 6;
+        int codeLength = 7;
         Random random = new Random();
 
         StringBuilder classCode = new StringBuilder();

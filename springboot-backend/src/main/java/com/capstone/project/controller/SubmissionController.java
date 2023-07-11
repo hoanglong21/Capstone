@@ -45,11 +45,7 @@ public class SubmissionController {
     }
 
     @PostMapping("/submissions")
-    public ResponseEntity<?> createSubmission(@Valid @RequestBody SubmissionRequest submissionRequest, BindingResult result,
-                                              @RequestParam(value = "filename", required = false) List<String> files,
-                                              @RequestParam(value = "type", required = false) Optional<Integer> type,
-                                              @RequestParam(value = "fileurl", required = false) List<String> url,
-                                              @RequestParam(value = "filetype", required = false) List<String> file_type) {
+    public ResponseEntity<?> createSubmission(@Valid @RequestBody SubmissionRequest submissionRequest, BindingResult result) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -59,7 +55,7 @@ public class SubmissionController {
         } else {
             Submission submission = modelMapper.map(submissionRequest,Submission.class);
             try{
-                return ResponseEntity.ok(submissionService.createSubmission(submission,files,type.orElse(0),url,file_type));
+                return ResponseEntity.ok(submissionService.createSubmission(submission));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
@@ -78,11 +74,7 @@ public class SubmissionController {
 
 
     @PutMapping("/submissions/{id}")
-    public ResponseEntity<?> updateSubmission(@Valid @RequestBody SubmissionRequest submissionRequest, @PathVariable int id,BindingResult result,
-                                              @RequestParam(value = "filename", required = false) List<String> files,
-                                              @RequestParam(value = "type", required = false) Optional<Integer> type,
-                                              @RequestParam(value = "fileurl", required = false) List<String> url,
-                                              @RequestParam(value = "filetype", required = false) List<String> file_type) {
+    public ResponseEntity<?> updateSubmission(@Valid @RequestBody SubmissionRequest submissionRequest, @PathVariable int id,BindingResult result) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -92,7 +84,7 @@ public class SubmissionController {
         } else {
             Submission submission = modelMapper.map(submissionRequest,Submission.class);
             try {
-                return ResponseEntity.ok(submissionService.updateSubmission(id, submission,files,type.orElse(0),url,file_type));
+                return ResponseEntity.ok(submissionService.updateSubmission(id, submission));
             } catch (ResourceNotFroundException e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }

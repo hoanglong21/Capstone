@@ -54,32 +54,32 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment createAssignment(Assignment assignment, List<String> file_names, int type, List<String> urls, List<String> file_types) {
+    public Assignment createAssignment(Assignment assignment) {
         assignment.setCreated_date(new Date());
 
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
-        if (file_names != null && urls != null && file_types != null  && type != 0) {
-            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-            for (int i = 0; i < numOfAttachments; i++) {
-                String file_name = file_names.get(i);
-                String url = urls.get(i);
-                String file_type = file_types.get(i);
-
-                Attachment attachment = new Attachment();
-                attachment.setFile_name(file_name);
-                attachment.setFile_type(file_type);
-                attachment.setFile_url(url);
-
-                AttachmentType attachmentType = new AttachmentType();
-                attachmentType.setId(type);
-
-                attachment.setAttachmentType(attachmentType);
-                attachment.setAssignment(savedAssignment);
-
-                attachmentRepository.save(attachment);
-            }
-        }
+//        if (file_names != null && urls != null && file_types != null  && type != 0) {
+//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+//            for (int i = 0; i < numOfAttachments; i++) {
+//                String file_name = file_names.get(i);
+//                String url = urls.get(i);
+//                String file_type = file_types.get(i);
+//
+//                Attachment attachment = new Attachment();
+//                attachment.setFile_name(file_name);
+//                attachment.setFile_type(file_type);
+//                attachment.setFile_url(url);
+//
+//                AttachmentType attachmentType = new AttachmentType();
+//                attachmentType.setId(type);
+//
+//                attachment.setAttachmentType(attachmentType);
+//                attachment.setAssignment(savedAssignment);
+//
+//                attachmentRepository.save(attachment);
+//            }
+//        }
 
         return savedAssignment;
     }
@@ -92,36 +92,42 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment updateAssignment(int id, Assignment assignment,List<String> file_names, int type,List<String>urls, List<String> file_types) throws ResourceNotFroundException {
+    public Assignment updateAssignment(int id, Assignment assignment) throws ResourceNotFroundException {
         Assignment existingAssignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Assignment does not exist with id: " + id));
 
-        existingAssignment.setDescription(assignment.getDescription());
+        existingAssignment.setInstruction(assignment.getInstruction());
         existingAssignment.setDue_date(assignment.getDue_date());
         existingAssignment.setModified_date(new Date());
         existingAssignment.setTitle(assignment.getTitle());
 
-        if (file_names != null && urls != null && file_types != null  && type != 0) {
-            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-            for (int i = 0; i < numOfAttachments; i++) {
-                String file_name = file_names.get(i);
-                String url = urls.get(i);
-                String file_type = file_types.get(i);
+        List<Attachment> attachments = attachmentRepository.getAttachmentByAssignmentId(existingAssignment.getId());
 
-                Attachment attachment = new Attachment();
-                attachment.setFile_name(file_name);
-                attachment.setFile_type(file_type);
-                attachment.setFile_url(url);
-
-                AttachmentType attachmentType = new AttachmentType();
-                attachmentType.setId(type);
-
-                attachment.setAttachmentType(attachmentType);
-                attachment.setAssignment(existingAssignment);
-
-                attachmentRepository.save(attachment);
-            }
+        for (Attachment attachment : attachments) {
+            attachmentRepository.delete(attachment);
         }
+
+//        if (file_names != null && urls != null && file_types != null  && type != 0) {
+//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
+//            for (int i = 0; i < numOfAttachments; i++) {
+//                String file_name = file_names.get(i);
+//                String url = urls.get(i);
+//                String file_type = file_types.get(i);
+//
+//                Attachment attachment = new Attachment();
+//                attachment.setFile_name(file_name);
+//                attachment.setFile_type(file_type);
+//                attachment.setFile_url(url);
+//
+//                AttachmentType attachmentType = new AttachmentType();
+//                attachmentType.setId(type);
+//
+//                attachment.setAttachmentType(attachmentType);
+//                attachment.setAssignment(existingAssignment);
+//
+//                attachmentRepository.save(attachment);
+//            }
+//        }
         return assignmentRepository.save(existingAssignment);
     }
 
@@ -130,10 +136,10 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment assignmentclass = assignmentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Assignment not exist with id:" + id));
         for (Submission submission : submissionRepository.getSubmissionByAssignmentId(assignmentclass.getId())) {
-            for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())) {
-               attachmentRepository.delete(attachment);
-            }
             submissionRepository.delete(submission);
+        }
+        for (Attachment attachment : attachmentRepository.getAttachmentByAssignmentId(assignmentclass.getId())) {
+            attachmentRepository.delete(attachment);
         }
         assignmentRepository.delete(assignmentclass);
         return true;
