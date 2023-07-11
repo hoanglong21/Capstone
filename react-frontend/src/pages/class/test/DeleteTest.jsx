@@ -20,7 +20,7 @@ function DeleteTest() {
             <p>Are you sure delete this test ?</p>
           </div>
           <div className="modal-footer">
-            <button type="button" class="btn btn-success">
+            <button type="button" class="btn btn-primary">
               Yes
             </button>
             <button

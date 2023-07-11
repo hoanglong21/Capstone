@@ -62,6 +62,8 @@ import Stream from './pages/class/Stream'
 import CreateTest from './pages/class/test/CreateTest'
 import ViewDetailTest from './pages/class/test/ViewDetailTest'
 import ManageAssignment from './pages/class/assignment/ManageAssignment'
+import CreateAssignment from './pages/class/assignment/CreateAssignment'
+import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -120,7 +122,10 @@ const App = () => {
                         />
                         <Route path="/createtest" element={<CreateTest />} />
                         {/* Assignment */}
-                        <Route path="/manageassignment" element={<ManageAssignment/>} />
+                        <Route path="/manageassignment" element={<ManageAssignment/>} 
+                        />
+                        <Route path="/createassignment" element={<CreateAssignment />} />
+                        <Route path="/updateassignment" element={<UpdateAssignment />} />
                         {/* Feedback */}
                         <Route
                             path="help-center/send-feedback"
