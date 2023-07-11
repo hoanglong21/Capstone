@@ -56,11 +56,7 @@ public class AssignmentController {
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/assignments")
-    public ResponseEntity<?> createAssignment(@Valid @RequestBody AssignmentRequest assignmentRequest, BindingResult result,
-                                              @RequestParam(value = "filename", required = false) List<String> files,
-                                              @RequestParam(value = "type", required = false) Optional<Integer> type,
-                                              @RequestParam(value = "fileurl", required = false) List<String> url,
-                                              @RequestParam(value = "filetype", required = false) List<String> file_type){
+    public ResponseEntity<?> createAssignment(@Valid @RequestBody AssignmentRequest assignmentRequest, BindingResult result){
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
@@ -70,7 +66,7 @@ public class AssignmentController {
         } else {
                Assignment assignment = modelMapper.map(assignmentRequest,Assignment.class);
             try {
-                return ResponseEntity.ok(assignmentService.createAssignment(assignment,files,type.orElse(0),url,file_type));
+                return ResponseEntity.ok(assignmentService.createAssignment(assignment));
             } catch (Exception e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
@@ -81,10 +77,7 @@ public class AssignmentController {
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PutMapping ("/assignments/{id}")
-    public ResponseEntity<?> updateAssignment(@PathVariable int id, @Valid @RequestBody AssignmentRequest assignmentRequest,@RequestParam(value = "filename", required = false) List<String> files,
-                                              @RequestParam(value = "type", required = false) Optional<Integer> type,
-                                              @RequestParam(value = "fileurl", required = false) List<String> url,
-                                              @RequestParam(value = "filetype", required = false) List<String> file_type,
+    public ResponseEntity<?> updateAssignment(@PathVariable int id, @Valid @RequestBody AssignmentRequest assignmentRequest,
                                               BindingResult result){
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
@@ -95,7 +88,7 @@ public class AssignmentController {
         } else {
             Assignment assignment = modelMapper.map(assignmentRequest,Assignment.class);
             try {
-                return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment,files,type.orElse(0),url,file_type));
+                return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment));
             } catch (ResourceNotFroundException e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }

@@ -40,7 +40,7 @@ public class Assignment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date due_date;
 
-    private String description;
+    private String instruction;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,4 +49,6 @@ public class Assignment {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date start_date;
+
+    private boolean is_draft;
 }

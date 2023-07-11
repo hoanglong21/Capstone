@@ -40,9 +40,8 @@ public class AssignmentRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date due_date;
 
-
-    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,:]+", message = "Description can only contain letters, numbers, and spaces")
-    private String description;
+//    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = " Can only contain letters, numbers, and spaces")
+    private String instruction;
 
 
     public String getTitle() {
@@ -53,12 +52,12 @@ public class AssignmentRequest {
         return title;
     }
 
-    public String getDescription() {
-        if (description != null) {
+    public String getInstruction() {
+        if (instruction != null) {
             // Remove extra spaces between words
-            return StringUtils.normalizeSpace(description.trim());
+            return StringUtils.normalizeSpace(instruction.trim());
         }
-        return description;
+        return instruction;
     }
 
     @AssertTrue(message = "Due date must be greater than or equal to start date")
