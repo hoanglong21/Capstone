@@ -39,4 +39,7 @@ public class Submission {
     private Date modified_date;
 
     private String description;
+
+    @Column
+    private double mark;
 }
