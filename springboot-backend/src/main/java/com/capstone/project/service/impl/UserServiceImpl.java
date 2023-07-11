@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLSyntaxErrorException;
 import java.util.*;
 
 @Service
@@ -336,7 +337,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> filterUser(String name, String username, String email,  String gender, String phone, String[] role, String address, String bio, String[] status,
-                                 String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, int page, int size) {
+                                 String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
+                                          String sortBy, String direction, int page, int size) {
         String sql = "SELECT * FROM user WHERE 1=1";
         List<Object> params = new ArrayList<>();
 
@@ -417,6 +419,16 @@ public class UserServiceImpl implements UserService {
             sql += " AND deleted_date <= ?";
             params.add(toDeleted);
         }
+        if (fromCreated != null && !fromCreated.equals("")) {
+            sql += " AND created_date >= ?";
+            params.add(fromCreated);
+        }
+        if (toCreated != null && !toCreated.equals("")) {
+            sql += " AND created_date <= ?";
+            params.add(toCreated);
+        }
+
+        sql += " ORDER BY " + sortBy + " " + direction;
 
         // Count total items
         String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS countQuery";

@@ -4,6 +4,7 @@ import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 
+import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,5 +36,6 @@ public interface UserService {
     Boolean changePassword(String username, String password) throws ResourceNotFroundException;
 
     Map<String, Object> filterUser(String name, String username, String email, String gender, String phone, String[] role, String address, String bio, String[] status,
-                                   String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, int page, int size);
+                                   String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
+                                   String sortBy, String direction, int page, int size);
 }
