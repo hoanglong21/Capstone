@@ -129,10 +129,12 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String author,
+                                             String fromDeleted, String toDeleted, String fromCreated, String toCreated,
+                                             String sortBy, String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, " +
+        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, s.created_date, " +
                 "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count, " +
                 "(SELECT username FROM capstone.user WHERE id = s.author_id) AS author, " +
                 "(SELECT avatar FROM capstone.user WHERE id = s.author_id) AS avatar FROM studyset s WHERE 1=1 ";
@@ -160,13 +162,13 @@ public class StudySetServiceImpl implements StudySetService {
         }
 
         if ((isDeleted == null || isDeleted)) {
-            if (from != null) {
+            if (fromDeleted != null) {
                 query += " AND s.deleted_date >= :from";
-                parameters.put("from", from);
+                parameters.put("from", fromDeleted);
             }
-            if (to != null) {
+            if (toDeleted != null) {
                 query += " AND s.deleted_date <= :to";
-                parameters.put("to", to);
+                parameters.put("to", toDeleted);
             }
         }
 
@@ -180,6 +182,17 @@ public class StudySetServiceImpl implements StudySetService {
             query += " AND type_id = :typeId";
             parameters.put("typeId", type);
         }
+
+        if (fromCreated != null && !fromCreated.equals("")) {
+            query += " AND created_date >= :fromCreated";
+            parameters.put("fromCreated", fromCreated);
+        }
+        if (toCreated != null && !toCreated.equals("")) {
+            query += " AND created_date <= :";
+            parameters.put("toCreated", toCreated);
+        }
+
+        query += " ORDER BY " + sortBy + " " + direction;
 
         Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
