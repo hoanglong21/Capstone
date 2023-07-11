@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { login } from '../../features/auth/authAction'
 import { reset } from '../../features/auth/authSlice'
 
-import { ArrowLeftIcon } from '../../components/icons'
+import { ArrowLeftLongIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
 
 const Login = () => {
@@ -64,7 +64,7 @@ const Login = () => {
     return (
         <div className="mt-4 me-5 pe-5" style={{ position: 'relative' }}>
             <button className="backHomeBtn" onClick={() => navigate('/')}>
-                <ArrowLeftIcon />
+                <ArrowLeftLongIcon />
             </button>
             <div className="container me-5">
                 <h2>Welcome Back!</h2>

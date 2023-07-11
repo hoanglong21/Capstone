@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { register as userRegister } from '../../features/auth/authAction'
 import { reset } from '../../features/auth/authSlice'
 
-import { ArrowLeftIcon } from '../../components/icons'
+import { ArrowLeftLongIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
 
 const Register = () => {
@@ -65,7 +65,7 @@ const Register = () => {
             emailInvalidEl.classList.remove('d-none')
             dispatch(reset())
             setEmptyMess('')
-            
+
             if (error === 'Username already registered') {
                 usernameEl.classList.add('is-invalid')
             }
@@ -78,7 +78,7 @@ const Register = () => {
     return (
         <div className="pe-5" style={{ position: 'relative' }}>
             <button className="backHomeBtn" onClick={() => navigate('/')}>
-                <ArrowLeftIcon />
+                <ArrowLeftLongIcon />
             </button>
             <h2>Get Started</h2>
             <h5 className="fw-normal" style={{ color: 'var(--text-light)' }}>

@@ -12,7 +12,7 @@
     margin-bottom: 2rem;
 }
 
-.StudyModesItem {
+.studyModesItem {
     box-shadow: 0 0.0625rem 0.1875rem 0 #2e385614;
     background: #fff;
     border-bottom: 0.25rem solid #0000;
@@ -20,9 +20,10 @@
     cursor: pointer;
     padding: 0.5rem 0.75rem;
     transition: all 0.2s;
+    text-decoration: none;
 }
 
-.StudyModesItem:hover {
+.studyModesItem:hover {
     box-shadow: 0 0.25rem 1rem 0 var(--shadow-with-opacity);
     border-bottom-color: #dbdfff;
 }
@@ -31,7 +32,7 @@
     color: #4255ff;
 }
 
-.StudyModesItemName {
+.studyModesItemName {
     font-size: 1rem;
     letter-spacing: normal;
     line-height: 1.5;
@@ -115,10 +116,18 @@
     font-size: 1.1rem;
 }
 
+.setPageTerm_termText p {
+    margin: 0;
+}
+
 .setPageTerm_definitionText {
     padding: 0 2rem;
     word-wrap: break-word;
     font-size: 1.1rem;
+}
+
+.setPageTerm_definitionText p {
+    margin: 0;
 }
 
 .kanji-search-ul > li {
