@@ -47,10 +47,15 @@ const getFilterList = (
     is_public,
     is_draft,
     search,
-    author,
+    authorId,
+    authorName,
     type,
-    from,
-    to,
+    fromDeteted,
+    toDeteted,
+    fromCreated,
+    toCreated,
+    sortBy,
+    direction,
     page,
     size
 ) => {
@@ -64,12 +69,20 @@ const getFilterList = (
             is_draft +
             '&search' +
             search +
-            '&author' +
-            author +
+            '&author_id' +
+            authorId +
+            '&author_name' +
+            authorName +
             '&type' +
             type +
-            (from ? `&from${from}` : '') +
-            (to ? `&to${to}` : '') +
+            (fromDeteted ? `&fromdeteted${fromDeteted}` : '') +
+            (toDeteted ? `&todeteted${toDeteted}` : '') +
+            (fromCreated ? `&fromcreated${fromCreated}` : '') +
+            (toCreated ? `&tocreated${toCreated}` : '') +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
             '&page' +
             page +
             '&size' +

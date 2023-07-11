@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 
 import StudySetService from '../../services/StudySetService'
 import ClassService from '../../services/ClassService'
@@ -13,8 +12,6 @@ function AllForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
 
-    const { userInfo } = useSelector((state) => state.user)
-
     const [sets, setSets] = useState([])
     const [classes, setClasses] = useState([])
     const [users, setUsers] = useState([])
@@ -26,6 +23,11 @@ function AllForHome() {
                 '=1',
                 '=0',
                 `${searchKey ? '=' + searchKey : ''}`,
+                '',
+                '',
+                '',
+                '',
+                '',
                 '',
                 '',
                 '',

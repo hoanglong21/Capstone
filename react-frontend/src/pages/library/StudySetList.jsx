@@ -27,7 +27,12 @@ const StudySetList = () => {
                 '',
                 '',
                 `${searchKey ? '=' + searchKey : ''}`,
-                `=${userInfo.username}`,
+                `=${userInfo.id}`,
+                '',
+                '',
+                '',
+                '',
+                '',
                 '',
                 '',
                 '',
@@ -35,34 +40,13 @@ const StudySetList = () => {
                 ''
             )
         ).data.list
+        if (!searchKey && temp.length == 0) {
+            setIsEmpty(true)
+        } else {
+            setIsEmpty(false)
+        }
         setSets(temp)
     }
-
-    const checkEmpty = async () => {
-        const temp = (
-            await StudySetService.getFilterList(
-                '',
-                '',
-                '',
-                '',
-                `=${userInfo.username}`,
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        if (temp.length === 0) {
-            setIsEmpty(true)
-        }
-    }
-
-    useEffect(() => {
-        if (userInfo.username) {
-            checkEmpty()
-        }
-    }, [userInfo])
 
     useEffect(() => {
         if (userInfo.username) {
