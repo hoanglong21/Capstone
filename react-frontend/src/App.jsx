@@ -53,7 +53,6 @@ import VocabDict from './pages/dictionary/VocabDict'
 import GrammarDict from './pages/dictionary/GrammarDict'
 import KanjiDict from './pages/dictionary/KanjiDict'
 import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
-// import ViewGrammarDetail from './pages/studyset/view/ViewGrammarDetail'
 import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
 import ViewSet from './pages/studySet/view/ViewSet'
 import DoTest from './pages/class/test/DoTest'
@@ -61,9 +60,10 @@ import ManageTest from './pages/class/test/ManageTest'
 import Stream from './pages/class/Stream'
 import CreateTest from './pages/class/test/CreateTest'
 import ViewDetailTest from './pages/class/test/ViewDetailTest'
-import ManageAssignment from './pages/class/assignment/AssignmentList'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
+import DoQuiz from './pages/DoQuiz'
+import AssignmentList from './pages/class/assignment/AssignmentList'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -114,7 +114,7 @@ const App = () => {
                             <Route index element={<Stream />} />
                             <Route
                                 path="assignments"
-                                element={<ManageAssignment />}
+                                element={<AssignmentList />}
                             />
                             <Route
                                 path="create-assignment"
@@ -130,14 +130,6 @@ const App = () => {
                         />
                         <Route path="/createtest" element={<CreateTest />} />
                         {/* Assignment */}
-                        <Route
-                            path="/manageassignment"
-                            element={<ManageAssignment />}
-                        />
-                        <Route
-                            path="/createassignment"
-                            element={<CreateAssignment />}
-                        />
                         <Route
                             path="/updateassignment"
                             element={<UpdateAssignment />}
@@ -235,6 +227,8 @@ const App = () => {
                     path="/viewdetailvocab"
                     element={<ViewVocabularyDetail />}
                 />
+                {/* Quiz */}
+                <Route path="/doquiz" element={<DoQuiz />} />
             </Routes>
         </BrowserRouter>
     )
