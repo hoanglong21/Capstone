@@ -39,4 +39,6 @@ public class Submission {
     private Date modified_date;
 
     private String description;
+
+    private Double mark;
 }

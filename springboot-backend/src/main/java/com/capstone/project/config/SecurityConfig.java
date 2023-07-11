@@ -30,6 +30,9 @@ public class SecurityConfig {
 
     private LogoutHandler logoutHandler;
 
+    @Autowired
+    private CustomAccessDeniedHandler accessDeniedHandler;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new MyUserDetailsService();
@@ -49,6 +52,9 @@ public class SecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler) // Add this line
+                .and()
                 .build();
     }
 
