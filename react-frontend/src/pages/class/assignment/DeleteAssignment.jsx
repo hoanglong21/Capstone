@@ -1,12 +1,12 @@
 import React from 'react'
 
-function DeleteTest() {
+function DeleteAssignment() {
   return (
-    <div className="modal" tabindex="-1" role="dialog" id="deleteTestModal">
+    <div className="modal" tabindex="-1" role="dialog" id="deleteAssignmentModal">
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title text-danger">DELETE TEST</h5>
+            <h5 className="modal-title text-danger">DELETE ASSIGNMENT</h5>
             <button
               type="button"
               id="closeModal"
@@ -17,7 +17,7 @@ function DeleteTest() {
             </button>
           </div>
           <div className="modal-body">
-            <p>Are you sure delete this test ?</p>
+            <p>Are you sure delete this assignment ?</p>
           </div>
           <div className="modal-footer">
             <button type="button" class="btn btn-primary">
@@ -38,4 +38,4 @@ function DeleteTest() {
   )
 }
 
-export default DeleteTest
+export default DeleteAssignment
