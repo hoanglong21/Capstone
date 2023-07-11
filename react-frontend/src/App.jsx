@@ -8,7 +8,7 @@ import ChatContainer from './components/Chat/ChatContainer'
 import Layout from './components/layouts/Layout'
 import GPTContainer from './components/Chat/GPTContainer'
 import Flashcard from './pages/studySet/flashcard/Flashcard'
-import MainClass from './pages/class/mainClass/MainClass'
+import ClassLayout from './pages/class/classLayout/ClassLayout'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
@@ -60,6 +60,7 @@ import ViewTest from './pages/class/test/ViewTest'
 import DoTest from './pages/class/test/DoTest'
 import ViewAssignment from './pages/ViewAssignment'
 import ManageTest from './pages/class/test/ManageTest'
+import Stream from './pages/class/Stream'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -106,7 +107,9 @@ const App = () => {
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
                         {/* Class */}
-                        <Route path="class/:id" element={<MainClass />} />
+                        <Route path="class/:id" element={<ClassLayout />}>
+                            <Route index path="stream" element={<Stream />} />
+                        </Route>
                         {/* Feedback */}
                         <Route
                             path="help-center/send-feedback"
