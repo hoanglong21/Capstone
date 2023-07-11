@@ -88,12 +88,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post updatePost(Post posts, int id, List<String> file_names, int type, List<String> urls, List<String> file_types) throws ResourceNotFroundException {
+    public Post updatePost(Post post, int id, List<String> file_names, int type, List<String> urls, List<String> file_types) throws ResourceNotFroundException {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Post does not exist with id: " + id));
 
+        existingPost.setContent(post.getContent());
 
-        existingPost.setContent(posts.getContent());
+        List<Attachment> attachments = attachmentRepository.getAttachmentByPostId(existingPost.getId());
+
+        for (Attachment attachment : attachments) {
+            attachmentRepository.delete(attachment);
+        }
 
         if (file_names != null && urls != null && file_types != null && type != 0) {
             int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));

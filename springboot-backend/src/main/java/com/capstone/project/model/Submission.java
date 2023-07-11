@@ -40,5 +40,6 @@ public class Submission {
 
     private String description;
 
-    private Double mark;
+    @Column
+    private double mark;
 }
