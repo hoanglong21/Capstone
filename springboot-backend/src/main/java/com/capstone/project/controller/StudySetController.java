@@ -9,6 +9,7 @@ import com.capstone.project.service.StudySetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -34,6 +35,7 @@ public class StudySetController {
     }
 
     @PostMapping("/studysets")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> createStudySet(@RequestBody StudySet studySet) {
         return ResponseEntity.ok(studySetService.createStudySet(studySet));
     }
@@ -48,6 +50,7 @@ public class StudySetController {
     }
 
     @PutMapping("/studysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> updateStudySet(@PathVariable int id, @RequestBody StudySet studySetDetails) {
         try {
             return ResponseEntity.ok(studySetService.updateStudySet(id, studySetDetails));
@@ -57,6 +60,7 @@ public class StudySetController {
     }
 
     @DeleteMapping("/studysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteStudySet(@PathVariable int id) {
         try {
             studySetService.deleteStudySet(id);
@@ -67,6 +71,7 @@ public class StudySetController {
     }
 
     @DeleteMapping("/deletestudysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteHardStudySet(@PathVariable int id) {
         try {
             studySetService.deleteHardStudySet(id);
@@ -77,6 +82,7 @@ public class StudySetController {
     }
 
     @GetMapping("/checkstudyset/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> checkStudySet(@PathVariable int id) {
         try {
             return ResponseEntity.ok(studySetService.checkBlankCard(id));
@@ -99,16 +105,23 @@ public class StudySetController {
                                            @RequestParam(value = "public", required = false) Boolean isPublic,
                                            @RequestParam(value = "draft", required = false) Boolean isDraft,
                                            @RequestParam(value = "search", required = false) String search,
-                                           @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "author_id", required = false, defaultValue = "0") int authorId,
+                                           @RequestParam(value = "author_name", required = false) String authorName,
                                            @RequestParam(value = "type", required = false, defaultValue = "0") int type,
-                                           @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
-                                           @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
+                                           @RequestParam(value = "fromdeteted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDeteted,
+                                           @RequestParam(value = "todeteted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDeteted,
+                                           @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
+                                           @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
+                                           @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                           @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
-        try {
-            return ResponseEntity.ok(studySetService.getFilterList(isDeleted, isPublic, isDraft, search, type, author, from, to, page, size));
-        } catch (ResourceNotFroundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+//        try {
+            return ResponseEntity.ok(studySetService.getFilterList(isDeleted, isPublic, isDraft, search, type, authorId, authorName,
+                    fromDeteted, toDeteted, fromCreated, toCreated, sortBy, direction, page, size));
+//        }
+//        catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Check the input again");
+//        }
     }
 }

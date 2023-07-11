@@ -21,14 +21,9 @@ public class StudySetTypeServiceImpl implements StudySetTypeService {
     }
 
     @Override
-    public StudySetType getStudySetTypeById(int id) {
-        StudySetType studySetType= null;
-        try {
-            studySetType = studysetTypeRepository.findById(id)
+    public StudySetType getStudySetTypeById(int id) throws ResourceNotFroundException {
+        StudySetType studySetType = studysetTypeRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("StudysetType not exist with id: " + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return studySetType;
     }
 

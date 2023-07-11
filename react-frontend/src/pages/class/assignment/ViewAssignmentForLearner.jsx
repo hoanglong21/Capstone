@@ -1,13 +1,13 @@
 import React from "react";
 
 function ViewAssignment() {
-  const actualBtn = document.getElementById("actual-btn");
+  // const actualBtn = document.getElementById("actual-btn");
 
-  const fileChosen = document.getElementById("file-chosen");
+  // const fileChosen = document.getElementById("file-chosen");
 
-  actualBtn.addEventListener("change", function () {
-    fileChosen.textContent = this.files[0].name;
-  });
+  // actualBtn.addEventListener("change", function () {
+  //   fileChosen.textContent = this.files[0].name;
+  // });
 
   return (
     <div className="container">
@@ -29,7 +29,7 @@ function ViewAssignment() {
             <th scope="row" style={{ verticalAlign: "middle" }}>
               1
             </th>
-            <td style={{ verticalAlign: "middle" }}>Practice 1</td>
+            <td style={{ verticalAlign: "middle" }}><a href="/">Practice1.pdf</a></td>
             <td style={{ verticalAlign: "middle" }}>
               Do exercise 1 to 5 in the grammar part
             </td>

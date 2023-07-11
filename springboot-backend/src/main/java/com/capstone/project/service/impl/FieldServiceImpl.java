@@ -21,14 +21,9 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Field getFieldById(int id) {
-        Field field = null;
-        try {
-            field = fieldRepository.findById(id)
+    public Field getFieldById(int id) throws ResourceNotFroundException {
+        Field field = fieldRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Field not exist with id: " + id));
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
         return field;
     }
 

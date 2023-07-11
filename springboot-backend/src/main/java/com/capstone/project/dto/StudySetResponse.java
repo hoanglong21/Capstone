@@ -29,5 +29,9 @@ public class StudySetResponse {
 
     private String author;
     private String avatar;
+    private Date created_date;
+
+    private String author_firstname;
+    private String author_lastname;
 }
 
