@@ -129,15 +129,14 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String author,
+    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId, String authorName,
                                              String fromDeleted, String toDeleted, String fromCreated, String toCreated,
-                                             String sortBy, String direction, int page, int size) throws ResourceNotFroundException {
+                                             String sortBy, String direction, int page, int size) {
         int offset = (page - 1) * size;
 
-        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, s.created_date, " +
-                "(SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS count, " +
-                "(SELECT username FROM capstone.user WHERE id = s.author_id) AS author, " +
-                "(SELECT avatar FROM capstone.user WHERE id = s.author_id) AS avatar FROM studyset s WHERE 1=1 ";
+        String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, s.created_date," +
+                " u.username as author, u.avatar, u.first_name AS author_firstname, u.last_name AS author_lastname," +
+                " (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS `count` FROM studyset s LEFT JOIN `user` u ON s.author_id = u.id WHERE 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
 
@@ -172,23 +171,27 @@ public class StudySetServiceImpl implements StudySetService {
             }
         }
 
-        if (author != null && !author.isEmpty()) {
+        if (authorId != 0) {
             query += " AND s.author_id = :authorId";
-            User user = userService.getUserByUsername(author);
-            parameters.put("authorId", user.getId());
+            parameters.put("authorId", authorId);
+        }
+
+        if (authorId == 0 && authorName != null && !authorName.isEmpty()) {
+            query += " AND (u.username LIKE :name OR u.first_name LIKE :name OR u.last_name LIKE :name OR CONCAT(u.first_name, ' ', u.last_name))";
+            parameters.put("name", "%" + authorName + "%");
         }
 
         if (type != 0) {
-            query += " AND type_id = :typeId";
+            query += " AND s.type_id = :typeId";
             parameters.put("typeId", type);
         }
 
         if (fromCreated != null && !fromCreated.equals("")) {
-            query += " AND created_date >= :fromCreated";
+            query += " AND s.created_date >= :fromCreated";
             parameters.put("fromCreated", fromCreated);
         }
         if (toCreated != null && !toCreated.equals("")) {
-            query += " AND created_date <= :";
+            query += " AND s.created_date <= :";
             parameters.put("toCreated", toCreated);
         }
 
@@ -214,4 +217,5 @@ public class StudySetServiceImpl implements StudySetService {
 
         return response;
     }
+
 }
