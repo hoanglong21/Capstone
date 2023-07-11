@@ -9,14 +9,17 @@ import com.capstone.project.repository.FeedbackTypeRepository;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.FeedbackService;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
@@ -70,6 +73,103 @@ public class FeedbackServiceImpl implements FeedbackService {
                 .orElseThrow(() -> new ResourceNotFroundException("Feedback not exist with id: " + id));
         feedbackRepository.delete(feedback);
         return true;
+    }
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Override
+    public Map<String, Object> filterFeedback(String search, int type, int authorId, String authorName, String destination,
+                                              String fromCreated, String toCreated, String sortBy, String direction,
+                                              int page, int size) {
+        String jpql = "FROM Feedback f LEFT JOIN FETCH f.user WHERE 1=1 ";
+        Map<String, Object> params = new HashMap<>();
+
+        if (search != null && !search.isEmpty()) {
+            jpql += "AND (f.content LIKE :search OR f.title LIKE :search) ";
+            params.put("search", "%" + search + "%");
+        }
+
+        if (destination != null && !destination.isEmpty()) {
+            jpql += "AND f.destination LIKE :destination ";
+            params.put("destination", "%" + destination + "%");
+        }
+
+        if (authorId != 0) {
+            jpql += "AND f.user.id = :authorId ";
+            params.put("authorId", authorId);
+        }
+
+        if (authorId == 0 && authorName != null && !authorName.isEmpty()) {
+            jpql += "AND (f.user.username LIKE :authorName OR CONCAT(f.user.first_name, ' ', f.user.last_name) LIKE :authorName) ";
+            params.put("authorName", "%" + authorName + "%");
+        }
+
+        if (type != 0) {
+            jpql += "AND f.feedbackType.id = :type ";
+            params.put("type", type);
+        }
+
+        if (fromCreated != null && !fromCreated.isEmpty()) {
+            jpql += "AND f.created_date >= :fromCreated ";
+            params.put("fromCreated", fromCreated);
+        }
+
+        if (toCreated != null && !toCreated.isEmpty()) {
+            jpql += "AND f.created_date <= :toCreated ";
+            params.put("toCreated", toCreated);
+        }
+
+        sortBy = "f." + sortBy;
+
+
+        jpql += "ORDER BY " + sortBy + " " + direction;
+
+        TypedQuery<Feedback> query = entityManager.createQuery(jpql, Feedback.class);
+
+        // Set parameters
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        // Apply pagination
+        int offset = (page - 1) * size;
+        query.setFirstResult(offset);
+        query.setMaxResults(size);
+
+        List<Feedback> feedbackList = query.getResultList();
+
+        int totalItems = getTotalFeedbackCount(jpql, params);
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", feedbackList);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return response;
+    }
+
+    private int getTotalFeedbackCount(String jpql, Map<String, Object> params) {
+        // Remove the ORDER BY clause from the original JPQL query
+        int orderByIndex = jpql.toUpperCase().lastIndexOf("ORDER BY");
+        if (orderByIndex != -1) {
+            jpql = jpql.substring(0, orderByIndex);
+        }
+
+        // Construct the count query by adding the COUNT function and removing the FETCH JOIN
+        String countJpql = "SELECT COUNT(f) " + jpql.replace("LEFT JOIN FETCH f.user", "");
+
+        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+
+        // Set parameters for the count query
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            countQuery.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        Long countResult = countQuery.getSingleResult();
+        return countResult != null ? countResult.intValue() : 0;
     }
 
     private void sendFeedbackEmail(Feedback feedback) {
