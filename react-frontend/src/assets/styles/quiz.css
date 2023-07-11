@@ -70,18 +70,6 @@
     position: relative;
 }
 
-.svwhkoh {
-    -webkit-box-pack: justify;
-    background-color: #fff;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.25rem 1rem 0 #2e385614;
-    justify-content: space-between;
-    max-width: 52.5rem;
-    min-height: 29.25rem;
-    padding: 1.5rem 2rem;
-    transition: all .5s ease;
-}
-
 .p1tur8tp {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -191,3 +179,34 @@
     grid-template-columns: 1fr 1fr;
 }
 
+.q1sv7y1h {
+    margin-top: 1.5rem;
+}
+
+.ssy64mv.svwhkoh {
+    position: relative;
+}
+
+.a1qes7yk {
+    -webkit-box-pack: end;
+    justify-content: flex-end;
+    margin: 2rem 0 0;
+    display: flex;
+}
+
+.AssemblyButtonBase--medium.AssemblyButtonBase--padding {
+    padding: 0.5rem 1rem;
+}
+
+.AssemblyPrimaryButton--default {
+    background: #4255ff;
+    color: #fff;
+    align-items: center;
+    border-radius: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.a1qes7yk>button {
+    margin-left: 1rem;
+}

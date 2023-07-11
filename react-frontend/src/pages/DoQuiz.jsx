@@ -222,7 +222,7 @@ function DoQuiz() {
         </div>
       </div>
       {/* IF QUIZ: TRUE/FALSE */}
-      <div style={{ margin: "0 auto", maxWidth: "52.5rem", padding: "0 2rem" }}>
+      <div style={{ margin: "0 auto", maxWidth: "57rem", padding: "0 2rem" }}>
         <article id="trueFalse-0" tabindex="-1" class="w1gd4v28 svwhkoh">
           <div class="p1tur8tp">
             <div class="pr2w5fu">
@@ -309,7 +309,7 @@ d) Khoa học"
         </article>
       </div>
       {/* IF QUIZ: MULTIPLE CHOICE */}
-      <div aria-label="question" role="listitem" class="qq5bf7c">
+      <div class="qq5bf7c">
         <div id="mcq-0" tabindex="-1" class="q1sjw0yf">
           <article aria-live="polite" class="src0sz3 svwhkoh">
             <div class="a1bncmms">
@@ -413,7 +413,97 @@ d) Khoa học"
         </div>
       </div>
       {/* IF QUIZ: WRITTEN */}
-      
+      <div class="q1sv7y1h">
+        <div id="written-9" tabindex="-1" class="q1t9fgzq">
+          <article class="ssy64mv svwhkoh">
+            <div class="qjwdgny">
+              <div class="a1bncmms">
+                <div class="wlbcmo g8d16b6">
+                  <div class="wlbcmo hn7llme">
+                    <div class="wlbcmo l3h11jy">
+                      <section class="lwajxlv">Term</section>
+                    </div>
+                    <div class="wlbcmo c8ck6sr"></div>
+                    <div class="wlbcmo rpq3rlv">
+                      <div class="r1i8yi5w"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="t4j019x" data-testid="Question Text">
+                  <div class="t1gujtze c1sj1twu">
+                    <div
+                      aria-label="18) Chọn câu trả lời đúng theo quan điểm duy vật lịch sử:
+Nhân tố quyết định trong lực lượng sản xuât là nhân tố:
+a) Tư liệu sản xuất
+b) Người lao động
+c) Công cụ lao động
+d) Tri thức"
+                      class="FormattedText notranslate FormattedTextWithImage-wrapper lang-vi"
+                      style={{ fontSize: "20px" }}
+                    >
+                      <div style={{ display: "block" }}>
+                        18) Chọn câu trả lời đúng theo quan điểm duy vật lịch
+                        sử:
+                        <br />
+                        Nhân tố quyết định trong lực lượng sản xuât là nhân tố:
+                        <br />
+                        a) Tư liệu sản xuất
+                        <br />
+                        b) Người lao động
+                        <br />
+                        c) Công cụ lao động
+                        <br />
+                        d) Tri thức
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="a13cru74">
+              <div class="l1e3267a">
+                <section class="lv6856r">Your answer</section>
+              </div>
+              <form name="form" class="fnkfiqj">
+                <div>
+                  <div class="collapsed ckizkc3"></div>
+                  <label class="AssemblyInput">
+                    <input
+                      autocomplete="off"
+                      spellcheck="false"
+                      aria-label="Type the answer"
+                      class="AssemblyInput-input AssemblyInput-placeholder"
+                      placeholder="Type the answer"
+                      type="text"
+                    />
+                  </label>
+                </div>
+                <div class="a1qes7yk">
+                  <button
+                    type="submit"
+                    aria-label="Next"
+                    class="AssemblyButtonBase AssemblyPrimaryButton--default AssemblyButtonBase--medium AssemblyButtonBase--padding"
+                  >
+                    <span>Next</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="t1b9wj7u">
+              <div class="c86ukn8">10 of 20</div>
+            </div>
+          </article>
+        </div>
+      </div>
+      {/* Button Submit */}
+      <div className="text-center mt-3 mb-5">
+        <button
+          type="submit"
+          className="bg-primary text-white border border-primary rounded-3 py-2 px-4 fw-bold fs-7 ms-3"
+        >
+          Submit Quiz
+        </button>
+      </div>
     </div>
   );
 }
