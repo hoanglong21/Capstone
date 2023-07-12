@@ -138,7 +138,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Map<String, Object> getFilterPost(String search, String author, int classid, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterPost(String search, String author,String direction, int classid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT p.id,p.content,p.class_id,p.author_id, " +
@@ -162,6 +162,14 @@ public class PostServiceImpl implements PostService {
             Class classroom = classService.getClassroomById(classid);
             parameters.put("classId", classroom.getId());
         }
+
+        String direct = "desc";
+        if(direction != null && !direction.isEmpty()){
+            if (direction.equalsIgnoreCase("asc")) {
+                direct = "asc";
+            }
+        }
+        query += " ORDER BY created_date " + " " + direct;
 
 
         Query q = em.createNativeQuery(query, Post.class);

@@ -105,12 +105,13 @@ public class PostController {
     @GetMapping("/filterpost")
     public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "direction", required = false) String direction,
                                            @RequestParam(value = "classid", required = false) Optional<Integer> classid,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
 
         try{
-            return ResponseEntity.ok(postService.getFilterPost(search,author,classid.orElse(0),page,size));
+            return ResponseEntity.ok(postService.getFilterPost(search,author,direction,classid.orElse(0),page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

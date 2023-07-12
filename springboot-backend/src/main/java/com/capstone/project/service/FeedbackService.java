@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Feedback;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FeedbackService {
 
@@ -16,4 +17,7 @@ public interface FeedbackService {
     Feedback updateFeedback(int id, Feedback feedbackDetails) throws ResourceNotFroundException;
 
     Boolean deleteFeedback(int id) throws ResourceNotFroundException;
+
+    Map<String, Object> filterFeedback(String search, int type, int authorId, String authorName, String destination, String fromCreated, String toCreated,
+                                       String sortBy, String direction, int page, int size);
 }

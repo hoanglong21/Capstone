@@ -61,6 +61,26 @@ public class AttachmentController {
         }
     }
 
+    @PostMapping("/createattachments")
+    public ResponseEntity<?> createAttachments(@Valid @RequestBody List<AttachmentRequest> attachmentRequests, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            List<Attachment> attachments = attachmentRequests.stream()
+                    .map(attachmentRequest -> modelMapper.map(attachmentRequest, Attachment.class))
+                    .collect(Collectors.toList());
+            try {
+                return ResponseEntity.ok(attachmentService.createAttachments(attachments));
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
+    }
+
     @PostMapping("/attachments")
     public ResponseEntity<?> createAttachment(@Valid @RequestBody AttachmentRequest attachmentRequest, BindingResult result) {
         if (result.hasErrors()) {

@@ -46,6 +46,12 @@ public class AttachmentSerivceImpl implements AttachmentService {
     }
 
     @Override
+    public List<Attachment> createAttachments(List<Attachment> attachments) {
+        return attachmentRepository.saveAll(attachments);
+    }
+
+
+    @Override
     public Attachment getAttachmentById(int id) throws ResourceNotFroundException {
         Attachment attachment = attachmentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Attachment not exist with id: " + id));

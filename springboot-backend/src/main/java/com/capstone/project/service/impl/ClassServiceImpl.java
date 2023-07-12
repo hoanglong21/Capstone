@@ -122,7 +122,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to,String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM class WHERE 1=1";
@@ -156,6 +156,14 @@ public class ClassServiceImpl implements ClassService {
                 parameters.put("to", to);
             }
         }
+
+        String direct = "desc";
+        if(direction != null && !direction.isEmpty()){
+            if (direction.equalsIgnoreCase("asc")) {
+                direct = "asc";
+            }
+        }
+        query += " ORDER BY created_date " + " " + direct;
 
         Query q = em.createNativeQuery(query, Class.class);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {

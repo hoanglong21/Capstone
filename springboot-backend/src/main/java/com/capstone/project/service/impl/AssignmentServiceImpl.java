@@ -146,7 +146,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Map<String, Object> getFilterAssignment(String search, String author, String from, String to,int classid ,int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterAssignment(String search, String author, String from, String to,String direction,int classid ,int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM assignment WHERE 1=1";
@@ -178,6 +178,14 @@ public class AssignmentServiceImpl implements AssignmentService {
             query += " AND start_date <= :to";
             parameters.put("to", to);
         }
+
+        String direct = "desc";
+        if(direction != null && !direction.isEmpty()){
+            if (direction.equalsIgnoreCase("asc")) {
+                direct = "asc";
+            }
+        }
+        query += " ORDER BY created_date " + " " + direct;
 
         Query q = em.createNativeQuery(query, Assignment.class);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
