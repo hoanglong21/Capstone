@@ -95,7 +95,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Map<String, Object> getFilterComment( String search, String author, int typeid,int postid, int testid,int studysetid, int rootid, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterComment( String search, String author,String direction, int typeid,int postid, int testid,int studysetid, int rootid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query = "SELECT * FROM comment WHERE 1=1";
@@ -112,6 +112,12 @@ public class CommentServiceImpl implements CommentService {
             query += " AND post_id = :postId";
             Post post = postService.getPostById(postid);
             parameters.put("postId",  post.getId());
+        }
+
+        if (studysetid != 0) {
+            query += " AND studyset_id = :studysetId";
+            StudySet studySet = studySetService.getStudySetById(studysetid);
+            parameters.put("studysetId",  studySet.getId());
         }
 
 
@@ -143,6 +149,15 @@ public class CommentServiceImpl implements CommentService {
             query += " AND content LIKE :search ";
             parameters.put("search", "%" + search + "%");
         }
+
+
+        String direct = "desc";
+        if(direction != null && !direction.isEmpty()){
+            if (direction.equalsIgnoreCase("asc")) {
+                direct = "asc";
+            }
+        }
+        query += " ORDER BY created_date " + " " + direct;
 
         Query q = em.createNativeQuery(query, Comment.class);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {

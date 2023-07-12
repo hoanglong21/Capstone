@@ -104,12 +104,13 @@ public class TestController {
     @GetMapping("/filtertest")
     public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "direction", required = false) String direction,
                                            @RequestParam(value = "duration", required = false) Optional<Integer> duration,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
 
         try{
-            return ResponseEntity.ok(testService.getFilterTest(search,author,duration.orElse(0),page,size));
+            return ResponseEntity.ok(testService.getFilterTest(search,author,direction,duration.orElse(0),page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

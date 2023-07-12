@@ -22,5 +22,5 @@ public interface CommentService {
 
     Boolean deleteComment (int id) throws ResourceNotFroundException;
 
-    Map<String, Object> getFilterComment( String search, String author, int typeid,int postid,int testid,int studysetid,int rootid, int page, int size) throws ResourceNotFroundException;
+    Map<String, Object> getFilterComment(String search, String author, String direction, int typeid, int postid, int testid, int studysetid, int rootid, int page, int size) throws ResourceNotFroundException;
 }

@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Feedback;
 import com.capstone.project.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/feedbacks/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getFeedbackById(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(feedbackService.getFeedbackById(id));
@@ -42,7 +43,7 @@ public class FeedbackController {
     }
 
     @PutMapping("/feedbacks/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> updateFeedback(@PathVariable("id") int id, @RequestBody Feedback feedbackDetails) {
         try {
             return ResponseEntity.ok(feedbackService.updateFeedback(id, feedbackDetails));
@@ -52,12 +53,32 @@ public class FeedbackController {
     }
 
     @DeleteMapping("/feedbacks/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteFeedback(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(feedbackService.deleteFeedback(id));
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/filterfeedback")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> filterUser(@RequestParam(value = "search", required = false, defaultValue = "") String search,
+                                        @RequestParam(value = "author_id", required = false, defaultValue = "0") int authorId,
+                                        @RequestParam(value = "author_name", required = false) String authorName,
+                                        @RequestParam(value = "type", required = false, defaultValue = "0") int type,
+                                        @RequestParam(value = "destination", required = false) String destination,
+                                        @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
+                                        @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
+                                        @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                        @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                        @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+//        try {
+            return ResponseEntity.ok(feedbackService.filterFeedback(search, type, authorId, authorName, destination, fromCreated, toCreated, sortBy, direction, page, size));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Check the input again");
+//        }
     }
 }

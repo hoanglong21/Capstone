@@ -16,13 +16,15 @@ public interface PostService {
 
     Post getPostById(int id) throws ResourceNotFroundException;
 
-//    Post createPost(Post post);
+    Post createPost(Post post);
 
-    Post createPost(Post post, List<String> file_names, int type, List<String> urls, List<String> file_types);
+//    Post createPost(Post post, List<String> file_names, int type, List<String> urls, List<String> file_types);
 
-    Post updatePost(Post posts, int id, List<String> files, int type, List<String> urls, List<String> file_types) throws ResourceNotFroundException;
+//    Post updatePost(Post posts, int id, List<String> files, int type, List<String> urls, List<String> file_types) throws ResourceNotFroundException;
+
+    Post updatePost(Post post, int id) throws ResourceNotFroundException;
 
     Boolean deletePost(int id) throws ResourceNotFroundException;
 
-    Map<String, Object> getFilterPost(String search, String author, int classid, int page, int size) throws ResourceNotFroundException;
+    Map<String, Object> getFilterPost(String search, String author, String direction, int classid, int page, int size) throws ResourceNotFroundException;
 }

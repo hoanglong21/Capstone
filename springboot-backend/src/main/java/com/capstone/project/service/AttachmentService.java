@@ -13,6 +13,7 @@ public interface AttachmentService {
     List<Attachment> getAllAttachmentByPostId(int id);
 
     Attachment createAttachment( Attachment attachment);
+    List<Attachment> createAttachments( List<Attachment> attachments);
 
     Attachment getAttachmentById( int id) throws ResourceNotFroundException;
 
