@@ -146,7 +146,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Map<String, Object> getFilterAssignment(String search, String author, String from, String to,String direction,int classid ,int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterAssignment(String search, String author, String from, String to,Boolean isDraft,String direction,int classid ,int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM assignment WHERE 1=1";
@@ -169,6 +169,12 @@ public class AssignmentServiceImpl implements AssignmentService {
             Class classroom = classService.getClassroomById(classid);
             parameters.put("classId", classroom.getId());
         }
+
+        if (isDraft != null) {
+            query += " AND is_draft = :isDraft";
+            parameters.put("isDraft", isDraft);
+        }
+
         if(from != null){
             query += " AND start_date >= :from ";
             parameters.put("from", from);

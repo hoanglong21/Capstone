@@ -111,13 +111,14 @@ public class AssignmentController {
                                            @RequestParam(value = "author", required = false) String author,
                                            @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
                                            @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
+                                           @RequestParam(value = "draft", required = false) Boolean isDraft,
                                            @RequestParam(value = "direction", required = false) String direction,
                                            @RequestParam(value = "classid", required = false) Optional<Integer> classid,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
 
         try{
-            return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,from,to,direction,classid.orElse(0),page,size));
+            return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,from,to,isDraft,direction,classid.orElse(0),page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

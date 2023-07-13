@@ -28,6 +28,10 @@ public class Test {
     @JoinColumn(name = "author_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "class_id", nullable = false)
+    private Class classroom;
+
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_date;
@@ -39,5 +43,17 @@ public class Test {
     private String description;
 
     private float duration;
+
+    private boolean is_draft;
+
+    private int num_attemps;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date start_date;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date due_date;
 
 }
