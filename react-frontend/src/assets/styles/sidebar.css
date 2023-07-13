@@ -1,7 +1,9 @@
-.nav-pills li a:hover{
-    background-color: rgb(61, 61, 243);
-}
+/* .nav-pills li a:hover{
+    background-color: #0D6EFD;
+} */
 
 .header__admin{
-    background-color: #4E73DE;
+    background-color: #F6F7FB;
+    border: 10px solid #ffffff;
+    border-radius: 10px;
 }

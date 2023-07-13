@@ -11,46 +11,46 @@ function SidebarforAdmin() {
           <div>
             <Link
               href=""
-              className="text-decoration-none text-white d-flex align-item center d-none d-sm-inline d-none d-sm-inline mt-2 "
+              className="text-decoration-none d-flex align-item center d-none d-sm-inline d-none d-sm-inline mt-2 "
             >
               <img className="img-thumbnail mt-2" src={logo} alt="" />
             </Link>
             <hr className="text-dark d-none d-sm-block" />
             <ul className="nav nav-pills flex-column mt-3 mt-sm-0">
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
+              <li className="nav-item fs-6 my-1 py-2 py-sm-0">
                 <Link
                   to="/dashboard"
-                  className="nav-link text-white fs-7 active"
+                  className="nav-link fs-7 active"
                   aria-current="page"
                 >
                   <i className="bi bi-speedometer2"></i>
                   <span className="ms-3 d-none d-sm-inline">Dashboard</span>
                 </Link>
               </li>
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
+              <li className="nav-item fs-6 my-1 py-2 py-sm-0">
                 <Link
                   to="/manageusers"
-                  className="nav-link text-white fs-7"
+                  className="nav-link fs-7"
                   aria-current="page"
                 >
                   <i class="bi bi-person-square"></i>
                   <span className="ms-3 d-none d-sm-inline">Manage User</span>
                 </Link>
               </li>
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
+              <li className="nav-item fs-6 my-1 py-2 py-sm-0">
                 <Link
                   to="/manageclass"
-                  className="nav-link text-white fs-7"
+                  className="nav-link fs-7"
                   aria-current="page"
                 >
                   <i class="bi bi-people"></i>
                   <span className="ms-3 d-none d-sm-inline">Manage Class</span>
                 </Link>
               </li>
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
+              <li className="nav-item fs-6 my-1 py-2 py-sm-0">
                 <Link
                   to="/managefeedback"
-                  className="nav-link text-white fs-7"
+                  className="nav-link fs-7"
                   aria-current="page"
                 >
                   <i class="bi bi-chat-text"></i>
@@ -64,7 +64,7 @@ function SidebarforAdmin() {
           <div className="dropdown open">
             <Link
               to=""
-              className="text-decoration-none text-white p-3"
+              className="text-decoration-none p-3"
               type="button"
               id="triggerId"
               data-bs-toggle="dropdown"
