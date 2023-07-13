@@ -14,7 +14,7 @@ import logo from '../../assets/images/logo-2.png'
 import {
     HomeIcon,
     TranslateIcon,
-    AddIcon,
+    AddCircleIcon,
     NotifyIcon,
     ProfileIcon,
     SettingIcon,
@@ -167,7 +167,10 @@ const Header = () => {
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <AddIcon className="icon-primary" size="3.5rem" />
+                            <AddCircleIcon
+                                className="icon-primary"
+                                size="3.5rem"
+                            />
                         </button>
                         <ul className="dropdown-menu dropdown-menu-end p-2">
                             <li>

@@ -97,10 +97,7 @@ public class AttachmentController {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
-
     }
-
-
 
     @PutMapping("/attachments/{id}")
     public ResponseEntity<?> updateAttachment(@PathVariable int id,@Valid @RequestBody AttachmentRequest attachmentRequest, BindingResult result) {

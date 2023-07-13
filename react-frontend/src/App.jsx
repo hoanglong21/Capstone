@@ -7,7 +7,7 @@ import VideoChatContainer from './components/Chat/VideoChatContainer'
 import ChatContainer from './components/Chat/ChatContainer'
 import Layout from './components/layouts/Layout'
 import GPTContainer from './components/Chat/GPTContainer'
-import Flashcard from './pages/studyset/flashcard/Flashcard'
+import Flashcard from './pages/studySet/flashcard/Flashcard'
 import ClassLayout from './pages/class/classLayout/ClassLayout'
 import Landing from './pages/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
@@ -47,25 +47,23 @@ import ManageClass from './pages/admin/ManageClass'
 import ViewDetailClass from './pages/admin/ViewDetailClass'
 import ManageFeedback from './pages/admin/ManageFeedback'
 import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
-import CreateSet from './pages/studyset/create/CreateSet'
+import CreateSet from './pages/studySet/create/CreateSet'
 import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
 import GrammarDict from './pages/dictionary/GrammarDict'
 import KanjiDict from './pages/dictionary/KanjiDict'
-import ViewKanjiDetail from './pages/studyset/view/ViewKanjiDetail'
-// import ViewGrammarDetail from './pages/studyset/view/ViewGrammarDetail'
-import ViewVocabularyDetail from './pages/studyset/view/ViewVocabularyDetail'
-import ViewSet from './pages/studyset/view/ViewSet'
+import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
+import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
+import ViewSet from './pages/studySet/view/ViewSet'
 import DoTest from './pages/class/test/DoTest'
-import ManageTest from './pages/class/test/ManageTest'
+import TestList from './pages/class/test/TestList'
 import Stream from './pages/class/Stream'
 import CreateTest from './pages/class/test/CreateTest'
 import ViewDetailTest from './pages/class/test/ViewDetailTest'
-import ManageAssignment from './pages/class/assignment/ManageAssignment'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/DoQuiz'
-import ViewAssignment from './pages/class/assignment/ViewAssignmentForLearner'
+import AssignmentList from './pages/class/assignment/AssignmentList'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -113,22 +111,32 @@ const App = () => {
                         <Route path="edit-set/:id" element={<CreateSet />} />
                         {/* Class */}
                         <Route path="class/:id" element={<ClassLayout />}>
-                            <Route index path="stream" element={<Stream />} />
+                            <Route index element={<Stream />} />
+                            <Route
+                                path="assignments"
+                                element={<AssignmentList />}
+                            />
+                            <Route
+                                path="create-assignment"
+                                element={<CreateAssignment />}
+                            />
+                            <Route path="tests" element={<TestList />} />
+                            <Route
+                                path="create-test"
+                                element={<CreateTest />}
+                            />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
-                        <Route path="/managetest" element={<ManageTest />} />
                         <Route
                             path="/viewdetailtest"
                             element={<ViewDetailTest />}
                         />
-                        <Route path="/createtest" element={<CreateTest />} />
                         {/* Assignment */}
-                        <Route path='/viewassignment' element={<ViewAssignment />} />
-                        <Route path="/manageassignment" element={<ManageAssignment/>} 
+                        <Route
+                            path="/updateassignment"
+                            element={<UpdateAssignment />}
                         />
-                        <Route path="/createassignment" element={<CreateAssignment />} />
-                        <Route path="/updateassignment" element={<UpdateAssignment />} />
                         {/* Feedback */}
                         <Route
                             path="help-center/send-feedback"
@@ -182,6 +190,7 @@ const App = () => {
                         <Route path="users" element={<UsersForHome />} />
                     </Route>
                 </Route>
+                {/* No header + footer */}
                 {/* Auth */}
                 <Route element={<AuthLayout />}>
                     <Route path="/login" element={<Login />} />
@@ -213,16 +222,12 @@ const App = () => {
                 />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
-                {/* <Route
-                    path="/viewdetailgrammar"
-                    element={<ViewGrammarDetail />}
-                /> */}
                 <Route
                     path="/viewdetailvocab"
                     element={<ViewVocabularyDetail />}
                 />
                 {/* Quiz */}
-                <Route path='/doquiz' element={<DoQuiz />} />
+                <Route path="/doquiz" element={<DoQuiz />} />
             </Routes>
         </BrowserRouter>
     )

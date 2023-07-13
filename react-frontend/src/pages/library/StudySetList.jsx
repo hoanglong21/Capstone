@@ -27,7 +27,12 @@ const StudySetList = () => {
                 '',
                 '',
                 `${searchKey ? '=' + searchKey : ''}`,
-                `=${userInfo.username}`,
+                `=${userInfo.id}`,
+                '',
+                '',
+                '',
+                '',
+                '',
                 '',
                 '',
                 '',
@@ -35,34 +40,13 @@ const StudySetList = () => {
                 ''
             )
         ).data.list
+        if (!searchKey && temp.length == 0) {
+            setIsEmpty(true)
+        } else {
+            setIsEmpty(false)
+        }
         setSets(temp)
     }
-
-    const checkEmpty = async () => {
-        const temp = (
-            await StudySetService.getFilterList(
-                '',
-                '',
-                '',
-                '',
-                `=${userInfo.username}`,
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        if (temp.length === 0) {
-            setIsEmpty(true)
-        }
-    }
-
-    useEffect(() => {
-        if (userInfo.username) {
-            checkEmpty()
-        }
-    }, [userInfo])
 
     useEffect(() => {
         if (userInfo.username) {
@@ -108,7 +92,7 @@ const StudySetList = () => {
                                     <button
                                         className="dropdown-item m-0"
                                         onClick={() => {
-                                            navigate('/create-set/type=1')
+                                            navigate('/create-set?type=1')
                                         }}
                                     >
                                         Vocabulary
@@ -117,7 +101,9 @@ const StudySetList = () => {
                                 <li>
                                     <button
                                         className="dropdown-item"
-                                        onClick={navigate('/create-set/type=2')}
+                                        onClick={() =>
+                                            navigate('/create-set?type=2')
+                                        }
                                     >
                                         Kanji
                                     </button>
@@ -125,7 +111,9 @@ const StudySetList = () => {
                                 <li>
                                     <button
                                         className="dropdown-item"
-                                        onClick={navigate('/create-set/type=3')}
+                                        onClick={() =>
+                                            navigate('/create-set?type=3')
+                                        }
                                     >
                                         Grammar
                                     </button>
