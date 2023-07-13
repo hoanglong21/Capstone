@@ -1,4 +1,13 @@
 import { useState } from 'react'
+import {
+    CloseIcon,
+    CopyIcon,
+    DeleteIcon,
+    ImageIcon,
+    PlaySolidIcon,
+    SpeakIcon,
+    VideoIcon,
+} from '../../../components/icons'
 
 const CreateTest = () => {
     const [error, setError] = useState('')
@@ -144,7 +153,7 @@ const CreateTest = () => {
             {questions.map((ques, index) => (
                 <div className="card mt-4">
                     <div className="card-body p-4">
-                        <div className="createTest_formGroup mb-4">
+                        <div className="createTest_formGroup mb-4 d-flex align-items-center">
                             <input
                                 type="text"
                                 className="form-control"
@@ -152,6 +161,68 @@ const CreateTest = () => {
                                 name="question"
                                 placeholder="Question"
                             />
+                            <button className="btn btn-customLight ms-3 p-2 rounded-circle">
+                                <ImageIcon />
+                            </button>
+                            <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                <SpeakIcon />
+                            </button>
+                            <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                <VideoIcon />
+                            </button>
+                        </div>
+                        <div class="createTest_formGroup-sm mb-2 form-check d-flex align-items-center">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                            />
+                            <div className="d-flex align-items-center w-100">
+                                <input
+                                    type="text"
+                                    className="form-control ms-3"
+                                    placeholder="Option"
+                                />
+                                <button className="btn btn-customLight ms-3 p-2 rounded-circle">
+                                    <ImageIcon />
+                                </button>
+                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                    <SpeakIcon />
+                                </button>
+                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                    <VideoIcon />
+                                </button>
+                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                    <CloseIcon />
+                                </button>
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            className="createTest_addOptionBtn"
+                            onClick={handleAddQuestion}
+                        >
+                            Add option
+                        </button>
+                    </div>
+                    <div className="card-footer bg-white d-flex align-items-center justify-content-between">
+                        <div className="createTest_formGroup d-flex align-items-center">
+                            <input
+                                type="number"
+                                className="form-control me-2"
+                                id={`question${index}`}
+                                name="question"
+                                placeholder="Point"
+                                style={{ width: '5rem' }}
+                            />
+                            <span>points</span>
+                        </div>
+                        <div>
+                            <button className="btn btn-customLight me-2 p-2 rounded-circle">
+                                <CopyIcon />
+                            </button>
+                            <button className="btn btn-customLight p-2 rounded-circle">
+                                <DeleteIcon />
+                            </button>
                         </div>
                     </div>
                 </div>

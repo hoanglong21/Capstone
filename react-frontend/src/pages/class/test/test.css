@@ -94,17 +94,44 @@
     border-bottom: 1px solid #80868b;
     line-height: 1.5;
     padding: 1rem;
+    font-size: 12pt;
+    font-weight: 400;
+    letter-spacing: 0;
 }
 
 .createTest_formGroup:hover .form-control {
     background-color: #f1f3f4;
-    box-shadow: none;
 }
 
 .createTest_formGroup .form-control:focus {
     background-color: #f1f3f4;
     box-shadow: none;
     border-bottom: 2px solid rgb(66, 133, 244);
+}
+
+.createTest_formGroup-sm .form-control {
+    background-color: transparent;
+    border-radius: 4px 4px 0 0;
+    border: none;
+    outline: none;
+    min-height: 48px;
+    font-size: 11pt;
+    padding: 0.125rem 0;
+    border-bottom: 1px solid transparent;
+}
+
+.createTest_formGroup-sm:hover .form-control {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.createTest_formGroup-sm .form-control:focus {
+    box-shadow: none;
+    border-bottom: 2px solid rgb(66, 133, 244);
+}
+
+.createTest_formGroup-sm .form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
 }
 
 .createTest_formLabel {
@@ -114,6 +141,15 @@
     letter-spacing: 0.1px;
     line-height: 24px;
     color: #5f6368;
+}
+
+.createTest_addOptionBtn {
+    color: #70757a;
+    padding: 0.125rem 0;
+}
+
+.createTest_addOptionBtn:hover {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .createTest_addQuesBtn {
