@@ -143,7 +143,7 @@ function CreateAssignment() {
                         disabled={!assignment?.title || loadingCreateAssign}
                         onClick={handleSubmit}
                     >
-                        {loadingCreateAssign ? 'Saving...' : 'Save'}
+                        {loadingCreateAssign ? 'Assigning...' : 'Assign'}
                     </button>
                     <button
                         className="createAssign_draftBtn"

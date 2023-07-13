@@ -121,6 +121,10 @@ const App = () => {
                                 element={<CreateAssignment />}
                             />
                             <Route path="tests" element={<TestList />} />
+                            <Route
+                                path="create-test"
+                                element={<CreateTest />}
+                            />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
@@ -128,7 +132,6 @@ const App = () => {
                             path="/viewdetailtest"
                             element={<ViewDetailTest />}
                         />
-                        <Route path="/createtest" element={<CreateTest />} />
                         {/* Assignment */}
                         <Route
                             path="/updateassignment"

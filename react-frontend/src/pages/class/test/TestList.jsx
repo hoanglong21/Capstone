@@ -15,9 +15,9 @@ const TestList = () => {
                     marginTop: '2.5rem',
                 }}
             >
-                <Link to="../create-test" className="createAssign_btn">
+                <Link to="../create-test" className="createTest_btn">
                     <AddIcon
-                        className="createAssignIcon_btn"
+                        className="createTestIcon_btn"
                         size="1.125rem"
                         strokeWidth="2.25"
                     />
