@@ -114,8 +114,8 @@ const Stream = () => {
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `post/${post.id}`,
-                    uploadFileItem.type
+                    `post/${tempPost.id}`,
+                    uploadFileItem.file_type
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,

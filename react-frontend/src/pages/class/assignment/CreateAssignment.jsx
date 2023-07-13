@@ -1,15 +1,19 @@
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import { uploadFile } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
+import AssignmentService from '../../../services/AssignmentService'
+import AttachmentService from '../../../services/AttachmentService'
 
 import InstructionEditor from '../../../components/textEditor/InstructionEditor'
 
 import { DeleteIcon, UploadIcon } from '../../../components/icons'
 
 function CreateAssignment() {
+    const navigate = useNavigate()
+
     const { id } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
@@ -17,11 +21,25 @@ function CreateAssignment() {
     const [assignment, setAssignment] = useState({})
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [uploadFiles, setUploadFiles] = useState([])
+    const [loadingCreateAssign, setLoadingCreateAssign] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
             setClassroom(tempClass)
+            setAssignment({
+                title: '',
+                classroom: {
+                    id: classroom.id,
+                },
+                user: {
+                    id: userInfo.id,
+                },
+                due_date: '',
+                start_date: new Date().toISOString().substring(0, 16),
+                instruction: '',
+                _draft: true,
+            })
         }
         if (userInfo?.id) {
             fetchData()
@@ -34,7 +52,7 @@ function CreateAssignment() {
         if (file) {
             setUploadFiles([
                 ...uploadFiles,
-                { file_name: file.name, file_type: file.type, file_url: file },
+                { file_name: file.name, file_type: file.type, file: file },
             ])
         }
         setLoadingUploadFile(false)
@@ -46,34 +64,93 @@ function CreateAssignment() {
         setUploadFiles(temp)
     }
 
+    const handleChange = (event) => {
+        setAssignment({
+            ...assignment,
+            [event.target.name]: event.target.value,
+        })
+    }
+
+    const handleSubmit = async () => {
+        setLoadingCreateAssign(true)
+        try {
+            const tempAssignment = (
+                await AssignmentService.createAssignment(assignment)
+            ).data
+            // add attachments
+            let tempAttachments = []
+            for (const uploadFileItem of uploadFiles) {
+                const url = await uploadFile(
+                    uploadFileItem.file,
+                    `assignment/${tempAssignment.id}/tutor`,
+                    uploadFileItem.file_type
+                )
+                tempAttachments.push({
+                    file_name: uploadFileItem.file_name,
+                    file_type: uploadFileItem.file_type,
+                    file_url: url,
+                    assignment: {
+                        id: tempAssignment.id,
+                    },
+                    attachmentType: {
+                        id: 1,
+                    },
+                })
+            }
+            await AttachmentService.createAttachments(tempAttachments)
+            // clear
+            handleClear()
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingCreateAssign(false)
+    }
+
+    const handleClear = () => {
+        setAssignment({
+            title: {},
+            classroom: {
+                id: classroom.id,
+            },
+            user: {
+                id: userInfo.id,
+            },
+            due_date: '',
+            start_date: new Date().toISOString().substring(0, 16),
+            instruction: '',
+            _draft: true,
+        })
+        setUploadFiles([])
+        navigate('../assignments')
+    }
+
     return (
-        <div>
+        <div className="mb-5">
             <div className="d-flex justify-content-between align-items-center">
-                <Link to="../assignments" className="createAssign_cancelBtn">
+                <button
+                    className="createAssign_cancelBtn"
+                    onClick={handleClear}
+                >
                     cancel
-                </Link>
+                </button>
                 <div className="d-flex">
-                    <button className="createAssign_submitBtn">Assign</button>
-                    <div className="dropdown">
-                        <button
-                            className="createAssign_dropdownBtn dropdown-toggle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        ></button>
-                        <ul className="dropdown-menu">
-                            <li>
-                                <a className="dropdown-item" href="#">
-                                    Assign
-                                </a>
-                            </li>
-                            <li>
-                                <a className="dropdown-item" href="#">
-                                    Save draft
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <button
+                        className="createAssign_submitBtn"
+                        disabled={!assignment?.title || loadingCreateAssign}
+                        onClick={handleSubmit}
+                    >
+                        {loadingCreateAssign ? 'Saving...' : 'Save'}
+                    </button>
+                    <button
+                        className="createAssign_draftBtn"
+                        disabled={!assignment?.title}
+                    >
+                        Save draft
+                    </button>
                 </div>
             </div>
             <div className="card mt-4">
@@ -85,6 +162,7 @@ function CreateAssignment() {
                             id="title"
                             name="title"
                             placeholder="title"
+                            onChange={handleChange}
                         />
                         <label
                             htmlFor="title"
@@ -94,7 +172,15 @@ function CreateAssignment() {
                         </label>
                     </div>
                     <div className="createAssign_formGroup form-floating mb-4">
-                        <InstructionEditor />
+                        <InstructionEditor
+                            onChange={(event, editor) => {
+                                setAssignment({
+                                    ...assignment,
+                                    title: editor.getData(),
+                                })
+                                console.log(editor.getData())
+                            }}
+                        />
                         <label className="createAssign_formLabel createAssign_editorLabel">
                             Instruction (Optional)
                         </label>
@@ -108,6 +194,8 @@ function CreateAssignment() {
                                     name="start_date"
                                     id="start_date"
                                     placeholder="start date"
+                                    value={assignment?.start_date}
+                                    onChange={handleChange}
                                 />
                                 <label
                                     htmlFor="start_date"
@@ -125,6 +213,7 @@ function CreateAssignment() {
                                     id="due_date"
                                     name="due_date"
                                     placeholder="due date"
+                                    onChange={handleChange}
                                 />
                                 <label
                                     htmlFor="due_date"
@@ -135,30 +224,37 @@ function CreateAssignment() {
                             </div>
                         </div>
                     </div>
-                    {uploadFiles.map((file, index) => (
-                        <div className="card mb-2" key={index}>
-                            <div className="card-body d-flex justify-content-between">
-                                <a
-                                    className="text-decoration-none w-100"
-                                    href={file.file_url}
-                                    target="_blank"
-                                >
-                                    <div className="fileUploadName">
-                                        {file.file_name}
+                    <div className="row">
+                        {uploadFiles.map((file, index) => (
+                            <div className="col-6" key={index}>
+                                <div className="card mb-2">
+                                    <div className="card-body d-flex justify-content-between">
+                                        <a
+                                            className="text-decoration-none w-100 text-truncate"
+                                            href={file.file_url}
+                                            target="_blank"
+                                        >
+                                            <div className="fileUploadName">
+                                                {file.file_name}
+                                            </div>
+                                            <div className="fileUploadType">
+                                                {file.file_type}
+                                            </div>
+                                        </a>
+                                        <button
+                                            className="btn fileUploadDelButton"
+                                            onClick={() =>
+                                                handleDeleteFile(index)
+                                            }
+                                        >
+                                            <DeleteIcon />
+                                        </button>
                                     </div>
-                                    <div className="fileUploadType">
-                                        {file.file_type}
-                                    </div>
-                                </a>
-                                <button
-                                    className="btn fileUploadDelButton"
-                                    onClick={() => handleDeleteFile(index)}
-                                >
-                                    <DeleteIcon />
-                                </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+
                     <input
                         type="file"
                         id="uploadPostFile"

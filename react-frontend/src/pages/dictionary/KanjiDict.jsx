@@ -112,15 +112,18 @@ const KanjiDict = () => {
                                         <div>
                                             <div className="kanji-search-block ed">
                                                 <label>Onyomi:</label>
-                                                <p>
+                                                <div>
                                                     {word?.readingJapaneseOn?.map(
-                                                        (onyomi) => (
-                                                            <p className="ony">
+                                                        (onyomi, index) => (
+                                                            <p
+                                                                className="ony"
+                                                                key={index}
+                                                            >
                                                                 {onyomi}
                                                             </p>
                                                         )
                                                     )}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div className="kanji-search-block ed">
                                                 <label>Kunyomi:</label>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import PostService from '../../../services/PostService'
+import AttachmentService from '../../../services/AttachmentService'
 import {
     deleteFile,
     deleteFileByUrl,
@@ -18,7 +19,6 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
-import AttachmentService from '../../../services/AttachmentService'
 
 const Post = ({ post, stateChanger, posts, index }) => {
     const [showUpdate, setShowUpdate] = useState(false)
@@ -57,12 +57,13 @@ const Post = ({ post, stateChanger, posts, index }) => {
             ).data
             // delete folder old post in firebase
             await deleteFile('', `post/${tempPost.id}`)
+            // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
                     `post/${post.id}`,
-                    uploadFileItem.type
+                    uploadFileItem.file_type
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,
@@ -76,10 +77,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
                     },
                 })
             }
-            // add attachments
-            const res = await AttachmentService.createAttachments(
-                tempAttachments
-            )
+            await AttachmentService.createAttachments(tempAttachments)
             // update list posts
             var tempPosts = [...posts]
             tempPosts[index] = tempPost
@@ -207,7 +205,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
                     <div className="post__content">
                         {showUpdate ? (
                             <div>
-                                <div className="postTextEditor">
+                                <div className="createAssign_formGroup form-floating mb-4">
                                     <PostEditor
                                         data={updatePost?.content}
                                         onChange={(event, editor) => {
@@ -219,6 +217,9 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                             }
                                         }}
                                     />
+                                    <label className="createAssign_formLabel createAssign_editorLabel">
+                                        Announce something to your class
+                                    </label>
                                 </div>
                                 <div className="mainClass_filesUpload mt-3">
                                     {uploadFiles.map((file, index) => (

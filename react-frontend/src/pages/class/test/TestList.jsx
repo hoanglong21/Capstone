@@ -1,5 +1,8 @@
-import DeleteTest from './DeleteTest'
 import { Link } from 'react-router-dom'
+
+import { AddIcon } from '../../../components/icons'
+import DeleteTest from './DeleteTest'
+import './test.css'
 
 const TestList = () => {
     return (
@@ -12,64 +15,85 @@ const TestList = () => {
                     marginTop: '2.5rem',
                 }}
             >
-                <h3>Management Test</h3>
-                <button
-                    type="submit"
-                    className="bg-primary text-white border border-primary rounded-3 py-2 px-2 fw-bold fs-7"
-                >
-                    <i class="bi bi-plus-square me-2"></i>Create Test
-                </button>
+                <Link to="../create-test" className="createAssign_btn">
+                    <AddIcon
+                        className="createAssignIcon_btn"
+                        size="1.125rem"
+                        strokeWidth="2.25"
+                    />
+                    Create
+                </Link>
             </div>
-            <table className="table table-striped mt-5">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Test Name</th>
-                        <th scope="col">Questions</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Deadline</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row" style={{ verticalAlign: 'middle' }}>
-                            1
-                        </th>
-                        <td style={{ verticalAlign: 'middle' }}>
-                            Vocabulary - Grammar Lesson 3
-                        </td>
-                        <td style={{ verticalAlign: 'middle' }}>20</td>
-                        <td style={{ verticalAlign: 'middle' }}>15 minutes</td>
-                        <td style={{ verticalAlign: 'middle' }}>9/7/2023</td>
-                        <td>
-                            <Link
-                                to="/viewdetailtest"
-                                className="btn btn-primary me-3"
-                            >
-                                <i class="bi bi-info-square me-2"></i>View
-                                Details
-                            </Link>
-                            <Link
-                                type="button"
-                                className="btn btn-success me-3"
-                            >
-                                <i class="bi bi-pencil-square me-2"></i>
-                                Update
-                            </Link>
-                            <button
-                                type="button"
-                                className="btn btn-danger "
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteTestModal"
-                            >
-                                <i class="bi bi-trash-fill me-2"></i>
-                                Delete
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div className="accordion mt-3" id="accordionTests">
+                <div className="accordion-item">
+                    <h2 className="accordion-header">
+                        <button
+                            className="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo"
+                            aria-expanded="false"
+                            aria-controls="collapseTwo"
+                        >
+                            Accordion Item #2
+                        </button>
+                    </h2>
+                    <div
+                        id="collapseTwo"
+                        className="accordion-collapse collapse"
+                        data-bs-parent="#accordionAssignments"
+                    >
+                        <div className="accordion-body">
+                            <strong>
+                                This is the second item's accordion body.
+                            </strong>{' '}
+                            It is hidden by default, until the collapse plugin
+                            adds the appropriate classes that we use to style
+                            each element. These classes control the overall
+                            appearance, as well as the showing and hiding via
+                            CSS transitions. You can modify any of this with
+                            custom CSS or overriding our default variables. It's
+                            also worth noting that just about any HTML can go
+                            within the <code>.accordion-body</code>, though the
+                            transition does limit overflow.
+                        </div>
+                    </div>
+                </div>
+                <div className="accordion-item">
+                    <h2 className="accordion-header">
+                        <button
+                            className="accordion-button collapsed"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree"
+                            aria-expanded="false"
+                            aria-controls="collapseThree"
+                        >
+                            Accordion Item #3
+                        </button>
+                    </h2>
+                    <div
+                        id="collapseThree"
+                        className="accordion-collapse collapse"
+                        data-bs-parent="#accordionAssignments"
+                    >
+                        <div className="accordion-body">
+                            <strong>
+                                This is the third item's accordion body.
+                            </strong>{' '}
+                            It is hidden by default, until the collapse plugin
+                            adds the appropriate classes that we use to style
+                            each element. These classes control the overall
+                            appearance, as well as the showing and hiding via
+                            CSS transitions. You can modify any of this with
+                            custom CSS or overriding our default variables. It's
+                            also worth noting that just about any HTML can go
+                            within the <code>.accordion-body</code>, though the
+                            transition does limit overflow.
+                        </div>
+                    </div>
+                </div>
+            </div>
             <DeleteTest />
         </div>
     )
