@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 
 import PostService from '../../../services/PostService'
-import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import {
+    deleteFile,
+    deleteFileByUrl,
+    uploadFile,
+} from '../../../features/fileManagement'
 
 import CardEditor from '../../../components/textEditor/CardEditor'
 import PostEditor from '../../../components/textEditor/PostEditor'
@@ -47,36 +51,40 @@ const Post = ({ post, stateChanger, posts, index }) => {
     const handleUpdatePost = async () => {
         setLoadingUpdatePost(true)
         try {
-            var tempFilenames = ''
-            var tempFileUrls = ''
-            var tempFileTypes = ''
-            uploadFiles.forEach((uploadFile) => {
-                tempFilenames += uploadFile.file_name + ','
-                tempFileUrls += uploadFile.file_url + ','
-                tempFileTypes += uploadFile.file_type + ','
-            })
-            const filenames = tempFilenames.substring(
-                0,
-                tempFilenames.length - 1
-            )
-            const fileUrls = tempFileUrls.substring(0, tempFileUrls.length - 1)
-            const fileTypes = tempFileTypes.substring(
-                0,
-                tempFileTypes.length - 1
-            )
+            // update post
             const tempPost = (
-                await PostService.updatePost(
-                    updatePost.id,
-                    updatePost,
-                    `${filenames ? `=${filenames}` : ''}`,
-                    '=3',
-                    `${fileUrls ? `=${fileUrls}` : ''}`,
-                    `${fileTypes ? `=${fileTypes}` : ''}`
-                )
+                await PostService.updatePost(updatePost.id, updatePost)
             ).data
+            // delete folder old post in firebase
+            await deleteFile('', `post/${tempPost.id}`)
+            let tempAttachments = []
+            for (const uploadFileItem of uploadFiles) {
+                const url = await uploadFile(
+                    uploadFileItem.file,
+                    `post/${post.id}`,
+                    uploadFileItem.type
+                )
+                tempAttachments.push({
+                    file_name: uploadFileItem.file_name,
+                    file_type: uploadFileItem.file_type,
+                    file_url: url,
+                    post: {
+                        id: post.id,
+                    },
+                    attachmentType: {
+                        id: 3,
+                    },
+                })
+            }
+            // add attachments
+            const res = await AttachmentService.createAttachments(
+                tempAttachments
+            )
+            // update list posts
             var tempPosts = [...posts]
             tempPosts[index] = tempPost
             stateChanger(tempPosts)
+            // clear
             setShowUpdate(false)
             setCurrentFiles([...uploadFiles])
         } catch (error) {
@@ -93,27 +101,16 @@ const Post = ({ post, stateChanger, posts, index }) => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
-            const url = await uploadFile(
-                file,
-                `file/class/${post.classroom.id}/post`,
-                file.type
-            )
             setUploadFiles([
                 ...uploadFiles,
-                { file_name: file.name, file_type: file.type, file_url: url },
+                { file_name: file.name, file_type: file.type, file: file },
             ])
         }
         setLoadingUploadFile(false)
     }
 
     const handleCancelUpdatePost = () => {
-        uploadFiles.forEach((file) => {
-            deleteFileByUrl(
-                file.file_url,
-                `file/class/${post.classroom.id}/post`
-            )
-        })
-        setUploadFiles(currentFiles)
+        setUploadFiles([...currentFiles])
         setUpdatePost({ ...post })
         setShowUpdate(false)
     }
@@ -121,10 +118,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
     const handleDeletePost = async () => {
         await PostService.deletePost(post.id)
         currentFiles.forEach((file) => {
-            deleteFileByUrl(
-                file.file_url,
-                `file/class/${post.classroom.id}/post`
-            )
+            deleteFileByUrl(file.file_url, `files/post/${post.id}`)
         })
         var tempPosts = [...posts]
         tempPosts.splice(index, 1)
@@ -132,11 +126,13 @@ const Post = ({ post, stateChanger, posts, index }) => {
         document.getElementById(`closeDeletePostModal${index}`).click()
     }
 
-    const handleDeleteFile = (fileUrl, index) => {
+    const handleDeleteFile = (file, index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
         setUploadFiles(temp)
-        deleteFileByUrl(fileUrl, `file/class/${post.classroom.id}/post`)
+        if (file.file_url) {
+            deleteFileByUrl(file.file_url, `files/post/${post.id}`)
+        }
     }
 
     function getDate(date) {
@@ -244,7 +240,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                                     className="btn fileUploadDelButton"
                                                     onClick={() =>
                                                         handleDeleteFile(
-                                                            file.file_url,
+                                                            file,
                                                             index
                                                         )
                                                     }

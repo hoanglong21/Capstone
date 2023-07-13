@@ -3,7 +3,6 @@ import { CKEditor } from '@ckeditor/ckeditor5-react'
 
 export default function PostEditor(props) {
     const editorConfiguration = {
-        placeholder: 'Announce something to your class',
         toolbar: {
             items: [
                 'undo',

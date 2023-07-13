@@ -2,36 +2,12 @@ import axios from 'axios'
 
 const API_BASE_URL = 'http://localhost:8080/api/v1'
 
-const createPost = (post, filename, type, url, file_type) => {
-    return axios.post(
-        API_BASE_URL +
-            '/post?filename' +
-            filename +
-            '&type' +
-            type +
-            '&fileurl' +
-            url +
-            '&filetype' +
-            file_type,
-        post
-    )
+const createPost = (post) => {
+    return axios.post(API_BASE_URL + '/post', post)
 }
 
-const updatePost = (id, post, filename, type, fileurl, filetype) => {
-    return axios.put(
-        API_BASE_URL +
-            '/post/' +
-            id +
-            '?filename' +
-            filename +
-            '&type' +
-            type +
-            '&fileurl' +
-            fileurl +
-            '&filetype' +
-            filetype,
-        post
-    )
+const updatePost = (id, post) => {
+    return axios.put(API_BASE_URL + '/post/' + id, post)
 }
 
 const deletePost = (id) => {
@@ -42,11 +18,30 @@ const getAllPostByClassId = (id) => {
     return axios.get(API_BASE_URL + '/postbyclassid/' + id)
 }
 
+const getFilterList = (search, author, direction, classId, page, size) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterpost?search' +
+            search +
+            '&author' +
+            author +
+            '&direction' +
+            direction +
+            '&classid' +
+            classId +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
+
 const PostService = {
     createPost,
     getAllPostByClassId,
     updatePost,
     deletePost,
+    getFilterList,
 }
 
 export default PostService

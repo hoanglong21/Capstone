@@ -236,7 +236,7 @@ export const KanjiCard = (props) => {
                 const tempCard = { ...card, [name]: url }
                 setCard(tempCard)
                 if (urlOld) {
-                    deleteFileByUrl(urlOld, `card/${card.id}`)
+                    await deleteFileByUrl(urlOld, `card/${card.id}`)
                 }
                 doUpdateCard(tempCard)
             }
@@ -254,7 +254,7 @@ export const KanjiCard = (props) => {
         }
     }
 
-    const handleDeleteFile = (event) => {
+    const handleDeleteFile = async (event) => {
         const name = event.target.name
         // set loading
         if (name === 'picture') {
@@ -281,7 +281,7 @@ export const KanjiCard = (props) => {
         }
         // delete url
         if (urlOld) {
-            deleteFileByUrl(urlOld, `card/${card.id}`)
+            await deleteFileByUrl(urlOld, `card/${card.id}`)
         }
 
         // set loading
@@ -328,9 +328,7 @@ export const KanjiCard = (props) => {
                             accept="image/*"
                             name="picture"
                             className={styles.file_upload}
-                            onChange={(event) =>
-                                handleChangeFile(event)
-                            }
+                            onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadImage${props.index}`}>
                             <ImageIcon className="ms-3 icon-warning" />
@@ -343,9 +341,7 @@ export const KanjiCard = (props) => {
                             accept="audio/*"
                             name="audio"
                             className={styles.file_upload}
-                            onChange={(event) =>
-                                handleChangeFile(event)
-                            }
+                            onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadAudio${props.index}`}>
                             <MicIcon className="ms-3 icon-warning" />
@@ -574,9 +570,7 @@ export const KanjiCard = (props) => {
                                     type="button"
                                     name="strokeOrder"
                                     className={`btn btn-danger p-1 rounded-circle ${styles.card_delImage}`}
-                                    onClick={(event) =>
-                                        handleDeleteFile(event)
-                                    }
+                                    onClick={(event) => handleDeleteFile(event)}
                                 >
                                     <DeleteIcon size="1rem" />
                                 </button>

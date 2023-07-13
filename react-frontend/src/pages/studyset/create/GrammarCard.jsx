@@ -163,21 +163,21 @@ export const GrammarCard = (props) => {
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {
-                deleteFileByUrl(urlOld, `card/${card.id}`)
+                await deleteFileByUrl(urlOld, `card/${card.id}`)
             }
             doUpdateCard(tempCard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
     }
 
-    const handleDeleteFile = (event) => {
+    const handleDeleteFile = async (event) => {
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         const urlOld = card[name]
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
         if (urlOld) {
-            deleteFileByUrl(urlOld, `card/${card.id}`)
+            await deleteFileByUrl(urlOld, `card/${card.id}`)
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)

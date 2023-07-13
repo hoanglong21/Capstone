@@ -6,20 +6,21 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 import ClassService from '../../services/ClassService'
-import { deleteFileByUrl, uploadFile } from '../../features/fileManagement'
 import PostService from '../../services/PostService'
+import { uploadFile } from '../../features/fileManagement'
 
 import Post from './post/Post'
 import PostEditor from '../../components/textEditor/PostEditor'
 
+import defaultAvatar from '../../assets/images/default_avatar.png'
 import {
-    AccountSolidIcon,
     CopyIcon,
     DeleteIcon,
     OptionVerIcon,
     ResetIcon,
     UploadIcon,
 } from '../../components/icons'
+import AttachmentService from '../../services/AttachmentService'
 
 const Stream = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -43,6 +44,18 @@ const Stream = () => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
             setClassroom(tempClass)
+            // setPosts(
+            //     (
+            //         await PostService.getFilterList(
+            //             '',
+            //             '',
+            //             '',
+            //             tempClass.id,
+            //             '',
+            //             ''
+            //         )
+            //     ).data
+            // )
             setPosts((await PostService.getAllPostByClassId(tempClass.id)).data)
             setAddPost({
                 user: {
@@ -85,7 +98,7 @@ const Stream = () => {
         if (file) {
             setUploadFiles([
                 ...uploadFiles,
-                { file_name: file.name, file_type: file.type, file_url: file },
+                { file_name: file.name, file_type: file.type, file: file },
             ])
         }
         setLoadingUploadFile(false)
@@ -94,9 +107,31 @@ const Stream = () => {
     const handleAddPost = async () => {
         setLoadingAddPost(true)
         try {
-            const tempPost = (
-                await PostService.createPost(addPost, '', '=3', '', '')
-            ).data
+            // add post
+            const tempPost = (await PostService.createPost(addPost)).data
+            // upload file to firebase
+            let tempAttachments = []
+            for (const uploadFileItem of uploadFiles) {
+                const url = await uploadFile(
+                    uploadFileItem.file,
+                    `post/${post.id}`,
+                    uploadFileItem.type
+                )
+                tempAttachments.push({
+                    file_name: uploadFileItem.file_name,
+                    file_type: uploadFileItem.file_type,
+                    file_url: url,
+                    post: {
+                        id: tempPost.id,
+                    },
+                    attachmentType: {
+                        id: 3,
+                    },
+                })
+            }
+            // add attachments
+            await AttachmentService.createAttachments(tempAttachments)
+            // clear
             setAddPost({})
             setUploadFiles([])
             setPosts([...posts, tempPost])
@@ -192,7 +227,7 @@ const Stream = () => {
                 <div className="card mainClass_postAddContainer mb-4">
                     {showInput ? (
                         <div>
-                            <div className="postTextEditor">
+                            <div className="createAssign_formGroup form-floating mb-4">
                                 <PostEditor
                                     onChange={(event, editor) => {
                                         setAddPost({
@@ -201,6 +236,9 @@ const Stream = () => {
                                         })
                                     }}
                                 />
+                                <label className="createAssign_formLabel createAssign_editorLabel">
+                                    Announce something to your class
+                                </label>
                             </div>
                             <div className="mainClass_filesUpload mt-3">
                                 {uploadFiles.map((file, index) => (
@@ -263,7 +301,6 @@ const Stream = () => {
                                     >
                                         Cancel
                                     </button>
-
                                     <button
                                         onClick={handleAddPost}
                                         className="btn btn-primary"
@@ -278,11 +315,25 @@ const Stream = () => {
                         </div>
                     ) : (
                         <div
-                            className="mainClass_wrapper100"
-                            onClick={() => setShowInput(true)}
+                            className="mainClass_postAddWrapper d-flex align-items-center"
+                            onClick={() => {
+                                setShowInput(true)
+                            }}
                         >
-                            <AccountSolidIcon />
-                            <div>Announce something to class</div>
+                            <div className="maiClass_postAddAuthor">
+                                <img
+                                    src={
+                                        userInfo.avatar
+                                            ? userInfo.avatar
+                                            : defaultAvatar
+                                    }
+                                    className="w-100 h-100"
+                                    alt="author avatar"
+                                />
+                            </div>
+                            <span className="ms-4">
+                                Announce something to your class
+                            </span>
                         </div>
                     )}
                 </div>

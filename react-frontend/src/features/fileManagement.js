@@ -77,18 +77,17 @@ export const uploadFile = async (file, folderName, fileType) => {
     })
 }
 
-export const deleteFile = (fileName, folderName) => {
+export const deleteFile = async (fileName, folderName) => {
     // Create a reference to the file to delete
     const fileRef = ref(storage, `files/` + folderName + `${fileName}`)
 
     // Delete the file
-    deleteObject(fileRef)
-        .then(() => {
-            console.log(`${fileName} has been deleted successfully.`)
-        })
-        .catch((error) => {
-            console.error(`Error deleting ${fileName}: ${error}`)
-        })
+    try {
+        await deleteObject(fileRef)
+        console.log(`${fileName} has been deleted successfully.`)
+    } catch (error) {
+        console.error(`Error deleting ${fileName}: ${error}`)
+    }
 }
 
 export const deleteFileByUrl = async (url, folderName) => {
