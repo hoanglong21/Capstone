@@ -2,10 +2,8 @@ package com.capstone.project.dto;
 
 import com.capstone.project.model.Class;
 import com.capstone.project.model.User;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,12 +30,15 @@ public class AssignmentRequest {
 
 
     @FutureOrPresent
+    @NotNull(message = "Start date cannot be null")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date start_date;
 
+    private boolean is_draft;
 
-    @FutureOrPresent
+    @Future
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Nullable
     private Date due_date;
 
 //    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = " Can only contain letters, numbers, and spaces")

@@ -30,10 +30,10 @@ if (!firebase.apps.length) {
 
 const storage = getStorage(firebaseApp)
 
-export const uploadFile = async (file, folderName) => {
+export const uploadFile = async (file, folderName, fileType) => {
     return new Promise(function (resolve, reject) {
         const metadata = {
-            contentType: 'image/jpeg',
+            contentType: fileType,
         }
         const storageRef = ref(storage, 'files/' + folderName + '/' + file.name)
         const uploadTask = uploadBytesResumable(storageRef, file, metadata)
@@ -77,18 +77,17 @@ export const uploadFile = async (file, folderName) => {
     })
 }
 
-export const deleteFile = (fileName, folderName) => {
+export const deleteFile = async (fileName, folderName) => {
     // Create a reference to the file to delete
     const fileRef = ref(storage, `files/` + folderName + `${fileName}`)
 
     // Delete the file
-    deleteObject(fileRef)
-        .then(() => {
-            console.log(`${fileName} has been deleted successfully.`)
-        })
-        .catch((error) => {
-            console.error(`Error deleting ${fileName}: ${error}`)
-        })
+    try {
+        await deleteObject(fileRef)
+        console.log(`${fileName} has been deleted successfully.`)
+    } catch (error) {
+        console.error(`Error deleting ${fileName}: ${error}`)
+    }
 }
 
 export const deleteFileByUrl = async (url, folderName) => {

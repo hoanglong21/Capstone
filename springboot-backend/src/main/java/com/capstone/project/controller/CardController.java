@@ -23,13 +23,13 @@ public class CardController {
     }
 
     @GetMapping("/cards")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getAllCards() {
         return ResponseEntity.ok(cardService.getAllCards());
     }
 
     @GetMapping("/cardbystudysetid")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getAllByStudySetId(@RequestParam int id) {
         return ResponseEntity.ok(cardService.getAllByStudySetId(id));
     }
@@ -41,7 +41,7 @@ public class CardController {
     }
 
     @GetMapping("/cards/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getCardById(@PathVariable int id) {
         try {
             return ResponseEntity.ok(cardService.getCardById(id));

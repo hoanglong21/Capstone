@@ -51,7 +51,7 @@ const KanjiDict = () => {
 
     return (
         <div>
-            <div className="row mt-4">
+            <div className="row mt-4 mb-5">
                 <div className="col-2">
                     <div className="dictResultWordList">
                         {kanjis.map((kanji, index) => (
@@ -112,15 +112,18 @@ const KanjiDict = () => {
                                         <div>
                                             <div className="kanji-search-block ed">
                                                 <label>Onyomi:</label>
-                                                <p>
+                                                <div>
                                                     {word?.readingJapaneseOn?.map(
-                                                        (onyomi) => (
-                                                            <p className="ony">
+                                                        (onyomi, index) => (
+                                                            <p
+                                                                className="ony"
+                                                                key={index}
+                                                            >
                                                                 {onyomi}
                                                             </p>
                                                         )
                                                     )}
-                                                </p>
+                                                </div>
                                             </div>
                                             <div className="kanji-search-block ed">
                                                 <label>Kunyomi:</label>
