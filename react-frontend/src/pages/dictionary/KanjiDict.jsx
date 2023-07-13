@@ -50,108 +50,118 @@ const KanjiDict = () => {
     }
 
     return (
-        <div>
-            <div className="row mt-4 mb-5">
-                <div className="col-2">
-                    <div className="dictResultWordList">
-                        {kanjis.map((kanji, index) => (
-                            <div
-                                className={`dictResultWord ${
-                                    activeIndex === index ? 'active' : ''
-                                }`}
-                                key={index}
-                                onClick={() => {
-                                    setWord(kanji)
-                                    setActiveIndex(index)
-                                }}
-                            >
-                                <div className="word">
-                                    <b className="me-2">{kanji.character}</b>
-                                    {getDisplay(kanji.readingVietnam)}
-                                </div>
-                                <i className="wordSense">
-                                    {getDisplay(kanji?.meanings)}
-                                </i>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="col-10">
-                    <div className="word-detail h-100">
-                        <div className="kanji-search-header">
-                            {word.character} -{' '}
-                            {getDisplay(word?.readingVietnam)}
-                        </div>
-                        <div className="kanji-search-main">
-                            <div className="row">
-                                <div className="col-3">
-                                    <div className="kanji-search-left">
-                                        <div
-                                            dangerouslySetInnerHTML={{
-                                                __html: word.svgFile,
-                                            }}
-                                        ></div>
+        <div className="mt-4 mb-5">
+            {word?.character ? (
+                <div className="row">
+                    <div className="col-2">
+                        <div className="dictResultWordList">
+                            {kanjis.map((kanji, index) => (
+                                <div
+                                    className={`dictResultWord ${
+                                        activeIndex === index ? 'active' : ''
+                                    }`}
+                                    key={index}
+                                    onClick={() => {
+                                        setWord(kanji)
+                                        setActiveIndex(index)
+                                    }}
+                                >
+                                    <div className="word">
+                                        <b className="me-2">
+                                            {kanji?.character}
+                                        </b>
+                                        {getDisplay(kanji.readingVietnam)}
                                     </div>
+                                    <i className="wordSense">
+                                        {getDisplay(kanji?.meanings)}
+                                    </i>
                                 </div>
-                                <div className="col-9">
-                                    <div className="kanji-search-right">
-                                        <div>
-                                            <div className="kanji-search-block ed">
-                                                <label>Meaning:</label>
-                                                <p>
-                                                    {getDisplay(word?.meanings)}
-                                                </p>
-                                            </div>
-                                            <div className="kanji-search-block ed">
-                                                <label>Kanji radicals:</label>
-                                                <p>
-                                                    {getDisplay(word?.radicals)}
-                                                </p>
-                                            </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="col-10">
+                        <div className="word-detail h-100">
+                            <div className="kanji-search-header">
+                                {word?.character} -{' '}
+                                {getDisplay(word?.readingVietnam)}
+                            </div>
+                            <div className="kanji-search-main">
+                                <div className="row">
+                                    <div className="col-3">
+                                        <div className="kanji-search-left">
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: word?.svgFile,
+                                                }}
+                                            ></div>
                                         </div>
-                                        <div>
-                                            <div className="kanji-search-block ed">
-                                                <label>Onyomi:</label>
-                                                <div>
-                                                    {word?.readingJapaneseOn?.map(
-                                                        (onyomi, index) => (
-                                                            <p
-                                                                className="ony"
-                                                                key={index}
-                                                            >
-                                                                {onyomi}
-                                                            </p>
-                                                        )
-                                                    )}
+                                    </div>
+                                    <div className="col-9">
+                                        <div className="kanji-search-right">
+                                            <div>
+                                                <div className="kanji-search-block ed">
+                                                    <label>Meaning:</label>
+                                                    <p>
+                                                        {getDisplay(
+                                                            word?.meanings
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                <div className="kanji-search-block ed">
+                                                    <label>
+                                                        Kanji radicals:
+                                                    </label>
+                                                    <p>
+                                                        {getDisplay(
+                                                            word?.radicals
+                                                        )}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="kanji-search-block ed">
-                                                <label>Kunyomi:</label>
-                                                <p>
-                                                    {word?.readingJapaneseKun?.map(
-                                                        (kunyomi) => (
-                                                            <p className="kuny">
-                                                                {kunyomi}
-                                                            </p>
-                                                        )
-                                                    )}
-                                                </p>
+                                            <div>
+                                                <div className="kanji-search-block ed">
+                                                    <label>Onyomi:</label>
+                                                    <div>
+                                                        {word?.readingJapaneseOn?.map(
+                                                            (onyomi, index) => (
+                                                                <p
+                                                                    className="ony"
+                                                                    key={index}
+                                                                >
+                                                                    {onyomi}
+                                                                </p>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="kanji-search-block ed">
+                                                    <label>Kunyomi:</label>
+                                                    <p>
+                                                        {word?.readingJapaneseKun?.map(
+                                                            (kunyomi) => (
+                                                                <p className="kuny">
+                                                                    {kunyomi}
+                                                                </p>
+                                                            )
+                                                        )}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div>
-                                            <div className="kanji-search-block ed">
-                                                <label>JLPT level:</label>
-                                                <p className="kanji-search-bold">
-                                                    {word?.jlptLevel
-                                                        ? `N${word.jlptLevel}`
-                                                        : ''}
-                                                </p>
-                                            </div>
-                                            <div className="kanji-search-block ed">
-                                                <label>Stroke count:</label>
-                                                <p className="kanji-search-bold">
-                                                    {word?.strokeCount}
-                                                </p>
+                                            <div>
+                                                <div className="kanji-search-block ed">
+                                                    <label>JLPT level:</label>
+                                                    <p className="kanji-search-bold">
+                                                        {word?.jlptLevel
+                                                            ? `N${word.jlptLevel}`
+                                                            : ''}
+                                                    </p>
+                                                </div>
+                                                <div className="kanji-search-block ed">
+                                                    <label>Stroke count:</label>
+                                                    <p className="kanji-search-bold">
+                                                        {word?.strokeCount}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -160,7 +170,9 @@ const KanjiDict = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <p>No kanji matching {search} found</p>
+            )}
         </div>
     )
 }
