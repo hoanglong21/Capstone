@@ -99,10 +99,10 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
-    public Map<String, Object> getFilterTest(String search, String author,String direction, int duration, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterTest(String search, String author, String direction, int duration, String from, String to, Boolean isDraft, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="select t.id,t.created_date,t.description,t.duration,t.modified_date,t.title,t.author_id," +
+        String query ="select t.id,t.created_date,t.description,t.duration,t.modified_date,t.title,t.author_id,t.class_id,t.due_date,t.is_draft,t.num_attemps,t.start_date," +
                 "(select count(*) from capstone.question where test_id = t.id) as totalquestion," +
                 "(select count(*) from capstone.comment where test_id = t.id) as totalcomment from test t where 1=1 ";
 
@@ -122,6 +122,21 @@ public class TestServiceImpl  implements TestService {
         if (duration != 0) {
             query += " AND t.duration = :duration";
             parameters.put("duration", duration);
+        }
+
+        if (isDraft != null) {
+            query += " AND t.is_draft = :isDraft";
+            parameters.put("isDraft", isDraft);
+        }
+
+        if(from != null){
+            query += " AND t.start_date >= :from ";
+            parameters.put("from", from);
+        }
+
+        if(to != null){
+            query += " AND t.start_date <= :to";
+            parameters.put("to", to);
         }
 
         String direct = "desc";
