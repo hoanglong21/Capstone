@@ -55,11 +55,7 @@ export const deleteUser = (username) => {
 }
 
 export const sendResetPasswordEmail = (username) => {
-    return axios.get(API_BASE_URL + '/sendreset?username=' + username, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
-    })
+    return axios.get(API_BASE_URL + '/sendreset?username=' + username)
 }
 
 export const filterUser = (
