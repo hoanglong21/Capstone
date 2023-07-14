@@ -3,6 +3,7 @@ package com.capstone.project.dto;
 import com.capstone.project.model.Class;
 import com.capstone.project.model.User;
 import jakarta.annotation.Nullable;
+import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,7 @@ public class AssignmentRequest {
 
     private boolean is_draft;
 
+
     @Future
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Nullable
@@ -65,4 +67,5 @@ public class AssignmentRequest {
     public boolean isDueDateValid() {
         return due_date == null || start_date == null || due_date.compareTo(start_date) >= 0;
     }
+
 }

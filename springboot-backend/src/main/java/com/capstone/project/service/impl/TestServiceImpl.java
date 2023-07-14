@@ -78,6 +78,10 @@ public class TestServiceImpl  implements TestService {
         testclass.setDescription(test.getDescription());
         testclass.setDuration(test.getDuration());
         testclass.setModified_date(new Date());
+        testclass.set_draft(test.is_draft());
+        testclass.setStart_date(test.getStart_date());
+        testclass.setDue_date(test.getDue_date());
+        testclass.setNum_attemps(test.getNum_attemps());
         return testRepository.save(testclass);
     }
 
