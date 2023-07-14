@@ -90,11 +90,14 @@ function CreateAssignment() {
         })
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (draft) => {
         setLoadingCreateAssign(true)
         try {
             const tempAssignment = (
-                await AssignmentService.createAssignment(assignment)
+                await AssignmentService.createAssignment({
+                    ...assignment,
+                    _draft: draft,
+                })
             ).data
             // add attachments
             let tempAttachments = []
@@ -160,13 +163,14 @@ function CreateAssignment() {
                     <button
                         className="createAssign_submitBtn"
                         disabled={!assignment?.title || loadingCreateAssign}
-                        onClick={handleSubmit}
+                        onClick={() => handleSubmit(false)}
                     >
                         {loadingCreateAssign ? 'Assigning...' : 'Assign'}
                     </button>
                     <button
                         className="createAssign_draftBtn"
                         disabled={!assignment?.title}
+                        onClick={() => handleSubmit(true)}
                     >
                         Save draft
                     </button>
