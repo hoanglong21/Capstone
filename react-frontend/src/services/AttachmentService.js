@@ -10,9 +10,14 @@ const createAttachments = (attachments) => {
     return axios.post(API_BASE_URL + '/createattachments', attachments)
 }
 
+const getAttachmentsByAssignmentId = (id) => {
+    return axios.get(API_BASE_URL + '/attachmentsbyassignmentid/' + id)
+}
+
 const AttachmentService = {
     getAttachmentsByPostId,
     createAttachments,
+    getAttachmentsByAssignmentId,
 }
 
 export default AttachmentService

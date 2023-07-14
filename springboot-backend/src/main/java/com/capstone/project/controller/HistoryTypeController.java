@@ -1,7 +1,7 @@
 package com.capstone.project.controller;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.service.AchievementTypeService;
+import com.capstone.project.service.HistoryTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,22 +10,22 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
-public class AchievementTypeController {
+public class HistoryTypeController {
 
     @Autowired
-    private AchievementTypeService achievementTypeService;
+    private HistoryTypeService historyTypeService;
 
-    @GetMapping("achievementtypes")
+    @GetMapping("historytypes")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(achievementTypeService.getAll());
+        return ResponseEntity.ok(historyTypeService.getAll());
     }
 
-    @GetMapping("achievementtypes/{id}")
+    @GetMapping("historytypes/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getById(@PathVariable("id") int id) {
         try {
-            return ResponseEntity.ok(achievementTypeService.getById(id));
+            return ResponseEntity.ok(historyTypeService.getById(id));
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

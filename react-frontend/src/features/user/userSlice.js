@@ -42,5 +42,4 @@ const userSlice = createSlice({
 
 export const { reset } = userSlice.actions
 
-
 export default userSlice.reducer
