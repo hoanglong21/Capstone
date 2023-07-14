@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { uploadFile } from '../../../features/fileManagement'
+import { deleteFile, uploadFile } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
@@ -15,50 +15,47 @@ function UpdateAssignment() {
     const navigate = useNavigate()
 
     const { id } = useParams()
+    const { assign_id } = useParams()
+
     const { userInfo } = useSelector((state) => state.user)
 
     const [classroom, setClassroom] = useState({})
-    const [assignment, setAssignment] = useState({})
+    const [currentAssignment, setCurrentAssignment] = useState({})
+    const [updateAssignment, setUpdateAssignment] = useState({})
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
+    const [currentFiles, setCurrentFiles] = useState([])
     const [uploadFiles, setUploadFiles] = useState([])
-    const [loadingCreateAssign, setLoadingCreateAssign] = useState(false)
+    const [loadingUpdateAssign, setLoadingUpdateAssign] = useState(false)
 
-    function padWithLeadingZeros(num, totalLength) {
-        return String(num).padStart(totalLength, '0')
-    }
-
-    function getToday() {
-        const today = new Date()
-        return (
-            today.getFullYear() +
-            '-' +
-            padWithLeadingZeros(today.getMonth() + 1, 2) +
-            '-' +
-            padWithLeadingZeros(today.getDate() + 1, 2) +
-            'T' +
-            padWithLeadingZeros(today.getHours(), 2) +
-            ':' +
-            padWithLeadingZeros(today.getMinutes(), 2)
-        )
+    function toFEDate(date) {
+        const index = date?.lastIndexOf(':00.')
+        return date?.replace(' ', 'T').substring(0, index)
     }
 
     useEffect(() => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
             setClassroom(tempClass)
-            setAssignment({
-                title: '',
-                classroom: {
-                    id: tempClass.id,
-                },
-                user: {
-                    id: userInfo.id,
-                },
-                due_date: '',
-                start_date: getToday(),
-                instruction: '',
-                _draft: true,
+            const tempAssignment = (
+                await AssignmentService.getAssignmentById(assign_id)
+            ).data
+            setCurrentAssignment({
+                ...tempAssignment,
+                start_date: toFEDate(tempAssignment.start_date),
+                due_date: toFEDate(tempAssignment.due_date),
             })
+            setUpdateAssignment({
+                ...tempAssignment,
+                start_date: toFEDate(tempAssignment.start_date),
+                due_date: toFEDate(tempAssignment.due_date),
+            })
+            const tempAttachments = (
+                await AttachmentService.getAttachmentsByAssignmentId(
+                    tempAssignment.id
+                )
+            ).data
+            setCurrentFiles([...tempAttachments])
+            setUploadFiles([...tempAttachments])
         }
         if (userInfo?.id) {
             fetchData()
@@ -84,21 +81,23 @@ function UpdateAssignment() {
     }
 
     const handleChange = (event) => {
-        setAssignment({
-            ...assignment,
+        setUpdateAssignment({
+            ...updateAssignment,
             [event.target.name]: event.target.value,
         })
     }
 
     const handleSubmit = async (draft) => {
-        setLoadingCreateAssign(true)
+        setLoadingUpdateAssign(true)
         try {
             const tempAssignment = (
-                await AssignmentService.UpdateAssignment({
-                    ...assignment,
+                await AssignmentService.updateAssignment(updateAssignment.id, {
+                    ...updateAssignment,
                     _draft: draft,
                 })
             ).data
+            // delete folder
+            await deleteFile('', `assignment/${tempAssignment.id}/tutor`)
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
@@ -129,24 +128,12 @@ function UpdateAssignment() {
                 console.log(error.message)
             }
         }
-        setLoadingCreateAssign(false)
+        setLoadingUpdateAssign(false)
     }
 
     const handleClear = () => {
-        setAssignment({
-            title: {},
-            classroom: {
-                id: classroom.id,
-            },
-            user: {
-                id: userInfo.id,
-            },
-            due_date: '',
-            start_date: new Date().toISOString().substring(0, 16),
-            instruction: '',
-            _draft: true,
-        })
-        setUploadFiles([])
+        setUpdateAssignment({ ...currentAssignment })
+        setUploadFiles([...currentFiles])
         navigate('../assignments')
     }
 
@@ -159,22 +146,36 @@ function UpdateAssignment() {
                 >
                     cancel
                 </button>
-                <div className="d-flex">
+                {updateAssignment?._draft ? (
+                    <div className="d-flex">
+                        <button
+                            className="createAssign_submitBtn"
+                            disabled={
+                                !updateAssignment?.title || loadingUpdateAssign
+                            }
+                            onClick={() => handleSubmit(false)}
+                        >
+                            {loadingUpdateAssign ? 'Assigning...' : 'Assign'}
+                        </button>
+                        <button
+                            className="createAssign_draftBtn"
+                            disabled={!updateAssignment?.title}
+                            onClick={() => handleSubmit(true)}
+                        >
+                            Save draft
+                        </button>
+                    </div>
+                ) : (
                     <button
                         className="createAssign_submitBtn"
-                        disabled={!assignment?.title || loadingCreateAssign}
+                        disabled={
+                            !updateAssignment?.title || loadingUpdateAssign
+                        }
                         onClick={() => handleSubmit(false)}
                     >
-                        {loadingCreateAssign ? 'Assigning...' : 'Assign'}
+                        {loadingUpdateAssign ? 'Saving...' : 'Save'}
                     </button>
-                    <button
-                        className="createAssign_draftBtn"
-                        disabled={!assignment?.title}
-                        onClick={() => handleSubmit(true)}
-                    >
-                        Save draft
-                    </button>
-                </div>
+                )}
             </div>
             <div className="card mt-4">
                 <div className="card-body p-4">
@@ -185,6 +186,7 @@ function UpdateAssignment() {
                             id="title"
                             name="title"
                             placeholder="title"
+                            value={updateAssignment?.title || ''}
                             onChange={handleChange}
                         />
                         <label
@@ -196,11 +198,14 @@ function UpdateAssignment() {
                     </div>
                     <div className="createAssign_formGroup form-floating mb-4">
                         <InstructionEditor
+                            data={updateAssignment?.instruction || null}
                             onChange={(event, editor) => {
-                                setAssignment({
-                                    ...assignment,
-                                    title: editor.getData(),
-                                })
+                                if (updateAssignment?.id) {
+                                    setUpdateAssignment({
+                                        ...updateAssignment,
+                                        instruction: editor.getData(),
+                                    })
+                                }
                             }}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
@@ -216,7 +221,7 @@ function UpdateAssignment() {
                                     name="start_date"
                                     id="start_date"
                                     placeholder="start date"
-                                    value={assignment?.start_date || ''}
+                                    value={updateAssignment?.start_date || ''}
                                     onChange={handleChange}
                                 />
                                 <label
@@ -235,6 +240,7 @@ function UpdateAssignment() {
                                     id="due_date"
                                     name="due_date"
                                     placeholder="due date"
+                                    value={updateAssignment?.due_date || ''}
                                     onChange={handleChange}
                                 />
                                 <label

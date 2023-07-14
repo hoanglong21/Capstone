@@ -127,7 +127,7 @@ const App = () => {
                                 element={<CreateAssignment />}
                             />
                             <Route
-                                path="edit-assignment"
+                                path="edit-assignment/:assign_id"
                                 element={<UpdateAssignment />}
                             />
                             <Route path="tests" element={<TestList />} />

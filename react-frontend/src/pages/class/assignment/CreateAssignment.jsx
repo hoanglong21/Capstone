@@ -199,7 +199,7 @@ function CreateAssignment() {
                             onChange={(event, editor) => {
                                 setAssignment({
                                     ...assignment,
-                                    title: editor.getData(),
+                                    instruction: editor.getData(),
                                 })
                             }}
                         />

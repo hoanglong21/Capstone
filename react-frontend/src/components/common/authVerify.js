@@ -14,7 +14,7 @@ const AuthVerify = (props) => {
         const token = localStorage.getItem('userToken')
         if (token) {
             const decodedJwt = jwtDecode(token)
-            if (decodedJwt.exp + 2 * 60 * 60 * 1000 < Date.now()) {
+            if (decodedJwt.exp * 1000 < Date.now()) {
                 dispatch(logout())
                 navigate('/')
             }

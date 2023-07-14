@@ -121,30 +121,29 @@ const KanjiDict = () => {
                                             <div>
                                                 <div className="kanji-search-block ed">
                                                     <label>Onyomi:</label>
-                                                    <div>
-                                                        {word?.readingJapaneseOn?.map(
-                                                            (onyomi, index) => (
-                                                                <p
-                                                                    className="ony"
-                                                                    key={index}
-                                                                >
-                                                                    {onyomi}
-                                                                </p>
-                                                            )
-                                                        )}
-                                                    </div>
+                                                    {word?.readingJapaneseOn?.map(
+                                                        (onyomi, index) => (
+                                                            <p
+                                                                className="ony"
+                                                                key={index}
+                                                            >
+                                                                {onyomi}
+                                                            </p>
+                                                        )
+                                                    )}
                                                 </div>
                                                 <div className="kanji-search-block ed">
                                                     <label>Kunyomi:</label>
-                                                    <p>
-                                                        {word?.readingJapaneseKun?.map(
-                                                            (kunyomi) => (
-                                                                <p className="kuny">
-                                                                    {kunyomi}
-                                                                </p>
-                                                            )
-                                                        )}
-                                                    </p>
+                                                    {word?.readingJapaneseKun?.map(
+                                                        (kunyomi, index) => (
+                                                            <p
+                                                                className="kuny"
+                                                                key={index}
+                                                            >
+                                                                {kunyomi}
+                                                            </p>
+                                                        )
+                                                    )}
                                                 </div>
                                             </div>
                                             <div>

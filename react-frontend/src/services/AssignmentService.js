@@ -6,6 +6,14 @@ const createAssignment = (assignment) => {
     return axios.post(API_BASE_URL + '/assignments', assignment)
 }
 
+const getAssignmentById = (id) => {
+    return axios.get(API_BASE_URL + '/assignments/' + id)
+}
+
+const updateAssignment = (id, assignment) => {
+    return axios.put(API_BASE_URL + '/assignments/' + id, assignment)
+}
+
 const getFilterList = (
     search,
     author,
@@ -41,6 +49,8 @@ const getFilterList = (
 const AssignmentService = {
     createAssignment,
     getFilterList,
+    getAssignmentById,
+    updateAssignment,
 }
 
 export default AssignmentService

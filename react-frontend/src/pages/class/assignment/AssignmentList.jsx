@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 import AssignmentService from '../../../services/AssignmentService'
@@ -10,6 +10,8 @@ import { AddIcon } from '../../../components/icons'
 import './assignment.css'
 
 function AssignmentList() {
+    const navigate = useNavigate()
+
     const { id } = useParams()
 
     const [assignments, setAssignments] = useState([])
@@ -52,14 +54,19 @@ function AssignmentList() {
                     marginTop: '2.5rem',
                 }}
             >
-                <Link to="../create-assignment" className="createAssign_btn">
+                <button
+                    className="createAssign_btn"
+                    onClick={() => {
+                        navigate('../create-assignment')
+                    }}
+                >
                     <AddIcon
                         className="createAssignIcon_btn"
                         size="1.125rem"
                         strokeWidth="2.25"
                     />
                     Create
-                </Link>
+                </button>
             </div>
             <div
                 className="accordion mt-4 accordionAssignments"
@@ -121,12 +128,16 @@ function AssignmentList() {
                                     </div>
                                 </div>
                                 <div className="mt-5 d-flex justify-content-between">
-                                    <Link
-                                        to="../edit-assignment"
+                                    <button
                                         className="editAssign_btn"
+                                        onClick={() => {
+                                            navigate(
+                                                `../edit-assignment/${assign?.id}`
+                                            )
+                                        }}
                                     >
                                         Edit assignment
-                                    </Link>
+                                    </button>
                                     <button className="deleteAssign_btn">
                                         Delete assignment
                                     </button>
