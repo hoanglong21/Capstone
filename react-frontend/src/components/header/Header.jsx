@@ -37,11 +37,7 @@ const Header = () => {
 
     useEffect(() => {
         if (userToken) {
-            try {
-                dispatch(getUser(userToken))
-            } catch (error) {
-                dispatch(logout())
-            }
+            dispatch(getUser(userToken))
         }
     }, [userToken])
 

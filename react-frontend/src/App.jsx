@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import Register from './pages/auth/Register'
@@ -64,9 +64,15 @@ import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/DoQuiz'
 import AssignmentList from './pages/class/assignment/AssignmentList'
+import AuthVerify from './components/common/authVerify'
+import AuthService from './services/AuthService'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
+
+    const logOut = () => {
+        AuthService.logout()
+    }
 
     return (
         <BrowserRouter>
@@ -120,6 +126,10 @@ const App = () => {
                                 path="create-assignment"
                                 element={<CreateAssignment />}
                             />
+                            <Route
+                                path="edit-assignment"
+                                element={<UpdateAssignment />}
+                            />
                             <Route path="tests" element={<TestList />} />
                             <Route
                                 path="create-test"
@@ -131,11 +141,6 @@ const App = () => {
                         <Route
                             path="/viewdetailtest"
                             element={<ViewDetailTest />}
-                        />
-                        {/* Assignment */}
-                        <Route
-                            path="/updateassignment"
-                            element={<UpdateAssignment />}
                         />
                         {/* Feedback */}
                         <Route
@@ -229,6 +234,7 @@ const App = () => {
                 {/* Quiz */}
                 <Route path="/doquiz" element={<DoQuiz />} />
             </Routes>
+            <AuthVerify logOut={logOut} />
         </BrowserRouter>
     )
 }

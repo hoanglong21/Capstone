@@ -121,9 +121,12 @@ function AssignmentList() {
                                     </div>
                                 </div>
                                 <div className="mt-5 d-flex justify-content-between">
-                                    <button className="editAssign_btn">
+                                    <Link
+                                        to="../edit-assignment"
+                                        className="editAssign_btn"
+                                    >
                                         Edit assignment
-                                    </button>
+                                    </Link>
                                     <button className="deleteAssign_btn">
                                         Delete assignment
                                     </button>
