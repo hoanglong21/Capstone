@@ -65,6 +65,9 @@ public class QuestionServiceImpl implements QuestionService {
         question_new.setNum_choice(question.getNum_choice());
         question_new.setQuestion(question.getQuestion());
         question_new.setQuestionType(question.getQuestionType());
+        question_new.setPicture(question.getPicture());
+        question_new.setAudio(question.getAudio());
+        question_new.setVideo(question.getVideo());
         return questionRepository.save(question_new);
     }
 

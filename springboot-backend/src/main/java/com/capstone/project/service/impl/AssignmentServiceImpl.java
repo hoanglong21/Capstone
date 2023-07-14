@@ -95,11 +95,16 @@ public class AssignmentServiceImpl implements AssignmentService {
     public Assignment updateAssignment(int id, Assignment assignment) throws ResourceNotFroundException {
         Assignment existingAssignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Assignment does not exist with id: " + id));
-
+        if (assignment.getStart_date() != null && existingAssignment.getCreated_date() != null &&
+                assignment.getStart_date().before(existingAssignment.getCreated_date())) {
+            throw new ResourceNotFroundException("Start date must be >= created date");
+        }
         existingAssignment.setInstruction(assignment.getInstruction());
         existingAssignment.setDue_date(assignment.getDue_date());
         existingAssignment.setModified_date(new Date());
+        existingAssignment.setStart_date(assignment.getStart_date());
         existingAssignment.setTitle(assignment.getTitle());
+        existingAssignment.set_draft(assignment.is_draft());
 
         List<Attachment> attachments = attachmentRepository.getAttachmentByAssignmentId(existingAssignment.getId());
 

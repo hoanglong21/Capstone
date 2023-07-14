@@ -48,6 +48,9 @@ public class AnswerServiceImpl implements AnswerService {
                     .orElseThrow(() -> new ResourceNotFroundException("Answer not exist with id: " + id));
         answer_new.setContent(answer.getContent());
         answer_new.set_true(answer.is_true());
+        answer_new.setPicture(answer.getPicture());
+        answer_new.setAudio(answer.getAudio());
+        answer_new.setVideo(answer.getVideo());
         return answerRepository.save(answer_new);
     }
 
