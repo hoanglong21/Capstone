@@ -148,7 +148,7 @@ public class TestServiceImpl  implements TestService {
         query += " ORDER BY created_date " + " " + direct;
 
 
-        Query q = em.createNativeQuery(query, Test.class);
+        Query q = em.createNativeQuery(query, "TestCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             q.setParameter(entry.getKey(), entry.getValue());
         }

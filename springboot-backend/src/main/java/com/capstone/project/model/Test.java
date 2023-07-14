@@ -1,5 +1,7 @@
 package com.capstone.project.model;
 
+import com.capstone.project.dto.StudySetResponse;
+import com.capstone.project.dto.TestRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +12,28 @@ import org.hibernate.annotations.Formula;
 import java.util.Date;
 import java.util.List;
 
+@SqlResultSetMapping(
+        name = "TestCustomListMapping",
+        classes = @ConstructorResult(
+                targetClass = TestRequest.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Integer.class),
+                        @ColumnResult(name = "created_date", type = Date.class),
+                        @ColumnResult(name = "description", type = String.class),
+                        @ColumnResult(name = "duration", type = Float.class),
+                        @ColumnResult(name = "modified_date", type = Date.class),
+                        @ColumnResult(name = "title", type = String.class),
+                        @ColumnResult(name = "author_id", type = Integer.class),
+                        @ColumnResult(name = "class_id", type = Integer.class),
+                        @ColumnResult(name = "due_date", type = Date.class),
+                        @ColumnResult(name = "is_draft", type = Boolean.class),
+                        @ColumnResult(name = "num_attemps", type = Integer.class),
+                        @ColumnResult(name = "start_date", type = Date.class),
+                        @ColumnResult(name = "totalquestion", type = Integer.class),
+                        @ColumnResult(name = "totalcomment", type = Integer.class)
+                }
+        )
+)
 @Entity
 @Data
 @AllArgsConstructor

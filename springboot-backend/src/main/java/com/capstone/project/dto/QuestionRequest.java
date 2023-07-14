@@ -25,8 +25,13 @@ public class QuestionRequest {
     @Length(min = 5, message = "Question must have at least 5 characters")
     private String question;
 
-    private QuestionType questionType;
+    private String picture;
 
+    private String audio;
+
+    private String video;
+
+    private QuestionType questionType;
 
     @NumberFormat(style = NumberFormat.Style.NUMBER)
     @Min(value = 1, message = "number of choice must >= 1")
