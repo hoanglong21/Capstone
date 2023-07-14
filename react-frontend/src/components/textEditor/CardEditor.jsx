@@ -31,6 +31,7 @@ export default function CardEditor(props) {
                 reversed: true,
             },
         },
+        removePlugins: ['MediaEmbedToolbar'],
     }
 
     return (

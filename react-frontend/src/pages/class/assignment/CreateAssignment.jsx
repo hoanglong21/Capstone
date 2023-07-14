@@ -23,6 +23,25 @@ function CreateAssignment() {
     const [uploadFiles, setUploadFiles] = useState([])
     const [loadingCreateAssign, setLoadingCreateAssign] = useState(false)
 
+    function padWithLeadingZeros(num, totalLength) {
+        return String(num).padStart(totalLength, '0')
+    }
+
+    function getToday() {
+        const today = new Date()
+        return (
+            today.getFullYear() +
+            '-' +
+            padWithLeadingZeros(today.getMonth() + 1, 2) +
+            '-' +
+            padWithLeadingZeros(today.getDate() + 1, 2) +
+            'T' +
+            padWithLeadingZeros(today.getHours(), 2) +
+            ':' +
+            padWithLeadingZeros(today.getMinutes(), 2)
+        )
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
@@ -30,13 +49,14 @@ function CreateAssignment() {
             setAssignment({
                 title: '',
                 classroom: {
-                    id: classroom.id,
+                    id: tempClass.id,
                 },
                 user: {
                     id: userInfo.id,
                 },
                 due_date: '',
-                start_date: new Date().toISOString().substring(0, 16),
+                start_date: getToday(),
+                created_date: getToday(),
                 instruction: '',
                 _draft: true,
             })
@@ -71,18 +91,21 @@ function CreateAssignment() {
         })
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (draft) => {
         setLoadingCreateAssign(true)
         try {
             const tempAssignment = (
-                await AssignmentService.createAssignment(assignment)
+                await AssignmentService.createAssignment({
+                    ...assignment,
+                    _draft: draft,
+                })
             ).data
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `assignment/${tempAssignment.id}/tutor`,
+                    `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
                     uploadFileItem.file_type
                 )
                 tempAttachments.push({
@@ -141,13 +164,14 @@ function CreateAssignment() {
                     <button
                         className="createAssign_submitBtn"
                         disabled={!assignment?.title || loadingCreateAssign}
-                        onClick={handleSubmit}
+                        onClick={() => handleSubmit(false)}
                     >
                         {loadingCreateAssign ? 'Assigning...' : 'Assign'}
                     </button>
                     <button
                         className="createAssign_draftBtn"
                         disabled={!assignment?.title}
+                        onClick={() => handleSubmit(true)}
                     >
                         Save draft
                     </button>
@@ -176,9 +200,8 @@ function CreateAssignment() {
                             onChange={(event, editor) => {
                                 setAssignment({
                                     ...assignment,
-                                    title: editor.getData(),
+                                    instruction: editor.getData(),
                                 })
-                                console.log(editor.getData())
                             }}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
@@ -194,7 +217,8 @@ function CreateAssignment() {
                                     name="start_date"
                                     id="start_date"
                                     placeholder="start date"
-                                    value={assignment?.start_date}
+                                    min={assignment?.created_date || ''}
+                                    value={assignment?.start_date || ''}
                                     onChange={handleChange}
                                 />
                                 <label
@@ -254,7 +278,6 @@ function CreateAssignment() {
                             </div>
                         ))}
                     </div>
-
                     <input
                         type="file"
                         id="uploadPostFile"

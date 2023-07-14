@@ -56,7 +56,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
                 await PostService.updatePost(updatePost.id, updatePost)
             ).data
             // delete folder old post in firebase
-            await deleteFile('', `post/${tempPost.id}`)
+            await deleteFile('', `class/${tempPost.classroom.id}/post/${tempPost.id}`)
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
@@ -115,9 +115,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
 
     const handleDeletePost = async () => {
         await PostService.deletePost(post.id)
-        currentFiles.forEach((file) => {
-            deleteFileByUrl(file.file_url, `files/post/${post.id}`)
-        })
+        await deleteFile('', `class/${post.classroom.id}/post/${post.id}`)
         var tempPosts = [...posts]
         tempPosts.splice(index, 1)
         stateChanger(tempPosts)
@@ -128,9 +126,6 @@ const Post = ({ post, stateChanger, posts, index }) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
         setUploadFiles(temp)
-        if (file.file_url) {
-            deleteFileByUrl(file.file_url, `files/post/${post.id}`)
-        }
     }
 
     function getDate(date) {

@@ -39,7 +39,7 @@ const Header = () => {
         if (userToken) {
             dispatch(getUser(userToken))
         }
-    }, [userToken, dispatch])
+    }, [userToken])
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 

@@ -1,4 +1,8 @@
-import { Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+
+import AssignmentService from '../../../services/AssignmentService'
+import ClassService from '../../../services/ClassService'
 
 import DeleteAssignment from './DeleteAssignment'
 
@@ -6,8 +10,42 @@ import { AddIcon } from '../../../components/icons'
 import './assignment.css'
 
 function AssignmentList() {
+    const navigate = useNavigate()
+
+    const { id } = useParams()
+
+    const [assignments, setAssignments] = useState([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const tempClass = (await ClassService.getClassroomById(id)).data
+            const tempAssignments = (
+                await AssignmentService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    `=${tempClass.id}`,
+                    '',
+                    '=10'
+                )
+            ).data.list
+            setAssignments(tempAssignments)
+        }
+        if (id) {
+            fetchData()
+        }
+    }, [id])
+
+    function getDate(date) {
+        const index = date.lastIndexOf(':00.')
+        return date.replace('T', ' ').substring(0, index)
+    }
+
     return (
-        <div className="container">
+        <div>
             <div
                 className="header"
                 style={{
@@ -16,86 +54,110 @@ function AssignmentList() {
                     marginTop: '2.5rem',
                 }}
             >
-                <Link to="../create-assignment" className="createAssign_btn">
+                <button
+                    className="createAssign_btn"
+                    onClick={() => {
+                        navigate('../create-assignment')
+                    }}
+                >
                     <AddIcon
                         className="createAssignIcon_btn"
                         size="1.125rem"
                         strokeWidth="2.25"
                     />
                     Create
-                </Link>
+                </button>
             </div>
-            <div className="accordion mt-3" id="accordionAssignments">
-                <div className="accordion-item">
-                    <h2 className="accordion-header">
+            <div
+                className="accordion mt-4 accordionAssignments"
+                id="accordionAssignments"
+            >
+                {assignments.map((assign, index) => (
+                    <div className="accordion-item">
                         <button
-                            className="accordion-button collapsed"
+                            className="accordion-button collapsed d-flex justify-content-between align-items-center"
                             type="button"
                             data-bs-toggle="collapse"
-                            data-bs-target="#collapseTwo"
+                            data-bs-target={`#assign${assign?.id}`}
                             aria-expanded="false"
-                            aria-controls="collapseTwo"
+                            aria-controls={`assign${assign?.id}`}
                         >
-                            Accordion Item #2
+                            <div>{assign.title}</div>
+                            <div>
+                                {assign._draft
+                                    ? 'Draft'
+                                    : assign?.due_date
+                                    ? `Due ${getDate(assign?.due_date)}`
+                                    : `Posted ${getDate(assign?.created_date)}`}
+                            </div>
                         </button>
-                    </h2>
-                    <div
-                        id="collapseTwo"
-                        className="accordion-collapse collapse"
-                        data-bs-parent="#accordionAssignments"
-                    >
-                        <div className="accordion-body">
-                            <strong>
-                                This is the second item's accordion body.
-                            </strong>{' '}
-                            It is hidden by default, until the collapse plugin
-                            adds the appropriate classes that we use to style
-                            each element. These classes control the overall
-                            appearance, as well as the showing and hiding via
-                            CSS transitions. You can modify any of this with
-                            custom CSS or overriding our default variables. It's
-                            also worth noting that just about any HTML can go
-                            within the <code>.accordion-body</code>, though the
-                            transition does limit overflow.
+                        <div
+                            id={`assign${assign?.id}`}
+                            className="accordion-collapse collapse"
+                            data-bs-parent="#accordionAssignments"
+                        >
+                            <div className="accordion-body">
+                                <p>
+                                    {assign?.due_date
+                                        ? `Posted ${getDate(
+                                              assign?.created_date
+                                          )}`
+                                        : 'No due date'}
+                                </p>
+                                <div className="mt-2 d-flex justify-content-between">
+                                    <button className="viewAssign_btn">
+                                        View details
+                                    </button>
+                                    <div className="d-flex">
+                                        <div className="asignInfo_block">
+                                            <div className="assignInfo_number">
+                                                0
+                                            </div>
+                                            <div className="assignInfo_title">
+                                                Turned in
+                                            </div>
+                                        </div>
+                                        <div className="asignInfo_block">
+                                            <div className="assignInfo_number">
+                                                1
+                                            </div>
+                                            <div className="assignInfo_title">
+                                                Assigned
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-5 d-flex justify-content-between">
+                                    <button
+                                        className="editAssign_btn"
+                                        onClick={() => {
+                                            navigate(
+                                                `../edit-assignment/${assign?.id}`
+                                            )
+                                        }}
+                                    >
+                                        Edit assignment
+                                    </button>
+                                    <button
+                                        className="deleteAssign_btn"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={`#deleteAssignmentModal${assign?.id}`}
+                                    >
+                                        Delete assignment
+                                    </button>
+                                </div>
+                            </div>
+                            <DeleteAssignment
+                                index={index}
+                                assign={assign}
+                                assignments={assignments}
+                                stateChanger={setAssignments}
+                            />
                         </div>
                     </div>
-                </div>
-                <div className="accordion-item">
-                    <h2 className="accordion-header">
-                        <button
-                            className="accordion-button collapsed"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseThree"
-                            aria-expanded="false"
-                            aria-controls="collapseThree"
-                        >
-                            Accordion Item #3
-                        </button>
-                    </h2>
-                    <div
-                        id="collapseThree"
-                        className="accordion-collapse collapse"
-                        data-bs-parent="#accordionAssignments"
-                    >
-                        <div className="accordion-body">
-                            <strong>
-                                This is the third item's accordion body.
-                            </strong>{' '}
-                            It is hidden by default, until the collapse plugin
-                            adds the appropriate classes that we use to style
-                            each element. These classes control the overall
-                            appearance, as well as the showing and hiding via
-                            CSS transitions. You can modify any of this with
-                            custom CSS or overriding our default variables. It's
-                            also worth noting that just about any HTML can go
-                            within the <code>.accordion-body</code>, though the
-                            transition does limit overflow.
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
-            <DeleteAssignment />
         </div>
     )
 }
