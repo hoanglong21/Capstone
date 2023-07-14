@@ -22,14 +22,14 @@ public class TestRequest {
 
     @NotBlank(message = "Title cannot be empty")
     @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Title can only contain letters, numbers, and spaces")
-    @Length(min = 3, message = "Title must have at least 3 characters")
+    @Length(min = 2, message = "Title must have at least 2 characters")
     private String title;
 
     private User user;
 
     private Class classroom;
 
-    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,:+-]+", message = "Description can only contain letters, numbers, and spaces")
+    @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:+-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
     @Min(value = 5, message = "min duration is 5")
@@ -46,7 +46,19 @@ public class TestRequest {
     @Nullable
     private Date due_date;
 
+    private Date created_date;
+
+    private Date modified_date;
+
     private boolean is_draft;
+
+    private int author_id;
+
+    private int class_id;
+
+    private int totalquestion;
+
+    private int totalcomment;
 
     @NumberFormat(style = NumberFormat.Style.NUMBER)
     private int num_attemps;

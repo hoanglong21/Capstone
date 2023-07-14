@@ -20,6 +20,12 @@ public class Question {
 
     private String question;
 
+    private String picture;
+
+    private String audio;
+
+    private String video;
+
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
     private QuestionType questionType;

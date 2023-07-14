@@ -28,7 +28,7 @@ public class ClassRequest {
 
 
 //    @Pattern(regexp = "[^\\s].*[^\\s]", message = "Description must not start or end with whitespace")
-    @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,:;!?+&\\[\\]()\\-]+", message = "Description can only contain letters, numbers, and spaces")
+    @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:;!?+&\\[\\]()\\-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
     // Custom getter for class_name

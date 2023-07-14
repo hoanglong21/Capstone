@@ -24,4 +24,10 @@ public class Answer {
     private String content;
 
     private boolean is_true;
+
+    private String picture;
+
+    private String audio;
+
+    private String video;
 }
