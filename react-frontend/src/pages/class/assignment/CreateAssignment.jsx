@@ -23,6 +23,25 @@ function CreateAssignment() {
     const [uploadFiles, setUploadFiles] = useState([])
     const [loadingCreateAssign, setLoadingCreateAssign] = useState(false)
 
+    function padWithLeadingZeros(num, totalLength) {
+        return String(num).padStart(totalLength, '0')
+    }
+
+    function getToday() {
+        const today = new Date()
+        return (
+            today.getFullYear() +
+            '-' +
+            padWithLeadingZeros(today.getMonth() + 1, 2) +
+            '-' +
+            padWithLeadingZeros(today.getDate() + 1, 2) +
+            'T' +
+            padWithLeadingZeros(today.getHours(), 2) +
+            ':' +
+            padWithLeadingZeros(today.getMinutes(), 2)
+        )
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
@@ -30,13 +49,13 @@ function CreateAssignment() {
             setAssignment({
                 title: '',
                 classroom: {
-                    id: classroom.id,
+                    id: tempClass.id,
                 },
                 user: {
                     id: userInfo.id,
                 },
                 due_date: '',
-                start_date: new Date().toISOString().substring(0, 16),
+                start_date: getToday(),
                 instruction: '',
                 _draft: true,
             })
@@ -178,7 +197,6 @@ function CreateAssignment() {
                                     ...assignment,
                                     title: editor.getData(),
                                 })
-                                console.log(editor.getData())
                             }}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
@@ -194,7 +212,7 @@ function CreateAssignment() {
                                     name="start_date"
                                     id="start_date"
                                     placeholder="start date"
-                                    value={assignment?.start_date}
+                                    value={assignment?.start_date || ''}
                                     onChange={handleChange}
                                 />
                                 <label
@@ -254,7 +272,6 @@ function CreateAssignment() {
                             </div>
                         ))}
                     </div>
-
                     <input
                         type="file"
                         id="uploadPostFile"

@@ -37,9 +37,13 @@ const Header = () => {
 
     useEffect(() => {
         if (userToken) {
-            dispatch(getUser(userToken))
+            try {
+                dispatch(getUser(userToken))
+            } catch (error) {
+                dispatch(logout())
+            }
         }
-    }, [userToken, dispatch])
+    }, [userToken])
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 

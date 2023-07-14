@@ -26,7 +26,6 @@ export const authSlice = createSlice({
             state.userToken = null
             state.error = null
         },
-        
     },
     extraReducers(builder) {
         builder
