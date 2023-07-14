@@ -18,7 +18,7 @@ public class AttachmentRequest {
 
     private int id;
 
-    @NotBlank(message = "Cannot be empty")
+//    @NotBlank(message = "Cannot be empty")
     @Pattern(regexp = "[a-zA-Z0-9\\s.]+", message = "File can only contain letters, numbers, and spaces")
     private String file_name;
 

@@ -11,28 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "question")
-public class Question {
-
+@Table(name = "achievement")
+public class Achievement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String question;
-
-    private String picture;
-
-    private String audio;
-
-    private String video;
-
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
-    private QuestionType questionType;
+    private AchievementType type_id;
 
-    private int num_choice;
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "test_id", nullable = false)
-    private Test test;
+    private String description;
 }

@@ -11,23 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "answer")
-public class Answer {
+@Table(name = "achievement_type")
+public class AchievementType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "question_id", nullable = false)
-    private Question question;
-
-    private String content;
-
-    private boolean is_true;
-
-    private String picture;
-
-    private String audio;
-
-    private String video;
+    private String name;
 }

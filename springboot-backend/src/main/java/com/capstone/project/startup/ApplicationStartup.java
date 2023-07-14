@@ -35,6 +35,9 @@ public class ApplicationStartup implements ApplicationRunner {
     private AttachmentTypeRepository attachmentTypeRepository;
 
     @Autowired
+    private AchievementTypeRepository achievementTypeRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -123,6 +126,17 @@ public class ApplicationStartup implements ApplicationRunner {
                 attachmentTypes.add(attachmentType);
             }
             attachmentTypeRepository.saveAll(attachmentTypes);
+        }
+
+        if (achievementTypeRepository.count() == 0) {
+            List<String> defaultNames = Arrays.asList("study", "lifetime", "streaks");
+            List<AchievementType> achievementTypes = new ArrayList<>();
+            for (String name : defaultNames) {
+                AchievementType achievementType = new AchievementType();
+                achievementType.setName(name);
+                achievementTypes.add(achievementType);
+            }
+            achievementTypeRepository.saveAll(achievementTypes);
         }
 
         if(fieldRepository.count() == 0) {

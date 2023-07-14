@@ -20,10 +20,16 @@ public class AnswerRequest {
 
     @NotBlank(message = "Answer cannot be empty")
     @Pattern(regexp = "[a-zA-Z0-9\\s.,:]+", message = "Answer  can only contain letters, numbers, and spaces")
-    @Length(min = 2, message = "Answer  must have at least 2 characters")
+    @Length(min = 1, message = "Answer  must have at least 1 characters")
     private String content;
 
     private boolean is_true;
+
+    private String picture;
+
+    private String audio;
+
+    private String video;
 
     // Custom getter for content
     public String getContent() {
