@@ -56,6 +56,7 @@ function CreateAssignment() {
                 },
                 due_date: '',
                 start_date: getToday(),
+                created_date: getToday(),
                 instruction: '',
                 _draft: true,
             })
@@ -104,7 +105,7 @@ function CreateAssignment() {
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `assignment/${tempAssignment.id}/tutor`,
+                    `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
                     uploadFileItem.file_type
                 )
                 tempAttachments.push({
@@ -216,6 +217,7 @@ function CreateAssignment() {
                                     name="start_date"
                                     id="start_date"
                                     placeholder="start date"
+                                    min={assignment?.created_date || ''}
                                     value={assignment?.start_date || ''}
                                     onChange={handleChange}
                                 />

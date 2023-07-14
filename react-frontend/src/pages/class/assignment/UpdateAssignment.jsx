@@ -43,11 +43,13 @@ function UpdateAssignment() {
                 ...tempAssignment,
                 start_date: toFEDate(tempAssignment.start_date),
                 due_date: toFEDate(tempAssignment.due_date),
+                created_date: toFEDate(tempAssignment.created_date),
             })
             setUpdateAssignment({
                 ...tempAssignment,
                 start_date: toFEDate(tempAssignment.start_date),
                 due_date: toFEDate(tempAssignment.due_date),
+                created_date: toFEDate(tempAssignment.created_date),
             })
             const tempAttachments = (
                 await AttachmentService.getAttachmentsByAssignmentId(
@@ -97,13 +99,16 @@ function UpdateAssignment() {
                 })
             ).data
             // delete folder
-            await deleteFile('', `assignment/${tempAssignment.id}/tutor`)
+            await deleteFile(
+                '',
+                `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
+            )
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `assignment/${tempAssignment.id}/tutor`,
+                    `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
                     uploadFileItem.file_type
                 )
                 tempAttachments.push({
@@ -221,6 +226,7 @@ function UpdateAssignment() {
                                     name="start_date"
                                     id="start_date"
                                     placeholder="start date"
+                                    min={updateAssignment?.created_date || ''}
                                     value={updateAssignment?.start_date || ''}
                                     onChange={handleChange}
                                 />

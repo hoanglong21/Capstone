@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 import AssignmentService from '../../../services/AssignmentService'
@@ -72,7 +72,7 @@ function AssignmentList() {
                 className="accordion mt-4 accordionAssignments"
                 id="accordionAssignments"
             >
-                {assignments.map((assign) => (
+                {assignments.map((assign, index) => (
                     <div className="accordion-item">
                         <button
                             className="accordion-button collapsed d-flex justify-content-between align-items-center"
@@ -138,16 +138,26 @@ function AssignmentList() {
                                     >
                                         Edit assignment
                                     </button>
-                                    <button className="deleteAssign_btn">
+                                    <button
+                                        className="deleteAssign_btn"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={`#deleteAssignmentModal${assign?.id}`}
+                                    >
                                         Delete assignment
                                     </button>
                                 </div>
                             </div>
+                            <DeleteAssignment
+                                index={index}
+                                assign={assign}
+                                assignments={assignments}
+                                stateChanger={setAssignments}
+                            />
                         </div>
                     </div>
                 ))}
             </div>
-            <DeleteAssignment />
         </div>
     )
 }

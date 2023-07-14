@@ -14,6 +14,10 @@ const updateAssignment = (id, assignment) => {
     return axios.put(API_BASE_URL + '/assignments/' + id, assignment)
 }
 
+const deleteAssignment = (id) => {
+    return axios.delete(API_BASE_URL + '/assignments/' + id)
+}
+
 const getFilterList = (
     search,
     author,
@@ -51,6 +55,7 @@ const AssignmentService = {
     getFilterList,
     getAssignmentById,
     updateAssignment,
+    deleteAssignment,
 }
 
 export default AssignmentService

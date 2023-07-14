@@ -64,3 +64,8 @@
     font-weight: 700;
     line-height: 1.33;
 }
+
+.assignDeleteModal.modal {
+    margin-top: 8rem;
+    --bs-modal-width: 25vw;
+}
