@@ -14,7 +14,7 @@ import {
     EditIcon,
     LearnSolidIcon,
     OptionHorIcon,
-    AddIcon,
+    AddCircleIcon,
     StudySetSolidIcon,
     TestSolidIcon,
     ArrowDownIcon,
@@ -129,7 +129,7 @@ const ViewSet = () => {
                                 type="button"
                                 onClick={() => checkAuth()}
                             >
-                                <AddIcon
+                                <AddCircleIcon
                                     className="me-3"
                                     size="1.3rem"
                                     strokeWidth="2"

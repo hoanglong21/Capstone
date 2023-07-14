@@ -136,7 +136,7 @@ public class UserController {
     }
 
     @GetMapping("/sendreset")
-    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> sendResetPasswordEmail(@RequestParam("username") String username) {
         try {
             return ResponseEntity.ok(userService.sendResetPasswordEmail(username));
@@ -146,7 +146,7 @@ public class UserController {
     }
 
     @PostMapping("/reset")
-    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> resetPassword(@RequestParam("username") String username, @RequestParam("pin") String pin,
                                            @Valid @RequestBody ChangePasswordRequest changePasswordRequest, BindingResult result) {
         if (result.hasErrors()) {
@@ -213,7 +213,7 @@ public class UserController {
     }
 
     @GetMapping("/filterusers")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> filterUser(@RequestParam(value = "name", required = false, defaultValue = "") String name,
                                         @RequestParam(value = "username", required = false, defaultValue = "") String username,
                                         @RequestParam(value = "email", required = false, defaultValue = "") String email,

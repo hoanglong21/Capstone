@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import PostService from '../../../services/PostService'
-import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import AttachmentService from '../../../services/AttachmentService'
+import {
+    deleteFile,
+    deleteFileByUrl,
+    uploadFile,
+} from '../../../features/fileManagement'
 
 import CardEditor from '../../../components/textEditor/CardEditor'
 import PostEditor from '../../../components/textEditor/PostEditor'
@@ -14,7 +19,6 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
-import AttachmentService from '../../../services/AttachmentService'
 
 const Post = ({ post, stateChanger, posts, index }) => {
     const [showUpdate, setShowUpdate] = useState(false)
@@ -22,28 +26,65 @@ const Post = ({ post, stateChanger, posts, index }) => {
     const [updatePost, setUpdatePost] = useState({ ...post })
     const [currentFiles, setCurrentFiles] = useState([])
     const [uploadFiles, setUploadFiles] = useState([])
-    const [allFiles, setAllFiles] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [loadingUpdatePost, setLoadingUpdatePost] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempFiles = (
-                await AttachmentService.getAttachmentsByPostId(post.id)
-            ).data
-            setCurrentFiles([...currentFiles, tempFiles])
-            setAllFiles([...allFiles, tempFiles])
+            try {
+                const tempFiles = (
+                    await AttachmentService.getAttachmentsByPostId(post.id)
+                ).data
+                setCurrentFiles([...tempFiles])
+                setUploadFiles([...tempFiles])
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
+        fetchData()
     }, [post.id])
 
     const handleUpdatePost = async () => {
         setLoadingUpdatePost(true)
         try {
-            await PostService.updatePost(updatePost.id, updatePost)
+            // update post
+            const tempPost = (
+                await PostService.updatePost(updatePost.id, updatePost)
+            ).data
+            // delete folder old post in firebase
+            await deleteFile('', `post/${tempPost.id}`)
+            // add attachments
+            let tempAttachments = []
+            for (const uploadFileItem of uploadFiles) {
+                const url = await uploadFile(
+                    uploadFileItem.file,
+                    `post/${post.id}`,
+                    uploadFileItem.file_type
+                )
+                tempAttachments.push({
+                    file_name: uploadFileItem.file_name,
+                    file_type: uploadFileItem.file_type,
+                    file_url: url,
+                    post: {
+                        id: post.id,
+                    },
+                    attachmentType: {
+                        id: 3,
+                    },
+                })
+            }
+            await AttachmentService.createAttachments(tempAttachments)
+            // update list posts
             var tempPosts = [...posts]
-            tempPosts[index] = updatePost
+            tempPosts[index] = tempPost
             stateChanger(tempPosts)
+            // clear
             setShowUpdate(false)
+            setCurrentFiles([...uploadFiles])
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -58,31 +99,24 @@ const Post = ({ post, stateChanger, posts, index }) => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
-            const url = await uploadFile(
-                file,
-                `file/class/${post.classroom.id}/post`
-            )
             setUploadFiles([
                 ...uploadFiles,
-                { name: file.name, type: file.type, url },
+                { file_name: file.name, file_type: file.type, file: file },
             ])
         }
         setLoadingUploadFile(false)
     }
 
     const handleCancelUpdatePost = () => {
-        uploadFiles.map((file) => {
-            deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
-        })
-        setUploadFiles([])
+        setUploadFiles([...currentFiles])
         setUpdatePost({ ...post })
         setShowUpdate(false)
     }
 
     const handleDeletePost = async () => {
         await PostService.deletePost(post.id)
-        uploadFiles.map((file) => {
-            deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
+        currentFiles.forEach((file) => {
+            deleteFileByUrl(file.file_url, `files/post/${post.id}`)
         })
         var tempPosts = [...posts]
         tempPosts.splice(index, 1)
@@ -93,8 +127,15 @@ const Post = ({ post, stateChanger, posts, index }) => {
     const handleDeleteFile = (file, index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
-        deleteFileByUrl(file.url, `file/class/${post.classroom.id}/post`)
         setUploadFiles(temp)
+        if (file.file_url) {
+            deleteFileByUrl(file.file_url, `files/post/${post.id}`)
+        }
+    }
+
+    function getDate(date) {
+        var index = date.lastIndexOf('.')
+        return date.replace('T', ' ').substring(0, index)
     }
 
     return (
@@ -117,7 +158,9 @@ const Post = ({ post, stateChanger, posts, index }) => {
                             <div className="postAuthor">
                                 {post.user.username}
                             </div>
-                            <div className="postCreatedDate">Create Date</div>
+                            <div className="postCreatedDate">
+                                {getDate(post.created_date)}
+                            </div>
                         </div>
                     </div>
                     <div className="dropdown">
@@ -162,7 +205,7 @@ const Post = ({ post, stateChanger, posts, index }) => {
                     <div className="post__content">
                         {showUpdate ? (
                             <div>
-                                <div className="postTextEditor">
+                                <div className="createAssign_formGroup form-floating mb-4">
                                     <PostEditor
                                         data={updatePost?.content}
                                         onChange={(event, editor) => {
@@ -174,19 +217,26 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                             }
                                         }}
                                     />
+                                    <label className="createAssign_formLabel createAssign_editorLabel">
+                                        Announce something to your class
+                                    </label>
                                 </div>
                                 <div className="mainClass_filesUpload mt-3">
                                     {uploadFiles.map((file, index) => (
                                         <div className="card mb-2" key={index}>
                                             <div className="card-body d-flex justify-content-between">
-                                                <div>
+                                                <a
+                                                    className="text-decoration-none w-100"
+                                                    href={file.file_url}
+                                                    target="_blank"
+                                                >
                                                     <div className="fileUploadName">
-                                                        {file.name}
+                                                        {file.file_name}
                                                     </div>
                                                     <div className="fileUploadType">
-                                                        {file.type}
+                                                        {file.file_type}
                                                     </div>
-                                                </div>
+                                                </a>
                                                 <button
                                                     className="btn fileUploadDelButton"
                                                     onClick={() =>
@@ -254,11 +304,35 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                 </div>
                             </div>
                         ) : (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: post.content,
-                                }}
-                            ></div>
+                            <div>
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: post.content,
+                                    }}
+                                ></div>
+                                <div className="row">
+                                    {currentFiles.map((file) => (
+                                        <div className="col-6" key={file.id}>
+                                            <a
+                                                className="card mb-2 text-decoration-none"
+                                                href={file.file_url}
+                                                target="_blank"
+                                            >
+                                                <div className="card-body d-flex justify-content-between">
+                                                    <div className="fileUploadContainer">
+                                                        <div className="fileUploadName">
+                                                            {file.file_name}
+                                                        </div>
+                                                        <div className="fileUploadType">
+                                                            {file.file_type}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>

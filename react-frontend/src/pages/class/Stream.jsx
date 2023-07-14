@@ -1,23 +1,26 @@
 import { useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
+import ClassService from '../../services/ClassService'
+import PostService from '../../services/PostService'
+import { uploadFile } from '../../features/fileManagement'
+
+import Post from './post/Post'
+import PostEditor from '../../components/textEditor/PostEditor'
+
+import defaultAvatar from '../../assets/images/default_avatar.png'
 import {
-    AccountSolidIcon,
     CopyIcon,
     DeleteIcon,
     OptionVerIcon,
     ResetIcon,
     UploadIcon,
 } from '../../components/icons'
-import ClassService from '../../services/ClassService'
-import Post from './post/Post'
-import PostEditor from '../../components/textEditor/PostEditor'
-import { deleteFileByUrl, uploadFile } from '../../features/fileManagement'
-import PostService from '../../services/PostService'
-import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import AttachmentService from '../../services/AttachmentService'
 
 const Stream = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -41,6 +44,18 @@ const Stream = () => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
             setClassroom(tempClass)
+            // setPosts(
+            //     (
+            //         await PostService.getFilterList(
+            //             '',
+            //             '',
+            //             '',
+            //             tempClass.id,
+            //             '',
+            //             ''
+            //         )
+            //     ).data
+            // )
             setPosts((await PostService.getAllPostByClassId(tempClass.id)).data)
             setAddPost({
                 user: {
@@ -71,10 +86,9 @@ const Stream = () => {
         navigator.clipboard.writeText(classroom.classcode)
     }
 
-    const handleDeleteFile = (file, index) => {
+    const handleDeleteFile = (index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
-        deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
         setUploadFiles(temp)
     }
 
@@ -82,13 +96,9 @@ const Stream = () => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
-            const url = await uploadFile(
-                file,
-                `file/class/${classroom.id}/post`
-            )
             setUploadFiles([
                 ...uploadFiles,
-                { name: file.name, type: file.type, url },
+                { file_name: file.name, file_type: file.type, file: file },
             ])
         }
         setLoadingUploadFile(false)
@@ -97,16 +107,31 @@ const Stream = () => {
     const handleAddPost = async () => {
         setLoadingAddPost(true)
         try {
-            var temp = ''
-            uploadFiles.forEach((uploadFile) => (temp += uploadFile.url + ','))
-            const filename = temp.substring(0, temp.length - 2)
-            const tempPost = (
-                await PostService.createPost(
-                    addPost,
-                    `${filename ? `=${filename}` : ''}`,
-                    3
+            // add post
+            const tempPost = (await PostService.createPost(addPost)).data
+            // upload file to firebase
+            let tempAttachments = []
+            for (const uploadFileItem of uploadFiles) {
+                const url = await uploadFile(
+                    uploadFileItem.file,
+                    `post/${tempPost.id}`,
+                    uploadFileItem.file_type
                 )
-            ).data
+                tempAttachments.push({
+                    file_name: uploadFileItem.file_name,
+                    file_type: uploadFileItem.file_type,
+                    file_url: url,
+                    post: {
+                        id: tempPost.id,
+                    },
+                    attachmentType: {
+                        id: 3,
+                    },
+                })
+            }
+            // add attachments
+            await AttachmentService.createAttachments(tempAttachments)
+            // clear
             setAddPost({})
             setUploadFiles([])
             setPosts([...posts, tempPost])
@@ -122,9 +147,6 @@ const Stream = () => {
     }
 
     const handleCancelAddPost = () => {
-        uploadFiles.forEach((file) => {
-            deleteFileByUrl(file.url, `file/class/${classroom.id}/post`)
-        })
         setUploadFiles([])
         setAddPost({ ...addPost, content: '' })
         setShowInput(false)
@@ -134,58 +156,62 @@ const Stream = () => {
         <div className="row">
             {/* Side */}
             <div className="col-3">
-                <div className="card classCode_container mb-4">
-                    <div className="card-body">
-                        <div className="card-title mainClass_sectionTitle d-flex justify-content-between align-items-center">
-                            <span>Class code</span>
-                            <div className="dropdown">
-                                <button
-                                    className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    <OptionVerIcon />
-                                </button>
-                                <ul className="dropdown-menu">
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={handleCopyCode}
-                                        >
-                                            <CopyIcon
-                                                className="me-3"
-                                                size="1.3rem"
-                                            />
-                                            <span className="align-middle fw-medium">
-                                                Copy class code
-                                            </span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={handleResetCode}
-                                        >
-                                            <ResetIcon
-                                                className="me-3"
-                                                size="1.3rem"
-                                            />
-                                            <span className="align-middle fw-medium">
-                                                Reset class code
-                                            </span>
-                                        </button>
-                                    </li>
-                                </ul>
+                {/* Class code */}
+                {userInfo.role !== 'ROLE_LEANER' && (
+                    <div className="card classCode_container mb-4">
+                        <div className="card-body">
+                            <div className="card-title mainClass_sectionTitle d-flex justify-content-between align-items-center">
+                                <span>Class code</span>
+                                <div className="dropdown">
+                                    <button
+                                        className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <OptionVerIcon />
+                                    </button>
+                                    <ul className="dropdown-menu">
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                                type="button"
+                                                onClick={handleCopyCode}
+                                            >
+                                                <CopyIcon
+                                                    className="me-3"
+                                                    size="1.3rem"
+                                                />
+                                                <span className="align-middle fw-medium">
+                                                    Copy class code
+                                                </span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                                type="button"
+                                                onClick={handleResetCode}
+                                            >
+                                                <ResetIcon
+                                                    className="me-3"
+                                                    size="1.3rem"
+                                                />
+                                                <span className="align-middle fw-medium">
+                                                    Reset class code
+                                                </span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="classCode_value">
+                                {classroom?.classcode}
                             </div>
                         </div>
-                        <div className="classCode_value">
-                            {classroom?.classcode}
-                        </div>
                     </div>
-                </div>
+                )}
+                {/* Upcoming */}
                 <div className="card">
                     <div className="card-body">
                         <div className="card-title mainClass_sectionTitle">
@@ -201,7 +227,7 @@ const Stream = () => {
                 <div className="card mainClass_postAddContainer mb-4">
                     {showInput ? (
                         <div>
-                            <div className="postTextEditor">
+                            <div className="createAssign_formGroup form-floating mb-4">
                                 <PostEditor
                                     onChange={(event, editor) => {
                                         setAddPost({
@@ -210,26 +236,30 @@ const Stream = () => {
                                         })
                                     }}
                                 />
+                                <label className="createAssign_formLabel createAssign_editorLabel">
+                                    Announce something to your class
+                                </label>
                             </div>
                             <div className="mainClass_filesUpload mt-3">
                                 {uploadFiles.map((file, index) => (
                                     <div className="card mb-2" key={index}>
                                         <div className="card-body d-flex justify-content-between">
-                                            <div>
+                                            <a
+                                                className="text-decoration-none w-100"
+                                                href={file.file_url}
+                                                target="_blank"
+                                            >
                                                 <div className="fileUploadName">
-                                                    {file.name}
+                                                    {file.file_name}
                                                 </div>
                                                 <div className="fileUploadType">
-                                                    {file.type}
+                                                    {file.file_type}
                                                 </div>
-                                            </div>
+                                            </a>
                                             <button
                                                 className="btn fileUploadDelButton"
                                                 onClick={() =>
-                                                    handleDeleteFile(
-                                                        file,
-                                                        index
-                                                    )
+                                                    handleDeleteFile(index)
                                                 }
                                             >
                                                 <DeleteIcon />
@@ -271,7 +301,6 @@ const Stream = () => {
                                     >
                                         Cancel
                                     </button>
-
                                     <button
                                         onClick={handleAddPost}
                                         className="btn btn-primary"
@@ -286,11 +315,25 @@ const Stream = () => {
                         </div>
                     ) : (
                         <div
-                            className="mainClass_wrapper100"
-                            onClick={() => setShowInput(true)}
+                            className="mainClass_postAddWrapper d-flex align-items-center"
+                            onClick={() => {
+                                setShowInput(true)
+                            }}
                         >
-                            <AccountSolidIcon />
-                            <div>Announce something to class</div>
+                            <div className="maiClass_postAddAuthor">
+                                <img
+                                    src={
+                                        userInfo.avatar
+                                            ? userInfo.avatar
+                                            : defaultAvatar
+                                    }
+                                    className="w-100 h-100"
+                                    alt="author avatar"
+                                />
+                            </div>
+                            <span className="ms-4">
+                                Announce something to your class
+                            </span>
                         </div>
                     )}
                 </div>
