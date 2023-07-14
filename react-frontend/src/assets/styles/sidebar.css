@@ -3,7 +3,11 @@
 } */
 
 .header__admin{
-    background-color: #F6F7FB;
-    border: 10px solid #ffffff;
+    /* background-color: #344767; */
+    background-image: linear-gradient(to top, #0f0c29, #302b63, #24243e);
     border-radius: 10px;
+}
+
+.nav-link span, .nav-link i{
+    color: #fff;
 }
