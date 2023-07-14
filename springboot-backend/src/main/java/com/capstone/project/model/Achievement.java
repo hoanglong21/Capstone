@@ -19,9 +19,17 @@ public class Achievement {
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
-    private AchievementType type_id;
+    private AchievementType achievementType;
 
     private String name;
 
     private String description;
+
+    public Achievement(int typeId, String name, String description) {
+        AchievementType achievementType = new AchievementType();
+        achievementType.setId(typeId);
+        this.achievementType = achievementType;
+        this.name = name;
+        this.description = description;
+    }
 }
