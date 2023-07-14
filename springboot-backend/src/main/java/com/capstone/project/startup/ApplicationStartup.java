@@ -38,6 +38,9 @@ public class ApplicationStartup implements ApplicationRunner {
     private AchievementTypeRepository achievementTypeRepository;
 
     @Autowired
+    private HistoryTypeRepository historyTypeRepository;
+
+    @Autowired
     private AchievementRepository achievementRepository;
 
     @Autowired
@@ -140,6 +143,17 @@ public class ApplicationStartup implements ApplicationRunner {
                 achievementTypes.add(achievementType);
             }
             achievementTypeRepository.saveAll(achievementTypes);
+        }
+
+        if (historyTypeRepository.count() == 0) {
+            List<String> defaultNames = Arrays.asList("attend", "studyset", "class");
+            List<HistoryType> historyTypes = new ArrayList<>();
+            for (String name : defaultNames) {
+                HistoryType historyType = new HistoryType();
+                historyType.setName(name);
+                historyTypes.add(historyType);
+            }
+            historyTypeRepository.saveAll(historyTypes);
         }
 
         if(achievementRepository.count() == 0) {
