@@ -158,6 +158,7 @@ function DoQuiz() {
         </div>
       </div> */}
 
+      {/* Header */}
       <div className="flashcardHeader d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
           <StudySetSolidIcon className="flashcardModeIcon" size="2rem" />

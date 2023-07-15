@@ -174,7 +174,7 @@ const ClassLayout = () => {
                         </li>
                         <li>
                             <NavLink
-                                to="mark"
+                                to="people"
                                 className={
                                     'mainClass_navlink ' +
                                     (({ isActive }) =>
@@ -186,9 +186,7 @@ const ClassLayout = () => {
                         </li>
                         <li>
                             <NavLink
-                                to={{
-                                    pathname: 'classes',
-                                }}
+                                to="mark"
                                 className={
                                     'mainClass_navlink ' +
                                     (({ isActive }) =>

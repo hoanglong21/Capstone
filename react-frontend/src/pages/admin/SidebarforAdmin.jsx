@@ -7,80 +7,60 @@ import "../../assets/styles/sidebar.css";
 
 function SidebarforAdmin() {
   return (
-        <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column">
-          <div>
+    <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
+      <nav id="navbar">
+        <Link
+          href=""
+          className="text-decoration-none d-flex align-item center d-none d-sm-inline d-none d-sm-inline mt-2 "
+        >
+          <img className="img-thumbnail mt-2" src={logo} alt="" />
+        </Link>
+        <hr className="text-dark d-none d-sm-block" />
+        <ul className="nav nav-pills flex-column mt-3 mt-sm-0">
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link
-              href=""
-              className="text-decoration-none text-white d-flex align-item center d-none d-sm-inline d-none d-sm-inline mt-2 "
+              to="/dashboard"
+              className="nav-link fs-7 active"
+              aria-current="page"
             >
-              <img className="img-thumbnail mt-2" src={logo} alt="" />
+              <i className="bi bi-speedometer2 text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Dashboard</span>
             </Link>
-            <hr className="text-dark d-none d-sm-block" />
-            <ul className="nav nav-pills flex-column mt-3 mt-sm-0">
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
-                <Link
-                  to="/dashboard"
-                  className="nav-link text-white fs-7 active"
-                  aria-current="page"
-                >
-                  <i className="bi bi-speedometer2"></i>
-                  <span className="ms-3 d-none d-sm-inline">Dashboard</span>
-                </Link>
-              </li>
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
-                <Link
-                  to="/manageusers"
-                  className="nav-link text-white fs-7"
-                  aria-current="page"
-                >
-                  <i class="bi bi-person-square"></i>
-                  <span className="ms-3 d-none d-sm-inline">Manage User</span>
-                </Link>
-              </li>
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
-                <Link
-                  to="/manageclass"
-                  className="nav-link text-white fs-7"
-                  aria-current="page"
-                >
-                  <i class="bi bi-people"></i>
-                  <span className="ms-3 d-none d-sm-inline">Manage Class</span>
-                </Link>
-              </li>
-              <li className="nav-item text-white fs-6 my-1 py-2 py-sm-0">
-                <Link
-                  to="/managefeedback"
-                  className="nav-link text-white fs-7"
-                  aria-current="page"
-                >
-                  <i class="bi bi-chat-text"></i>
-                  <span className="ms-3 d-none d-sm-inline">
-                    Manage Feedback
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="dropdown open">
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link
-              to=""
-              className="text-decoration-none text-white p-3"
-              type="button"
-              id="triggerId"
-              data-bs-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
+              to="/manageusers"
+              className="nav-link fs-7"
+              aria-current="page"
             >
-              <i className="bi bi-person-circle">
-                <span className="ms-2 d-none d-sm-inline me-2 fs-6">
-                  Administrator
-                </span>
-              </i>
-              <i class="bi bi-box-arrow-in-left"></i>
+              <i class="bi bi-person-square text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Manage User</span>
             </Link>
-          </div>
-        </div>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link
+              to="/manageclass"
+              className="nav-link fs-7"
+              aria-current="page"
+            >
+              <i class="bi bi-people text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Manage Class</span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link
+              to="/managefeedback"
+              className="nav-link fs-7"
+              aria-current="page"
+            >
+              <i class="bi bi-chat-text text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Manage Feedback</span>
+            </Link>
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 }
 
-export default SidebarforAdmin
+export default SidebarforAdmin;
