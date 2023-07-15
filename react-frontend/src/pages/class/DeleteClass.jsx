@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import ClassService from '../../services/ClassService'
 
 import '../../assets/styles/popup.css'
+import { deleteFile } from '../../features/fileManagement'
 
 const DeleteClass = ({ classroom }) => {
     let navigate = useNavigate()
@@ -25,6 +26,7 @@ const DeleteClass = ({ classroom }) => {
         setLoading(true)
         try {
             await ClassService.deleteClass(deleteClass.id)
+            await deleteFile('', `class/${deleteClass.id}`)
             document.getElementById('closeDeleteClassModal').click()
             navigate('/')
             // clear validation

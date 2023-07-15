@@ -34,4 +34,8 @@ public class Post {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date created_date;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified_date;
 }

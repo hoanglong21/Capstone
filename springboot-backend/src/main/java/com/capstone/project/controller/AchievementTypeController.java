@@ -23,7 +23,7 @@ public class AchievementTypeController {
 
     @GetMapping("achievementtypes/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
-    public ResponseEntity<?> getById(@RequestParam("id") int id) {
+    public ResponseEntity<?> getById(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(achievementTypeService.getById(id));
         } catch (ResourceNotFroundException e) {

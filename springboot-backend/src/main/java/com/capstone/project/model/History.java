@@ -25,7 +25,7 @@ public class History {
 
     @ManyToOne
     @JoinColumn(name = "type_id", nullable = false)
-    private HistoryType type_id;
+    private HistoryType historyType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

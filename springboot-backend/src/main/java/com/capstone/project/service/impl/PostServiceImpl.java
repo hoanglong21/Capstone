@@ -91,7 +91,7 @@ public class PostServiceImpl implements PostService {
     public Post updatePost(Post post, int id) throws ResourceNotFroundException {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Post does not exist with id: " + id));
-
+        existingPost.setModified_date(new Date());
         existingPost.setContent(post.getContent());
 
         List<Attachment> attachments = attachmentRepository.getAttachmentByPostId(existingPost.getId());
@@ -141,7 +141,7 @@ public class PostServiceImpl implements PostService {
     public Map<String, Object> getFilterPost(String search, String author,String direction, int classid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="SELECT p.id,p.content,p.class_id,p.author_id, " +
+        String query ="SELECT p.id,p.content,p.class_id,p.author_id,p.created_date,p.modified_date, " +
                 "(SELECT COUNT(*) from capstone.comment where post_id = p.id) AS count FROM post p WHERE 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
