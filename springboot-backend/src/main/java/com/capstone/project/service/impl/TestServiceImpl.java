@@ -103,7 +103,7 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
-    public Map<String, Object> getFilterTest(String search, String author, String direction, int duration, String from, String to, Boolean isDraft, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid, String from, String to, Boolean isDraft, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="select t.id,t.created_date,t.description,t.duration,t.modified_date,t.title,t.author_id,t.class_id,t.due_date,t.is_draft,t.num_attemps,t.start_date," +
@@ -116,6 +116,11 @@ public class TestServiceImpl  implements TestService {
             query += " AND t.author_id = :authorId";
             User user = userService.getUserByUsername(author);
             parameters.put("authorId", user.getId());
+        }
+
+        if (classid != 0) {
+            query += " AND t.class_id = :classId";
+            parameters.put("classId", classid);
         }
 
         if (search != null && !search.isEmpty()) {
