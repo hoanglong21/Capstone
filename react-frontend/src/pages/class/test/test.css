@@ -24,6 +24,69 @@
     margin-right: 0.5rem;
 }
 
+.emptyTests_container {
+    border-top: 0.0625rem solid #e0e0e0;
+    margin-top: 2.5rem;
+}
+
+.emptyTests_container img {
+    margin: 5rem 0 1.5rem;
+    width: 15rem;
+}
+
+.emptyTests_heading {
+    letter-spacing: 0.02;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+}
+
+.emptyTests_content {
+    margin: 0 auto 2rem;
+    letter-spacing: 0.02;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-align: center;
+}
+
+.accordionTests .accordion-button::after {
+    display: none;
+}
+
+.editTest_btn,
+.deleteTest_btn,
+.viewTest_btn {
+    color: rgb(25, 103, 210);
+    margin: -6px -8px -6px -8px;
+    background-color: transparent;
+    font-size: 0.875rem;
+    letter-spacing: 0.01;
+    font-weight: 500;
+    height: 36px;
+    padding: 0 8px 0 8px;
+    min-width: 64px;
+}
+
+.deleteTest_btn {
+    color: #ff6347;
+}
+
+.viewTest_btn {
+    color: var(--text-primary);
+}
+
+.viewTest_btn:hover {
+    background-color: #dddede;
+}
+
+.editTest_btn:hover {
+    background-color: #f6f9fd;
+}
+
+.deleteTest_btn:hover {
+    background-color: #fff1f0;
+}
+
 /* create test */
 .createTest_cancelBtn {
     border: none;
@@ -160,3 +223,8 @@
     transition: all 0.3s;
     border-color: var(--card-button-hover);
 }
+
+.createAnswerContainer > .createAnswerContainer_btn > button {
+    display: none;
+}
+

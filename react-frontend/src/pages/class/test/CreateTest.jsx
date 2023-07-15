@@ -17,7 +17,13 @@ const CreateTest = () => {
 
     const handleAddQuestion = async () => {
         try {
-            const ques = {}
+            const ques = {
+                question: '',
+                questionType: {
+                    id: 2,
+                },
+                answers: [],
+            }
             setQuestions([...questions, ques])
         } catch (error) {
             if (error.response && error.response.data) {
@@ -25,6 +31,38 @@ const CreateTest = () => {
             } else {
                 setError(error.message)
             }
+        }
+    }
+
+    const handleAddAnswer = async (ques_index) => {
+        try {
+            const ans = {
+                content: '',
+                _true: false,
+            }
+            var tempQuestions = [...questions]
+            var tempAnswers = [...tempQuestions[ques_index].answers]
+            tempAnswers.push(ans)
+            tempQuestions[ques_index] = {
+                ...tempQuestions[ques_index],
+                answers: tempAnswers,
+            }
+            setQuestions(tempQuestions)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
+        }
+    }
+
+    const handleAnswerFocus = (ansIndex) => {
+        const buttonsEl = document
+            .getElementById(`createAnswer${ansIndex}`)
+            .querySelectorAll('.btn')
+        for (const btnEl of buttonsEl) {
+            btnEl.classList.add('d-inline-block')
         }
     }
 
@@ -45,7 +83,7 @@ const CreateTest = () => {
             <div className="card mt-4">
                 <div className="card-body p-4">
                     {error && (
-                        <div class="alert alert-danger mb-4" role="alert">
+                        <div className="alert alert-danger mb-4" role="alert">
                             {error}
                         </div>
                     )}
@@ -150,14 +188,14 @@ const CreateTest = () => {
                     </div>
                 </div>
             </div>
-            {questions.map((ques, index) => (
-                <div className="card mt-4">
+            {questions.map((ques, quesIndex) => (
+                <div className="card mt-4" key={quesIndex}>
                     <div className="card-body p-4">
                         <div className="createTest_formGroup mb-4 d-flex align-items-center">
                             <input
                                 type="text"
                                 className="form-control"
-                                id={`question${index}`}
+                                id={`question${quesIndex}`}
                                 name="question"
                                 placeholder="Question"
                             />
@@ -171,35 +209,46 @@ const CreateTest = () => {
                                 <VideoIcon />
                             </button>
                         </div>
-                        <div class="createTest_formGroup-sm mb-2 form-check d-flex align-items-center">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                            />
-                            <div className="d-flex align-items-center w-100">
+                        {ques?.answers?.map((ans, ansIndex) => (
+                            <div
+                                className="createAnswerContainer createTest_formGroup-sm mb-2 form-check d-flex align-items-center"
+                                key={ansIndex}
+                            >
                                 <input
-                                    type="text"
-                                    className="form-control ms-3"
-                                    placeholder="Option"
+                                    className="form-check-input"
+                                    type="checkbox"
                                 />
-                                <button className="btn btn-customLight ms-3 p-2 rounded-circle">
-                                    <ImageIcon />
-                                </button>
-                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
-                                    <SpeakIcon />
-                                </button>
-                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
-                                    <VideoIcon />
-                                </button>
-                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
-                                    <CloseIcon />
-                                </button>
+                                <div
+                                    className="createAnswerContainer_btn d-flex align-items-center w-100"
+                                    id={`createAnswer${ansIndex}`}
+                                >
+                                    <input
+                                        type="text"
+                                        className="form-control ms-3"
+                                        placeholder="Option"
+                                        onFocus={() =>
+                                            handleAnswerFocus(ansIndex)
+                                        }
+                                    />
+                                    <button className="btn btn-customLight ms-3 p-2 rounded-circle">
+                                        <ImageIcon />
+                                    </button>
+                                    <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                        <SpeakIcon />
+                                    </button>
+                                    <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                        <VideoIcon />
+                                    </button>
+                                    <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                        <CloseIcon />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                         <button
                             type="button"
                             className="createTest_addOptionBtn"
-                            onClick={handleAddQuestion}
+                            onClick={() => handleAddAnswer(quesIndex)}
                         >
                             Add option
                         </button>
@@ -209,7 +258,7 @@ const CreateTest = () => {
                             <input
                                 type="number"
                                 className="form-control me-2"
-                                id={`question${index}`}
+                                id={`question${quesIndex}`}
                                 name="question"
                                 placeholder="Point"
                                 style={{ width: '5rem' }}

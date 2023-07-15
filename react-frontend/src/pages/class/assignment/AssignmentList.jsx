@@ -69,15 +69,12 @@ function AssignmentList() {
                         This is where you’ll assign work
                     </p>
                     <p className="emptyAssignments_content">
-                        You can add assignments and other work for the class,
-                        then organize it into topics
+                        You can add assignments for the class, then organize it
+                        into topics
                     </p>
                 </div>
             )}
-            <div
-                className="accordion mt-4 accordionAssignments"
-                id="accordionAssignments"
-            >
+            <div className="accordion mt-4 accordionTests" id="accordionTests">
                 {assignments.map((assign, index) => (
                     <div className="accordion-item">
                         <button
@@ -100,7 +97,7 @@ function AssignmentList() {
                         <div
                             id={`assign${assign?.id}`}
                             className="accordion-collapse collapse"
-                            data-bs-parent="#accordionAssignments"
+                            data-bs-parent="#accordionTests"
                         >
                             <div className="accordion-body">
                                 <p>

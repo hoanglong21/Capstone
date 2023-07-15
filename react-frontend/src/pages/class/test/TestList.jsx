@@ -1,100 +1,168 @@
-import { Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+
+import ClassService from '../../../services/ClassService'
+import TestService from '../../../services/TestService'
+
+import DeleteTest from './DeleteTest'
 
 import { AddIcon } from '../../../components/icons'
-import DeleteTest from './DeleteTest'
+import empty from '../../../assets/images/assign_empty.jpg'
 import './test.css'
 
 const TestList = () => {
+    const navigate = useNavigate()
+
+    const { id } = useParams()
+
+    const [tests, setTests] = useState()
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const tempClass = (await ClassService.getClassroomById(id)).data
+            const tempTests = (
+                await TestService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    `=${tempClass.id}`,
+                    '',
+                    '=10'
+                )
+            ).data.list
+            setTests(tempTests)
+        }
+        if (id) {
+            fetchData()
+        }
+    }, [id])
+
+    function getDate(date) {
+        const index = date.lastIndexOf(':00.')
+        return date.replace('T', ' ').substring(0, index)
+    }
+
     return (
-        <div className="container">
-            <div
-                className="header"
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginTop: '2.5rem',
-                }}
-            >
-                <Link to="../create-test" className="createTest_btn">
+        <div>
+            <div>
+                <button
+                    className="createTest_btn"
+                    onClick={() => {
+                        navigate('../create-test')
+                    }}
+                >
                     <AddIcon
                         className="createTestIcon_btn"
                         size="1.125rem"
                         strokeWidth="2.25"
                     />
                     Create
-                </Link>
+                </button>
             </div>
-            <div className="accordion mt-3" id="accordionTests">
-                <div className="accordion-item">
-                    <h2 className="accordion-header">
+            {tests?.length === 0 && (
+                <div className="emptyTests_container d-flex flex-column align-items-center justify-content-center">
+                    <img src={empty} alt="" />
+                    <p className="mb-2 emptyTests_heading">
+                        This is where you’ll assign test
+                    </p>
+                    <p className="emptyTests_content">
+                        You can add test for the class, then organize it into
+                        topics
+                    </p>
+                </div>
+            )}
+            <div
+                className="accordion mt-4 accordionAssignments"
+                id="accordionTests"
+            >
+                {tests?.map((test, index) => (
+                    <div className="accordion-item">
                         <button
-                            className="accordion-button collapsed"
+                            className="accordion-button collapsed d-flex justify-content-between align-items-center"
                             type="button"
                             data-bs-toggle="collapse"
-                            data-bs-target="#collapseTwo"
+                            data-bs-target={`#test${test?.id}`}
                             aria-expanded="false"
-                            aria-controls="collapseTwo"
+                            aria-controls={`test${test?.id}`}
                         >
-                            Accordion Item #2
+                            <div>{test.title}</div>
+                            <div>
+                                {test._draft
+                                    ? 'Draft'
+                                    : test?.due_date
+                                    ? `Due ${getDate(test?.due_date)}`
+                                    : `Posted ${getDate(test?.created_date)}`}
+                            </div>
                         </button>
-                    </h2>
-                    <div
-                        id="collapseTwo"
-                        className="accordion-collapse collapse"
-                        data-bs-parent="#accordionAssignments"
-                    >
-                        <div className="accordion-body">
-                            <strong>
-                                This is the second item's accordion body.
-                            </strong>{' '}
-                            It is hidden by default, until the collapse plugin
-                            adds the appropriate classes that we use to style
-                            each element. These classes control the overall
-                            appearance, as well as the showing and hiding via
-                            CSS transitions. You can modify any of this with
-                            custom CSS or overriding our default variables. It's
-                            also worth noting that just about any HTML can go
-                            within the <code>.accordion-body</code>, though the
-                            transition does limit overflow.
+                        <div
+                            id={`test${test?.id}`}
+                            className="accordion-collapse collapse"
+                            data-bs-parent="#accordionTests"
+                        >
+                            <div className="accordion-body">
+                                <p>
+                                    {test?.due_date
+                                        ? `Posted ${getDate(
+                                              test?.created_date
+                                          )}`
+                                        : 'No due date'}
+                                </p>
+                                <div className="mt-2 d-flex justify-content-between">
+                                    <button className="viewTest_btn">
+                                        View details
+                                    </button>
+                                    <div className="d-flex">
+                                        <div className="asignInfo_block">
+                                            <div className="assignInfo_number">
+                                                0
+                                            </div>
+                                            <div className="assignInfo_title">
+                                                Turned in
+                                            </div>
+                                        </div>
+                                        <div className="asignInfo_block">
+                                            <div className="assignInfo_number">
+                                                1
+                                            </div>
+                                            <div className="assignInfo_title">
+                                                Assigned
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-5 d-flex justify-content-between">
+                                    <button
+                                        className="editTest_btn"
+                                        onClick={() => {
+                                            navigate(`../edit-test/${test?.id}`)
+                                        }}
+                                    >
+                                        Edit test
+                                    </button>
+                                    <button
+                                        className="deleteTest_btn"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={`#deleteTestModal${test?.id}`}
+                                    >
+                                        Delete test
+                                    </button>
+                                </div>
+                            </div>
+                            <DeleteTest
+                                index={index}
+                                test={test}
+                                tests={tests}
+                                stateChanger={setTests}
+                            />
                         </div>
                     </div>
-                </div>
-                <div className="accordion-item">
-                    <h2 className="accordion-header">
-                        <button
-                            className="accordion-button collapsed"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#collapseThree"
-                            aria-expanded="false"
-                            aria-controls="collapseThree"
-                        >
-                            Accordion Item #3
-                        </button>
-                    </h2>
-                    <div
-                        id="collapseThree"
-                        className="accordion-collapse collapse"
-                        data-bs-parent="#accordionAssignments"
-                    >
-                        <div className="accordion-body">
-                            <strong>
-                                This is the third item's accordion body.
-                            </strong>{' '}
-                            It is hidden by default, until the collapse plugin
-                            adds the appropriate classes that we use to style
-                            each element. These classes control the overall
-                            appearance, as well as the showing and hiding via
-                            CSS transitions. You can modify any of this with
-                            custom CSS or overriding our default variables. It's
-                            also worth noting that just about any HTML can go
-                            within the <code>.accordion-body</code>, though the
-                            transition does limit overflow.
-                        </div>
-                    </div>
-                </div>
+                ))}
             </div>
-            <DeleteTest />
         </div>
     )
 }
