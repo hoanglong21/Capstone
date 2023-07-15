@@ -5,10 +5,10 @@ function People() {
   return (
     <div className="container">
       <div className="header">
-        <span className="fs-5 me-3 ms-4" style={{ color: "#C26401" }}>
+        <span className="fs-5 me-3 ms-4" style={{ color: "#137333" }}>
           Teacher
         </span>
-        <hr className="me-3" style={{ color: "#C26401" }} />
+        <hr className="me-3" style={{ color: "#137333" }} />
         <p>
           <img
             src={img}
@@ -25,10 +25,10 @@ function People() {
         </p>
       </div>
       <div className="body">
-        <span className="fs-5 me-3 ms-4" style={{ color: "#C26401" }}>
+        <span className="fs-5 me-3 ms-4" style={{ color: "#137333" }}>
           Student (50 people)
         </span>
-        <hr className="me-2" style={{ color: "#C26401" }} />
+        <hr className="me-2" style={{ color: "#137333" }} />
         <p>
           <img
             src={img}
