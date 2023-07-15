@@ -17,7 +17,6 @@ import {
   AddCircleIcon,
   NotifyIcon,
   ProfileIcon,
-  SettingIcon,
   HelpIcon,
   LogoutIcon,
   DictIcon,
@@ -25,6 +24,7 @@ import {
 } from "../icons";
 import defaultAvatar from "../../assets/images/default_avatar.png";
 import "./Header.css";
+import $ from "jquery";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -73,6 +73,21 @@ const Header = () => {
     }
   };
 
+  $(document).ready(function () {
+    var down = false;
+
+    $("#bell").click(function (e) {
+      if (down) {
+        $("#box").css("height", "0px");
+        $("#box").css("opacity", "0");
+        down = false;
+      } else {
+        $("#box").css("height", "auto");
+        $("#box").css("opacity", "1");
+        down = true;
+      }
+    });
+  });
   return (
     <header className="px-4 border-bottom">
       <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -238,13 +253,33 @@ const Header = () => {
           {userToken ? (
             <>
               {/* Notify */}
-              <button
-                type="button"
+              <div
+                id="bell"
                 className="btn btn-outline-secondary icon-outline-secondary me-2"
               >
                 <NotifyIcon strokeWidth="2" />
-              </button>
-
+              </div>
+              <div className="notifications" id="box">
+                <h2>
+                  Notifications
+                </h2>
+                <div className="notifications-item">
+                  <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img" />
+                  <div className="text">
+                    <h4>AnhDuong</h4>
+                    <p style={{marginBottom: "0", fontSize: "14px"}}>You have homework to do</p>
+                    <p>10 minutes ago</p>
+                  </div>
+                </div>
+                <div className="notifications-item">
+                  <img src="https://i.imgur.com/uIgDDDd.jpg" alt="img" />
+                  <div className="text">
+                    <h4>AnhDuong</h4>
+                    <p style={{marginBottom: "0", fontSize: "14px"}}>You have homework to do</p>
+                    <p>10 minutes ago</p>
+                  </div>
+                </div>
+              </div>
               {/* User */}
               <div className="dropdown d-inline-flex">
                 <button
@@ -296,9 +331,7 @@ const Header = () => {
                       }}
                     >
                       <ProfileIcon className="me-3" strokeWidth="2" />
-                      <span className="align-middle fw-semibold">
-                        Account Settings
-                      </span>
+                      <span className="align-middle fw-semibold">Settings</span>
                     </button>
                   </li>
                   <li>

@@ -186,9 +186,7 @@ const ClassLayout = () => {
                         </li>
                         <li>
                             <NavLink
-                                to={{
-                                    pathname: 'classes',
-                                }}
+                                to="mark"
                                 className={
                                     'mainClass_navlink ' +
                                     (({ isActive }) =>

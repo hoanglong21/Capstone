@@ -69,6 +69,7 @@ import AssignmentList from './pages/class/assignment/AssignmentList'
 import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
 import People from './pages/class/People'
+import Mark from './pages/class/Mark'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -139,6 +140,7 @@ const App = () => {
                                 element={<CreateTest />}
                             />
                             <Route path="people" element={<People />} />
+                            <Route path='mark' element={<Mark />} />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
