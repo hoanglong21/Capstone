@@ -110,11 +110,12 @@ public class TestController {
                                            @RequestParam(value = "draft", required = false) Boolean isDraft,
                                            @RequestParam(value = "direction", required = false) String direction,
                                            @RequestParam(value = "duration", required = false) Optional<Integer> duration,
+                                           @RequestParam(value = "classid", required = false) Optional<Integer> classid,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
 
         try{
-            return ResponseEntity.ok(testService.getFilterTest(search,author,direction,duration.orElse(0),from,to,isDraft,page,size));
+            return ResponseEntity.ok(testService.getFilterTest(search,author,direction,duration.orElse(0),classid.orElse(0),from,to,isDraft,page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
