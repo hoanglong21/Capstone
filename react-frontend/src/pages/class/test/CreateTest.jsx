@@ -4,7 +4,6 @@ import {
     CopyIcon,
     DeleteIcon,
     ImageIcon,
-    PlaySolidIcon,
     SpeakIcon,
     VideoIcon,
 } from '../../../components/icons'
@@ -12,6 +11,8 @@ import {
 const CreateTest = () => {
     const [error, setError] = useState('')
     const [questions, setQuestions] = useState([])
+
+    const [loadingQuesImage, setLoadingQuesImage] = useState(false)
 
     const handleCreate = () => {}
 
@@ -34,17 +35,17 @@ const CreateTest = () => {
         }
     }
 
-    const handleAddAnswer = async (ques_index) => {
+    const handleAddAnswer = async (quesIndex) => {
         try {
             const ans = {
                 content: '',
                 _true: false,
             }
             var tempQuestions = [...questions]
-            var tempAnswers = [...tempQuestions[ques_index].answers]
+            var tempAnswers = [...tempQuestions[quesIndex].answers]
             tempAnswers.push(ans)
-            tempQuestions[ques_index] = {
-                ...tempQuestions[ques_index],
+            tempQuestions[quesIndex] = {
+                ...tempQuestions[quesIndex],
                 answers: tempAnswers,
             }
             setQuestions(tempQuestions)
@@ -64,6 +65,52 @@ const CreateTest = () => {
         for (const btnEl of buttonsEl) {
             btnEl.classList.add('d-inline-block')
         }
+    }
+
+    const handleAnswerBlur = (ansIndex) => {
+        const buttonsEl = document
+            .getElementById(`createAnswer${ansIndex}`)
+            .querySelectorAll('.btn')
+        for (const btnEl of buttonsEl) {
+            btnEl.classList.remove('d-inline-block')
+        }
+    }
+
+    const handleChangeAnswer = (event, quesIndex, ansIndex) => {
+        var tempQuestions = [...questions]
+        var tempAnswers = [...tempQuestions[quesIndex].answers]
+        tempAnswers[ansIndex] = {
+            ...tempAnswers[ansIndex],
+            content: event.target.value,
+        }
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            answers: tempAnswers,
+        }
+        setQuestions(tempQuestions)
+    }
+
+    const handleChangeAnswerCorrect = (event, quesIndex, ansIndex) => {
+        var tempQuestions = [...questions]
+        var tempAnswers = [...tempQuestions[quesIndex].answers]
+        tempAnswers[ansIndex] = {
+            ...tempAnswers[ansIndex],
+            _true: event.target.checked,
+        }
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            answers: tempAnswers,
+        }
+        setQuestions(tempQuestions)
+    }
+
+    const handleChangeQuestion = (event, quesIndex) => {
+        var tempQuestions = [...questions]
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            [event.target.name]: event.target.value,
+        }
+        setQuestions(tempQuestions)
     }
 
     return (
@@ -195,9 +242,11 @@ const CreateTest = () => {
                             <input
                                 type="text"
                                 className="form-control"
-                                id={`question${quesIndex}`}
                                 name="question"
                                 placeholder="Question"
+                                onChange={(event) =>
+                                    handleChangeQuestion(event, quesIndex)
+                                }
                             />
                             <button className="btn btn-customLight ms-3 p-2 rounded-circle">
                                 <ImageIcon />
@@ -217,10 +266,24 @@ const CreateTest = () => {
                                 <input
                                     className="form-check-input"
                                     type="checkbox"
+                                    onChange={(event) =>
+                                        handleChangeAnswerCorrect(
+                                            event,
+                                            quesIndex,
+                                            ansIndex
+                                        )
+                                    }
                                 />
                                 <div
                                     className="createAnswerContainer_btn d-flex align-items-center w-100"
                                     id={`createAnswer${ansIndex}`}
+                                    onChange={(event) =>
+                                        handleChangeAnswer(
+                                            event,
+                                            quesIndex,
+                                            ansIndex
+                                        )
+                                    }
                                 >
                                     <input
                                         type="text"
@@ -228,6 +291,9 @@ const CreateTest = () => {
                                         placeholder="Option"
                                         onFocus={() =>
                                             handleAnswerFocus(ansIndex)
+                                        }
+                                        onBlur={() =>
+                                            handleAnswerBlur(ansIndex)
                                         }
                                     />
                                     <button className="btn btn-customLight ms-3 p-2 rounded-circle">
@@ -258,10 +324,12 @@ const CreateTest = () => {
                             <input
                                 type="number"
                                 className="form-control me-2"
-                                id={`question${quesIndex}`}
-                                name="question"
+                                name="point"
                                 placeholder="Point"
                                 style={{ width: '5rem' }}
+                                onChange={(event) =>
+                                    handleChangeQuestion(event, quesIndex)
+                                }
                             />
                             <span>points</span>
                         </div>
