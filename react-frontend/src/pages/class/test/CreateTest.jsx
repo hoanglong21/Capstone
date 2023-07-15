@@ -4,7 +4,6 @@ import {
     CopyIcon,
     DeleteIcon,
     ImageIcon,
-    PlaySolidIcon,
     SpeakIcon,
     VideoIcon,
 } from '../../../components/icons'
@@ -13,11 +12,19 @@ const CreateTest = () => {
     const [error, setError] = useState('')
     const [questions, setQuestions] = useState([])
 
+    const [loadingQuesImage, setLoadingQuesImage] = useState(false)
+
     const handleCreate = () => {}
 
     const handleAddQuestion = async () => {
         try {
-            const ques = {}
+            const ques = {
+                question: '',
+                questionType: {
+                    id: 2,
+                },
+                answers: [],
+            }
             setQuestions([...questions, ques])
         } catch (error) {
             if (error.response && error.response.data) {
@@ -26,6 +33,84 @@ const CreateTest = () => {
                 setError(error.message)
             }
         }
+    }
+
+    const handleAddAnswer = async (quesIndex) => {
+        try {
+            const ans = {
+                content: '',
+                _true: false,
+            }
+            var tempQuestions = [...questions]
+            var tempAnswers = [...tempQuestions[quesIndex].answers]
+            tempAnswers.push(ans)
+            tempQuestions[quesIndex] = {
+                ...tempQuestions[quesIndex],
+                answers: tempAnswers,
+            }
+            setQuestions(tempQuestions)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
+        }
+    }
+
+    const handleAnswerFocus = (ansIndex) => {
+        const buttonsEl = document
+            .getElementById(`createAnswer${ansIndex}`)
+            .querySelectorAll('.btn')
+        for (const btnEl of buttonsEl) {
+            btnEl.classList.add('d-inline-block')
+        }
+    }
+
+    const handleAnswerBlur = (ansIndex) => {
+        const buttonsEl = document
+            .getElementById(`createAnswer${ansIndex}`)
+            .querySelectorAll('.btn')
+        for (const btnEl of buttonsEl) {
+            btnEl.classList.remove('d-inline-block')
+        }
+    }
+
+    const handleChangeAnswer = (event, quesIndex, ansIndex) => {
+        var tempQuestions = [...questions]
+        var tempAnswers = [...tempQuestions[quesIndex].answers]
+        tempAnswers[ansIndex] = {
+            ...tempAnswers[ansIndex],
+            content: event.target.value,
+        }
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            answers: tempAnswers,
+        }
+        setQuestions(tempQuestions)
+    }
+
+    const handleChangeAnswerCorrect = (event, quesIndex, ansIndex) => {
+        var tempQuestions = [...questions]
+        var tempAnswers = [...tempQuestions[quesIndex].answers]
+        tempAnswers[ansIndex] = {
+            ...tempAnswers[ansIndex],
+            _true: event.target.checked,
+        }
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            answers: tempAnswers,
+        }
+        setQuestions(tempQuestions)
+    }
+
+    const handleChangeQuestion = (event, quesIndex) => {
+        var tempQuestions = [...questions]
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            [event.target.name]: event.target.value,
+        }
+        setQuestions(tempQuestions)
     }
 
     return (
@@ -45,7 +130,7 @@ const CreateTest = () => {
             <div className="card mt-4">
                 <div className="card-body p-4">
                     {error && (
-                        <div class="alert alert-danger mb-4" role="alert">
+                        <div className="alert alert-danger mb-4" role="alert">
                             {error}
                         </div>
                     )}
@@ -150,16 +235,18 @@ const CreateTest = () => {
                     </div>
                 </div>
             </div>
-            {questions.map((ques, index) => (
-                <div className="card mt-4">
+            {questions.map((ques, quesIndex) => (
+                <div className="card mt-4" key={quesIndex}>
                     <div className="card-body p-4">
                         <div className="createTest_formGroup mb-4 d-flex align-items-center">
                             <input
                                 type="text"
                                 className="form-control"
-                                id={`question${index}`}
                                 name="question"
                                 placeholder="Question"
+                                onChange={(event) =>
+                                    handleChangeQuestion(event, quesIndex)
+                                }
                             />
                             <button className="btn btn-customLight ms-3 p-2 rounded-circle">
                                 <ImageIcon />
@@ -171,35 +258,63 @@ const CreateTest = () => {
                                 <VideoIcon />
                             </button>
                         </div>
-                        <div class="createTest_formGroup-sm mb-2 form-check d-flex align-items-center">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                            />
-                            <div className="d-flex align-items-center w-100">
+                        {ques?.answers?.map((ans, ansIndex) => (
+                            <div
+                                className="createAnswerContainer createTest_formGroup-sm mb-2 form-check d-flex align-items-center"
+                                key={ansIndex}
+                            >
                                 <input
-                                    type="text"
-                                    className="form-control ms-3"
-                                    placeholder="Option"
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    onChange={(event) =>
+                                        handleChangeAnswerCorrect(
+                                            event,
+                                            quesIndex,
+                                            ansIndex
+                                        )
+                                    }
                                 />
-                                <button className="btn btn-customLight ms-3 p-2 rounded-circle">
-                                    <ImageIcon />
-                                </button>
-                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
-                                    <SpeakIcon />
-                                </button>
-                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
-                                    <VideoIcon />
-                                </button>
-                                <button className="btn btn-customLight ms-1 p-2 rounded-circle">
-                                    <CloseIcon />
-                                </button>
+                                <div
+                                    className="createAnswerContainer_btn d-flex align-items-center w-100"
+                                    id={`createAnswer${ansIndex}`}
+                                    onChange={(event) =>
+                                        handleChangeAnswer(
+                                            event,
+                                            quesIndex,
+                                            ansIndex
+                                        )
+                                    }
+                                >
+                                    <input
+                                        type="text"
+                                        className="form-control ms-3"
+                                        placeholder="Option"
+                                        onFocus={() =>
+                                            handleAnswerFocus(ansIndex)
+                                        }
+                                        onBlur={() =>
+                                            handleAnswerBlur(ansIndex)
+                                        }
+                                    />
+                                    <button className="btn btn-customLight ms-3 p-2 rounded-circle">
+                                        <ImageIcon />
+                                    </button>
+                                    <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                        <SpeakIcon />
+                                    </button>
+                                    <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                        <VideoIcon />
+                                    </button>
+                                    <button className="btn btn-customLight ms-1 p-2 rounded-circle">
+                                        <CloseIcon />
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                         <button
                             type="button"
                             className="createTest_addOptionBtn"
-                            onClick={handleAddQuestion}
+                            onClick={() => handleAddAnswer(quesIndex)}
                         >
                             Add option
                         </button>
@@ -209,10 +324,12 @@ const CreateTest = () => {
                             <input
                                 type="number"
                                 className="form-control me-2"
-                                id={`question${index}`}
-                                name="question"
+                                name="point"
                                 placeholder="Point"
                                 style={{ width: '5rem' }}
+                                onChange={(event) =>
+                                    handleChangeQuestion(event, quesIndex)
+                                }
                             />
                             <span>points</span>
                         </div>

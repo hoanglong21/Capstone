@@ -24,6 +24,31 @@
     margin-right: 0.5rem;
 }
 
+.emptyAssignments_container {
+    border-top: 0.0625rem solid #e0e0e0;
+    margin-top: 2.5rem;
+}
+
+.emptyAssignments_container img {
+    margin: 5rem 0 1.5rem;
+    width: 15rem;
+}
+
+.emptyAssignments_heading {
+    letter-spacing: 0.02;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+}
+
+.emptyAssignments_content {
+    margin: 0 auto 2rem;
+    letter-spacing: 0.02;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-align: center;
+}
+
 .accordionAssignments .accordion-button::after {
     display: none;
 }
