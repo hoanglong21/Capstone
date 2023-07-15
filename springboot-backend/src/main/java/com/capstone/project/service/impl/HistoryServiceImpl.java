@@ -52,13 +52,13 @@ public class HistoryServiceImpl implements HistoryService {
                                        String sortBy, String direction, int page, int size) {
         String sql = "SELECT h.* FROM history h";
 
-        if(userId!=0) {
-            sql += " LEFT JOIN user u ON h.user_id = u.id";
-        } if (typeId==2) {
-            sql += " LEFT JOIN studyset s ON h.studyset_id = s.id";
-        } if (typeId==3) {
-            sql += " LEFT JOIN class c ON h.class_id = c.id";
-        }
+//        if(userId!=0) {
+//            sql += " LEFT JOIN user u ON h.user_id = u.id";
+//        } if (typeId==2) {
+//            sql += " LEFT JOIN studyset s ON h.studyset_id = s.id";
+//        } if (typeId==3) {
+//            sql += " LEFT JOIN class c ON h.class_id = c.id";
+//        }
 
         sql += " WHERE 1=1 ";
 

@@ -49,11 +49,11 @@ public class HistoryController {
                                         @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
-//        try {
+        try {
             return ResponseEntity.ok(historyService.filterHistory(userId, destinationId, typeId, fromDatetime, toDatetime,
                     sortBy, direction, page, size));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body("Check the input again");
-//        }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Check the input again");
+        }
     }
 }
