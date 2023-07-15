@@ -6,6 +6,7 @@ import com.capstone.project.model.Submission;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface SubmissionService {
 
@@ -24,5 +25,5 @@ public interface SubmissionService {
 
     Boolean deleteSubmission(int id) throws ResourceNotFroundException;
 
-
+    Map<String, Object> getFilterSubmission(String search, int authorId,double mark, String from, String to, String direction, int page, int size) throws ResourceNotFroundException;
 }
