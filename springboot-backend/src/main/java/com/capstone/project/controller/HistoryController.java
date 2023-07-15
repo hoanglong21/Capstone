@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.History;
 import com.capstone.project.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,24 @@ public class HistoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> createHistory(@RequestBody History history) {
         return ResponseEntity.ok(historyService.createHistory(history));
+    }
+
+    @GetMapping("/filterhistory")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> filterUser(@RequestParam(value = "userid", required = false, defaultValue = "0") int userId,
+                                        @RequestParam(value = "destinationid", required = false, defaultValue = "0") int destinationId,
+                                        @RequestParam(value = "typeid", required = false, defaultValue = "1") int typeId,
+                                        @RequestParam(value = "fromdatetime", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDatetime,
+                                        @RequestParam(value = "todatetime", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDatetime,
+                                        @RequestParam(value = "sortby", required = false, defaultValue = "datetime") String sortBy,
+                                        @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                        @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+//        try {
+            return ResponseEntity.ok(historyService.filterHistory(userId, destinationId, typeId, fromDatetime, toDatetime,
+                    sortBy, direction, page, size));
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Check the input again");
+//        }
     }
 }
