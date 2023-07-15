@@ -174,7 +174,7 @@ const ClassLayout = () => {
                         </li>
                         <li>
                             <NavLink
-                                to="mark"
+                                to="people"
                                 className={
                                     'mainClass_navlink ' +
                                     (({ isActive }) =>

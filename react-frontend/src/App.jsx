@@ -68,6 +68,7 @@ import QuizAnswer from './pages/QuizAnswer'
 import AssignmentList from './pages/class/assignment/AssignmentList'
 import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
+import People from './pages/class/People'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -137,6 +138,7 @@ const App = () => {
                                 path="create-test"
                                 element={<CreateTest />}
                             />
+                            <Route path="people" element={<People />} />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />

@@ -4,7 +4,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logo from "../../assets/images/logo-1.png";
 import { Link } from "react-router-dom";
 import "../../assets/styles/sidebar.css";
-import jQuery from "jquery";
 
 function SidebarforAdmin() {
   return (
@@ -24,8 +23,8 @@ function SidebarforAdmin() {
               className="nav-link fs-7 active"
               aria-current="page"
             >
-              <i className="bi bi-speedometer2"></i>
-              <span className="ms-3 d-none d-sm-inline">Dashboard</span>
+              <i className="bi bi-speedometer2 text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Dashboard</span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
@@ -34,8 +33,8 @@ function SidebarforAdmin() {
               className="nav-link fs-7"
               aria-current="page"
             >
-              <i class="bi bi-person-square"></i>
-              <span className="ms-3 d-none d-sm-inline">Manage User</span>
+              <i class="bi bi-person-square text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Manage User</span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
@@ -44,8 +43,8 @@ function SidebarforAdmin() {
               className="nav-link fs-7"
               aria-current="page"
             >
-              <i class="bi bi-people"></i>
-              <span className="ms-3 d-none d-sm-inline">Manage Class</span>
+              <i class="bi bi-people text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Manage Class</span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
@@ -54,8 +53,8 @@ function SidebarforAdmin() {
               className="nav-link fs-7"
               aria-current="page"
             >
-              <i class="bi bi-chat-text"></i>
-              <span className="ms-3 d-none d-sm-inline">Manage Feedback</span>
+              <i class="bi bi-chat-text text-white"></i>
+              <span className="ms-3 d-none d-sm-inline text-white">Manage Feedback</span>
             </Link>
           </li>
         </ul>
