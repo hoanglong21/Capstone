@@ -83,7 +83,6 @@ public class ClassServiceImpl implements ClassService {
                     .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
         classroom.setClass_name(classrooms.getClass_name());
         classroom.setDescription(classrooms.getDescription());
-        classroom.setDeleted_date(classrooms.getDeleted_date());
         classroom.set_deleted(classrooms.is_deleted());
         return classRepository.save(classroom);
     }
@@ -125,7 +124,13 @@ public class ClassServiceImpl implements ClassService {
     public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to,String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="SELECT * FROM class WHERE 1=1";
+//        String query ="SELECT * FROM class WHERE 1=1";
+
+        String query = "SELECT c.*, COUNT(cl.user_id) AS member, COUNT(cs.sudyset_id) AS studyset " +
+                "FROM class c " +
+                "LEFT JOIN class_learner cl ON c.id = cl.class_id " +
+                "LEFT JOIN class_studyset cs ON c.id = cs.class_id " +
+                "GROUP BY c.id HAVING 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
 
@@ -136,7 +141,7 @@ public class ClassServiceImpl implements ClassService {
         }
 
         if (author != null && !author.isEmpty()) {
-            query += " AND author_id = :authorId OR EXISTS (SELECT * FROM class_learner cl WHERE cl.class_id = capstone.class.id AND cl.user_id = :authorId)";
+            query += " AND author_id = :authorId OR EXISTS (SELECT * FROM class_learner cl WHERE cl.class_id = c.id AND cl.user_id = :authorId)";
             User user = userService.getUserByUsername(author);
             parameters.put("authorId", user.getId());
         }
@@ -165,7 +170,7 @@ public class ClassServiceImpl implements ClassService {
         }
         query += " ORDER BY created_date " + " " + direct;
 
-        Query q = em.createNativeQuery(query, Class.class);
+        Query q = em.createNativeQuery(query, "ClassCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             q.setParameter(entry.getKey(), entry.getValue());
         }

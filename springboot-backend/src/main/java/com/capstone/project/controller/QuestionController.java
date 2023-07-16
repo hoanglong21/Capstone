@@ -1,7 +1,9 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.dto.AttachmentRequest;
 import com.capstone.project.dto.QuestionRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.Attachment;
 import com.capstone.project.model.Question;
 import com.capstone.project.service.QuestionService;
 import jakarta.validation.Valid;
@@ -49,6 +51,26 @@ public class QuestionController {
     } catch (ResourceNotFroundException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+    }
+
+    @PostMapping("/createquestions")
+    public ResponseEntity<?> createQuestions(@Valid @RequestBody List<QuestionRequest> questionRequests, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            List<Question> questions = questionRequests.stream()
+                    .map(questionRequest -> modelMapper.map(questionRequest, Question.class))
+                    .collect(Collectors.toList());
+            try {
+                return ResponseEntity.ok(questionService.createQuestions(questions));
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
+        }
     }
 
     @PostMapping("/questions")

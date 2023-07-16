@@ -12,6 +12,8 @@ public interface AnswerService {
 
     Answer createAnswer( Answer answer);
 
+    List<Answer> createAnswers(List<Answer> answerlist);
+
     Answer getAnswerById( int id) throws ResourceNotFroundException;
 
     Answer updateAnswer ( int id, Answer answer) throws ResourceNotFroundException;

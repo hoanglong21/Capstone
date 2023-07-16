@@ -15,6 +15,8 @@ public interface QuestionService {
 
     Question createQuestion( Question question);
 
+    List<Question> createQuestions(List<Question> questions);
+
     Question getQuestionById( int id) throws ResourceNotFroundException;
 
     Question updateQuestion ( int id, Question question) throws ResourceNotFroundException;

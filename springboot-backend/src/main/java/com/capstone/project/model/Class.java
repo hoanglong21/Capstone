@@ -1,5 +1,6 @@
 package com.capstone.project.model;
 
+import com.capstone.project.dto.ClassRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,24 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.Set;
 
+@SqlResultSetMapping(
+        name = "ClassCustomListMapping",
+        classes = @ConstructorResult(
+                targetClass = ClassRequest.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Integer.class),
+                        @ColumnResult(name = "class_name", type = String.class),
+                        @ColumnResult(name = "classcode", type = String.class),
+                        @ColumnResult(name = "created_date", type = Date.class),
+                        @ColumnResult(name = "deleted_date", type = Date.class),
+                        @ColumnResult(name = "description", type = String.class),
+                        @ColumnResult(name = "is_deleted", type =Boolean.class),
+                        @ColumnResult(name = "author_id", type = Integer.class),
+                        @ColumnResult(name = "member", type = Integer.class),
+                        @ColumnResult(name = "studyset", type = Integer.class)
+                }
+        )
+)
 @Entity
 @Data
 @AllArgsConstructor
