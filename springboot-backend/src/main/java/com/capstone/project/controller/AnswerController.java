@@ -1,7 +1,9 @@
 package com.capstone.project.controller;
 import com.capstone.project.dto.AnswerRequest;
+import com.capstone.project.dto.QuestionRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Answer;
+import com.capstone.project.model.Question;
 import com.capstone.project.service.AnswerService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -47,6 +49,26 @@ public class AnswerController {
             return ResponseEntity.ok(answerService.getAnswerById(id));
         }catch(ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/createanswers")
+    public ResponseEntity<?> createAnswers(@Valid @RequestBody List<AnswerRequest> answerRequests, BindingResult result) {
+        if (result.hasErrors()) {
+            // create a list of error messages from the binding result
+            List<String> errors = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errors);
+        } else {
+            List<Answer> answers = answerRequests.stream()
+                    .map(answerRequest -> modelMapper.map(answerRequest, Answer.class))
+                    .collect(Collectors.toList());
+            try {
+                return ResponseEntity.ok(answerService.createAnswers(answers));
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
     }
 

@@ -26,10 +26,21 @@ public class ClassRequest {
     @Length(min = 3, message = "Class name must have at least 3 characters")
     private String class_name;
 
+    private String classcode;
 
 //    @Pattern(regexp = "[^\\s].*[^\\s]", message = "Description must not start or end with whitespace")
     @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:;!?+&\\[\\]()\\-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
+
+    private Date deleted_date;
+
+    private boolean is_deleted;
+
+    private int member;
+
+    private int studyset;
+
+    private int author_id;
 
     // Custom getter for class_name
     public String getClass_name() {
