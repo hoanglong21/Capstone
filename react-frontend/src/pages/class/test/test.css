@@ -178,6 +178,12 @@
     max-width: 80%;
 }
 
+.createTest_img--sm,
+.createTest_video--sm {
+    max-height: 10rem;
+    max-width: 60%;
+}
+
 .createTest_video {
     pointer-events: initial;
 }
@@ -236,4 +242,21 @@
 
 .createAnswerContainer > .createAnswerContainer_btn .btn-hide {
     display: none;
+}
+
+.uploadFileAnsItem,
+.uploadFileAnsItem--sm {
+    position: relative;
+}
+
+.uploadFileAnsItem button {
+    position: absolute;
+    top: -15;
+    left: -60;
+}
+
+.uploadFileAnsItem--sm button {
+    position: absolute;
+    top: -8;
+    left: -8;
 }

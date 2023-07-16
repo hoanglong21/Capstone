@@ -114,18 +114,18 @@ const ClassList = () => {
                         <SearchIcon />
                     </div>
                     <div className="sets-list">
-                        {classes.length === 0 && (
+                        {classes?.length === 0 && (
                             <p>No classes matching {search} found</p>
                         )}
-                        {classes.map((classroom) => (
+                        {classes?.map((classroom) => (
                             <div key={classroom.id} className="set-item mb-3">
                                 <Link to={`/class/${classroom.id}`}>
                                     <div className="set-body row mb-2">
                                         <div className="term-count col-1">
-                                            {classroom.users.length} member
+                                            {classroom?.users?.length} member
                                         </div>
                                         <div className="term-count col-1">
-                                            {classroom.studySets.length} sets
+                                            {classroom?.studySets?.length} sets
                                         </div>
                                         <div
                                             className="set-author col d-flex "
@@ -134,9 +134,9 @@ const ClassList = () => {
                                             <div className="author-avatar">
                                                 <img
                                                     src={
-                                                        classroom.user.avatar
-                                                            ? classroom.user
-                                                                  .avatar
+                                                        classroom?.user?.avatar
+                                                            ? classroom?.user
+                                                                  ?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
@@ -144,14 +144,14 @@ const ClassList = () => {
                                                 />
                                             </div>
                                             <span className="author-username ms-2">
-                                                {classroom.user.username}
+                                                {classroom?.user?.username}
                                             </span>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="set-title col-2 d-flex align-items-center">
                                             <ClassIcon className="me-2" />
-                                            {classroom.class_name}
+                                            {classroom?.class_name}
                                         </div>
                                         <div className="col d-flex align-items-center">
                                             <p
@@ -160,7 +160,7 @@ const ClassList = () => {
                                                     whiteSpace: 'pre-wrap',
                                                 }}
                                             >
-                                                {classroom.description}
+                                                {classroom?.description}
                                             </p>
                                         </div>
                                     </div>

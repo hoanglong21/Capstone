@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 
 import { uploadFile } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
+import TestService from '../../../services/TestService'
 
 import {
     CloseIcon,
@@ -13,6 +14,7 @@ import {
     SpeakIcon,
     VideoIcon,
 } from '../../../components/icons'
+import QuestionService from '../../../services/QuestionService'
 
 const CreateTest = () => {
     const { id } = useParams()
@@ -68,7 +70,57 @@ const CreateTest = () => {
         }
     }, [userInfo])
 
-    const handleCreate = () => {}
+    const handleCreate = async () => {
+        try {
+            // create test
+            const tempTest = (await TestService.createTest(test)).data
+            // question
+            var createQuestions = []
+            for (var ques of questions) {
+                // upload question to firebase
+                var urlQuesPicture = ''
+                if (ques.picture) {
+                    urlQuesPicture = await uploadFile(
+                        ques.picture,
+                        `class/${classroom.id}/test/${tempTest.id}/question_tempQuesId/question`
+                    )
+                }
+                var urlQuesAudio = ''
+                if (ques.audio) {
+                    urlQuesAudio = await uploadFile(
+                        ques.audio,
+                        `class/${classroom.id}/test/${tempTest.id}/question_tempQuesId/question`
+                    )
+                }
+                var urlQuesVideo = ''
+                if (ques.video) {
+                    urlQuesVideo = await uploadFile(
+                        ques.video,
+                        `class/${classroom.id}/test/${tempTest.id}/question_tempQuesId/question`
+                    )
+                }
+                var tempCreateQues = {
+                    ...ques,
+                    test: { id: tempTest.id },
+                    picture: urlQuesPicture,
+                    audio: urlQuesAudio,
+                    video: urlQuesVideo,
+                }
+                delete tempCreateQues.answers
+                createQuestions.push({ ...tempCreateQues })
+            }
+            const tempQuestions = (
+                await QuestionService.createQuestions(createQuestions)
+            ).data
+            // change firebase foldername
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
 
     const handleAddQuestion = async () => {
         try {
@@ -171,7 +223,7 @@ const CreateTest = () => {
     }
 
     const handleUploadFileQuestion = async (event, quesIndex) => {
-        var file = event.target.files[0]
+        var file = event.targets[0]
         if (file) {
             var tempQuestions = [...questions]
             tempQuestions[quesIndex] = {
@@ -187,7 +239,7 @@ const CreateTest = () => {
     }
 
     const handleUploadFileAnswer = async (event, quesIndex, ansIndex) => {
-        const file = event.target.files[0]
+        const file = event.targets[0]
         if (file) {
             var tempQuestions = [...questions]
             var tempAnswers = [...tempQuestions[quesIndex].answers]
@@ -469,7 +521,7 @@ const CreateTest = () => {
                         <div className="row">
                             {ques?.picture && (
                                 <div className="col-6 mb-2">
-                                    <div className="d-flex align-items-center">
+                                    <div className="uploadFileAnsItem">
                                         <img
                                             src={URL.createObjectURL(
                                                 ques?.picture
@@ -495,7 +547,7 @@ const CreateTest = () => {
                             )}
                             {ques?.audio && (
                                 <div className="col-6 mb-2">
-                                    <div className="d-flex align-items-center">
+                                    <div className="uploadFileAnsItem">
                                         <audio
                                             controls
                                             src={URL.createObjectURL(
@@ -521,7 +573,7 @@ const CreateTest = () => {
                             )}
                             {ques?.video && (
                                 <div className="col-6 mb-2">
-                                    <div className="d-flex align-items-center">
+                                    <div className="uploadFileAnsItem">
                                         <video
                                             className="createTest_video"
                                             controls
@@ -631,64 +683,72 @@ const CreateTest = () => {
                                                 </button>
                                             </div>
                                         )}
-
                                         {/* audio answer */}
-                                        <input
-                                            type="file"
-                                            id={`uploadAnsAudio${quesIndex}-${ansIndex}`}
-                                            name="audio"
-                                            accept="audio/*"
-                                            className="postUpload"
-                                            onChange={(event) =>
-                                                handleUploadFileAnswer(
-                                                    event,
-                                                    quesIndex,
-                                                    ansIndex
-                                                )
-                                            }
-                                        />
-                                        <button
-                                            className="btn-hide p-0"
-                                            type="btn"
-                                            onMouseDown={(e) =>
-                                                e.preventDefault()
-                                            }
-                                        >
-                                            <label
-                                                htmlFor={`uploadAnsAudio${quesIndex}-${ansIndex}`}
-                                                className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
-                                            >
-                                                <SpeakIcon />
-                                            </label>
-                                        </button>
-                                        {/* video question */}
-                                        <input
-                                            type="file"
-                                            id={`uploadAnsVideo${quesIndex}-${ansIndex}`}
-                                            name="video"
-                                            accept="video/*"
-                                            className="d-none"
-                                            onChange={(event) =>
-                                                handleUploadFileQuestion(
-                                                    event,
-                                                    quesIndex
-                                                )
-                                            }
-                                        />
-                                        <button
-                                            className="btn-hide p-0"
-                                            type="btn"
-                                            onMouseDown={(e) =>
-                                                e.preventDefault()
-                                            }
-                                        >
-                                            <label
-                                                htmlFor={`uploadAnsVideo${quesIndex}-${ansIndex}`}
-                                                className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
-                                            >
-                                                <VideoIcon />
-                                            </label>
-                                        </button>
+                                        {!ans?.audio && (
+                                            <div>
+                                                <input
+                                                    type="file"
+                                                    id={`uploadAnsAudio${quesIndex}-${ansIndex}`}
+                                                    name="audio"
+                                                    accept="audio/*"
+                                                    className="postUpload"
+                                                    onChange={(event) =>
+                                                        handleUploadFileAnswer(
+                                                            event,
+                                                            quesIndex,
+                                                            ansIndex
+                                                        )
+                                                    }
+                                                />
+                                                <button
+                                                    className="btn-hide p-0"
+                                                    type="btn"
+                                                    onMouseDown={(e) =>
+                                                        e.preventDefault()
+                                                    }
+                                                >
+                                                    <label
+                                                        htmlFor={`uploadAnsAudio${quesIndex}-${ansIndex}`}
+                                                        className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                                    >
+                                                        <SpeakIcon />
+                                                    </label>
+                                                </button>
+                                            </div>
+                                        )}
+                                        {/* video answer */}
+                                        {!ans?.video && (
+                                            <div>
+                                                <input
+                                                    type="file"
+                                                    id={`uploadAnsVideo${quesIndex}-${ansIndex}`}
+                                                    name="video"
+                                                    accept="video/*"
+                                                    className="d-none"
+                                                    onChange={(event) =>
+                                                        handleUploadFileAnswer(
+                                                            event,
+                                                            quesIndex,
+                                                            ansIndex
+                                                        )
+                                                    }
+                                                />
+                                                <button
+                                                    className="btn-hide p-0"
+                                                    type="btn"
+                                                    onMouseDown={(e) =>
+                                                        e.preventDefault()
+                                                    }
+                                                >
+                                                    <label
+                                                        htmlFor={`uploadAnsVideo${quesIndex}-${ansIndex}`}
+                                                        className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                                    >
+                                                        <VideoIcon />
+                                                    </label>
+                                                </button>
+                                            </div>
+                                        )}
                                         <button
                                             className="btn-customLight ms-1 p-2 rounded-circle"
                                             style={{ marginRight: '-0.5rem' }}
@@ -709,35 +769,35 @@ const CreateTest = () => {
                                 </div>
                                 <div className="row mt-1">
                                     {ans?.picture && (
-                                        <div className="col-6 mb-2">
-                                            <div className="d-flex align-items-center">
+                                        <div className="col-4 mb-2">
+                                            <div className="uploadFileAnsItem--sm">
                                                 <img
                                                     src={URL.createObjectURL(
                                                         ans?.picture
                                                     )}
-                                                    className="createTest_img"
-                                                    alt="question picture"
+                                                    className="createTest_img--sm"
+                                                    alt="answer picture"
                                                 />
                                                 <button
                                                     type="button"
                                                     name="picture"
-                                                    className="btn btn-danger ms-5 p-2 rounded-circle"
+                                                    className="btn btn-danger p-1 rounded-circle"
                                                     onClick={(event) =>
-                                                        handleDeleteFileQues(
+                                                        handleDeleteFileAns(
                                                             event,
                                                             quesIndex,
                                                             ansIndex
                                                         )
                                                     }
                                                 >
-                                                    <DeleteIcon size="1.25rem" />
+                                                    <DeleteIcon size="0.85rem" />
                                                 </button>
                                             </div>
                                         </div>
                                     )}
                                     {ans?.audio && (
-                                        <div className="col-6 mb-2">
-                                            <div className="d-flex align-items-center">
+                                        <div className="col-4 mb-2">
+                                            <div className="uploadFileAnsItem--sm">
                                                 <audio
                                                     controls
                                                     src={URL.createObjectURL(
@@ -748,7 +808,7 @@ const CreateTest = () => {
                                                 <button
                                                     type="button"
                                                     name="audio"
-                                                    className="btn btn-danger ms-5 p-2 rounded-circle"
+                                                    className="btn btn-danger p-1 rounded-circle"
                                                     onClick={(event) =>
                                                         handleDeleteFileAns(
                                                             event,
@@ -757,16 +817,16 @@ const CreateTest = () => {
                                                         )
                                                     }
                                                 >
-                                                    <DeleteIcon size="1.25rem" />
+                                                    <DeleteIcon size="0.85rem" />
                                                 </button>
                                             </div>
                                         </div>
                                     )}
                                     {ans?.video && (
-                                        <div className="col-6 mb-2">
-                                            <div className="d-flex align-items-center">
+                                        <div className="col-4 mb-2">
+                                            <div className="uploadFileAnsItem--sm">
                                                 <video
-                                                    className="createTest_video"
+                                                    className="createTest_video--sm"
                                                     controls
                                                     src={URL.createObjectURL(
                                                         ans?.video
@@ -778,7 +838,7 @@ const CreateTest = () => {
                                                 <button
                                                     type="button"
                                                     name="video"
-                                                    className="btn btn-danger ms-5 p-2 rounded-circle"
+                                                    className="btn btn-danger p-1 rounded-circle"
                                                     onClick={(event) =>
                                                         handleDeleteFileAns(
                                                             event,
@@ -787,7 +847,7 @@ const CreateTest = () => {
                                                         )
                                                     }
                                                 >
-                                                    <DeleteIcon size="1.25rem" />
+                                                    <DeleteIcon size="0.85rem" />
                                                 </button>
                                             </div>
                                         </div>
