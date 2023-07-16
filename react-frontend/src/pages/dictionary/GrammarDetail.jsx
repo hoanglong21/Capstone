@@ -69,20 +69,20 @@ const GrammarDetail = ({ grammar }) => {
                                     <div className="row">
                                         {grammar?.synonyms?.map((synonym) => (
                                             <div className="col-4 mb-2">
-                                                <div className="synonymItem">
-                                                    <div
-                                                        className="synonym_text"
-                                                        onClick={() => {
-                                                            setSearchParams({
-                                                                search: synonym.text,
-                                                            })
-                                                            document
-                                                                .getElementById(
-                                                                    'grammarDetailCloseBtn'
-                                                                )
-                                                                .click()
-                                                        }}
-                                                    >
+                                                <div
+                                                    className="synonymItem"
+                                                    onClick={() => {
+                                                        setSearchParams({
+                                                            search: synonym.text,
+                                                        })
+                                                        document
+                                                            .getElementById(
+                                                                'grammarDetailCloseBtn'
+                                                            )
+                                                            .click()
+                                                    }}
+                                                >
+                                                    <div className="synonym_text">
                                                         {synonym.text}
                                                     </div>
                                                     <div className="synonym_explanation">
@@ -102,20 +102,20 @@ const GrammarDetail = ({ grammar }) => {
                                     <div className="row">
                                         {grammar?.antonyms?.map((antonym) => (
                                             <div className="col-4 mb-2">
-                                                <div className="synonymItem">
-                                                    <div
-                                                        className="synonym_text"
-                                                        onClick={() => {
-                                                            setSearchParams({
-                                                                search: antonym.text,
-                                                            })
-                                                            document
-                                                                .getElementById(
-                                                                    'grammarDetailCloseBtn'
-                                                                )
-                                                                .click()
-                                                        }}
-                                                    >
+                                                <div
+                                                    className="synonymItem"
+                                                    onClick={() => {
+                                                        setSearchParams({
+                                                            search: antonym.text,
+                                                        })
+                                                        document
+                                                            .getElementById(
+                                                                'grammarDetailCloseBtn'
+                                                            )
+                                                            .click()
+                                                    }}
+                                                >
+                                                    <div className="synonym_text">
                                                         {antonym.text}
                                                     </div>
                                                     <div className="synonym_explanation">

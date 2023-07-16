@@ -108,7 +108,7 @@ export const VocabCard = (props) => {
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file, `card/${card.id}`, file.type)
+            const url = await uploadFile(file, `card/${card.id}`)
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {

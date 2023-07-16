@@ -30,10 +30,10 @@ if (!firebase.apps.length) {
 
 const storage = getStorage(firebaseApp)
 
-export const uploadFile = async (file, folderName, fileType) => {
+export const uploadFile = async (file, folderName) => {
     return new Promise(function (resolve, reject) {
         const metadata = {
-            contentType: fileType,
+            contentType: file.type,
         }
         const storageRef = ref(storage, 'files/' + folderName + '/' + file.name)
         const uploadTask = uploadBytesResumable(storageRef, file, metadata)

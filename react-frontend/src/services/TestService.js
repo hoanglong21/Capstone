@@ -2,6 +2,10 @@ import axios from 'axios'
 
 const API_BASE_URL = 'http://localhost:8080/api/v1'
 
+const createTest = (test) => {
+    return axios.post(API_BASE_URL + '/test', test)
+}
+
 const getFilterList = (
     search,
     author,
@@ -39,5 +43,6 @@ const getFilterList = (
 
 const TestService = {
     getFilterList,
+    createTest,
 }
 export default TestService

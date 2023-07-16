@@ -107,23 +107,23 @@ function AllForHome() {
                         <p>No sets matching {search} found</p>
                     )}
                     {sets.map((set) => (
-                        <div className="col-12 col-md-6 col-xl-4" key={set.id}>
-                            <div key={set.id} className="set-item">
-                                <Link to={`/set/${set.id}`}>
+                        <div className="col-12 col-md-6 col-xl-4" key={set?.id}>
+                            <div key={set?.id} className="set-item">
+                                <Link to={`/set/${set?.id}`}>
                                     <div className="set-body">
                                         <div className="set-title mb-2">
-                                            {set._draft
-                                                ? `(Draft) ${set.title}`
-                                                : set.title}
+                                            {set?._draft
+                                                ? `(Draft) ${set?.title}`
+                                                : set?.title}
                                         </div>
                                         <div className="term-count mb-2">
-                                            {set.count} terms
+                                            {set?.count} terms
                                         </div>
                                         <p
                                             className="set-description m-0 mb-2"
                                             style={{ whiteSpace: 'pre-wrap' }}
                                         >
-                                            {set.description}
+                                            {set?.description}
                                         </p>
                                         <div
                                             className="set-author d-flex align-items-center"
@@ -132,8 +132,8 @@ function AllForHome() {
                                             <div className="author-avatar">
                                                 <img
                                                     src={
-                                                        set.avatar
-                                                            ? set.avatar
+                                                        set?.avatar
+                                                            ? set?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
@@ -141,7 +141,7 @@ function AllForHome() {
                                                 />
                                             </div>
                                             <span className="author-username ms-2">
-                                                {set.author}
+                                                {set?.author}
                                             </span>
                                         </div>
                                     </div>
@@ -166,17 +166,17 @@ function AllForHome() {
                     </Link>
                 </div>
                 <div className="sets-list row g-3">
-                    {classes.length === 0 && (
+                    {classes?.length === 0 && (
                         <p>No classes matching {search} found</p>
                     )}
-                    {classes.map((classroom) => (
-                        <div className="col-12 col-lg-6" key={classroom.id}>
-                            <div key={classroom.id} className="set-item h-100">
-                                <Link to={`/class/${classroom.id}`}>
+                    {classes?.map((classroom) => (
+                        <div className="col-12 col-lg-6" key={classroom?.id}>
+                            <div key={classroom?.id} className="set-item h-100">
+                                <Link to={`/class/${classroom?.id}`}>
                                     <div className="set-body">
                                         <div className="set-title mb-2 d-flex align-items-center">
                                             <ClassIcon className="me-2" />
-                                            {classroom.class_name}
+                                            {classroom?.class_name}
                                         </div>
                                         <p
                                             className="set-description m-0 mb-2"
@@ -184,15 +184,15 @@ function AllForHome() {
                                                 whiteSpace: 'pre-wrap',
                                             }}
                                         >
-                                            {classroom.description}
+                                            {classroom?.description}
                                         </p>
                                         <div className="set-author mb-2 d-flex align-items-center">
                                             <div className="author-avatar">
                                                 <img
                                                     src={
-                                                        classroom.user.avatar
-                                                            ? classroom.user
-                                                                  .avatar
+                                                        classroom?.user?.avatar
+                                                            ? classroom?.user
+                                                                  ?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
@@ -200,14 +200,14 @@ function AllForHome() {
                                                 />
                                             </div>
                                             <span className="author-username ms-2">
-                                                {classroom.user.username}
+                                                {classroom?.user?.username}
                                             </span>
                                         </div>
                                         <div className="term-count">
-                                            {classroom.users.length} member
+                                            {classroom?.users?.length} member
                                         </div>
                                         <div className="term-count">
-                                            {classroom.studySets.length} sets
+                                            {classroom?.studySets?.length} sets
                                         </div>
                                     </div>
                                 </Link>
@@ -235,7 +235,10 @@ function AllForHome() {
                         <p>No users matching {search} found</p>
                     )}
                     {users.map((user) => (
-                        <div className="col-12 col-md-6 col-xl-4" key={user.id}>
+                        <div
+                            className="col-12 col-md-6 col-xl-4"
+                            key={user?.id}
+                        >
                             <div className="set-item h-100">
                                 <Link to={``}>
                                     <div className="set-body">
@@ -249,8 +252,8 @@ function AllForHome() {
                                             >
                                                 <img
                                                     src={
-                                                        user.avatar
-                                                            ? user.avatar
+                                                        user?.avatar
+                                                            ? user?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
@@ -259,7 +262,7 @@ function AllForHome() {
                                             </div>
                                             <div className="d-flex flex-column justify-content-center ms-3">
                                                 <span className="set-title">
-                                                    {user.username}
+                                                    {user?.username}
                                                 </span>
                                                 <p
                                                     className="set-description m-0 mt-2"
@@ -267,9 +270,9 @@ function AllForHome() {
                                                         whiteSpace: 'pre-wrap',
                                                     }}
                                                 >
-                                                    {user.role === 'ROLE_ADMIN'
+                                                    {user?.role === 'ROLE_ADMIN'
                                                         ? 'Admin'
-                                                        : user.role ===
+                                                        : user?.role ===
                                                           'ROLE_TUTOR'
                                                         ? 'Tutor'
                                                         : 'Learner'}
@@ -282,7 +285,7 @@ function AllForHome() {
                                                 whiteSpace: 'pre-wrap',
                                             }}
                                         >
-                                            {user.bio}
+                                            {user?.bio}
                                         </p>
                                     </div>
                                 </Link>

@@ -139,18 +139,18 @@ const StudySetList = () => {
                         <SearchIcon />
                     </div>
                     <div className="sets-list">
-                        {sets.length === 0 && (
+                        {sets?.length === 0 && (
                             <p>No sets matching {search} found</p>
                         )}
-                        {sets.map((set) => (
-                            <div key={set.id} className="set-item mb-3">
+                        {sets?.map((set) => (
+                            <div key={set?.id} className="set-item mb-3">
                                 <div
                                     onClick={() => handleViewSet(set)}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     <div className="set-body row mb-2">
                                         <div className="term-count col-2">
-                                            {set.count} terms
+                                            {set?.count} terms
                                         </div>
                                         <div
                                             className="set-author col d-flex align-items-center"
@@ -159,8 +159,8 @@ const StudySetList = () => {
                                             <div className="author-avatar">
                                                 <img
                                                     src={
-                                                        userInfo.avatar
-                                                            ? userInfo.avatar
+                                                        userInfo?.avatar
+                                                            ? userInfo?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
@@ -168,15 +168,15 @@ const StudySetList = () => {
                                                 />
                                             </div>
                                             <span className="author-username ms-2">
-                                                {userInfo.username}
+                                                {userInfo?.username}
                                             </span>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="set-title col-2">
-                                            {set._draft
-                                                ? `(Draft) ${set.title}`
-                                                : set.title}
+                                            {set?._draft
+                                                ? `(Draft) ${set?.title}`
+                                                : set?.title}
                                         </div>
                                         <div className="col d-flex align-items-center">
                                             <p
@@ -185,7 +185,7 @@ const StudySetList = () => {
                                                     whiteSpace: 'pre-wrap',
                                                 }}
                                             >
-                                                {set.description}
+                                                {set?.description}
                                             </p>
                                         </div>
                                     </div>
