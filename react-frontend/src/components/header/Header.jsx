@@ -21,6 +21,7 @@ import {
     LogoutIcon,
     DictIcon,
     LibraryIcon,
+    SettingIcon,
 } from '../icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import './Header.css'
@@ -376,7 +377,7 @@ const Header = () => {
                                                 navigate('account')
                                             }}
                                         >
-                                            <ProfileIcon
+                                            <SettingIcon
                                                 className="me-3"
                                                 strokeWidth="2"
                                             />
