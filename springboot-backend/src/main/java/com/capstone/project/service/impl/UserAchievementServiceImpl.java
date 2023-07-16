@@ -1,18 +1,23 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.Feedback;
+import com.capstone.project.model.History;
 import com.capstone.project.model.User;
 import com.capstone.project.model.UserAchievement;
 import com.capstone.project.repository.UserAchievementRepository;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.UserAchievementService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class UserAchievementServiceImpl implements UserAchievementService {
@@ -48,5 +53,75 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     @Override
     public List<UserAchievement> getUserAchievementByUserId(int id) {
         return userAchievementRepository.getUserAchievementByUserId(id);
+    }
+
+    @Autowired
+    private EntityManager entityManager;
+
+    @Override
+    public Map<String, Object> filterUserAchievement(int userId, int achievementId, String fromDatetime, String toDatetime, String sortBy, String direction, int page, int size) {
+        String jpql = "FROM UserAchievement f LEFT JOIN FETCH f.achievement WHERE 1=1 ";
+        Map<String, Object> params = new HashMap<>();
+
+        if (achievementId != 0) {
+            jpql += " AND f.achievement.id = :achievementId ";
+            params.put("achievementId", achievementId);
+        }
+
+        if (userId != 0) {
+            jpql += " AND f.user.id = :userId ";
+            params.put("userId", userId);
+        }
+
+        sortBy = "f." + sortBy;
+
+
+        jpql += "ORDER BY " + sortBy + " " + direction;
+
+        TypedQuery<UserAchievement> query = entityManager.createQuery(jpql, UserAchievement.class);
+
+        // Set parameters
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        // Apply pagination
+        int offset = (page - 1) * size;
+        query.setFirstResult(offset);
+        query.setMaxResults(size);
+
+        List<UserAchievement> userAchievements = query.getResultList();
+
+        int totalItems = getTotalFeedbackCount(jpql, params);
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", userAchievements);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return response;
+    }
+
+    private int getTotalFeedbackCount(String jpql, Map<String, Object> params) {
+        // Remove the ORDER BY clause from the original JPQL query
+        int orderByIndex = jpql.toUpperCase().lastIndexOf("ORDER BY");
+        if (orderByIndex != -1) {
+            jpql = jpql.substring(0, orderByIndex);
+        }
+
+        // Construct the count query by adding the COUNT function and removing the FETCH JOIN
+        String countJpql = "SELECT COUNT(f) " + jpql.replace("LEFT JOIN FETCH f.achievement", "");
+
+        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+
+        // Set parameters for the count query
+        for (Map.Entry<String, Object> entry : params.entrySet()) {
+            countQuery.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        Long countResult = countQuery.getSingleResult();
+        return countResult != null ? countResult.intValue() : 0;
     }
 }

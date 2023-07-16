@@ -12,6 +12,7 @@ import { uploadFile } from '../../features/fileManagement'
 import Post from './post/Post'
 import PostEditor from '../../components/textEditor/PostEditor'
 
+import empty from '../../assets/images/post_empty.jpg'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import {
     CopyIcon,
@@ -44,19 +45,18 @@ const Stream = () => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
             setClassroom(tempClass)
-            // setPosts(
-            //     (
-            //         await PostService.getFilterList(
-            //             '',
-            //             '',
-            //             '',
-            //             `=${tempClass.id}`,
-            //             '',
-            //             ''
-            //         )
-            //     ).data
-            // )
-            setPosts((await PostService.getAllPostByClassId(tempClass.id)).data)
+            setPosts(
+                (
+                    await PostService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        `=${tempClass.id}`,
+                        '',
+                        ''
+                    )
+                ).data.list
+            )
             setAddPost({
                 user: {
                     id: userInfo.id,
@@ -337,8 +337,23 @@ const Stream = () => {
                         </div>
                     )}
                 </div>
+                {/* Empty */}
+                {posts?.length === 0 && (
+                    <div className="card emptyPosts_container">
+                        <div className="card-body d-flex flex-column align-items-center">
+                            <img src={empty} alt="" />
+                            <p className="emptyPosts_heading">
+                                This is where you can talk to your class
+                            </p>
+                            <p className="emptyPosts_content">
+                                Use the stream to share announcements, post
+                                assignments, and respond to student questions
+                            </p>
+                        </div>
+                    </div>
+                )}
                 {/* Post list */}
-                {posts.map((post, index) => (
+                {posts?.map((post, index) => (
                     <Post
                         key={post.id}
                         post={post}

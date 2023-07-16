@@ -7,6 +7,7 @@ import ClassService from '../../../services/ClassService'
 import DeleteAssignment from './DeleteAssignment'
 
 import { AddIcon } from '../../../components/icons'
+import empty from '../../../assets/images/assign_empty.jpg'
 import './assignment.css'
 
 function AssignmentList() {
@@ -46,14 +47,7 @@ function AssignmentList() {
 
     return (
         <div>
-            <div
-                className="header"
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginTop: '2.5rem',
-                }}
-            >
+            <div>
                 <button
                     className="createAssign_btn"
                     onClick={() => {
@@ -68,10 +62,19 @@ function AssignmentList() {
                     Create
                 </button>
             </div>
-            <div
-                className="accordion mt-4 accordionAssignments"
-                id="accordionAssignments"
-            >
+            {assignments.length === 0 && (
+                <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
+                    <img src={empty} alt="" />
+                    <p className="mb-2 emptyAssignments_heading">
+                        This is where you’ll assign work
+                    </p>
+                    <p className="emptyAssignments_content">
+                        You can add assignments for the class, then organize it
+                        into topics
+                    </p>
+                </div>
+            )}
+            <div className="accordion mt-4 accordionTests" id="accordionTests">
                 {assignments.map((assign, index) => (
                     <div className="accordion-item">
                         <button
@@ -94,7 +97,7 @@ function AssignmentList() {
                         <div
                             id={`assign${assign?.id}`}
                             className="accordion-collapse collapse"
-                            data-bs-parent="#accordionAssignments"
+                            data-bs-parent="#accordionTests"
                         >
                             <div className="accordion-body">
                                 <p>

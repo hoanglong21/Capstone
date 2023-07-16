@@ -63,9 +63,13 @@ import ViewDetailTest from './pages/class/test/ViewDetailTest'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/DoQuiz'
+// import ViewAssignment from './pages/class/assignment/ViewAssignmentForLearner'
+import QuizAnswer from './pages/QuizAnswer'
 import AssignmentList from './pages/class/assignment/AssignmentList'
 import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
+import People from './pages/class/People'
+import Mark from './pages/class/Mark'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -135,6 +139,8 @@ const App = () => {
                                 path="create-test"
                                 element={<CreateTest />}
                             />
+                            <Route path="people" element={<People />} />
+                            <Route path='mark' element={<Mark />} />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
@@ -232,7 +238,8 @@ const App = () => {
                     element={<ViewVocabularyDetail />}
                 />
                 {/* Quiz */}
-                <Route path="/doquiz" element={<DoQuiz />} />
+                <Route path='/doquiz' element={<DoQuiz />} />
+                <Route path='/quizanswer' element={<QuizAnswer />} />
             </Routes>
             <AuthVerify logOut={logOut} />
         </BrowserRouter>
