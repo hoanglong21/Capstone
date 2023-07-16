@@ -277,7 +277,7 @@ const Header = () => {
                                 className="dropdown d-inline-flex me-2"
                             >
                                 <button
-                                    className="btn btn btn-outline-secondary icon-outline-secondary"
+                                    className="btn notify_btn btn-outline-secondary icon-outline-secondary"
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
