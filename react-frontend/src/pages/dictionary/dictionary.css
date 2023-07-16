@@ -153,6 +153,10 @@ p.kanji-search-bold {
     border-radius: 4px;
     cursor: default;
 }
+
+.kanji_svg svg {
+    pointer-events: initial;
+}
 /* Kanji */
 
 /* Grammar */
