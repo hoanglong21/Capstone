@@ -162,7 +162,7 @@
     letter-spacing: 0;
 }
 
-.createTest_formGroup:hover .form-control {
+.createTest_formGroup .form-control:hover {
     background-color: #f1f3f4;
 }
 
@@ -170,6 +170,16 @@
     background-color: #f1f3f4;
     box-shadow: none;
     border-bottom: 2px solid rgb(66, 133, 244);
+}
+
+.createTest_img,
+.createTest_video {
+    max-height: 15rem;
+    max-width: 100%;
+}
+
+.createTest_video {
+    pointer-events: initial;
 }
 
 .createTest_formGroup-sm .form-control {
@@ -224,7 +234,6 @@
     border-color: var(--card-button-hover);
 }
 
-.createAnswerContainer > .createAnswerContainer_btn > button {
+.createAnswerContainer > .createAnswerContainer_btn > .btn-hide {
     display: none;
 }
-
