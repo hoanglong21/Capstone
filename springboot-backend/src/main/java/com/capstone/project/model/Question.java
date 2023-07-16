@@ -32,6 +32,8 @@ public class Question {
 
     private int num_choice;
 
+    private double point;
+
     @ManyToOne
     @JoinColumn(name = "test_id", nullable = false)
     private Test test;

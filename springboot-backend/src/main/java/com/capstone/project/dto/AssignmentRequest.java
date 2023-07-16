@@ -24,8 +24,8 @@ public class AssignmentRequest {
     private User user;
 
     @NotBlank(message = "Title cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Title can only contain letters, numbers, and spaces")
-    @Length(min = 3, message = "Title must have at least 3 characters")
+//    @Pattern(regexp = "[a-zA-Z0-9\\s?+?/]+", message = "Title can only contain letters, numbers, and spaces")
+    @Length(min = 2, message = "Title must have at least 2 characters")
     private String title;
 
 

@@ -36,6 +36,12 @@ public class AnswerServiceImpl implements AnswerService {
     }
 
     @Override
+    public List<Answer> createAnswers(List<Answer> answerlist) {
+        return answerRepository.saveAll(answerlist);
+    }
+
+
+    @Override
     public Answer getAnswerById(int id) throws ResourceNotFroundException {
         Answer answer = answerRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Answer not exist with id: " + id));

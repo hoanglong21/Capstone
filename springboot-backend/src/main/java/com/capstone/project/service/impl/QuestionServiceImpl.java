@@ -52,6 +52,12 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<Question> createQuestions(List<Question> questionlist) {
+        return questionRepository.saveAll(questionlist);
+    }
+
+
+    @Override
     public Question getQuestionById(int id) throws ResourceNotFroundException {
         Question question = questionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Question not exist with id: " + id));
@@ -68,6 +74,7 @@ public class QuestionServiceImpl implements QuestionService {
         question_new.setPicture(question.getPicture());
         question_new.setAudio(question.getAudio());
         question_new.setVideo(question.getVideo());
+        question_new.setPoint(question.getPoint());
         return questionRepository.save(question_new);
     }
 
