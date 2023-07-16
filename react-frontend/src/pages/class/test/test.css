@@ -175,7 +175,7 @@
 .createTest_img,
 .createTest_video {
     max-height: 15rem;
-    max-width: 100%;
+    max-width: 80%;
 }
 
 .createTest_video {
@@ -234,6 +234,6 @@
     border-color: var(--card-button-hover);
 }
 
-.createAnswerContainer > .createAnswerContainer_btn > .btn-hide {
+.createAnswerContainer > .createAnswerContainer_btn .btn-hide {
     display: none;
 }
