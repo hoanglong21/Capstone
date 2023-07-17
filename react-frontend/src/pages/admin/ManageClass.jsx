@@ -1,10 +1,40 @@
-import React from "react";
+import React,  { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux'
+import ClassService from '../../services/ClassService';
+import { useSearchParams } from 'react-router-dom'
 
 function ManageClass() {
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
+
+    const { userInfo } = useSelector((state) => state.user)
+
+    const [classes, setClasses] = useState([])
+
+    const fetchData = async (searchKey) => {
+        const temp = (
+            await ClassService.getFilterList(
+                '=0',
+                `${searchKey ? '=' + searchKey : ''}`,
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+            )
+        ).data.list
+        setClasses(temp)
+    }
+
+    useEffect(() => {
+        fetchData(search ? search : '')
+    }, [search])
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -25,36 +55,26 @@ function ManageClass() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
+                {classes?.map((classroom) => (
+                  <tr key={classroom.id}>
+                    <th scope="row">{classroom?.id}</th>
                     <td>
-                      <p className="text-info mb-0">N2</p>
+                      <p className="text-info mb-0">{classroom?.class_name}</p>
                     </td>
-                    <td>Nguyen Van A</td>
-                    <td>06/07/2023</td>
+                    <td>{classroom?.user?.username}</td>
+                    <td>{classroom?.created_date}</td>
                     <td>
-                      <button
-                        type="button"
+                      <Link
                         className="btn btn-primary me-3"
-                        onClick={() => {
-                          navigate("viewdetails");
-                        }}
+                        to={`/viewdetailclass/${classroom.id}`}
                       >
                         <i class="bi bi-info-square me-2"></i>
                         View Details
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-success me-3"
-                        onClick={() => {
-                          navigate("viewdetails");
-                        }}
-                      >
-                        <i class="bi bi-bar-chart me-3"></i>
-                        View Statistics
-                      </button>
+                      </Link>
+                      
                     </td>
                   </tr>
+                ))}
                 </tbody>
               </table>
             </div>

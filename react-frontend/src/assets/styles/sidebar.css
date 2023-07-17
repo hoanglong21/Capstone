@@ -1,10 +1,18 @@
-/* .nav-pills li a:hover{
-    background-color: #0D6EFD;
+/* .nav-pills li a:active{
+    border-color: 1px solid #0D6EFD;
 } */
 
 .header__admin{
-    background-color: #185ABD;
-    /* background-image: linear-gradient(to top, #0f0c29, #302b63, #24243e); */
+    background-color: #eee;
     border-radius: 10px;
+}
+
+#navbar .nav-pills .nav-item a {
+	color: #000;
+}
+
+#navbar .nav-pills .nav-item a:hover {
+	color: #008bff;
+    border-color: 1px solid #0D6EFD;
 }
 
