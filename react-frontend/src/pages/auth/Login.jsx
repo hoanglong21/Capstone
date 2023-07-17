@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 import { login } from '../../features/auth/authAction'
 import { reset } from '../../features/auth/authSlice'
+import { getUser } from '../../features/user/userAction'
 
 import { ArrowLeftLongIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
@@ -15,16 +16,28 @@ const Login = () => {
     const dispatch = useDispatch()
 
     const { register, handleSubmit } = useForm()
+
     const { userToken, error } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
 
     const [emptyMess, setEmptyMess] = useState('')
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (userToken) {
-            navigate('/')
+            dispatch(getUser(userToken))
         }
     }, [userToken])
+
+    useEffect(() => {
+        if (userInfo.username) {
+            if (userInfo.role === 'ROLE_ADMIN') {
+                navigate('/dashboard')
+            } else {
+                navigate('/')
+            }
+        }
+    }, [userToken, userInfo])
 
     const submitForm = (data) => {
         var form = document.querySelector('.needs-validation')
@@ -36,7 +49,6 @@ const Login = () => {
         passwordEl.classList.remove('is-invalid')
         dispatch(reset())
         setEmptyMess('')
-
         if (!form.checkValidity()) {
             form.classList.add('was-validated')
             if (!data.username || !data.password) {
@@ -52,7 +64,7 @@ const Login = () => {
         }
         setLoading(true)
         dispatch(login(data))
-
+        // clear
         form.classList.remove('was-validated')
         usernameEl.classList.remove('is-invalid')
         passwordEl.classList.remove('is-invalid')

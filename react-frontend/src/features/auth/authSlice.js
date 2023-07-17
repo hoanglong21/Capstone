@@ -43,13 +43,16 @@ export const authSlice = createSlice({
             // login user
             .addCase(login.pending, (state) => {
                 state.error = null
+                state.success = null
             })
             .addCase(login.fulfilled, (state) => {
                 state.userToken = localStorage.getItem('userToken')
                 state.error = null
+                state.success = true
             })
             .addCase(login.rejected, (state, { payload }) => {
                 state.error = payload
+                state.success = false
             })
     },
 })
