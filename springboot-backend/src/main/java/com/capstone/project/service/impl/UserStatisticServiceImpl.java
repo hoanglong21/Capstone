@@ -24,20 +24,30 @@ public class UserStatisticServiceImpl implements UserStatisticService {
     private UserRepository userRepository;
 
     @Override
-    public List<Integer> getAccessStatistic(int id) throws ResourceNotFroundException {
-        // TODO not right yet
-        // Check user exist
+    public List<List<Map<String, Integer>>> getAccessStatistic(int id) throws ResourceNotFroundException {
         userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("User not exist with id: " + id));
 
-        List<Integer> result = new ArrayList<>();
-        List<String> listDate = dateRangePicker.getDateRange();
-        for(int i=0; i<listDate.size()-1; i++) {
-            Map<String, Object> response = historyService.filterHistory(id, 0, 1, 0, listDate.get(i), listDate.get(i+1),
+        List<Map<String, Integer>> result = new ArrayList<>();
+        List<String> listDate = dateRangePicker.getDateActive();
+        int countDate = 1;
+        for(int i=0; i<listDate.size(); i++) {
+            Map<String, Object> response = historyService.filterHistory(id, 0, 2, 0, listDate.get(i), listDate.get(i),
                     "datetime", "DESC", 1, 5);
-            result.add(Integer.parseInt(String.valueOf(response.get("totalItems"))));
+            result.add(Map.of("x", countDate, "y", Integer.parseInt(String.valueOf(response.get("totalItems")))));
+            countDate++;
+            if (countDate == 8) {
+                countDate = 1;
+            }
         }
-        return result;
+        List<List<Map<String, Integer>>> dividedResult = new ArrayList<>();
+
+        for (int i = 0; i < result.size(); i += 7) {
+            int end = Math.min(i + 7, result.size());
+            dividedResult.add(result.subList(i, end));
+        }
+
+        return dividedResult;
     }
 
     @Override

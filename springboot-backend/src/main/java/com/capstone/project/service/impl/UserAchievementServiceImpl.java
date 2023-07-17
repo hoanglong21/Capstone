@@ -92,7 +92,7 @@ public class UserAchievementServiceImpl implements UserAchievementService {
 
         List<UserAchievement> userAchievements = query.getResultList();
 
-        int totalItems = getTotalFeedbackCount(jpql, params);
+        int totalItems = getTotalCount(jpql, params);
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
         Map<String, Object> response = new HashMap<>();
@@ -104,7 +104,7 @@ public class UserAchievementServiceImpl implements UserAchievementService {
         return response;
     }
 
-    private int getTotalFeedbackCount(String jpql, Map<String, Object> params) {
+    private int getTotalCount(String jpql, Map<String, Object> params) {
         // Remove the ORDER BY clause from the original JPQL query
         int orderByIndex = jpql.toUpperCase().lastIndexOf("ORDER BY");
         if (orderByIndex != -1) {
