@@ -119,14 +119,17 @@ public class ClassController {
     public ResponseEntity<?> getFilterList(@RequestParam(value = "deleted", required = false) Boolean isDeleted,
                                            @RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
-                                           @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
-                                           @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
-                                           @RequestParam(value = "direction", required = false) String direction,
+                                           @RequestParam(value = "fromdeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDeleted,
+                                           @RequestParam(value = "todeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDeleted,
+                                           @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
+                                           @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
+                                           @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                           @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
 
     try{
-        return ResponseEntity.ok(classService.getFilterClass(isDeleted,search,author,from,to,direction,page,size));
+        return ResponseEntity.ok(classService.getFilterClass(isDeleted,search,author,fromDeleted,toDeleted,fromCreated,toCreated,sortBy,direction,page,size));
     }catch (ResourceNotFroundException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }

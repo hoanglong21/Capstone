@@ -1,6 +1,5 @@
 package com.capstone.project.service.impl;
 
-import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
@@ -121,7 +120,8 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to,String direction, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String fromDeleted, String toDeleted,
+                                              String fromCreated, String toCreated,String sortBy,String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
 //        String query ="SELECT * FROM class WHERE 1=1";
@@ -152,23 +152,34 @@ public class ClassServiceImpl implements ClassService {
         }
 
         if ((isDeleted == null || isDeleted)) {
-            if (from != null) {
-                query += " AND deleted_date >= :from";
-                parameters.put("from", from);
+            if (fromDeleted != null) {
+                query += " AND DATE(deleted_date) >= :from";
+                parameters.put("from", fromDeleted);
             }
-            if (to != null) {
-                query += " AND deleted_date <= :to";
-                parameters.put("to", to);
+            if (toDeleted != null) {
+                query += " AND DATE(deleted_date) <= :to";
+                parameters.put("to", toDeleted);
             }
         }
 
-        String direct = "desc";
-        if(direction != null && !direction.isEmpty()){
-            if (direction.equalsIgnoreCase("asc")) {
-                direct = "asc";
-            }
+        if (fromCreated != null && !fromCreated.equals("")) {
+            query += " AND DATE(created_date) >= :fromCreated";
+            parameters.put("fromCreated", fromCreated);
         }
-        query += " ORDER BY created_date " + " " + direct;
+        if (toCreated != null && !toCreated.equals("")) {
+            query += " AND DATE(created_date) <= :toCreated";
+            parameters.put("toCreated", toCreated);
+        }
+
+        query += " ORDER BY " + sortBy + " " + direction;
+
+//        String direct = "desc";
+//        if(direction != null && !direction.isEmpty()){
+//            if (direction.equalsIgnoreCase("asc")) {
+//                direct = "asc";
+//            }
+//        }
+//        query += " ORDER BY created_date " + " " + direct;
 
         Query q = em.createNativeQuery(query, "ClassCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
