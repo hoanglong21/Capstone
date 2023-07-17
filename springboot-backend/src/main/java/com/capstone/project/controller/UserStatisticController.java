@@ -35,6 +35,16 @@ public class UserStatisticController {
         }
     }
 
+    @GetMapping("/user/classjoined/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> getClassJoinedStatistic(@PathVariable("id") int id) {
+        try {
+            return ResponseEntity.ok(userStatisticService.getClassJoinedStatistic(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/user/learning/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getLearningStatistic(@PathVariable("id") int id) {
