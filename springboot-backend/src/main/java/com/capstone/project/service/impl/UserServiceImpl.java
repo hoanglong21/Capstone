@@ -404,27 +404,27 @@ public class UserServiceImpl implements UserService {
             params.add(toDob);
         }
         if (fromBanned != null && !fromBanned.equals("")) {
-            sql += " AND banned_date >= ?";
+            sql += " AND DATE(banned_date) >= ?";
             params.add(fromBanned);
         }
         if (toBanned != null && !toBanned.equals("")) {
-            sql += " AND banned_date <= ?";
+            sql += " AND DATE(banned_date) <= ?";
             params.add(toBanned);
         }
         if (fromDeleted != null && !fromDeleted.equals("")) {
-            sql += " AND deleted_date >= ?";
+            sql += " AND DATE(deleted_date) >= ?";
             params.add(fromDeleted);
         }
         if (toDeleted != null && !toDeleted.equals("")) {
-            sql += " AND deleted_date <= ?";
+            sql += " AND DATE(deleted_date) <= ?";
             params.add(toDeleted);
         }
         if (fromCreated != null && !fromCreated.equals("")) {
-            sql += " AND created_date >= ?";
+            sql += " AND DATE(created_date) >= ?";
             params.add(fromCreated);
         }
         if (toCreated != null && !toCreated.equals("")) {
-            sql += " AND created_date <= ?";
+            sql += " AND DATE(created_date) <= ?";
             params.add(toCreated);
         }
 

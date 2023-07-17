@@ -14,6 +14,6 @@ public interface HistoryService {
 
     History getHistoryById(int id) throws ResourceNotFroundException;
 
-    Map<String, Object> filterHistory(int userId, int destinationId, int typeId, String fromDatetime, String toDatetime,
+    Map<String, Object> filterHistory(int userId, int destinationId, int typeId, int categoryId, String fromDatetime, String toDatetime,
                                       String sortBy, String direction, int page, int size);
 }
