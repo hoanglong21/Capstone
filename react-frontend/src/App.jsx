@@ -70,7 +70,6 @@ import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
 import People from './pages/class/People'
 import Mark from './pages/class/Mark'
-import ABC from './pages/admin/ABC'
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
 
@@ -240,7 +239,6 @@ const App = () => {
                 {/* Quiz */}
                 <Route path="/doquiz" element={<DoQuiz />} />
                 <Route path="/quizanswer" element={<QuizAnswer />} />
-                <Route path="/hihihi" element={<ABC />} />
             </Routes>
             <AuthVerify logOut={logOut} />
         </BrowserRouter>
