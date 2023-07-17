@@ -11,7 +11,8 @@
 	color: #000;
 }
 
-#navbar .nav-pills .nav-item a:active {
+#navbar .nav-pills .nav-item a:hover {
 	color: #008bff;
     border-color: 1px solid #0D6EFD;
 }
+

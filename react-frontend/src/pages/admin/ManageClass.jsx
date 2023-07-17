@@ -43,16 +43,7 @@ function ManageClass() {
                         <i class="bi bi-info-square me-2"></i>
                         View Details
                       </button>
-                      <button
-                        type="button"
-                        className="btn btn-success me-3"
-                        onClick={() => {
-                          navigate("viewdetails");
-                        }}
-                      >
-                        <i class="bi bi-bar-chart me-3"></i>
-                        View Statistics
-                      </button>
+                      
                     </td>
                   </tr>
                 </tbody>

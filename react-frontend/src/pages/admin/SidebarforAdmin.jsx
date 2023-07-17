@@ -6,18 +6,6 @@ import { Link } from "react-router-dom";
 import "../../assets/styles/sidebar.css";
 
 function SidebarforAdmin() {
-  // const allSideMenu = document.querySelectorAll("#navbar .nav.nav-pills .nav-item .nav-link");
-
-  // allSideMenu.forEach((item) => {
-  //   const li = item.parentElement;
-
-  //   item.addEventListener("click", function () {
-  //     allSideMenu.forEach((i) => {
-  //       i.parentElement.classList.remove("active");
-  //     });
-  //     li.classList.add("active");
-  //   });
-  // });
   return (
     <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
       <section id="navbar">

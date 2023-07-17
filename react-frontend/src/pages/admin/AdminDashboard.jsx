@@ -4,115 +4,77 @@ import HeaderAdmin from "./HeaderAdmin";
 import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
-// import CanvasJS from '@canvasjs/charts';
 import ApexCharts from "apexcharts";
 
 function AdminDashboard() {
-  // window.onload = function () {
-  //   var chartArea = new CanvasJS.Chart("chartContainer",
-  //   {
-  //     title: {
-  //       text: "Users By Month"
-  //     },
-  //       data: [
-  //     {
-  //       type: "area",
-  //       dataPoints: [//array
-
-  //       { x: new Date(2012, 0, 1), y: 2600 },
-  //       { x: new Date(2012, 1, 1), y: 3800 },
-  //       { x: new Date(2012, 2, 1), y: 4300 },
-  //       { x: new Date(2012, 3, 1), y: 2900 },
-  //       { x: new Date(2012, 4, 1), y: 4100 },
-  //       { x: new Date(2012, 5, 1), y: 4500 },
-  //       { x: new Date(2012, 6, 1), y: 8600 },
-  //       { x: new Date(2012, 7, 1), y: 6400 },
-  //       { x: new Date(2012, 8, 1), y: 5300 },
-  //       { x: new Date(2012, 9, 1), y: 6000 }
-  //       ]
-  //     }
-  //     ]
-  //   });
-
-  //   chartArea.render();
-
-  //   var chartPie = new CanvasJS.Chart("chartPie", {
-  //     theme: "light2", // "light1", "light2", "dark1", "dark2"
-  //     exportEnabled: true,
-  //     animationEnabled: true,
-  //     title: {
-  //       text: "Users Device"
-  //     },
-  //     data: [{
-  //       type: "pie",
-  //       startAngle: 25,
-  //       toolTipContent: "<b>{label}</b>: {y}%",
-  //       showInLegend: "true",
-  //       legendText: "{label}",
-  //       indexLabelFontSize: 16,
-  //       indexLabel: "{label} - {y}%",
-  //       dataPoints: [
-  //         { y: 55.08, label: "Chrome" },
-  //         { y: 30.02, label: "Microsoft Edge" },
-  //         { y: 15.44, label: "Others" }
-  //       ]
-  //     }]
-  //   });
-  //   chartPie.render();
-
-  // }
-  var options = {
+  var optionColumn = {
     series: [
       {
-        name: "series1",
-        data: [31, 40, 28],
-      },
-      {
-        name: "series2",
-        data: [11, 32, 60],
+        name: "Person",
+        data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65],
       },
     ],
     chart: {
       height: 350,
-      type: "area",
+      type: "bar",
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        columnWidth: "50%",
+      },
     },
     dataLabels: {
       enabled: false,
     },
     stroke: {
-      curve: "smooth",
+      width: 2,
+    },
+
+    grid: {
+      row: {
+        colors: ["#fff", "#f2f2f2"],
+      },
     },
     xaxis: {
-      type: "datetime",
+      labels: {
+        rotate: -45,
+      },
       categories: [
-        "2018-09-19T00:00:00.000Z",
-        "2018-09-19T01:30:00.000Z",
-        "2018-09-19T02:30:00.000Z",
+        "Week 1",
+        "Week 2",
+        "Week 3",
+        "Week 4",
+        "Week 5",
+        "Week 6",
+        "Week 7",
+        "Week 8",
+        "Week 9",
+        "Week 10",
+        "Week 11",
+        "Week 12",
       ],
+      tickPlacement: "on",
     },
-    tooltip: {
-      x: {
-        format: "dd/MM/yy HH:mm",
+    yaxis: {
+      title: {
+        text: "Person",
+      },
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shade: "light",
+        type: "horizontal",
+        shadeIntensity: 0.25,
+        gradientToColors: undefined,
+        inverseColors: true,
+        opacityFrom: 0.85,
+        opacityTo: 0.85,
+        stops: [50, 0, 100],
       },
     },
   };
-
-  
-  // var chartOrigin = document.querySelector('#chart');
-  // if(chartOrigin) {
-  //   var chart = new ApexCharts(document.querySelector('#chart'), options);
-  //   chart.render();
-  // }
-
-  // useEffect(() => {
-  //   window.onload = () => {
-  //     const chartOrigin = document.querySelector('#chart');
-  //     if (chartOrigin) {
-  //       const chart = new ApexCharts(chartOrigin, options);
-  //       chart.render();
-  //     }
-  //   };
-  // }, []);
 
   useEffect(() => {
     initializeChart(); // Render the chart when the component mounts
@@ -123,13 +85,77 @@ function AdminDashboard() {
   // }, [options]); // Pass any dependencies here that may change and require the chart to be rerendered
 
   const initializeChart = () => {
-    const chartOrigin = document.querySelector('#chart');
+    const chartOrigin = document.querySelector("#chart");
     if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, options);
+      const chart = new ApexCharts(chartOrigin, optionColumn);
       chart.render();
     }
   };
 
+  var optionLine = {
+    series: [{
+    name: 'Sales',
+    data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5]
+  }],
+    chart: {
+    height: 350,
+    type: 'line',
+  },
+  // forecastDataPoints: {
+  //   count: 7
+  // },
+  stroke: {
+    width: 7,
+    curve: 'smooth'
+  },
+  xaxis: {
+    type: 'datetime',
+    categories: ['1/11/2000', '2/11/2000', '3/11/2000', '4/11/2000', '5/11/2000', '6/11/2000', '7/11/2000', '8/11/2000', '9/11/2000', '10/11/2000', '11/11/2000', '12/11/2000', '1/11/2001', '2/11/2001', '3/11/2001','4/11/2001' ,'5/11/2001' ,'6/11/2001'],
+    tickAmount: 10,
+    labels: {
+      formatter: function(value, timestamp, opts) {
+        return opts.dateFormatter(new Date(timestamp), 'dd MMM')
+      }
+    }
+  },
+  title: {
+    text: 'Set',
+    align: 'left',
+    style: {
+      fontSize: "16px",
+      color: '#666'
+    }
+  },
+  fill: {
+    type: 'gradient',
+    gradient: {
+      shade: 'dark',
+      gradientToColors: [ '#FDD835'],
+      shadeIntensity: 1,
+      type: 'horizontal',
+      opacityFrom: 1,
+      opacityTo: 1,
+      stops: [50, 100, 50, 100]
+    },
+  },
+  yaxis: {
+    min: -10,
+    max: 40
+  }
+  };
+
+
+  useEffect(() => {
+    initializeChartline(); // Render the chart when the component mounts
+  }, []);
+
+  const initializeChartline = () => {
+    const chartOrigin = document.querySelector("#chartPie");
+    if (chartOrigin) {
+      const chart = new ApexCharts(chartOrigin, optionLine);
+      chart.render();
+    }
+  };
 
   return (
     <div className="container-fluid bg-white">
@@ -148,21 +174,18 @@ function AdminDashboard() {
               </Link>
             </div>
             <div className="row">
-              {/*  <!-- Earnings (Monthly) Card Example --> */}
               <div className="col-xl-3 col-md-6 mb-4">
                 <div className="card border-left border-primary shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                          Earnings (Monthly)
+                        <div className="fw-bold text-primary text-uppercase mb-1">
+                          Visitors (Monthly)
                         </div>
-                        <div className="h5 mb-0 font-weight-bold text-gray-800">
-                          $40,000
-                        </div>
+                        <div className="h5 mb-0 fw-bold">500</div>
                       </div>
                       <div className="col-auto">
-                        <i className="fas fa-calendar fa-2x text-gray-300"></i>
+                        <i class="bi bi-people fs-2 text-secondary"></i>
                       </div>
                     </div>
                   </div>
@@ -176,28 +199,27 @@ function AdminDashboard() {
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
                         <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
-                          Earnings (Annual)
+                          Subscribers (Monthly)
                         </div>
                         <div className="h5 mb-0 font-weight-bold text-gray-800">
-                          $215,000
+                          100
                         </div>
                       </div>
                       <div className="col-auto">
-                        <i className="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        <i class="bi bi-person-plus fs-2 text-secondary"></i>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/*  <!-- Earnings (Monthly) Card Example --> */}
               <div className="col-xl-3 col-md-6 mb-4">
                 <div className="card border-left border-info shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
                         <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
-                          Tasks
+                          Classes created (Monthly)
                         </div>
                         <div className="row no-gutters align-items-center">
                           <div className="col-auto">
@@ -208,28 +230,27 @@ function AdminDashboard() {
                         </div>
                       </div>
                       <div className="col-auto">
-                        <i className="bi bi-clipboard fs-2 text-secondary"></i>
+                        <i className="bi bi-person-workspace fs-2 text-secondary"></i>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/*  <!-- Pending Requests Card Example --> */}
               <div className="col-xl-3 col-md-6 mb-4">
                 <div className="card border-left border-warning shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
                         <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                          Pending Requests
+                          Sets created (Monthly)
                         </div>
                         <div className="h5 mb-0 font-weight-bold text-gray-800">
                           18
                         </div>
                       </div>
                       <div className="col-auto">
-                        <i className="fas fa-comments fa-2x text-gray-300"></i>
+                        <i className="bi bi-file-earmark-text fs-2 text-secondary"></i>
                       </div>
                     </div>
                   </div>
@@ -239,11 +260,11 @@ function AdminDashboard() {
           </div>
           <div className="row">
             {/*   <!-- Area Chart --> */}
-            <div className="col-xl-7 col-lg-7">
+            <div className="col-xl-6 col-lg-6">
               <div className="card shadow mb-4">
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 className="m-0 font-weight-bold text-primary">
-                    Number Of Users By Month
+                  <h6 className="m-0 fw-bold text-uppercase text-primary">
+                    User growth over the last 3 months
                   </h6>
                 </div>
                 <div className="card-body">
@@ -257,11 +278,11 @@ function AdminDashboard() {
             </div>
 
             {/*  <!-- Pie Chart --> */}
-            <div className="col-xl-5 col-lg-5">
+            <div className="col-xl-6 col-lg-6">
               <div className="card shadow mb-4">
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 className="m-0 font-weight-bold text-primary">
-                    User Devices
+                  <h6 className="m-0 font-weight-bold text-secondary text-uppercase">
+                   Sets created by users within 1 month
                   </h6>
                 </div>
                 {/*  <!-- Card Body --> */}
