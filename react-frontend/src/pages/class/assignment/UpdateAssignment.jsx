@@ -101,15 +101,14 @@ function UpdateAssignment() {
             // delete folder
             await deleteFile(
                 '',
-                `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
+                `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
             )
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
-                    uploadFileItem.file_type
+                    `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,
