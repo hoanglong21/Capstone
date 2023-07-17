@@ -9,7 +9,7 @@ import Layout from './components/layouts/Layout'
 import GPTContainer from './components/Chat/GPTContainer'
 import Flashcard from './pages/studySet/flashcard/Flashcard'
 import ClassLayout from './pages/class/classLayout/ClassLayout'
-import Landing from './pages/Landing'
+import Landing from './pages/landing/Landing'
 import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
 import LibraryLayout from './pages/library/LibraryLayout'
@@ -140,7 +140,7 @@ const App = () => {
                                 element={<CreateTest />}
                             />
                             <Route path="people" element={<People />} />
-                            <Route path='mark' element={<Mark />} />
+                            <Route path="mark" element={<Mark />} />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
@@ -238,8 +238,8 @@ const App = () => {
                     element={<ViewVocabularyDetail />}
                 />
                 {/* Quiz */}
-                <Route path='/doquiz' element={<DoQuiz />} />
-                <Route path='/quizanswer' element={<QuizAnswer />} />
+                <Route path="/doquiz" element={<DoQuiz />} />
+                <Route path="/quizanswer" element={<QuizAnswer />} />
             </Routes>
             <AuthVerify logOut={logOut} />
         </BrowserRouter>

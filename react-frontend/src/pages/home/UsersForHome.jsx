@@ -49,9 +49,9 @@ function UsersForHome() {
     return (
         <div className="mt-4 mb-5">
             <div className="sets-list row g-3">
-                {users.length === 0 && <p>No users matching {search} found</p>}
-                {users.map((user) => (
-                    <div className="col-12 col-md-6 col-xl-4" key={user.id}>
+                {users?.length === 0 && <p>No users matching {search} found</p>}
+                {users?.map((user) => (
+                    <div className="col-12 col-md-6 col-xl-4" key={user?.id}>
                         <div className="set-item h-100">
                             <Link to={``}>
                                 <div className="set-body">
@@ -65,8 +65,8 @@ function UsersForHome() {
                                         >
                                             <img
                                                 src={
-                                                    user.avatar
-                                                        ? user.avatar
+                                                    user?.avatar
+                                                        ? user?.avatar
                                                         : defaultAvatar
                                                 }
                                                 alt="author avatar"
@@ -75,7 +75,7 @@ function UsersForHome() {
                                         </div>
                                         <div className="d-flex flex-column justify-content-center ms-3">
                                             <span className="set-title">
-                                                {user.username}
+                                                {user?.username}
                                             </span>
                                             <p
                                                 className="set-description m-0 mt-2"
@@ -83,9 +83,10 @@ function UsersForHome() {
                                                     whiteSpace: 'pre-wrap',
                                                 }}
                                             >
-                                                {user.role === 'ROLE_ADMIN'
+                                                {user?.role === 'ROLE_ADMIN'
                                                     ? 'Admin'
-                                                    : user.role === 'ROLE_TUTOR'
+                                                    : user?.role ===
+                                                      'ROLE_TUTOR'
                                                     ? 'Tutor'
                                                     : 'Learner'}
                                             </p>
@@ -97,7 +98,7 @@ function UsersForHome() {
                                             whiteSpace: 'pre-wrap',
                                         }}
                                     >
-                                        {user.bio}
+                                        {user?.bio}
                                     </p>
                                 </div>
                             </Link>
