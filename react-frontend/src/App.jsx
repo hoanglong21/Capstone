@@ -222,7 +222,7 @@ const App = () => {
                 />
                 <Route path="/manageclass" element={<ManageClass />} />
                 <Route
-                    path="/manageclass/viewdetails"
+                    path="/viewdetailclass/:id"
                     element={<ViewDetailClass />}
                 />
                 <Route path="/managefeedback" element={<ManageFeedback />} />

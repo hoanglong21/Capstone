@@ -16,6 +16,7 @@
         "bootstrap": "^5.3.0",
         "bootstrap-icons": "^1.10.5",
         "ckeditor5-custom-build": "file:ckeditor5",
+        "dayjs": "^1.11.9",
         "dotenv-webpack": "^8.0.1",
         "fetch-json": "^3.2.0",
         "firebase": "^9.22.1",
