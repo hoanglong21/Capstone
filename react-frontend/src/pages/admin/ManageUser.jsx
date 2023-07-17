@@ -1,12 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import { useNavigate } from "react-router-dom";
 import BanUser from "./BanUser";
 import UnBanUser from "./UnBanUser";
 import HeaderAdmin from "./HeaderAdmin";
+import { useSearchParams } from "react-router-dom";
+import { useSelector } from 'react-redux'
+import UserService from '../../services/UserService'
 
 function ManageUser() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const search = searchParams.get("search");
+  const { userInfo } = useSelector((state) => state.user);
+  const [users, setUsers] = useState([]);
+  const fetchData = async (searchKey) => {
+    const temp = (
+        await UserService.filterUser(
+            '',
+            `${searchKey ? '=' + searchKey : ''}`,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '=active,pending',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+        )
+    ).data.list
+    setUsers(temp)
+}
+
+useEffect(() => {
+    fetchData(search ? search : '')
+}, [search])
+
 
   return (
     <div className="container-fluid">
@@ -28,44 +65,47 @@ function ManageUser() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>
-                      <p className="text-info mb-0">Duong</p>Learner
-                    </td>
-                    <td>abc@gmail.com</td>
-                    <td>0123456789</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-primary me-3"
-                        onClick={() => {
-                          navigate("/manageusers/viewdetails");
-                        }}
-                      >
-                        <i class="bi bi-info-square me-2"></i>
-                        View Details
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-success me-3"
-                        data-bs-toggle="modal"
-                        data-bs-target="#unbanModal"
-                      >
-                        <i class="bi bi-person-fill-check me-2"></i>
-                        Unban
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-danger "
-                        data-bs-toggle="modal"
-                        data-bs-target="#banModal"
-                      >
-                        <i class="bi bi-person-fill-slash me-2"></i>
-                        Ban
-                      </button>
-                    </td>
-                  </tr>
+                  {users?.map((user) => (
+                    <tr>
+                      <th scope="row">{user?.id}</th>
+                      <td>
+                        <p className="text-info mb-0">{user?.username}</p>
+                        {user?.role}
+                      </td>
+                      <td>{user?.email}</td>
+                      <td>{user?.phone}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-primary me-3"
+                          onClick={() => {
+                            navigate("/manageusers/viewdetails");
+                          }}
+                        >
+                          <i class="bi bi-info-square me-2"></i>
+                          View Details
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-success me-3"
+                          data-bs-toggle="modal"
+                          data-bs-target="#unbanModal"
+                        >
+                          <i class="bi bi-person-fill-check me-2"></i>
+                          Unban
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-danger "
+                          data-bs-toggle="modal"
+                          data-bs-target="#banModal"
+                        >
+                          <i class="bi bi-person-fill-slash me-2"></i>
+                          Ban
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

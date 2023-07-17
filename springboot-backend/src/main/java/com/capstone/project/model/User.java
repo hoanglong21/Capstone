@@ -39,7 +39,7 @@ public class User {
     private String email;
 
     @Column(unique = true)
-    private String phone;
+    private String c;
 
     private String password;
 

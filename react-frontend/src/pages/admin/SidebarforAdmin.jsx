@@ -8,7 +8,7 @@ import "../../assets/styles/sidebar.css";
 function SidebarforAdmin() {
   return (
     <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
-      <nav id="navbar">
+      <section id="navbar">
         <Link
           href=""
           className="text-decoration-none d-flex align-item center d-none d-sm-inline d-none d-sm-inline mt-2 "
@@ -17,48 +17,40 @@ function SidebarforAdmin() {
         </Link>
         <hr className="text-dark d-none d-sm-block" />
         <ul className="nav nav-pills flex-column mt-3 mt-sm-0">
-          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link
-              to="/dashboard"
-              className="nav-link fs-7 active"
-              aria-current="page"
-            >
-              <i className="bi bi-speedometer2 text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Dashboard</span>
+          <li className="nav-item active fs-6 my-1 py-2 py-sm-0">
+            <Link to="/dashboard" className="nav-link fs-7">
+              <i className="bi bi-speedometer2"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Dashboard
+              </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link
-              to="/manageusers"
-              className="nav-link fs-7"
-              aria-current="page"
-            >
-              <i class="bi bi-person-square text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Manage User</span>
+            <Link to="/manageusers" className="nav-link fs-7">
+              <i class="bi bi-person-square"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Manage User
+              </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link
-              to="/manageclass"
-              className="nav-link fs-7"
-              aria-current="page"
-            >
-              <i class="bi bi-people text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Manage Class</span>
+            <Link to="/manageclass" className="nav-link fs-7">
+              <i class="bi bi-people"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Manage Class
+              </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link
-              to="/managefeedback"
-              className="nav-link fs-7"
-              aria-current="page"
-            >
-              <i class="bi bi-chat-text text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Manage Feedback</span>
+            <Link to="/managefeedback" className="nav-link fs-7">
+              <i class="bi bi-chat-text"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Manage Feedback
+              </span>
             </Link>
           </li>
         </ul>
-      </nav>
+      </section>
     </div>
   );
 }

@@ -42,7 +42,7 @@ function HeaderAdmin() {
 
   return (
     <>
-      <nav className="navbar bg-light">
+      <nav className="navbar bg-white">
         <form className="d-flex w-50" role="search">
           <input
             class="form-control ms-3 me-2"
