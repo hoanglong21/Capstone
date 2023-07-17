@@ -27,11 +27,12 @@ public class ClassServiceImpl implements ClassService {
     private final AttachmentRepository attachmentRepository;
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
+    private final ClassLearnerRepository classLearnerRepository;
 
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
@@ -39,6 +40,7 @@ public class ClassServiceImpl implements ClassService {
         this.attachmentRepository = attachmentRepository;
         this.submissionRepository = submissionRepository;
         this.userRepository = userRepository;
+        this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
     }
 
@@ -221,8 +223,8 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("You cannot join your class !");
         }
 
-
-        if (classroom.getUsers().contains(user)) {
+        ClassLearner classLearner = classLearnerRepository.findByUserAndClassroom(user,classroom);
+        if (classLearner != null) {
             throw new ResourceNotFroundException("You are already in the class !");
         }
 
@@ -230,8 +232,12 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("Class is not exist !");
         }
 
+        classLearner = new ClassLearner();
+        classLearner.setUser(user);
+        classLearner.setClassroom(classroom);
+        classLearner.setCreated_date(new Date());
+        classLearnerRepository.save(classLearner);
         // add user to classroom
-        classroom.getUsers().add(user);
         return classRepository.save(classroom);
     }
 

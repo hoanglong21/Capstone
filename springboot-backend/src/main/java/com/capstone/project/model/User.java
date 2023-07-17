@@ -53,8 +53,6 @@ public class User {
 
     private String avatar;
 
-    @ManyToMany(mappedBy = "users")
-    Set<Class> classes;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
