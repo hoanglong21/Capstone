@@ -106,7 +106,6 @@ function CreateAssignment() {
                 const url = await uploadFile(
                     uploadFileItem.file,
                     `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
-                    uploadFileItem.file_type
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,
@@ -121,6 +120,7 @@ function CreateAssignment() {
                 })
             }
             await AttachmentService.createAttachments(tempAttachments)
+            navigate('../assignments')
             // clear
             handleClear()
         } catch (error) {

@@ -437,7 +437,6 @@ const Profile = () => {
                                         ))}
                                     </div>
                                 )}
-
                                 <div className="col-12 mt-4 p-0 text-center mb-2">
                                     <input
                                         type="file"

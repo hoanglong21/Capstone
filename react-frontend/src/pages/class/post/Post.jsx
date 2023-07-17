@@ -4,7 +4,6 @@ import PostService from '../../../services/PostService'
 import AttachmentService from '../../../services/AttachmentService'
 import {
     deleteFile,
-    deleteFileByUrl,
     uploadFile,
 } from '../../../features/fileManagement'
 
@@ -63,7 +62,6 @@ const Post = ({ post, stateChanger, posts, index }) => {
                 const url = await uploadFile(
                     uploadFileItem.file,
                     `post/${post.id}`,
-                    uploadFileItem.file_type
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,

@@ -124,6 +124,7 @@ function UpdateAssignment() {
                 })
             }
             await AttachmentService.createAttachments(tempAttachments)
+            navigate('../assignments')
             // clear
             handleClear()
         } catch (error) {
