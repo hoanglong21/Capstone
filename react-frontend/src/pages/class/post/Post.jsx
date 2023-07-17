@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react'
 
 import PostService from '../../../services/PostService'
 import AttachmentService from '../../../services/AttachmentService'
-import {
-    deleteFile,
-    uploadFile,
-} from '../../../features/fileManagement'
+import { deleteFile, uploadFile } from '../../../features/fileManagement'
 
 import CardEditor from '../../../components/textEditor/CardEditor'
 import PostEditor from '../../../components/textEditor/PostEditor'
@@ -19,7 +16,7 @@ import {
 } from '../../../components/icons'
 import './post.css'
 
-const Post = ({ post, stateChanger, posts, index }) => {
+const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [showUpdate, setShowUpdate] = useState(false)
 
     const [updatePost, setUpdatePost] = useState({ ...post })
@@ -55,13 +52,16 @@ const Post = ({ post, stateChanger, posts, index }) => {
                 await PostService.updatePost(updatePost.id, updatePost)
             ).data
             // delete folder old post in firebase
-            await deleteFile('', `class/${tempPost.classroom.id}/post/${tempPost.id}`)
+            await deleteFile(
+                '',
+                `${userInfo.username}/class/${tempPost.classroom.id}/post/${tempPost.id}`
+            )
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `post/${post.id}`,
+                    `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,
@@ -113,7 +113,10 @@ const Post = ({ post, stateChanger, posts, index }) => {
 
     const handleDeletePost = async () => {
         await PostService.deletePost(post.id)
-        await deleteFile('', `class/${post.classroom.id}/post/${post.id}`)
+        await deleteFile(
+            '',
+            `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+        )
         var tempPosts = [...posts]
         tempPosts.splice(index, 1)
         stateChanger(tempPosts)
@@ -304,8 +307,8 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                     }}
                                 ></div>
                                 <div className="row">
-                                    {currentFiles.map((file) => (
-                                        <div className="col-6" key={file.id}>
+                                    {currentFiles.map((file, index) => (
+                                        <div className="col-6" key={index}>
                                             <a
                                                 className="card mb-2 text-decoration-none"
                                                 href={file.file_url}

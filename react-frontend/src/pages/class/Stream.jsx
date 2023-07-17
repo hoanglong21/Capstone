@@ -114,7 +114,7 @@ const Stream = () => {
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `class/${classroom.id}/post/${tempPost.id}`
+                    `${userInfo.username}/class/${classroom.id}/post/${tempPost.id}`
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,
@@ -229,10 +229,12 @@ const Stream = () => {
                             <div className="createAssign_formGroup form-floating mb-4">
                                 <PostEditor
                                     onChange={(event, editor) => {
-                                        setAddPost({
-                                            ...addPost,
-                                            content: editor.getData(),
-                                        })
+                                        if (addPost?.user?.id) {
+                                            setAddPost({
+                                                ...addPost,
+                                                content: editor.getData(),
+                                            })
+                                        }
                                     }}
                                 />
                                 <label className="createAssign_formLabel createAssign_editorLabel">
@@ -359,6 +361,7 @@ const Stream = () => {
                         index={index}
                         stateChanger={setPosts}
                         posts={posts}
+                        userInfo={userInfo}
                     />
                 ))}
             </div>

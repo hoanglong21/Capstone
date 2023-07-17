@@ -9,6 +9,7 @@ import { logout as userLogout } from '../../features/user/userSlice'
 
 import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/class/JoinClass'
+import { getUser } from '../../features/user/userAction'
 
 import logo from '../../assets/images/logo-2.png'
 import {
@@ -33,6 +34,12 @@ const Header = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [showLogoutMess, setShowLogoutMess] = useState(false)
+
+    useEffect(() => {
+        if (userToken) {
+            dispatch(getUser(userToken))
+        }
+    }, [userToken])
 
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 

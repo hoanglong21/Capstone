@@ -134,9 +134,8 @@ const ClassList = () => {
                                             <div className="author-avatar">
                                                 <img
                                                     src={
-                                                        classroom?.user?.avatar
-                                                            ? classroom?.user
-                                                                  ?.avatar
+                                                        userInfo?.avatar
+                                                            ? userInfo?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
