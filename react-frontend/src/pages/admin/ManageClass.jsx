@@ -1,10 +1,39 @@
-import React from "react";
+import React,  { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux'
+import ClassService from '../../services/ClassService';
+import { useSearchParams } from 'react-router-dom'
 
 function ManageClass() {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+    const search = searchParams.get('search')
   const navigate = useNavigate();
+  const { userInfo } = useSelector((state) => state.user)
+  const [classes, setClasses] = useState([])
+
+  const fetchData = async (searchKey) => {
+    const temp = (
+        await ClassService.getFilterList(
+            '=0',
+            `${searchKey ? '=' + searchKey : ''}`,
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+        )
+    ).data.list
+    setClasses(temp)
+}
+
+useEffect(() => {
+    fetchData(search ? search : '')
+}, [search])
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -25,13 +54,14 @@ function ManageClass() {
                   </tr>
                 </thead>
                 <tbody>
+                {classes?.map((classroom) => (
                   <tr>
-                    <th scope="row">1</th>
+                    <th scope="row" key={classroom.id}>{classroom?.id}</th>
                     <td>
-                      <p className="text-info mb-0">N2</p>
+                      <p className="text-info mb-0">{classroom?.class_name}</p>
                     </td>
-                    <td>Nguyen Van A</td>
-                    <td>06/07/2023</td>
+                    <td>{classroom?.user?.username}</td>
+                    <td>{classroom?.created_date}</td>
                     <td>
                       <button
                         type="button"
@@ -46,6 +76,7 @@ function ManageClass() {
                       
                     </td>
                   </tr>
+                ))}
                 </tbody>
               </table>
             </div>
