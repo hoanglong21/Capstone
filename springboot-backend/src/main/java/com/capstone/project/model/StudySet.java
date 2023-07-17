@@ -29,7 +29,8 @@ import java.util.Set;
                         @ColumnResult(name = "author", type = String.class),
                         @ColumnResult(name = "created_date", type = Date.class),
                         @ColumnResult(name = "author_firstname", type = String.class),
-                        @ColumnResult(name = "author_lastname", type = String.class)
+                        @ColumnResult(name = "author_lastname", type = String.class),
+                        @ColumnResult(name = "avatar", type = String.class)
                 }
         )
 )
