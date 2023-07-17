@@ -30,10 +30,10 @@ if (!firebase.apps.length) {
 
 const storage = getStorage(firebaseApp)
 
-export const uploadFile = async (file, folderName) => {
+export const uploadFile = async (file, folderName, file_type) => {
     return new Promise(function (resolve, reject) {
         const metadata = {
-            contentType: file.type,
+            contentType: file_type ? file_type : file.type,
         }
         const storageRef = ref(storage, 'files/' + folderName + '/' + file.name)
         const uploadTask = uploadBytesResumable(storageRef, file, metadata)
@@ -206,7 +206,7 @@ export const deleteFolderByPath = async (folderPath) => {
         await Promise.all(itemsToDelete.map(deleteObject))
 
         // After deleting all items, delete the empty folder
-        await deleteObject(folderRef)
+        // await deleteObject(folderRef)
 
         console.log(`${folderRef.fullPath} has been deleted successfully.`)
     } catch (error) {

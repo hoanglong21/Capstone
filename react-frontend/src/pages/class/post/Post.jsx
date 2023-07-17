@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react'
 
 import PostService from '../../../services/PostService'
 import AttachmentService from '../../../services/AttachmentService'
-import { deleteFile, uploadFile } from '../../../features/fileManagement'
+import {
+    deleteFileByUrl,
+    deleteFolderByPath,
+    uploadFile,
+} from '../../../features/fileManagement'
 
 import CardEditor from '../../../components/textEditor/CardEditor'
 import PostEditor from '../../../components/textEditor/PostEditor'
@@ -51,29 +55,38 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
             const tempPost = (
                 await PostService.updatePost(updatePost.id, updatePost)
             ).data
-            // delete folder old post in firebase
-            await deleteFile(
-                '',
-                `${userInfo.username}/class/${tempPost.classroom.id}/post/${tempPost.id}`
-            )
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
-                const url = await uploadFile(
-                    uploadFileItem.file,
-                    `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
-                )
-                tempAttachments.push({
-                    file_name: uploadFileItem.file_name,
-                    file_type: uploadFileItem.file_type,
-                    file_url: url,
-                    post: {
-                        id: post.id,
-                    },
-                    attachmentType: {
-                        id: 3,
-                    },
-                })
+                if (uploadFileItem.file_url) {
+                    tempAttachments.push({
+                        file_name: uploadFileItem.file_name,
+                        file_type: uploadFileItem.file_type,
+                        file_url: uploadFileItem.file_url,
+                        post: {
+                            id: post.id,
+                        },
+                        attachmentType: {
+                            id: 3,
+                        },
+                    })
+                } else {
+                    const url = await uploadFile(
+                        uploadFileItem.file,
+                        `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+                    )
+                    tempAttachments.push({
+                        file_name: uploadFileItem.file_name,
+                        file_type: uploadFileItem.file_type,
+                        file_url: url,
+                        post: {
+                            id: post.id,
+                        },
+                        attachmentType: {
+                            id: 3,
+                        },
+                    })
+                }
             }
             await AttachmentService.createAttachments(tempAttachments)
             // update list posts
@@ -113,17 +126,24 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
 
     const handleDeletePost = async () => {
         await PostService.deletePost(post.id)
-        await deleteFile(
-            '',
-            `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
-        )
         var tempPosts = [...posts]
         tempPosts.splice(index, 1)
         stateChanger(tempPosts)
         document.getElementById(`closeDeletePostModal${index}`).click()
+        await deleteFolderByPath(
+            `files/${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+        )
     }
 
-    const handleDeleteFile = (file, index) => {
+    const handleDeleteFile = async (file, index) => {
+        // delete in firebase
+        if (file.file_url) {
+            await deleteFileByUrl(
+                file.file_url,
+                `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+            )
+        }
+        // update list file
         var temp = [...uploadFiles]
         temp.splice(index, 1)
         setUploadFiles(temp)

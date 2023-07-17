@@ -204,10 +204,10 @@ function AllForHome() {
                                             </span>
                                         </div>
                                         <div className="term-count">
-                                            {classroom?.users?.length} member
+                                            {classroom?.member} member
                                         </div>
                                         <div className="term-count">
-                                            {classroom?.studySets?.length} sets
+                                            {classroom?.studyset} sets
                                         </div>
                                     </div>
                                 </Link>
