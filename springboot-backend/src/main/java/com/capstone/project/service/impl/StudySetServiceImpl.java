@@ -162,12 +162,12 @@ public class StudySetServiceImpl implements StudySetService {
 
         if ((isDeleted == null || isDeleted)) {
             if (fromDeleted != null) {
-                query += " AND s.deleted_date >= :from";
-                parameters.put("from", fromDeleted);
+                query += " AND s.deleted_date >= :fromDeleted";
+                parameters.put("fromDeleted", fromDeleted);
             }
             if (toDeleted != null) {
-                query += " AND s.deleted_date <= :to";
-                parameters.put("to", toDeleted);
+                query += " AND s.deleted_date <= :toDeleted";
+                parameters.put("toDeleted", toDeleted);
             }
         }
 
@@ -191,7 +191,7 @@ public class StudySetServiceImpl implements StudySetService {
             parameters.put("fromCreated", fromCreated);
         }
         if (toCreated != null && !toCreated.equals("")) {
-            query += " AND s.created_date <= :";
+            query += " AND s.created_date <= :toCreated";
             parameters.put("toCreated", toCreated);
         }
 
