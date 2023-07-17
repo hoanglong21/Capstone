@@ -154,7 +154,8 @@ p.kanji-search-bold {
     cursor: default;
 }
 
-.kanji_svg svg {
+.kanji_svg svg,
+.svgKanji svg {
     pointer-events: initial;
 }
 /* Kanji */

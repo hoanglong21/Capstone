@@ -105,7 +105,7 @@ function CreateAssignment() {
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
+                    `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,

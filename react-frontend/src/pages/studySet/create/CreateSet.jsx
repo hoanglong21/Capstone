@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 
 import CardService from '../../../services/CardService'
 import StudySetService from '../../../services/StudySetService'
+import { deleteFile } from '../../../features/fileManagement'
 
 import { VocabCard } from './VocabCard'
 import { GrammarCard } from './GrammarCard'
@@ -170,7 +171,6 @@ const CreateSet = () => {
         form.classList.remove('was-validated')
         titleEl.classList.remove('is-invalid')
         setError('')
-
         try {
             form.classList.add('was-validated')
             if (!studySet.title) {
@@ -209,10 +209,14 @@ const CreateSet = () => {
         }
     }
 
-    const handleDelete = async (event) => {
+    const handleDelete = async (event, card) => {
         try {
             var cardEl = event.target.closest('.card')
             await CardService.deleteCard(cardEl.id)
+            await deleteFile(
+                '',
+                `${userInfo.username}/studySet/${studySet.id}/card/${card.id}`
+            )
             var array = [...cards]
             var index = cardEl.getAttribute('index')
             if (index > -1) {
@@ -263,6 +267,7 @@ const CreateSet = () => {
                 })
             ).data
             await StudySetService.deleteStudySet(studySet.id)
+            await deleteFile('', `${userInfo.username}/studySet/${studySet.id}`)
             setStudySet(newStudySet)
             setCards([])
             toggleShowDiscardMess()
@@ -382,7 +387,9 @@ const CreateSet = () => {
                                     key={card.id}
                                     index={index}
                                     card={card}
-                                    handleDelete={handleDelete}
+                                    handleDelete={(event) =>
+                                        handleDelete(event, card)
+                                    }
                                 />
                             )
                         }
@@ -392,7 +399,9 @@ const CreateSet = () => {
                                     key={card.id}
                                     index={index}
                                     card={card}
-                                    handleDelete={handleDelete}
+                                    handleDelete={(event) =>
+                                        handleDelete(event, card)
+                                    }
                                 />
                             )
                         }
@@ -402,7 +411,9 @@ const CreateSet = () => {
                                     key={card.id}
                                     index={index}
                                     card={card}
-                                    handleDelete={handleDelete}
+                                    handleDelete={(event) =>
+                                        handleDelete(event, card)
+                                    }
                                 />
                             )
                         }

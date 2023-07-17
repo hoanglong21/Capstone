@@ -19,7 +19,7 @@ const DeleteAssignment = ({ assignments, assign, stateChanger, index }) => {
             stateChanger(tempAssignments)
             await deleteFile(
                 '',
-                `class/${assign.classroom.id}/assignment/${assign.id}`
+                `${assign.classroom.user.username}/class/${assign.classroom.id}/assignment/${assign.id}`
             )
             document
                 .getElementById(`closeDeleteAssignmentModal${assign?.id}`)

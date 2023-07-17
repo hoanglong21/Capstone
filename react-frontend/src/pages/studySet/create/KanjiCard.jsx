@@ -225,7 +225,10 @@ export const KanjiCard = (props) => {
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file, `card/${card.id}`)
+            const url = await uploadFile(
+                file,
+                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+            )
             if (name === 'strokeOrder') {
                 // update stroke order
                 const tempStrokeOrder = { ...strokeOrder, content: url }
@@ -236,7 +239,10 @@ export const KanjiCard = (props) => {
                 const tempCard = { ...card, [name]: url }
                 setCard(tempCard)
                 if (urlOld) {
-                    await deleteFileByUrl(urlOld, `card/${card.id}`)
+                    await deleteFileByUrl(
+                        urlOld,
+                        `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                    )
                 }
                 doUpdateCard(tempCard)
             }
@@ -266,7 +272,6 @@ export const KanjiCard = (props) => {
         if (name === 'strokeOrder') {
             setLoadingStrokeOrder(true)
         }
-
         const urlOld = card[name]
         if (name === 'strokeOrder') {
             // update stroke order
@@ -281,9 +286,11 @@ export const KanjiCard = (props) => {
         }
         // delete url
         if (urlOld) {
-            await deleteFileByUrl(urlOld, `card/${card.id}`)
+            await deleteFileByUrl(
+                urlOld,
+                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+            )
         }
-
         // set loading
         if (name === 'picture') {
             setLoadingPicture(false)
