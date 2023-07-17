@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import StudySetService from '../../services/StudySetService'
 
 import '../../assets/styles/popup.css'
+import { deleteFile } from '../../features/fileManagement'
 
 const DeleteSet = ({ studySet }) => {
     let navigate = useNavigate()
@@ -18,6 +19,7 @@ const DeleteSet = ({ studySet }) => {
         setLoading(true)
         try {
             await StudySetService.deleteStudySet(studySet.id)
+            await deleteFile('', `studySet/${studySet.id}`)
             document.getElementById('closeDeleteSetModal').click()
             navigate('/')
             // clear validation
