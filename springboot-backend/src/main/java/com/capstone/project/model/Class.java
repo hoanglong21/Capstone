@@ -62,13 +62,6 @@ public class Class {
             inverseJoinColumns = @JoinColumn(name = "sudyset_id"))
     Set<StudySet> studySets;
 
-    @ManyToMany
-    @JoinTable(
-            name = "class_learner",
-            joinColumns = @JoinColumn(name = "class_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    Set<User> users;
-
     private boolean is_deleted;
 
     @Column

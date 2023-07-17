@@ -1,6 +1,5 @@
 package com.capstone.project.service.impl;
 
-import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
@@ -28,11 +27,12 @@ public class ClassServiceImpl implements ClassService {
     private final AttachmentRepository attachmentRepository;
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
+    private final ClassLearnerRepository classLearnerRepository;
 
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
@@ -40,6 +40,7 @@ public class ClassServiceImpl implements ClassService {
         this.attachmentRepository = attachmentRepository;
         this.submissionRepository = submissionRepository;
         this.userRepository = userRepository;
+        this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
     }
 
@@ -121,7 +122,8 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String from, String to,String direction, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String fromDeleted, String toDeleted,
+                                              String fromCreated, String toCreated,String sortBy,String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
 //        String query ="SELECT * FROM class WHERE 1=1";
@@ -152,23 +154,34 @@ public class ClassServiceImpl implements ClassService {
         }
 
         if ((isDeleted == null || isDeleted)) {
-            if (from != null) {
-                query += " AND deleted_date >= :from";
-                parameters.put("from", from);
+            if (fromDeleted != null) {
+                query += " AND DATE(deleted_date) >= :from";
+                parameters.put("from", fromDeleted);
             }
-            if (to != null) {
-                query += " AND deleted_date <= :to";
-                parameters.put("to", to);
+            if (toDeleted != null) {
+                query += " AND DATE(deleted_date) <= :to";
+                parameters.put("to", toDeleted);
             }
         }
 
-        String direct = "desc";
-        if(direction != null && !direction.isEmpty()){
-            if (direction.equalsIgnoreCase("asc")) {
-                direct = "asc";
-            }
+        if (fromCreated != null && !fromCreated.equals("")) {
+            query += " AND DATE(created_date) >= :fromCreated";
+            parameters.put("fromCreated", fromCreated);
         }
-        query += " ORDER BY created_date " + " " + direct;
+        if (toCreated != null && !toCreated.equals("")) {
+            query += " AND DATE(created_date) <= :toCreated";
+            parameters.put("toCreated", toCreated);
+        }
+
+        query += " ORDER BY " + sortBy + " " + direction;
+
+//        String direct = "desc";
+//        if(direction != null && !direction.isEmpty()){
+//            if (direction.equalsIgnoreCase("asc")) {
+//                direct = "asc";
+//            }
+//        }
+//        query += " ORDER BY created_date " + " " + direct;
 
         Query q = em.createNativeQuery(query, "ClassCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
@@ -210,8 +223,8 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("You cannot join your class !");
         }
 
-
-        if (classroom.getUsers().contains(user)) {
+        ClassLearner classLearner = classLearnerRepository.findByUserAndClassroom(user,classroom);
+        if (classLearner != null) {
             throw new ResourceNotFroundException("You are already in the class !");
         }
 
@@ -219,8 +232,12 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("Class is not exist !");
         }
 
+        classLearner = new ClassLearner();
+        classLearner.setUser(user);
+        classLearner.setClassroom(classroom);
+        classLearner.setCreated_date(new Date());
+        classLearnerRepository.save(classLearner);
         // add user to classroom
-        classroom.getUsers().add(user);
         return classRepository.save(classroom);
     }
 

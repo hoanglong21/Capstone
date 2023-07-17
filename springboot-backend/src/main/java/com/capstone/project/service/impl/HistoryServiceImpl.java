@@ -48,15 +48,17 @@ public class HistoryServiceImpl implements HistoryService {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public Map<String, Object> filterHistory(int userId, int destinationId, int typeId, String fromDatetime, String toDatetime,
+    public Map<String, Object> filterHistory(int userId, int destinationId, int typeId, int categoryId, String fromDatetime, String toDatetime,
                                        String sortBy, String direction, int page, int size) {
         String sql = "SELECT h.* FROM history h";
 
 //        if(userId!=0) {
 //            sql += " LEFT JOIN user u ON h.user_id = u.id";
-//        } if (typeId==2) {
-//            sql += " LEFT JOIN studyset s ON h.studyset_id = s.id";
-//        } if (typeId==3) {
+//        }
+        if (typeId==2) {
+            sql += " LEFT JOIN studyset s ON h.studyset_id = s.id";
+        }
+//        if (typeId==3) {
 //            sql += " LEFT JOIN class c ON h.class_id = c.id";
 //        }
 
@@ -67,12 +69,17 @@ public class HistoryServiceImpl implements HistoryService {
         if(userId!=0) {
             sql += " AND h.user_id = ? ";
             params.add(userId);
-        } if(typeId==2) {
+        } if(typeId==2 && destinationId!=0) {
             sql += " AND h.studyset_id = ? ";
             params.add(destinationId);
-        } if (typeId==3) {
+        } if (typeId==3 && destinationId!=0) {
             sql += " AND h.class_id = ? ";
             params.add(destinationId);
+        }
+
+        if(typeId==2 && categoryId!=0) {
+            sql += " AND s.type_id = ? ";
+            params.add(categoryId);
         }
 
         sql += " AND h.type_id = ?";
@@ -80,12 +87,12 @@ public class HistoryServiceImpl implements HistoryService {
 
 
         if (fromDatetime != null && !fromDatetime.isEmpty()) {
-            sql += " AND h.datetime >= ? ";
+            sql += " AND DATE(h.datetime) >= ? ";
             params.add(fromDatetime);
         }
 
         if (toDatetime != null && !toDatetime.isEmpty()) {
-            sql += " AND h.datetime <= ? ";
+            sql += " AND DATE(h.datetime) <= ? ";
             params.add(toDatetime);
         }
 
