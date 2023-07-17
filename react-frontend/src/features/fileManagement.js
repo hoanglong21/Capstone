@@ -181,3 +181,25 @@ export const renameFolder = async (currentFolderName, newFolderName) => {
         console.error(`Error renaming ${currentFolderName} to ${newFolderName}: ${error}`);
     }
 };
+
+export const deleteFolderByPath = async (folderPath) => {
+    // Attention: start by files/ ...
+    // Create a reference to the folder
+    const folderRef = ref(storage, folderPath);
+  
+    // List all items (files and subfolders) inside the folder
+    try {
+      const listResult = await listAll(folderRef);
+      const itemsToDelete = listResult.items;
+  
+      // Delete all items (files and subfolders) inside the folder
+      await Promise.all(itemsToDelete.map(deleteObject));
+  
+      // After deleting all items, delete the empty folder
+      await deleteObject(folderRef);
+  
+      console.log(`${folderRef.fullPath} has been deleted successfully.`);
+    } catch (error) {
+      console.error(`Error deleting ${folderRef.fullPath}: ${error}`);
+    }
+  };

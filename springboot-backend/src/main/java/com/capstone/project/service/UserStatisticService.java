@@ -12,7 +12,7 @@ public interface UserStatisticService {
 
     List<Integer> getStudySetLearnedStatistic(int id) throws ResourceNotFroundException;
 
-    List<Integer> getClassJoinedStatistic(int id);
+    List<Integer> getClassJoinedStatistic(int id) throws ResourceNotFroundException;
 
     List<Integer> getLearningStatistic(int id) throws ResourceNotFroundException;
 }
