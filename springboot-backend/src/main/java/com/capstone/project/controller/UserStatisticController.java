@@ -34,4 +34,14 @@ public class UserStatisticController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/user/learning/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> getLearningStatistic(@PathVariable("id") int id) {
+        try {
+            return ResponseEntity.ok(userStatisticService.getLearningStatistic(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

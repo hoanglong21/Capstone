@@ -56,7 +56,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
     @Override
     public Integer getAccessNumber() {
         List<String> listDate = dateRangePicker.getShortDateRange();
-        Map<String, Object> response = historyService.filterHistory(0, 0, 1, listDate.get(0), listDate.get(1),
+        Map<String, Object> response = historyService.filterHistory(0, 0, 1, 0, listDate.get(0), listDate.get(1),
                 "datetime", "DESC", 1, 5);
         return Integer.parseInt(String.valueOf(response.get("totalItems")));
     }
