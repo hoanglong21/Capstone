@@ -67,10 +67,10 @@ public class HistoryServiceImpl implements HistoryService {
         if(userId!=0) {
             sql += " AND h.user_id = ? ";
             params.add(userId);
-        } if(typeId==2) {
+        } if(typeId==2 && destinationId!=0) {
             sql += " AND h.studyset_id = ? ";
             params.add(destinationId);
-        } if (typeId==3) {
+        } if (typeId==3 && destinationId!=0) {
             sql += " AND h.class_id = ? ";
             params.add(destinationId);
         }
