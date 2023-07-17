@@ -20,41 +20,37 @@ function SidebarforAdmin() {
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link
               to="/dashboard"
-              className="nav-link fs-7 active"
-              aria-current="page"
+              className="nav-link fs-7"
             >
-              <i className="bi bi-speedometer2 text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Dashboard</span>
+              <i className="bi bi-speedometer2 text-dark"></i>
+              <span className="ms-3 d-none d-sm-inline text-dark">Dashboard</span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link
               to="/manageusers"
               className="nav-link fs-7"
-              aria-current="page"
             >
-              <i class="bi bi-person-square text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Manage User</span>
+              <i class="bi bi-person-square text-dark"></i>
+              <span className="ms-3 d-none d-sm-inline text-dark">Manage User</span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link
               to="/manageclass"
               className="nav-link fs-7"
-              aria-current="page"
             >
-              <i class="bi bi-people text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Manage Class</span>
+              <i class="bi bi-people text-dark"></i>
+              <span className="ms-3 d-none d-sm-inline text-dark">Manage Class</span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link
               to="/managefeedback"
               className="nav-link fs-7"
-              aria-current="page"
             >
-              <i class="bi bi-chat-text text-white"></i>
-              <span className="ms-3 d-none d-sm-inline text-white">Manage Feedback</span>
+              <i class="bi bi-chat-text text-dark"></i>
+              <span className="ms-3 d-none d-sm-inline text-dark">Manage Feedback</span>
             </Link>
           </li>
         </ul>
