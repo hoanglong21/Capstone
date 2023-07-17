@@ -1,8 +1,7 @@
 package com.capstone.project.service.impl;
 
-import com.capstone.project.service.OverviewStatisticService;
-import com.capstone.project.service.StudySetService;
-import com.capstone.project.service.UserService;
+import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +16,12 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
 
     @Autowired
     private StudySetService studySetService;
+
+    @Autowired
+    private HistoryService historyService;
+
+    @Autowired
+    private ClassService classService;
 
     @Override
     public List<Integer> getUserGrowth() {
@@ -45,6 +50,43 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
         return result;
     }
 
+    @Override
+    public Integer getAccessNumber() {
+        List<String> listDate = getShortDateRange();
+        Map<String, Object> response = historyService.filterHistory(0, 0, 1, listDate.get(0), listDate.get(1),
+                "datetime", "DESC", 1, 5);
+        return Integer.parseInt(String.valueOf(response.get("totalItems")));
+    }
+
+    @Override
+    public Integer getRegisterNumber() {
+        List<String> listDate = getShortDateRange();
+        Map<String, Object> response = userService.filterUser(null,null, null, null, null,
+                new String[]{"ROLE_LEARNER", "ROLE_TUTOR"}, null, null, null,
+                null, null, null, null, null, null, listDate.get(0), listDate.get(1),
+                "created_date", "DESC", 1, 5);
+        return Integer.parseInt(String.valueOf(response.get("totalItems")));
+
+    }
+
+    @Override
+    public Integer getClassNumber() throws ResourceNotFroundException {
+        List<String> listDate = getShortDateRange();
+        Map<String, Object> response = classService.getFilterClass(null, null, null,
+                listDate.get(0), listDate.get(1),"DESC", 1, 5);
+        // TODO edit after change order by
+        return Integer.parseInt(String.valueOf(response.get("totalItems")));
+    }
+
+    @Override
+    public Integer getStudySetNumber() {
+        List<String> listDate = getShortDateRange();
+        Map<String, Object> response = studySetService.getFilterList(null, null, null, null, 0,
+                0, null, null, null,
+                listDate.get(0), listDate.get(1), "created_date", "DESC", 1, 5);
+        return Integer.parseInt(String.valueOf(response.get("totalItems")));
+    }
+
     private List<String> getDateRange() {
         // Get the current date
         Date currentDate = new Date();
@@ -66,6 +108,27 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
             listOfDate.add(dateFormat.format(updatedDate));
         }
         Collections.reverse(listOfDate);
+
+        return listOfDate;
+    }
+
+    private List<String> getShortDateRange() {
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        List<String> listOfDate = new ArrayList<>();
+
+        // Subtract 30 days
+        calendar.add(Calendar.DAY_OF_MONTH, -30);
+        // Get the updated date as a Date object
+        Date updatedDate = calendar.getTime();
+
+        // Now currentDate contains the date 7 days ago from today
+        listOfDate.add(dateFormat.format(updatedDate));
+        listOfDate.add(dateFormat.format(currentDate));
 
         return listOfDate;
     }

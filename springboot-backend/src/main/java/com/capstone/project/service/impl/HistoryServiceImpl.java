@@ -80,12 +80,12 @@ public class HistoryServiceImpl implements HistoryService {
 
 
         if (fromDatetime != null && !fromDatetime.isEmpty()) {
-            sql += " AND h.datetime >= ? ";
+            sql += " AND DATE(h.datetime) >= ? ";
             params.add(fromDatetime);
         }
 
         if (toDatetime != null && !toDatetime.isEmpty()) {
-            sql += " AND h.datetime <= ? ";
+            sql += " AND DATE(h.datetime) <= ? ";
             params.add(toDatetime);
         }
 
