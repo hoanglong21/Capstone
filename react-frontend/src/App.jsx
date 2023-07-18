@@ -217,7 +217,7 @@ const App = () => {
                 <Route path="/sidebar" element={<SidebarforAdmin />} />
                 <Route path="/dashboard" element={<AdminDashboard />} />
                 <Route
-                    path="/manageusers/viewdetails"
+                    path="/viewdetailuser/:username"
                     element={<ViewDetailsUser />}
                 />
                 <Route path="/manageclass" element={<ManageClass />} />
