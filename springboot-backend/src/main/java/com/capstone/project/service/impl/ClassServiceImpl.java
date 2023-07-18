@@ -128,10 +128,11 @@ public class ClassServiceImpl implements ClassService {
 
 //        String query ="SELECT * FROM class WHERE 1=1";
 
-        String query = "SELECT c.*, COUNT(cl.user_id) AS member, COUNT(cs.sudyset_id) AS studyset " +
+        String query = "SELECT c.*, COUNT(cl.user_id) AS member, COUNT(cs.sudyset_id) AS studyset,u.avatar,u.username as author " +
                 "FROM class c " +
                 "LEFT JOIN class_learner cl ON c.id = cl.class_id " +
                 "LEFT JOIN class_studyset cs ON c.id = cs.class_id " +
+                "LEFT JOIN user u ON u.id = c.author_id " +
                 "GROUP BY c.id HAVING 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
