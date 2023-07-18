@@ -107,7 +107,8 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
-    public Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid, String from, String to, Boolean isDraft, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid,
+                                             String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="select t.id,t.created_date,t.description,t.duration,t.modified_date,t.title,t.author_id,t.class_id,t.due_date,t.is_draft,t.num_attemps,t.start_date," +
@@ -142,23 +143,26 @@ public class TestServiceImpl  implements TestService {
             parameters.put("isDraft", isDraft);
         }
 
-        if(from != null){
+        if(fromStarted != null){
             query += " AND t.start_date >= :from ";
-            parameters.put("from", from);
+            parameters.put("from", fromStarted);
         }
 
-        if(to != null){
+        if(toStarted != null){
             query += " AND t.start_date <= :to";
-            parameters.put("to", to);
+            parameters.put("to", toStarted);
         }
 
-        String direct = "desc";
-        if(direction != null && !direction.isEmpty()){
-            if (direction.equalsIgnoreCase("asc")) {
-                direct = "asc";
-            }
+        if (fromCreated != null && !fromCreated.equals("")) {
+            query += " AND DATE(t.created_date) >= :fromCreated";
+            parameters.put("fromCreated", fromCreated);
         }
-        query += " ORDER BY created_date " + " " + direct;
+        if (toCreated != null && !toCreated.equals("")) {
+            query += " AND DATE(t.created_date) <= :toCreated";
+            parameters.put("toCreated", toCreated);
+        }
+
+        query += " ORDER BY " + sortBy + " " + direction;
 
 
         Query q = em.createNativeQuery(query, "TestCustomListMapping");
