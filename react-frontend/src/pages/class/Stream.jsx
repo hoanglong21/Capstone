@@ -274,6 +274,9 @@ const Stream = () => {
                                     type="file"
                                     id="uploadPostFile"
                                     className="postUpload"
+                                    onClick={(event) => {
+                                        event.target.value = null
+                                    }}
                                     onChange={handleUploadFile}
                                 />
                                 <button type="btn" disabled={loadingUploadFile}>

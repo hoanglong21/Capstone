@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { uploadFile } from '../../../features/fileManagement'
+import {
+    deleteFileByUrl,
+    deleteFolder,
+    renameFolder,
+    uploadFile,
+} from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
 import TestService from '../../../services/TestService'
 
@@ -15,6 +20,7 @@ import {
     VideoIcon,
 } from '../../../components/icons'
 import QuestionService from '../../../services/QuestionService'
+import AnswerService from '../../../services/AnswerService'
 
 const CreateTest = () => {
     const { id } = useParams()
@@ -74,50 +80,49 @@ const CreateTest = () => {
         try {
             // create test
             const tempTest = (await TestService.createTest(test)).data
+            // change test folder name
+            await renameFolder(
+                `${userInfo.username}/class/${classroom.id}/test/test_id`,
+                `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}`
+            )
             // question
-            var createQuestions = []
-            for (var ques of questions) {
-                // upload question to firebase
-                var urlQuesPicture = ''
-                if (ques.picture) {
-                    urlQuesPicture = await uploadFile(
-                        ques.picture,
-                        `class/${classroom.id}/test/${tempTest.id}/question_tempQuesId/question`
-                    )
-                }
-                var urlQuesAudio = ''
-                if (ques.audio) {
-                    urlQuesAudio = await uploadFile(
-                        ques.audio,
-                        `class/${classroom.id}/test/${tempTest.id}/question_tempQuesId/question`
-                    )
-                }
-                var urlQuesVideo = ''
-                if (ques.video) {
-                    urlQuesVideo = await uploadFile(
-                        ques.video,
-                        `class/${classroom.id}/test/${tempTest.id}/question_tempQuesId/question`
-                    )
-                }
+            for (let indexQues = 0; indexQues < questions.length; indexQues++) {
+                const ques = questions[indexQues]
                 var tempCreateQues = {
                     ...ques,
                     test: { id: tempTest.id },
-                    picture: urlQuesPicture,
-                    audio: urlQuesAudio,
-                    video: urlQuesVideo,
                 }
+                const answers = tempCreateQues.answers
                 delete tempCreateQues.answers
-                createQuestions.push({ ...tempCreateQues })
+                // add question
+                const tempQues = await QuestionService.createQuestion(
+                    tempCreateQues
+                )
+                // change question foldername
+                await renameFolder(
+                    `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/question_${indexQues}`,
+                    `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/${tempQues.id}`
+                )
+                // add answers
+                const tempAnswers = await AnswerService.createAnswers(answers)
+                // change answer foldername
+                for (
+                    let indexAns = 0;
+                    indexAns < tempAnswers.length;
+                    indexAns++
+                ) {
+                    const ans = tempAnswers[indexAns]
+                    await renameFolder(
+                        `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/${tempQues.id}/answer/ans_${indexAns}`,
+                        `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/${tempQues.id}/answer/${ans.id}`
+                    )
+                }
             }
-            const tempQuestions = (
-                await QuestionService.createQuestions(createQuestions)
-            ).data
-            // change firebase foldername
         } catch (error) {
             if (error.response && error.response.data) {
-                console.log(error.response.data)
+                setError(error.response.data)
             } else {
-                console.log(error.message)
+                setError(error.message)
             }
         }
     }
@@ -223,12 +228,16 @@ const CreateTest = () => {
     }
 
     const handleUploadFileQuestion = async (event, quesIndex) => {
-        var file = event.targets[0]
+        var file = event.target.files[0]
         if (file) {
+            const url = await uploadFile(
+                file,
+                `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/question`
+            )
             var tempQuestions = [...questions]
             tempQuestions[quesIndex] = {
                 ...tempQuestions[quesIndex],
-                [event.target.name]: file,
+                [event.target.name]: url,
             }
             setQuestions(tempQuestions)
         }
@@ -239,13 +248,17 @@ const CreateTest = () => {
     }
 
     const handleUploadFileAnswer = async (event, quesIndex, ansIndex) => {
-        const file = event.targets[0]
+        const file = event.target.files[0]
         if (file) {
+            const url = await uploadFile(
+                file,
+                `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/answer/answer_${ansIndex}`
+            )
             var tempQuestions = [...questions]
             var tempAnswers = [...tempQuestions[quesIndex].answers]
             tempAnswers[ansIndex] = {
                 ...tempAnswers[ansIndex],
-                [event.target.name]: file,
+                [event.target.name]: url,
             }
             tempQuestions[quesIndex] = {
                 ...tempQuestions[quesIndex],
@@ -255,7 +268,7 @@ const CreateTest = () => {
         }
     }
 
-    const handleDeleteAnswer = (event, quesIndex, ansIndex) => {
+    const handleDeleteAnswer = async (event, quesIndex, ansIndex) => {
         var tempQuestions = [...questions]
         var tempAnswers = [...tempQuestions[quesIndex].answers]
         tempAnswers.splice(ansIndex, 1)
@@ -264,32 +277,38 @@ const CreateTest = () => {
             answers: tempAnswers,
         }
         setQuestions(tempQuestions)
+        await deleteFolder(
+            `files/${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/answer/answer_${ansIndex}`
+        )
     }
 
-    const handleDeleteQues = (quesIndex) => {
+    const handleDeleteQues = async (quesIndex) => {
         var tempQuestions = [...questions]
         tempQuestions.splice(quesIndex, 1)
         setQuestions(tempQuestions)
+        await deleteFolder(
+            `files/${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}`
+        )
     }
 
-    const handleDuplicateQues = (quesIndex) => {
+    const handleDeleteFileQues = async (event, quesIndex) => {
         var tempQuestions = [...questions]
-        tempQuestions.splice(quesIndex, 0, { ...tempQuestions[quesIndex] })
-        setQuestions(tempQuestions)
-    }
-
-    const handleDeleteFileQues = (event, quesIndex) => {
-        var tempQuestions = [...questions]
+        const url = tempQuestions[quesIndex][event.target.name]
         tempQuestions[quesIndex] = {
             ...tempQuestions[quesIndex],
             [event.target.name]: null,
         }
         setQuestions(tempQuestions)
+        await deleteFileByUrl(
+            url,
+            `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}`
+        )
     }
 
-    const handleDeleteFileAns = (event, quesIndex, ansIndex) => {
+    const handleDeleteFileAns = async (event, quesIndex, ansIndex) => {
         var tempQuestions = [...questions]
         var tempAnswers = [...tempQuestions[quesIndex].answers]
+        const url = tempAnswers[ansIndex][event.target.name]
         tempAnswers[ansIndex] = {
             ...tempAnswers[ansIndex],
             [event.target.name]: null,
@@ -299,6 +318,10 @@ const CreateTest = () => {
             answers: tempAnswers,
         }
         setQuestions(tempQuestions)
+        await deleteFileByUrl(
+            url,
+            `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/answer/answer_${ansIndex}`
+        )
     }
 
     return (
@@ -309,6 +332,7 @@ const CreateTest = () => {
                     <button
                         className="createTest_submitBtn"
                         onClick={handleCreate}
+                        disabled={!test?.title}
                     >
                         Create
                     </button>
@@ -523,9 +547,7 @@ const CreateTest = () => {
                                 <div className="col-6 mb-2">
                                     <div className="uploadFileAnsItem">
                                         <img
-                                            src={URL.createObjectURL(
-                                                ques?.picture
-                                            )}
+                                            src={ques?.picture}
                                             className="createTest_img"
                                             alt="question picture"
                                         />
@@ -550,9 +572,7 @@ const CreateTest = () => {
                                     <div className="uploadFileAnsItem">
                                         <audio
                                             controls
-                                            src={URL.createObjectURL(
-                                                ques?.audio
-                                            )}
+                                            src={ques?.audio}
                                             alt="question audio"
                                         />
                                         <button
@@ -577,9 +597,7 @@ const CreateTest = () => {
                                         <video
                                             className="createTest_video"
                                             controls
-                                            src={URL.createObjectURL(
-                                                ques?.video
-                                            )}
+                                            src={ques?.video}
                                         >
                                             Your browser does not support the
                                             video tag.
@@ -772,9 +790,7 @@ const CreateTest = () => {
                                         <div className="col-4 mb-2">
                                             <div className="uploadFileAnsItem--sm">
                                                 <img
-                                                    src={URL.createObjectURL(
-                                                        ans?.picture
-                                                    )}
+                                                    src={ans?.picture}
                                                     className="createTest_img--sm"
                                                     alt="answer picture"
                                                 />
@@ -800,9 +816,7 @@ const CreateTest = () => {
                                             <div className="uploadFileAnsItem--sm">
                                                 <audio
                                                     controls
-                                                    src={URL.createObjectURL(
-                                                        ans?.audio
-                                                    )}
+                                                    src={ans?.audio}
                                                     alt="answer audio"
                                                 />
                                                 <button
@@ -828,9 +842,7 @@ const CreateTest = () => {
                                                 <video
                                                     className="createTest_video--sm"
                                                     controls
-                                                    src={URL.createObjectURL(
-                                                        ans?.video
-                                                    )}
+                                                    src={ans?.video}
                                                 >
                                                     Your browser does not
                                                     support the video tag.
@@ -878,20 +890,12 @@ const CreateTest = () => {
                             />
                             <span>points</span>
                         </div>
-                        <div>
-                            <button
-                                className="btn btn-customLight me-2 p-2 rounded-circle"
-                                onClick={() => handleDuplicateQues(quesIndex)}
-                            >
-                                <CopyIcon />
-                            </button>
-                            <button
-                                className="btn btn-customLight p-2 rounded-circle"
-                                onClick={() => handleDeleteQues(quesIndex)}
-                            >
-                                <DeleteIcon />
-                            </button>
-                        </div>
+                        <button
+                            className="btn btn-customLight p-2 rounded-circle"
+                            onClick={() => handleDeleteQues(quesIndex)}
+                        >
+                            <DeleteIcon />
+                        </button>
                     </div>
                 </div>
             ))}

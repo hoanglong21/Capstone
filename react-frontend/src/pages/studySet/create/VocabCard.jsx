@@ -81,7 +81,10 @@ export const VocabCard = (props) => {
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
-            if (e.message === 'ResizeObserver loop limit exceeded') {
+            if (
+                e.message === 'ResizeObserver loop limit exceeded' ||
+                e.message.includes('t.getStyle is not a function')
+            ) {
                 const resizeObserverErrDiv = document.getElementById(
                     'webpack-dev-server-client-overlay-div'
                 )
@@ -173,6 +176,9 @@ export const VocabCard = (props) => {
                             accept="image/*"
                             name="picture"
                             className={styles.file_upload}
+                            onClick={(event) => {
+                                event.target.value = null
+                            }}
                             onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadImage${props.index}`}>
@@ -186,6 +192,9 @@ export const VocabCard = (props) => {
                             accept="audio/*"
                             name="audio"
                             className={styles.file_upload}
+                            onClick={(event) => {
+                                event.target.value = null
+                            }}
                             onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadAudio${props.index}`}>
@@ -203,7 +212,7 @@ export const VocabCard = (props) => {
             </div>
             <div className={`card-body ${styles.card_body}`}>
                 <div className="row px-2 py-1">
-                    <div className="col-6 pe-4">
+                    <div className="col-6 pe-4 d-flex flex-column justify-content-end">
                         <CardEditor
                             name="term"
                             data={term?.content}
@@ -223,7 +232,7 @@ export const VocabCard = (props) => {
                             TERM
                         </span>
                     </div>
-                    <div className="col-6 ps-4">
+                    <div className="col-6 ps-4 d-flex flex-column justify-content-end">
                         <CardEditor
                             name="definition"
                             data={definition?.content}

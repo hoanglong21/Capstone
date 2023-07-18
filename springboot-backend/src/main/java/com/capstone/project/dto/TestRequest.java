@@ -20,9 +20,9 @@ import java.util.Date;
 public class TestRequest {
     private int id;
 
-    @NotBlank(message = "Title cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Title can only contain letters, numbers, and spaces")
-    @Length(min = 2, message = "Title must have at least 2 characters")
+    @NotNull(message = "Title cannot be null")
+//    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Title can only contain letters, numbers, and spaces")
+//    @Length(min = 2, message = "Title must have at least 2 characters")
     private String title;
 
     private User user;
@@ -87,7 +87,7 @@ public class TestRequest {
 
     }
 
-    @AssertTrue(message = "Start date must be equal or after today's date")
+    @AssertTrue(message = "Start date must be equal or after created date")
     public boolean isStartDateValid() {
         return start_date == null || start_date.compareTo(new Date()) >= 0;
     }

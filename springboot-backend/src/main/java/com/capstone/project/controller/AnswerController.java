@@ -53,7 +53,7 @@ public class AnswerController {
     }
 
     @PostMapping("/createanswers")
-    public ResponseEntity<?> createAnswers(@Valid @RequestBody List<AnswerRequest> answerRequests, BindingResult result) {
+        public ResponseEntity<?> createAnswers(@Valid @RequestBody List<AnswerRequest> answerRequests, BindingResult result) {
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()

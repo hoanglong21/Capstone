@@ -2,7 +2,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { deleteFile, uploadFile } from '../../../features/fileManagement'
+import {
+    deleteFolder,
+    uploadFile,
+} from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
@@ -99,16 +102,16 @@ function UpdateAssignment() {
                 })
             ).data
             // delete folder
-            await deleteFile(
-                '',
-                `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
+            await deleteFolder(
+                `files/${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
+                false
             )
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
                 const url = await uploadFile(
                     uploadFileItem.file,
-                    `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
+                    `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
                 )
                 tempAttachments.push({
                     file_name: uploadFileItem.file_name,
