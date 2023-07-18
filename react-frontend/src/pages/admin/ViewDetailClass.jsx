@@ -4,7 +4,7 @@ import HeaderAdmin from "./HeaderAdmin";
 import { Link, useParams } from "react-router-dom";
 import ClassService from "../../services/ClassService";
 import ApexCharts from "apexcharts";
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 
 function ViewDetailClass() {
   const [classes, setClasses] = useState([]);

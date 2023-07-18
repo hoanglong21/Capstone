@@ -76,7 +76,7 @@ function AssignmentList() {
             )}
             <div className="accordion mt-4 accordionTests" id="accordionTests">
                 {assignments.map((assign, index) => (
-                    <div className="accordion-item">
+                    <div className="accordion-item" key={index}>
                         <button
                             className="accordion-button collapsed d-flex justify-content-between align-items-center"
                             type="button"

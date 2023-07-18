@@ -26,20 +26,31 @@ const ViewCard = ({ card }) => {
 
     return (
         <div className="setPageTerm mb-3">
-            <div className="row">
+            <div className="row d-flex align-items-center">
                 <div
                     className="col-3"
                     style={{ borderRight: '0.125rem solid #f6f7fb' }}
                 >
                     <div className="setPageTerm_termText">
-                        <div dangerouslySetInnerHTML={{ __html: term }}></div>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: term ? term : '...',
+                            }}
+                        ></div>
                     </div>
                 </div>
                 <div className="col-9">
-                    <div className="setPageTerm_definitionText">
-                        <div
-                            dangerouslySetInnerHTML={{ __html: definition }}
-                        ></div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <div className="setPageTerm_definitionText">
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: definition ? definition : '...',
+                                }}
+                            ></div>
+                        </div>
+                        <div className="setPageTerm_imageWrap d-flex align-items-center">
+                            {card.picture && <img src={card?.picture} />}
+                        </div>
                     </div>
                 </div>
             </div>
