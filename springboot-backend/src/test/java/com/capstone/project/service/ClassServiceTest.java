@@ -188,7 +188,7 @@ public class ClassServiceTest {
                 .id(1)
                 .user(User.builder().id(2).build())
                 .classroom(Class.builder().id(2).build())
-                .description("do excersices")
+                .instruction("do excersices")
                 .title("Assignment 1")
                 .build();
 
@@ -199,7 +199,7 @@ public class ClassServiceTest {
 
         Attachment attachment = Attachment.builder()
                 .attachmentType(AttachmentType.builder().id(1).build())
-                .file("tailieu.docx")
+                .file_url("tailieu.docx")
                 .assignment(assignment)
                 .submission(submission).build();
 
