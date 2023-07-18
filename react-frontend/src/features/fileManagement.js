@@ -6,6 +6,7 @@ import {
     getDownloadURL,
     deleteObject,
     listAll,
+    list
 } from 'firebase/storage'
 
 const firebaseConfig = {
@@ -196,20 +197,51 @@ export const deleteFolderByPath = async (folderPath) => {
     // Attention: start by files/ ...
     // Create a reference to the folder
     const folderRef = ref(storage, folderPath)
+    console.log(folderRef)
 
     // List all items (files and subfolders) inside the folder
-    try {
-        const listResult = await listAll(folderRef)
-        const itemsToDelete = listResult.items
+    // try {
+    //     const listResult = await listAll(folderRef)
+    //     const itemsToDelete = listResult.items
 
-        // Delete all items (files and subfolders) inside the folder
-        await Promise.all(itemsToDelete.map(deleteObject))
+    //     // Delete all items (files and subfolders) inside the folder
+    //     await Promise.all(itemsToDelete.map(deleteObject))
 
-        // After deleting all items, delete the empty folder
-        // await deleteObject(folderRef)
+    //     // After deleting all items, delete the empty folder
+    //     await deleteObject(folderRef)
 
-        console.log(`${folderRef.fullPath} has been deleted successfully.`)
-    } catch (error) {
-        console.error(`Error deleting ${folderRef.fullPath}: ${error}`)
-    }
+    //     console.log(`${folderRef} has been deleted successfully.`)
+    // } catch (error) {
+    //     console.error(`Error deleting ${folderRef}: ${error}`)
+    // }
 }
+
+export const deleteFolder = async (folderPath) => {
+    try {
+      // Create a reference to the folder
+      const folderRef = ref(storage, folderPath);
+  
+      // List all items (files and subfolders) inside the folder
+      const listResult = await list(folderRef);
+      const listResult2 = await listAll(folderRef);
+      const items = listResult2.items;
+
+      // Filter out the subfolders based on their names
+      const subfolders = listResult.prefixes.map((subfolderRef) => subfolderRef.fullPath);
+  
+      console.log('Subfolders:', subfolders);
+  
+      // Delete all items (files and subfolders) inside the folder recursively
+      await Promise.all(items.map(deleteObject))
+      await Promise.all(subfolders.map(deleteFolder))
+  
+      console.log(`All items inside ${folderPath} have been deleted successfully.`);
+      return true;
+    } catch (error) {
+      console.error(`Error deleting items inside ${folderPath}:`, error);
+      return false;
+    }
+  };
+  
+  
+  
