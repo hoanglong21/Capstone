@@ -159,11 +159,17 @@ export const GrammarCard = (props) => {
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
-            const url = await uploadFile(file, `card/${card.id}`)
+            const url = await uploadFile(
+                file,
+                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+            )
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {
-                await deleteFileByUrl(urlOld, `card/${card.id}`)
+                await deleteFileByUrl(
+                    urlOld,
+                    `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                )
             }
             doUpdateCard(tempCard)
         }
@@ -177,7 +183,10 @@ export const GrammarCard = (props) => {
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
         if (urlOld) {
-            await deleteFileByUrl(urlOld, `card/${card.id}`)
+            await deleteFileByUrl(
+                urlOld,
+                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+            )
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)

@@ -4,11 +4,12 @@ import Toast from 'react-bootstrap/Toast'
 import { useState, useEffect } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 
-import { logout } from '../../features/auth/authSlice'
-import { getUser } from '../../features/user/userAction'
+import { logout as authLogout } from '../../features/auth/authSlice'
+import { logout as userLogout } from '../../features/user/userSlice'
 
 import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/class/JoinClass'
+import { getUser } from '../../features/user/userAction'
 
 import logo from '../../assets/images/logo-2.png'
 import {
@@ -16,7 +17,6 @@ import {
     TranslateIcon,
     AddCircleIcon,
     NotifyIcon,
-    ProfileIcon,
     HelpIcon,
     LogoutIcon,
     DictIcon,
@@ -25,7 +25,6 @@ import {
 } from '../icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import './Header.css'
-import $ from 'jquery'
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -45,7 +44,8 @@ const Header = () => {
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
     const handleLogout = () => {
-        dispatch(logout())
+        dispatch(userLogout())
+        dispatch(authLogout())
         toggleShowLogoutMess()
         navigate('/')
     }
@@ -74,21 +74,6 @@ const Header = () => {
         }
     }
 
-    $(document).ready(function () {
-        var down = false
-
-        $('#bell').click(function (e) {
-            if (down) {
-                $('#box').css('height', '0px')
-                $('#box').css('opacity', '0')
-                down = false
-            } else {
-                $('#box').css('height', 'auto')
-                $('#box').css('opacity', '1')
-                down = true
-            }
-        })
-    })
     return (
         <header className="px-4 border-bottom">
             <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -173,7 +158,6 @@ const Header = () => {
                         </li>
                     )}
                 </ul>
-
                 <div className="d-flex align-items-center">
                     {/* Add button */}
                     <div className="dropdown d-inline-flex">
@@ -231,7 +215,7 @@ const Header = () => {
                                 </ul>
                             </li>
                             {(!userInfo ||
-                                userInfo.role !== 'ROLE_LEARNER') && (
+                                userInfo?.role !== 'ROLE_LEARNER') && (
                                 <li>
                                     <button
                                         className="dropdown-item py-2 px-2"
@@ -269,7 +253,6 @@ const Header = () => {
                             </li>
                         </ul>
                     </div>
-
                     {userToken ? (
                         <div>
                             {/* Notify */}
@@ -329,8 +312,8 @@ const Header = () => {
                                 >
                                     <img
                                         src={
-                                            userInfo.avatar
-                                                ? userInfo.avatar
+                                            userInfo?.avatar
+                                                ? userInfo?.avatar
                                                 : defaultAvatar
                                         }
                                         alt="avatar"
@@ -343,8 +326,8 @@ const Header = () => {
                                             <div className="flex-shrink-0">
                                                 <img
                                                     src={
-                                                        userInfo.avatar
-                                                            ? userInfo.avatar
+                                                        userInfo?.avatar
+                                                            ? userInfo?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="avatar"
@@ -353,7 +336,7 @@ const Header = () => {
                                             </div>
                                             <div className="flex-grow-1 ms-3">
                                                 <p className="fw-semibold">
-                                                    {userInfo.username}
+                                                    {userInfo?.username}
                                                 </p>
                                                 <p
                                                     className="text-truncate"
@@ -361,7 +344,7 @@ const Header = () => {
                                                         maxWidth: '8rem',
                                                     }}
                                                 >
-                                                    {userInfo.email}
+                                                    {userInfo?.email}
                                                 </p>
                                             </div>
                                         </div>

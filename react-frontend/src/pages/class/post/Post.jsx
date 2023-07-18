@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import PostService from '../../../services/PostService'
 import AttachmentService from '../../../services/AttachmentService'
 import {
-    deleteFile,
+    deleteFileByUrl,
+    deleteFolderByPath,
     uploadFile,
 } from '../../../features/fileManagement'
 
@@ -19,7 +20,7 @@ import {
 } from '../../../components/icons'
 import './post.css'
 
-const Post = ({ post, stateChanger, posts, index }) => {
+const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [showUpdate, setShowUpdate] = useState(false)
 
     const [updatePost, setUpdatePost] = useState({ ...post })
@@ -54,26 +55,38 @@ const Post = ({ post, stateChanger, posts, index }) => {
             const tempPost = (
                 await PostService.updatePost(updatePost.id, updatePost)
             ).data
-            // delete folder old post in firebase
-            await deleteFile('', `class/${tempPost.classroom.id}/post/${tempPost.id}`)
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
-                const url = await uploadFile(
-                    uploadFileItem.file,
-                    `post/${post.id}`,
-                )
-                tempAttachments.push({
-                    file_name: uploadFileItem.file_name,
-                    file_type: uploadFileItem.file_type,
-                    file_url: url,
-                    post: {
-                        id: post.id,
-                    },
-                    attachmentType: {
-                        id: 3,
-                    },
-                })
+                if (uploadFileItem.file_url) {
+                    tempAttachments.push({
+                        file_name: uploadFileItem.file_name,
+                        file_type: uploadFileItem.file_type,
+                        file_url: uploadFileItem.file_url,
+                        post: {
+                            id: post.id,
+                        },
+                        attachmentType: {
+                            id: 3,
+                        },
+                    })
+                } else {
+                    const url = await uploadFile(
+                        uploadFileItem.file,
+                        `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+                    )
+                    tempAttachments.push({
+                        file_name: uploadFileItem.file_name,
+                        file_type: uploadFileItem.file_type,
+                        file_url: url,
+                        post: {
+                            id: post.id,
+                        },
+                        attachmentType: {
+                            id: 3,
+                        },
+                    })
+                }
             }
             await AttachmentService.createAttachments(tempAttachments)
             // update list posts
@@ -113,14 +126,24 @@ const Post = ({ post, stateChanger, posts, index }) => {
 
     const handleDeletePost = async () => {
         await PostService.deletePost(post.id)
-        await deleteFile('', `class/${post.classroom.id}/post/${post.id}`)
         var tempPosts = [...posts]
         tempPosts.splice(index, 1)
         stateChanger(tempPosts)
         document.getElementById(`closeDeletePostModal${index}`).click()
+        await deleteFolderByPath(
+            `files/${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+        )
     }
 
-    const handleDeleteFile = (file, index) => {
+    const handleDeleteFile = async (file, index) => {
+        // delete in firebase
+        if (file.file_url) {
+            await deleteFileByUrl(
+                file.file_url,
+                `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+            )
+        }
+        // update list file
         var temp = [...uploadFiles]
         temp.splice(index, 1)
         setUploadFiles(temp)
@@ -304,8 +327,8 @@ const Post = ({ post, stateChanger, posts, index }) => {
                                     }}
                                 ></div>
                                 <div className="row">
-                                    {currentFiles.map((file) => (
-                                        <div className="col-6" key={file.id}>
+                                    {currentFiles.map((file, index) => (
+                                        <div className="col-6" key={index}>
                                             <a
                                                 className="card mb-2 text-decoration-none"
                                                 href={file.file_url}

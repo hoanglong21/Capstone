@@ -67,6 +67,7 @@ export default function PostEditor(props) {
                 },
             ],
         },
+        removePlugins: ['MediaEmbedToolbar'],
     }
 
     return (

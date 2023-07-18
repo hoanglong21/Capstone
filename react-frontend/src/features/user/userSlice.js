@@ -3,7 +3,6 @@ import { getUser, updateUser } from './userAction'
 
 const initialState = {
     userInfo: {},
-    defaultAvatar: [],
     error: null,
     success: null,
 }
@@ -15,6 +14,9 @@ const userSlice = createSlice({
         reset: (state) => {
             state.error = null
             state.success = null
+        },
+        logout: () => {
+            return initialState
         },
     },
     extraReducers(builder) {
@@ -40,6 +42,6 @@ const userSlice = createSlice({
     },
 })
 
-export const { reset } = userSlice.actions
+export const { reset, logout } = userSlice.actions
 
 export default userSlice.reducer

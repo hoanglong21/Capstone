@@ -13,6 +13,19 @@ const VocabDict = () => {
     const [activeIndex, setActiveIndex] = useState(0)
     const [kanjiSvgs, setKanjiSvgs] = useState([])
 
+    async function getKanjiSvg(vocab) {
+        var tempKanjiSvgs = []
+        for (var i = 0; i < vocab.length; i++) {
+            const svg = (await DictionaryService.getKanjivg(vocab.charAt(i)))
+                .data
+            tempKanjiSvgs.push({
+                kanji: vocab.charAt(i),
+                svg: svg,
+            })
+        }
+        return tempKanjiSvgs
+    }
+
     const fetchData = async (searchKey) => {
         const temp = (
             await DictionaryService.getVocabulary(
@@ -25,28 +38,57 @@ const VocabDict = () => {
         setVocabs(temp)
         if (temp.length > 0) {
             setWord(temp[0])
-            var tempKanjiSvgs = []
-            for (var i = 0; i < temp[0].kanji[0].length; i++) {
-                const svg = (
-                    await DictionaryService.getKanjivg(
-                        temp[0].kanji[0].charAt(i)
-                    )
-                ).data
-                tempKanjiSvgs.push({
-                    kanji: temp[0].kanji[0].charAt(i),
-                    svg: svg,
-                })
-            }
-            setKanjiSvgs(tempKanjiSvgs)
+            setKanjiSvgs(await getKanjiSvg(temp[0].kanji[0]))
         } else {
             setWord({})
             setKanjiSvgs([])
         }
     }
 
+    function nodeScriptClone(idSelector, index) {
+        const node = document.querySelectorAll(idSelector)[0]
+        var script = document.createElement('script')
+        script.text = node?.innerHTML
+            .replaceAll('svg=', `svg${index}=`)
+            .replaceAll('svg.', `svg${index}.`)
+            .replaceAll('pause=', `pause${index}=`)
+            .replaceAll('pause.', `pause${index}.`)
+            .replaceAll('.pause()', `.pause${index}()`)
+            .replaceAll('reset=', `reset${index}=`)
+            .replaceAll('reset.', `reset${index}.`)
+            .replaceAll('timer', `timer${index}`)
+        var i = -1,
+            attrs = node?.attributes,
+            attr
+        while (++i < attrs?.length) {
+            script.setAttribute((attr = attrs[i]).name, attr.value)
+        }
+        return script
+    }
+
+    // fetch data
     useEffect(() => {
         fetchData(search ? search : '')
     }, [search])
+
+    // kanji svg button
+    useEffect(() => {
+        if (kanjiSvgs.length > 0) {
+            kanjiSvgs.forEach((kanjiSvgs, index) => {
+                const idSelector = `#svgKanji${index} svg script`
+                var script = nodeScriptClone(idSelector, index)
+                if (document.querySelectorAll(idSelector)) {
+                    document.body.appendChild(script)
+                }
+            })
+        }
+        return () => {
+            const scripts = document.querySelectorAll('body > script')
+            for (const script of scripts) {
+                document.body.removeChild(script)
+            }
+        }
+    }, [kanjiSvgs])
 
     function getDisplay(words) {
         if (words) {
@@ -71,13 +113,16 @@ const VocabDict = () => {
                                         activeIndex === index ? 'active' : ''
                                     }`}
                                     key={index}
-                                    onClick={() => {
+                                    onClick={async () => {
                                         setWord(vocab)
                                         setActiveIndex(index)
+                                        setKanjiSvgs(
+                                            await getKanjiSvg(vocab.kanji[0])
+                                        )
                                     }}
                                 >
                                     <div className="word">
-                                        <b>{vocab.kanji}</b> [
+                                        <b>{vocab.kanji[0]}</b> [
                                         {getDisplay(vocab.reading)}]
                                     </div>
                                     <i className="wordSense">
@@ -90,7 +135,9 @@ const VocabDict = () => {
                     <div className="col-7">
                         <div className="word-detail h-100">
                             <div className="word-detail-overview d-flex flex-column align-items-center">
-                                <span className="txtKanji">{word?.kanji}</span>
+                                <span className="txtKanji">
+                                    {word?.kanji[0]}
+                                </span>
                                 <div className="d-flex">
                                     <span className="txtFurigana">
                                         {getDisplay(word?.reading)}
@@ -98,7 +145,7 @@ const VocabDict = () => {
                                     <span className="sound">
                                         <TextToSpeech
                                             className="ms-1"
-                                            text={word?.kanji}
+                                            text={word?.kanji[0]}
                                             language="ja"
                                             size="1.25rem"
                                         />
@@ -142,7 +189,7 @@ const VocabDict = () => {
                             className="accordion accordion-flush"
                             id="accordionKanjiSvg"
                         >
-                            {kanjiSvgs.map((kanjiSvg, index) => (
+                            {kanjiSvgs?.map((kanjiSvg, index) => (
                                 <div className="accordion-item" key={index}>
                                     <h2 className="accordion-header">
                                         <button

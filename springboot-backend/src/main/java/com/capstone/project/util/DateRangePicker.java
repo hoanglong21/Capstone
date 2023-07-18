@@ -52,4 +52,47 @@ public class DateRangePicker {
 
         return listOfDate;
     }
+
+    public List<String> getDateActive() {
+        List<String> listOfDate = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+
+        // Find the most recent Sunday
+        int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int daysToPreviousSunday = (currentDayOfWeek == Calendar.SUNDAY) ? 0 : (Calendar.SUNDAY - currentDayOfWeek);
+        calendar.add(Calendar.DAY_OF_MONTH, daysToPreviousSunday);
+
+        // Add the previous four Sundays
+        for (int i = 0; i < 3; i++) {
+            // Subtract 7 days to get the previous Sunday
+            calendar.add(Calendar.DAY_OF_MONTH, -7);
+        }
+        Date start = calendar.getTime();
+        listOfDate.add(dateFormat.format(start));
+
+        // Find the most recent Saturday
+        calendar = Calendar.getInstance();
+        currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int daysToNextSaturday = (currentDayOfWeek == Calendar.SATURDAY) ? 0 : (Calendar.SATURDAY - currentDayOfWeek);
+        calendar.add(Calendar.DAY_OF_MONTH, daysToNextSaturday);
+
+        // Add the next two Saturdays
+        for (int i = 0; i < 2; i++) {
+            // Add 7 days to get the next Saturday
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+        }
+        Date end = calendar.getTime();
+
+        // Add all the dates between start and end (inclusive)
+        calendar.setTime(start);
+        while (calendar.getTime().before(end)) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            listOfDate.add(dateFormat.format(calendar.getTime()));
+        }
+//        int index = listOfDate.size() - 1;
+//        listOfDate.remove(index);
+
+        return listOfDate;
+    }
 }

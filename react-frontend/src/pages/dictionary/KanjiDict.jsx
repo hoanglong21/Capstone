@@ -48,10 +48,12 @@ const KanjiDict = () => {
         return script
     }
 
+    // fetch data
     useEffect(() => {
         fetchData(search ? search : '')
     }, [search])
 
+    // kanji svg button
     useEffect(() => {
         var script = nodeScriptClone()
         if (document.querySelectorAll('.kanji_svg svg script')) {

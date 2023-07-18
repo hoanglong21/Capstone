@@ -70,7 +70,6 @@ import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
 import People from './pages/class/People'
 import Mark from './pages/class/Mark'
-
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
 
@@ -223,7 +222,7 @@ const App = () => {
                 />
                 <Route path="/manageclass" element={<ManageClass />} />
                 <Route
-                    path="/manageclass/viewdetails"
+                    path="/viewdetailclass/:id"
                     element={<ViewDetailClass />}
                 />
                 <Route path="/managefeedback" element={<ManageFeedback />} />
