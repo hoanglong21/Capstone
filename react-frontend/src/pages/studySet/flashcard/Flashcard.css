@@ -178,3 +178,13 @@
     cursor: default;
     background: #fff;
 }
+
+.flashcard_picture {
+    height: 100%;
+    width: 50%;
+}
+
+.flashcard_picture img {
+    max-width: 100%;
+    max-height: 100%;
+}

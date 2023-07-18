@@ -41,9 +41,6 @@ const Flashcard = () => {
         window.addEventListener(
             'keydown',
             (event) => {
-                // if (event.defaultPrevented) {
-                //     return // Do nothing if the event was already processed
-                // }
                 switch (event.key) {
                     case 'ArrowLeft':
                         const tempIndex1 = cardIndex - 1
@@ -257,24 +254,48 @@ export const FlashcardItem = ({ card }) => {
                     ></div>
                 </div>
                 <div className="flashcardBack">
-                    <div className="row h-100">
-                        {contents.map((contentItem, index) => {
-                            if (index > 0) {
-                                return (
-                                    <div className="col-6" key={contentItem.id}>
-                                        <div className="flashCardField_label mb-2">
-                                            {contentItem.field.name}
-                                        </div>
+                    <div className="row h-100 p-5 d-flex align-items-center">
+                        <div className="col-12 col-lg-8">
+                            {contents.map((contentItem, index) => {
+                                if (index > 0) {
+                                    return (
                                         <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: contentItem?.content,
-                                            }}
-                                        ></div>
-                                    </div>
-                                )
-                            }
-                        })}
+                                            className="mb-5"
+                                            key={contentItem?.id}
+                                        >
+                                            <div className="flashCardField_label mb-2">
+                                                {contentItem?.field.name}
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: contentItem?.content,
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )
+                                }
+                            })}
+                        </div>
+                        <div className="col-12 col-lg-4">
+                            {card?.picture && (
+                                <div className="mb-4 flashcard_picture d-flex align-items-center">
+                                    <img
+                                        src={card?.picture}
+                                        alt="card picture"
+                                    />
+                                </div>
+                            )}
+                            {card?.audio && (
+                                <div className="d-flex align-items-center">
+                                    <audio
+                                        controls
+                                        src={card?.audio}
+                                        alt="card audio"
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

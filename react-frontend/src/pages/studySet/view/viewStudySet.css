@@ -130,6 +130,16 @@
     margin: 0;
 }
 
+.setPageTerm_imageWrap {
+    height: 6.25rem;
+    width: 9.5rem;
+}
+
+.setPageTerm_imageWrap img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
 .kanji-search-ul > li {
     list-style-type: square;
 }

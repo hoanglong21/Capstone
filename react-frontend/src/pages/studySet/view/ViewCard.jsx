@@ -40,14 +40,18 @@ const ViewCard = ({ card }) => {
                     </div>
                 </div>
                 <div className="col-9">
-                    <div className="setPageTerm_definitionText">
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: definition ? definition : '...',
-                            }}
-                        ></div>
+                    <div className="d-flex justify-content-between">
+                        <div className="setPageTerm_definitionText">
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: definition ? definition : '...',
+                                }}
+                            ></div>
+                        </div>
+                        <div className="setPageTerm_imageWrap">
+                            {card.picture && <img src={card?.picture} />}
+                        </div>
                     </div>
-                    {card.picture && <img src={card?.picture} />}
                 </div>
             </div>
         </div>
