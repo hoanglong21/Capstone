@@ -1,7 +1,7 @@
 import React,  { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux'
 import ClassService from '../../services/ClassService';
 import { useSearchParams } from 'react-router-dom'

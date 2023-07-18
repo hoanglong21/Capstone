@@ -227,7 +227,7 @@ const App = () => {
                 />
                 <Route path="/managefeedback" element={<ManageFeedback />} />
                 <Route
-                    path="/managefeedback/viewdetailfb"
+                    path="/viewdetailfb/:id"
                     element={<ViewDetailFeedback />}
                 />
                 <Route path="/chatbox" element={<Chat />} />

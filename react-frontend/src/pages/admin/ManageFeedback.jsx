@@ -4,9 +4,46 @@ import HeaderAdmin from "./HeaderAdmin";
 import { Link } from "react-router-dom";
 import FeedbackService from "../../services/FeedbackService";
 import { useSearchParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 function ManageFeedback() {
   const [feedback, setFeedback] = useState([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [error, setError] = useState('')
+
+  const search = searchParams.get('search')
+
+    const { userInfo } = useSelector((state) => state.user)
+
+    const fetchData = async (searchKey) => {
+      let temp;
+      try{
+        temp = (
+          await FeedbackService.filterFeedbackList(
+            `${searchKey ? '=' + searchKey : ''}`,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+          )).data.list
+      }catch(error){
+        if (error.response && error.response.data) {
+          setError(error.response.data)
+      } else {
+          setError(error.message)
+      }
+      return console.log(error)
+      }
+      setFeedback(temp)
+    }
+
+    useEffect(() => {
+        fetchData(search ? search : '')
+    }, [search])
 
   return (
     <div className="container-fluid">
@@ -30,14 +67,15 @@ function ManageFeedback() {
                   </tr>
                 </thead>
                 <tbody>
+                {feedback?.map((feedbacks) => (
                   <tr>
-                    <th scope="row">1</th>
-                    <td>6/7/2023</td>
-                    <td>Suggestions</td>
-                    <td>Duong</td>
+                    <th scope="row" key={feedbacks.id}>{feedbacks?.id}</th>
+                    <td>{feedbacks?.created_date}</td>
+                    <td>{feedbacks?.feedbackType?.name}</td>
+                    <td>{feedbacks?.user?.username}</td>
                     <td>
                       <Link
-                        to="/managefeedback"
+                        to={`/viewdetailfb/${feedbacks.id}`}
                         className="btn btn-primary me-3"
                       >
                         <i class="bi bi-info-square me-2"></i>
@@ -45,6 +83,7 @@ function ManageFeedback() {
                       </Link>
                     </td>
                   </tr>
+                ))}
                 </tbody>
               </table>
             </div>
