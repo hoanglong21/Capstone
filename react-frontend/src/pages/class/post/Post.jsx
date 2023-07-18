@@ -26,6 +26,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [updatePost, setUpdatePost] = useState({ ...post })
     const [currentFiles, setCurrentFiles] = useState([])
     const [uploadFiles, setUploadFiles] = useState([])
+    const [deleteFiles, setDeleteFiles] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [loadingUpdatePost, setLoadingUpdatePost] = useState(false)
 
@@ -55,6 +56,15 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
             const tempPost = (
                 await PostService.updatePost(updatePost.id, updatePost)
             ).data
+            // delete file in firebase
+            for (const deleteFile of deleteFiles) {
+                if (deleteFile.file_url) {
+                    await deleteFileByUrl(
+                        deleteFile.file_url,
+                        `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+                    )
+                }
+            }
             // add attachments
             let tempAttachments = []
             for (const uploadFileItem of uploadFiles) {
@@ -95,7 +105,9 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
             stateChanger(tempPosts)
             // clear
             setShowUpdate(false)
-            setCurrentFiles([...uploadFiles])
+            setCurrentFiles([...tempAttachments])
+            setUploadFiles([...tempAttachments])
+            setDeleteFiles([])
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -122,6 +134,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         setUploadFiles([...currentFiles])
         setUpdatePost({ ...post })
         setShowUpdate(false)
+        setDeleteFiles([])
     }
 
     const handleDeletePost = async () => {
@@ -136,13 +149,10 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     }
 
     const handleDeleteFile = async (file, index) => {
-        // delete in firebase
-        if (file.file_url) {
-            await deleteFileByUrl(
-                file.file_url,
-                `${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
-            )
-        }
+        // add to list delete
+        var tempDelete = [...deleteFiles]
+        tempDelete.push(file)
+        setDeleteFiles(tempDelete)
         // update list file
         var temp = [...uploadFiles]
         temp.splice(index, 1)
@@ -273,6 +283,9 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         type="file"
                                         id="uploadPostFile"
                                         className="postUpload"
+                                        onClick={(event) => {
+                                            event.target.value = null
+                                        }}
                                         onChange={handleUploadFile}
                                     />
                                     <button

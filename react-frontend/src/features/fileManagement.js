@@ -207,10 +207,6 @@ export const deleteFolderByPath = async (folderPath) => {
 
             // Delete all items (files and subfolders) inside the folder
             await Promise.all(itemsToDelete.map(deleteObject))
-
-            // After deleting all items, delete the empty folder
-            // await deleteObject(folderRef)
-
             console.log(`${folderRef.fullPath} has been deleted successfully.`)
         } catch (error) {
             console.error(`Error deleting ${folderRef.fullPath}: ${error}`)

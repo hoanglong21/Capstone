@@ -32,15 +32,22 @@ const ViewCard = ({ card }) => {
                     style={{ borderRight: '0.125rem solid #f6f7fb' }}
                 >
                     <div className="setPageTerm_termText">
-                        <div dangerouslySetInnerHTML={{ __html: term }}></div>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: term ? term : '...',
+                            }}
+                        ></div>
                     </div>
                 </div>
                 <div className="col-9">
                     <div className="setPageTerm_definitionText">
                         <div
-                            dangerouslySetInnerHTML={{ __html: definition }}
+                            dangerouslySetInnerHTML={{
+                                __html: definition ? definition : '...',
+                            }}
                         ></div>
                     </div>
+                    {card.picture && <img src={card?.picture} />}
                 </div>
             </div>
         </div>
