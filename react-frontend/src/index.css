@@ -269,12 +269,14 @@ input::placeholder {
     border-bottom: 0.125rem solid var(--editor-border);
     transition: all 0.1s;
     min-height: 60px;
+    padding-bottom: 0.125rem;
 }
 
 .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
     border: none;
     border-bottom: 0.25rem solid var(--editor-border-focus);
     box-shadow: none;
+    padding-bottom: 0;
 }
 
 svg {

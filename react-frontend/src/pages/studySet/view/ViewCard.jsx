@@ -26,7 +26,7 @@ const ViewCard = ({ card }) => {
 
     return (
         <div className="setPageTerm mb-3">
-            <div className="row">
+            <div className="row d-flex align-items-center">
                 <div
                     className="col-3"
                     style={{ borderRight: '0.125rem solid #f6f7fb' }}
@@ -40,7 +40,7 @@ const ViewCard = ({ card }) => {
                     </div>
                 </div>
                 <div className="col-9">
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex align-items-center justify-content-between">
                         <div className="setPageTerm_definitionText">
                             <div
                                 dangerouslySetInnerHTML={{
@@ -48,7 +48,7 @@ const ViewCard = ({ card }) => {
                                 }}
                             ></div>
                         </div>
-                        <div className="setPageTerm_imageWrap">
+                        <div className="setPageTerm_imageWrap d-flex align-items-center">
                             {card.picture && <img src={card?.picture} />}
                         </div>
                     </div>

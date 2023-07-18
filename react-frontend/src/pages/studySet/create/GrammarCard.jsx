@@ -132,7 +132,10 @@ export const GrammarCard = (props) => {
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
-            if (e.message === 'ResizeObserver loop limit exceeded') {
+            if (
+                e.message === 'ResizeObserver loop limit exceeded' ||
+                e.message.includes('t.getStyle is not a function')
+            ) {
                 const resizeObserverErrDiv = document.getElementById(
                     'webpack-dev-server-client-overlay-div'
                 )

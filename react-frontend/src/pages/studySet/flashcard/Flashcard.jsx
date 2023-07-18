@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 import CardService from '../../../services/CardService'
-import ContentService from '../../../services/ContentService'
+import VocabCard from './VocabCard'
 
 import {
     ArrowDownIcon,
@@ -16,6 +16,7 @@ import {
     TestSolidIcon,
 } from '../../../components/icons'
 import './Flashcard.css'
+import KanjiCard from './KanjiCard'
 
 const Flashcard = () => {
     const navigate = useNavigate()
@@ -24,12 +25,14 @@ const Flashcard = () => {
 
     const [cards, setCards] = useState([])
     const [cardIndex, setCardIndex] = useState(null)
+    const [type, setType] = useState(1)
 
     useEffect(() => {
         const fetchData = async () => {
             const tempCards = (await CardService.getAllByStudySetId(id)).data
             setCards(tempCards)
             setCardIndex(0)
+            setType(tempCards[0]?.studySet?.studySetType?.id)
         }
         if (id) {
             fetchData()
@@ -46,6 +49,9 @@ const Flashcard = () => {
                         const tempIndex1 = cardIndex - 1
                         if (tempIndex1 > -1) {
                             setCardIndex(tempIndex1)
+                            document
+                                .getElementById('flipElement')
+                                ?.classList.remove('is-flipped')
                         }
                         // Do something for "left arrow" key press.
                         break
@@ -53,6 +59,9 @@ const Flashcard = () => {
                         const tempIndex2 = cardIndex + 1
                         if (tempIndex2 < cards.length) {
                             setCardIndex(tempIndex2)
+                            document
+                                .getElementById('flipElement')
+                                ?.classList.remove('is-flipped')
                         }
                         // Do something for "right arrow" key press.
                         break
@@ -157,7 +166,13 @@ const Flashcard = () => {
                 ></div>
             </div>
             <div className="flashcardMain mx-auto mb-5">
-                <FlashcardItem card={cards[cardIndex]} />
+                {type === 1 ? (
+                    <VocabCard card={cards[cardIndex]} />
+                ) : type === 2 ? (
+                    <KanjiCard card={cards[cardIndex]} />
+                ) : (
+                    ''
+                )}
                 <div className="d-flex align-items-center justify-content-between mt-4">
                     <div className="flashcardPlay">
                         <button className="flashcardPlay_btn">
@@ -197,108 +212,3 @@ const Flashcard = () => {
     )
 }
 export default Flashcard
-
-export const FlashcardItem = ({ card }) => {
-    const [contents, setContents] = useState([])
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const tempContents = (await ContentService.getAllByCardId(card.id))
-                .data
-            setContents(tempContents)
-        }
-        if (card?.id) {
-            fetchData()
-        }
-    }, [card])
-
-    const toggleFlip = () => {
-        document.getElementById('flipElement').classList.toggle('is-flipped')
-    }
-
-    // catch press space event
-    useEffect(() => {
-        window.addEventListener(
-            'keydown',
-            (event) => {
-                if (event.defaultPrevented) {
-                    return // Do nothing if event already handled
-                }
-                switch (event.code) {
-                    case 'Space':
-                        toggleFlip()
-                }
-                if (event.code !== 'Tab') {
-                    // Consume the event so it doesn't get handled twice,
-                    // as long as the user isn't trying to move focus away
-                    event.preventDefault()
-                }
-            },
-            true
-        )
-    }, [])
-
-    return (
-        <div
-            className="flashcardContentContainer"
-            onClick={() => {
-                toggleFlip()
-            }}
-        >
-            <div className="flashcardContentWrapper" id="flipElement">
-                <div className="flashcardFront d-flex align-items-center justify-content-center">
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: contents[0]?.content,
-                        }}
-                    ></div>
-                </div>
-                <div className="flashcardBack">
-                    <div className="row h-100 p-5 d-flex align-items-center">
-                        <div className="col-12 col-lg-8">
-                            {contents.map((contentItem, index) => {
-                                if (index > 0) {
-                                    return (
-                                        <div
-                                            className="mb-5"
-                                            key={contentItem?.id}
-                                        >
-                                            <div className="flashCardField_label mb-2">
-                                                {contentItem?.field.name}
-                                            </div>
-                                            <div
-                                                className="flashCardField_content"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: contentItem?.content,
-                                                }}
-                                            ></div>
-                                        </div>
-                                    )
-                                }
-                            })}
-                        </div>
-                        <div className="col-12 col-lg-4">
-                            {card?.picture && (
-                                <div className="mb-4 flashcard_picture d-flex align-items-center">
-                                    <img
-                                        src={card?.picture}
-                                        alt="card picture"
-                                    />
-                                </div>
-                            )}
-                            {card?.audio && (
-                                <div className="d-flex align-items-center">
-                                    <audio
-                                        controls
-                                        src={card?.audio}
-                                        alt="card audio"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
-}

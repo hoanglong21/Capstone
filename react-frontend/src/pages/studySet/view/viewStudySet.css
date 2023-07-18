@@ -182,10 +182,6 @@
     position: relative;
 }
 
-ul li {
-    list-style-type: none;
-}
-
 .grammar-ex-japan {
     display: block;
     margin-top: 5px;

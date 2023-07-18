@@ -99,7 +99,7 @@
 
 .flashcardContentWrapper {
     position: relative;
-    min-height: 60vh;
+    height: 60vh;
     width: 100%;
     transition: transform 0.8s;
     transform-style: preserve-3d;
@@ -112,7 +112,7 @@
 .flashcardFront,
 .flashcardBack {
     position: absolute;
-    min-height: 100%;
+    height: 60vh;
     -webkit-backface-visibility: hidden; /* Safari */
     backface-visibility: hidden;
 }
@@ -179,12 +179,12 @@
     background: #fff;
 }
 
-.flashcard_picture {
-    height: 100%;
-    width: 50%;
+.flashCardField_img {
+    max-height: 100%;
+    max-width: 100%;
 }
 
-.flashcard_picture img {
+.flashCardField_img img {
     max-width: 100%;
     max-height: 100%;
 }
