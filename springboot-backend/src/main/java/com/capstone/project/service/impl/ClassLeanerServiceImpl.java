@@ -11,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class ClassLeanerServiceImpl implements ClassLearnerService {
@@ -57,7 +56,8 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     @Autowired
     private EntityManager entityManager;
     @Override
-    public Map<String, Object> filterClassLeaner(int userId, int classId, String fromCreated, String toCreated, String sortBy, String direction, int page, int size) {
+    public Map<String, Object> filterClassLeaner(int userId, int classId, String fromCreated, String toCreated, String sortBy, String direction, int page, int size) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "FROM ClassLearner f LEFT JOIN FETCH f.classroom WHERE 1=1 ";
         Map<String, Object> params = new HashMap<>();
 
@@ -71,10 +71,19 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
             params.put("userId", userId);
         }
 
+        if (fromCreated != null && !fromCreated.equals("")) {
+            jpql += " AND DATE(f.created_date) >= :fromCreated ";
+            params.put("fromCreated", formatter.parse(fromCreated));
+        }
+        if (toCreated != null && !toCreated.equals("")) {
+            jpql += " AND DATE(f.created_date) <= :toCreated ";
+            params.put("toCreated", formatter.parse(toCreated));
+        }
+
         sortBy = "f." + sortBy;
 
 
-        jpql += "ORDER BY " + sortBy + " " + direction;
+        jpql += " ORDER BY " + sortBy + " " + direction;
 
         TypedQuery<ClassLearner> query = entityManager.createQuery(jpql, ClassLearner.class);
 

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/statistic")
@@ -40,7 +42,7 @@ public class UserStatisticController {
     public ResponseEntity<?> getClassJoinedStatistic(@PathVariable("id") int id) {
         try {
             return ResponseEntity.ok(userStatisticService.getClassJoinedStatistic(id));
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

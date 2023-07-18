@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.ClassLearner;
 import com.capstone.project.model.UserAchievement;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,6 @@ public interface ClassLearnerService {
     List<ClassLearner> getClassLeanerByUserId(int id);
 
     Map<String, Object> filterClassLeaner(int userId, int classId, String fromCreated, String toCreated,
-                                              String sortBy, String direction, int page, int size);
+                                              String sortBy, String direction, int page, int size) throws ParseException;
 
 }
