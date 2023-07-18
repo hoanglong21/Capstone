@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/")
@@ -59,11 +61,15 @@ public class UserAchievementController {
                                         @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+//        try {
         try {
             return ResponseEntity.ok(userAchievementService.filterUserAchievement(userId, achievementId, fromCreated, toCreated,
                     sortBy, direction, page, size));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Check the input again");
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Check the input again");
+//        }
     }
 }

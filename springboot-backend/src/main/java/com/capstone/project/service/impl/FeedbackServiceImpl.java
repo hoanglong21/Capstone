@@ -19,6 +19,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -81,49 +83,50 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public Map<String, Object> filterFeedback(String search, int type, int authorId, String authorName, String destination,
                                               String fromCreated, String toCreated, String sortBy, String direction,
-                                              int page, int size) {
+                                              int page, int size) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "FROM Feedback f LEFT JOIN FETCH f.user WHERE 1=1 ";
         Map<String, Object> params = new HashMap<>();
 
         if (search != null && !search.isEmpty()) {
-            jpql += "AND (f.content LIKE :search OR f.title LIKE :search) ";
+            jpql += " AND (f.content LIKE :search OR f.title LIKE :search) ";
             params.put("search", "%" + search + "%");
         }
 
         if (destination != null && !destination.isEmpty()) {
-            jpql += "AND f.destination LIKE :destination ";
+            jpql += " AND f.destination LIKE :destination ";
             params.put("destination", "%" + destination + "%");
         }
 
         if (authorId != 0) {
-            jpql += "AND f.user.id = :authorId ";
+            jpql += " AND f.user.id = :authorId ";
             params.put("authorId", authorId);
         }
 
         if (authorId == 0 && authorName != null && !authorName.isEmpty()) {
-            jpql += "AND (f.user.username LIKE :authorName OR CONCAT(f.user.first_name, ' ', f.user.last_name) LIKE :authorName) ";
+            jpql += " AND (f.user.username LIKE :authorName OR CONCAT(f.user.first_name, ' ', f.user.last_name) LIKE :authorName) ";
             params.put("authorName", "%" + authorName + "%");
         }
 
         if (type != 0) {
-            jpql += "AND f.feedbackType.id = :type ";
+            jpql += " AND f.feedbackType.id = :type ";
             params.put("type", type);
         }
 
         if (fromCreated != null && !fromCreated.isEmpty()) {
-            jpql += "AND f.created_date >= :fromCreated ";
-            params.put("fromCreated", fromCreated);
+            jpql += " AND f.created_date >= :fromCreated ";
+            params.put("fromCreated", formatter.parse(fromCreated));
         }
 
         if (toCreated != null && !toCreated.isEmpty()) {
-            jpql += "AND f.created_date <= :toCreated ";
-            params.put("toCreated", toCreated);
+            jpql += " AND f.created_date <= :toCreated ";
+            params.put("toCreated", formatter.parse(toCreated));
         }
 
         sortBy = "f." + sortBy;
 
 
-        jpql += "ORDER BY " + sortBy + " " + direction;
+        jpql += " ORDER BY " + sortBy + " " + direction;
 
         TypedQuery<Feedback> query = entityManager.createQuery(jpql, Feedback.class);
 
