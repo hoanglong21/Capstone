@@ -153,7 +153,7 @@ public class SubmissionServiceTest {
                 .assignment(Assignment.builder().id(1).build())
                 .attachmentType(AttachmentType.builder().id(1).build())
                 .submission(Submission.builder().id(1).build())
-                .file("home.doc")
+                .file_url("home.doc")
                 .build();
 
         doNothing().when(submissionRepository).delete(submission);

@@ -47,7 +47,7 @@ public class AttachmentRepositoryTest {
         classRepository.save(classroom);
 
         Assignment assignment = Assignment.builder()
-                .description("Assignment for all")
+                .instruction("Assignment for all")
                 .title("Assignment 1")
                 .classroom(classroom)
                 .user(user).build();
@@ -61,7 +61,7 @@ public class AttachmentRepositoryTest {
 
         Attachment attachment = Attachment.builder()
                 .attachmentType(AttachmentType.builder().id(1).build())
-                .file("tailieu.docx")
+                .file_url("tailieu.docx")
                 .assignment(assignment)
                 .submission(submission).build();
         attachmentRepository.save(attachment);
