@@ -181,7 +181,7 @@ export const renameFolder = async (currentFolderName, newFolderName) => {
         )
 
         // Delete the current folder and all its contents
-        await deleteObject(currentFolderRef)
+        await deleteFolder(currentFolderRef)
 
         console.log(
             `${currentFolderName} has been renamed to ${newFolderName} successfully.`
@@ -191,29 +191,6 @@ export const renameFolder = async (currentFolderName, newFolderName) => {
             `Error renaming ${currentFolderName} to ${newFolderName}: ${error}`
         )
     }
-}
-
-export const deleteFolderByPath = async (folderPath) => {
-    // Attention: start by files/ ...
-    // Create a reference to the folder
-    const folderRef = ref(storage, folderPath)
-    console.log(folderRef)
-
-    // List all items (files and subfolders) inside the folder
-    // try {
-    //     const listResult = await listAll(folderRef)
-    //     const itemsToDelete = listResult.items
-
-    //     // Delete all items (files and subfolders) inside the folder
-    //     await Promise.all(itemsToDelete.map(deleteObject))
-
-    //     // After deleting all items, delete the empty folder
-    //     await deleteObject(folderRef)
-
-    //     console.log(`${folderRef} has been deleted successfully.`)
-    // } catch (error) {
-    //     console.error(`Error deleting ${folderRef}: ${error}`)
-    // }
 }
 
 export const deleteFolder = async (folderPath) => {
@@ -229,7 +206,7 @@ export const deleteFolder = async (folderPath) => {
       // Filter out the subfolders based on their names
       const subfolders = listResult.prefixes.map((subfolderRef) => subfolderRef.fullPath);
   
-      console.log('Subfolders:', subfolders);
+    //   console.log('Subfolders:', subfolders);
   
       // Delete all items (files and subfolders) inside the folder recursively
       await Promise.all(items.map(deleteObject))
