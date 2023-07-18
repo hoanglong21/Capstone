@@ -26,5 +26,5 @@ public interface PostService {
 
     Boolean deletePost(int id) throws ResourceNotFroundException;
 
-    Map<String, Object> getFilterPost(String search, String author, String direction, int classid, int page, int size) throws ResourceNotFroundException;
+    Map<String, Object> getFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy, String direction, int classid, int page, int size) throws ResourceNotFroundException;
 }

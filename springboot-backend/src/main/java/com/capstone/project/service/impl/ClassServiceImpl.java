@@ -137,9 +137,9 @@ public class ClassServiceImpl implements ClassService {
 
         Map<String, Object> parameters = new HashMap<>();
 
-        if (isDeleted != null && isDeleted) {
+        if (isDeleted != null) {
             query += " AND is_deleted = :isDeleted";
-            parameters.put("isDeleted", true);
+            parameters.put("isDeleted", isDeleted);
 
         }
 
