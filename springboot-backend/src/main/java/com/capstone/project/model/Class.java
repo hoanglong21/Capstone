@@ -24,7 +24,9 @@ import java.util.Set;
                         @ColumnResult(name = "is_deleted", type =Boolean.class),
                         @ColumnResult(name = "author_id", type = Integer.class),
                         @ColumnResult(name = "member", type = Integer.class),
-                        @ColumnResult(name = "studyset", type = Integer.class)
+                        @ColumnResult(name = "studyset", type = Integer.class),
+                        @ColumnResult(name = "avatar", type = String.class),
+                        @ColumnResult(name = "author", type = String.class)
                 }
         )
 )
