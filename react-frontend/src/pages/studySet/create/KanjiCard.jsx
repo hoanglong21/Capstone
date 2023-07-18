@@ -188,7 +188,11 @@ export const KanjiCard = (props) => {
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
-            if (e.message === 'ResizeObserver loop limit exceeded') {
+            console.log(e)
+            if (
+                e.message === 'ResizeObserver loop limit exceeded' ||
+                e.message.includes('t.getStyle is not a function')
+            ) {
                 const resizeObserverErrDiv = document.getElementById(
                     'webpack-dev-server-client-overlay-div'
                 )
@@ -335,6 +339,9 @@ export const KanjiCard = (props) => {
                             accept="image/*"
                             name="picture"
                             className={styles.file_upload}
+                            onClick={(event) => {
+                                event.target.value = null
+                            }}
                             onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadImage${props.index}`}>
@@ -348,6 +355,9 @@ export const KanjiCard = (props) => {
                             accept="audio/*"
                             name="audio"
                             className={styles.file_upload}
+                            onClick={(event) => {
+                                event.target.value = null
+                            }}
                             onChange={(event) => handleChangeFile(event)}
                         />
                         <label htmlFor={`uploadAudio${props.index}`}>
@@ -593,6 +603,9 @@ export const KanjiCard = (props) => {
                                     name="strokeOrder"
                                     className={styles.file_upload}
                                     accept="image/*"
+                                    onClick={(event) => {
+                                        event.target.value = null
+                                    }}
                                     onChange={(event) =>
                                         handleChangeFile(event)
                                     }
