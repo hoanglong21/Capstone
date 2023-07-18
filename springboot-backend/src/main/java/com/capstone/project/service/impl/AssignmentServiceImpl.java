@@ -151,7 +151,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Map<String, Object> getFilterAssignment(String search, String author, String from, String to,Boolean isDraft,String direction,int classid ,int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterAssignment(String search, String author, String fromStart, String toStart,String fromCreated, String toCreated,
+                                                   Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM assignment WHERE 1=1";
@@ -180,23 +181,27 @@ public class AssignmentServiceImpl implements AssignmentService {
             parameters.put("isDraft", isDraft);
         }
 
-        if(from != null){
+        if(fromStart != null){
             query += " AND start_date >= :from ";
-            parameters.put("from", from);
+            parameters.put("from", fromStart);
         }
 
-        if(to != null){
+        if(toStart != null){
             query += " AND start_date <= :to";
-            parameters.put("to", to);
+            parameters.put("to", toStart);
         }
 
-        String direct = "desc";
-        if(direction != null && !direction.isEmpty()){
-            if (direction.equalsIgnoreCase("asc")) {
-                direct = "asc";
-            }
+
+        if (fromCreated != null && !fromCreated.equals("")) {
+            query += " AND DATE(created_date) >= :fromCreated";
+            parameters.put("fromCreated", fromCreated);
         }
-        query += " ORDER BY created_date " + " " + direct;
+        if (toCreated != null && !toCreated.equals("")) {
+            query += " AND DATE(created_date) <= :toCreated";
+            parameters.put("toCreated", toCreated);
+        }
+
+        query += " ORDER BY " + sortBy + " " + direction;
 
         Query q = em.createNativeQuery(query, Assignment.class);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
