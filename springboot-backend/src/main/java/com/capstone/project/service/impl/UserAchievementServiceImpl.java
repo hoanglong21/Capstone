@@ -17,6 +17,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -59,7 +61,8 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     private EntityManager entityManager;
 
     @Override
-    public Map<String, Object> filterUserAchievement(int userId, int achievementId, String fromDatetime, String toDatetime, String sortBy, String direction, int page, int size) {
+    public Map<String, Object> filterUserAchievement(int userId, int achievementId, String fromCreated, String toCreated, String sortBy, String direction, int page, int size) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "FROM UserAchievement f LEFT JOIN FETCH f.achievement WHERE 1=1 ";
         Map<String, Object> params = new HashMap<>();
 
@@ -73,10 +76,19 @@ public class UserAchievementServiceImpl implements UserAchievementService {
             params.put("userId", userId);
         }
 
+        if (fromCreated != null && !fromCreated.equals("")) {
+            System.out.println(fromCreated);
+            jpql += " AND DATE(f.created_date) >= :fromCreated ";
+            params.put("fromCreated", formatter.parse(fromCreated));
+        }
+        if (toCreated != null && !toCreated.equals("")) {
+            jpql += " AND DATE(f.created_date) <= :toCreated ";
+            params.put("toCreated", formatter.parse(toCreated));
+        }
+
         sortBy = "f." + sortBy;
 
-
-        jpql += "ORDER BY " + sortBy + " " + direction;
+        jpql += " ORDER BY " + sortBy + " " + direction;
 
         TypedQuery<UserAchievement> query = entityManager.createQuery(jpql, UserAchievement.class);
 
