@@ -42,6 +42,9 @@ public class ClassRequest {
 
     private int author_id;
 
+    private String author;
+    private String avatar;
+
     // Custom getter for class_name
     public String getClass_name() {
         if (class_name != null) {

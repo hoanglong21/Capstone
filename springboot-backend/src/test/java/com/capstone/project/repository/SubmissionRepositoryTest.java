@@ -45,7 +45,7 @@ public class SubmissionRepositoryTest {
         classRepository.save(classroom);
 
         Assignment assignment = Assignment.builder()
-                .description("Assignment for all")
+                .instruction("Assignment for all")
                 .title("Assignment 1")
                 .classroom(classroom)
                 .user(user).build();

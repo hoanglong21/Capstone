@@ -39,7 +39,7 @@ public class AttachmentServiceTest {
     @Test
     void testGetAllAttachment() {
         Attachment attachment = Attachment.builder()
-                .file("homework.doc")
+                .file_url("homework.doc")
                 .build();
         List<Attachment> attachments = List.of(attachment);
         when(attachmentRepository.findAll()).thenReturn(attachments);
@@ -50,8 +50,8 @@ public class AttachmentServiceTest {
     @Test
     void testGetAttachmentBySubmissionId(){
         List<Attachment> attachments = new ArrayList<>();
-        Attachment attachment1 = Attachment.builder().file("homework1.doc").build();
-        Attachment attachment2 = Attachment.builder().file("homework2.doc").build();
+        Attachment attachment1 = Attachment.builder().file_url("homework1.doc").build();
+        Attachment attachment2 = Attachment.builder().file_url("homework2.doc").build();
         attachments.add(attachment1);
         attachments.add(attachment2);
         when(attachmentRepository.getAttachmentBySubmissionId(any(Integer.class))).thenReturn(attachments);
@@ -63,8 +63,8 @@ public class AttachmentServiceTest {
     @Test
     void testGetAttachmentByAssignmentId(){
         List<Attachment> attachments = new ArrayList<>();
-        Attachment attachment1 = Attachment.builder().file("homework1.doc").build();
-        Attachment attachment2 = Attachment.builder().file("homework2.doc").build();
+        Attachment attachment1 = Attachment.builder().file_url("homework1.doc").build();
+        Attachment attachment2 = Attachment.builder().file_url("homework2.doc").build();
         attachments.add(attachment1);
         attachments.add(attachment2);
         when(attachmentRepository.getAttachmentByAssignmentId(any(Integer.class))).thenReturn(attachments);
@@ -84,7 +84,7 @@ public class AttachmentServiceTest {
                 .assignment(Assignment.builder().id(assignmentId).build())
                 .attachmentType(AttachmentType.builder().id(typeId).build())
                 .submission(Submission.builder().id(submissionId).build())
-                .file(file)
+                .file_name(file)
                 .build();
         when(attachmentRepository.save(any())).thenReturn(attachment);
 
@@ -96,7 +96,7 @@ public class AttachmentServiceTest {
     @Test
     void testGetAttachmentById(){
         Attachment attachment = Attachment.builder()
-                .file("haha.doc")
+                .file_url("haha.doc")
                 .build();
         when(attachmentRepository.findById(any())).thenReturn(Optional.ofNullable(attachment));
         try{
@@ -118,14 +118,14 @@ public class AttachmentServiceTest {
             try{
 
                 Attachment attachment_new = Attachment.builder()
-                        .file("homework.doc")
+                        .file_url("homework.doc")
                         .build();
 
                 Attachment attachment = Attachment.builder()
                         .assignment(Assignment.builder().id(assignmentId).build())
                         .attachmentType(AttachmentType.builder().id(typeId).build())
                         .submission(Submission.builder().id(submissionId).build())
-                        .file(file)
+                        .file_name(file)
                         .build();
 
                 when(attachmentRepository.findById(any())).thenReturn(Optional.ofNullable(attachment_new));
@@ -147,7 +147,7 @@ public class AttachmentServiceTest {
                 .assignment(Assignment.builder().id(1).build())
                 .attachmentType(AttachmentType.builder().id(1).build())
                 .submission(Submission.builder().id(1).build())
-                .file("home.doc")
+                .file_url("home.doc")
                 .build();
 
         when(attachmentRepository.findById(any())).thenReturn(Optional.ofNullable(attachment));

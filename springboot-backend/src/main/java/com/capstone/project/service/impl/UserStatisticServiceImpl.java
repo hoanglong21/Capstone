@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.*;
 
 @Service
@@ -71,7 +72,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
     }
 
     @Override
-    public List<Integer> getClassJoinedStatistic(int id) throws ResourceNotFroundException {
+    public List<Integer> getClassJoinedStatistic(int id) throws ResourceNotFroundException, ParseException {
         // Check user exist
         userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("User not exist with id: " + id));
@@ -80,7 +81,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         List<String> listDate = dateRangePicker.getDateRange();
         for(int i=0; i<listDate.size()-1; i++) {
             Map<String, Object> response = classLearnerService.filterClassLeaner(id, 0, listDate.get(i), listDate.get(i+1),
-                    "datetime", "DESC", 1, 5);
+                    "created_date", "DESC", 1, 5);
             result.add(Integer.parseInt(String.valueOf(response.get("totalItems"))));
         }
         return result;

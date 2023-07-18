@@ -1,6 +1,7 @@
 package com.capstone.project.controller;
 
 import com.capstone.project.dto.UserRequest;
+import com.capstone.project.dto.UserUpdateRequest;
 import com.capstone.project.model.User;
 import com.capstone.project.service.UserService;
 
@@ -139,19 +140,15 @@ public class UserControllerTest {
                 .avatar("avatar.jpg")
                 .build();
 
-        UserRequest userDetails = UserRequest.builder()
-                .username(username)
+        UserUpdateRequest userDetails = UserUpdateRequest.builder()
                 .gender(gender)
                 .dob(dateFormat.parse(date))
-                .email(email)
                 .phone(phone)
-                .password(password)
-                .role(role)
                 .address(address)
                 .bio(bio)
-                .status(status)
                 .avatar(avatar)
                 .build();
+        // TODO change a bit
 
         userDetails.setFirst_name(first_name);
         userDetails.setLast_name(last_name);

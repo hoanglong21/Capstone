@@ -36,12 +36,12 @@ public class TestRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER)
     private float duration;
 
-    @FutureOrPresent
+//    @FutureOrPresent
     @NotNull(message = "Start date cannot be null")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date start_date;
 
-    @Future
+//    @Future
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Nullable
     private Date due_date;
@@ -83,5 +83,12 @@ public class TestRequest {
     @AssertTrue(message = "Due date must be greater than or equal to start date")
     public boolean isDueDateValid() {
         return due_date == null || start_date == null || due_date.compareTo(start_date) >= 0;
+
+
+    }
+
+    @AssertTrue(message = "Start date must be equal or after today's date")
+    public boolean isStartDateValid() {
+        return start_date == null || start_date.compareTo(new Date()) >= 0;
     }
 }
