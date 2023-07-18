@@ -109,16 +109,19 @@ public class AssignmentController {
     @GetMapping("/filterassignment")
     public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
-                                           @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
-                                           @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
+                                           @RequestParam(value = "fromstarted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromStart,
+                                           @RequestParam(value = "tostarted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toStart,
+                                           @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
+                                           @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
                                            @RequestParam(value = "draft", required = false) Boolean isDraft,
-                                           @RequestParam(value = "direction", required = false) String direction,
+                                           @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                           @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
                                            @RequestParam(value = "classid", required = false) Optional<Integer> classid,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
 
         try{
-            return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,from,to,isDraft,direction,classid.orElse(0),page,size));
+            return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,fromStart,toStart,fromCreated,toCreated,isDraft,direction,sortBy,classid.orElse(0),page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

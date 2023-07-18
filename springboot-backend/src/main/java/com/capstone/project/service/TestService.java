@@ -20,5 +20,6 @@ public interface TestService {
 
     Boolean deleteTest( int id) throws ResourceNotFroundException;
 
-    Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid, String from, String to, Boolean isDraft, int page, int size) throws ResourceNotFroundException;
+    Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid,
+                                      String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException;
 }
