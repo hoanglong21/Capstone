@@ -20,10 +20,10 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class UserUpdateRequest {
-    @Pattern(regexp = "^[a-zA-Z ]+$", message = "First name must contain letters only")
+    @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "First name must contain letters only")
     private String first_name;
 
-    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Last name must contain letters only")
+    @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "Last name must contain letters only")
     private String last_name;
 
     @Pattern(regexp = "male|female", message = "Gender must be male or female")
