@@ -2,8 +2,7 @@ import { useState } from 'react'
 
 import AssignmentService from '../../../services/AssignmentService'
 import {
-    deleteFile,
-    deleteFolderByPath,
+    deleteFolder,
 } from '../../../features/fileManagement'
 
 import '../../../assets/styles/popup.css'
@@ -20,7 +19,7 @@ const DeleteAssignment = ({ assignments, assign, stateChanger, index }) => {
             var tempAssignments = [...assignments]
             tempAssignments.splice(index, 1)
             stateChanger(tempAssignments)
-            await deleteFolderByPath(
+            await deleteFolder(
                 `files/${assign.classroom.user.username}/class/${assign.classroom.id}/assignment/${assign.id}`,
                 true
             )

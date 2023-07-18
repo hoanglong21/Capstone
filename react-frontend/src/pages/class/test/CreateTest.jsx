@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import {
     deleteFileByUrl,
-    deleteFolderByPath,
+    deleteFolder,
     renameFolder,
     uploadFile,
 } from '../../../features/fileManagement'
@@ -277,7 +277,7 @@ const CreateTest = () => {
             answers: tempAnswers,
         }
         setQuestions(tempQuestions)
-        await deleteFolderByPath(
+        await deleteFolder(
             `files/${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/answer/answer_${ansIndex}`
         )
     }
@@ -286,7 +286,7 @@ const CreateTest = () => {
         var tempQuestions = [...questions]
         tempQuestions.splice(quesIndex, 1)
         setQuestions(tempQuestions)
-        await deleteFolderByPath(
+        await deleteFolder(
             `files/${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}`
         )
     }

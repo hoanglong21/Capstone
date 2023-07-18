@@ -4,7 +4,7 @@ import PostService from '../../../services/PostService'
 import AttachmentService from '../../../services/AttachmentService'
 import {
     deleteFileByUrl,
-    deleteFolderByPath,
+    deleteFolder,
     uploadFile,
 } from '../../../features/fileManagement'
 
@@ -143,7 +143,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         tempPosts.splice(index, 1)
         stateChanger(tempPosts)
         document.getElementById(`closeDeletePostModal${index}`).click()
-        await deleteFolderByPath(
+        await deleteFolder(
             `files/${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
         )
     }

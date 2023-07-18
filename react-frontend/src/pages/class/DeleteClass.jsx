@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import ClassService from '../../services/ClassService'
 
 import '../../assets/styles/popup.css'
-import { deleteFolderByPath } from '../../features/fileManagement'
+import { deleteFolder } from '../../features/fileManagement'
 
 const DeleteClass = ({ classroom }) => {
     let navigate = useNavigate()
@@ -26,7 +26,7 @@ const DeleteClass = ({ classroom }) => {
         setLoading(true)
         try {
             await ClassService.deleteClass(deleteClass.id)
-            await deleteFolderByPath(
+            await deleteFolder(
                 `files/${deleteClass.user.username}/class/${deleteClass.id}`
             )
             document.getElementById('closeDeleteClassModal').click()

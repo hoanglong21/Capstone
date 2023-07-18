@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import {
-    deleteFile,
-    deleteFolderByPath,
+    deleteFolder,
     uploadFile,
 } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
@@ -103,7 +102,7 @@ function UpdateAssignment() {
                 })
             ).data
             // delete folder
-            await deleteFolderByPath(
+            await deleteFolder(
                 `files/${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
                 false
             )
