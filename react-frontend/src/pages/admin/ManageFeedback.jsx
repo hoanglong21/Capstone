@@ -1,10 +1,13 @@
-import React from 'react'
+import React, {useState, useEffect} from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import FeedbackService from "../../services/FeedbackService";
+import { useSearchParams } from 'react-router-dom'
 
 function ManageFeedback() {
-    const navigate = useNavigate();
+  const [feedback, setFeedback] = useState([])
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -12,7 +15,9 @@ function ManageFeedback() {
         <div className="col-sm">
           <HeaderAdmin />
           <div className="container">
-            <h3 className="mt-3 mb-4 text-bold text-black">Management Feedback</h3>
+            <h3 className="mt-3 mb-4 text-bold text-black">
+              Management Feedback
+            </h3>
             <div className="table-responsive">
               <table className="table table-hover">
                 <thead style={{ backgroundColor: "#000" }}>
@@ -27,22 +32,17 @@ function ManageFeedback() {
                 <tbody>
                   <tr>
                     <th scope="row">1</th>
-                    <td>
-                      6/7/2023
-                    </td>
+                    <td>6/7/2023</td>
                     <td>Suggestions</td>
                     <td>Duong</td>
                     <td>
-                      <button
-                        type="button"
+                      <Link
+                        to="/managefeedback"
                         className="btn btn-primary me-3"
-                        onClick={() => {
-                          navigate("viewdetailfb");
-                        }}
                       >
                         <i class="bi bi-info-square me-2"></i>
                         View Details
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 </tbody>
@@ -52,7 +52,7 @@ function ManageFeedback() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ManageFeedback
+export default ManageFeedback;
