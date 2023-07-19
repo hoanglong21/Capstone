@@ -46,7 +46,6 @@ public class DateRangePicker {
         // Get the updated date as a Date object
         Date updatedDate = calendar.getTime();
 
-        // Now currentDate contains the date 7 days ago from today
         listOfDate.add(dateFormat.format(updatedDate));
         listOfDate.add(dateFormat.format(currentDate));
 
