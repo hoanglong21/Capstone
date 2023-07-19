@@ -1,12 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
 import ApexCharts from "apexcharts";
+import AdminService from "../../services/AdminService";
 
 function AdminDashboard() {
+  const [registernumber, setRegisterNumber] = useState();
+  const [classnumber, setClassNumber] = useState();
+  const [studySetnumber, setStudySetNumber] = useState();
+  const [accessNumber, setAccessNumber] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const temp = (await AdminService.getRegisterNumber()).data;
+      setRegisterNumber(temp);
+    };
+    fetchData();
+
+    const fetchDataClass = async () => {
+      const temp = (await AdminService.getClassNumber()).data;
+      setClassNumber(temp);
+    };
+    fetchDataClass();
+
+    const fetchDataStudySet = async () => {
+      const temp = (await AdminService.getStudySetNumber()).data;
+      setStudySetNumber(temp);
+    };
+    fetchDataStudySet();
+
+    const fetchDataAccess = async () => {
+      const temp = (await AdminService.getAccessNumber()).data;
+      setAccessNumber(temp);
+    };
+    fetchDataAccess();
+  }, []);
+
   var optionColumn = {
     series: [
       {
@@ -93,57 +125,77 @@ function AdminDashboard() {
   };
 
   var optionLine = {
-    series: [{
-    name: 'Sales',
-    data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5]
-  }],
+    series: [
+      {
+        name: "Sales",
+        data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5],
+      },
+    ],
     chart: {
-    height: 350,
-    type: 'line',
-  },
-  // forecastDataPoints: {
-  //   count: 7
-  // },
-  stroke: {
-    width: 7,
-    curve: 'smooth'
-  },
-  xaxis: {
-    type: 'datetime',
-    categories: ['1/11/2000', '2/11/2000', '3/11/2000', '4/11/2000', '5/11/2000', '6/11/2000', '7/11/2000', '8/11/2000', '9/11/2000', '10/11/2000', '11/11/2000', '12/11/2000', '1/11/2001', '2/11/2001', '3/11/2001','4/11/2001' ,'5/11/2001' ,'6/11/2001'],
-    tickAmount: 10,
-    labels: {
-      formatter: function(value, timestamp, opts) {
-        return opts.dateFormatter(new Date(timestamp), 'dd MMM')
-      }
-    }
-  },
-  title: {
-    text: 'Set',
-    align: 'left',
-    style: {
-      fontSize: "16px",
-      color: '#666'
-    }
-  },
-  fill: {
-    type: 'gradient',
-    gradient: {
-      shade: 'dark',
-      gradientToColors: [ '#FDD835'],
-      shadeIntensity: 1,
-      type: 'horizontal',
-      opacityFrom: 1,
-      opacityTo: 1,
-      stops: [50, 100, 50, 100]
+      height: 350,
+      type: "line",
     },
-  },
-  yaxis: {
-    min: -10,
-    max: 40
-  }
+    // forecastDataPoints: {
+    //   count: 7
+    // },
+    stroke: {
+      width: 7,
+      curve: "smooth",
+    },
+    xaxis: {
+      type: "datetime",
+      categories: [
+        "1/11/2000",
+        "2/11/2000",
+        "3/11/2000",
+        "4/11/2000",
+        "5/11/2000",
+        "6/11/2000",
+        "7/11/2000",
+        "8/11/2000",
+        "9/11/2000",
+        "10/11/2000",
+        "11/11/2000",
+        "12/11/2000",
+        "1/11/2001",
+        "2/11/2001",
+        "3/11/2001",
+        "4/11/2001",
+        "5/11/2001",
+        "6/11/2001",
+      ],
+      tickAmount: 10,
+      labels: {
+        formatter: function (value, timestamp, opts) {
+          return opts.dateFormatter(new Date(timestamp), "dd MMM");
+        },
+      },
+    },
+    title: {
+      text: "Set",
+      align: "left",
+      style: {
+        fontSize: "16px",
+        color: "#666",
+      },
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        shade: "dark",
+        gradientToColors: ["#FDD835"],
+        shadeIntensity: 1,
+        type: "horizontal",
+        opacityFrom: 1,
+        opacityTo: 1,
+        stops: [50, 100, 50, 100],
+      },
+    },
+    yaxis: {
+      min: -10,
+      max: 40,
+    },
   };
-
 
   useEffect(() => {
     initializeChartline(); // Render the chart when the component mounts
@@ -180,9 +232,9 @@ function AdminDashboard() {
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
                         <div className="fw-bold text-primary text-uppercase mb-1">
-                          Visitors (Monthly)
+                          Access Number (Monthly)
                         </div>
-                        <div className="h5 mb-0 fw-bold">500</div>
+                        <div className="h5 mb-0 fw-bold">{accessNumber}</div>
                       </div>
                       <div className="col-auto">
                         <i class="bi bi-people fs-2 text-secondary"></i>
@@ -192,17 +244,16 @@ function AdminDashboard() {
                 </div>
               </div>
 
-              {/*  <!-- Earnings (Monthly) Card Example --> */}
               <div className="col-xl-3 col-md-6 mb-4">
                 <div className="card border-left border-success shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
                         <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
-                          Subscribers (Monthly)
+                          Register (Monthly)
                         </div>
                         <div className="h5 mb-0 font-weight-bold text-gray-800">
-                          100
+                          {registernumber}
                         </div>
                       </div>
                       <div className="col-auto">
@@ -224,7 +275,7 @@ function AdminDashboard() {
                         <div className="row no-gutters align-items-center">
                           <div className="col-auto">
                             <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                              50%
+                              {classnumber}
                             </div>
                           </div>
                         </div>
@@ -246,7 +297,7 @@ function AdminDashboard() {
                           Sets created (Monthly)
                         </div>
                         <div className="h5 mb-0 font-weight-bold text-gray-800">
-                          18
+                          {studySetnumber}
                         </div>
                       </div>
                       <div className="col-auto">
@@ -282,7 +333,7 @@ function AdminDashboard() {
               <div className="card shadow mb-4">
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 className="m-0 font-weight-bold text-secondary text-uppercase">
-                   Sets created by users within 1 month
+                    Sets created by users within 1 month
                   </h6>
                 </div>
                 {/*  <!-- Card Body --> */}

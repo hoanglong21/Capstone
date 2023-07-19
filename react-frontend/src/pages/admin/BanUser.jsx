@@ -8,7 +8,6 @@ function BanUser() {
   const { userInfo } = useSelector((state) => state.user)
   const [banUser, setBanUser] = useState({});
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (banUser.username) {
@@ -16,15 +15,11 @@ function BanUser() {
     }
   }, [banUser]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  const handleSubmit = async () => {
     try {
       await UserService.banUser(banUser.username);
       document.getElementById("banUserModal").click();
       navigate("/");
-      setError("");
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);
@@ -32,7 +27,6 @@ function BanUser() {
         setError(error.message);
       }
     }
-    setLoading(false);
   };
   return (
     <div class="modal" tabindex="-1" role="dialog" id="banModal">
@@ -57,7 +51,6 @@ function BanUser() {
               type="button"
               class="btn btn-danger"
               onClick={handleSubmit}
-              disabled={loading}
             >
               Sure!
             </button>

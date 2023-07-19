@@ -4,6 +4,7 @@ import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import UserService from "../../services/UserService";
 import ApexCharts from "apexcharts";
+import defaultAvatar from "../../assets/images/avatar-default.jpg"
 
 function ViewDetailsUser() {
   const [users, setUsers] = useState([]);
@@ -324,7 +325,7 @@ function ViewDetailsUser() {
                   <label className="small mb-1 fs-6">Profile Picture </label>
                   <img
                     className="img-account-profile rounded-circle"
-                    src={users?.avatar}
+                    src={users?.avatar ? users?.avatar : defaultAvatar}
                     alt=""
                     style={{
                       width: "100px",
