@@ -122,7 +122,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClass(Boolean isDeleted, String search, String author, String fromDeleted, String toDeleted,
+    public Map<String, Object> getFilterClass(int classid,Boolean isDeleted, String search, String author, String fromDeleted, String toDeleted,
                                               String fromCreated, String toCreated,String sortBy,String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
@@ -136,6 +136,11 @@ public class ClassServiceImpl implements ClassService {
                 "GROUP BY c.id HAVING 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
+
+        if (classid != 0) {
+            query += " AND c.id = :classId";
+            parameters.put("classId", classid);
+        }
 
         if (isDeleted != null) {
             query += " AND is_deleted = :isDeleted";
