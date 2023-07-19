@@ -15,26 +15,42 @@ function AdminDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const temp = (await AdminService.getRegisterNumber()).data;
-      setRegisterNumber(temp);
+      try {
+        const temp = (await AdminService.getRegisterNumber()).data;
+        setRegisterNumber(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
     };
     fetchData();
 
     const fetchDataClass = async () => {
-      const temp = (await AdminService.getClassNumber()).data;
-      setClassNumber(temp);
+      try {
+        const temp = (await AdminService.getClassNumber()).data;
+        setClassNumber(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
     };
     fetchDataClass();
 
     const fetchDataStudySet = async () => {
-      const temp = (await AdminService.getStudySetNumber()).data;
-      setStudySetNumber(temp);
+      try {
+        const temp = (await AdminService.getStudySetNumber()).data;
+        setStudySetNumber(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
     };
     fetchDataStudySet();
 
     const fetchDataAccess = async () => {
-      const temp = (await AdminService.getAccessNumber()).data;
-      setAccessNumber(temp);
+      try {
+        const temp = (await AdminService.getAccessNumber()).data;
+        setAccessNumber(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
     };
     fetchDataAccess();
   }, []);
