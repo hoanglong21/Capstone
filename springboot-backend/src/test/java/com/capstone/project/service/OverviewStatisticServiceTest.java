@@ -105,8 +105,8 @@ public class OverviewStatisticServiceTest {
             Map<String, Object> response = new HashMap<>();
             response.put("totalItems", 2);
             when(dateRangePicker.getShortDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-            when(classService.getFilterClass(any(), any(), any(), any(), any(),
-                    any(), any(),any(), any(), anyInt(), anyInt())).thenReturn(response);
+            when(classService.getFilterClass(anyInt(), any(), any(), any(), any(),
+                    any(), any(),any(),any(), any(), anyInt(), anyInt())).thenReturn(response);
             Integer result = overviewStatisticService.getClassNumber();
             assertThat(result).isEqualTo(2);
         } catch (ResourceNotFroundException e) {
