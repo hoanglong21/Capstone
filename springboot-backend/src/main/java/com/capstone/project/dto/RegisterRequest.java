@@ -26,10 +26,10 @@ public class RegisterRequest {
     @Pattern(regexp = "^\\S+$", message = "Username not allow space")
     private String username;
 
-    @Pattern(regexp = "^[a-zA-Z ]+$", message = "First name must contain letters only")
+    @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "First name must contain letters only")
     private String first_name;
 
-    @Pattern(regexp = "^[a-zA-Z ]+$", message = "Last name must contain letters only")
+    @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "Last name must contain letters only")
     private String last_name;
 
     @NotBlank(message = "Email cannot be empty")
