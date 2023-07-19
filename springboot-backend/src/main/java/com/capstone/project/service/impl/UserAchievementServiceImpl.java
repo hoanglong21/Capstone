@@ -26,8 +26,11 @@ public class UserAchievementServiceImpl implements UserAchievementService {
 
     private final UserAchievementRepository userAchievementRepository;
 
-    public UserAchievementServiceImpl(UserAchievementRepository userAchievementRepository) {
+    private final EntityManager entityManager;
+
+    public UserAchievementServiceImpl(UserAchievementRepository userAchievementRepository, EntityManager entityManager) {
         this.userAchievementRepository = userAchievementRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -57,9 +60,6 @@ public class UserAchievementServiceImpl implements UserAchievementService {
         return userAchievementRepository.getUserAchievementByUserId(id);
     }
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Override
     public Map<String, Object> filterUserAchievement(int userId, int achievementId, String fromCreated, String toCreated, String sortBy, String direction, int page, int size) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -77,7 +77,6 @@ public class UserAchievementServiceImpl implements UserAchievementService {
         }
 
         if (fromCreated != null && !fromCreated.equals("")) {
-            System.out.println(fromCreated);
             jpql += " AND DATE(f.created_date) >= :fromCreated ";
             params.put("fromCreated", formatter.parse(fromCreated));
         }

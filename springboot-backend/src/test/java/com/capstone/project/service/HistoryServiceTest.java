@@ -104,7 +104,7 @@ public class HistoryServiceTest {
             "1, 0, 1, 0, 2023-07-01, 2023-07-10, datetime, DESC, 1, 5, true",
             "1, 1, 2, 0, 2023-07-01, 2023-07-10, datetime, DESC, 1, 5, false",
     })
-    public void filterHistory(int userId, int destinationId, int typeId, int categoryId, String fromDatetime, String toDatetime,
+    public void filterUserAchievement(int userId, int destinationId, int typeId, int categoryId, String fromDatetime, String toDatetime,
                               String sortBy, String direction, int page, int size, boolean greaterThanZero) {
 
         try {
