@@ -6,6 +6,10 @@ const createTest = (test) => {
     return axios.post(API_BASE_URL + '/test', test)
 }
 
+const updateTest = (id, test) => {
+    return axios.put(API_BASE_URL + '/test/' + id, test)
+}
+
 const getFilterList = (
     search,
     author,
@@ -44,5 +48,6 @@ const getFilterList = (
 const TestService = {
     getFilterList,
     createTest,
+    updateTest,
 }
 export default TestService

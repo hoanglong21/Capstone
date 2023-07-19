@@ -1,33 +1,34 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import {
     deleteFileByUrl,
     deleteFolder,
-    renameFolder,
     uploadFile,
 } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
 import TestService from '../../../services/TestService'
+import QuestionService from '../../../services/QuestionService'
+import AnswerService from '../../../services/AnswerService'
 
 import {
     CloseIcon,
-    CopyIcon,
     DeleteIcon,
     ImageIcon,
     SpeakIcon,
     VideoIcon,
 } from '../../../components/icons'
-import QuestionService from '../../../services/QuestionService'
-import AnswerService from '../../../services/AnswerService'
 
 const CreateTest = () => {
+    const navigate = useNavigate()
+
     const { id } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
     const [error, setError] = useState('')
     const [test, setTest] = useState({})
+    const [isScroll, setIsScroll] = useState(false)
     const [questions, setQuestions] = useState([])
     const [classroom, setClassroom] = useState({})
 
@@ -52,72 +53,142 @@ const CreateTest = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempClass = (await ClassService.getClassroomById(id)).data
-            setClassroom(tempClass)
-            setTest({
-                title: '',
-                classroom: {
-                    id: tempClass.id,
-                },
-                user: {
-                    id: userInfo.id,
-                },
-                description: '',
-                duration: '',
-                num_attemps: '',
-                due_date: '',
-                start_date: getToday(),
-                created_date: getToday(),
-                _draft: true,
-            })
+            try {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                setTest(
+                    (
+                        await TestService.createTest({
+                            title: '',
+                            classroom: {
+                                id: tempClass.id,
+                            },
+                            user: {
+                                id: userInfo.id,
+                            },
+                            description: '',
+                            duration: '',
+                            num_attemps: 1,
+                            due_date: '',
+                            start_date: getToday(),
+                            created_date: getToday(),
+                            _draft: true,
+                        })
+                    ).data
+                )
+            } catch (error) {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                setTest(
+                    (
+                        await TestService.createTest({
+                            title: '',
+                            classroom: {
+                                id: tempClass.id,
+                            },
+                            user: {
+                                id: userInfo.id,
+                            },
+                            description: '',
+                            duration: '',
+                            num_attemps: 1,
+                            due_date: '',
+                            start_date: getToday(),
+                            created_date: getToday(),
+                            _draft: true,
+                        })
+                    ).data
+                )
+            }
+            setError('')
         }
         if (userInfo?.id) {
             fetchData()
         }
     }, [userInfo])
 
+    // handle sticky header
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScroll(window.scrollY > 96)
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+
+    // test
     const handleCreate = async () => {
-        try {
-            // create test
-            const tempTest = (await TestService.createTest(test)).data
-            // change test folder name
-            await renameFolder(
-                `${userInfo.username}/class/${classroom.id}/test/test_id`,
-                `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}`
-            )
-            // question
-            for (let indexQues = 0; indexQues < questions.length; indexQues++) {
-                const ques = questions[indexQues]
-                var tempCreateQues = {
-                    ...ques,
-                    test: { id: tempTest.id },
-                }
-                const answers = tempCreateQues.answers
-                delete tempCreateQues.answers
-                // add question
-                const tempQues = await QuestionService.createQuestion(
-                    tempCreateQues
+        // validation
+        // check duration > 0
+        if (test?.duration && test?.duration <= 0) {
+            setError('Duration must be a positive number')
+            return
+        }
+        // check num attempts > 0
+        if (
+            test?.num_attemps &&
+            (test?.num_attemps <= 0 || !Number.isInteger(test?.num_attemps))
+        ) {
+            setError('Number of attempts must be a positive integer number')
+            return
+        }
+        // check question.length > 0
+        if (questions?.length <= 0) {
+            setError('There must be at least one question\ndfd')
+            return
+        }
+        for (let indexQues = 0; indexQues < questions?.length; indexQues++) {
+            const ques = questions[indexQues]
+            // check if question content null
+            if (!ques.question) {
+                setError(
+                    `The content of <a href="#question${indexQues}">this</a> question cannot be left blank.`
                 )
-                // change question foldername
-                await renameFolder(
-                    `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/question_${indexQues}`,
-                    `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/${tempQues.id}`
+                return
+            }
+            // check if answer content null
+            if (ques?.answers?.length < 2) {
+                setError(
+                    `Please add at least 2 answer options for <a href="#question${indexQues}">this</a> question.`
                 )
-                // add answers
-                const tempAnswers = await AnswerService.createAnswers(answers)
-                // change answer foldername
+                return
+            } else {
+                var isSelectCorrectAns = false
                 for (
                     let indexAns = 0;
-                    indexAns < tempAnswers.length;
+                    indexAns < ques?.answers?.length;
                     indexAns++
                 ) {
-                    const ans = tempAnswers[indexAns]
-                    await renameFolder(
-                        `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/${tempQues.id}/answer/ans_${indexAns}`,
-                        `${userInfo.username}/class/${classroom.id}/test/${tempTest.id}/${tempQues.id}/answer/${ans.id}`
+                    const ans = ques?.answers[indexAns]
+                    if (!ans?.content) {
+                        setError(
+                            `Please add at least 2 answer options for <a href="#question${indexQues}">this</a> question.`
+                        )
+                        return
+                    }
+                    if (ans?._true) {
+                        isSelectCorrectAns = true
+                    }
+                }
+                // check if select correct answer
+                if (!isSelectCorrectAns) {
+                    setError(
+                        `Please mark the correct answer to <a href="#question${indexQues}">this</a> question.`
                     )
+                    return
                 }
             }
+        }
+        try {
+            // update test
+            await TestService.updateTest(test.id, {
+                ...test,
+                _draft: false,
+            })
+            navigate('../tests')
+            // clear
+            setTest({})
+            setError('')
         } catch (error) {
             if (error.response && error.response.data) {
                 setError(error.response.data)
@@ -127,19 +198,33 @@ const CreateTest = () => {
         }
     }
 
+    const handleChangeTest = (event) => {
+        setTest({ ...test, [event.target.name]: event.target.value })
+    }
+
+    // question
     const handleAddQuestion = async () => {
         try {
-            const ques = {
-                question: '',
-                questionType: {
-                    id: 2,
+            const ques = (
+                await QuestionService.createQuestion({
+                    question: '',
+                    questionType: {
+                        id: 2,
+                    },
+                    picture: null,
+                    audio: null,
+                    video: null,
+                    test: {
+                        id: test.id,
+                    },
+                })
+            ).data
+            setQuestions([
+                ...questions,
+                {
+                    ...ques,
                 },
-                picture: null,
-                audio: null,
-                video: null,
-                answers: [],
-            }
-            setQuestions([...questions, ques])
+            ])
         } catch (error) {
             if (error.response && error.response.data) {
                 setError(error.response.data)
@@ -149,12 +234,67 @@ const CreateTest = () => {
         }
     }
 
-    const handleAddAnswer = async (quesIndex) => {
-        try {
-            const ans = {
-                content: '',
-                _true: false,
+    const handleChangeQuestion = (event, quesIndex) => {
+        var tempQuestions = [...questions]
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            [event.target.name]: event.target.value,
+        }
+        setQuestions(tempQuestions)
+    }
+
+    const handleUploadFileQuestion = async (event, ques, quesIndex) => {
+        var file = event.target.files[0]
+        if (file) {
+            const url = await uploadFile(
+                file,
+                `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/question`
+            )
+            var tempQuestions = [...questions]
+            tempQuestions[quesIndex] = {
+                ...tempQuestions[quesIndex],
+                [event.target.name]: url,
             }
+            setQuestions(tempQuestions)
+        }
+    }
+
+    const handleDeleteQues = async (ques, quesIndex) => {
+        var tempQuestions = [...questions]
+        tempQuestions.splice(quesIndex, 1)
+        setQuestions(tempQuestions)
+        await QuestionService.deleteQuestion(ques.id)
+        await deleteFolder(
+            `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
+        )
+    }
+
+    const handleDeleteFileQues = async (event, ques, quesIndex) => {
+        var tempQuestions = [...questions]
+        const url = tempQuestions[quesIndex][event.target.name]
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            [event.target.name]: null,
+        }
+        setQuestions(tempQuestions)
+        await deleteFileByUrl(
+            url,
+            `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
+        )
+    }
+
+    // answer
+    const handleAddAnswer = async (ques, quesIndex) => {
+        try {
+            const ans = (
+                await AnswerService.createAnswer({
+                    question: {
+                        id: ques.id,
+                    },
+                    content: '',
+                    _true: false,
+                })
+            ).data
             var tempQuestions = [...questions]
             var tempAnswers = [...tempQuestions[quesIndex].answers]
             tempAnswers.push(ans)
@@ -181,7 +321,7 @@ const CreateTest = () => {
         }
     }
 
-    const handleAnswerBlur = (event, quesIndex, ansIndex) => {
+    const handleAnswerBlur = (quesIndex, ansIndex) => {
         const buttonsEl = document
             .getElementById(`createAnswer${quesIndex}-${ansIndex}`)
             .querySelectorAll(`#createAnswer${quesIndex}-${ansIndex} .btn-hide`)
@@ -218,41 +358,18 @@ const CreateTest = () => {
         setQuestions(tempQuestions)
     }
 
-    const handleChangeQuestion = (event, quesIndex) => {
-        var tempQuestions = [...questions]
-        tempQuestions[quesIndex] = {
-            ...tempQuestions[quesIndex],
-            [event.target.name]: event.target.value,
-        }
-        setQuestions(tempQuestions)
-    }
-
-    const handleUploadFileQuestion = async (event, quesIndex) => {
-        var file = event.target.files[0]
-        if (file) {
-            const url = await uploadFile(
-                file,
-                `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/question`
-            )
-            var tempQuestions = [...questions]
-            tempQuestions[quesIndex] = {
-                ...tempQuestions[quesIndex],
-                [event.target.name]: url,
-            }
-            setQuestions(tempQuestions)
-        }
-    }
-
-    const handleChangeTest = (event) => {
-        setTest({ ...test, [event.target.name]: event.target.value })
-    }
-
-    const handleUploadFileAnswer = async (event, quesIndex, ansIndex) => {
+    const handleUploadFileAnswer = async (
+        event,
+        ques,
+        quesIndex,
+        ans,
+        ansIndex
+    ) => {
         const file = event.target.files[0]
         if (file) {
             const url = await uploadFile(
                 file,
-                `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/answer/answer_${ansIndex}`
+                `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
             )
             var tempQuestions = [...questions]
             var tempAnswers = [...tempQuestions[quesIndex].answers]
@@ -268,7 +385,7 @@ const CreateTest = () => {
         }
     }
 
-    const handleDeleteAnswer = async (event, quesIndex, ansIndex) => {
+    const handleDeleteAnswer = async (ques, quesIndex, ans, ansIndex) => {
         var tempQuestions = [...questions]
         var tempAnswers = [...tempQuestions[quesIndex].answers]
         tempAnswers.splice(ansIndex, 1)
@@ -277,35 +394,19 @@ const CreateTest = () => {
             answers: tempAnswers,
         }
         setQuestions(tempQuestions)
+        await AnswerService.deleteAnswer(ans.id)
         await deleteFolder(
-            `files/${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/answer/answer_${ansIndex}`
+            `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
         )
     }
 
-    const handleDeleteQues = async (quesIndex) => {
-        var tempQuestions = [...questions]
-        tempQuestions.splice(quesIndex, 1)
-        setQuestions(tempQuestions)
-        await deleteFolder(
-            `files/${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}`
-        )
-    }
-
-    const handleDeleteFileQues = async (event, quesIndex) => {
-        var tempQuestions = [...questions]
-        const url = tempQuestions[quesIndex][event.target.name]
-        tempQuestions[quesIndex] = {
-            ...tempQuestions[quesIndex],
-            [event.target.name]: null,
-        }
-        setQuestions(tempQuestions)
-        await deleteFileByUrl(
-            url,
-            `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}`
-        )
-    }
-
-    const handleDeleteFileAns = async (event, quesIndex, ansIndex) => {
+    const handleDeleteFileAns = async (
+        event,
+        ques,
+        quesIndex,
+        ans,
+        ansIndex
+    ) => {
         var tempQuestions = [...questions]
         var tempAnswers = [...tempQuestions[quesIndex].answers]
         const url = tempAnswers[ansIndex][event.target.name]
@@ -320,14 +421,25 @@ const CreateTest = () => {
         setQuestions(tempQuestions)
         await deleteFileByUrl(
             url,
-            `${userInfo.username}/class/${classroom.id}/test/test_id/question_${quesIndex}/answer/answer_${ansIndex}`
+            `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
         )
     }
 
     return (
         <div>
-            <div className="d-flex justify-content-between align-items-center">
-                <button className="createTest_cancelBtn">cancel</button>
+            <div
+                className={`d-flex justify-content-between align-items-center sticky-top sticky-header ${
+                    isScroll ? 'scroll-shadows p-3 rounded-bottom' : ''
+                }`}
+            >
+                <button
+                    className="createTest_cancelBtn"
+                    onClick={() => {
+                        navigate('../tests')
+                    }}
+                >
+                    cancel
+                </button>
                 <div className="d-flex">
                     <button
                         className="createTest_submitBtn"
@@ -336,16 +448,25 @@ const CreateTest = () => {
                     >
                         Create
                     </button>
-                    <button className="createTest_draftBtn">Save draft</button>
+                    <button
+                        className="createTest_draftBtn"
+                        onClick={() => {
+                            navigate('../tests')
+                        }}
+                    >
+                        Save draft
+                    </button>
                 </div>
             </div>
             {/* Test */}
             <div className="card mt-4">
                 <div className="card-body p-4">
                     {error && (
-                        <div className="alert alert-danger mb-4" role="alert">
-                            {error}
-                        </div>
+                        <div
+                            className="alert alert-danger mb-4"
+                            role="alert"
+                            dangerouslySetInnerHTML={{ __html: error }}
+                        ></div>
                     )}
                     <div className="createTest_formGroup form-floating mb-4">
                         <input
@@ -387,6 +508,7 @@ const CreateTest = () => {
                                     name="start_date"
                                     id="start_date"
                                     placeholder="start date"
+                                    min={test?.created_date || ''}
                                     value={test?.start_date || ''}
                                     onChange={handleChangeTest}
                                 />
@@ -406,6 +528,7 @@ const CreateTest = () => {
                                     id="due_date"
                                     name="due_date"
                                     placeholder="due date"
+                                    min={test?.start_date || ''}
                                     value={test?.due_date || ''}
                                     onChange={handleChangeTest}
                                 />
@@ -462,7 +585,11 @@ const CreateTest = () => {
             </div>
             {/* Question */}
             {questions.map((ques, quesIndex) => (
-                <div className="card mt-4" key={quesIndex}>
+                <div
+                    className="card mt-4"
+                    key={quesIndex}
+                    id={`question${quesIndex}`}
+                >
                     <div className="card-body p-4">
                         <div className="createTest_formGroup mb-4 d-flex align-items-center">
                             <input
@@ -486,7 +613,11 @@ const CreateTest = () => {
                                     event.target.value = null
                                 }}
                                 onChange={(event) =>
-                                    handleUploadFileQuestion(event, quesIndex)
+                                    handleUploadFileQuestion(
+                                        event,
+                                        ques,
+                                        quesIndex
+                                    )
                                 }
                             />
                             <button className="btn p-0" type="btn">
@@ -508,7 +639,11 @@ const CreateTest = () => {
                                     event.target.value = null
                                 }}
                                 onChange={(event) =>
-                                    handleUploadFileQuestion(event, quesIndex)
+                                    handleUploadFileQuestion(
+                                        event,
+                                        ques,
+                                        quesIndex
+                                    )
                                 }
                             />
                             <button className="btn p-0" type="btn">
@@ -530,7 +665,11 @@ const CreateTest = () => {
                                     event.target.value = null
                                 }}
                                 onChange={(event) =>
-                                    handleUploadFileQuestion(event, quesIndex)
+                                    handleUploadFileQuestion(
+                                        event,
+                                        ques,
+                                        quesIndex
+                                    )
                                 }
                             />
                             <button className="btn p-0" type="btn">
@@ -558,6 +697,7 @@ const CreateTest = () => {
                                             onClick={(event) =>
                                                 handleDeleteFileQues(
                                                     event,
+                                                    ques,
                                                     quesIndex
                                                 )
                                             }
@@ -582,6 +722,7 @@ const CreateTest = () => {
                                             onClick={(event) =>
                                                 handleDeleteFileQues(
                                                     event,
+                                                    ques,
                                                     quesIndex
                                                 )
                                             }
@@ -609,6 +750,7 @@ const CreateTest = () => {
                                             onClick={(event) =>
                                                 handleDeleteFileQues(
                                                     event,
+                                                    ques,
                                                     quesIndex
                                                 )
                                             }
@@ -629,7 +771,7 @@ const CreateTest = () => {
                                     <input
                                         className="form-check-input"
                                         type="checkbox"
-                                        checked={ans?._draft || false}
+                                        checked={ans?._true || false}
                                         onChange={(event) =>
                                             handleChangeAnswerCorrect(
                                                 event,
@@ -660,9 +802,8 @@ const CreateTest = () => {
                                                     ansIndex
                                                 )
                                             }
-                                            onBlur={(event) =>
+                                            onBlur={() =>
                                                 handleAnswerBlur(
-                                                    event,
                                                     quesIndex,
                                                     ansIndex
                                                 )
@@ -680,7 +821,9 @@ const CreateTest = () => {
                                                     onChange={(event) =>
                                                         handleUploadFileAnswer(
                                                             event,
+                                                            ques,
                                                             quesIndex,
+                                                            ans,
                                                             ansIndex
                                                         )
                                                     }
@@ -713,7 +856,9 @@ const CreateTest = () => {
                                                     onChange={(event) =>
                                                         handleUploadFileAnswer(
                                                             event,
+                                                            ques,
                                                             quesIndex,
+                                                            ans,
                                                             ansIndex
                                                         )
                                                     }
@@ -746,7 +891,9 @@ const CreateTest = () => {
                                                     onChange={(event) =>
                                                         handleUploadFileAnswer(
                                                             event,
+                                                            ques,
                                                             quesIndex,
+                                                            ans,
                                                             ansIndex
                                                         )
                                                     }
@@ -767,22 +914,27 @@ const CreateTest = () => {
                                                 </button>
                                             </div>
                                         )}
-                                        <button
-                                            className="btn-customLight ms-1 p-2 rounded-circle"
-                                            style={{ marginRight: '-0.5rem' }}
-                                            onMouseDown={(e) =>
-                                                e.preventDefault()
-                                            }
-                                            onClick={(event) =>
-                                                handleDeleteAnswer(
-                                                    event,
-                                                    quesIndex,
-                                                    ansIndex
-                                                )
-                                            }
-                                        >
-                                            <CloseIcon />
-                                        </button>
+                                        {ques?.answers.length > 1 && (
+                                            <button
+                                                className="btn-customLight ms-1 p-2 rounded-circle"
+                                                style={{
+                                                    marginRight: '-0.5rem',
+                                                }}
+                                                onMouseDown={(e) =>
+                                                    e.preventDefault()
+                                                }
+                                                onClick={() =>
+                                                    handleDeleteAnswer(
+                                                        ques,
+                                                        quesIndex,
+                                                        ans,
+                                                        ansIndex
+                                                    )
+                                                }
+                                            >
+                                                <CloseIcon />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="row mt-1">
@@ -801,7 +953,9 @@ const CreateTest = () => {
                                                     onClick={(event) =>
                                                         handleDeleteFileAns(
                                                             event,
+                                                            ques,
                                                             quesIndex,
+                                                            ans,
                                                             ansIndex
                                                         )
                                                     }
@@ -826,7 +980,9 @@ const CreateTest = () => {
                                                     onClick={(event) =>
                                                         handleDeleteFileAns(
                                                             event,
+                                                            ques,
                                                             quesIndex,
+                                                            ans,
                                                             ansIndex
                                                         )
                                                     }
@@ -854,7 +1010,9 @@ const CreateTest = () => {
                                                     onClick={(event) =>
                                                         handleDeleteFileAns(
                                                             event,
+                                                            ques,
                                                             quesIndex,
+                                                            ans,
                                                             ansIndex
                                                         )
                                                     }
@@ -870,7 +1028,7 @@ const CreateTest = () => {
                         <button
                             type="button"
                             className="createTest_addOptionBtn"
-                            onClick={() => handleAddAnswer(quesIndex)}
+                            onClick={() => handleAddAnswer(ques, quesIndex)}
                         >
                             Add option
                         </button>
@@ -892,7 +1050,7 @@ const CreateTest = () => {
                         </div>
                         <button
                             className="btn btn-customLight p-2 rounded-circle"
-                            onClick={() => handleDeleteQues(quesIndex)}
+                            onClick={() => handleDeleteQues(ques, quesIndex)}
                         >
                             <DeleteIcon />
                         </button>

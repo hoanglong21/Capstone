@@ -10,9 +10,14 @@ const createQuestion = (question) => {
     return axios.post(API_BASE_URL + '/questions', question)
 }
 
+const deleteQuestion = (id) => {
+    return axios.delete(API_BASE_URL + '/questions/' + id)
+}
+
 const QuestionService = {
     createQuestions,
     createQuestion,
+    deleteQuestion,
 }
 
 export default QuestionService

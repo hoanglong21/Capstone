@@ -75,7 +75,7 @@ public class TestController {
 
     }
     @PutMapping ("/test/{id}")
-    public ResponseEntity<?> updateTest(@PathVariable int id,@Valid @RequestBody TestRequest testRequest, BindingResult result){
+        public ResponseEntity<?> updateTest(@PathVariable int id,@Valid @RequestBody TestRequest testRequest, BindingResult result){
         if (result.hasErrors()) {
             // create a list of error messages from the binding result
             List<String> errors = result.getAllErrors().stream()
