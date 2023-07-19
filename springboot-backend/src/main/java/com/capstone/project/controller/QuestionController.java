@@ -54,41 +54,22 @@ public class QuestionController {
     }
 
     @PostMapping("/createquestions")
-    public ResponseEntity<?> createQuestions(@Valid @RequestBody List<QuestionRequest> questionRequests, BindingResult result) {
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-            List<Question> questions = questionRequests.stream()
-                    .map(questionRequest -> modelMapper.map(questionRequest, Question.class))
-                    .collect(Collectors.toList());
+    public ResponseEntity<?> createQuestions(@RequestBody List<Question> questions) {
             try {
                 return ResponseEntity.ok(questionService.createQuestions(questions));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
+
     }
 
     @PostMapping("/questions")
-    public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionRequest questionRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-            Question question = modelMapper.map(questionRequest,Question.class);
+    public ResponseEntity<?> createQuestion( @RequestBody Question question) {
             try{
                 return ResponseEntity.ok(questionService.createQuestion(question));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
 
     }
 

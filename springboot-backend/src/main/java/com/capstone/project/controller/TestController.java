@@ -57,21 +57,13 @@ public class TestController {
     }
 
     @PostMapping("/test")
-    public ResponseEntity<?> createTest(@Valid @RequestBody TestRequest testRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-                Test test = modelMapper.map(testRequest,Test.class);
+    public ResponseEntity<?> createTest(@RequestBody Test test) {
             try{
                 return ResponseEntity.ok(testService.createTest(test));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
+
 
     }
     @PutMapping ("/test/{id}")

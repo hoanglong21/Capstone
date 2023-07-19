@@ -53,41 +53,23 @@ public class AnswerController {
     }
 
     @PostMapping("/createanswers")
-        public ResponseEntity<?> createAnswers(@Valid @RequestBody List<AnswerRequest> answerRequests, BindingResult result) {
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-            List<Answer> answers = answerRequests.stream()
-                    .map(answerRequest -> modelMapper.map(answerRequest, Answer.class))
-                    .collect(Collectors.toList());
+        public ResponseEntity<?> createAnswers(@RequestBody List<Answer> answers) {
             try {
                 return ResponseEntity.ok(answerService.createAnswers(answers));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
+
     }
 
     @PostMapping("/answers")
-    public ResponseEntity<?> createAnswer(@Valid @RequestBody AnswerRequest answerRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-            Answer answer = modelMapper.map(answerRequest,Answer.class);
+    public ResponseEntity<?> createAnswer(@RequestBody Answer answer) {
             try{
                 return ResponseEntity.ok(answerService.createAnswer(answer));
             } catch (Exception e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
+
     }
 
 
