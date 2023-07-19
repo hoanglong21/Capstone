@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import {
+    deleteFileByUrl,
     deleteFolder,
     uploadFile,
 } from '../../../features/fileManagement'
@@ -71,18 +72,36 @@ function UpdateAssignment() {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
+            const url = await uploadFile(
+                file,
+                `${userInfo.username}/class/${classroom.id}/assignment/${updateAssignment.id}/tutor`
+            )
             setUploadFiles([
                 ...uploadFiles,
-                { file_name: file.name, file_type: file.type, file: file },
+                {
+                    file_name: file.name,
+                    file_type: file.type,
+                    file_url: url,
+                    assignment: {
+                        id: updateAssignment.id,
+                    },
+                    attachmentType: {
+                        id: 1,
+                    },
+                },
             ])
         }
         setLoadingUploadFile(false)
     }
 
-    const handleDeleteFile = (index) => {
+    const handleDeleteFile = async (file, index) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
         setUploadFiles(temp)
+        await deleteFileByUrl(
+            file.file_url,
+            `${userInfo.username}/class/${classroom.id}/assignment/${updateAssignment.id}/tutor`
+        )
     }
 
     const handleChange = (event) => {
@@ -101,31 +120,8 @@ function UpdateAssignment() {
                     _draft: draft,
                 })
             ).data
-            // delete folder
-            await deleteFolder(
-                `files/${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`,
-                false
-            )
             // add attachments
-            let tempAttachments = []
-            for (const uploadFileItem of uploadFiles) {
-                const url = await uploadFile(
-                    uploadFileItem.file,
-                    `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
-                )
-                tempAttachments.push({
-                    file_name: uploadFileItem.file_name,
-                    file_type: uploadFileItem.file_type,
-                    file_url: url,
-                    assignment: {
-                        id: tempAssignment.id,
-                    },
-                    attachmentType: {
-                        id: 1,
-                    },
-                })
-            }
-            await AttachmentService.createAttachments(tempAttachments)
+            await AttachmentService.createAttachments(uploadFiles)
             navigate('../assignments')
             // clear
             handleClear()
@@ -281,7 +277,7 @@ function UpdateAssignment() {
                                         <button
                                             className="btn fileUploadDelButton"
                                             onClick={() =>
-                                                handleDeleteFile(index)
+                                                handleDeleteFile(file, index)
                                             }
                                         >
                                             <DeleteIcon />

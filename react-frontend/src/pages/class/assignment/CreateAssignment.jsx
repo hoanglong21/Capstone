@@ -236,6 +236,7 @@ function CreateAssignment() {
                                     className="form-control"
                                     id="due_date"
                                     name="due_date"
+                                    min={assignment?.start_date || ''}
                                     placeholder="due date"
                                     onChange={handleChange}
                                 />

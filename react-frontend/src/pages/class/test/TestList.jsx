@@ -80,7 +80,7 @@ const TestList = () => {
                 id="accordionTests"
             >
                 {tests?.map((test, index) => (
-                    <div className="accordion-item">
+                    <div className="accordion-item" key={test.id}>
                         <button
                             className="accordion-button collapsed d-flex justify-content-between align-items-center"
                             type="button"
@@ -89,7 +89,7 @@ const TestList = () => {
                             aria-expanded="false"
                             aria-controls={`test${test?.id}`}
                         >
-                            <div>{test.title}</div>
+                            <div>{test.title || '...'}</div>
                             <div>
                                 {test._draft
                                     ? 'Draft'

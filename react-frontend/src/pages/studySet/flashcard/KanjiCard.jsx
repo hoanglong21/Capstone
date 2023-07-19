@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import ContentService from '../../../services/ContentService'
 
 const KanjiCard = ({ card }) => {
-    const [contents, setContents] = useState([])
+    const [character, setCharacter] = useState(null)
     const [name, setName] = useState(null)
     const [strokeOrder, setStrokeOrder] = useState(null)
     const [meanings, setMeanings] = useState(null)
@@ -18,9 +18,11 @@ const KanjiCard = ({ card }) => {
         const fetchData = async () => {
             const tempContents = (await ContentService.getAllByCardId(card.id))
                 .data
-            setContents(tempContents)
             for (const content of tempContents) {
                 switch (content.field.name) {
+                    case 'character':
+                        setCharacter(content)
+                        break
                     case 'name':
                         setName(content)
                         break
@@ -95,7 +97,7 @@ const KanjiCard = ({ card }) => {
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
                     <div
                         dangerouslySetInnerHTML={{
-                            __html: contents[0]?.content,
+                            __html: character?.content,
                         }}
                     ></div>
                 </div>

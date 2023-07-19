@@ -58,8 +58,8 @@ const ClassesForHome = () => {
                                     <div className="author-avatar">
                                         <img
                                             src={
-                                                classroom?.user?.avatar
-                                                    ? classroom?.user?.avatar
+                                                classroom?.avatar
+                                                    ? classroom?.avatar
                                                     : defaultAvatar
                                             }
                                             alt="author avatar"
@@ -67,7 +67,7 @@ const ClassesForHome = () => {
                                         />
                                     </div>
                                     <span className="author-username ms-2">
-                                        {classroom?.user?.username}
+                                        {classroom?.author}
                                     </span>
                                 </div>
                             </div>
