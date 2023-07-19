@@ -10,6 +10,10 @@ const updateTest = (id, test) => {
     return axios.put(API_BASE_URL + '/test/' + id, test)
 }
 
+const getTestById = (id) => {
+    return axios.get(API_BASE_URL + '/test/' + id)
+}
+
 const getFilterList = (
     search,
     author,
@@ -49,5 +53,6 @@ const TestService = {
     getFilterList,
     createTest,
     updateTest,
+    getTestById,
 }
 export default TestService

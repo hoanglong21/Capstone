@@ -24,9 +24,13 @@ const CreateTest = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
+    const { test_id } = useParams()
+
     const { userInfo } = useSelector((state) => state.user)
 
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
     const [test, setTest] = useState({})
     const [isScroll, setIsScroll] = useState(false)
     const [questions, setQuestions] = useState([])
@@ -51,13 +55,41 @@ const CreateTest = () => {
         )
     }
 
+    function toFEDate(date) {
+        const index = date?.lastIndexOf(':00.')
+        return date?.replace(' ', 'T').substring(0, index)
+    }
+
+    // fetch data
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
-                setTest(
-                    (
+                if (test_id) {
+                    const tempTest = (await TestService.getTestById(test_id))
+                        .data
+                    setTest({
+                        ...tempTest,
+                        start_date: toFEDate(tempTest.start_date),
+                        created_date: toFEDate(tempTest.created_date),
+                    })
+                    const tempQuestions = (
+                        await QuestionService.getAllByTestId(tempTest.id)
+                    ).data
+                    var tempUpdateQuestions = []
+                    for (const ques of tempQuestions) {
+                        const tempAnswers = (
+                            await AnswerService.getAllByQuestionId(ques.id)
+                        ).data
+                        tempUpdateQuestions.push({
+                            ...ques,
+                            answers: tempAnswers,
+                        })
+                    }
+                    setQuestions(tempUpdateQuestions)
+                } else {
+                    const tempTest = (
                         await TestService.createTest({
                             title: '',
                             classroom: {
@@ -71,46 +103,35 @@ const CreateTest = () => {
                             num_attemps: 1,
                             due_date: '',
                             start_date: getToday(),
-                            created_date: getToday(),
                             _draft: true,
                         })
                     ).data
-                )
+                    setTest({
+                        ...tempTest,
+                        start_date: toFEDate(tempTest.start_date),
+                        created_date: toFEDate(tempTest.created_date),
+                    })
+                }
             } catch (error) {
-                const tempClass = (await ClassService.getClassroomById(id)).data
-                setClassroom(tempClass)
-                setTest(
-                    (
-                        await TestService.createTest({
-                            title: '',
-                            classroom: {
-                                id: tempClass.id,
-                            },
-                            user: {
-                                id: userInfo.id,
-                            },
-                            description: '',
-                            duration: '',
-                            num_attemps: 1,
-                            due_date: '',
-                            start_date: getToday(),
-                            created_date: getToday(),
-                            _draft: true,
-                        })
-                    ).data
-                )
+                if (error.response && error.response.data) {
+                    setError(error.response.data)
+                } else {
+                    setError(error.message)
+                }
             }
             setError('')
         }
         if (userInfo?.id) {
+            setLoading(true)
             fetchData()
+            setLoading(false)
         }
     }, [userInfo])
 
     // handle sticky header
     useEffect(() => {
         const handleScroll = () => {
-            setIsScroll(window.scrollY > 96)
+            setIsScroll(window.scrollY > 250)
         }
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
@@ -202,8 +223,23 @@ const CreateTest = () => {
         setTest({ ...test, [event.target.name]: event.target.value })
     }
 
+    const handleUpdateTest = async () => {
+        setSaving(true)
+        try {
+            await TestService.updateTest(test.id, test)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
+        }
+        setSaving(false)
+    }
+
     // question
     const handleAddQuestion = async () => {
+        setSaving(true)
         try {
             const ques = (
                 await QuestionService.createQuestion({
@@ -232,6 +268,7 @@ const CreateTest = () => {
                 setError(error.message)
             }
         }
+        setSaving(false)
     }
 
     const handleChangeQuestion = (event, quesIndex) => {
@@ -243,7 +280,24 @@ const CreateTest = () => {
         setQuestions(tempQuestions)
     }
 
+    const handleUpdateQuestion = async (ques) => {
+        setSaving(true)
+        try {
+            const tempQuestion = { ...ques }
+            delete ques.answers
+            await QuestionService.updateQuestion(tempQuestion.id, tempQuestion)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
+        }
+        setSaving(false)
+    }
+
     const handleUploadFileQuestion = async (event, ques, quesIndex) => {
+        setSaving(true)
         var file = event.target.files[0]
         if (file) {
             const url = await uploadFile(
@@ -256,10 +310,13 @@ const CreateTest = () => {
                 [event.target.name]: url,
             }
             setQuestions(tempQuestions)
+            handleUpdateQuestion(tempQuestions[quesIndex])
         }
+        setSaving(false)
     }
 
     const handleDeleteQues = async (ques, quesIndex) => {
+        setSaving(true)
         var tempQuestions = [...questions]
         tempQuestions.splice(quesIndex, 1)
         setQuestions(tempQuestions)
@@ -267,9 +324,11 @@ const CreateTest = () => {
         await deleteFolder(
             `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
         )
+        setSaving(false)
     }
 
     const handleDeleteFileQues = async (event, ques, quesIndex) => {
+        setSaving(true)
         var tempQuestions = [...questions]
         const url = tempQuestions[quesIndex][event.target.name]
         tempQuestions[quesIndex] = {
@@ -277,14 +336,17 @@ const CreateTest = () => {
             [event.target.name]: null,
         }
         setQuestions(tempQuestions)
+        handleUpdateQuestion(tempQuestions[quesIndex])
         await deleteFileByUrl(
             url,
             `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
         )
+        setSaving(false)
     }
 
     // answer
     const handleAddAnswer = async (ques, quesIndex) => {
+        setSaving(true)
         try {
             const ans = (
                 await AnswerService.createAnswer({
@@ -296,7 +358,9 @@ const CreateTest = () => {
                 })
             ).data
             var tempQuestions = [...questions]
-            var tempAnswers = [...tempQuestions[quesIndex].answers]
+            var tempAnswers = tempQuestions[quesIndex]?.answers
+                ? [...tempQuestions[quesIndex]?.answers]
+                : []
             tempAnswers.push(ans)
             tempQuestions[quesIndex] = {
                 ...tempQuestions[quesIndex],
@@ -310,6 +374,7 @@ const CreateTest = () => {
                 setError(error.message)
             }
         }
+        setSaving(false)
     }
 
     const handleAnswerFocus = (quesIndex, ansIndex) => {
@@ -358,6 +423,20 @@ const CreateTest = () => {
         setQuestions(tempQuestions)
     }
 
+    const handleUpdateAnswer = async (ans) => {
+        setSaving(true)
+        try {
+            await AnswerService.updateAnswer(ans.id, ans)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
+        }
+        setSaving(false)
+    }
+
     const handleUploadFileAnswer = async (
         event,
         ques,
@@ -365,6 +444,7 @@ const CreateTest = () => {
         ans,
         ansIndex
     ) => {
+        setSaving(true)
         const file = event.target.files[0]
         if (file) {
             const url = await uploadFile(
@@ -382,10 +462,13 @@ const CreateTest = () => {
                 answers: tempAnswers,
             }
             setQuestions(tempQuestions)
+            handleUpdateAnswer(tempQuestions[quesIndex])
         }
+        setSaving(false)
     }
 
     const handleDeleteAnswer = async (ques, quesIndex, ans, ansIndex) => {
+        setSaving(true)
         var tempQuestions = [...questions]
         var tempAnswers = [...tempQuestions[quesIndex].answers]
         tempAnswers.splice(ansIndex, 1)
@@ -398,6 +481,7 @@ const CreateTest = () => {
         await deleteFolder(
             `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
         )
+        setSaving(false)
     }
 
     const handleDeleteFileAns = async (
@@ -407,6 +491,7 @@ const CreateTest = () => {
         ans,
         ansIndex
     ) => {
+        setSaving(true)
         var tempQuestions = [...questions]
         var tempAnswers = [...tempQuestions[quesIndex].answers]
         const url = tempAnswers[ansIndex][event.target.name]
@@ -423,6 +508,8 @@ const CreateTest = () => {
             url,
             `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
         )
+        handleUpdateAnswer(tempQuestions[quesIndex])
+        setSaving(false)
     }
 
     return (
@@ -432,14 +519,24 @@ const CreateTest = () => {
                     isScroll ? 'scroll-shadows p-3 rounded-bottom' : ''
                 }`}
             >
-                <button
-                    className="createTest_cancelBtn"
-                    onClick={() => {
-                        navigate('../tests')
-                    }}
-                >
-                    cancel
-                </button>
+                <div className="d-flex">
+                    <button
+                        className="createTest_cancelBtn"
+                        onClick={() => {
+                            navigate('../tests')
+                        }}
+                    >
+                        cancel
+                    </button>
+                    {loading && (
+                        <div className="createTest_status">Loading</div>
+                    )}
+
+                    <div className="createTest_status">
+                        {saving ? 'Saving...' : 'Saved'}
+                    </div>
+                </div>
+
                 <div className="d-flex">
                     <button
                         className="createTest_submitBtn"
@@ -476,6 +573,7 @@ const CreateTest = () => {
                             name="title"
                             placeholder="title"
                             value={test?.title || ''}
+                            onBlur={handleUpdateTest}
                             onChange={handleChangeTest}
                         />
                         <label htmlFor="title" className="createTest_formLabel">
@@ -490,6 +588,7 @@ const CreateTest = () => {
                             name="description"
                             placeholder="description"
                             value={test?.description || ''}
+                            onBlur={handleUpdateTest}
                             onChange={handleChangeTest}
                         />
                         <label
@@ -511,6 +610,7 @@ const CreateTest = () => {
                                     min={test?.created_date || ''}
                                     value={test?.start_date || ''}
                                     onChange={handleChangeTest}
+                                    onBlur={handleUpdateTest}
                                 />
                                 <label
                                     htmlFor="start_date"
@@ -531,6 +631,7 @@ const CreateTest = () => {
                                     min={test?.start_date || ''}
                                     value={test?.due_date || ''}
                                     onChange={handleChangeTest}
+                                    onBlur={handleUpdateTest}
                                 />
                                 <label
                                     htmlFor="due_date"
@@ -552,6 +653,7 @@ const CreateTest = () => {
                                     placeholder="duration"
                                     value={test?.duration || ''}
                                     onChange={handleChangeTest}
+                                    onBlur={handleUpdateTest}
                                 />
                                 <label
                                     htmlFor="duration"
@@ -571,6 +673,7 @@ const CreateTest = () => {
                                     placeholder="Number of attempts"
                                     value={test?.num_attemps || ''}
                                     onChange={handleChangeTest}
+                                    onBlur={handleUpdateTest}
                                 />
                                 <label
                                     htmlFor="num_attemps"
@@ -601,6 +704,7 @@ const CreateTest = () => {
                                 onChange={(event) =>
                                     handleChangeQuestion(event, quesIndex)
                                 }
+                                onBlur={() => handleUpdateQuestion(ques)}
                             />
                             {/* picture question */}
                             <input
@@ -763,11 +867,8 @@ const CreateTest = () => {
                         </div>
                         {/* Answer */}
                         {ques?.answers?.map((ans, ansIndex) => (
-                            <div>
-                                <div
-                                    className="createAnswerContainer createTest_formGroup-sm mb-2 form-check d-flex align-items-center"
-                                    key={ansIndex}
-                                >
+                            <div key={ansIndex}>
+                                <div className="createAnswerContainer createTest_formGroup-sm mb-2 form-check d-flex align-items-center">
                                     <input
                                         className="form-check-input"
                                         type="checkbox"
@@ -779,6 +880,7 @@ const CreateTest = () => {
                                                 ansIndex
                                             )
                                         }
+                                        onBlur={() => handleUpdateAnswer(ans)}
                                     />
                                     <div
                                         className="createAnswerContainer_btn d-flex align-items-center w-100"
@@ -802,12 +904,13 @@ const CreateTest = () => {
                                                     ansIndex
                                                 )
                                             }
-                                            onBlur={() =>
+                                            onBlur={() => {
                                                 handleAnswerBlur(
                                                     quesIndex,
                                                     ansIndex
                                                 )
-                                            }
+                                                handleUpdateAnswer(ans)
+                                            }}
                                         />
                                         {/* picture answer */}
                                         {!ans?.picture && (
@@ -1045,6 +1148,7 @@ const CreateTest = () => {
                                 onChange={(event) =>
                                     handleChangeQuestion(event, quesIndex)
                                 }
+                                onBlur={() => handleUpdateQuestion(ques)}
                             />
                             <span>points</span>
                         </div>

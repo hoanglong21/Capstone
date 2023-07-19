@@ -14,10 +14,20 @@ const deleteAnswer = (id) => {
     return axios.delete(API_BASE_URL + '/answers/' + id)
 }
 
+const getAllByQuestionId = (quesId) => {
+    return axios.get(API_BASE_URL + '/answersbyquestionid?id=' + quesId)
+}
+
+const updateAnswer = (id, answer) => {
+    return axios.put(API_BASE_URL + '/answers/' + id, answer)
+}
+
 const AnswerService = {
     createAnswers,
     createAnswer,
     deleteAnswer,
+    getAllByQuestionId,
+    updateAnswer,
 }
 
 export default AnswerService
