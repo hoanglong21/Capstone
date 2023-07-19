@@ -536,24 +536,33 @@ const CreateTest = () => {
                         {saving ? 'Saving...' : 'Saved'}
                     </div>
                 </div>
-
-                <div className="d-flex">
+                {test?._draft ? (
+                    <div className="d-flex">
+                        <button
+                            className="createTest_submitBtn"
+                            onClick={handleCreate}
+                            disabled={!test?.title}
+                        >
+                            Create
+                        </button>
+                        <button
+                            className="createTest_draftBtn"
+                            onClick={() => {
+                                navigate('../tests')
+                            }}
+                        >
+                            Save draft
+                        </button>
+                    </div>
+                ) : (
                     <button
                         className="createTest_submitBtn"
                         onClick={handleCreate}
                         disabled={!test?.title}
                     >
-                        Create
+                        Save
                     </button>
-                    <button
-                        className="createTest_draftBtn"
-                        onClick={() => {
-                            navigate('../tests')
-                        }}
-                    >
-                        Save draft
-                    </button>
-                </div>
+                )}
             </div>
             {/* Test */}
             <div className="card mt-4">
