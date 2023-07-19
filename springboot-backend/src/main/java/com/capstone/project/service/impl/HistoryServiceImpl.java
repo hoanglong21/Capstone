@@ -21,9 +21,12 @@ public class HistoryServiceImpl implements HistoryService {
 
     private final HistoryRepository historyRepository;
 
+    private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    public HistoryServiceImpl(HistoryRepository historyRepository) {
+    public HistoryServiceImpl(HistoryRepository historyRepository, JdbcTemplate jdbcTemplate) {
         this.historyRepository = historyRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -43,9 +46,6 @@ public class HistoryServiceImpl implements HistoryService {
                 .orElseThrow(() -> new ResourceNotFroundException("History not exist with id: " + id));
         return history;
     }
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Override
     public Map<String, Object> filterHistory(int userId, int destinationId, int typeId, int categoryId, String fromDatetime, String toDatetime,
