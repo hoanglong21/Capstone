@@ -23,6 +23,7 @@ export const GrammarCard = (props) => {
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
+            props.setLoading(true)
             const contents = (await ContentService.getAllByCardId(card.id)).data
             if (contents.length === 0) {
                 setTitle(
@@ -125,6 +126,7 @@ export const GrammarCard = (props) => {
                 setNote(contents[5])
                 setStructure(contents[6])
             }
+            props.setLoading(false)
         }
         fetchData()
     }, [card.id])
@@ -153,10 +155,13 @@ export const GrammarCard = (props) => {
     }, [])
 
     const doUpdateCard = async (tempCard) => {
+        props.setSaving(true)
         await CardService.updateCard(tempCard.id, tempCard)
+        props.setSaving(false)
     }
 
     const handleChangeFile = async (event) => {
+        props.setSaving(true)
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
@@ -177,9 +182,11 @@ export const GrammarCard = (props) => {
             doUpdateCard(tempCard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+        props.setSaving(false)
     }
 
     const handleDeleteFile = async (event) => {
+        props.setSaving(true)
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         const urlOld = card[name]
@@ -193,9 +200,11 @@ export const GrammarCard = (props) => {
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+        props.setSaving(false)
     }
 
     const doUpdateContent = async (content) => {
+        props.setSaving(true)
         try {
             await ContentService.updateContent(content.id, content)
         } catch (error) {
@@ -205,6 +214,7 @@ export const GrammarCard = (props) => {
                 console.log(error.message)
             }
         }
+        props.setSaving(false)
     }
 
     return (

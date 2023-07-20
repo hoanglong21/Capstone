@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import CardService from '../../../services/CardService'
 import StudySetService from '../../../services/StudySetService'
-import { deleteFile } from '../../../features/fileManagement'
+import { deleteFile, deleteFolder } from '../../../features/fileManagement'
 
 import { VocabCard } from './VocabCard'
 import { GrammarCard } from './GrammarCard'
@@ -30,6 +30,8 @@ const CreateSet = () => {
     const [cards, setCards] = useState([])
     const [error, setError] = useState('')
     const [showDiscardMess, setShowDiscardMess] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [saving, setSaving] = useState(false)
 
     // draft can go to edit, back to create
     useEffect(() => {
@@ -41,6 +43,7 @@ const CreateSet = () => {
     // fetch data
     useEffect(() => {
         const fetchData = async (tempType) => {
+            setLoading(true)
             try {
                 let temp = {}
                 if (id) {
@@ -99,6 +102,7 @@ const CreateSet = () => {
                     setError(error.message)
                 }
             }
+            setLoading(false)
         }
         setError('')
         setType(Number(searchParams.get('type')))
@@ -142,6 +146,7 @@ const CreateSet = () => {
     }
 
     const handleAddCard = async () => {
+        setSaving(true)
         try {
             const card = (
                 await CardService.createCard({
@@ -160,9 +165,11 @@ const CreateSet = () => {
                 setError(error.message)
             }
         }
+        setSaving(false)
     }
 
     const handleSubmit = async (event) => {
+        setLoading(true)
         event.preventDefault()
         const titleEl = document.querySelector('#title')
         var form = document.querySelector('.needs-validation')
@@ -206,15 +213,16 @@ const CreateSet = () => {
                 setError(error.message)
             }
         }
+        setLoading(false)
     }
 
     const handleDelete = async (event, card) => {
+        setSaving(true)
         try {
             var cardEl = event.target.closest('.card')
             await CardService.deleteCard(cardEl.id)
-            await deleteFile(
-                '',
-                `${userInfo.username}/studySet/${studySet.id}/card/${card.id}`
+            await deleteFolder(
+                `files/${userInfo.username}/studySet/${studySet.id}/card/${card.id}`
             )
             var array = [...cards]
             var index = cardEl.getAttribute('index')
@@ -229,6 +237,7 @@ const CreateSet = () => {
                 setError(error.message)
             }
         }
+        setSaving(false)
     }
 
     const handleChange = (event) => {
@@ -236,6 +245,7 @@ const CreateSet = () => {
     }
 
     const doUpdate = async () => {
+        setSaving(true)
         try {
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
@@ -245,9 +255,11 @@ const CreateSet = () => {
                 setError(error.message)
             }
         }
+        setSaving(false)
     }
 
     const handleDiscard = async () => {
+        setLoading(true)
         try {
             const newStudySet = (
                 await StudySetService.createStudySet({
@@ -277,6 +289,7 @@ const CreateSet = () => {
                 setError(error.message)
             }
         }
+        setLoading(false)
     }
 
     return (
@@ -298,19 +311,39 @@ const CreateSet = () => {
                             >
                                 Create
                             </button>
+                            {loading && (
+                                <div className="createTest_status">Loading</div>
+                            )}
+                            <div className="createTest_status">
+                                {saving ? 'Saving...' : 'Saved'}
+                            </div>
                         </div>
                     ) : (
                         <div className="container d-flex justify-content-between">
-                            <Link
-                                to={`/set/${studySet.id}`}
-                                className={CardStyles.card_button}
-                                style={{
-                                    backgroundColor: 'inherit',
-                                    textDecoration: 'none',
-                                }}
-                            >
-                                BACK TO SET
-                            </Link>
+                            <div className="d-flex">
+                                <Link
+                                    to={`/set/${studySet.id}`}
+                                    className={CardStyles.card_button}
+                                    style={{
+                                        backgroundColor: 'inherit',
+                                        textDecoration: 'none',
+                                    }}
+                                >
+                                    BACK TO SET
+                                </Link>
+                                {loading && (
+                                    <div className="createTest_status">
+                                        Loading
+                                    </div>
+                                )}
+                                <div className="createTest_status">
+                                    {saving
+                                        ? 'Saving...'
+                                        : loading
+                                        ? ''
+                                        : 'Saved'}
+                                </div>
+                            </div>
                             <button
                                 type="submit"
                                 className="btn btn-primary"
@@ -389,6 +422,8 @@ const CreateSet = () => {
                                     handleDelete={(event) =>
                                         handleDelete(event, card)
                                     }
+                                    setLoading={setLoading}
+                                    setSaving={setSaving}
                                 />
                             )
                         }
@@ -401,6 +436,8 @@ const CreateSet = () => {
                                     handleDelete={(event) =>
                                         handleDelete(event, card)
                                     }
+                                    setLoading={setLoading}
+                                    setSaving={setSaving}
                                 />
                             )
                         }
@@ -413,6 +450,8 @@ const CreateSet = () => {
                                     handleDelete={(event) =>
                                         handleDelete(event, card)
                                     }
+                                    setLoading={setLoading}
+                                    setSaving={setSaving}
                                 />
                             )
                         }
