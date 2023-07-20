@@ -551,7 +551,6 @@ const CreateTest = () => {
                     {loading && (
                         <div className="createTest_status">Loading</div>
                     )}
-
                     <div className="createTest_status">
                         {saving ? 'Saving...' : 'Saved'}
                     </div>
