@@ -74,21 +74,13 @@ public class AnswerController {
 
 
     @PutMapping("/answers/{id}")
-    public ResponseEntity<?> updateAnswer(@PathVariable int id,@Valid @RequestBody AnswerRequest answerRequest,BindingResult result) {
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else{
-            Answer answer = modelMapper.map(answerRequest,Answer.class);
+    public ResponseEntity<?> updateAnswer(@PathVariable int id, @RequestBody Answer answer) {
             try {
                 return ResponseEntity.ok(answerService.updateAnswer( id,answer));
             }catch (ResourceNotFroundException e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
+
     }
 
 
