@@ -104,6 +104,7 @@ public class SubmissionController {
     @GetMapping("/filtersubmission")
     public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "authorid", required = false) Optional<Integer> authorId,
+                                           @RequestParam(value = "assignmentid", required = false) Optional<Integer> assignmentId,
                                            @RequestParam(value = "mark", required = false) Optional<Double> mark,
                                            @RequestParam(value = "from", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String from,
                                            @RequestParam(value = "to", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String to,
@@ -112,7 +113,7 @@ public class SubmissionController {
                                            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
 
         try{
-            return ResponseEntity.ok(submissionService.getFilterSubmission(search,authorId.orElse(0),mark.orElse(0.0),from,to,direction,page,size));
+            return ResponseEntity.ok(submissionService.getFilterSubmission(search,authorId.orElse(0),assignmentId.orElse(0),mark.orElse(0.0),from,to,direction,page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
