@@ -116,7 +116,8 @@ public class ClassController {
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR') or hasRole('ROLE_LEARNER')" )
     @GetMapping("/filterclass")
-    public ResponseEntity<?> getFilterList(@RequestParam(value = "deleted", required = false) Boolean isDeleted,
+    public ResponseEntity<?> getFilterList(@RequestParam(value = "classid", required = false) Optional<Integer> classid,
+                                           @RequestParam(value = "deleted", required = false) Boolean isDeleted,
                                            @RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
                                            @RequestParam(value = "fromdeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDeleted,
@@ -129,7 +130,7 @@ public class ClassController {
                                            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
 
     try{
-        return ResponseEntity.ok(classService.getFilterClass(isDeleted,search,author,fromDeleted,toDeleted,fromCreated,toCreated,sortBy,direction,page,size));
+        return ResponseEntity.ok(classService.getFilterClass(classid.orElse(0),isDeleted,search,author,fromDeleted,toDeleted,fromCreated,toCreated,sortBy,direction,page,size));
     }catch (ResourceNotFroundException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }

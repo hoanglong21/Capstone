@@ -39,6 +39,7 @@ export default function CreateClass() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
+        console.log(newClass)
         var form = document.querySelector('.needs-validation')
         const classNameEl = document.getElementById('class_name')
         // clear validation

@@ -109,7 +109,6 @@ const CreateSet = () => {
 
     // handle sticky header
     useEffect(() => {
-        setError('')
         const handleScroll = () => {
             setIsScroll(window.scrollY > 96)
         }

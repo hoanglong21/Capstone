@@ -1,9 +1,7 @@
 import { useState } from 'react'
 
 import AssignmentService from '../../../services/AssignmentService'
-import {
-    deleteFolder,
-} from '../../../features/fileManagement'
+import { deleteFolder } from '../../../features/fileManagement'
 
 import '../../../assets/styles/popup.css'
 
@@ -19,13 +17,13 @@ const DeleteAssignment = ({ assignments, assign, stateChanger, index }) => {
             var tempAssignments = [...assignments]
             tempAssignments.splice(index, 1)
             stateChanger(tempAssignments)
+            document
+                .getElementById(`closeDeleteAssignmentModal${assign?.id}`)
+                .click()
             await deleteFolder(
                 `files/${assign.classroom.user.username}/class/${assign.classroom.id}/assignment/${assign.id}`,
                 true
             )
-            document
-                .getElementById(`closeDeleteAssignmentModal${assign?.id}`)
-                .click()
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

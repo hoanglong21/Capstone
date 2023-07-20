@@ -32,8 +32,9 @@ public class TestRequest {
     @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:+-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
-    @Min(value = 5, message = "min duration is 5")
+
     @NumberFormat(style = NumberFormat.Style.NUMBER)
+    @Nullable
     private float duration;
 
 //    @FutureOrPresent

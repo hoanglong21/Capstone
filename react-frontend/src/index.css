@@ -361,3 +361,7 @@ svg {
     transform: translateY(-0.25em);
     box-shadow: 0 0.25rem 1rem 0 #2e385614;
 }
+
+.alert {
+    white-space: pre-wrap;
+}

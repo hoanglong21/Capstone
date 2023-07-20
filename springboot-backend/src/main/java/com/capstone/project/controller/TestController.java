@@ -48,7 +48,7 @@ public class TestController {
     }
 
     @GetMapping("/test/{id}")
-    public ResponseEntity<?> getTestById(@PathVariable int id){
+        public ResponseEntity<?> getTestById(@PathVariable int id){
         try {
             return ResponseEntity.ok(testService.getTestById(id));
         } catch (ResourceNotFroundException e){
@@ -57,39 +57,23 @@ public class TestController {
     }
 
     @PostMapping("/test")
-    public ResponseEntity<?> createTest(@Valid @RequestBody TestRequest testRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-                Test test = modelMapper.map(testRequest,Test.class);
+    public ResponseEntity<?> createTest(@RequestBody Test test) {
             try{
                 return ResponseEntity.ok(testService.createTest(test));
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
+
 
     }
     @PutMapping ("/test/{id}")
-    public ResponseEntity<?> updateTest(@PathVariable int id,@Valid @RequestBody TestRequest testRequest, BindingResult result){
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-            Test test = modelMapper.map(testRequest,Test.class);
+        public ResponseEntity<?> updateTest(@PathVariable int id, @RequestBody Test test){
             try {
                 return ResponseEntity.ok(testService.updateTest(id, test));
             } catch (ResourceNotFroundException e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
-        }
+
 
     }
 

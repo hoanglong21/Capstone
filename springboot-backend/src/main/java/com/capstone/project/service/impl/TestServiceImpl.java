@@ -78,6 +78,11 @@ public class TestServiceImpl  implements TestService {
                 test.getStart_date().before(testclass.getCreated_date())) {
             throw new ResourceNotFroundException("Start date must be >= created date");
         }
+
+        if (test.getDuration() < 5) {
+            throw new ResourceNotFroundException("Duration must be >= 5 minutes");
+        }
+
         testclass.setTitle(test.getTitle());
         testclass.setDescription(test.getDescription());
         testclass.setDuration(test.getDuration());

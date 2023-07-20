@@ -2,10 +2,7 @@ package com.capstone.project.dto;
 
 import com.capstone.project.model.QuestionType;
 import com.capstone.project.model.Test;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,8 +17,7 @@ public class QuestionRequest {
 
     private int id;
 
-    @NotBlank(message = "Question cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s.,?&!:\\[\\]()\\-]+", message = "Question can only contain letters, numbers, and spaces")
+    @NotNull(message = "Question cannot be null")
     @Length(min = 5, message = "Question must have at least 5 characters")
     private String question;
 
