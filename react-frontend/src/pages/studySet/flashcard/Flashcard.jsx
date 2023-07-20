@@ -42,40 +42,42 @@ const Flashcard = () => {
 
     // catch press arrow event event
     useEffect(() => {
-        window.addEventListener(
-            'keydown',
-            (event) => {
-                switch (event.key) {
-                    case 'ArrowLeft':
-                        const tempIndex1 = cardIndex - 1
-                        if (tempIndex1 > -1) {
-                            setCardIndex(tempIndex1)
-                            document
-                                .getElementById('flipElement')
-                                ?.classList.remove('is-flipped')
-                        }
-                        // Do something for "left arrow" key press.
-                        break
-                    case 'ArrowRight':
-                        const tempIndex2 = cardIndex + 1
-                        if (tempIndex2 < cards.length) {
-                            setCardIndex(tempIndex2)
-                            document
-                                .getElementById('flipElement')
-                                ?.classList.remove('is-flipped')
-                        }
-                        // Do something for "right arrow" key press.
-                        break
-                    default:
-                        return // Quit when this doesn't handle the key event.
-                }
+        const handleUserKeyPress = (event) => {
+            console.log('55555')
 
-                // Cancel the default action to avoid it being handled twice
-                event.preventDefault()
-            },
-            true
-        )
-    }, [cardIndex])
+            switch (event.key) {
+                case 'ArrowLeft':
+                    const tempIndex1 = cardIndex - 1
+                    if (tempIndex1 > -1) {
+                        setCardIndex(tempIndex1)
+                        document
+                            .getElementById('flipElement')
+                            ?.classList.remove('is-flipped')
+                    }
+                    // Do something for "left arrow" key press.
+                    break
+                case 'ArrowRight':
+                    const tempIndex2 = cardIndex + 1
+                    if (tempIndex2 < cards.length) {
+                        setCardIndex(tempIndex2)
+                        document
+                            .getElementById('flipElement')
+                            ?.classList.remove('is-flipped')
+                    }
+                    // Do something for "right arrow" key press.
+                    break
+                default:
+                    return // Quit when this doesn't handle the key event.
+            }
+
+            // Cancel the default action to avoid it being handled twice
+            event.preventDefault()
+        }
+        window.addEventListener('keydown', handleUserKeyPress, true)
+        return () => {
+            window.removeEventListener('keydown', handleUserKeyPress, true)
+        }
+    }, [])
 
     return (
         <div>

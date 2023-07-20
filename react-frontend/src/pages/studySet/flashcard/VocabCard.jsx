@@ -22,24 +22,25 @@ const VocabCard = ({ card }) => {
 
     // catch press space event
     useEffect(() => {
-        window.addEventListener(
-            'keydown',
-            (event) => {
-                if (event.defaultPrevented) {
-                    return // Do nothing if event already handled
-                }
-                switch (event.code) {
-                    case 'Space':
-                        toggleFlip()
-                }
-                if (event.code !== 'Tab') {
-                    // Consume the event so it doesn't get handled twice,
-                    // as long as the user isn't trying to move focus away
-                    event.preventDefault()
-                }
-            },
-            true
-        )
+        const handleUserKeyPress = (event) => {
+            console.log('55555')
+            if (event.defaultPrevented) {
+                return // Do nothing if event already handled
+            }
+            switch (event.code) {
+                case 'Space':
+                    toggleFlip()
+            }
+            if (event.code !== 'Tab') {
+                // Consume the event so it doesn't get handled twice,
+                // as long as the user isn't trying to move focus away
+                event.preventDefault()
+            }
+        }
+        window.addEventListener('keydown', handleUserKeyPress, true)
+        return () => {
+            window.removeEventListener('keydown', handleUserKeyPress, true)
+        }
     }, [])
 
     return (
