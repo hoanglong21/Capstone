@@ -14,7 +14,6 @@ import AnswerService from '../../../services/AnswerService'
 
 import {
     CloseIcon,
-    CopyIcon,
     DeleteIcon,
     ImageIcon,
     SpeakIcon,
@@ -74,6 +73,9 @@ const CreateTest = () => {
                         ...tempTest,
                         start_date: toFEDate(tempTest.start_date),
                         created_date: toFEDate(tempTest.created_date),
+                        due_date: tempTest.due_date
+                            ? toFEDate(tempTest.due_date)
+                            : null,
                     })
                     const tempQuestions = (
                         await QuestionService.getAllByTestId(tempTest.id)
@@ -111,13 +113,16 @@ const CreateTest = () => {
                         ...tempTest,
                         start_date: toFEDate(tempTest.start_date),
                         created_date: toFEDate(tempTest.created_date),
+                        due_date: tempTest.due_date
+                            ? toFEDate(tempTest.due_date)
+                            : null,
                     })
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
-                    setError(error.response.data)
+                    console.log(error.response.data)
                 } else {
-                    setError(error.message)
+                    console.log(error.message)
                 }
             }
             setError('')
@@ -213,9 +218,9 @@ const CreateTest = () => {
             setError('')
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
     }
@@ -230,16 +235,16 @@ const CreateTest = () => {
             await TestService.updateTest(test.id, test)
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setSaving(false)
     }
 
     // question
-    const handleAddQuestion = async () => {
+    const handleAddMultipleChoiceQuestion = async () => {
         setSaving(true)
         try {
             const ques = (
@@ -264,9 +269,102 @@ const CreateTest = () => {
             ])
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
+            }
+        }
+        setSaving(false)
+    }
+
+    const handleAddTrueFalseQuestion = async () => {
+        setSaving(true)
+        try {
+            const ques = (
+                await QuestionService.createQuestion({
+                    question: '',
+                    questionType: {
+                        id: 1,
+                    },
+                    picture: null,
+                    audio: null,
+                    video: null,
+                    test: {
+                        id: test.id,
+                    },
+                })
+            ).data
+            const answers = await AnswerService.createAnswers([
+                {
+                    question: {
+                        id: ques.id,
+                    },
+                    content: 'True',
+                    _true: false,
+                },
+                {
+                    question: {
+                        id: ques.id,
+                    },
+                    content: 'False',
+                    _true: false,
+                },
+            ])
+            setQuestions([
+                ...questions,
+                {
+                    ...ques,
+                    answers: answers,
+                },
+            ])
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setSaving(false)
+    }
+
+    const handleAddWrittenQuestion = async () => {
+        setSaving(true)
+        try {
+            const ques = (
+                await QuestionService.createQuestion({
+                    question: '',
+                    questionType: {
+                        id: 3,
+                    },
+                    picture: null,
+                    audio: null,
+                    video: null,
+                    test: {
+                        id: test.id,
+                    },
+                })
+            ).data
+            const answers = await AnswerService.createAnswers([
+                {
+                    question: {
+                        id: ques.id,
+                    },
+                    content: '',
+                    _true: true,
+                },
+            ])
+            setQuestions([
+                ...questions,
+                {
+                    ...ques,
+                    answers: answers,
+                },
+            ])
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
             }
         }
         setSaving(false)
@@ -289,9 +387,9 @@ const CreateTest = () => {
             await QuestionService.updateQuestion(tempQuestion.id, tempQuestion)
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setSaving(false)
@@ -345,25 +443,6 @@ const CreateTest = () => {
         setSaving(false)
     }
 
-    const handleDuplicateQues = async (quesIndex) => {
-        setSaving(true)
-        var tempQuestions = [...questions]
-        var tempQues = { ...tempQuestions[quesIndex] }
-        delete tempQues.answers
-        delete tempQues.id
-        var ques = (await QuestionService.createQuestion(ques)).data
-        var tempAnswers = []
-        for (const ans of tempQuestions[quesIndex]?.answers) {
-            var tempAns = { ...ans, question: { id: ques.id } }
-            delete tempAns.id
-            const tempCreateAns = (await AnswerService.createAnswer(tempAns)).data
-            tempAnswers.push(tempCreateAns)
-        }
-        tempQuestions.splice(quesIndex, 0, { ...ques, answers: tempAnswers })
-        setQuestions(tempQuestions)
-        setSaving(false)
-    }
-
     // answer
     const handleAddAnswer = async (ques, quesIndex) => {
         setSaving(true)
@@ -389,9 +468,9 @@ const CreateTest = () => {
             setQuestions(tempQuestions)
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setSaving(false)
@@ -449,9 +528,9 @@ const CreateTest = () => {
             await AnswerService.updateAnswer(ans.id, ans)
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setSaving(false)
@@ -530,6 +609,324 @@ const CreateTest = () => {
         )
         handleUpdateAnswer(tempQuestions[quesIndex])
         setSaving(false)
+    }
+
+    const MultipleChoiceAnswer = ({ ques, quesIndex }) => {
+        return (
+            <div>
+                {ques?.answers?.map((ans, ansIndex) => (
+                    <div key={ansIndex}>
+                        <div className="createAnswerContainer createTest_formGroup-sm mb-2 form-check d-flex align-items-center">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={ans?._true || false}
+                                onChange={(event) =>
+                                    handleChangeAnswerCorrect(
+                                        event,
+                                        quesIndex,
+                                        ansIndex
+                                    )
+                                }
+                                onBlur={() => handleUpdateAnswer(ans)}
+                            />
+                            <div
+                                className="createAnswerContainer_btn d-flex align-items-center w-100"
+                                id={`createAnswer${quesIndex}-${ansIndex}`}
+                            >
+                                <input
+                                    type="text"
+                                    className="form-control ms-3"
+                                    placeholder="Option"
+                                    value={ans?.content || ''}
+                                    onChange={(event) =>
+                                        handleChangeAnswer(
+                                            event,
+                                            quesIndex,
+                                            ansIndex
+                                        )
+                                    }
+                                    onFocus={() =>
+                                        handleAnswerFocus(quesIndex, ansIndex)
+                                    }
+                                    onBlur={() => {
+                                        handleAnswerBlur(quesIndex, ansIndex)
+                                        handleUpdateAnswer(ans)
+                                    }}
+                                />
+                                {/* picture answer */}
+                                {!ans?.picture && (
+                                    <div>
+                                        <input
+                                            type="file"
+                                            id={`uploadAnsImg${quesIndex}-${ansIndex}`}
+                                            name="picture"
+                                            accept="image/*"
+                                            className="postUpload"
+                                            onChange={(event) =>
+                                                handleUploadFileAnswer(
+                                                    event,
+                                                    ques,
+                                                    quesIndex,
+                                                    ans,
+                                                    ansIndex
+                                                )
+                                            }
+                                        />
+                                        <button
+                                            className="btn-hide p-0"
+                                            type="btn"
+                                            onMouseDown={(e) =>
+                                                e.preventDefault()
+                                            }
+                                        >
+                                            <label
+                                                htmlFor={`uploadAnsImg${quesIndex}-${ansIndex}`}
+                                                className="btn-customLight ms-3 p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                            >
+                                                <ImageIcon />
+                                            </label>
+                                        </button>
+                                    </div>
+                                )}
+                                {/* audio answer */}
+                                {!ans?.audio && (
+                                    <div>
+                                        <input
+                                            type="file"
+                                            id={`uploadAnsAudio${quesIndex}-${ansIndex}`}
+                                            name="audio"
+                                            accept="audio/*"
+                                            className="postUpload"
+                                            onChange={(event) =>
+                                                handleUploadFileAnswer(
+                                                    event,
+                                                    ques,
+                                                    quesIndex,
+                                                    ans,
+                                                    ansIndex
+                                                )
+                                            }
+                                        />
+                                        <button
+                                            className="btn-hide p-0"
+                                            type="btn"
+                                            onMouseDown={(e) =>
+                                                e.preventDefault()
+                                            }
+                                        >
+                                            <label
+                                                htmlFor={`uploadAnsAudio${quesIndex}-${ansIndex}`}
+                                                className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                            >
+                                                <SpeakIcon />
+                                            </label>
+                                        </button>
+                                    </div>
+                                )}
+                                {/* video answer */}
+                                {!ans?.video && (
+                                    <div>
+                                        <input
+                                            type="file"
+                                            id={`uploadAnsVideo${quesIndex}-${ansIndex}`}
+                                            name="video"
+                                            accept="video/*"
+                                            className="d-none"
+                                            onChange={(event) =>
+                                                handleUploadFileAnswer(
+                                                    event,
+                                                    ques,
+                                                    quesIndex,
+                                                    ans,
+                                                    ansIndex
+                                                )
+                                            }
+                                        />
+                                        <button
+                                            className="btn-hide p-0"
+                                            type="btn"
+                                            onMouseDown={(e) =>
+                                                e.preventDefault()
+                                            }
+                                        >
+                                            <label
+                                                htmlFor={`uploadAnsVideo${quesIndex}-${ansIndex}`}
+                                                className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                            >
+                                                <VideoIcon />
+                                            </label>
+                                        </button>
+                                    </div>
+                                )}
+                                {ques?.answers.length > 1 && (
+                                    <button
+                                        className="btn-customLight ms-1 p-2 rounded-circle"
+                                        style={{
+                                            marginRight: '-0.5rem',
+                                        }}
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        onClick={() =>
+                                            handleDeleteAnswer(
+                                                ques,
+                                                quesIndex,
+                                                ans,
+                                                ansIndex
+                                            )
+                                        }
+                                    >
+                                        <CloseIcon />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                        <div className="row mt-1">
+                            {ans?.picture && (
+                                <div className="col-4 mb-2">
+                                    <div className="uploadFileAnsItem--sm">
+                                        <img
+                                            src={ans?.picture}
+                                            className="createTest_img--sm"
+                                            alt="answer picture"
+                                        />
+                                        <button
+                                            type="button"
+                                            name="picture"
+                                            className="btn btn-danger p-1 rounded-circle"
+                                            onClick={(event) =>
+                                                handleDeleteFileAns(
+                                                    event,
+                                                    ques,
+                                                    quesIndex,
+                                                    ans,
+                                                    ansIndex
+                                                )
+                                            }
+                                        >
+                                            <DeleteIcon size="0.85rem" />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                            {ans?.audio && (
+                                <div className="col-4 mb-2">
+                                    <div className="uploadFileAnsItem--sm">
+                                        <audio
+                                            controls
+                                            src={ans?.audio}
+                                            alt="answer audio"
+                                        />
+                                        <button
+                                            type="button"
+                                            name="audio"
+                                            className="btn btn-danger p-1 rounded-circle"
+                                            onClick={(event) =>
+                                                handleDeleteFileAns(
+                                                    event,
+                                                    ques,
+                                                    quesIndex,
+                                                    ans,
+                                                    ansIndex
+                                                )
+                                            }
+                                        >
+                                            <DeleteIcon size="0.85rem" />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                            {ans?.video && (
+                                <div className="col-4 mb-2">
+                                    <div className="uploadFileAnsItem--sm">
+                                        <video
+                                            className="createTest_video--sm"
+                                            controls
+                                            src={ans?.video}
+                                        >
+                                            Your browser does not support the
+                                            video tag.
+                                        </video>
+                                        <button
+                                            type="button"
+                                            name="video"
+                                            className="btn btn-danger p-1 rounded-circle"
+                                            onClick={(event) =>
+                                                handleDeleteFileAns(
+                                                    event,
+                                                    ques,
+                                                    quesIndex,
+                                                    ans,
+                                                    ansIndex
+                                                )
+                                            }
+                                        >
+                                            <DeleteIcon size="0.85rem" />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ))}
+                <button
+                    type="button"
+                    className="createTest_addOptionBtn"
+                    onClick={() => handleAddAnswer(ques, quesIndex)}
+                >
+                    Add option
+                </button>
+            </div>
+        )
+    }
+
+    const TrueFalseAnswer = ({ ques, quesIndex }) => {
+        return (
+            <div>
+                {ques?.answers?.map((ans, ansIndex) => (
+                    <div key={ansIndex}>
+                        <div className="createTest_formGroup-sm mb-2 form-check">
+                            <input
+                                id={`answer${ques?.id}_${ans?.id}`}
+                                className="form-check-input"
+                                type="radio"
+                                checked={ans?._true || false}
+                                name={`answerCorrect${ques.id}`}
+                                onChange={(event) =>
+                                    handleChangeAnswerCorrect(
+                                        event,
+                                        quesIndex,
+                                        ansIndex
+                                    )
+                                }
+                                onBlur={() => handleUpdateAnswer(ans)}
+                            />
+                            <label
+                                className="form-check-label"
+                                htmlFor={`answer${ques.id}_${ans.id}`}
+                            >
+                                {ans?.content}
+                            </label>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+    const WrittenAnswer = ({ ques, quesIndex }) => {
+        return (
+            <div className="createTest_formGroup-sm d-flex align-items-center w-100">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Answer"
+                    value={ques?.answers[0]?.content || ''}
+                    onChange={(event) =>
+                        handleChangeAnswer(event, quesIndex, 0)
+                    }
+                />
+            </div>
+        )
     }
 
     return (
@@ -894,275 +1291,21 @@ const CreateTest = () => {
                             )}
                         </div>
                         {/* Answer */}
-                        {ques?.answers?.map((ans, ansIndex) => (
-                            <div key={ansIndex}>
-                                <div className="createAnswerContainer createTest_formGroup-sm mb-2 form-check d-flex align-items-center">
-                                    <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        checked={ans?._true || false}
-                                        onChange={(event) =>
-                                            handleChangeAnswerCorrect(
-                                                event,
-                                                quesIndex,
-                                                ansIndex
-                                            )
-                                        }
-                                        onBlur={() => handleUpdateAnswer(ans)}
-                                    />
-                                    <div
-                                        className="createAnswerContainer_btn d-flex align-items-center w-100"
-                                        id={`createAnswer${quesIndex}-${ansIndex}`}
-                                    >
-                                        <input
-                                            type="text"
-                                            className="form-control ms-3"
-                                            placeholder="Option"
-                                            value={ans?.content || ''}
-                                            onChange={(event) =>
-                                                handleChangeAnswer(
-                                                    event,
-                                                    quesIndex,
-                                                    ansIndex
-                                                )
-                                            }
-                                            onFocus={() =>
-                                                handleAnswerFocus(
-                                                    quesIndex,
-                                                    ansIndex
-                                                )
-                                            }
-                                            onBlur={() => {
-                                                handleAnswerBlur(
-                                                    quesIndex,
-                                                    ansIndex
-                                                )
-                                                handleUpdateAnswer(ans)
-                                            }}
-                                        />
-                                        {/* picture answer */}
-                                        {!ans?.picture && (
-                                            <div>
-                                                <input
-                                                    type="file"
-                                                    id={`uploadAnsImg${quesIndex}-${ansIndex}`}
-                                                    name="picture"
-                                                    accept="image/*"
-                                                    className="postUpload"
-                                                    onChange={(event) =>
-                                                        handleUploadFileAnswer(
-                                                            event,
-                                                            ques,
-                                                            quesIndex,
-                                                            ans,
-                                                            ansIndex
-                                                        )
-                                                    }
-                                                />
-                                                <button
-                                                    className="btn-hide p-0"
-                                                    type="btn"
-                                                    onMouseDown={(e) =>
-                                                        e.preventDefault()
-                                                    }
-                                                >
-                                                    <label
-                                                        htmlFor={`uploadAnsImg${quesIndex}-${ansIndex}`}
-                                                        className="btn-customLight ms-3 p-2 rounded-circle d-flex align-items-center justify-content-center"
-                                                    >
-                                                        <ImageIcon />
-                                                    </label>
-                                                </button>
-                                            </div>
-                                        )}
-                                        {/* audio answer */}
-                                        {!ans?.audio && (
-                                            <div>
-                                                <input
-                                                    type="file"
-                                                    id={`uploadAnsAudio${quesIndex}-${ansIndex}`}
-                                                    name="audio"
-                                                    accept="audio/*"
-                                                    className="postUpload"
-                                                    onChange={(event) =>
-                                                        handleUploadFileAnswer(
-                                                            event,
-                                                            ques,
-                                                            quesIndex,
-                                                            ans,
-                                                            ansIndex
-                                                        )
-                                                    }
-                                                />
-                                                <button
-                                                    className="btn-hide p-0"
-                                                    type="btn"
-                                                    onMouseDown={(e) =>
-                                                        e.preventDefault()
-                                                    }
-                                                >
-                                                    <label
-                                                        htmlFor={`uploadAnsAudio${quesIndex}-${ansIndex}`}
-                                                        className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
-                                                    >
-                                                        <SpeakIcon />
-                                                    </label>
-                                                </button>
-                                            </div>
-                                        )}
-                                        {/* video answer */}
-                                        {!ans?.video && (
-                                            <div>
-                                                <input
-                                                    type="file"
-                                                    id={`uploadAnsVideo${quesIndex}-${ansIndex}`}
-                                                    name="video"
-                                                    accept="video/*"
-                                                    className="d-none"
-                                                    onChange={(event) =>
-                                                        handleUploadFileAnswer(
-                                                            event,
-                                                            ques,
-                                                            quesIndex,
-                                                            ans,
-                                                            ansIndex
-                                                        )
-                                                    }
-                                                />
-                                                <button
-                                                    className="btn-hide p-0"
-                                                    type="btn"
-                                                    onMouseDown={(e) =>
-                                                        e.preventDefault()
-                                                    }
-                                                >
-                                                    <label
-                                                        htmlFor={`uploadAnsVideo${quesIndex}-${ansIndex}`}
-                                                        className="btn-customLight ms-1 p-2 rounded-circle d-flex align-items-center justify-content-center"
-                                                    >
-                                                        <VideoIcon />
-                                                    </label>
-                                                </button>
-                                            </div>
-                                        )}
-                                        {ques?.answers.length > 1 && (
-                                            <button
-                                                className="btn-customLight ms-1 p-2 rounded-circle"
-                                                style={{
-                                                    marginRight: '-0.5rem',
-                                                }}
-                                                onMouseDown={(e) =>
-                                                    e.preventDefault()
-                                                }
-                                                onClick={() =>
-                                                    handleDeleteAnswer(
-                                                        ques,
-                                                        quesIndex,
-                                                        ans,
-                                                        ansIndex
-                                                    )
-                                                }
-                                            >
-                                                <CloseIcon />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="row mt-1">
-                                    {ans?.picture && (
-                                        <div className="col-4 mb-2">
-                                            <div className="uploadFileAnsItem--sm">
-                                                <img
-                                                    src={ans?.picture}
-                                                    className="createTest_img--sm"
-                                                    alt="answer picture"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    name="picture"
-                                                    className="btn btn-danger p-1 rounded-circle"
-                                                    onClick={(event) =>
-                                                        handleDeleteFileAns(
-                                                            event,
-                                                            ques,
-                                                            quesIndex,
-                                                            ans,
-                                                            ansIndex
-                                                        )
-                                                    }
-                                                >
-                                                    <DeleteIcon size="0.85rem" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {ans?.audio && (
-                                        <div className="col-4 mb-2">
-                                            <div className="uploadFileAnsItem--sm">
-                                                <audio
-                                                    controls
-                                                    src={ans?.audio}
-                                                    alt="answer audio"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    name="audio"
-                                                    className="btn btn-danger p-1 rounded-circle"
-                                                    onClick={(event) =>
-                                                        handleDeleteFileAns(
-                                                            event,
-                                                            ques,
-                                                            quesIndex,
-                                                            ans,
-                                                            ansIndex
-                                                        )
-                                                    }
-                                                >
-                                                    <DeleteIcon size="0.85rem" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                    {ans?.video && (
-                                        <div className="col-4 mb-2">
-                                            <div className="uploadFileAnsItem--sm">
-                                                <video
-                                                    className="createTest_video--sm"
-                                                    controls
-                                                    src={ans?.video}
-                                                >
-                                                    Your browser does not
-                                                    support the video tag.
-                                                </video>
-                                                <button
-                                                    type="button"
-                                                    name="video"
-                                                    className="btn btn-danger p-1 rounded-circle"
-                                                    onClick={(event) =>
-                                                        handleDeleteFileAns(
-                                                            event,
-                                                            ques,
-                                                            quesIndex,
-                                                            ans,
-                                                            ansIndex
-                                                        )
-                                                    }
-                                                >
-                                                    <DeleteIcon size="0.85rem" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                        <button
-                            type="button"
-                            className="createTest_addOptionBtn"
-                            onClick={() => handleAddAnswer(ques, quesIndex)}
-                        >
-                            Add option
-                        </button>
+                        {ques?.questionType?.id === 1 && (
+                            <TrueFalseAnswer
+                                ques={ques}
+                                quesIndex={quesIndex}
+                            />
+                        )}
+                        {ques?.questionType?.id === 2 && (
+                            <MultipleChoiceAnswer
+                                ques={ques}
+                                quesIndex={quesIndex}
+                            />
+                        )}
+                        {ques?.questionType?.id === 3 && (
+                            <WrittenAnswer ques={ques} quesIndex={quesIndex} />
+                        )}
                     </div>
                     <div className="card-footer bg-white d-flex align-items-center justify-content-between">
                         <div className="createTest_formGroup d-flex align-items-center">
@@ -1180,33 +1323,37 @@ const CreateTest = () => {
                             />
                             <span>points</span>
                         </div>
-                        <div>
-                            <button
-                                className="btn btn-customLight me-2 p-2 rounded-circle"
-                                onClick={() => handleDuplicateQues(quesIndex)}
-                            >
-                                <CopyIcon />
-                            </button>
-                            <button
-                                className="btn btn-customLight p-2 rounded-circle"
-                                onClick={() =>
-                                    handleDeleteQues(ques, quesIndex)
-                                }
-                            >
-                                <DeleteIcon />
-                            </button>
-                        </div>
+                        <button
+                            className="btn btn-customLight p-2 rounded-circle"
+                            onClick={() => handleDeleteQues(ques, quesIndex)}
+                        >
+                            <DeleteIcon />
+                        </button>
                     </div>
                 </div>
             ))}
-            <div className="card mt-4 mb-3 py-4">
-                <div className="card-body d-flex justify-content-center">
+            <div className="card mt-4 mb-3 py-4 px-5">
+                <div className="card-body d-flex justify-content-between px-5">
                     <button
                         type="button"
                         className="createTest_addQuesBtn"
-                        onClick={handleAddQuestion}
+                        onClick={handleAddTrueFalseQuestion}
                     >
-                        + ADD QUESTION
+                        + TRUE/FALSE
+                    </button>
+                    <button
+                        type="button"
+                        className="createTest_addQuesBtn"
+                        onClick={handleAddMultipleChoiceQuestion}
+                    >
+                        + MULTIPLE CHOICE
+                    </button>
+                    <button
+                        type="button"
+                        className="createTest_addQuesBtn"
+                        onClick={handleAddWrittenQuestion}
+                    >
+                        + WRITTEN
                     </button>
                 </div>
             </div>

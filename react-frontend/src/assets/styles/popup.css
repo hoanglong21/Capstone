@@ -69,3 +69,8 @@
     margin-top: 8rem;
     --bs-modal-width: 25vw;
 }
+
+.testDeleteModal.modal {
+    margin-top: 8rem;
+    --bs-modal-width: 30vw;
+}
