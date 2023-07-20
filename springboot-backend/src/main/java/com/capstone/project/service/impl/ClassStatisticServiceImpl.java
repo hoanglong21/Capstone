@@ -1,6 +1,7 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.repository.AssignmentRepository;
 import com.capstone.project.repository.ClassRepository;
 import com.capstone.project.service.*;
 import com.capstone.project.util.DateRangePicker;
@@ -14,6 +15,12 @@ import java.util.Map;
 
 @Service
 public class ClassStatisticServiceImpl implements ClassStatisticService {
+
+    @Autowired
+    AssignmentRepository assignmentRepository;
+
+    @Autowired
+    SubmissionService submissionService;
 
     @Autowired
     PostService postService;
@@ -55,7 +62,6 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
 
     @Override
     public List<Integer> getLeanerJoined(int id) throws ResourceNotFroundException, ParseException {
-        // Check user exist
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
         List<String> listDate = dateRangePicker.getDateRange();
@@ -72,7 +78,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     }
 
     @Override
-    public List<Integer> getPostGrowth(int id) throws ResourceNotFroundException {
+    public List<Integer> getPostGrowth() throws ResourceNotFroundException {
         List<Integer> result = new ArrayList<>();
         List<String> listDate = dateRangePicker.getDateActive();
         for(int i=0; i<listDate.size()-1; i++) {
@@ -83,6 +89,20 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
         return result;
     }
 
+    @Override
+    public List<Integer> getPointDistribution(int id) throws ResourceNotFroundException {
+        assignmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Assignment not exist with id: " + id));
+//        List<String> listDate = dateRangePicker.getDateRange();
+        List<Integer> result = new ArrayList<>();
+            Map<String, Object> response = submissionService.getFilterSubmission(null,0,id,0,null,null,"DESC",1,5);
+            result.add( Integer.parseInt(String.valueOf(response.get("markLessThan5Count"))));
+            result.add( Integer.parseInt(String.valueOf(response.get("markBetween5And8Count"))));
+            result.add( Integer.parseInt(String.valueOf(response.get("markGreaterThan8Count"))));
 
+        return result;
     }
+
+
+}
 
