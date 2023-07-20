@@ -1,12 +1,11 @@
-import React from 'react'
-import '../assets/styles/quiz.css'
 import {
     StudySetSolidIcon,
     ArrowDownIcon,
     CloseIcon,
     LearnSolidIcon,
     TestSolidIcon,
-} from '../components/icons'
+} from '../../../components/icons'
+import './quiz.css'
 
 function DoQuiz() {
     return (

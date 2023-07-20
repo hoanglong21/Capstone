@@ -21,7 +21,7 @@ import {
 } from '../../../components/icons'
 import './viewStudySet.css'
 
-const ViewSet = () => {
+const ViewStudySet = () => {
     const navigate = useNavigate()
 
     const { userToken } = useSelector((state) => state.auth)
@@ -83,12 +83,13 @@ const ViewSet = () => {
                     </div>
                 </div>
                 <div className="col-4">
-                    <div className="studyModesItem d-flex align-items-center justify-content-center">
+                    <Link
+                        to={`/quiz/${studySet.id}`}
+                        className="studyModesItem d-flex align-items-center justify-content-center"
+                    >
                         <TestSolidIcon className="StudyModesIcon" size="2rem" />
-                        <a className="studyModesItemName" href="/test">
-                            Test
-                        </a>
-                    </div>
+                        <span className="studyModesItemName">Test</span>
+                    </Link>
                 </div>
             </div>
             {/* Author + Options */}
@@ -238,4 +239,4 @@ const ViewSet = () => {
     )
 }
 
-export default ViewSet
+export default ViewStudySet
