@@ -17,6 +17,7 @@ import {
 } from '../../../components/icons'
 import './Flashcard.css'
 import KanjiCard from './KanjiCard'
+import GrammarCard from './GrammarCard'
 
 const Flashcard = () => {
     const navigate = useNavigate()
@@ -171,7 +172,7 @@ const Flashcard = () => {
                 ) : type === 2 ? (
                     <KanjiCard card={cards[cardIndex]} />
                 ) : (
-                    ''
+                    <GrammarCard card={cards[cardIndex]} />
                 )}
                 <div className="d-flex align-items-center justify-content-between mt-4">
                     <div className="flashcardPlay">

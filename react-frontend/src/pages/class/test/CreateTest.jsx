@@ -14,6 +14,7 @@ import AnswerService from '../../../services/AnswerService'
 
 import {
     CloseIcon,
+    CopyIcon,
     DeleteIcon,
     ImageIcon,
     SpeakIcon,
@@ -283,7 +284,7 @@ const CreateTest = () => {
     const handleUpdateQuestion = async (ques) => {
         setSaving(true)
         try {
-            const tempQuestion = { ...ques }
+            var tempQuestion = { ...ques }
             delete ques.answers
             await QuestionService.updateQuestion(tempQuestion.id, tempQuestion)
         } catch (error) {
@@ -341,6 +342,25 @@ const CreateTest = () => {
             url,
             `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
         )
+        setSaving(false)
+    }
+
+    const handleDuplicateQues = async (quesIndex) => {
+        setSaving(true)
+        var tempQuestions = [...questions]
+        var tempQues = { ...tempQuestions[quesIndex] }
+        delete tempQues.answers
+        delete tempQues.id
+        var ques = (await QuestionService.createQuestion(ques)).data
+        var tempAnswers = []
+        for (const ans of tempQuestions[quesIndex]?.answers) {
+            var tempAns = { ...ans, question: { id: ques.id } }
+            delete tempAns.id
+            const tempCreateAns = (await AnswerService.createAnswer(tempAns)).data
+            tempAnswers.push(tempCreateAns)
+        }
+        tempQuestions.splice(quesIndex, 0, { ...ques, answers: tempAnswers })
+        setQuestions(tempQuestions)
         setSaving(false)
     }
 
@@ -1161,12 +1181,22 @@ const CreateTest = () => {
                             />
                             <span>points</span>
                         </div>
-                        <button
-                            className="btn btn-customLight p-2 rounded-circle"
-                            onClick={() => handleDeleteQues(ques, quesIndex)}
-                        >
-                            <DeleteIcon />
-                        </button>
+                        <div>
+                            <button
+                                className="btn btn-customLight me-2 p-2 rounded-circle"
+                                onClick={() => handleDuplicateQues(quesIndex)}
+                            >
+                                <CopyIcon />
+                            </button>
+                            <button
+                                className="btn btn-customLight p-2 rounded-circle"
+                                onClick={() =>
+                                    handleDeleteQues(ques, quesIndex)
+                                }
+                            >
+                                <DeleteIcon />
+                            </button>
+                        </div>
                     </div>
                 </div>
             ))}

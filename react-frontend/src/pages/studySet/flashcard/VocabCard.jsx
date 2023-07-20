@@ -73,7 +73,9 @@ const VocabCard = ({ card }) => {
                                             <div
                                                 className="flashCardField_content"
                                                 dangerouslySetInnerHTML={{
-                                                    __html: contentItem?.content,
+                                                    __html:
+                                                        contentItem?.content ||
+                                                        '...',
                                                 }}
                                             ></div>
                                         </div>

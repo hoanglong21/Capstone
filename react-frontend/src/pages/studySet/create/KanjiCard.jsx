@@ -80,7 +80,7 @@ export const KanjiCard = (props) => {
                                 field: {
                                     id: 7,
                                 },
-                                content: '',
+                                content: 'Unknown',
                             })
                         ).data
                     )
