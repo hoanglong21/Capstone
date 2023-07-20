@@ -134,8 +134,8 @@ const ClassList = () => {
                                             <div className="author-avatar">
                                                 <img
                                                     src={
-                                                        userInfo?.avatar
-                                                            ? userInfo?.avatar
+                                                        classroom?.avatar
+                                                            ? classroom?.avatar
                                                             : defaultAvatar
                                                     }
                                                     alt="author avatar"
@@ -143,7 +143,7 @@ const ClassList = () => {
                                                 />
                                             </div>
                                             <span className="author-username ms-2">
-                                                {classroom?.user?.username}
+                                                {classroom?.author}
                                             </span>
                                         </div>
                                     </div>

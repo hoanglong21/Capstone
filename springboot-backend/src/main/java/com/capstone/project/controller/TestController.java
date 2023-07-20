@@ -48,7 +48,7 @@ public class TestController {
     }
 
     @GetMapping("/test/{id}")
-    public ResponseEntity<?> getTestById(@PathVariable int id){
+        public ResponseEntity<?> getTestById(@PathVariable int id){
         try {
             return ResponseEntity.ok(testService.getTestById(id));
         } catch (ResourceNotFroundException e){

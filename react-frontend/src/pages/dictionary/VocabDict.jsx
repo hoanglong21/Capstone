@@ -15,7 +15,7 @@ const VocabDict = () => {
 
     async function getKanjiSvg(vocab) {
         var tempKanjiSvgs = []
-        for (var i = 0; i < vocab.length; i++) {
+        for (var i = 0; i < vocab?.length; i++) {
             const svg = (await DictionaryService.getKanjivg(vocab.charAt(i)))
                 .data
             tempKanjiSvgs.push({

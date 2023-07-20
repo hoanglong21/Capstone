@@ -107,6 +107,14 @@
     border-color: var(--card-button-hover);
 }
 
+.createTest_status {
+    color: #939bb4;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.29;
+    margin: 0.625rem 1rem;
+}
+
 .createTest_submitBtn,
 .createTest_draftBtn {
     background-color: rgb(25, 103, 210);
