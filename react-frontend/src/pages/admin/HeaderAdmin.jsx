@@ -1,11 +1,9 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import img from "../../assets/images/avatar-default.jpg";
 import "../../assets/styles/sidebar.css";
 import {
   NotifyIcon,
-  ProfileIcon,
   SettingIcon,
   HelpIcon,
   LogoutIcon,

@@ -9,7 +9,10 @@ import ApexCharts from "apexcharts";
 function ViewDetailClass() {
   const [classes, setClasses] = useState([]);
   const { id } = useParams();
-  const [classLearnerJoined, setclassLearnerJoined] = useState();
+  const [classLearnerJoined, setclassLearnerJoined] = useState([]);
+  const [classTest, setClassTest] = useState([]);
+  const [classAssignment, setClassAssignment] = useState([]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +34,26 @@ function ViewDetailClass() {
       }
     };
     fetchDataClassLearnerJoined();
-    
+
+    const fetchDataClassAssignmentNumber = async () => {
+      try {
+        const temp = (await ClassService.getAssignmentNumber(id)).data;
+        setClassAssignment(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataClassAssignmentNumber();
+
+    const fetchDataClassTestNumber = async () => {
+      try {
+        const temp = (await ClassService.getTestNumber(id)).data;
+        setClassTest(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataClassTestNumber();
   }, [id]);
 
   var options = {
@@ -104,7 +126,7 @@ function ViewDetailClass() {
   var optionsDataLabel = {
     series: [
       {
-        name: "Inflation",
+        name: "Learn Joined",
         data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2],
       },
     ],
@@ -217,7 +239,6 @@ function ViewDetailClass() {
             <div className="card-header fs-5 fw-bold text-uppercase">
               Class Details
             </div>
-
             <div className="card-body">
               <div className="row gx-3 mb-3">
                 <div className="col-xl-4 col-md-4 mb-4">
@@ -229,7 +250,7 @@ function ViewDetailClass() {
                             Learners join
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-gray-800">
-                            {classLearnerJoined?.id}
+                            {classLearnerJoined}
                           </div>
                         </div>
                         <div className="col-auto">
@@ -248,7 +269,7 @@ function ViewDetailClass() {
                             Number of assignments
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-gray-800">
-                            18
+                            {classAssignment}
                           </div>
                         </div>
                         <div className="col-auto">
@@ -267,7 +288,7 @@ function ViewDetailClass() {
                             Number of tests
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-gray-800">
-                            18
+                            {classTest}
                           </div>
                         </div>
                         <div className="col-auto">

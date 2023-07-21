@@ -25,8 +25,16 @@ const getClassroomById = (id) => {
 };
 
 const getLeanerJoined = (id) => {
-    return axios.get(API_BASE_URL + "/classlearnerjoined/" + id);
+    return axios.get(API_BASE_URL + "/statistic/classlearnerjoined/" + id);
   };
+
+const getTestNumber = (id) =>{
+  return axios.get(API_BASE_URL + "/statistic/classtest/" + id);
+};
+
+const getAssignmentNumber = (id) =>{
+  return axios.get(API_BASE_URL + "/statistic/classassignment/" + id);
+};
 
 const resetClassCode = (id) => {
   return axios.post(API_BASE_URL + "/resetclasscode/" + id);
@@ -62,6 +70,7 @@ const getFilterList = (
 };
 
 
+
 const ClassService = {
   createClassroom,
   getFilterList,
@@ -71,6 +80,8 @@ const ClassService = {
   deleteClass,
   resetClassCode,
   getLeanerJoined,
+  getTestNumber,
+  getAssignmentNumber
 };
 
 export default ClassService;
