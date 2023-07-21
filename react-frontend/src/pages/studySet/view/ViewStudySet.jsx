@@ -88,7 +88,7 @@ const ViewStudySet = () => {
                         className="studyModesItem d-flex align-items-center justify-content-center"
                     >
                         <TestSolidIcon className="StudyModesIcon" size="2rem" />
-                        <span className="studyModesItemName">Test</span>
+                        <span className="studyModesItemName">Quiz</span>
                     </Link>
                 </div>
             </div>

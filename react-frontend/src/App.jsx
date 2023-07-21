@@ -63,7 +63,6 @@ import ViewDetailTest from './pages/class/test/ViewDetailTest'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/studySet/quiz/DoQuiz'
-// import ViewAssignment from './pages/class/assignment/ViewAssignmentForLearner'
 import AssignmentList from './pages/class/assignment/AssignmentList'
 import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
@@ -118,7 +117,6 @@ const App = () => {
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
-                        <Route path="quiz/:id" element={<DoQuiz />} />
                         {/* Class */}
                         <Route path="class/:id" element={<ClassLayout />}>
                             <Route index element={<Stream />} />
@@ -214,6 +212,7 @@ const App = () => {
                 {/* Access deny */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="flashcards/:id" element={<Flashcard />} />
+                    <Route path="quiz/:id" element={<DoQuiz />} />
                 </Route>
 
                 <Route path="/banuser" element={<BanUser />} />
