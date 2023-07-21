@@ -131,7 +131,15 @@ const Stream = () => {
             // add attachments
             await AttachmentService.createAttachments(tempAttachments)
             // clear
-            setAddPost({})
+            setAddPost({
+                user: {
+                    id: userInfo.id,
+                },
+                classroom: {
+                    id: classroom.id,
+                },
+                content: '',
+            })
             setUploadFiles([])
             setPosts([...posts, tempPost])
             setShowInput(false)
@@ -309,7 +317,7 @@ const Stream = () => {
                                         onClick={handleAddPost}
                                         className="btn btn-primary"
                                         disabled={
-                                            !addPost.content || loadingAddPost
+                                            !addPost?.content || loadingAddPost
                                         }
                                     >
                                         {loadingAddPost ? 'Posting...' : 'Post'}

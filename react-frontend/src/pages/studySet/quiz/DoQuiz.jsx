@@ -1,180 +1,44 @@
-import React from 'react'
-import '../assets/styles/quiz.css'
 import {
     StudySetSolidIcon,
     ArrowDownIcon,
     CloseIcon,
     LearnSolidIcon,
     TestSolidIcon,
-} from '../components/icons'
+} from '../../../components/icons'
+import FormStyles from '../../../assets/styles/Form.module.css'
+import './quiz.css'
 
 function DoQuiz() {
     return (
         <div>
-            {/* Pop up like Quizlet */}
-            {/* <button
-        type="button"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#quizModal"
-      >
-        Setup your quiz
-      </button>
-
-      <div
-        class="modal fade"
-        id="quizModal"
-        tabindex="-1"
-        aria-labelledby="quizModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="quizModalLabel">
-                <strong>MLN111</strong>
-                <br />
-                Set up your quiz
-              </h4>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form action="">
-                <div
-                  class="ojn81eb"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    margin: "1rem 0",
-                  }}
-                >
-                  <div
-                    class="qa7hpt4"
-                    style={{ display: "flex", justifyContent: "flex-start" }}
-                  >
-                    <h5 class="qh8uqkb" style={{ marginRight: ".5rem" }}>
-                      <strong>Questions</strong>
-                    </h5>
-                    <div class="qxkjrwb">(max 408)</div>
-                  </div>
-                  <div class="qasqj0a" style={{ width: "5.375rem" }}>
-                    <label class="AssemblyInput">
-                      <input
-                        name="questionCount"
-                        aria-label="Enter the desired number of questions"
-                        class="AssemblyInput-input"
-                        placeholder=""
-                        type="number"
-                        value="1"
-                      />
-                    </label>
-                  </div>
-                </div>
-                <div class="ojn81eb">
-                  <div
-                    class="qa7hpt4"
-                    style={{ display: "flex", justifyContent: "flex-start" }}
-                  >
-                    <h5 class="qh8uqkb" style={{ marginRight: ".5rem" }}>
-                      <strong>Answer with</strong>
-                    </h5>
-                  </div>
-                  <div class="select">
-                    <select
-                      class="form-select"
-                      aria-label="Default select example"
-                    >
-                      <option selected>Term</option>
-                      <option value="1">Definition</option>
-                      <option value="2">Both</option>
-                    </select>
-                  </div>
-                </div>
-                <hr class="d1llavan" />
-                <div>
-                  <div class="ojn81eb">
-                    <div class="o5jd1da">
-                    <h5 class="qh8uqkb" style={{ marginRight: ".5rem" }}>
-                      <strong>True/False</strong>
-                    </h5>
-                    </div>
-                    <div class="form-check form-switch">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="flexSwitchCheckChecked"
-                        checked
-                      />
-                    </div>
-                  </div>
-                  <div class="ojn81eb">
-                  <h5 class="qh8uqkb" style={{ marginRight: ".5rem" }}>
-                      <strong>Multiple Choice</strong>
-                    </h5>
-                    <div class="form-check form-switch">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="flexSwitchCheckChecked"
-                      />
-                    </div>
-                  </div>
-                  <div class="ojn81eb">
-                  <h5 class="qh8uqkb" style={{ marginRight: ".5rem" }}>
-                      <strong>Written</strong>
-                    </h5>
-                    <div class="form-check form-switch">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id="flexSwitchCheckChecked"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Start Quiz
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
             {/* Header */}
             <div className="flashcardHeader d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
-                    <StudySetSolidIcon
-                        className="flashcardModeIcon"
-                        size="2rem"
-                    />
+                    <TestSolidIcon className="flashcardModeIcon" size="2rem" />
                     <div className="flashcardMode dropdown d-flex align-items-center">
                         <button
                             type="button dropdown-toggle"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <span className="ps-2 me-2">Flashcards</span>
+                            <span className="ps-2 me-2">Quiz</span>
                             <ArrowDownIcon size="1rem" strokeWidth="2.6" />
                         </button>
                         <ul className="dropdown-menu">
+                            <li>
+                                <button
+                                    className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                    type="button"
+                                >
+                                    <StudySetSolidIcon
+                                        className="me-3 flashcardModeIcon"
+                                        size="1.3rem"
+                                    />
+                                    <span className="align-middle fw-semibold">
+                                        Flashcards
+                                    </span>
+                                </button>
+                            </li>
                             <li>
                                 <button
                                     className="dropdown-item flashcardModeIcon py-2 px-3 d-flex align-items-center"
@@ -187,20 +51,6 @@ function DoQuiz() {
                                     />
                                     <span className="align-middle fw-semibold">
                                         Learn
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                    type="button"
-                                >
-                                    <TestSolidIcon
-                                        className="me-3 flashcardModeIcon"
-                                        size="1.3rem"
-                                    />
-                                    <span className="align-middle fw-semibold">
-                                        Test
                                     </span>
                                 </button>
                             </li>
@@ -225,7 +75,13 @@ function DoQuiz() {
                     <h3>MLN111</h3>
                 </div>
                 <div className="flashcardOptions d-flex">
-                    <button className="flashcardOptions_btn">Options</button>
+                    <button
+                        className="flashcardOptions_btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#quizOptionModal"
+                    >
+                        Options
+                    </button>
                     <button className="flashcardClose_btn ms-3 d-flex align-items-center">
                         <CloseIcon strokeWidth="2" />
                     </button>
@@ -544,6 +400,150 @@ d) Tri thức"
                 >
                     Submit Quiz
                 </button>
+            </div>
+            {/* Option modal */}
+            <div
+                class="modal fade quizOptionModal"
+                id="quizOptionModal"
+                tabindex="-1"
+                aria-labelledby="quizOptionModalLabel"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="quizOptionModalLabel">
+                                Options
+                            </h3>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            <button className="quizOption_newBtn btn btn-primary">
+                                Create new quiz
+                            </button>
+                            <div className="row mt-4">
+                                <div className="col-6">
+                                    <div className="quizOptionBlock mb-4">
+                                        <legend>QUESTION TYPES</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value=""
+                                                id="written"
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                for="written"
+                                            >
+                                                Written
+                                            </label>
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value=""
+                                                id="mupltipleChoice"
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                for="mupltipleChoice"
+                                            >
+                                                Multiple choice
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value=""
+                                                id="trueFalse"
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                for="trueFalse"
+                                            >
+                                                True/False
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="quizOptionBlock mb-4">
+                                        <legend>QUESTION LIMIT</legend>
+                                        <div className="mb-2 d-flex align-items-center">
+                                            <input
+                                                className="form-control"
+                                                type="number"
+                                                id="quesLimit"
+                                            />
+                                            <p className="form-check-label m-0">
+                                                of 2 questions
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="quizOptionBlock">
+                                        <legend>NOTE</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value=""
+                                                id="note"
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                for="note"
+                                            >
+                                                Show note
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-6">
+                                    <div className="quizOptionBlock mb-4">
+                                        <legend>PROMPT WITH</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value=""
+                                                id="note"
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                for="note"
+                                            >
+                                                Show note
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="quizOptionBlock">
+                                        <legend>ANSWER WITH</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value=""
+                                                id="note"
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                for="note"
+                                            >
+                                                Show note
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
