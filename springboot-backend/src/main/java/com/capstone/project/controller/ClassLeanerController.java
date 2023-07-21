@@ -53,7 +53,7 @@ public class ClassLeanerController {
 
 
     @GetMapping("/filterclassleaner")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> filterClassLeaner(@RequestParam(value = "userid", required = false, defaultValue = "0") int userId,
                                                    @RequestParam(value = "classid", required = false, defaultValue = "0") int classId,
                                                    @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,

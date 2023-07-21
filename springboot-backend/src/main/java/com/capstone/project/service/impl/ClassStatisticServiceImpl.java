@@ -61,10 +61,21 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     }
 
     @Override
-    public List<Integer> getLeanerJoined(int id) throws ResourceNotFroundException, ParseException {
+    public Integer getLeanerJoinedNumber(int id) throws ResourceNotFroundException, ParseException {
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
         List<String> listDate = dateRangePicker.getDateRange();
+            Map<String, Object> response = classLearnerService.filterClassLeaner(0, id, null, null,
+                    "created_date", "DESC", 1, 5);
+            return Integer.parseInt(String.valueOf(response.get("totalItems")));
+        }
+
+
+    @Override
+    public List<Integer> getLeanerJoinedGrowth(int id) throws ResourceNotFroundException, ParseException {
+        classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
+        List<String> listDate = dateRangePicker.getShortDateRange();
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < listDate.size() - 1; i++) {
             Map<String, Object> response = classLearnerService.filterClassLeaner(0, id, listDate.get(i), listDate.get(i + 1),
