@@ -127,7 +127,7 @@ function ViewDetailClass() {
     series: [
       {
         name: "Learn Joined",
-        data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2],
+        data: classLearnerJoined,
       },
     ],
     chart: {
@@ -145,7 +145,7 @@ function ViewDetailClass() {
     dataLabels: {
       enabled: true,
       formatter: function (val) {
-        return val + "%";
+        return val;
       },
       offsetY: -20,
       style: {
@@ -207,7 +207,6 @@ function ViewDetailClass() {
       },
     },
     title: {
-      text: "Monthly Inflation in Argentina, 2002",
       floating: true,
       offsetY: 330,
       align: "center",
