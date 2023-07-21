@@ -49,10 +49,10 @@ const ClassesForHome = () => {
                         <Link to={`/class/${classroom.id}`}>
                             <div className="set-body row mb-2">
                                 <div className="term-count col-1">
-                                    {classroom?.users?.length} member
+                                    {classroom?.member} member
                                 </div>
                                 <div className="term-count col-1">
-                                    {classroom?.studySets?.length} sets
+                                    {classroom?.studyset} sets
                                 </div>
                                 <div className="set-author col d-flex ">
                                     <div className="author-avatar">

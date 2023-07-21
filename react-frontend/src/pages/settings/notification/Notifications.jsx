@@ -1,3 +1,6 @@
+import FormStyles from '../../../assets/styles/Form.module.css'
+import './notification.css'
+
 const Notifications = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -7,10 +10,10 @@ const Notifications = () => {
         <div className="mx-5 ps-3">
             <h4>Email Notification</h4>
             <form className="mt-4" noValidate>
-                <fieldset className="form-check">
+                <fieldset className="notification_label form-check mb-4">
                     <legend>STUDY REMINDERS</legend>
                     <input
-                        className="form-check-input"
+                        className={`form-check-input ${FormStyles.formCheckInput}`}
                         type="checkbox"
                         value=""
                         id="studyReminder"
