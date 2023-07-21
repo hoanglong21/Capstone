@@ -127,7 +127,7 @@ function ViewDetailClass() {
     series: [
       {
         name: "Learn Joined",
-        data: classLearnerJoined,
+        data: [1,3, 4, 6, 7, 5, 6, 6, 2,9, 10, 22],
       },
     ],
     chart: {

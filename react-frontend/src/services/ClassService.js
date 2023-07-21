@@ -25,7 +25,7 @@ const getClassroomById = (id) => {
 };
 
 const getLeanerJoined = (id) => {
-    return axios.get(API_BASE_URL + "/statistic/classlearnerjoined/" + id);
+    return axios.get(API_BASE_URL + "/statistic/leanerjoinednum/" + id);
   };
 
 const getTestNumber = (id) =>{

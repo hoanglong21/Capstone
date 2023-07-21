@@ -47,6 +47,7 @@ import ManageClass from './pages/admin/ManageClass'
 import ViewDetailClass from './pages/admin/ViewDetailClass'
 import ManageFeedback from './pages/admin/ManageFeedback'
 import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
+import ManageStudyset from './pages/admin/ManageStudyset'
 import CreateSet from './pages/studySet/create/CreateSet'
 import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
@@ -235,6 +236,7 @@ const App = () => {
                     path="/viewdetailfb/:id"
                     element={<ViewDetailFeedback />}
                 />
+                <Route path="/managestudyset" element={<ManageStudyset />} />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route
