@@ -156,4 +156,13 @@ public class ClassController {
         }
     }
 
+
+    @GetMapping("/checkuserclass")
+    public ResponseEntity<?> checkUserClass(@RequestParam int classId, @RequestParam int userId) {
+        try {
+            return ResponseEntity.ok(classService.CheckUserClass(userId,classId));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

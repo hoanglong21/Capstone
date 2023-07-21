@@ -8,6 +8,7 @@ import com.capstone.project.service.ClassService;
 import com.capstone.project.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import net.loomchild.segment.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.Query;
@@ -254,6 +255,31 @@ public class ClassServiceImpl implements ClassService {
         String newCode = generateClassCode();
         classroom.setClasscode(newCode);
         return classRepository.save(classroom);
+    }
+
+    @Override
+    public Boolean CheckUserClass(int userId, int classId) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(classId)
+                .orElseThrow(() -> new ResourceNotFoundException("Class not exist with id:" + classId));
+
+
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with id: " + userId);
+        }
+
+        ClassLearner classLearner = classLearnerRepository.findByUserAndClassroom(user,classroom);
+        if (classLearner!= null) {
+            if(classLearner.getUser().getId() == userId){
+                return true;}
+        }
+
+        if (user.getUsername().equals(classroom.getUser().getUsername())) {
+            return true;
+        }
+
+
+        return false;
     }
 
 
