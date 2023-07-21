@@ -12,10 +12,7 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
@@ -131,8 +128,9 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Map<String, Object> getFilterSubmission(String search, int authorId, double mark, String from, String to, String direction, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterSubmission(String search, int authorId,int assignmentId, double mark, String from, String to, String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
+
         String query ="SELECT * FROM submission WHERE 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
@@ -146,6 +144,11 @@ public class SubmissionServiceImpl implements SubmissionService {
         if (authorId != 0) {
             query += " AND author_id = :authorId";
             parameters.put("authorId", authorId);
+        }
+
+        if (assignmentId != 0) {
+            query += " AND assignment_id = :assignmentId";
+            parameters.put("assignmentId", assignmentId);
         }
 
         if (mark != 0) {
@@ -175,6 +178,10 @@ public class SubmissionServiceImpl implements SubmissionService {
             q.setParameter(entry.getKey(), entry.getValue());
         }
 
+        int markLessThan5Count = 0;
+        int markBetween5And8Count = 0;
+        int markGreaterThan8Count = 0;
+
         int totalItems = q.getResultList().size();
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
@@ -184,7 +191,21 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         List<Submission> resultList = q.getResultList();
 
+        for (Submission submission : resultList) {
+            double submissionMark = submission.getMark();
+            if (submissionMark < 5) {
+                markLessThan5Count++;
+            } else if (submissionMark >= 5 && submissionMark <= 8) {
+                markBetween5And8Count++;
+            } else if (submissionMark > 8) {
+                markGreaterThan8Count++;
+            }
+        }
+
         Map<String, Object> response = new HashMap<>();
+        response.put("markLessThan5Count", markLessThan5Count);
+        response.put("markBetween5And8Count", markBetween5And8Count);
+        response.put("markGreaterThan8Count", markGreaterThan8Count);
         response.put("list", resultList);
         response.put("currentPage", page);
         response.put("totalPages", totalPages);
