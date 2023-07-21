@@ -74,15 +74,15 @@ public class TestServiceImpl  implements TestService {
     public Test updateTest(int id, Test test) throws ResourceNotFroundException {
         Test testclass = testRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + id));
-        if (test.getStart_date() != null && testclass.getCreated_date() != null &&
-                test.getStart_date().before(testclass.getCreated_date())) {
-            throw new ResourceNotFroundException("Start date must be >= created date");
-        }
-
-        if (test.getDuration() < 5) {
-            throw new ResourceNotFroundException("Duration must be >= 5 minutes");
-        }
-
+//        if (test.getStart_date() != null && testclass.getCreated_date() != null &&
+//                test.getStart_date().before(testclass.getCreated_date())) {
+//            throw new ResourceNotFroundException("Start date must be >= created date");
+//        }
+//
+//        if (test.getDuration() < 5) {
+//            throw new ResourceNotFroundException("Duration must be >= 5 minutes");
+//        }
+        
         testclass.setTitle(test.getTitle());
         testclass.setDescription(test.getDescription());
         testclass.setDuration(test.getDuration());

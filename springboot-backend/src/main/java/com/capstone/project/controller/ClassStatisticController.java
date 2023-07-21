@@ -35,10 +35,19 @@ public class ClassStatisticController {
         }
     }
 
-    @GetMapping("/classlearnerjoined/{id}")
-    public ResponseEntity<?> getLeanerJoined(@PathVariable int id){
+    @GetMapping("/leanerjoinednum/{id}")
+    public ResponseEntity<?> getLeanerJoinedNumber(@PathVariable int id){
         try {
-            return ResponseEntity.ok(classStatisticService.getLeanerJoined(id));
+            return ResponseEntity.ok(classStatisticService.getLeanerJoinedNumber(id));
+        } catch (ResourceNotFroundException | ParseException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/learnerjoinedgrowth/{id}")
+    public ResponseEntity<?> getLeanerJoinedGrowth(@PathVariable int id){
+        try {
+            return ResponseEntity.ok(classStatisticService.getLeanerJoinedGrowth(id));
         } catch (ResourceNotFroundException | ParseException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
