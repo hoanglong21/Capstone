@@ -28,6 +28,7 @@ export const KanjiCard = (props) => {
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
+            props.setLoading(true)
             try {
                 const contents = (await ContentService.getAllByCardId(card.id))
                     .data
@@ -80,7 +81,7 @@ export const KanjiCard = (props) => {
                                 field: {
                                     id: 7,
                                 },
-                                content: '',
+                                content: 'Unknown',
                             })
                         ).data
                     )
@@ -181,6 +182,7 @@ export const KanjiCard = (props) => {
                     console.log(error.message)
                 }
             }
+            props.setLoading(false)
         }
         fetchData()
     }, [card.id])
@@ -210,10 +212,13 @@ export const KanjiCard = (props) => {
     }, [])
 
     const doUpdateCard = async (tempCard) => {
+        props.setSaving(true)
         await CardService.updateCard(tempCard.id, tempCard)
+        props.setSaving(false)
     }
 
     const handleChangeFile = async (event) => {
+        props.setSaving(true)
         const name = event.target.name
         // set loading
         if (name === 'picture') {
@@ -225,7 +230,6 @@ export const KanjiCard = (props) => {
         if (name === 'strokeOrder') {
             setLoadingStrokeOrder(true)
         }
-
         const file = event.target.files[0]
         if (file) {
             const urlOld = String(card[name])
@@ -251,7 +255,6 @@ export const KanjiCard = (props) => {
                 doUpdateCard(tempCard)
             }
         }
-
         // set loading
         if (name === 'picture') {
             setLoadingPicture(false)
@@ -262,9 +265,11 @@ export const KanjiCard = (props) => {
         if (name === 'strokeOrder') {
             setLoadingStrokeOrder(false)
         }
+        props.setSaving(false)
     }
 
     const handleDeleteFile = async (event) => {
+        props.setSaving(true)
         const name = event.target.name
         // set loading
         if (name === 'picture') {
@@ -305,9 +310,11 @@ export const KanjiCard = (props) => {
         if (name === 'strokeOrder') {
             setLoadingStrokeOrder(false)
         }
+        props.setSaving(false)
     }
 
     const doUpdateContent = async (content) => {
+        props.setSaving(true)
         try {
             await ContentService.updateContent(content.id, content)
         } catch (error) {
@@ -317,6 +324,7 @@ export const KanjiCard = (props) => {
                 console.log(error.message)
             }
         }
+        props.setSaving(false)
     }
 
     return (

@@ -19,6 +19,7 @@ export const VocabCard = (props) => {
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
+            props.setLoading(true)
             try {
                 const contents = (await ContentService.getAllByCardId(card.id))
                     .data
@@ -74,6 +75,7 @@ export const VocabCard = (props) => {
                     console.log(error.message)
                 }
             }
+            props.setLoading(false)
         }
         fetchData()
     }, [card.id])
@@ -102,10 +104,13 @@ export const VocabCard = (props) => {
     }, [])
 
     const doUpdateCard = async (tempCard) => {
+        props.setSaving(true)
         await CardService.updateCard(tempCard.id, tempCard)
+        props.setSaving(false)
     }
 
     const handleChangeFile = async (event) => {
+        props.setSaving(true)
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
@@ -126,9 +131,11 @@ export const VocabCard = (props) => {
             doUpdateCard(tempCard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+        props.setSaving(false)
     }
 
     const handleDeleteFile = async (event) => {
+        props.setSaving(true)
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         const urlOld = card[name]
@@ -142,9 +149,11 @@ export const VocabCard = (props) => {
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+        props.setSaving(false)
     }
 
     const doUpdateContent = async (content) => {
+        props.setSaving(true)
         try {
             await ContentService.updateContent(content.id, content)
         } catch (error) {
@@ -154,6 +163,7 @@ export const VocabCard = (props) => {
                 console.log(error.message)
             }
         }
+        props.setSaving(false)
     }
 
     return (
