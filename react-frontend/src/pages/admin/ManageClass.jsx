@@ -61,7 +61,7 @@ function ManageClass() {
                     <td>
                       <p className="text-info mb-0">{classroom?.class_name}</p>
                     </td>
-                    <td>{classroom?.user?.username}</td>
+                    <td>{classroom?.author}</td>
                     <td>{classroom?.created_date}</td>
                     <td>
                       <Link
