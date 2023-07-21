@@ -91,7 +91,7 @@ function ManageFeedback() {
                       <td>{assign?.user?.username}</td>
                       <td>
                         <Link
-                          to={`/viewdetailfb/${assign.id}`}
+                          to={`/viewdetailassign/${assign.id}`}
                           className="btn btn-primary me-3"
                         >
                           <i class="bi bi-info-square me-2"></i>

@@ -49,6 +49,7 @@ import ManageFeedback from './pages/admin/ManageFeedback'
 import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
 import ManageStudyset from './pages/admin/ManageStudyset'
 import ManageAssignment from './pages/admin/ManageAssignment'
+import ViewDetailAssignment from './pages/admin/ViewDetailAssignment'
 import CreateSet from './pages/studySet/create/CreateSet'
 import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
@@ -240,6 +241,7 @@ const App = () => {
                 <Route path="/managestudyset" element={<ManageStudyset />} />
                 <Route path="/viewdetailset/:id" element={<ViewDetailStudyset />} />
                 <Route path='/manageassignment' element={<ManageAssignment />} />
+                <Route path='/viewdetailassign/:id' element={<ViewDetailAssignment />}/>
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route
