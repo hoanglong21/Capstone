@@ -243,17 +243,17 @@ function AdminDashboard() {
             </div>
             <div className="row">
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-left border-primary shadow h-100 py-2">
+                <div className="card border-left border-primary bg-primary shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="fw-bold text-primary text-uppercase mb-1">
+                        <div className="fw-bold text-white text-uppercase mb-1">
                           Access Number (Monthly)
                         </div>
-                        <div className="h5 mb-0 fw-bold">{accessNumber}</div>
+                        <div className="h5 mb-0 fw-bold text-white">{accessNumber}</div>
                       </div>
                       <div className="col-auto">
-                        <i class="bi bi-people fs-2 text-secondary"></i>
+                        <i class="bi bi-people fs-2 text-white"></i>
                       </div>
                     </div>
                   </div>
@@ -261,19 +261,19 @@ function AdminDashboard() {
               </div>
 
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-left border-success shadow h-100 py-2">
+                <div className="card border-left border-success bg-success shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
                           Register (Monthly)
                         </div>
-                        <div className="h5 mb-0 font-weight-bold text-gray-800">
+                        <div className="h5 mb-0 font-weight-bold text-white">
                           {registernumber}
                         </div>
                       </div>
                       <div className="col-auto">
-                        <i class="bi bi-person-plus fs-2 text-secondary"></i>
+                        <i class="bi bi-person-plus fs-2 text-white"></i>
                       </div>
                     </div>
                   </div>
@@ -281,23 +281,23 @@ function AdminDashboard() {
               </div>
 
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-left border-info shadow h-100 py-2">
+                <div className="card border-left border-danger bg-danger shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
+                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
                           Classes created (Monthly)
                         </div>
                         <div className="row no-gutters align-items-center">
                           <div className="col-auto">
-                            <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                            <div className="h5 mb-0 mr-3 font-weight-bold text-white">
                               {classnumber}
                             </div>
                           </div>
                         </div>
                       </div>
                       <div className="col-auto">
-                        <i className="bi bi-person-workspace fs-2 text-secondary"></i>
+                        <i className="bi bi-person-workspace fs-2 text-white"></i>
                       </div>
                     </div>
                   </div>
@@ -305,19 +305,19 @@ function AdminDashboard() {
               </div>
 
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-left border-warning shadow h-100 py-2">
+                <div className="card border-left border-warning bg-warning shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
                           Sets created (Monthly)
                         </div>
-                        <div className="h5 mb-0 font-weight-bold text-gray-800">
+                        <div className="h5 mb-0 font-weight-bold text-white">
                           {studySetnumber}
                         </div>
                       </div>
                       <div className="col-auto">
-                        <i className="bi bi-file-earmark-text fs-2 text-secondary"></i>
+                        <i className="bi bi-file-earmark-text fs-2 text-white"></i>
                       </div>
                     </div>
                   </div>

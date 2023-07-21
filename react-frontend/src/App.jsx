@@ -71,6 +71,7 @@ import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
 import People from './pages/class/People'
 import Mark from './pages/class/Mark'
+import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -237,6 +238,7 @@ const App = () => {
                     element={<ViewDetailFeedback />}
                 />
                 <Route path="/managestudyset" element={<ManageStudyset />} />
+                <Route path="/viewdetailset/:id" element={<ViewDetailStudyset />} />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route
