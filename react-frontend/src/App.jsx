@@ -47,6 +47,8 @@ import ManageClass from './pages/admin/ManageClass'
 import ViewDetailClass from './pages/admin/ViewDetailClass'
 import ManageFeedback from './pages/admin/ManageFeedback'
 import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
+import ManageStudyset from './pages/admin/ManageStudyset'
+import ManageAssignment from './pages/admin/ManageAssignment'
 import CreateSet from './pages/studySet/create/CreateSet'
 import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
@@ -68,6 +70,7 @@ import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
 import People from './pages/class/People'
 import Mark from './pages/class/Mark'
+import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -221,7 +224,7 @@ const App = () => {
                 <Route path="/sidebar" element={<SidebarforAdmin />} />
                 <Route path="/dashboard" element={<AdminDashboard />} />
                 <Route
-                    path="/manageusers/viewdetails"
+                    path="/viewdetailuser/:username"
                     element={<ViewDetailsUser />}
                 />
                 <Route path="/manageclass" element={<ManageClass />} />
@@ -231,9 +234,12 @@ const App = () => {
                 />
                 <Route path="/managefeedback" element={<ManageFeedback />} />
                 <Route
-                    path="/managefeedback/viewdetailfb"
+                    path="/viewdetailfb/:id"
                     element={<ViewDetailFeedback />}
                 />
+                <Route path="/managestudyset" element={<ManageStudyset />} />
+                <Route path="/viewdetailset/:id" element={<ViewDetailStudyset />} />
+                <Route path='/manageassignment' element={<ManageAssignment />} />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route

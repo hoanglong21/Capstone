@@ -1,18 +1,17 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import ReplyFeedback from './ReplyFeedback';
-import { Link, useParams } from 'react-router-dom';
-import FeedbackService from '../../services/FeedbackService';
+import { Link, useParams } from "react-router-dom";
+import StudySetService from "../../services/StudySetService";
 
-function ViewDetailFeedback() {
-  const [feedback, setFeedback] = useState([])
-  const {id} = useParams();
+function ViewDetailStudyset() {
+  const [studySet, setStudySet] = useState({});
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
-      const temp = (await FeedbackService.getFeedbackById(id)).data;
-      setFeedback(temp);
+      const tempStudySet = (await StudySetService.getStudySetById(id)).data;
+      setStudySet(tempStudySet);
     };
     if (id) {
       fetchData();
@@ -26,27 +25,27 @@ function ViewDetailFeedback() {
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
-              Feedback Details
+              StudySet Details
             </div>
             <div className="card-body">
               <form>
                 <div className="mb-3">
-                  <label className="small mb-1 fs-6">Feedback Title </label>
+                  <label className="small mb-1 fs-6">StudySet Title </label>
                   <input
                     className="form-control"
                     type="text"
                     readOnly
-                    value={feedback.title}
+                    value={studySet?.title}
                   />
                 </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Feedback ID</label>
+                    <label className="small mb-1 fs-6">StudySet ID</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={feedback.id}
+                      value={studySet?.id}
                     />
                   </div>
                   <div className="col-md-4">
@@ -55,7 +54,7 @@ function ViewDetailFeedback() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={feedback?.user?.username}
+                      value={studySet?.user?.username}
                     />
                   </div>
                   <div className="col-md-4">
@@ -64,47 +63,62 @@ function ViewDetailFeedback() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={feedback.created_date}
+                      value={studySet?.created_date}
                     />
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
-                <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Feedback Type</label>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Type</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={feedback.feedbackType?.name}
+                      value={studySet?.studySetType?.name}
                     />
                   </div>
-                  <div className="col-md-8">
-                    <label className="small mb-1 fs-6">Content</label>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Status</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={feedback.content}
+                      value={studySet?.is_public == 1 ? "Public" : "Private"}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Deleted Date</label>
+                    <input
+                      className="form-control"
+                      type="tel"
+                      readOnly
+                      value={studySet?.deleted_date}
+                    />
+                  </div>
+                </div>
+                <div className="row gx-3 mb-3">
+                  <div className="col-md-12">
+                    <label className="small mb-1 fs-6">Description</label>
+                    <input
+                      className="form-control"
+                      type="tel"
+                      readOnly
+                      value={studySet?.description}
                     />
                   </div>
                 </div>
                 <div className="text-center">
-                  <Link className="btn btn-secondary me-4" to="/managefeedback">
+                  <Link className="btn btn-secondary me-4" to="/managestudyset">
                     Close
                   </Link>
-                  <button className="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#replyModal">
-                    Reply
-                  </button>
                 </div>
               </form>
             </div>
-            <ReplyFeedback/>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ViewDetailFeedback
+export default ViewDetailStudyset;

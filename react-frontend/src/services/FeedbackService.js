@@ -7,12 +7,57 @@ const createFeedback = (feedback) => {
 };
 
 const getFeedbackById = (id) => {
-  return axios.get(API_BASE_URL + "/feedbacks/" + id);
+  return axios.get(API_BASE_URL + "/feedbacks/" + id,
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+  },
+  });
+};
+
+const filterFeedbackList = (
+  search,
+  author_id,
+  author_name,
+  type,
+  destination,
+  fromcreated,
+  tocreated,
+  page,
+  size
+) => {
+  return axios.get(
+    API_BASE_URL +
+      "/filterfeedback?search" +
+      search +
+      "&author_id" +
+      author_id +
+      "&author_name" +
+      author_name +
+      "&type" +
+      type +
+      "&destination" +
+      destination +
+      "&fromcreated" +
+      fromcreated +
+      "&tocreated" +
+      tocreated +
+      "&page" +
+      page +
+      "&size" +
+      size, 
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+      },
+      }
+  );
 };
 
 const FeedbackService = {
   createFeedback,
   getFeedbackById,
+  filterFeedbackList,
 };
 
 export default FeedbackService;
