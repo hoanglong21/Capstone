@@ -11,6 +11,8 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,12 @@ public class TestServiceImpl  implements TestService {
         this.userRepository = userRepository;
     }
 
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+    Date date = localDateTimeToDate(localDateTime);
+
     @Override
     public List<Test> getAllTest() {
         return testRepository.findAll();
@@ -48,7 +56,7 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Test createTest(Test test) {
-        test.setCreated_date(new Date());
+        test.setCreated_date(date);
         return testRepository.save(test);
     }
 
@@ -86,7 +94,7 @@ public class TestServiceImpl  implements TestService {
         testclass.setTitle(test.getTitle());
         testclass.setDescription(test.getDescription());
         testclass.setDuration(test.getDuration());
-        testclass.setModified_date(new Date());
+        testclass.setModified_date(date);
         testclass.set_draft(test.is_draft());
         testclass.setStart_date(test.getStart_date());
         testclass.setDue_date(test.getDue_date());

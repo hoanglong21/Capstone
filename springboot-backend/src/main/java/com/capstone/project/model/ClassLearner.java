@@ -28,6 +28,6 @@ public class ClassLearner {
     private Class classroom;
 
     @Column
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date created_date;
 }

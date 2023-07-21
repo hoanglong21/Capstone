@@ -15,6 +15,8 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +42,12 @@ public class PostServiceImpl implements PostService {
         this.classService = classService;
     }
 
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+    Date date = localDateTimeToDate(localDateTime);
+
 
     @Override
     public List<Post> getAllPost() {
@@ -60,7 +68,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(Post post) {
-        post.setCreated_date(new Date());
+        post.setCreated_date(date);
 
         Post savedPost = postRepository.save(post);
 
@@ -91,7 +99,7 @@ public class PostServiceImpl implements PostService {
     public Post updatePost(Post post, int id) throws ResourceNotFroundException {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Post does not exist with id: " + id));
-        existingPost.setModified_date(new Date());
+        existingPost.setModified_date(date);
         existingPost.setContent(post.getContent());
 
         List<Attachment> attachments = attachmentRepository.getAttachmentByPostId(existingPost.getId());
