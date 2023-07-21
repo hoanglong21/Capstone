@@ -25,4 +25,6 @@ public interface ClassService {
     Class joinClass(String classCode, String username) throws ResourceNotFroundException;
 
     Class ResetClassCode(int id) throws ResourceNotFroundException;
+
+    Boolean CheckUserClass(int userId, int classId) throws ResourceNotFroundException;
 }
