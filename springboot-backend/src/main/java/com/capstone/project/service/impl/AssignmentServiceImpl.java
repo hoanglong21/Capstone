@@ -14,6 +14,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +45,11 @@ public class AssignmentServiceImpl implements AssignmentService {
         this.classService = classService;
     }
 
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+    Date date = localDateTimeToDate(localDateTime);
 
     @Override
     public List<Assignment> getAllAssignment() {
@@ -55,8 +63,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Assignment createAssignment(Assignment assignment) {
-        assignment.setCreated_date(new Date());
-
+        assignment.setCreated_date(date);
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
 //        if (file_names != null && urls != null && file_types != null  && type != 0) {
@@ -101,7 +108,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
         existingAssignment.setInstruction(assignment.getInstruction());
         existingAssignment.setDue_date(assignment.getDue_date());
-        existingAssignment.setModified_date(new Date());
+        existingAssignment.setModified_date(date);
         existingAssignment.setStart_date(assignment.getStart_date());
         existingAssignment.setTitle(assignment.getTitle());
         existingAssignment.set_draft(assignment.is_draft());

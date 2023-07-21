@@ -10,6 +10,15 @@ export const getUser = (username) => {
     })
 }
 
+export const banUser = (username) => {
+    return axios.get(API_BASE_URL + '/users/' + username + '/ban', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+
 export const updateUser = (username, userDetails) => {
     return axios.put(API_BASE_URL + '/users/' + username, userDetails, {
         headers: {

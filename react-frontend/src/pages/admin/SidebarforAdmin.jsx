@@ -37,7 +37,7 @@ function SidebarforAdmin() {
             <Link to="/manageclass" className="nav-link fs-7">
               <i class="bi bi-people"></i>
               <span className="ms-3 d-none d-sm-inline">
-                Manage Class
+                Class
               </span>
             </Link>
           </li>
@@ -45,7 +45,55 @@ function SidebarforAdmin() {
             <Link to="/managefeedback" className="nav-link fs-7">
               <i class="bi bi-chat-text"></i>
               <span className="ms-3 d-none d-sm-inline">
-                Manage Feedback
+                Feedback
+              </span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/managestudyset" className="nav-link fs-7">
+            <i class="bi bi-back"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Studyset
+              </span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/manageassignment" className="nav-link fs-7">
+            <i class="bi bi-file-zip-fill"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Assignment
+              </span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/managefeedback" className="nav-link fs-7">
+            <i class="bi bi-file-earmark-text"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Test
+              </span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/managefeedback" className="nav-link fs-7">
+            <i class="bi bi-send-fill"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Post
+              </span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/managefeedback" className="nav-link fs-7">
+            <i class="bi bi-question-circle"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Comment
+              </span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/managefeedback" className="nav-link fs-7">
+            <i class="bi bi-book"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Dictionary
               </span>
             </Link>
           </li>

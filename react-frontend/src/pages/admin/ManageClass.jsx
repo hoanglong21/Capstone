@@ -1,7 +1,7 @@
 import React,  { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux'
 import ClassService from '../../services/ClassService';
 import { useSearchParams } from 'react-router-dom'
@@ -34,6 +34,10 @@ function ManageClass() {
     useEffect(() => {
         fetchData(search ? search : '')
     }, [search])
+    function getDate(date) {
+      const index = date.lastIndexOf(":00.");
+      return date.replace("T", " ").substring(0, index);
+    }
 
   return (
     <div className="container-fluid">
@@ -61,8 +65,8 @@ function ManageClass() {
                     <td>
                       <p className="text-info mb-0">{classroom?.class_name}</p>
                     </td>
-                    <td>{classroom?.user?.username}</td>
-                    <td>{classroom?.created_date}</td>
+                    <td>{classroom?.author}</td>
+                    <td>{getDate(classroom?.created_date)}</td>
                     <td>
                       <Link
                         className="btn btn-primary me-3"

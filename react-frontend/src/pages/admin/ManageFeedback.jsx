@@ -1,10 +1,54 @@
-import React from 'react'
+import React, {useState, useEffect} from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import FeedbackService from "../../services/FeedbackService";
+import { useSearchParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 function ManageFeedback() {
-    const navigate = useNavigate();
+  function getDate(date) {
+    const index = date.lastIndexOf(":00.");
+    return date.replace("T", " ").substring(0, index);
+  }
+  const [feedback, setFeedback] = useState([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [error, setError] = useState('')
+
+  const search = searchParams.get('search')
+
+    const { userInfo } = useSelector((state) => state.user)
+
+    const fetchData = async (searchKey) => {
+      let temp;
+      try{
+        temp = (
+          await FeedbackService.filterFeedbackList(
+            `${searchKey ? '=' + searchKey : ''}`,
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            ''
+          )).data.list
+      }catch(error){
+        if (error.response && error.response.data) {
+          setError(error.response.data)
+      } else {
+          setError(error.message)
+      }
+      return console.log(error)
+      }
+      setFeedback(temp)
+    }
+
+    useEffect(() => {
+        fetchData(search ? search : '')
+    }, [search])
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -12,7 +56,9 @@ function ManageFeedback() {
         <div className="col-sm">
           <HeaderAdmin />
           <div className="container">
-            <h3 className="mt-3 mb-4 text-bold text-black">Management Feedback</h3>
+            <h3 className="mt-3 mb-4 text-bold text-black">
+              Management Feedback
+            </h3>
             <div className="table-responsive">
               <table className="table table-hover">
                 <thead style={{ backgroundColor: "#000" }}>
@@ -25,26 +71,23 @@ function ManageFeedback() {
                   </tr>
                 </thead>
                 <tbody>
+                {feedback?.map((feedbacks) => (
                   <tr>
-                    <th scope="row">1</th>
+                    <th scope="row" key={feedbacks.id}>{feedbacks?.id}</th>
+                    <td>{getDate(feedbacks?.created_date)}</td>
+                    <td>{feedbacks?.feedbackType?.name}</td>
+                    <td>{feedbacks?.user?.username}</td>
                     <td>
-                      6/7/2023
-                    </td>
-                    <td>Suggestions</td>
-                    <td>Duong</td>
-                    <td>
-                      <button
-                        type="button"
+                      <Link
+                        to={`/viewdetailfb/${feedbacks.id}`}
                         className="btn btn-primary me-3"
-                        onClick={() => {
-                          navigate("viewdetailfb");
-                        }}
                       >
                         <i class="bi bi-info-square me-2"></i>
                         View Details
-                      </button>
+                      </Link>
                     </td>
                   </tr>
+                ))}
                 </tbody>
               </table>
             </div>
@@ -52,7 +95,7 @@ function ManageFeedback() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ManageFeedback
+export default ManageFeedback;
