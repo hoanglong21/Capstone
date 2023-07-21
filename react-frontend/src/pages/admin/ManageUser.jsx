@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BanUser from "./BanUser";
 import UnBanUser from "./UnBanUser";
 import HeaderAdmin from "./HeaderAdmin";
@@ -75,16 +75,14 @@ useEffect(() => {
                       <td>{user?.email}</td>
                       <td>{user?.phone}</td>
                       <td>
-                        <button
+                        <Link
                           type="button"
                           className="btn btn-primary me-3"
-                          onClick={() => {
-                            navigate("/manageusers/viewdetails");
-                          }}
+                          to={`/viewdetailuser/${user.username}`}
                         >
                           <i class="bi bi-info-square me-2"></i>
                           View Details
-                        </button>
+                        </Link>
                         <button
                           type="button"
                           className="btn btn-success me-3"
