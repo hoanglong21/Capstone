@@ -32,17 +32,15 @@ const ChangePassword = () => {
         setError('')
 
         form.classList.add('was-validated')
-        if (!form.checkValidity()) {
+        if (!currentPass) {
+            currentPassEl.classList.add('is-invalid')
             setError('Please complete all the fields.')
-            if (!currentPass) {
-                currentPassEl.classList.add('is-invalid')
-            }
-            if (!newPass) {
-                newPassEl.classList.add('is-invalid')
-            }
-            if (!confirmPass) {
-                confirmPassEl.classList.add('is-invalid')
-            }
+        } else if (!newPass) {
+            newPassEl.classList.add('is-invalid')
+            setError('Please complete all the fields.')
+        } else if (!confirmPass) {
+            confirmPassEl.classList.add('is-invalid')
+            setError('Please complete all the fields.')
         } else if (
             !(
                 await UserService.checkMatchPassword(

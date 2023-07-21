@@ -15,11 +15,13 @@ const TestList = () => {
 
     const { id } = useParams()
 
-    const [tests, setTests] = useState()
+    const [tests, setTests] = useState([])
+    const [classroom, setClassroom] = useState({})
 
     useEffect(() => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
+            setClassroom(tempClass)
             const tempTests = (
                 await TestService.getFilterList(
                     '',
@@ -158,6 +160,7 @@ const TestList = () => {
                                 test={test}
                                 tests={tests}
                                 stateChanger={setTests}
+                                classroom={classroom}
                             />
                         </div>
                     </div>

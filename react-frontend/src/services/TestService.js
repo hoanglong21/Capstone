@@ -14,6 +14,10 @@ const getTestById = (id) => {
     return axios.get(API_BASE_URL + '/test/' + id)
 }
 
+const deleteTest = (id) => {
+    return axios.delete(API_BASE_URL + '/test/' + id)
+}
+
 const getFilterList = (
     search,
     author,
@@ -54,5 +58,6 @@ const TestService = {
     createTest,
     updateTest,
     getTestById,
+    deleteTest,
 }
 export default TestService

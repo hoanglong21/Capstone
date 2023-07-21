@@ -21,8 +21,7 @@ const DeleteAssignment = ({ assignments, assign, stateChanger, index }) => {
                 .getElementById(`closeDeleteAssignmentModal${assign?.id}`)
                 .click()
             await deleteFolder(
-                `files/${assign.classroom.user.username}/class/${assign.classroom.id}/assignment/${assign.id}`,
-                true
+                `files/${assign.classroom.user.username}/class/${assign.classroom.id}/assignment/${assign.id}`
             )
         } catch (error) {
             if (error.response && error.response.data) {
