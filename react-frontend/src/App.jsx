@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import Register from './pages/auth/Register'
@@ -19,7 +19,7 @@ import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
 import ChangePassword from './pages/settings/ChangePassword'
 import NotFound from './pages/notFound/NotFound'
-import Notifications from './pages/settings/Notifications'
+import Notifications from './pages/settings/notification/Notifications'
 import Term from './components/footer/Term'
 import Privacy from './components/footer/Privacy'
 import ClassList from './pages/library/ClassList'
@@ -54,7 +54,7 @@ import GrammarDict from './pages/dictionary/GrammarDict'
 import KanjiDict from './pages/dictionary/KanjiDict'
 import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
 import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
-import ViewSet from './pages/studySet/view/ViewSet'
+import ViewStudySet from './pages/studySet/view/ViewStudySet'
 import DoTest from './pages/class/test/DoTest'
 import TestList from './pages/class/test/TestList'
 import Stream from './pages/class/Stream'
@@ -62,9 +62,7 @@ import CreateTest from './pages/class/test/CreateTest'
 import ViewDetailTest from './pages/class/test/ViewDetailTest'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
-import DoQuiz from './pages/DoQuiz'
-// import ViewAssignment from './pages/class/assignment/ViewAssignmentForLearner'
-import QuizAnswer from './pages/QuizAnswer'
+import DoQuiz from './pages/studySet/quiz/DoQuiz'
 import AssignmentList from './pages/class/assignment/AssignmentList'
 import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
@@ -170,7 +168,7 @@ const App = () => {
                         />
                     </Route>
                     {/* Study set */}
-                    <Route path="set/:id" element={<ViewSet />} />
+                    <Route path="set/:id" element={<ViewStudySet />} />
                     {/* Translate */}
                     <Route path="translate" element={<Translate />} />
                     {/* Dictionary */}
@@ -214,6 +212,7 @@ const App = () => {
                 {/* Access deny */}
                 <Route element={<ProtectedRoute />}>
                     <Route path="flashcards/:id" element={<Flashcard />} />
+                    <Route path="quiz/:id" element={<DoQuiz />} />
                 </Route>
 
                 <Route path="/banuser" element={<BanUser />} />
@@ -241,9 +240,6 @@ const App = () => {
                     path="/viewdetailvocab"
                     element={<ViewVocabularyDetail />}
                 />
-                {/* Quiz */}
-                <Route path="/doquiz" element={<DoQuiz />} />
-                <Route path="/quizanswer" element={<QuizAnswer />} />
             </Routes>
             <AuthVerify logOut={logOut} />
         </BrowserRouter>

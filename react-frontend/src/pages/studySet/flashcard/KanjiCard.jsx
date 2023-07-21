@@ -66,24 +66,25 @@ const KanjiCard = ({ card }) => {
 
     // catch press space event
     useEffect(() => {
-        window.addEventListener(
-            'keydown',
-            (event) => {
-                if (event.defaultPrevented) {
-                    return // Do nothing if event already handled
-                }
-                switch (event.code) {
-                    case 'Space':
-                        toggleFlip()
-                }
-                if (event.code !== 'Tab') {
-                    // Consume the event so it doesn't get handled twice,
-                    // as long as the user isn't trying to move focus away
-                    event.preventDefault()
-                }
-            },
-            true
-        )
+        const handleUserKeyPress = (event) => {
+            console.log('55555')
+            if (event.defaultPrevented) {
+                return // Do nothing if event already handled
+            }
+            switch (event.code) {
+                case 'Space':
+                    toggleFlip()
+            }
+            if (event.code !== 'Tab') {
+                // Consume the event so it doesn't get handled twice,
+                // as long as the user isn't trying to move focus away
+                event.preventDefault()
+            }
+        }
+        window.addEventListener('keydown', handleUserKeyPress, true)
+        return () => {
+            window.removeEventListener('keydown', handleUserKeyPress, true)
+        }
     }, [])
 
     return (
@@ -101,7 +102,7 @@ const KanjiCard = ({ card }) => {
                         }}
                     ></div>
                 </div>
-                <div className="flashcardBack p-3">
+                <div className="flashcardBack">
                     <div className="row">
                         {strokeOrder?.content && (
                             <div className="col-3 mb-3">
@@ -127,7 +128,7 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: name?.content,
+                                                __html: name?.content || '...',
                                             }}
                                         ></div>
                                     </div>
@@ -140,7 +141,8 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: meanings?.content,
+                                                __html:
+                                                    meanings?.content || '...',
                                             }}
                                         ></div>
                                     </div>
@@ -153,7 +155,8 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: onyomi?.content,
+                                                __html:
+                                                    onyomi?.content || '...',
                                             }}
                                         ></div>
                                     </div>
@@ -166,7 +169,8 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: kunyomi?.content,
+                                                __html:
+                                                    kunyomi?.content || '...',
                                             }}
                                         ></div>
                                     </div>
@@ -179,7 +183,8 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: radical?.content,
+                                                __html:
+                                                    radical?.content || '...',
                                             }}
                                         ></div>
                                     </div>
@@ -192,7 +197,8 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: example?.content,
+                                                __html:
+                                                    example?.content || '...',
                                             }}
                                         ></div>
                                     </div>
@@ -205,7 +211,8 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: jlptLevel?.content,
+                                                __html:
+                                                    jlptLevel?.content || '...',
                                             }}
                                         ></div>
                                     </div>
@@ -218,7 +225,8 @@ const KanjiCard = ({ card }) => {
                                         <div
                                             className="flashCardField_content"
                                             dangerouslySetInnerHTML={{
-                                                __html: strokes?.content,
+                                                __html:
+                                                    strokes?.content || '...',
                                             }}
                                         ></div>
                                     </div>
