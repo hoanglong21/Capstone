@@ -58,7 +58,7 @@ function SidebarforAdmin() {
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link to="/managefeedback" className="nav-link fs-7">
+            <Link to="/manageassignment" className="nav-link fs-7">
             <i class="bi bi-file-zip-fill"></i>
               <span className="ms-3 d-none d-sm-inline">
                 Assignment

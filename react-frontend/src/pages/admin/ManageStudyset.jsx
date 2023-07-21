@@ -19,7 +19,7 @@ function ManageFeedback() {
         const temp = (
             await StudySetService.getFilterList(
                 '=0',
-                '=1',
+                '',
                 '=0',
                 `${searchKey ? '=' + searchKey : ''}`,
                 '',
@@ -41,6 +41,12 @@ function ManageFeedback() {
     useEffect(() => {
         fetchData(search ? search : '')
     }, [search])
+
+    function getDate(date) {
+      const index = date.lastIndexOf(":00.");
+      return date.replace("T", " ").substring(0, index);
+    }
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -68,7 +74,7 @@ function ManageFeedback() {
                   <tr>
                     <th scope="row" key={set?.id}>{set?.id}</th>
                     <td>{set?.description}</td>
-                    <td>{set?.created_date}</td>
+                    <td>{getDate(set?.created_date)}</td>
                     <td>{set?.author}</td>
                     <td>
                       <Link
