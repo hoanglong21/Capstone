@@ -246,7 +246,7 @@ function ViewDetailClass() {
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
                           <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Learners join
+                           Member's Joined
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-gray-800">
                             {classLearnerJoined}
@@ -308,7 +308,7 @@ function ViewDetailClass() {
                 />
               </div>
               <div className="row gx-3 mb-3">
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="small mb-1 fs-6">Class ID</label>
                   <input
                     className="form-control"
@@ -317,7 +317,7 @@ function ViewDetailClass() {
                     value={classes?.id}
                   />
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="small mb-1 fs-6">Tutor guide</label>
                   <input
                     className="form-control"
@@ -326,26 +326,13 @@ function ViewDetailClass() {
                     value={classes?.user?.username}
                   />
                 </div>
-              </div>
-
-              <div className="row gx-3 mb-3">
-                <div className="col-md-6">
+                <div className="col-md-4">
                   <label className="small mb-1 fs-6">Create Date</label>
                   <input
                     className="form-control"
                     type="text"
                     readOnly
                     value={classes?.created_date}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <label className="small mb-1 fs-6">Member's Joined</label>
-                  <input
-                    className="form-control"
-                    readOnly
-                    type="text"
-                    value={classes?.users?.length}
                   />
                 </div>
               </div>
