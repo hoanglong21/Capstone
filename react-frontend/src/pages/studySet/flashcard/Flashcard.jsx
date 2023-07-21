@@ -122,7 +122,7 @@ const Flashcard = () => {
                                         size="1.3rem"
                                     />
                                     <span className="align-middle fw-semibold">
-                                        Test
+                                        Quiz
                                     </span>
                                 </button>
                             </li>
