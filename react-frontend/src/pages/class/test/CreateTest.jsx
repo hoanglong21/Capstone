@@ -178,7 +178,7 @@ const CreateTest = () => {
                 return
             }
             // check answer length of multiple choice
-            if (ques?.answers?.length < 2) {
+            if (ques?.answers?.length < 2 && ques?.questionType === 1) {
                 setError(
                     `Please add at least 2 answer options for <a href="#question${indexQues}">this</a> question.`
                 )

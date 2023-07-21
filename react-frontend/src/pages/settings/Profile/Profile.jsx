@@ -311,7 +311,9 @@ const Profile = () => {
                         value={
                             newUser.role === 'ROLE_LEARNER'
                                 ? 'Learner'
-                                : 'Tutor'
+                                : newUser.role === 'ROLE_TUTOR'
+                                ? 'Tutor'
+                                : 'Admin'
                         }
                         className="form-control-plaintext p-0"
                         readOnly
