@@ -10,6 +10,8 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +39,10 @@ public class CommentServiceImpl implements CommentService {
         this.postService = postService;
         this.testService = testService;
         this.studySetService = studySetService;
+    }
+
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
 
@@ -74,7 +80,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(Comment comment) {
-        comment.setCreated_date(new Date());
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+        comment.setCreated_date(date);
         return commentRepository.save(comment);
     }
 

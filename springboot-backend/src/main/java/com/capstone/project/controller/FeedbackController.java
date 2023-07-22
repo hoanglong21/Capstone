@@ -66,21 +66,34 @@ public class FeedbackController {
 
     @GetMapping("/filterfeedback")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
-    public ResponseEntity<?> filterUser(@RequestParam(value = "search", required = false, defaultValue = "") String search,
+    public ResponseEntity<?> filterFeedback(@RequestParam(value = "search", required = false, defaultValue = "") String search,
                                         @RequestParam(value = "author_id", required = false, defaultValue = "0") int authorId,
                                         @RequestParam(value = "author_name", required = false) String authorName,
                                         @RequestParam(value = "type", required = false, defaultValue = "0") int type,
                                         @RequestParam(value = "destination", required = false) String destination,
                                         @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
                                         @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
-                                        @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                        @RequestParam(value = "sortby", required = false) String sortBy,
                                         @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         try {
             return ResponseEntity.ok(feedbackService.filterFeedback(search, type, authorId, authorName, destination, fromCreated, toCreated, sortBy, direction, page, size));
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.badRequest().body("Check the input again");
+        }
+    }
+
+    @GetMapping("/replyfeedback")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getFeedbackById(@RequestParam("id") int id,
+                                             @RequestParam("title") String title,
+                                             @RequestParam("content") String content) {
+        try {
+            return ResponseEntity.ok(feedbackService.replyFeedback(id, title, content));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

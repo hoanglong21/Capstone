@@ -123,10 +123,10 @@ public class FeedbackServiceImpl implements FeedbackService {
             params.put("toCreated", formatter.parse(toCreated));
         }
 
-        sortBy = "f." + sortBy;
-
-
-        jpql += " ORDER BY " + sortBy + " " + direction;
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            sortBy = "f." + sortBy;
+            jpql += " ORDER BY " + sortBy + " " + direction;
+        }
 
         TypedQuery<Feedback> query = entityManager.createQuery(jpql, Feedback.class);
 
@@ -152,6 +152,28 @@ public class FeedbackServiceImpl implements FeedbackService {
         response.put("totalPages", totalPages);
 
         return response;
+    }
+
+    @Override
+    public String replyFeedback(int feedbackId, String subject, String content) throws Exception {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new ResourceNotFroundException("Feedback not exist with id: " + feedbackId));
+        subject = "[" + feedback.getTitle() + "] " + subject;
+        String toAddress = feedback.getUser().getEmail();
+        String fromAddress = "nihongolevelup.box@gmail.com";
+        String senderName = "NihongoLevelUp";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        helper.setText(content, true);
+
+        mailSender.send(message);
+        return "Send reply successfully";
     }
 
     private int getTotalFeedbackCount(String jpql, Map<String, Object> params) {

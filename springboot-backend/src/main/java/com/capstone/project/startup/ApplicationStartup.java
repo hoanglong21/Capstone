@@ -50,6 +50,9 @@ public class ApplicationStartup implements ApplicationRunner {
     private FieldRepository fieldRepository;
 
     @Autowired
+    private SettingRepository settingRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -244,6 +247,18 @@ public class ApplicationStartup implements ApplicationRunner {
                     new Field(3, "note"),
                     new Field(3, "structure"));
             fieldRepository.saveAll(fields);
+        }
+
+        if (settingRepository.count() == 0) {
+            List<String> defaultNames = Arrays.asList("study reminder", "language", "assignment due date reminder",
+                    "test due date reminder", "set added", "post added", "assignment assigned", "test assigned", "submission graded");
+            List<Setting> settings = new ArrayList<>();
+            for (String name : defaultNames) {
+                Setting setting = new Setting();
+                setting.setTitle(name);
+                settings.add(setting);
+            }
+            settingRepository.saveAll(settings);
         }
 
         if(userRepository.count() == 0) {

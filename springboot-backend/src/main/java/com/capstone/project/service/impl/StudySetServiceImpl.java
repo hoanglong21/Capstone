@@ -1,5 +1,6 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.dto.CardWrapper;
 import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
@@ -195,7 +196,9 @@ public class StudySetServiceImpl implements StudySetService {
             parameters.put("toCreated", toCreated);
         }
 
-        query += " ORDER BY " + sortBy + " " + direction;
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            query += " ORDER BY " + sortBy + " " + direction;
+        }
 
         Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
@@ -214,6 +217,50 @@ public class StudySetServiceImpl implements StudySetService {
         response.put("list", resultList);
         response.put("totalPages", totalPages);
         response.put("totalItems", totalItems);
+
+        return response;
+    }
+
+    @Override
+    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, String questionType, int numberOfQuestion) {
+        List<Card> cardList = cardService.getAllByStudySetId(studySetId);
+
+        // Shuffle the cardList to randomize the order of cards
+        Collections.shuffle(cardList);
+        List<CardWrapper> questionCardSet = new ArrayList<>();
+
+        for (Card card : cardList) {
+            if (questionCardSet.size() == numberOfQuestion) {
+                break;
+            }
+            List<Content> contents = contentRepository.getContentByCardId(card.getId());
+            CardWrapper cardWrapper = new CardWrapper(card, contents);
+            questionCardSet.add(cardWrapper);
+        }
+        List<CardWrapper> cardListCloneForAnswers = new ArrayList<>(questionCardSet);
+        List<Map<String, Object>> response = new ArrayList<>();
+        for(CardWrapper cardWrapper : questionCardSet) {
+            Collections.shuffle(cardListCloneForAnswers);
+            List<CardWrapper> answerCardSet = new ArrayList<>();
+            answerCardSet.add(cardWrapper);
+
+            for (CardWrapper randomCard : cardListCloneForAnswers) {
+                if (answerCardSet.size() == 4) {
+                    break;
+                }
+                // Make sure not to add the same cardWrapper as the original one
+                if (!cardWrapper.equals(randomCard)) {
+                    answerCardSet.add(randomCard);
+                }
+            }
+            Collections.shuffle(answerCardSet);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("question", cardWrapper);
+            map.put("question_type", questionType);
+            map.put("answers", answerCardSet);
+            response.add(map);
+        }
 
         return response;
     }

@@ -12,6 +12,8 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -22,6 +24,11 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final SubmissionRepository submissionRepository;
 
     private final AttachmentRepository attachmentRepository;
+
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
 
     @Autowired
     public SubmissionServiceImpl(SubmissionRepository submissionRepository, AttachmentRepository attachmentRepository) {
@@ -42,7 +49,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public Submission createSubmission(Submission submission) {
-        submission.setCreated_date(new Date());
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+        submission.setCreated_date(date);
 
         Submission savedSubmission = submissionRepository.save(submission);
 
@@ -81,9 +90,10 @@ public class SubmissionServiceImpl implements SubmissionService {
     public Submission updateSubmission(int id, Submission submission) throws ResourceNotFroundException {
         Submission existingSubmission = submissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Submission does not exist with id: " + id));
-
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         existingSubmission.setDescription(submission.getDescription());
-        existingSubmission.setModified_date(new Date());
+        existingSubmission.setModified_date(date);
         existingSubmission.setMark(submission.getMark());
         List<Attachment> attachments = attachmentRepository.getAttachmentBySubmissionId(existingSubmission.getId());
 

@@ -84,10 +84,11 @@ public class UserAchievementServiceImpl implements UserAchievementService {
             jpql += " AND DATE(f.created_date) <= :toCreated ";
             params.put("toCreated", formatter.parse(toCreated));
         }
-
-        sortBy = "f." + sortBy;
-
-        jpql += " ORDER BY " + sortBy + " " + direction;
+        
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            sortBy = "f." + sortBy;
+            jpql += " ORDER BY " + sortBy + " " + direction;
+        }
 
         TypedQuery<UserAchievement> query = entityManager.createQuery(jpql, UserAchievement.class);
 

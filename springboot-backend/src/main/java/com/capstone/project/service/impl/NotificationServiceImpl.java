@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,10 @@ public class NotificationServiceImpl implements NotificationService {
         this.notificationRepository = notificationRepository;
     }
 
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
     @Override
     public List<Notification> getAllNotification() {
         return notificationRepository.findAll();
@@ -41,7 +47,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Notification createNotification(Notification notification) {
-        notification.setDatetime(new Date());
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+        notification.setDatetime(date);
         return notificationRepository.save(notification);
     }
 
