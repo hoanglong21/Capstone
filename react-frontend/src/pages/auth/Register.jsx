@@ -30,30 +30,32 @@ const Register = () => {
 
     const submitForm = async (data) => {
         const usernameEl = document.querySelector('#username')
+        const firstNameEl = document.querySelector('#first_name')
+        const lastNameEl = document.querySelector('#last_name')
         const emailEl = document.querySelector('#email')
         const emailInvalidEl = document.querySelector('#email-invalid')
-        var form = document.querySelector('.needs-validation')
+        var form = document.querySelector('#registerForm')
         // clear validation
         form.classList.remove('was-validated')
         usernameEl.classList.remove('is-invalid')
         emailInvalidEl.classList.remove('d-none')
+        firstNameEl.classList.remove('is-invalid')
+        lastNameEl.classList.remove('is-invalid')
         dispatch(reset())
         setEmptyMess('')
 
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated')
-            if (
-                !data.username ||
-                !data.first_name ||
-                !data.last_name ||
-                !data.email ||
-                !data.password ||
-                !data.role
-            ) {
-                setEmptyMess('Please complete all the fields.')
-                if (!data.email) {
-                    emailInvalidEl.classList.add('d-none')
-                }
+        form.classList.add('was-validated')
+        if (
+            !data.username ||
+            !data.first_name ||
+            !data.last_name ||
+            !data.email ||
+            !data.password ||
+            !data.role
+        ) {
+            setEmptyMess('Please complete all the fields.')
+            if (!data.email) {
+                emailInvalidEl.classList.add('d-none')
             }
         } else {
             setLoading(true)
@@ -63,14 +65,42 @@ const Register = () => {
             form.classList.remove('was-validated')
             usernameEl.classList.remove('is-invalid')
             emailInvalidEl.classList.remove('d-none')
+            firstNameEl.classList.remove('is-invalid')
+            lastNameEl.classList.remove('is-invalid')
+
             dispatch(reset())
             setEmptyMess('')
 
-            if (error === 'Username already registered') {
+            if (
+                error?.includes('Username already registered') ||
+                error?.includes(
+                    'Invalid username. Only letters, numbers, and underscores are allowed.'
+                ) ||
+                error?.includes('Username must be between 5 and 30 characters')
+            ) {
                 usernameEl.classList.add('is-invalid')
             }
-            if (error === 'Email already registered') {
+            if (
+                error?.includes('Email already registered') ||
+                error?.includes(
+                    'Invalid email. Only letters, numbers, and dot are allowed.'
+                )
+            ) {
                 emailEl.classList.add('is-invalid')
+            }
+            if (
+                error?.includes('First name must contain letters only') ||
+                error?.includes(
+                    'First name must be between 1 and 30 characters'
+                )
+            ) {
+                firstNameEl.classList.add('is-invalid')
+            }
+            if (
+                error?.includes('Last name must contain letters only') ||
+                error?.includes('Last name must be between 1 and 30 characters')
+            ) {
+                lastNameEl.classList.add('is-invalid')
             }
         }
     }
@@ -85,7 +115,8 @@ const Register = () => {
                 Create your account now
             </h5>
             <form
-                className="form me-5 pe-5 needs-validation"
+                id="registerForm"
+                className="form me-5 pe-5"
                 style={{ marginTop: '4rem' }}
                 onSubmit={handleSubmit(submitForm)}
                 noValidate
@@ -93,7 +124,10 @@ const Register = () => {
                 {/* error message */}
                 {(emptyMess || error) && (
                     <div className="alert alert-danger" role="alert">
-                        {emptyMess || error}
+                        <p>{emptyMess}</p>
+                        {error.map((item) => (
+                            <p>{item}</p>
+                        ))}
                     </div>
                 )}
                 {/* success message */}

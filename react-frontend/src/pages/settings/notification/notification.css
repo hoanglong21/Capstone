@@ -16,6 +16,11 @@
     margin-left: 0.5rem;
 }
 
+.notification_formContainer .form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
 .notification_formTime {
     max-width: 9.375rem;
 }

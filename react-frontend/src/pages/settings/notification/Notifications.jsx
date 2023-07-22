@@ -1,52 +1,187 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 
+import UserSettingService from '../../../services/UserSettingService'
+
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './notification.css'
 
 const Notifications = () => {
     const { userInfo } = useSelector((state) => state.user)
 
-    const [settings, setSettings] = useState({})
+    const [isStudyReminder, setIsStudyReminder] = useState(false)
+    const [studyReminder, setStudyReminder] = useState({})
+    const [isAssignDueDate, setIsAssignDueDate] = useState(false)
+    const [assignDueDate, setAssignDueDate] = useState({})
+    const [isTestDueDate, setIsTestDueDate] = useState(false)
+    const [testDueDate, setTestDueDate] = useState({})
+    const [setAdded, setSetAdded] = useState({})
+    const [postAdded, setPostAdded] = useState({})
+    const [assignAssigned, setAssignAssigned] = useState({})
+    const [testAssigned, setTestAssigned] = useState({})
+    const [submitGraded, setSubmitGraded] = useState({})
 
+    // fetch data
     useEffect(() => {
-      const fetchData = () => {
-        
-      }
-    
-      return () => {
-        second
-      }
-    }, [third])
-    
+        const fetchData = async () => {
+            try {
+                const settings = (
+                    await UserSettingService.getUserSettingByUserId(userInfo.id)
+                ).data
+                for (const setting of settings) {
+                    switch (setting.setting.id) {
+                        case 1:
+                            setStudyReminder({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 1,
+                                },
+                                value: setting.value,
+                            })
+                            setIsStudyReminder(setting.value ? true : false)
+                            break
+                        case 3:
+                            setAssignDueDate({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 3,
+                                },
+                                value: setting.value,
+                            })
+                            setIsAssignDueDate(setting.value ? true : false)
+                            break
+                        case 4:
+                            setTestDueDate({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 4,
+                                },
+                                value: setting.value,
+                            })
+                            setIsTestDueDate(setting.value ? true : false)
+                            break
+                        case 5:
+                            setSetAdded({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 5,
+                                },
+                                value: setting.value,
+                            })
+                            break
+                        case 6:
+                            setPostAdded({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 6,
+                                },
+                                value: setting.value,
+                            })
+                            break
+                        case 7:
+                            setAssignAssigned({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 7,
+                                },
+                                value: setting.value,
+                            })
+                            break
+                        case 8:
+                            setTestAssigned({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 8,
+                                },
+                                value: setting.value,
+                            })
+                            break
+                        case 9:
+                            setSubmitGraded({
+                                user: {
+                                    id: userInfo.id,
+                                    username: userInfo.username,
+                                },
+                                setting: {
+                                    id: 9,
+                                },
+                                value: setting.value,
+                            })
+                            break
+                        default:
+                            break
+                    }
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+        }
+        if (userInfo?.id) {
+            fetchData()
+        }
+    }, [userInfo])
 
-    const handleSubmit = (event) => {
-        event.preventDefault()
-    }
+    const handleSave = () => {}
 
     return (
         <div className="mx-5 ps-5">
             <h4>Email Notification</h4>
-            <form className="mt-4" noValidate>
+            <div className="mt-4">
                 <fieldset className="notification_formContainer form-check mb-3 ps-0">
                     <legend>STUDY REMINDERS</legend>
                     <input
                         className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                         type="checkbox"
-                        value=""
+                        checked={isStudyReminder}
                         id="studyReminder"
+                        onChange={(event) => {
+                            setIsStudyReminder(event.target.checked)
+                        }}
                     />
-                    <label className="form-check-label" for="studyReminder">
+                    <label className="form-check-label" htmlFor="studyReminder">
                         Email reminders
                     </label>
-                    <div class="mt-2 notification_formTime">
-                        <label for="studyReminderTime" class="form-label">
+                    <div className="mt-2 notification_formTime">
+                        <label
+                            htmlFor="studyReminderTime"
+                            className="form-label"
+                        >
                             Time of day:
                         </label>
                         <input
                             type="time"
-                            class={`form-control ${FormStyles.formControl} ms-0`}
+                            className={`form-control ${FormStyles.formControl} ms-0`}
                             id="studyReminderTime"
+                            value={studyReminder?.value || ''}
+                            disabled={!isStudyReminder}
+                            onChange={(event) => {
+                                setStudyReminder(event.target.value)
+                            }}
                         />
                     </div>
                 </fieldset>
@@ -56,21 +191,24 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            value=""
+                            checked={isAssignDueDate}
                             id="assignmentReminder"
+                            onChange={(event) => {
+                                setIsAssignDueDate(event.target.checked)
+                            }}
                         />
                         <label
                             className="form-check-label"
-                            for="assignmentReminder"
+                            htmlFor="assignmentReminder"
                         >
                             Assignment reminders
                         </label>
-                        <div class="mt-2">
+                        <div className="mt-2">
                             <div className="row d-flex align-items-center">
                                 <div className="col-2">
                                     <label
-                                        for="assignDueDateReminderTime"
-                                        class="form-label"
+                                        htmlFor="assignDueDateReminderTime"
+                                        className="form-label"
                                     >
                                         Before (hours):
                                     </label>
@@ -78,8 +216,13 @@ const Notifications = () => {
                                 <div className="col-10 notification_formTime">
                                     <input
                                         type="number"
-                                        class={`form-control ${FormStyles.formControl} ms-0`}
+                                        className={`form-control ${FormStyles.formControl} ms-0`}
                                         id="assignDueDateReminderTime"
+                                        disabled={!isAssignDueDate}
+                                        value={assignDueDate?.value || ''}
+                                        onChange={(event) => {
+                                            setAssignDueDate(event.target.value)
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -89,18 +232,24 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            value=""
+                            checked={isTestDueDate}
                             id="testReminder"
+                            onChange={(event) => {
+                                setIsTestDueDate(event.target.checked)
+                            }}
                         />
-                        <label className="form-check-label" for="testReminder">
+                        <label
+                            className="form-check-label"
+                            htmlFor="testReminder"
+                        >
                             Test reminders
                         </label>
-                        <div class="mt-2">
+                        <div className="mt-2">
                             <div className="row d-flex align-items-center">
                                 <div className="col-2">
                                     <label
-                                        for="testDueDateReminderTime"
-                                        class="form-label"
+                                        htmlFor="testDueDateReminderTime"
+                                        className="form-label"
                                     >
                                         Before (hours):
                                     </label>
@@ -108,8 +257,13 @@ const Notifications = () => {
                                 <div className="col-10 notification_formTime">
                                     <input
                                         type="number"
-                                        class={`form-control ${FormStyles.formControl} ms-0`}
+                                        className={`form-control ${FormStyles.formControl} ms-0`}
                                         id="testDueDateReminderTime"
+                                        disabled={!isTestDueDate}
+                                        value={testDueDate?.value || ''}
+                                        onChange={(event) => {
+                                            setTestDueDate(event.target.value)
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -122,10 +276,10 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            value=""
+                            checked={setAdded}
                             id="setAdded"
                         />
-                        <label className="form-check-label" for="setAdded">
+                        <label className="form-check-label" htmlFor="setAdded">
                             A set is added
                         </label>
                     </div>
@@ -136,7 +290,10 @@ const Notifications = () => {
                             value=""
                             id="postPosted"
                         />
-                        <label className="form-check-label" for="postPosted">
+                        <label
+                            className="form-check-label"
+                            htmlFor="postPosted"
+                        >
                             A post is posted
                         </label>
                     </div>
@@ -149,7 +306,7 @@ const Notifications = () => {
                         />
                         <label
                             className="form-check-label"
-                            for="assignmentAssigned"
+                            htmlFor="assignmentAssigned"
                         >
                             An assignment is assigned
                         </label>
@@ -161,7 +318,10 @@ const Notifications = () => {
                             value=""
                             id="testAssigned"
                         />
-                        <label className="form-check-label" for="testAssigned">
+                        <label
+                            className="form-check-label"
+                            htmlFor="testAssigned"
+                        >
                             A test is assigned
                         </label>
                     </div>
@@ -174,7 +334,7 @@ const Notifications = () => {
                         />
                         <label
                             className="form-check-label"
-                            for="submissionGraded"
+                            htmlFor="submissionGraded"
                         >
                             Your submission is graded
                         </label>
@@ -182,11 +342,11 @@ const Notifications = () => {
                 </fieldset>
                 <button
                     className="btn btn-primary px-4 mt-4"
-                    onClick={handleSubmit}
+                    onClick={handleSave}
                 >
                     Save
                 </button>
-            </form>
+            </div>
         </div>
     )
 }
