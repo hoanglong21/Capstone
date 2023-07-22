@@ -34,6 +34,9 @@ public class AttachmentRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PostRepository postRepository;
+
     @Order(1)
     @ParameterizedTest(name = "{index} => trueId={0}")
     @CsvSource({
@@ -75,5 +78,95 @@ public class AttachmentRepositoryTest {
         }
     }
 
+
+    @Order(2)
+    @ParameterizedTest(name = "{index} => trueId={0}")
+    @CsvSource({
+            "true", "false"
+    })
+    public void getAttachmentByAssignmentId(Boolean trueId){
+        User user = User.builder().username("test_stub").email("teststub@gmail.com").build();
+        userRepository.save(user);
+
+        Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
+        classRepository.save(classroom);
+
+        Assignment assignment = Assignment.builder()
+                .instruction("Assignment for all")
+                .title("Assignment 1")
+                .classroom(classroom)
+                .user(user).build();
+        assignmentRepository.save(assignment);
+
+        Submission submission = Submission.builder()
+                .description("submit assignment")
+                .user(user)
+                .assignment(assignment).build();
+        submissionRepository.save(submission);
+
+        Attachment attachment = Attachment.builder()
+                .attachmentType(AttachmentType.builder().id(1).build())
+                .file_url("tailieu.docx")
+                .assignment(assignment)
+                .submission(submission).build();
+        attachmentRepository.save(attachment);
+
+        if(trueId) {
+            List<Attachment> result = attachmentRepository.getAttachmentByAssignmentId(assignment.getId());
+            assertThat(result.size()).isGreaterThan(0);
+        } else {
+            List<Attachment> result = attachmentRepository.getAttachmentByAssignmentId(-1);
+            assertThat(result.size()).isEqualTo(0);
+        }
+    }
+
+    @Order(2)
+    @ParameterizedTest(name = "{index} => trueId={0}")
+    @CsvSource({
+            "true", "false"
+    })
+    public void getAttachmentByPostId(Boolean trueId){
+        User user = User.builder().username("test_stub").email("teststub@gmail.com").build();
+        userRepository.save(user);
+
+        Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
+        classRepository.save(classroom);
+
+        Assignment assignment = Assignment.builder()
+                .instruction("Assignment for all")
+                .title("Assignment 1")
+                .classroom(classroom)
+                .user(user).build();
+        assignmentRepository.save(assignment);
+
+        Submission submission = Submission.builder()
+                .description("submit assignment")
+                .user(user)
+                .assignment(assignment).build();
+        submissionRepository.save(submission);
+
+        Post post = Post.builder()
+                .content("Documents for semester")
+                .classroom(classroom)
+                .user(user).
+                build();
+        postRepository.save(post);
+
+        Attachment attachment = Attachment.builder()
+                .attachmentType(AttachmentType.builder().id(1).build())
+                .file_url("tailieu.docx")
+                .assignment(assignment)
+                .post(post)
+                .submission(submission).build();
+        attachmentRepository.save(attachment);
+
+        if(trueId) {
+            List<Attachment> result = attachmentRepository.getAttachmentByPostId(post.getId());
+            assertThat(result.size()).isGreaterThan(0);
+        } else {
+            List<Attachment> result = attachmentRepository.getAttachmentByPostId(-1);
+            assertThat(result.size()).isEqualTo(0);
+        }
+    }
 
 }

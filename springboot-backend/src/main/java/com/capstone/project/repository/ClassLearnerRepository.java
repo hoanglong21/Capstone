@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ClassLearnerRepository extends JpaRepository<ClassLearner,Integer> {
-    ClassLearner findByUserAndClassroom(User user, Class classroom);
+    ClassLearner findByUserIdAndClassroomId(int user,int classroom);
 
     List<ClassLearner> getClassLeanerByUserId(int id);
 }
