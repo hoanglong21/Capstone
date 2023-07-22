@@ -23,17 +23,20 @@ import java.util.stream.Collectors;
 public class RegisterRequest {
 
     @NotBlank(message = "Username cannot be empty")
-    @Pattern(regexp = "^\\S+$", message = "Username not allow space")
+    @Pattern(regexp = "[a-zA-Z0-9_]+", message = "Invalid username. Only letters, numbers, and underscores are allowed.")
+    @Length(min = 5, max = 30, message = "Username must be between 5 and 30 characters")
     private String username;
 
     @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "First name must contain letters only")
+    @Length(min = 1, max = 30, message = "First name must be between 1 and 30 characters")
     private String first_name;
 
     @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "Last name must contain letters only")
+    @Length(min = 1, max = 30, message = "Last name must be between 1 and 30 characters")
     private String last_name;
 
     @NotBlank(message = "Email cannot be empty")
-    @Email(message = "Invalid email address")
+    @Pattern(regexp = "^[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email. Only letters, numbers, and dot are allowed.")
     private String email;
 
     @NotBlank(message = "Password cannot be empty")
