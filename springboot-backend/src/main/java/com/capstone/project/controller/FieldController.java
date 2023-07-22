@@ -30,4 +30,11 @@ public class FieldController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("fieldbystudyset/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> getFieldsByStudySetTypeId(@PathVariable("id") int id) {
+        return ResponseEntity.ok(fieldService.getFieldsByStudySetTypeId(id));
+    }
+
 }
