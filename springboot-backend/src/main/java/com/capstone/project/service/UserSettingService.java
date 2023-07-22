@@ -19,7 +19,7 @@ public interface UserSettingService {
     UserSetting updateUserSetting( UserSetting usersetting,  int id) throws ResourceNotFroundException;
     Boolean deleteUserSetting( int id) throws ResourceNotFroundException;
 
-    Map<String, String> CustomGetUserSettingByUserId(int id);
+    Map<String, String> CustomGetUserSettingByUserId(int id) throws ResourceNotFroundException;
 
     UserSetting saveUserSettingCustom(int userId, int settingId, String newValue);
 }

@@ -4,13 +4,19 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Setting;
 import com.capstone.project.model.User;
 import com.capstone.project.model.UserSetting;
+import com.capstone.project.repository.UserRepository;
 import com.capstone.project.repository.UserSettingRepository;
 import com.capstone.project.service.SettingService;
 import com.capstone.project.service.UserSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+
+import com.capstone.project.util.UserSettingValidation;
 
 @Service
 public class UserSettingServiceImpl implements UserSettingService {
@@ -18,7 +24,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     private final UserSettingRepository userSettingRepository;
 
     @Autowired
-    private SettingService settingService;
+    private UserRepository userRepository;
 
     public UserSettingServiceImpl(UserSettingRepository userSettingRepository) {
         this.userSettingRepository = userSettingRepository;
@@ -69,7 +75,10 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public Map<String, String> CustomGetUserSettingByUserId(int id) {
+    public Map<String, String> CustomGetUserSettingByUserId(int id) throws ResourceNotFroundException {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("User not exist with id: " + id));
+
         List<UserSetting> customUserSettings = userSettingRepository.getByUserId(id);
         Map<String, String> customMap = new HashMap<>();
         for (UserSetting userSetting : customUserSettings) {
@@ -96,6 +105,29 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public UserSetting saveUserSettingCustom(int userId, int settingId, String newValue) {
         UserSetting userSetting = userSettingRepository.getUserSettingCustom(userId, settingId);
+        switch (settingId) {
+            case 1:
+                if (!UserSettingValidation.isValidTimeFormat(newValue)) {
+                    throw new IllegalArgumentException("Invalid input for time format. Expected format: HH:mm");
+                }
+                break;
+            case 2:
+                if (!UserSettingValidation.isValidLanguage(newValue)) {
+                    throw new IllegalArgumentException("Invalid input for language. Must have a short name for the language.");
+                }
+                break;
+            case 3:
+            case 4:
+                if (!UserSettingValidation.isValidInteger(newValue)) {
+                    throw new IllegalArgumentException("Invalid input for integer format. Expected an integer value.");
+                }
+                break;
+            default:
+                if (!UserSettingValidation.isValidBoolean(newValue)) {
+                    throw new IllegalArgumentException("Invalid input for boolean value. Expected 'TRUE' or 'FALSE'.");
+                }
+        }
+
         if (userSetting == null) {
             userSetting = UserSetting.builder()
                     .value(newValue)
@@ -105,6 +137,10 @@ public class UserSettingServiceImpl implements UserSettingService {
         } else {
             userSetting.setValue(newValue);
         }
-        return userSettingRepository.save(userSetting);
+        try {
+            return userSettingRepository.save(userSetting);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("Invalid input, check id again");
+        }
     }
 }
