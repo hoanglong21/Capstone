@@ -32,6 +32,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
 
     useEffect(() => {
         const fetchData = async () => {
+            console.log(post)
             try {
                 const tempFiles = (
                     await AttachmentService.getAttachmentsByPostId(post.id)
@@ -159,11 +160,6 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         setUploadFiles(temp)
     }
 
-    function getDate(date) {
-        var index = date.lastIndexOf('.')
-        return date.replace('T', ' ').substring(0, index)
-    }
-
     return (
         <div>
             <div className="card mb-4">
@@ -185,7 +181,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                 {post.user.username}
                             </div>
                             <div className="postCreatedDate">
-                                {getDate(post.created_date)}
+                                {post.created_date}
                             </div>
                         </div>
                     </div>

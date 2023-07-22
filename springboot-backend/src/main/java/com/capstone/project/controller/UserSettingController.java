@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Setting;
 import com.capstone.project.model.UserSetting;
 import com.capstone.project.service.UserSettingService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,6 +66,26 @@ public class UserSettingController {
         try {
             return ResponseEntity.ok(userSettingService.deleteUserSetting(id));
         } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/customsettings/{id}")
+    public ResponseEntity<?> customSettings(@PathVariable int id){
+        try {
+            return ResponseEntity.ok(userSettingService.CustomGetUserSettingByUserId(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/customsettings")
+    public ResponseEntity<?> updateCustomSettings(@RequestParam("userid") int userId,
+                                                  @RequestParam("settingid") int settingId,
+                                                  @RequestParam("value") String value){
+        try {
+            return ResponseEntity.ok(userSettingService.saveUserSettingCustom(userId, settingId, value));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

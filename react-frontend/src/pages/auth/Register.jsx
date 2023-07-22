@@ -28,50 +28,111 @@ const Register = () => {
         dispatch(reset())
     }, [])
 
-    const submitForm = async (data) => {
+    useEffect(() => {
         const usernameEl = document.querySelector('#username')
+        const firstNameEl = document.querySelector('#first_name')
+        const lastNameEl = document.querySelector('#last_name')
         const emailEl = document.querySelector('#email')
-        const emailInvalidEl = document.querySelector('#email-invalid')
-        var form = document.querySelector('.needs-validation')
-        // clear validation
-        form.classList.remove('was-validated')
-        usernameEl.classList.remove('is-invalid')
-        emailInvalidEl.classList.remove('d-none')
-        dispatch(reset())
-        setEmptyMess('')
-
-        if (!form.checkValidity()) {
-            form.classList.add('was-validated')
-            if (
-                !data.username ||
-                !data.first_name ||
-                !data.last_name ||
-                !data.email ||
-                !data.password ||
-                !data.role
-            ) {
-                setEmptyMess('Please complete all the fields.')
-                if (!data.email) {
-                    emailInvalidEl.classList.add('d-none')
+        const passEl = document.querySelector('#password')
+        if (Array.isArray(error)) {
+            for (const item of error) {
+                if (
+                    item?.includes(
+                        'Invalid username. Only letters, numbers, and underscores are allowed.'
+                    ) ||
+                    item?.includes(
+                        'Username must be between 5 and 30 characters'
+                    )
+                ) {
+                    usernameEl.classList.add('is-invalid')
+                }
+                if (
+                    item?.includes(
+                        'Invalid email. Only letters, numbers, and dot are allowed.'
+                    )
+                ) {
+                    emailEl.classList.add('is-invalid')
+                }
+                if (
+                    item?.includes('First name must contain letters only') ||
+                    item?.includes(
+                        'First name must be between 1 and 30 characters'
+                    )
+                ) {
+                    firstNameEl.classList.add('is-invalid')
+                }
+                if (
+                    item?.includes('Last name must contain letters only') ||
+                    item?.includes(
+                        'Last name must be between 1 and 30 characters'
+                    )
+                ) {
+                    lastNameEl.classList.add('is-invalid')
+                }
+                if (
+                    item?.includes(
+                        'Password must contain at least one lowercase letter'
+                    ) ||
+                    item?.includes(
+                        'Password must contain at least one uppercase letter'
+                    ) ||
+                    item?.includes(
+                        'Password must contain at least one digit (number)'
+                    ) ||
+                    item?.includes('Password at least 8 characters')
+                ) {
+                    passEl.classList.add('is-invalid')
                 }
             }
         } else {
-            setLoading(true)
-            dispatch(userRegister({ ...data }))
-            setLoading(false)
-            // clear validation
-            form.classList.remove('was-validated')
-            usernameEl.classList.remove('is-invalid')
-            emailInvalidEl.classList.remove('d-none')
-            dispatch(reset())
-            setEmptyMess('')
-
-            if (error === 'Username already registered') {
+            if (error?.includes('Username already registered')) {
                 usernameEl.classList.add('is-invalid')
             }
-            if (error === 'Email already registered') {
+            if (error?.includes('Email already registered')) {
                 emailEl.classList.add('is-invalid')
             }
+        }
+    }, [error])
+
+    const submitForm = async (data) => {
+        const usernameEl = document.querySelector('#username')
+        const emailEl = document.querySelector('#email')
+        const firstNameEl = document.querySelector('#first_name')
+        const lastNameEl = document.querySelector('#last_name')
+        const passEl = document.querySelector('#password')
+        var form = document.querySelector('#registerForm')
+        // clear validation
+        form.classList.remove('was-validated')
+        usernameEl.classList.remove('is-invalid')
+        firstNameEl.classList.remove('is-invalid')
+        lastNameEl.classList.remove('is-invalid')
+        passEl.classList.remove('is-invalid')
+        dispatch(reset())
+        setEmptyMess('')
+
+        form.classList.add('was-validated')
+        if (
+            !data.username ||
+            !data.first_name ||
+            !data.last_name ||
+            !data.email ||
+            !data.password ||
+            !data.role
+        ) {
+            setEmptyMess('Please complete all the fields.')
+        } else {
+            setLoading(true)
+            dispatch(userRegister({ ...data }))
+            // clear validation
+            dispatch(reset())
+            setLoading(false)
+            form.classList.remove('was-validated')
+            usernameEl.classList.remove('is-invalid')
+            emailEl.classList.remove('is-invalid')
+            firstNameEl.classList.remove('is-invalid')
+            lastNameEl.classList.remove('is-invalid')
+            passEl.classList.remove('is-invalid')
+            setEmptyMess('')
         }
     }
 
@@ -85,7 +146,8 @@ const Register = () => {
                 Create your account now
             </h5>
             <form
-                className="form me-5 pe-5 needs-validation"
+                id="registerForm"
+                className="form me-5 pe-5"
                 style={{ marginTop: '4rem' }}
                 onSubmit={handleSubmit(submitForm)}
                 noValidate
@@ -93,7 +155,16 @@ const Register = () => {
                 {/* error message */}
                 {(emptyMess || error) && (
                     <div className="alert alert-danger" role="alert">
-                        {emptyMess || error}
+                        <div>{emptyMess}</div>
+                        {Array.isArray(error) ? (
+                            <ul className="m-0">
+                                {error?.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <div>{error}</div>
+                        )}
                     </div>
                 )}
                 {/* success message */}
@@ -154,9 +225,6 @@ const Register = () => {
                         {...register('email')}
                         required
                     />
-                    <div className="invalid-feedback" id="email-invalid">
-                        Please enter a valid email
-                    </div>
                 </div>
                 {/* Password */}
                 <div className="form-group mb-4">
