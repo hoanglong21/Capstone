@@ -69,7 +69,7 @@ function ManagePost() {
                     <td>{posts?.created_date}</td>
                     <td>
                       <Link
-                        to={`/viewdetailpost/${posts.id}`}
+                        to={`/viewdetailpost/${posts.classroom?.id}`}
                         className="btn btn-primary me-3"
                       >
                         <i class="bi bi-info-square me-2"></i>
