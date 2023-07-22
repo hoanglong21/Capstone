@@ -28,8 +28,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-    Date date = localDateTimeToDate(localDateTime);
+
 
     @Autowired
     public SubmissionServiceImpl(SubmissionRepository submissionRepository, AttachmentRepository attachmentRepository) {
@@ -50,6 +49,8 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public Submission createSubmission(Submission submission) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         submission.setCreated_date(date);
 
         Submission savedSubmission = submissionRepository.save(submission);
@@ -89,7 +90,8 @@ public class SubmissionServiceImpl implements SubmissionService {
     public Submission updateSubmission(int id, Submission submission) throws ResourceNotFroundException {
         Submission existingSubmission = submissionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Submission does not exist with id: " + id));
-
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         existingSubmission.setDescription(submission.getDescription());
         existingSubmission.setModified_date(date);
         existingSubmission.setMark(submission.getMark());
