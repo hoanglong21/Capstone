@@ -44,8 +44,7 @@ public class CommentServiceImpl implements CommentService {
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-    Date date = localDateTimeToDate(localDateTime);
+
 
     @Override
     public List<Comment> getAllComment() {
@@ -81,6 +80,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(Comment comment) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         comment.setCreated_date(date);
         return commentRepository.save(comment);
     }

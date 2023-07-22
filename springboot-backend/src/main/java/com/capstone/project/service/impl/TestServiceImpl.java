@@ -46,8 +46,7 @@ public class TestServiceImpl  implements TestService {
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-    Date date = localDateTimeToDate(localDateTime);
+
 
     @Override
     public List<Test> getAllTest() {
@@ -56,6 +55,8 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Test createTest(Test test) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         test.setCreated_date(date);
         return testRepository.save(test);
     }
@@ -90,7 +91,8 @@ public class TestServiceImpl  implements TestService {
 //        if (test.getDuration() < 5) {
 //            throw new ResourceNotFroundException("Duration must be >= 5 minutes");
 //        }
-        
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         testclass.setTitle(test.getTitle());
         testclass.setDescription(test.getDescription());
         testclass.setDuration(test.getDuration());

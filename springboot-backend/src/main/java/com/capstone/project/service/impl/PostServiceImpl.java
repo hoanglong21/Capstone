@@ -45,9 +45,6 @@ public class PostServiceImpl implements PostService {
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-    Date date = localDateTimeToDate(localDateTime);
-
 
     @Override
     public List<Post> getAllPost() {
@@ -68,6 +65,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(Post post) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         post.setCreated_date(date);
 
         Post savedPost = postRepository.save(post);
@@ -99,6 +98,8 @@ public class PostServiceImpl implements PostService {
     public Post updatePost(Post post, int id) throws ResourceNotFroundException {
         Post existingPost = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Post does not exist with id: " + id));
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         existingPost.setModified_date(date);
         existingPost.setContent(post.getContent());
 

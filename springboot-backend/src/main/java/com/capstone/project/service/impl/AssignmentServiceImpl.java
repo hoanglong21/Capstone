@@ -48,8 +48,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-    Date date = localDateTimeToDate(localDateTime);
+
 
     @Override
     public List<Assignment> getAllAssignment() {
@@ -63,6 +62,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Assignment createAssignment(Assignment assignment) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         assignment.setCreated_date(date);
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
@@ -106,6 +107,8 @@ public class AssignmentServiceImpl implements AssignmentService {
                 assignment.getStart_date().before(existingAssignment.getCreated_date())) {
             throw new ResourceNotFroundException("Start date must be >= created date");
         }
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
         existingAssignment.setInstruction(assignment.getInstruction());
         existingAssignment.setDue_date(assignment.getDue_date());
         existingAssignment.setModified_date(date);
