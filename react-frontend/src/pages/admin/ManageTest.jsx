@@ -70,7 +70,7 @@ function ManageTest() {
                   <tr>
                     <th scope="row" key={test.id}>{test?.id}</th>
                     <td>{test?.classroom?.class_name}</td>
-                    <td>{test?.user?.username}</td>
+                    <td>{test?.author}</td>
                     <td>{test?.title}</td>
                     <td>{test?.description}</td>
                     <td>

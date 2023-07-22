@@ -18,10 +18,6 @@ function ViewDetailTest() {
     }
   }, [id]);
 
-  function getDate(date) {
-    const index = date.lastIndexOf(":00.");
-    return date.replace("T", " ").substring(0, index);
-  }
   return (
     <div className="container-fluid">
       <div className="row">
@@ -59,7 +55,7 @@ function ViewDetailTest() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={tests?.author_id?.username}
+                      value={tests?.user?.username}
                     />
                   </div>
                   <div className="col-md-4">
@@ -68,7 +64,7 @@ function ViewDetailTest() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={tests?.class_id?.class_name}
+                      value={tests?.classroom?.class_name}
                     />
                   </div>
                 </div>
