@@ -10,13 +10,15 @@ function ViewDetailPost() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const temp = (await PostService.getAllPostByClassId(id)).data;
+      const temp = (await PostService.getPostById(id)).data;
       setPost(temp);
     };
     if (id) {
       fetchData();
     }
   }, [id]);
+  
+  console.log(post)
   return (
     <div className="container-fluid">
       <div className="row">
@@ -30,7 +32,7 @@ function ViewDetailPost() {
             <div className="card-body">
               <form>
                 <div className="mb-3">
-                  <label className="small mb-1 fs-6">Content </label>
+                  <label className="small mb-1 fs-6">Content</label>
                   <input
                     className="form-control"
                     type="text"
