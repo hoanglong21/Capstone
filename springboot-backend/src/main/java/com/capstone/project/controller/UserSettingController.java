@@ -68,4 +68,16 @@ public class UserSettingController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/customsettings/{id}")
+    public ResponseEntity<?> customSettings(@PathVariable int id){
+        return ResponseEntity.ok(userSettingService.CustomGetUserSettingByUserId(id));
+    }
+
+    @GetMapping("/customsettings")
+    public ResponseEntity<?> updateCustomSettings(@RequestParam("userid") int userId,
+                                                  @RequestParam("settingid") int settingId,
+                                                  @RequestParam("value") String value){
+        return ResponseEntity.ok(userSettingService.saveUserSettingCustom(userId, settingId, value));
+    }
 }
