@@ -83,4 +83,16 @@ public class FeedbackController {
             return ResponseEntity.badRequest().body("Check the input again");
         }
     }
+
+    @GetMapping("/replyfeedback")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getFeedbackById(@RequestParam("id") int id,
+                                             @RequestParam("title") String title,
+                                             @RequestParam("content") String content) {
+        try {
+            return ResponseEntity.ok(feedbackService.replyFeedback(id, title, content));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

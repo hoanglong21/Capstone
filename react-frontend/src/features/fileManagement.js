@@ -7,7 +7,10 @@ import {
     deleteObject,
     listAll,
     list,
+    uploadBytes,
+    getMetadata
 } from 'firebase/storage'
+
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM',
@@ -128,71 +131,6 @@ export const getAll = async (folderName) => {
         console.log(error)
     }
     return data
-}
-
-export const renameFile = async (folderName, currentFileName, newFileName) => {
-    // Note: folder name should be long like "abc/def/..." to direct to right folder
-    const currentFilePath = `files/${folderName}/${currentFileName}`
-    const newFilePath = `files/${folderName}/${newFileName}`
-
-    // Create references to the current file and the new file
-    const currentFileRef = ref(storage, currentFilePath)
-    const newFileRef = ref(storage, newFilePath)
-
-    try {
-        // Copy the current file to the new file
-        await currentFileRef.copy(newFileRef)
-
-        // Delete the current file
-        await deleteObject(currentFileRef)
-
-        console.log(
-            `${currentFileName} has been renamed to ${newFileName} successfully.`
-        )
-    } catch (error) {
-        console.error(
-            `Error renaming ${currentFileName} to ${newFileName}: ${error}`
-        )
-    }
-}
-
-export const renameFolder = async (currentFolderName, newFolderName) => {
-    // Note: folder name should be long like "abc/def/..." to direct to right folder
-    const currentFolderPath = `files/${currentFolderName}`
-    const newFolderPath = `files/${newFolderName}`
-
-    // Create a reference to the current folder
-    const currentFolderRef = ref(storage, currentFolderPath)
-
-    if (currentFolderRef) {
-        try {
-            // List all the items (files and sub-folders) in the current folder
-            const itemsList = await listAll(currentFolderRef)
-
-            // Create a reference to the new folder
-            const newFolderRef = ref(storage, newFolderPath)
-
-            // Copy each item from the current folder to the new folder
-            await Promise.all(
-                itemsList.items.map(async (itemRef) => {
-                    const itemName = itemRef.name
-                    const newFileRef = ref(newFolderRef, itemName)
-                    await itemRef.copy(newFileRef)
-                })
-            )
-
-            // Delete the current folder and all its contents
-            await deleteFolder(currentFolderRef)
-
-            console.log(
-                `${currentFolderName} has been renamed to ${newFolderName} successfully.`
-            )
-        } catch (error) {
-            console.error(
-                `Error renaming ${currentFolderName} to ${newFolderName}: ${error}`
-            )
-        }
-    }
 }
 
 export const deleteFolder = async (folderPath) => {

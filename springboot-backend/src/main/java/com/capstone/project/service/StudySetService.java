@@ -31,4 +31,6 @@ public interface StudySetService {
     Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId, String authorName,
                                       String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                                       String sortBy, String direction, int page, int size);
+
+    List<Map<String, Object>> getQuizByStudySetId(int studySetId, String questionType, int numberOfQuestion);
 }

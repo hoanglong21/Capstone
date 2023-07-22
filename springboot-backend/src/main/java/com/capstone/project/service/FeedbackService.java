@@ -21,4 +21,6 @@ public interface FeedbackService {
 
     Map<String, Object> filterFeedback(String search, int type, int authorId, String authorName, String destination, String fromCreated, String toCreated,
                                        String sortBy, String direction, int page, int size) throws ParseException;
+
+    String replyFeedback(int feedbackId, String title, String content) throws Exception;
 }
