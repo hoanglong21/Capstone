@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import { Link } from "react-router-dom";
-import PostService from "../../services/PostService";
+import CommentService from "../../services/CommentService";
 import { useSearchParams } from 'react-router-dom'
 
 function ManageComment() {
@@ -15,7 +15,9 @@ function ManageComment() {
       let temp;
       try{
         temp = (
-            await PostService.getFilterList(
+            await CommentService.getFilterList(
+                '',
+                '',
                 '',
                 '',
                 '',
