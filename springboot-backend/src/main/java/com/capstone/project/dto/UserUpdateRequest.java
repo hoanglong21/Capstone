@@ -21,9 +21,11 @@ import java.util.Date;
 @Builder
 public class UserUpdateRequest {
     @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "First name must contain letters only")
+    @Length(min = 1, max = 30, message = "First name must be between 1 and 30 characters")
     private String first_name;
 
     @Pattern(regexp = "^[a-zA-ZÀ-ỹ ]+$", message = "Last name must contain letters only")
+    @Length(min = 1, max = 30, message = "Last name must be between 1 and 30 characters")
     private String last_name;
 
     @Pattern(regexp = "male|female", message = "Gender must be male or female")

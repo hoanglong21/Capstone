@@ -7,10 +7,6 @@ import { useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 function ManageFeedback() {
-  function getDate(date) {
-    const index = date.lastIndexOf(":00.");
-    return date.replace("T", " ").substring(0, index);
-  }
   const [feedback, setFeedback] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
@@ -74,7 +70,7 @@ function ManageFeedback() {
                 {feedback?.map((feedbacks) => (
                   <tr>
                     <th scope="row" key={feedbacks.id}>{feedbacks?.id}</th>
-                    <td>{getDate(feedbacks?.created_date)}</td>
+                    <td>{feedbacks?.created_date}</td>
                     <td>{feedbacks?.feedbackType?.name}</td>
                     <td>{feedbacks?.user?.username}</td>
                     <td>

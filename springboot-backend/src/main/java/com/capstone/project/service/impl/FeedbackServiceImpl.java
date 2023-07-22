@@ -123,10 +123,10 @@ public class FeedbackServiceImpl implements FeedbackService {
             params.put("toCreated", formatter.parse(toCreated));
         }
 
-        sortBy = "f." + sortBy;
-
-
-        jpql += " ORDER BY " + sortBy + " " + direction;
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            sortBy = "f." + sortBy;
+            jpql += " ORDER BY " + sortBy + " " + direction;
+        }
 
         TypedQuery<Feedback> query = entityManager.createQuery(jpql, Feedback.class);
 

@@ -24,6 +24,10 @@ const Login = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        dispatch(reset())
+    }, [])
+
+    useEffect(() => {
         if (userToken) {
             dispatch(getUser(userToken))
         }

@@ -10,4 +10,6 @@ public interface FieldService {
     Field getFieldById(int id) throws ResourceNotFroundException;
 
     List<Field> getAll();
+
+    List<Field> getFieldsByStudySetTypeId(int id);
 }

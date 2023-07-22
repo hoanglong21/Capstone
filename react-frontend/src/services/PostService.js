@@ -18,6 +18,9 @@ const getAllPostByClassId = (id) => {
     return axios.get(API_BASE_URL + '/postbyclassid/' + id)
 }
 
+const getPostById = (id) =>{
+    return axios.get(API_BASE_URL + '/post/' + id)
+}
 const getFilterList = (search, author, direction, classId, page, size) => {
     return axios.get(
         API_BASE_URL +
@@ -42,6 +45,7 @@ const PostService = {
     updatePost,
     deletePost,
     getFilterList,
+    getPostById
 }
 
 export default PostService

@@ -31,4 +31,11 @@ public class FieldServiceImpl implements FieldService {
     public List<Field> getAll() {
         return fieldRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
+
+    @Override
+    public List<Field> getFieldsByStudySetTypeId(int id) {
+        List<Field> list = fieldRepository.findFieldsByType_Id(id);
+        System.out.println(list);
+        return fieldRepository.findFieldsByType_Id(id);
+    }
 }

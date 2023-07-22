@@ -428,8 +428,10 @@ public class UserServiceImpl implements UserService {
             params.add(toCreated);
         }
 
-        sql += " ORDER BY " + sortBy + " " + direction;
-
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            sql += " ORDER BY " + sortBy + " " + direction;
+        }
+        
         // Count total items
         String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS countQuery";
         long totalItems = jdbcTemplate.queryForObject(countSql, Long.class, params.toArray());

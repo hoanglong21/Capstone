@@ -34,10 +34,6 @@ function ManageClass() {
     useEffect(() => {
         fetchData(search ? search : '')
     }, [search])
-    function getDate(date) {
-      const index = date.lastIndexOf(":00.");
-      return date.replace("T", " ").substring(0, index);
-    }
 
   return (
     <div className="container-fluid">
@@ -66,7 +62,7 @@ function ManageClass() {
                       <p className="text-info mb-0">{classroom?.class_name}</p>
                     </td>
                     <td>{classroom?.author}</td>
-                    <td>{getDate(classroom?.created_date)}</td>
+                    <td>{classroom?.created_date}</td>
                     <td>
                       <Link
                         className="btn btn-primary me-3"

@@ -76,6 +76,7 @@ const CreateSet = () => {
                             await StudySetService.createStudySet({
                                 user: {
                                     id: userInfo.id,
+                                    username: userInfo.username,
                                 },
                                 title: '',
                                 description: '',
