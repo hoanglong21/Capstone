@@ -154,6 +154,28 @@ public class FeedbackServiceImpl implements FeedbackService {
         return response;
     }
 
+    @Override
+    public String replyFeedback(int feedbackId, String subject, String content) throws Exception {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new ResourceNotFroundException("Feedback not exist with id: " + feedbackId));
+        subject = "[" + feedback.getTitle() + "] " + subject;
+        String toAddress = feedback.getUser().getEmail();
+        String fromAddress = "nihongolevelup.box@gmail.com";
+        String senderName = "NihongoLevelUp";
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(fromAddress, senderName);
+        helper.setTo(toAddress);
+        helper.setSubject(subject);
+
+        helper.setText(content, true);
+
+        mailSender.send(message);
+        return "Send reply successfully";
+    }
+
     private int getTotalFeedbackCount(String jpql, Map<String, Object> params) {
         // Remove the ORDER BY clause from the original JPQL query
         int orderByIndex = jpql.toUpperCase().lastIndexOf("ORDER BY");
