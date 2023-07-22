@@ -1,10 +1,10 @@
 package com.capstone.project.service;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Setting;
 import com.capstone.project.model.UserSetting;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserSettingService {
 
@@ -18,4 +18,8 @@ public interface UserSettingService {
 
     UserSetting updateUserSetting( UserSetting usersetting,  int id) throws ResourceNotFroundException;
     Boolean deleteUserSetting( int id) throws ResourceNotFroundException;
+
+    Map<String, String> CustomGetUserSettingByUserId(int id);
+
+    UserSetting saveUserSettingCustom(int userId, int settingId, String newValue);
 }
