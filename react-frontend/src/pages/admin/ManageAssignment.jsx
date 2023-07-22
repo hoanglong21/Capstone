@@ -80,18 +80,18 @@ function ManageFeedback() {
                       <th scope="row" key={assign.id}>
                         {assign?.id}
                       </th>
-                      <td>{getDate(assign?.start_date)}</td>
+                      <td>{assign?.start_date}</td>
                       <td>{assign?.due_date
-                                        ? `${getDate(
+                                        ? 
                                               assign?.due_date
-                                          )}`
+                                          
                                         : 'No due date'}</td>
                       <td>{assign?.title}</td>
                       <td>{assign?.classroom?.class_name}</td>
                       <td>{assign?.user?.username}</td>
                       <td>
                         <Link
-                          to={`/viewdetailfb/${assign.id}`}
+                          to={`/viewdetailassign/${assign.id}`}
                           className="btn btn-primary me-3"
                         >
                           <i class="bi bi-info-square me-2"></i>

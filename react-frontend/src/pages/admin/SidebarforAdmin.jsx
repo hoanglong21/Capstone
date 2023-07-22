@@ -66,7 +66,7 @@ function SidebarforAdmin() {
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link to="/managefeedback" className="nav-link fs-7">
+            <Link to="/managetest" className="nav-link fs-7">
             <i class="bi bi-file-earmark-text"></i>
               <span className="ms-3 d-none d-sm-inline">
                 Test
@@ -74,7 +74,15 @@ function SidebarforAdmin() {
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link to="/managefeedback" className="nav-link fs-7">
+            <Link to="/managesubmission" className="nav-link fs-7">
+            <i class="bi bi-question-circle"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                Submission
+              </span>
+            </Link>
+          </li>
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/managepost" className="nav-link fs-7">
             <i class="bi bi-send-fill"></i>
               <span className="ms-3 d-none d-sm-inline">
                 Post
@@ -82,7 +90,7 @@ function SidebarforAdmin() {
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link to="/managefeedback" className="nav-link fs-7">
+            <Link to="/managecomment" className="nav-link fs-7">
             <i class="bi bi-question-circle"></i>
               <span className="ms-3 d-none d-sm-inline">
                 Comment
@@ -90,7 +98,7 @@ function SidebarforAdmin() {
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link to="/managefeedback" className="nav-link fs-7">
+            <Link to="/vocab" className="nav-link fs-7">
             <i class="bi bi-book"></i>
               <span className="ms-3 d-none d-sm-inline">
                 Dictionary
