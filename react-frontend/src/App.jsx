@@ -50,6 +50,11 @@ import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
 import ManageStudyset from './pages/admin/ManageStudyset'
 import ManageAssignment from './pages/admin/ManageAssignment'
 import ViewDetailAssignment from './pages/admin/ViewDetailAssignment'
+import ViewDetailTestForAdmin from './pages/admin/ViewDetailTestForAdmin'
+import ManagePost from './pages/admin/ManagePost'
+import ViewDetailPost from './pages/admin/ViewDetailPost'
+import ManageComment from './pages/admin/ManageComment'
+import ViewDetailComment from './pages/admin/ViewDetailComment'
 import CreateSet from './pages/studySet/create/CreateSet'
 import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
@@ -72,6 +77,7 @@ import AuthService from './services/AuthService'
 import People from './pages/class/People'
 import Mark from './pages/class/Mark'
 import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
+import ManageTest from './pages/admin/ManageTest'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -242,6 +248,12 @@ const App = () => {
                 <Route path="/viewdetailset/:id" element={<ViewDetailStudyset />} />
                 <Route path='/manageassignment' element={<ManageAssignment />} />
                 <Route path='/viewdetailassign/:id' element={<ViewDetailAssignment />}/>
+                <Route path='/managetest' element={<ManageTest />}/>
+                <Route path="/viewdetailtest/:id" element={<ViewDetailTestForAdmin />} />
+                <Route path='/managepost' element={<ManagePost />}/>
+                <Route path="/viewdetailpost/:id" element={<ViewDetailPost />} />
+                <Route path='/managecomment' element={<ManageComment />}/>
+                <Route path="/viewdetailcomment/:id" element={<ViewDetailComment />} />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route

@@ -55,13 +55,6 @@ function HeaderAdmin() {
             Search
           </button>
         </form>
-        <button
-          type="button"
-          className="btn btn-outline-secondary icon-outline-secondary position-absolute"
-          style={{ right: "7%" }}
-        >
-          <NotifyIcon strokeWidth="2" />
-        </button>
         <div className="dropdown d-inline-flex">
           <button
             className="btn btn-avatar pe-0"

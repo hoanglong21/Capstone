@@ -80,11 +80,11 @@ function ManageFeedback() {
                       <th scope="row" key={assign.id}>
                         {assign?.id}
                       </th>
-                      <td>{getDate(assign?.start_date)}</td>
+                      <td>{assign?.start_date}</td>
                       <td>{assign?.due_date
-                                        ? `${getDate(
+                                        ? 
                                               assign?.due_date
-                                          )}`
+                                          
                                         : 'No due date'}</td>
                       <td>{assign?.title}</td>
                       <td>{assign?.classroom?.class_name}</td>

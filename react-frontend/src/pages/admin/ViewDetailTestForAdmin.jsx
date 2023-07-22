@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import { Link, useParams } from "react-router-dom";
-import AssignmentService from "../../services/AssignmentService";
+import TestService from "../../services/TestService";
 
-function ViewDetailAssignment() {
-  const [assignments, setAssignments] = useState([]);
+function ViewDetailTest() {
+    const [tests, setTests] = useState([])
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
-      const tempStudySet = (await AssignmentService.getAssignmentById(id)).data;
-      setAssignments(tempStudySet);
+      const temp = (await TestService.getTestById(id)).data;
+      setTests(temp);
     };
     if (id) {
       fetchData();
@@ -30,27 +30,27 @@ function ViewDetailAssignment() {
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
-              Assignment Details
+              Test Details
             </div>
             <div className="card-body">
               <form>
                 <div className="mb-3">
-                  <label className="small mb-1 fs-6">Assignment Title </label>
+                  <label className="small mb-1 fs-6">Test Title </label>
                   <input
                     className="form-control"
                     type="text"
                     readOnly
-                    value={assignments?.title}
+                    value={tests?.title}
                   />
                 </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Assignment ID</label>
+                    <label className="small mb-1 fs-6">Test ID</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={assignments?.id}
+                      value={tests?.id}
                     />
                   </div>
                   <div className="col-md-4">
@@ -59,7 +59,7 @@ function ViewDetailAssignment() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={assignments?.user?.username}
+                      value={tests?.author_id?.username}
                     />
                   </div>
                   <div className="col-md-4">
@@ -68,7 +68,7 @@ function ViewDetailAssignment() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={assignments?.classroom?.class_name}
+                      value={tests?.class_id?.class_name}
                     />
                   </div>
                 </div>
@@ -79,7 +79,7 @@ function ViewDetailAssignment() {
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={assignments?.created_date}
+                      value={tests?.created_date}
                     />
                   </div>
                   <div className="col-md-4">
@@ -88,7 +88,7 @@ function ViewDetailAssignment() {
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={assignments?.start_date}
+                      value={tests?.start_date}
                     />
                   </div>
                   <div className="col-md-4">
@@ -97,23 +97,23 @@ function ViewDetailAssignment() {
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={assignments?.due_date}
+                      value={tests?.due_date}
                     />
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-12">
-                    <label className="small mb-1 fs-6">Instruction</label>
+                    <label className="small mb-1 fs-6">Description</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={assignments?.instruction}
+                      value={tests?.description}
                     />
                   </div>
                 </div>
                 <div className="text-center">
-                  <Link className="btn btn-secondary me-4" to="/manageassignment">
+                  <Link className="btn btn-secondary me-4" to="/managetest">
                     Close
                   </Link>
                 </div>
@@ -126,4 +126,4 @@ function ViewDetailAssignment() {
   );
 }
 
-export default ViewDetailAssignment;
+export default ViewDetailTest;
