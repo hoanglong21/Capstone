@@ -60,6 +60,7 @@ const Stream = () => {
             setAddPost({
                 user: {
                     id: userInfo.id,
+                    username: userInfo.username,
                 },
                 classroom: {
                     id: tempClass.id,

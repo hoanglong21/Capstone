@@ -53,6 +53,7 @@ function CreateAssignment() {
                 },
                 user: {
                     id: userInfo.id,
+                    username: userInfo.username,
                 },
                 due_date: '',
                 start_date: getToday(),

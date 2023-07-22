@@ -1,7 +1,25 @@
+import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react'
+
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './notification.css'
 
 const Notifications = () => {
+    const { userInfo } = useSelector((state) => state.user)
+
+    const [settings, setSettings] = useState({})
+
+    useEffect(() => {
+      const fetchData = () => {
+        
+      }
+    
+      return () => {
+        second
+      }
+    }, [third])
+    
+
     const handleSubmit = (event) => {
         event.preventDefault()
     }
