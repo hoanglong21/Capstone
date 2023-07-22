@@ -40,11 +40,6 @@ function AssignmentList() {
         }
     }, [id])
 
-    function getDate(date) {
-        const index = date.lastIndexOf(':00.')
-        return date.replace('T', ' ').substring(0, index)
-    }
-
     return (
         <div>
             <div>
@@ -90,8 +85,8 @@ function AssignmentList() {
                                 {assign._draft
                                     ? 'Draft'
                                     : assign?.due_date
-                                    ? `Due ${getDate(assign?.due_date)}`
-                                    : `Posted ${getDate(assign?.created_date)}`}
+                                    ? `Due ${assign?.due_date}`
+                                    : `Posted ${assign?.created_date}`}
                             </div>
                         </button>
                         <div
@@ -102,9 +97,7 @@ function AssignmentList() {
                             <div className="accordion-body">
                                 <p>
                                     {assign?.due_date
-                                        ? `Posted ${getDate(
-                                              assign?.created_date
-                                          )}`
+                                        ? `Posted ${assign?.created_date}`
                                         : 'No due date'}
                                 </p>
                                 <div className="mt-2 d-flex justify-content-between">

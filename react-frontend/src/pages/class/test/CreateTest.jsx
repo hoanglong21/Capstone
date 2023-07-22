@@ -100,6 +100,7 @@ const CreateTest = () => {
                             },
                             user: {
                                 id: userInfo.id,
+                                username: userInfo.username,
                             },
                             description: '',
                             duration: '',

@@ -43,11 +43,6 @@ const TestList = () => {
         }
     }, [id])
 
-    function getDate(date) {
-        const index = date.lastIndexOf(':00.')
-        return date.replace('T', ' ').substring(0, index)
-    }
-
     return (
         <div>
             <div>
@@ -96,8 +91,8 @@ const TestList = () => {
                                 {test._draft
                                     ? 'Draft'
                                     : test?.due_date
-                                    ? `Due ${getDate(test?.due_date)}`
-                                    : `Posted ${getDate(test?.created_date)}`}
+                                    ? `Due ${test?.due_date}`
+                                    : `Posted ${test?.created_date}`}
                             </div>
                         </button>
                         <div
@@ -108,9 +103,7 @@ const TestList = () => {
                             <div className="accordion-body">
                                 <p>
                                     {test?.due_date
-                                        ? `Posted ${getDate(
-                                              test?.created_date
-                                          )}`
+                                        ? `Posted ${test?.created_date}`
                                         : 'No due date'}
                                 </p>
                                 <div className="mt-2 d-flex justify-content-between">

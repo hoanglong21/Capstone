@@ -116,7 +116,10 @@
     font-size: 1.1rem;
 }
 
-.setPageTerm_termText p {
+.setPageTerm_termText p,
+.setPageTerm_termText ul,
+.setPageTerm_definitionText p,
+.setPageTerm_definitionText ul {
     margin: 0;
 }
 
@@ -124,10 +127,6 @@
     padding: 0 2rem;
     word-wrap: break-word;
     font-size: 1.1rem;
-}
-
-.setPageTerm_definitionText p {
-    margin: 0;
 }
 
 .setPageTerm_imageWrap {
