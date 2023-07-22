@@ -196,7 +196,9 @@ public class StudySetServiceImpl implements StudySetService {
             parameters.put("toCreated", toCreated);
         }
 
-        query += " ORDER BY " + sortBy + " " + direction;
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            query += " ORDER BY " + sortBy + " " + direction;
+        }
 
         Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
