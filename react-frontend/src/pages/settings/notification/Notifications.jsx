@@ -9,11 +9,11 @@ import './notification.css'
 const Notifications = () => {
     const { userInfo } = useSelector((state) => state.user)
 
-    const [isStudyReminder, setIsStudyReminder] = useState(false)
+    const [isStudyReminder, setIsStudyReminder] = useState(true)
     const [studyReminder, setStudyReminder] = useState({})
-    const [isAssignDueDate, setIsAssignDueDate] = useState(false)
+    const [isAssignDueDate, setIsAssignDueDate] = useState(true)
     const [assignDueDate, setAssignDueDate] = useState({})
-    const [isTestDueDate, setIsTestDueDate] = useState(false)
+    const [isTestDueDate, setIsTestDueDate] = useState(true)
     const [testDueDate, setTestDueDate] = useState({})
     const [setAdded, setSetAdded] = useState({})
     const [postAdded, setPostAdded] = useState({})
@@ -276,8 +276,11 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            checked={setAdded}
                             id="setAdded"
+                            checked={setAdded?.value || true}
+                            onChange={(event) => {
+                                setSetAdded(event.target.checked)
+                            }}
                         />
                         <label className="form-check-label" htmlFor="setAdded">
                             A set is added
@@ -287,8 +290,11 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            value=""
                             id="postPosted"
+                            checked={postAdded?.value || true}
+                            onChange={(event) => {
+                                setPostAdded(event.target.checked)
+                            }}
                         />
                         <label
                             className="form-check-label"
@@ -301,8 +307,11 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            value=""
                             id="assignmentAssigned"
+                            checked={assignAssigned?.value || true}
+                            onChange={(event) => {
+                                setAssignAssigned(event.target.checked)
+                            }}
                         />
                         <label
                             className="form-check-label"
@@ -315,8 +324,11 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            value=""
                             id="testAssigned"
+                            checked={testAssigned?.value || true}
+                            onChange={(event) => {
+                                setTestAssigned(event.target.checked)
+                            }}
                         />
                         <label
                             className="form-check-label"
@@ -329,8 +341,11 @@ const Notifications = () => {
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            value=""
                             id="submissionGraded"
+                            checked={submitGraded?.value || true}
+                            onChange={(event) => {
+                                setSubmitGraded(event.target.checked)
+                            }}
                         />
                         <label
                             className="form-check-label"
