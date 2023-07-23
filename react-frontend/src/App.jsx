@@ -78,6 +78,8 @@ import People from './pages/class/People'
 import Mark from './pages/class/Mark'
 import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
 import ManageTest from './pages/admin/ManageTest'
+import ManageSubmission from './pages/admin/ManageSubmission'
+import ViewDetailSubmission from './pages/admin/ViewDetailSubmission'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -254,7 +256,8 @@ const App = () => {
                 <Route path="/viewdetailpost/:id" element={<ViewDetailPost />} />
                 <Route path='/managecomment' element={<ManageComment />}/>
                 <Route path="/viewdetailcomment/:id" element={<ViewDetailComment />} />
-                
+                <Route path="/managesubmission" element={<ManageSubmission />} />
+                <Route path="/viewdetailsubmission/:id" element={<ViewDetailSubmission />} />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route
