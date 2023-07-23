@@ -71,6 +71,25 @@ public class AnswerServiceTest {
     }
 
     @Order(3)
+    @Test
+    void testCreateAnswers() {
+
+        List<Answer> answerList = new ArrayList<>();
+        Answer answer1 =  Answer.builder().question(Question.builder().id(1).build()).content("Knight").audio("").video("").picture("").is_true(true).build();
+        Answer answer2 =  Answer.builder().question(Question.builder().id(1).build()).content("Cat").audio("").video("").picture("").is_true(false).build();
+
+        answerList.add(answer1);
+        answerList.add(answer2);
+
+        when(answerRepository.save(any())).thenReturn(answerList);
+
+        List<Answer> createdAnswers = answerServiceImpl.createAnswers(answerList);
+
+        assertThat(createdAnswers).isNotNull();
+    }
+
+
+    @Order(4)
     @ParameterizedTest(name = "index => questionId={0}, content={1},istrue{2}")
     @CsvSource({
             "1, Knight, true ",
@@ -99,7 +118,7 @@ public class AnswerServiceTest {
         }
     }
 
-    @Order(4)
+    @Order(5)
     @Test
     void testDeleteAnswer() {
         Answer answer = Answer.builder()
@@ -119,7 +138,7 @@ public class AnswerServiceTest {
         verify(answerRepository, times(1)).delete(answer);
     }
 
-    @Order(5)
+    @Order(6)
     @Test
     void testGetAnswerById(){
         Answer answer = Answer.builder()
@@ -134,7 +153,7 @@ public class AnswerServiceTest {
         }
     }
 
-    @Order(6)
+    @Order(7)
     @Test
     void testGetAllAnswerByQuestionId() {
         // Tạo danh sách câu trả lời

@@ -1,10 +1,7 @@
 package com.capstone.project.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -15,6 +12,8 @@ import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.FeedbackServiceImpl;
 import com.capstone.project.service.impl.StudySetServiceImpl;
 import com.capstone.project.service.impl.UserServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
@@ -26,6 +25,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.AssertionErrors;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -36,8 +37,13 @@ public class FeedbackServiceTest {
     @Mock
     private FeedbackRepository feedbackRepository;
 
+    @Mock
+    private EntityManager entityManager;
+
     @InjectMocks
     private FeedbackServiceImpl feedbackService;
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @BeforeEach
     void setUp() {
@@ -134,5 +140,47 @@ public class FeedbackServiceTest {
             e.printStackTrace();
         }
         verify(feedbackRepository, times(1)).delete(feedback);
+    }
+
+    @Order(6)
+    @ParameterizedTest
+    @CsvSource({
+            // Add test cases here in the format: "search, type, authorId, authorName, destination, fromCreated, toCreated, sortBy, direction, page, size, expectedTotalItems, expectedTotalPages"
+            "'keyword', 1, 0, '', 'destination', '2023-07-01', '2023-07-23', 'created_date', 'asc', 1, 10, true",
+    })
+    void testFilterFeedback(String search, int type, int authorId, String authorName, String destination,
+                            String fromCreated, String toCreated, String sortBy, String direction,
+                            int page, int size, boolean greaterThanZero) throws ParseException {
+        MockitoAnnotations.openMocks(this);
+        try {
+            Feedback feedback = Feedback.builder()
+                    .user(User.builder().id(1).build())
+                    .created_date(dateFormat.parse("2023-07-06"))
+                    .build();
+
+            List<Feedback> resultListMock = new ArrayList<>();
+            if(greaterThanZero) {
+                TypedQuery<Feedback> typedQueryMock = mock(TypedQuery.class);
+                when(entityManager.createQuery(anyString(), eq(Feedback.class))).thenReturn(typedQueryMock);
+                resultListMock.add(feedback);
+                when(typedQueryMock.getResultList()).thenReturn(resultListMock);
+
+                TypedQuery<Long> countQueryMock = mock(TypedQuery.class);
+                when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(countQueryMock);
+            } else {
+                TypedQuery<Feedback> typedQueryMock = mock(TypedQuery.class);
+                when(entityManager.createQuery(anyString(), eq(Feedback.class))).thenReturn(typedQueryMock);
+                when(typedQueryMock.getResultList()).thenReturn(resultListMock);
+
+                TypedQuery<Long> countQueryMock = mock(TypedQuery.class);
+                when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(countQueryMock);
+            }
+            List<Feedback> list = (List<Feedback>) feedbackService.filterFeedback(search, type, authorId, authorName, destination,
+                    fromCreated, toCreated, sortBy, direction,
+                    page, size).get("list");
+            assertThat(list.size()>0).isEqualTo(greaterThanZero);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

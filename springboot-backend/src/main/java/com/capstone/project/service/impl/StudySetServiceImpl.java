@@ -224,35 +224,36 @@ public class StudySetServiceImpl implements StudySetService {
     @Override
     public List<Map<String, Object>> getQuizByStudySetId(int studySetId, String questionType, int numberOfQuestion) {
         List<Card> cardList = cardService.getAllByStudySetId(studySetId);
-
         // Shuffle the cardList to randomize the order of cards
         Collections.shuffle(cardList);
-        List<CardWrapper> questionCardSet = new ArrayList<>();
+        List<CardWrapper> initCardWrappers = new ArrayList<>();
 
         for (Card card : cardList) {
-            if (questionCardSet.size() == numberOfQuestion) {
-                break;
-            }
             List<Content> contents = contentRepository.getContentByCardId(card.getId());
             CardWrapper cardWrapper = new CardWrapper(card, contents);
-            questionCardSet.add(cardWrapper);
+            initCardWrappers.add(cardWrapper);
         }
-        List<CardWrapper> cardListCloneForAnswers = new ArrayList<>(questionCardSet);
+
+        List<CardWrapper> questionCardSet = initCardWrappers.subList(0, Math.min(numberOfQuestion, initCardWrappers.size()));
+        List<CardWrapper> cardListCloneForAnswers = new ArrayList<>(initCardWrappers);
         List<Map<String, Object>> response = new ArrayList<>();
         for(CardWrapper cardWrapper : questionCardSet) {
             Collections.shuffle(cardListCloneForAnswers);
             List<CardWrapper> answerCardSet = new ArrayList<>();
             answerCardSet.add(cardWrapper);
 
-            for (CardWrapper randomCard : cardListCloneForAnswers) {
-                if (answerCardSet.size() == 4) {
-                    break;
-                }
-                // Make sure not to add the same cardWrapper as the original one
-                if (!cardWrapper.equals(randomCard)) {
-                    answerCardSet.add(randomCard);
+            if(questionType.toLowerCase().equals("multiple choice")) {
+                for (CardWrapper randomCard : cardListCloneForAnswers) {
+                    if (answerCardSet.size() == 4) {
+                        break;
+                    }
+                    // Make sure not to add the same cardWrapper as the original one
+                    if (!cardWrapper.equals(randomCard)) {
+                        answerCardSet.add(randomCard);
+                    }
                 }
             }
+
             Collections.shuffle(answerCardSet);
 
             Map<String, Object> map = new HashMap<>();
