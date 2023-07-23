@@ -1,16 +1,17 @@
 package com.capstone.project.service;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Answer;
-import com.capstone.project.model.Post;
-import com.capstone.project.model.Question;
-import com.capstone.project.model.QuestionType;
+import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import com.capstone.project.repository.AnswerRepository;
 import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.repository.QuestionRepository;
 import com.capstone.project.service.impl.PostServiceImpl;
 import com.capstone.project.service.impl.QuestionServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
@@ -29,6 +30,8 @@ import static org.mockito.Mockito.times;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class QuestionServiceTest {
 
+    @Mock
+    private EntityManager em;
     @Mock
     private QuestionRepository questionRepository;
 
@@ -91,7 +94,7 @@ public class QuestionServiceTest {
             "1,1,2, Who kill Jack Robin ",
             "2,2,3, Who is the first president "
     })
-    public void testCreateQuestion(int testId,int typeId, int num_choice,String content){
+    public void testCreateQuestion(int testId, int typeId, int num_choice, String content) {
 
         Question question = Question.builder()
                 .test(com.capstone.project.model.Test.builder().id(testId).build())
@@ -105,12 +108,42 @@ public class QuestionServiceTest {
     }
 
     @Order(5)
+    @Test
+    void testCreateQuestions() {
+
+        List<Question> questionList = new ArrayList<>();
+        Question question1 = Question.builder()
+                .test(com.capstone.project.model.Test.builder().id(1).build())
+                .questionType(QuestionType.builder().id(1).build())
+                .num_choice(2)
+                .question("Who kill Tim")
+                .build();
+
+        Question question2 = Question.builder()
+                .test(com.capstone.project.model.Test.builder().id(1).build())
+                .questionType(QuestionType.builder().id(1).build())
+                .num_choice(2)
+                .question("Who kill Jack")
+                .build();
+
+        questionList.add(question1);
+        questionList.add(question2);
+
+        when(questionRepository.save(any())).thenReturn(questionList);
+
+        List<Question> createdQuestions = questionServiceImpl.createQuestions(questionList);
+
+        assertThat(createdQuestions).isNotNull();
+    }
+
+
+    @Order(6)
     @ParameterizedTest(name = "index => testId={0}, typeId={1}, num_choice{2}, content{3}")
     @CsvSource({
             "1,1,2, Who kill Jack Robin ",
             "2,2,3, Who is the first president "
     })
-    public void testUpdateQuestion(int testId,int typeId, int num_choice,String content){
+    public void testUpdateQuestion(int testId, int typeId, int num_choice, String content) {
 
         Question question_new = Question.builder()
                 .num_choice(3)
@@ -128,7 +161,7 @@ public class QuestionServiceTest {
 
     }
 
-    @Order(6)
+    @Order(7)
     @Test
     void testDeleteQuestion() {
 
@@ -163,4 +196,33 @@ public class QuestionServiceTest {
         verify(answerRepository, times(1)).delete(answer);
 
     }
+
+    @Order(8)
+    @ParameterizedTest(name = "index => search={0},typeid{1},testid{2}, page{3}, size{4}")
+    @CsvSource({
+            "who,1,1,1,5",
+            "who,1,2,1,5"
+    })
+    public void testGetFilterQuestion(String search, int typeid, int testid, int page, int size) throws ResourceNotFroundException {
+
+        MockitoAnnotations.openMocks(this);
+        Question question = Question.builder()
+                .id(1)
+                .test(com.capstone.project.model.Test.builder().id(1).build())
+                .questionType(QuestionType.builder().id(1).build())
+                .num_choice(4)
+                .question("Who kill Jack Robin")
+                .build();
+
+
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(anyString(), eq(Question.class))).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+        when(mockedQuery.getResultList()).thenReturn(List.of(question));
+
+
+        List<Question> list = (List<Question>) questionServiceImpl.getFilterQuestion(search, typeid, testid, page, size).get("list");
+        assertThat(list.size()).isGreaterThan(0);
+    }
+
 }

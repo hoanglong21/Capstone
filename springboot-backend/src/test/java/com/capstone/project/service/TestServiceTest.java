@@ -2,9 +2,12 @@ package com.capstone.project.service;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.PostServiceImpl;
 import com.capstone.project.service.impl.TestServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,6 +28,10 @@ import static org.mockito.Mockito.times;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TestServiceTest {
+
+    @Mock
+    private EntityManager em;
+
     @Mock
     private TestRepository testRepository;
 
@@ -212,7 +219,7 @@ public class TestServiceTest {
 
 
         try {
-           testServiceImpl.deleteTest(1);
+            testServiceImpl.deleteTest(1);
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
@@ -221,6 +228,37 @@ public class TestServiceTest {
         verify(questionRepository, times(1)).delete(question);
         verify(answerRepository, times(1)).delete(answer);
         verify(commentRepository, times(1)).delete(comment);
+    }
+
+    @Order(7)
+    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, duration{3},classId={4}, fromStart{5}, toStart{6},fromCreated{7},toCreated{8} ,isDraft{9}, sortBy{10}, page{11}, size{12}")
+    @CsvSource({
+            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,1,5",
+            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,1,1,5"
+    })
+    public void testGetFilterTest(String search, String author, String direction, int duration, int classid,
+                                  String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException {
+
+        MockitoAnnotations.openMocks(this);
+        com.capstone.project.model.Test test = com.capstone.project.model.Test.builder()
+                .id(1)
+                .user(User.builder().id(1).build())
+                .description("test 1 for all")
+                .duration(12)
+                .title("PT1")
+                .build();
+
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(anyString(), eq("TestCustomListMapping"))).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+        when(mockedQuery.getResultList()).thenReturn(List.of(test));
+
+
+        List<com.capstone.project.model.Test> list = (List<com.capstone.project.model.Test>) testServiceImpl.getFilterTest(search, author, direction, duration,
+                classid, fromStarted, toStarted, fromCreated, toCreated,
+                isDraft, sortBy, page, size).get("list");
+        assertThat(list.size()).isGreaterThan(0);
+
     }
 
 }
