@@ -15,124 +15,110 @@ const Notifications = () => {
     const [assignDueDate, setAssignDueDate] = useState({})
     const [isTestDueDate, setIsTestDueDate] = useState(true)
     const [testDueDate, setTestDueDate] = useState({})
-    const [setAdded, setSetAdded] = useState({})
-    const [postAdded, setPostAdded] = useState({})
-    const [assignAssigned, setAssignAssigned] = useState({})
-    const [testAssigned, setTestAssigned] = useState({})
-    const [submitGraded, setSubmitGraded] = useState({})
+    const [setAdded, setSetAdded] = useState({ value: true })
+    const [postAdded, setPostAdded] = useState({ value: true })
+    const [assignAssigned, setAssignAssigned] = useState({ value: true })
+    const [testAssigned, setTestAssigned] = useState({ value: true })
+    const [submitGraded, setSubmitGraded] = useState({ value: true })
 
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const settings = (
-                    await UserSettingService.getUserSettingByUserId(userInfo.id)
+                    await UserSettingService.customSettings(userInfo.id)
                 ).data
-                for (const setting of settings) {
-                    switch (setting.setting.id) {
-                        case 1:
-                            setStudyReminder({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 1,
-                                },
-                                value: setting.value,
-                            })
-                            setIsStudyReminder(setting.value ? true : false)
-                            break
-                        case 3:
-                            setAssignDueDate({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 3,
-                                },
-                                value: setting.value,
-                            })
-                            setIsAssignDueDate(setting.value ? true : false)
-                            break
-                        case 4:
-                            setTestDueDate({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 4,
-                                },
-                                value: setting.value,
-                            })
-                            setIsTestDueDate(setting.value ? true : false)
-                            break
-                        case 5:
-                            setSetAdded({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 5,
-                                },
-                                value: setting.value,
-                            })
-                            break
-                        case 6:
-                            setPostAdded({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 6,
-                                },
-                                value: setting.value,
-                            })
-                            break
-                        case 7:
-                            setAssignAssigned({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 7,
-                                },
-                                value: setting.value,
-                            })
-                            break
-                        case 8:
-                            setTestAssigned({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 8,
-                                },
-                                value: setting.value,
-                            })
-                            break
-                        case 9:
-                            setSubmitGraded({
-                                user: {
-                                    id: userInfo.id,
-                                    username: userInfo.username,
-                                },
-                                setting: {
-                                    id: 9,
-                                },
-                                value: setting.value,
-                            })
-                            break
-                        default:
-                            break
-                    }
-                }
+                // study reminder
+                setStudyReminder({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 1,
+                    },
+                    value: settings.value,
+                })
+                setIsStudyReminder(settings.value ? true : false)
+                // assign due date
+                setAssignDueDate({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 3,
+                    },
+                    value: settings.value,
+                })
+                setIsAssignDueDate(settings.value ? true : false)
+                // test due date
+                setTestDueDate({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 4,
+                    },
+                    value: settings.value,
+                })
+                setIsTestDueDate(settings.value ? true : false)
+                // set added
+                setSetAdded({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 5,
+                    },
+                    value: settings.value ? settings.value : true,
+                })
+                // post added
+                setPostAdded({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 6,
+                    },
+                    value: settings.value ? settings.value : true,
+                })
+                // assign assigned
+                setAssignAssigned({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 7,
+                    },
+                    value: settings.value ? settings.value : true,
+                })
+                // test assigned
+                setTestAssigned({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 8,
+                    },
+                    value: settings.value ? settings.value : true,
+                })
+                // submit graded
+                setSubmitGraded({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    setting: {
+                        id: 9,
+                    },
+                    value: settings.value ? settings.value : true,
+                })
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -146,7 +132,64 @@ const Notifications = () => {
         }
     }, [userInfo])
 
-    const handleSave = () => {}
+    const handleSave = async () => {
+        try {
+            // study reminder
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                studyReminder.setting.id,
+                studyReminder.value
+            )
+            // assign due date
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                assignDueDate.setting.id,
+                assignDueDate.value
+            )
+            // test due date
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                testDueDate.setting.id,
+                testDueDate.value
+            )
+            // set added
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                setAdded.setting.id,
+                setAdded.value
+            )
+            // post added
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                postAdded.setting.id,
+                postAdded.value
+            )
+            // assign assigned
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                setAssignAssigned.setting.id,
+                setAssignAssigned.value
+            )
+            // test assigned
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                testAssigned.setting.id,
+                testAssigned.value
+            )
+            // submit graded
+            await UserSettingService.updateCustomSettings(
+                userInfo.id,
+                submitGraded.setting.id,
+                submitGraded.value
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
 
     return (
         <div className="mx-5 ps-5">
@@ -180,7 +223,10 @@ const Notifications = () => {
                             value={studyReminder?.value || ''}
                             disabled={!isStudyReminder}
                             onChange={(event) => {
-                                setStudyReminder(event.target.value)
+                                setStudyReminder({
+                                    ...studyReminder,
+                                    value: event.target.value,
+                                })
                             }}
                         />
                     </div>
@@ -221,7 +267,10 @@ const Notifications = () => {
                                         disabled={!isAssignDueDate}
                                         value={assignDueDate?.value || ''}
                                         onChange={(event) => {
-                                            setAssignDueDate(event.target.value)
+                                            setAssignDueDate({
+                                                ...assignDueDate,
+                                                value: event.target.value,
+                                            })
                                         }}
                                     />
                                 </div>
@@ -262,7 +311,10 @@ const Notifications = () => {
                                         disabled={!isTestDueDate}
                                         value={testDueDate?.value || ''}
                                         onChange={(event) => {
-                                            setTestDueDate(event.target.value)
+                                            setTestDueDate({
+                                                ...testDueDate,
+                                                value: event.target.value,
+                                            })
                                         }}
                                     />
                                 </div>
@@ -277,9 +329,12 @@ const Notifications = () => {
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
                             id="setAdded"
-                            checked={setAdded?.value || true}
+                            checked={setAdded?.value}
                             onChange={(event) => {
-                                setSetAdded(event.target.checked)
+                                setSetAdded({
+                                    ...setAdded,
+                                    value: event.target.checked,
+                                })
                             }}
                         />
                         <label className="form-check-label" htmlFor="setAdded">
@@ -291,9 +346,12 @@ const Notifications = () => {
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
                             id="postPosted"
-                            checked={postAdded?.value || true}
+                            checked={postAdded?.value}
                             onChange={(event) => {
-                                setPostAdded(event.target.checked)
+                                setPostAdded({
+                                    ...postAdded,
+                                    value: event.target.checked,
+                                })
                             }}
                         />
                         <label
@@ -308,9 +366,12 @@ const Notifications = () => {
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
                             id="assignmentAssigned"
-                            checked={assignAssigned?.value || true}
+                            checked={assignAssigned?.value}
                             onChange={(event) => {
-                                setAssignAssigned(event.target.checked)
+                                setAssignAssigned({
+                                    ...assignAssigned,
+                                    value: event.target.checked,
+                                })
                             }}
                         />
                         <label
@@ -325,9 +386,12 @@ const Notifications = () => {
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
                             id="testAssigned"
-                            checked={testAssigned?.value || true}
+                            checked={testAssigned?.value}
                             onChange={(event) => {
-                                setTestAssigned(event.target.checked)
+                                setTestAssigned({
+                                    ...testAssigned,
+                                    value: event.target.checked,
+                                })
                             }}
                         />
                         <label
@@ -342,9 +406,12 @@ const Notifications = () => {
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
                             id="submissionGraded"
-                            checked={submitGraded?.value || true}
+                            checked={submitGraded?.value}
                             onChange={(event) => {
-                                setSubmitGraded(event.target.checked)
+                                setSubmitGraded({
+                                    ...submitGraded,
+                                    value: event.target.checked,
+                                })
                             }}
                         />
                         <label

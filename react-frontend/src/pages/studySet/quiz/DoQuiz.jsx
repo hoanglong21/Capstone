@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 import StudySetService from '../../../services/StudySetService'
+import FieldService from '../../../services/FieldService'
 
 import {
     StudySetSolidIcon,
@@ -19,12 +20,17 @@ const DoQuiz = () => {
     const { id } = useParams()
 
     const [studySet, setStudySet] = useState({})
+    const [fields, setFields] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
             const tempStudySet = (await StudySetService.getStudySetById(id))
                 .data
             setStudySet(tempStudySet)
+            const tempFields = (
+                await FieldService.getFieldsByStudySetTypeId(tempStudySet.id)
+            ).data
+            setFields(tempFields)
         }
         if (id) {
             fetchData()
@@ -149,9 +155,9 @@ const DoQuiz = () => {
                             ></button>
                         </div>
                         <div className="modal-body">
-                            <div className="row">
+                            <div className="row mb-3">
                                 <div className="col-6">
-                                    <div className="quizOptionBlock mb-4">
+                                    <div className="quizOptionBlock">
                                         <legend>QUESTION TYPES</legend>
                                         <div className="mb-2">
                                             <input
@@ -196,6 +202,8 @@ const DoQuiz = () => {
                                             </label>
                                         </div>
                                     </div>
+                                </div>
+                                <div className="col-6">
                                     <div className="quizOptionBlock mb-4">
                                         <legend>QUESTION LIMIT</legend>
                                         <div className="mb-2 d-flex align-items-center">
@@ -227,40 +235,48 @@ const DoQuiz = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="row">
                                 <div className="col-6">
                                     <div className="quizOptionBlock mb-4">
                                         <legend>PROMPT WITH</legend>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                value=""
-                                                id="note"
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="note"
-                                            >
-                                                Show note
-                                            </label>
-                                        </div>
+                                        {fields?.map((field, index) => (
+                                            <div className="mb-2" index={index}>
+                                                <input
+                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                    type="checkbox"
+                                                    value=""
+                                                    id="note"
+                                                />
+                                                <label
+                                                    className="form-check-label"
+                                                    htmlFor="note"
+                                                >
+                                                    {field.name}
+                                                </label>
+                                            </div>
+                                        ))}
                                     </div>
+                                </div>
+                                <div className="col-6">
                                     <div className="quizOptionBlock">
                                         <legend>ANSWER WITH</legend>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                value=""
-                                                id="note"
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="note"
-                                            >
-                                                Show note
-                                            </label>
-                                        </div>
+                                        {fields?.map((field, index) => (
+                                            <div className="mb-2" index={index}>
+                                                <input
+                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                    type="checkbox"
+                                                    value=""
+                                                    id="note"
+                                                />
+                                                <label
+                                                    className="form-check-label"
+                                                    htmlFor="note"
+                                                >
+                                                    {field.name}
+                                                </label>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
