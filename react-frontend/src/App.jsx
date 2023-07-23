@@ -254,6 +254,7 @@ const App = () => {
                 <Route path="/viewdetailpost/:id" element={<ViewDetailPost />} />
                 <Route path='/managecomment' element={<ManageComment />}/>
                 <Route path="/viewdetailcomment/:id" element={<ViewDetailComment />} />
+                
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route
