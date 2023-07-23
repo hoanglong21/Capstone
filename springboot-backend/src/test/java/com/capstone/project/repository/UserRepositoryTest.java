@@ -292,4 +292,38 @@ public class UserRepositoryTest {
         Assertions.assertThat(user1).isNull();
     }
 
+    @Order(10)
+    @Test
+    public void testExistsByToken() {
+        User userInit = User.builder()
+                .username("test_long")
+                .email("test_long@gmail.com")
+                .token("12345")
+                .build();
+        userRepository.save(userInit);
+
+        boolean exists = userRepository.existsByToken("12345");
+        Assertions.assertThat(exists).isTrue();
+
+        exists = userRepository.existsByToken("00000");
+        Assertions.assertThat(exists).isFalse();
+    }
+
+    @Order(10)
+    @Test
+    public void testFindUserByToken() {
+        User userInit = User.builder()
+                .username("test_long")
+                .email("test_long@gmail.com")
+                .token("12345")
+                .build();
+        userRepository.save(userInit);
+
+        User user = userRepository.findUserByToken("12345");
+        Assertions.assertThat(user).isNotNull();
+
+        user = userRepository.findUserByToken("00000");
+        Assertions.assertThat(user).isNull();
+    }
+
 }
