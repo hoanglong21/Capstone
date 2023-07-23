@@ -7,12 +7,15 @@ import com.capstone.project.repository.AssignmentRepository;
 import com.capstone.project.repository.AttachmentRepository;
 import com.capstone.project.repository.SubmissionRepository;
 import com.capstone.project.service.impl.AssignmentServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.text.ParseException;
@@ -29,6 +32,14 @@ import static org.mockito.Mockito.times;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AssignmentServiceTest {
 
+    @Mock
+    private EntityManager em;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private ClassService classService;
     @Mock
     private AssignmentRepository assignmentRepository;
 
@@ -191,6 +202,36 @@ public class AssignmentServiceTest {
     }
 
 
+    @Order(7)
+    @ParameterizedTest(name = "index => search={0},author{1},fromStart{2}, toStart{3},fromCreated{4},toCreated{5} ,isDraft{6},direction{7}, sortBy{8},classId={9}, page{10}, size{11}")
+    @CsvSource({
+            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,DESC,created_date,1,1,5",
+            "Homwork2,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,DESC,created_date,1,1,5"
+    })
+    public void testGetFilterAssignment(String search, String author, String fromStart, String toStart, String fromCreated, String toCreated,
+                                        Boolean isDraft, String direction, String sortBy, int classid, int page, int size) throws ResourceNotFroundException {
+
+        MockitoAnnotations.openMocks(this);
+            Assignment assignment = Assignment.builder()
+                    .id(1)
+                    .user(User.builder().id(1).build())
+                    .classroom(Class.builder().id(1).build())
+                    .instruction("do excersices")
+                    .title("Assignment 1")
+                    .build();
+
+
+            Query mockedQuery = mock(Query.class);
+            when(em.createNativeQuery(anyString(),eq(Assignment.class))).thenReturn(mockedQuery);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(mockedQuery.getResultList()).thenReturn(List.of(assignment));
+
+
+            List<Assignment> list = (List<Assignment>) assignmentServiceImpl.getFilterAssignment(search, author, fromStart, toStart, fromCreated, toCreated,
+                    isDraft, direction, sortBy, classid, page, size).get("list");
+            assertThat(list.size()).isGreaterThan(0);
+
+    }
     }
 
 
