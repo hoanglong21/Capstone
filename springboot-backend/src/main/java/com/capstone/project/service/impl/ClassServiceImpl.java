@@ -230,7 +230,7 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("You cannot join your class !");
         }
 
-        ClassLearner classLearner = classLearnerRepository.findByUserAndClassroom(user,classroom);
+        ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
         if (classLearner != null) {
             throw new ResourceNotFroundException("You are already in the class !");
         }
@@ -268,7 +268,7 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("User not exist with id: " + userId);
         }
 
-        ClassLearner classLearner = classLearnerRepository.findByUserAndClassroom(user,classroom);
+        ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
         if (classLearner!= null) {
             if(classLearner.getUser().getId() == userId){
                 return true;}

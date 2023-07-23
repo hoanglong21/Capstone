@@ -12,6 +12,6 @@ public interface UserSettingRepository extends JpaRepository<UserSetting,Integer
     List<UserSetting> getByUserId(int id);
     List<UserSetting> getBySettingId(int id);
 
-    @Query(value = "SELECT * FROM use_setting WHERE user_id = :userId AND setting_id = :settingId", nativeQuery = true)
+    @Query(value = "SELECT * FROM user_setting WHERE user_id = :userId AND setting_id = :settingId", nativeQuery = true)
     UserSetting getUserSettingCustom(int userId, int settingId);
 }

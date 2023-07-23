@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "use_setting", uniqueConstraints = @UniqueConstraint(columnNames={"user_id", "setting_id"}))
+@Table(name = "user_setting", uniqueConstraints = @UniqueConstraint(columnNames={"user_id", "setting_id"}))
 public class UserSetting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
