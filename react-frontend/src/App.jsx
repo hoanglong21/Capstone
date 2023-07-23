@@ -80,6 +80,7 @@ import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
 import ManageTest from './pages/admin/ManageTest'
 import ManageSubmission from './pages/admin/ManageSubmission'
 import ViewDetailSubmission from './pages/admin/ViewDetailSubmission'
+import RegisterAdmin from './pages/admin/RegiserAdmin'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -264,6 +265,7 @@ const App = () => {
                     path="/viewdetailvocab"
                     element={<ViewVocabularyDetail />}
                 />
+                <Route path="/registeradmin" element={<RegisterAdmin />} />
             </Routes>
             <AuthVerify logOut={logOut} />
         </BrowserRouter>
