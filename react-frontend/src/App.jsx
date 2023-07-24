@@ -78,6 +78,9 @@ import People from './pages/class/People'
 import Mark from './pages/class/Mark'
 import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
 import ManageTest from './pages/admin/ManageTest'
+import Achievements from './pages/library/Achievements'
+import Statistics from './pages/library/Statistics'
+import ClassStatistics from './pages/class/ClassStatistics'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -121,8 +124,13 @@ const App = () => {
                         </Route>
                         {/* Library */}
                         <Route path="library" element={<LibraryLayout />}>
+                            <Route
+                                path="achievements"
+                                element={<Achievements />}
+                            />
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
+                            <Route path="statistics" element={<Statistics />} />
                         </Route>
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
@@ -153,6 +161,10 @@ const App = () => {
                             />
                             <Route path="people" element={<People />} />
                             <Route path="mark" element={<Mark />} />
+                            <Route
+                                path="statistics"
+                                element={<ClassStatistics />}
+                            />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
@@ -245,15 +257,33 @@ const App = () => {
                     element={<ViewDetailFeedback />}
                 />
                 <Route path="/managestudyset" element={<ManageStudyset />} />
-                <Route path="/viewdetailset/:id" element={<ViewDetailStudyset />} />
-                <Route path='/manageassignment' element={<ManageAssignment />} />
-                <Route path='/viewdetailassign/:id' element={<ViewDetailAssignment />}/>
-                <Route path='/managetest' element={<ManageTest />}/>
-                <Route path="/viewdetailtest/:id" element={<ViewDetailTestForAdmin />} />
-                <Route path='/managepost' element={<ManagePost />}/>
-                <Route path="/viewdetailpost/:id" element={<ViewDetailPost />} />
-                <Route path='/managecomment' element={<ManageComment />}/>
-                <Route path="/viewdetailcomment/:id" element={<ViewDetailComment />} />
+                <Route
+                    path="/viewdetailset/:id"
+                    element={<ViewDetailStudyset />}
+                />
+                <Route
+                    path="/manageassignment"
+                    element={<ManageAssignment />}
+                />
+                <Route
+                    path="/viewdetailassign/:id"
+                    element={<ViewDetailAssignment />}
+                />
+                <Route path="/managetest" element={<ManageTest />} />
+                <Route
+                    path="/viewdetailtest/:id"
+                    element={<ViewDetailTestForAdmin />}
+                />
+                <Route path="/managepost" element={<ManagePost />} />
+                <Route
+                    path="/viewdetailpost/:id"
+                    element={<ViewDetailPost />}
+                />
+                <Route path="/managecomment" element={<ManageComment />} />
+                <Route
+                    path="/viewdetailcomment/:id"
+                    element={<ViewDetailComment />}
+                />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route

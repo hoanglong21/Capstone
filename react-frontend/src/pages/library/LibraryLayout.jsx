@@ -11,6 +11,17 @@ const LibraryLayout = () => {
                 <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
                     <li>
                         <NavLink
+                            to="achievements"
+                            className={
+                                'nav-link sub-nav-link px-3 me-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <span className="align-middle">Achievements</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
                             to={{
                                 pathname: 'sets',
                                 search: `?${searchParams.toString()}`,
@@ -35,6 +46,17 @@ const LibraryLayout = () => {
                             }
                         >
                             <span className="align-middle">Classes</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="statistics"
+                            className={
+                                'nav-link sub-nav-link px-3 me-3 ' +
+                                (({ isActive }) => (isActive ? 'active' : ''))
+                            }
+                        >
+                            <span className="align-middle">Statistics</span>
                         </NavLink>
                     </li>
                 </ul>
