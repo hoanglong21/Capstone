@@ -36,7 +36,6 @@ public class AssignmentRepositoryTest {
             "true", "false"
     })
     public void getAssignmentByClassroomId(Boolean trueId){
-
         User user = User.builder().username("test_stuff").email("teststuff@gmail.com").build();
         userRepository.save(user);
 

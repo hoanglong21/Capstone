@@ -90,7 +90,7 @@ public class NotificationServiceTest {
         }
     }
 
-    @Order(5)
+    @Order(4)
     @ParameterizedTest(name = "index => user_id{0}, content={1}, datetime={2},is_read{3},title{4},url{5}")
     @CsvSource({
             "1,new studyset added,2023-8-9,true, studyset, qweqw ",
@@ -118,7 +118,7 @@ public class NotificationServiceTest {
         }
     }
 
-    @Order(6)
+    @Order(5)
     @Test
     void testDeleteNotification() {
 

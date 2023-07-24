@@ -99,7 +99,7 @@ public class UserSettingServiceTest {
         assertThat(retrievedUserSetting).isEqualTo(userSettings);
     }
 
-    @Order(3)
+    @Order(4)
     @Test
     void testGetUserSettingBySettingId() {
         List<UserSetting> userSettings = new ArrayList<>();
@@ -120,7 +120,7 @@ public class UserSettingServiceTest {
         assertThat(retrievedUserSetting).isEqualTo(userSettings);
     }
 
-    @Order(4)
+    @Order(5)
     @ParameterizedTest(name = "index => userId={0}, settingId={1}, value{2}")
     @CsvSource({
             "1, 1, ja ",
@@ -138,7 +138,7 @@ public class UserSettingServiceTest {
         assertThat(userSetting).isEqualTo(createdusersetting);
     }
 
-    @Order(5)
+    @Order(6)
     @ParameterizedTest(name = "index => userId={0}, settingId={1}, value{2}")
     @CsvSource({
             "1, 1, ja ",
@@ -146,19 +146,16 @@ public class UserSettingServiceTest {
     })
     public void testUpdateUserSetting(int userId, int classId,String value) {
         try{
-
             UserSetting userSetting_new = UserSetting.builder()
                     .user(User.builder().id(1).build())
                     .setting(Setting.builder().id(1).build())
                     .value("ja")
                     .build();
-
             UserSetting userSetting = UserSetting.builder()
                     .user(User.builder().id(1).build())
                     .setting(Setting.builder().id(1).build())
                     .value(value)
                     .build();
-
             when(userSettingRepository.findById(any())).thenReturn(Optional.ofNullable(userSetting_new));
             when(userSettingRepository.save(any())).thenReturn(userSetting);
 
@@ -170,7 +167,7 @@ public class UserSettingServiceTest {
     }
 
 
-    @Order(6)
+    @Order(7)
     @Test
     void testDeleteUserSetting() {
 
@@ -190,7 +187,7 @@ public class UserSettingServiceTest {
         verify(userSettingRepository, times(1)).delete(userSetting);
     }
 
-    @Order(7)
+    @Order(8)
     @Test
     void testCustomGetUserSettingByUserId() {
         try {
@@ -209,17 +206,11 @@ public class UserSettingServiceTest {
             userSettings.add(userSetting1);
             userSettings.add(userSetting2);
 
-
             Map<String, String> result = userSettingService.CustomGetUserSettingByUserId(1);
 
-
             assertThat(result.get("language")).isEqualTo("vn");
-
-
             assertThat(result.get("study reminder")).isEqualTo("7:00");
             assertThat(result.get("assignment due date reminder")).isEqualTo("24");
-
-
             assertThat(result.get("set added")).isEqualTo("TRUE");
             assertThat(result.get("post added")).isEqualTo("TRUE");
             assertThat(result.get("assignment assigned")).isEqualTo("TRUE");

@@ -54,7 +54,6 @@ public class PostServiceTest {
         List<Post> posts = List.of(post);
         when(postRepository.findAll()).thenReturn(posts);
         assertThat(postServiceImpl.getAllPost().size()).isGreaterThan(0);
-
     }
 
     @Order(2)
@@ -85,24 +84,24 @@ public class PostServiceTest {
         }
     }
 
-//    @Order(4)
-//    @ParameterizedTest(name = "index => userId={0}, classId={1}, content{2}")
-//    @CsvSource({
-//            "1,1,Submit all assignment ",
-//            "2,2, Class will be off on Sunday "
-//    })
-//    public void testCreatePost(int userId,int classId,String content ){
-//
-//        Post post = Post.builder()
-//                .user(User.builder().id(userId).build())
-//                .classroom(Class.builder().id(classId).build())
-//                .content(content)
-//                .build();
-//
-//        when(postRepository.save(any())).thenReturn(post);
-//        Post createdpost = postServiceImpl.createPost(post);
-//        assertThat(post).isEqualTo(createdpost);
-//    }
+    @Order(4)
+    @ParameterizedTest(name = "index => userId={0}, classId={1}, content{2}")
+    @CsvSource({
+            "1,1,Submit all assignment ",
+            "2,2, Class will be off on Sunday "
+    })
+    public void testCreatePost(int userId,int classId,String content ){
+
+        Post post = Post.builder()
+                .user(User.builder().id(userId).build())
+                .classroom(Class.builder().id(classId).build())
+                .content(content)
+                .build();
+
+        when(postRepository.save(any())).thenReturn(post);
+        Post createdpost = postServiceImpl.createPost(post);
+        assertThat(post).isEqualTo(createdpost);
+    }
 
     @Order(5)
     @ParameterizedTest(name = "index => userId={0}, classId={1}, content{2}")
@@ -135,17 +134,14 @@ public class PostServiceTest {
                 .classroom(Class.builder().id(1).build())
                 .content("Submit Assignment Deadline")
                 .build();
-
         Comment comment = Comment.builder()
                 .commentType(CommentType.builder().id(1).build())
                 .content("Hello")
                 .build();
-
         Attachment attachment = Attachment.builder()
                 .assignment(Assignment.builder().id(1).build())
                 .file_url("home.doc")
                 .build();
-
         doNothing().when(postRepository).delete(post);
         doNothing().when(commentRepository).delete(comment);
         doNothing().when(attachmentRepository).delete(attachment);
@@ -153,14 +149,11 @@ public class PostServiceTest {
         when(postRepository.findById(1)).thenReturn(Optional.of(post));
         when(commentRepository.getCommentByPostId(1)).thenReturn(List.of(comment));
         when(attachmentRepository.getAttachmentByPostId(1)).thenReturn(List.of(attachment));
-
-
         try {
             postServiceImpl.deletePost(1);
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
-
         verify(postRepository, times(1)).delete(post);
         verify(commentRepository, times(1)).delete(comment);
     }
@@ -171,7 +164,8 @@ public class PostServiceTest {
             "Review test,quantruong,2023-8-9,2023-8-15,created_date,DESC,1,1,5",
             "Guide slide,ngocnguyen,2023-8-9,2023-8-15,created_date,DESC,1,1,5"
     })
-    public void testGetFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy, String direction, int classid, int page, int size) throws ResourceNotFroundException {
+    public void testGetFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy, String direction, int classid,
+                                  int page, int size) throws ResourceNotFroundException {
 
         MockitoAnnotations.openMocks(this);
         Post post = Post.builder()

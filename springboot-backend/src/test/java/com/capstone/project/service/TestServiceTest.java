@@ -90,7 +90,6 @@ public class TestServiceTest {
             "janedoe"
     })
     void testGetTestByUser(String username) {
-
         User user = User.builder()
                 .username(username)
                 .email("johnsmith@example.com")
@@ -106,14 +105,12 @@ public class TestServiceTest {
         testList.add(test2);
         when(userRepository.findUserByUsername(username)).thenReturn(user);
         when(testRepository.getTestByAuthorId(user.getId())).thenReturn(testList);
-
         try {
             List<com.capstone.project.model.Test> result = testServiceImpl.getTestByUser(username);
             assertThat(result).containsExactlyInAnyOrderElementsOf(testList);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Order(4)
@@ -122,9 +119,9 @@ public class TestServiceTest {
             "1,2023-4-5,Test knowledge,12,2023-5-4, Test daily ",
             "2,2023-4-5, Test all learner,14, 2023-5-4, Midterm "
     })
-    public void testCreateTest(int userId, String created_date, String description, int duration, String modified_date, String title) {
+    public void testCreateTest(int userId, String created_date, String description, int duration, String modified_date,
+                               String title) {
         try {
-
             com.capstone.project.model.Test test = com.capstone.project.model.Test.builder()
                     .user(User.builder().id(userId).build())
                     .created_date(dateFormat.parse(created_date))
@@ -132,7 +129,6 @@ public class TestServiceTest {
                     .duration(duration)
                     .modified_date(dateFormat.parse(modified_date))
                     .title(title).build();
-
             when(testRepository.save(any())).thenReturn(test);
             com.capstone.project.model.Test createdtest = testServiceImpl.createTest(test);
             assertThat(test).isEqualTo(createdtest);
@@ -148,7 +144,8 @@ public class TestServiceTest {
             "1,2023-4-5,Test knowledge,12,2023-5-4, Test daily ",
             "2,2023-4-5, Test all learner,14, 2023-5-4, Midterm "
     })
-    public void testUpdateTest(int userId, String created_date, String description, int duration, String modified_date, String title) {
+    public void testUpdateTest(int userId, String created_date, String description, int duration, String modified_date,
+                               String title) {
         try {
 
             com.capstone.project.model.Test test_new = com.capstone.project.model.Test.builder()
@@ -158,7 +155,6 @@ public class TestServiceTest {
                     .duration(duration)
                     .modified_date(dateFormat.parse(modified_date))
                     .title(title).build();
-
             com.capstone.project.model.Test test = com.capstone.project.model.Test.builder()
                     .user(User.builder().id(userId).build())
                     .created_date(dateFormat.parse(created_date))
@@ -166,19 +162,16 @@ public class TestServiceTest {
                     .duration(duration)
                     .modified_date(dateFormat.parse(modified_date))
                     .title(title).build();
-
             when(testRepository.findById(any())).thenReturn(Optional.ofNullable(test_new));
             when(testRepository.save(any())).thenReturn(test);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Order(6)
     @Test
     void testDeleteTest() {
-
         com.capstone.project.model.Test test = com.capstone.project.model.Test.builder()
                 .id(1)
                 .user(User.builder().id(1).build())
@@ -186,7 +179,6 @@ public class TestServiceTest {
                 .duration(12)
                 .title("PT1")
                 .build();
-
         Question question = Question.builder()
                 .id(1)
                 .test(com.capstone.project.model.Test.builder().id(1).build())
@@ -194,19 +186,9 @@ public class TestServiceTest {
                 .num_choice(4)
                 .question("Who kill Jack Robin")
                 .build();
+        Answer answer = Answer.builder().question(Question.builder().id(1).build()).content("Mango").is_true(false).build();
 
-        Answer answer = Answer.builder()
-                .question(Question.builder().id(1).build())
-                .content("Mango")
-                .is_true(false)
-                .build();
-
-
-        Comment comment = Comment.builder()
-                .commentType(CommentType.builder().id(1).build())
-                .content("Forcus")
-                .build();
-
+        Comment comment = Comment.builder().commentType(CommentType.builder().id(1).build()).content("Forcus").build();
         doNothing().when(testRepository).delete(test);
         doNothing().when(questionRepository).delete(question);
         doNothing().when(answerRepository).delete(answer);
@@ -216,14 +198,11 @@ public class TestServiceTest {
         when(questionRepository.getQuestionByTestId(1)).thenReturn(List.of(question));
         when(answerRepository.getAnswerByQuestionId(1)).thenReturn(List.of(answer));
         when(commentRepository.getCommentByTestId(1)).thenReturn(List.of(comment));
-
-
         try {
             testServiceImpl.deleteTest(1);
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
-
         verify(testRepository, times(1)).delete(test);
         verify(questionRepository, times(1)).delete(question);
         verify(answerRepository, times(1)).delete(answer);
@@ -231,13 +210,15 @@ public class TestServiceTest {
     }
 
     @Order(7)
-    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, duration{3},classId={4}, fromStart{5}, toStart{6},fromCreated{7},toCreated{8} ,isDraft{9}, sortBy{10}, page{11}, size{12}")
+    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, duration{3},classId={4}, fromStart{5}, " +
+                                      "toStart{6},fromCreated{7},toCreated{8} ,isDraft{9}, sortBy{10}, page{11}, size{12}")
     @CsvSource({
             "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,1,5",
             "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,1,1,5"
     })
     public void testGetFilterTest(String search, String author, String direction, int duration, int classid,
-                                  String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException {
+                                  String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft,
+                                  String sortBy, int page, int size) throws ResourceNotFroundException {
 
         MockitoAnnotations.openMocks(this);
         com.capstone.project.model.Test test = com.capstone.project.model.Test.builder()
@@ -253,12 +234,10 @@ public class TestServiceTest {
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(test));
 
-
         List<com.capstone.project.model.Test> list = (List<com.capstone.project.model.Test>) testServiceImpl.getFilterTest(search, author, direction, duration,
                 classid, fromStarted, toStarted, fromCreated, toCreated,
                 isDraft, sortBy, page, size).get("list");
         assertThat(list.size()).isGreaterThan(0);
-
     }
 
 }

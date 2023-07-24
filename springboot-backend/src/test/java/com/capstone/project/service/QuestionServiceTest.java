@@ -118,14 +118,12 @@ public class QuestionServiceTest {
                 .num_choice(2)
                 .question("Who kill Tim")
                 .build();
-
         Question question2 = Question.builder()
                 .test(com.capstone.project.model.Test.builder().id(1).build())
                 .questionType(QuestionType.builder().id(1).build())
                 .num_choice(2)
                 .question("Who kill Jack")
                 .build();
-
         questionList.add(question1);
         questionList.add(question2);
 
@@ -172,26 +170,22 @@ public class QuestionServiceTest {
                 .num_choice(4)
                 .question("Who kill Jack Robin")
                 .build();
-
         Answer answer = Answer.builder()
                 .id(1)
                 .question(Question.builder().id(1).build())
                 .content("Mango")
                 .is_true(false)
                 .build();
-
         doNothing().when(questionRepository).delete(question);
         doNothing().when(answerRepository).delete(answer);
 
         when(questionRepository.findById(1)).thenReturn(Optional.of(question));
         when(answerRepository.getAnswerByQuestionId(1)).thenReturn(List.of(answer));
-
         try {
             questionServiceImpl.deleteQuestion(1);
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
-
         verify(questionRepository, times(1)).delete(question);
         verify(answerRepository, times(1)).delete(answer);
 
@@ -214,12 +208,10 @@ public class QuestionServiceTest {
                 .question("Who kill Jack Robin")
                 .build();
 
-
         Query mockedQuery = mock(Query.class);
         when(em.createNativeQuery(anyString(), eq(Question.class))).thenReturn(mockedQuery);
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(question));
-
 
         List<Question> list = (List<Question>) questionServiceImpl.getFilterQuestion(search, typeid, testid, page, size).get("list");
         assertThat(list.size()).isGreaterThan(0);

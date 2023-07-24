@@ -1,4 +1,5 @@
 package com.capstone.project.repository;
+import com.capstone.project.model.Class;
 import com.capstone.project.model.Submission;
 import com.capstone.project.model.Test;
 import com.capstone.project.model.User;
@@ -21,6 +22,9 @@ public class TestRepositoryTest {
     private UserRepository userRepository;
 
     @Autowired
+    private ClassRepository classRepository;
+
+    @Autowired
     private TestRepository testRepository;
 
     @Order(1)
@@ -33,7 +37,11 @@ public class TestRepositoryTest {
         User user = User.builder().username("test_stub").email("teststub@gmail.com").build();
         userRepository.save(user);
 
-        Test test = Test.builder().description("Test for all").duration(12).title("Progress test").user(user).build();
+        Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
+        classRepository.save(classroom);
+
+        Test test = Test.builder().description("Test for all").classroom(classroom).duration(12)
+                                  .title("Progress test").user(user).build();
         testRepository.save(test);
 
         if(trueId) {

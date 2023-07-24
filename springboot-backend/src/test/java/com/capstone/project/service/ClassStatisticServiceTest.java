@@ -90,7 +90,7 @@ public class ClassStatisticServiceTest {
         }
     }
 
-    @Order(2)
+    @Order(3)
     @Test
     public void getTLearnerJoinedNumber() {
         try {
@@ -106,7 +106,7 @@ public class ClassStatisticServiceTest {
         }
     }
 
-    @Order(3)
+    @Order(4)
     @Test
     public void getLearnerJoinedGrowth() {
         try {
@@ -122,7 +122,7 @@ public class ClassStatisticServiceTest {
         }
     }
 
-    @Order(4)
+    @Order(5)
     @Test
     public void getPostGrowth() {
         try {
@@ -137,7 +137,7 @@ public class ClassStatisticServiceTest {
         }
     }
 
-    @Order(5)
+    @Order(6)
     @Test
     public void getPointDistribution() {
         try {

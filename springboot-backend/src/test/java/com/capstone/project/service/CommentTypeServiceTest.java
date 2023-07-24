@@ -33,7 +33,7 @@ public class CommentTypeServiceTest {
     }
 
 
-    @Order(6)
+    @Order(1)
     @Test
     void testGetCommentTypeById() {
 
