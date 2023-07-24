@@ -13,21 +13,19 @@ function ManageFeedback() {
 
   const search = searchParams.get("search");
 
-  const { userInfo } = useSelector((state) => state.user);
-
   const fetchData = async (searchKey) => {
     let temp;
     try {
       temp = (
         await AssignmentService.getFilterList(
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
+          '',
+          `${searchKey ? '=' + searchKey : ''}`,
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
           "=10"
         )
       ).data.list;
@@ -70,6 +68,9 @@ function ManageFeedback() {
                   </tr>
                 </thead>
                 <tbody>
+                {assignments?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                   {assignments?.map((assign) => (
                     <tr>
                       <th scope="row" key={assign.id}>

@@ -8,7 +8,7 @@ import {
   HelpIcon,
   LogoutIcon,
 } from "../../components/icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { logout as authLogout } from "../../features/auth/authSlice";
 import { logout as userLogout } from "../../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +20,8 @@ import defaultAvatar from "../../assets/images/avatar-default.jpg";
 function HeaderAdmin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const search = searchParams.get("search");
   const { userToken } = useSelector((state) => state.auth);
   const { userInfo } = useSelector((state) => state.user);
 
@@ -50,8 +51,19 @@ function HeaderAdmin() {
             type="search"
             placeholder="Search"
             aria-label="Search"
+            value={search || ""}
+            onChange={(event) =>
+              setSearchParams({
+                search: event.target.value,
+              })
+            }
           />
-          <button class="btn btn-primary" type="submit">
+          <button
+            class="btn btn-primary"
+            onClick={(event) => {
+              event.preventDefault();
+            }}
+          >
             Search
           </button>
         </form>

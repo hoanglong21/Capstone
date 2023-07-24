@@ -17,7 +17,7 @@ function ManageTest() {
         temp = (
             await TestService.getFilterList(
                 '',
-                '',
+                `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
                 '',
@@ -66,6 +66,9 @@ function ManageTest() {
                   </tr>
                 </thead>
                 <tbody>
+                {tests?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {tests?.map((test) => (
                   <tr>
                     <th scope="row" key={test.id}>{test?.id}</th>

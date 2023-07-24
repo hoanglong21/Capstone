@@ -17,11 +17,11 @@ function ManageSubmission() {
         temp = (
             await SubmissionService.getFilterList(
                 '',
+                `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
                 '',
-                '',
-                '',
+                '=10',
             )
         ).data.list
       }catch(error){
@@ -62,6 +62,9 @@ function ManageSubmission() {
                   </tr>
                 </thead>
                 <tbody>
+                {submission?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {submission?.map((submissions) => (
                   <tr>
                     <th scope="row" key={submissions.id}>{submissions?.id}</th>

@@ -6,12 +6,13 @@ import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
 import ApexCharts from "apexcharts";
 import AdminService from "../../services/AdminService";
-
+import ReactApexChart from "react-apexcharts";
 function AdminDashboard() {
   const [registernumber, setRegisterNumber] = useState();
   const [classnumber, setClassNumber] = useState();
   const [studySetnumber, setStudySetNumber] = useState();
   const [accessNumber, setAccessNumber] = useState();
+  const [userGrowth, setUserGrowth] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,27 +54,47 @@ function AdminDashboard() {
       }
     };
     fetchDataAccess();
+
+    const fetchDataUserGrowth = async () => {
+      try {
+        const temp = (await AdminService.getUserGrowth()).data;
+        setUserGrowth(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataUserGrowth();
+
+    initializeChartline();
   }, []);
 
-  var optionColumn = {
-    series: [
-      {
-        name: "Person",
-        data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65],
-      },
-    ],
+  const week = [
+    "Week 1",
+    "Week 2",
+    "Week 3",
+    "Week 4",
+    "Week 5",
+    "Week 6",
+    "Week 7",
+    "Week 8",
+    "Week 9",
+    "Week 10",
+    "Week 11",
+    "Week 12",
+  ];
+
+  const options = {
     chart: {
-      height: 350,
-      type: "bar",
+      id: "barchart",
     },
     plotOptions: {
       bar: {
-        borderRadius: 10,
-        columnWidth: "50%",
+        borderRadius: 5,
+        columnWidth: "75%",
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: true,
     },
     stroke: {
       width: 2,
@@ -88,20 +109,7 @@ function AdminDashboard() {
       labels: {
         rotate: -45,
       },
-      categories: [
-        "Week 1",
-        "Week 2",
-        "Week 3",
-        "Week 4",
-        "Week 5",
-        "Week 6",
-        "Week 7",
-        "Week 8",
-        "Week 9",
-        "Week 10",
-        "Week 11",
-        "Week 12",
-      ],
+      categories: week,
       tickPlacement: "on",
     },
     yaxis: {
@@ -124,21 +132,12 @@ function AdminDashboard() {
     },
   };
 
-  useEffect(() => {
-    initializeChart(); // Render the chart when the component mounts
-  }, []);
-
-  // useEffect(() => {
-  //   initializeChart();
-  // }, [options]); // Pass any dependencies here that may change and require the chart to be rerendered
-
-  const initializeChart = () => {
-    const chartOrigin = document.querySelector("#chart");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, optionColumn);
-      chart.render();
-    }
-  };
+  const series = [
+    {
+      name: "Person",
+      data: userGrowth,
+    },
+  ];
 
   var optionLine = {
     series: [
@@ -151,9 +150,6 @@ function AdminDashboard() {
       height: 350,
       type: "line",
     },
-    // forecastDataPoints: {
-    //   count: 7
-    // },
     stroke: {
       width: 7,
       curve: "smooth",
@@ -213,10 +209,6 @@ function AdminDashboard() {
     },
   };
 
-  useEffect(() => {
-    initializeChartline(); // Render the chart when the component mounts
-  }, []);
-
   const initializeChartline = () => {
     const chartOrigin = document.querySelector("#chartPie");
     if (chartOrigin) {
@@ -250,7 +242,9 @@ function AdminDashboard() {
                         <div className="fw-bold text-white text-uppercase mb-1">
                           Access Number (Monthly)
                         </div>
-                        <div className="h5 mb-0 fw-bold text-white">{accessNumber}</div>
+                        <div className="h5 mb-0 fw-bold text-white">
+                          {accessNumber}
+                        </div>
                       </div>
                       <div className="col-auto">
                         <i class="bi bi-people fs-2 text-white"></i>
@@ -335,11 +329,12 @@ function AdminDashboard() {
                   </h6>
                 </div>
                 <div className="card-body">
-                  <div
-                    className="chart-area"
-                    id="chart"
-                    style={{ height: "300px", width: "100%" }}
-                  ></div>
+                  <ReactApexChart
+                    options={options}
+                    series={series}
+                    type="bar"
+                    height={350}
+                  />
                 </div>
               </div>
             </div>

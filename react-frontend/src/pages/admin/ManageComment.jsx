@@ -17,7 +17,7 @@ function ManageComment() {
         temp = (
             await CommentService.getFilterList(
                 '',
-                '',
+                `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
                 '',
@@ -63,6 +63,9 @@ function ManageComment() {
                   </tr>
                 </thead>
                 <tbody>
+                {comment?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {comment?.map((comments) => (
                   <tr>
                     <th scope="row" key={comments.id}>{comments?.id}</th>

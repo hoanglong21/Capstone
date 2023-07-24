@@ -25,7 +25,7 @@ function ManageClass() {
                 '',
                 '',
                 '',
-                ''
+                '=10'
             )
         ).data.list
         setClasses(temp)
@@ -55,6 +55,9 @@ function ManageClass() {
                   </tr>
                 </thead>
                 <tbody>
+                {classes?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {classes?.map((classroom) => (
                   <tr key={classroom.id}>
                     <th scope="row">{classroom?.id}</th>

@@ -17,7 +17,7 @@ function ManagePost() {
         temp = (
             await PostService.getFilterList(
                 '',
-                '',
+                `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
                 '',
@@ -64,6 +64,9 @@ function ManagePost() {
                   </tr>
                 </thead>
                 <tbody>
+                {post?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {post?.map((posts) => (
                   <tr>
                     <th scope="row" key={posts.id}>{posts?.id}</th>
