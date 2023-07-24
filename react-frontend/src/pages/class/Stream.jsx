@@ -43,30 +43,41 @@ const Stream = () => {
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const tempClass = (await ClassService.getClassroomById(id)).data
-            setClassroom(tempClass)
-            setPosts(
-                (
-                    await PostService.getFilterList(
-                        '',
-                        '',
-                        '',
-                        `=${tempClass.id}`,
-                        '',
-                        ''
-                    )
-                ).data.list
-            )
-            setAddPost({
-                user: {
-                    id: userInfo.id,
-                    username: userInfo.username,
-                },
-                classroom: {
-                    id: tempClass.id,
-                },
-                content: '',
-            })
+            try {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                setPosts(
+                    (
+                        await PostService.getFilterList(
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            `=${tempClass.id}`,
+                            '=1',
+                            '=10'
+                        )
+                    ).data.list
+                )
+                setAddPost({
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    classroom: {
+                        id: tempClass.id,
+                    },
+                    content: '',
+                })
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (userInfo?.id) {
             fetchData()

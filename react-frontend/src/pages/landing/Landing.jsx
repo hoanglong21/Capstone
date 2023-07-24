@@ -10,7 +10,14 @@ const Landing = () => {
     return (
         <>
             <div className="landing__video">
-                <video controls muted={true} autoPlay={true} loop src={video} />
+                <video
+                    id="landingVideo"
+                    controls
+                    muted={true}
+                    autoPlay={true}
+                    loop
+                    src={video}
+                />
             </div>
             <div className="landing__ti text-center">
                 <h2 className="heading__line">What is NihongoLevelUp?</h2>

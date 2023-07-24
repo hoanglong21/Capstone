@@ -43,11 +43,9 @@ const Flashcard = () => {
     // catch press arrow event event
     useEffect(() => {
         const handleUserKeyPress = (event) => {
-            console.log('55555')
-
             switch (event.key) {
                 case 'ArrowLeft':
-                    const tempIndex1 = cardIndex - 1
+                    var tempIndex1 = cardIndex - 1
                     if (tempIndex1 > -1) {
                         setCardIndex(tempIndex1)
                         document
@@ -57,7 +55,7 @@ const Flashcard = () => {
                     // Do something for "left arrow" key press.
                     break
                 case 'ArrowRight':
-                    const tempIndex2 = cardIndex + 1
+                    var tempIndex2 = cardIndex + 1
                     if (tempIndex2 < cards.length) {
                         setCardIndex(tempIndex2)
                         document
@@ -77,7 +75,27 @@ const Flashcard = () => {
         return () => {
             window.removeEventListener('keydown', handleUserKeyPress, true)
         }
-    }, [])
+    }, [cardIndex])
+
+    const handleShuffle = () => {
+        if (cards.length > 1) {
+            var array = [...cards]
+            let currentIndex = array.length,
+                randomIndex
+            // While there remain elements to shuffle.
+            while (currentIndex != 0) {
+                // Pick a remaining element.
+                randomIndex = Math.floor(Math.random() * currentIndex)
+                currentIndex--
+                // And swap it with the current element.
+                ;[array[currentIndex], array[randomIndex]] = [
+                    array[randomIndex],
+                    array[currentIndex],
+                ]
+            }
+            setCards([...array])
+        }
+    }
 
     return (
         <div>
@@ -148,17 +166,14 @@ const Flashcard = () => {
                     </h3>
                     <h3>{cards[cardIndex]?.studySet?.title}</h3>
                 </div>
-                <div className="flashcardOptions d-flex">
-                    <button className="flashcardOptions_btn">Options</button>
-                    <button
-                        className="flashcardClose_btn ms-3 d-flex align-items-center"
-                        onClick={() => {
-                            navigate(`/set/${cards[cardIndex]?.studySet?.id}`)
-                        }}
-                    >
-                        <CloseIcon strokeWidth="2" />
-                    </button>
-                </div>
+                <button
+                    className="flashcardClose_btn ms-3 d-flex align-items-center"
+                    onClick={() => {
+                        navigate(`/set/${cards[cardIndex]?.studySet?.id}`)
+                    }}
+                >
+                    <CloseIcon strokeWidth="2" />
+                </button>
             </div>
             <div className="flashcardProgressContainer">
                 <div
@@ -205,7 +220,10 @@ const Flashcard = () => {
                         </button>
                     </div>
                     <div className="flashcardPlay">
-                        <button className="flashcardPlay_btn">
+                        <button
+                            className="flashcardPlay_btn"
+                            onClick={handleShuffle}
+                        >
                             <ShuffleIcon size="1.5rem" />
                         </button>
                     </div>

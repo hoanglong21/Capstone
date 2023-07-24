@@ -48,6 +48,9 @@ const CreateSet = () => {
                 let temp = {}
                 if (id) {
                     temp = (await StudySetService.getStudySetById(id)).data
+                    const tempCreatedDate = temp.created_date
+                    temp.created_date =
+                        tempCreatedDate.replace(/\s/g, 'T') + '.000' + '+07:00'
                     setType(temp.studySetType.id)
                 } else {
                     const listSets = (
@@ -71,6 +74,11 @@ const CreateSet = () => {
                     ).data
                     if (listSets.totalItems > 0) {
                         temp = listSets.list[0]
+                        const tempCreatedDate = temp.created_date
+                        temp.created_date =
+                            tempCreatedDate.replace(/\s/g, 'T') +
+                            '.000' +
+                            '+07:00'
                     } else {
                         temp = (
                             await StudySetService.createStudySet({
@@ -89,6 +97,11 @@ const CreateSet = () => {
                                 deleted_date: '',
                             })
                         ).data
+                        const tempCreatedDate = temp.created_date
+                        temp.created_date =
+                            tempCreatedDate.replace(/\s/g, 'T') +
+                            '.000' +
+                            '+07:00'
                     }
                 }
                 setStudySet(temp)
@@ -304,7 +317,20 @@ const CreateSet = () => {
                 >
                     {studySet._draft ? (
                         <div className="container d-flex justify-content-between">
-                            <h3 className="fw-bold">Create a new study set</h3>
+                            <div className="d-flex">
+                                <h3 className="fw-bold">
+                                    Create a new study set
+                                </h3>
+                                {loading && (
+                                    <div className="createTest_status">
+                                        Loading
+                                    </div>
+                                )}
+                                <div className="createTest_status">
+                                    {saving ? 'Saving...' : 'Saved'}
+                                </div>
+                            </div>
+
                             <button
                                 type="submit"
                                 className="btn btn-primary"
@@ -312,12 +338,6 @@ const CreateSet = () => {
                             >
                                 Create
                             </button>
-                            {loading && (
-                                <div className="createTest_status">Loading</div>
-                            )}
-                            <div className="createTest_status">
-                                {saving ? 'Saving...' : 'Saved'}
-                            </div>
                         </div>
                     ) : (
                         <div className="container d-flex justify-content-between">

@@ -88,7 +88,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
 
         Map<String, String> userSettingMap = new HashMap<>();
-        userSettingMap.put("study reminder", "7:00");
+        userSettingMap.put("study reminder", "07:00");
         userSettingMap.put("language", "vn");
         userSettingMap.put("assignment due date reminder", "24");
         userSettingMap.put("test due date reminder", "24");
@@ -105,6 +105,10 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public UserSetting saveUserSettingCustom(int userId, int settingId, String newValue) {
         UserSetting userSetting = userSettingRepository.getUserSettingCustom(userId, settingId);
+        if(newValue==null || newValue.equals("")) {
+            userSettingRepository.delete(userSetting);
+            return null;
+        }
         switch (settingId) {
             case 1:
                 if (!UserSettingValidation.isValidTimeFormat(newValue)) {
