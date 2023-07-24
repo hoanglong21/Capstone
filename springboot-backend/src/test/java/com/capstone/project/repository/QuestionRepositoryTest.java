@@ -1,5 +1,6 @@
 package com.capstone.project.repository;
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -21,6 +22,10 @@ public class QuestionRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+
+    @Autowired
+    private ClassRepository classRepository;
+
     @Autowired
     private TestRepository testRepository;
 
@@ -37,7 +42,10 @@ public class QuestionRepositoryTest {
         User user = User.builder().username("test_stub").email("teststub@gmail.com").build();
         userRepository.save(user);
 
-        Test test = Test.builder().description("Test for all").duration(12).title("Progress test").user(user).build();
+        Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
+        classRepository.save(classroom);
+
+        Test test = Test.builder().description("Test for all").classroom(classroom).duration(12).title("Progress test").user(user).build();
         testRepository.save(test);
 
         Question question = Question.builder()

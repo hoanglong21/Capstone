@@ -44,20 +44,13 @@ public class SubmissionRepositoryTest {
         Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
         classRepository.save(classroom);
 
-        Assignment assignment = Assignment.builder()
-                .instruction("Assignment for all")
-                .title("Assignment 1")
-                .classroom(classroom)
+        Assignment assignment = Assignment.builder().instruction("Assignment for all").title("Assignment 1").classroom(classroom)
                 .user(user).build();
         assignmentRepository.save(assignment);
 
-        Submission submission =Submission.builder()
-                .user(user)
-                .assignment(assignment)
-                .description("Submit assignment")
+        Submission submission =Submission.builder().user(user).assignment(assignment).description("Submit assignment")
                 .build();
         submissionRepository.save(submission);
-
         if(trueId) {
             List<Submission> result = submissionRepository.getSubmissionByAssignmentId(assignment.getId());
             assertThat(result.size()).isGreaterThan(0);

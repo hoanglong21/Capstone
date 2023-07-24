@@ -38,6 +38,7 @@ public class Submission {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified_date;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     @Column

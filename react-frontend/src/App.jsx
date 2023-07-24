@@ -81,6 +81,9 @@ import ManageTest from './pages/admin/ManageTest'
 import ManageSubmission from './pages/admin/ManageSubmission'
 import ViewDetailSubmission from './pages/admin/ViewDetailSubmission'
 import RegisterAdmin from './pages/admin/RegiserAdmin'
+import Achievements from './pages/library/Achievements'
+import Statistics from './pages/library/Statistics'
+import ClassStatistics from './pages/class/ClassStatistics'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -124,8 +127,13 @@ const App = () => {
                         </Route>
                         {/* Library */}
                         <Route path="library" element={<LibraryLayout />}>
+                            <Route
+                                path="achievements"
+                                element={<Achievements />}
+                            />
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
+                            <Route path="statistics" element={<Statistics />} />
                         </Route>
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
@@ -156,6 +164,10 @@ const App = () => {
                             />
                             <Route path="people" element={<People />} />
                             <Route path="mark" element={<Mark />} />
+                            <Route
+                                path="statistics"
+                                element={<ClassStatistics />}
+                            />
                         </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />

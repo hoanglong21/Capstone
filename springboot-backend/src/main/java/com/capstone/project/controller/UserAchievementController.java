@@ -65,11 +65,11 @@ public class UserAchievementController {
         try {
             return ResponseEntity.ok(userAchievementService.filterUserAchievement(userId, achievementId, fromCreated, toCreated,
                     sortBy, direction, page, size));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body("Check the input again");
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
 //        }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Check the input again");
+        }
     }
 }

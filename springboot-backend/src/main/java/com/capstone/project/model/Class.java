@@ -55,6 +55,7 @@ public class Class {
     @Column(unique = true)
     private String classcode;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     @ManyToMany

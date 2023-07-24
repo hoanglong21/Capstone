@@ -26,5 +26,6 @@ public class Content {
     @JoinColumn(name = "field_id", nullable = false)
     private Field field;
 
+    @Column(columnDefinition="TEXT")
     private String content;
 }

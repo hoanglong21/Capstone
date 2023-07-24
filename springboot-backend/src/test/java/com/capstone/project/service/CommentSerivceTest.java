@@ -2,10 +2,13 @@ package com.capstone.project.service;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import com.capstone.project.repository.AnswerRepository;
 import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.service.impl.AnswerServiceImpl;
 import com.capstone.project.service.impl.CommentServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,6 +30,9 @@ import static org.mockito.Mockito.times;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CommentSerivceTest {
 
+
+    @Mock
+    private EntityManager em;
     @Mock
     private CommentRepository commentRepository;
 
@@ -108,7 +114,7 @@ public class CommentSerivceTest {
 
     @Order(6)
     @Test
-    void testGetAllCommentById() {
+    void testGetCommentById() {
 
         Comment comment = Comment.builder()
                 .content("Hello guys")
@@ -207,5 +213,30 @@ public class CommentSerivceTest {
             e.printStackTrace();
         }
         verify(commentRepository, times(1)).delete(comment);
+    }
+
+    @Order(10)
+    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, typeId{3},postId{4},testId{5} ,studysetId{6},rootId{7}, page{8}, size{9}")
+    @CsvSource({
+            "Hello,quantruong,DESC,1,2,1,2,1,1,5",
+            "hello,ngocnguyen,DESC,1,2,1,2,1,1,5"
+    })
+    public void testGetFilterAssignment(String search, String author, String direction, int typeid,int postid,int testid, int studysetid,int rootid, int page, int size) throws ResourceNotFroundException {
+
+        MockitoAnnotations.openMocks(this);
+        Comment comment = Comment.builder()
+                .id(1)
+                .commentType(CommentType.builder().id(1).build())
+                .content("Forcus")
+                .build();
+
+
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(anyString(),eq(Comment.class))).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+        when(mockedQuery.getResultList()).thenReturn(List.of(comment));
+        List<Comment> list = (List<Comment>) commentServiceImpl.getFilterComment(search, author, direction, typeid, postid,testid,studysetid,rootid, page, size).get("list");
+        assertThat(list.size()).isGreaterThan(0);
+
     }
 }

@@ -41,7 +41,6 @@ public class ClassLearnerRepositoryTest {
                     .classroom(Class.builder().id(classroomId).build())
                     .created_date(dateFormat.parse(createdDate))
                     .build();
-
             classLearnerRepository.save(classLearner);
 
             ClassLearner classLearners = classLearnerRepository.findByUserIdAndClassroomId(2,7);

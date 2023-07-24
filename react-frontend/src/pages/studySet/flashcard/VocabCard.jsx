@@ -22,8 +22,7 @@ const VocabCard = ({ card }) => {
 
     // catch press space event
     useEffect(() => {
-        const handleUserKeyPress = (event) => {
-            console.log('55555')
+        const handleUserSpacePress = (event) => {
             if (event.defaultPrevented) {
                 return // Do nothing if event already handled
             }
@@ -37,9 +36,9 @@ const VocabCard = ({ card }) => {
                 event.preventDefault()
             }
         }
-        window.addEventListener('keydown', handleUserKeyPress, true)
+        window.addEventListener('keydown', handleUserSpacePress, true)
         return () => {
-            window.removeEventListener('keydown', handleUserKeyPress, true)
+            window.removeEventListener('keydown', handleUserSpacePress, true)
         }
     }, [])
 

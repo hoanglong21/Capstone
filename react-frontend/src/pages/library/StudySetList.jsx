@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import StudySetService from '../../services/StudySetService'
 

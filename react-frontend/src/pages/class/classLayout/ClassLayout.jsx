@@ -196,6 +196,18 @@ const ClassLayout = () => {
                                 <span className="align-middle">Mark</span>
                             </NavLink>
                         </li>
+                        <li>
+                            <NavLink
+                                to="statistics"
+                                className={
+                                    'mainClass_navlink ' +
+                                    (({ isActive }) =>
+                                        isActive ? 'active' : '')
+                                }
+                            >
+                                <span className="align-middle">Statistics</span>
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
 

@@ -106,45 +106,44 @@ public class CommentServiceImpl implements CommentService {
     public Map<String, Object> getFilterComment( String search, String author,String direction, int typeid,int postid, int testid,int studysetid, int rootid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query = "SELECT * FROM comment WHERE 1=1";
+        String query = "SELECT comment.* FROM comment inner join user u on u.id = author_id WHERE 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
 
         if (author != null && !author.isEmpty()) {
-            query += " AND author_id = :authorId";
-            User user = userService.getUserByUsername(author);
-            parameters.put("authorId", user.getId());
+            query += " AND u.username LIKE :authorname";
+            parameters.put("authorname", author);
+        }
+
+        if (search != null && !search.isEmpty()) {
+            query += " AND content LIKE :search ";
+            parameters.put("search", "%" + search + "%");
         }
 
         if (postid != 0) {
             query += " AND post_id = :postId";
-            Post post = postService.getPostById(postid);
-            parameters.put("postId",  post.getId());
+            parameters.put("postId", postid);
         }
 
         if (studysetid != 0) {
             query += " AND studyset_id = :studysetId";
-            StudySet studySet = studySetService.getStudySetById(studysetid);
-            parameters.put("studysetId",  studySet.getId());
+            parameters.put("studysetId",  studysetid);
         }
 
 
         if (testid != 0) {
             query += " AND test_id = :testId";
-            Test test = testService.getTestById(testid);
-            parameters.put("testId",  test.getId());
+            parameters.put("testId", testid);
         }
 
         if (rootid != 0) {
             query += " AND root_id = :rootId";
-            Comment comment = getCommentById(rootid);
-            parameters.put("rootId", comment.getId());
+            parameters.put("rootId", rootid);
         }
 
         if (typeid != 0) {
             query += " AND type_id = :typeId";
-            CommentType commentType = commentTypeService.getCommentTypeById(typeid);
-            parameters.put("typeId", commentType.getId());
+            parameters.put("typeId", typeid);
         }
 
 //        if (type != null && !type.isEmpty()) {
@@ -153,10 +152,7 @@ public class CommentServiceImpl implements CommentService {
 //            parameters.put("typeId", commentType.getId());
 //        }
 
-        if (search != null && !search.isEmpty()) {
-            query += " AND content LIKE :search ";
-            parameters.put("search", "%" + search + "%");
-        }
+
 
 
         String direct = "desc";

@@ -32,5 +32,5 @@ public interface StudySetService {
                                       String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                                       String sortBy, String direction, int page, int size);
 
-    List<Map<String, Object>> getQuizByStudySetId(int studySetId, String questionType, int numberOfQuestion);
+    List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion) throws Exception;
 }
