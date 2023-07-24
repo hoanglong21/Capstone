@@ -21,6 +21,7 @@ public class Answer {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
+    @Column(columnDefinition="TEXT")
     private String content;
 
     private boolean is_true;

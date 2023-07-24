@@ -129,6 +129,10 @@ public class StudySetController {
     public ResponseEntity<?> getQuizByStudySetId(@RequestParam(value = "id") int id,
                                                  @RequestParam(value = "type") int[] type,
                                                  @RequestParam(value = "number") int number) {
-        return ResponseEntity.ok(studySetService.getQuizByStudySetId(id, type, number));
+        try {
+            return ResponseEntity.ok(studySetService.getQuizByStudySetId(id, type, number));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

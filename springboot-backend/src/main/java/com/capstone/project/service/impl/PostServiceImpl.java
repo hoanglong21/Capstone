@@ -150,7 +150,7 @@ public class PostServiceImpl implements PostService {
     public Map<String, Object> getFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy,String direction, int classid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="SELECT * FROM post inner join user u on u.id = author_id where 1=1";
+        String query ="SELECT p.* FROM post p inner join user u on u.id = p.author_id where 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
 
@@ -178,7 +178,7 @@ public class PostServiceImpl implements PostService {
             parameters.put("toCreated", toCreated);
         }
 
-        query += " ORDER BY " + sortBy + " " + direction;
+        query += " ORDER BY p." + sortBy + " " + direction;
 
 
         Query q = em.createNativeQuery(query, Post.class);
