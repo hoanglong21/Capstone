@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import ContentService from '../../../services/ContentService'
 
-const VocabCard = ({ card }) => {
+const VocabCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
     const [contents, setContents] = useState([])
 
     useEffect(() => {
@@ -16,8 +16,16 @@ const VocabCard = ({ card }) => {
         }
     }, [card])
 
+    useEffect(() => {
+        if (isAuto) {
+            handleAutoPlay()
+        }
+    }, [isAuto, contents])
+
     const toggleFlip = () => {
-        document.getElementById('flipElement')?.classList.toggle('is-flipped')
+        document
+            .getElementById(`flipElement${cardIndex}`)
+            ?.classList.toggle('is-flipped')
     }
 
     // catch press space event
@@ -49,7 +57,10 @@ const VocabCard = ({ card }) => {
                 toggleFlip()
             }}
         >
-            <div className="flashcardContentWrapper" id="flipElement">
+            <div
+                className="flashcardContentWrapper"
+                id={`flipElement${cardIndex}`}
+            >
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
                     <div
                         dangerouslySetInnerHTML={{

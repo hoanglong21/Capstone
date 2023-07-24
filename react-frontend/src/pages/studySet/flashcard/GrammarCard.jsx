@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import ContentService from '../../../services/ContentService'
 
-const GrammarCard = ({ card }) => {
+const GrammarCard = ({ card, cardIndex }) => {
     const [title, setTitle] = useState(null)
     const [jlptLevel, setJlptLevel] = useState(null)
     const [meaning, setMeaning] = useState(null)
@@ -49,7 +49,9 @@ const GrammarCard = ({ card }) => {
     }, [card])
 
     const toggleFlip = () => {
-        document.getElementById('flipElement')?.classList.toggle('is-flipped')
+        document
+            .getElementById(`flipElement${cardIndex}`)
+            ?.classList.toggle('is-flipped')
     }
 
     // catch press space event
@@ -81,7 +83,10 @@ const GrammarCard = ({ card }) => {
                 toggleFlip()
             }}
         >
-            <div className="flashcardContentWrapper" id="flipElement">
+            <div
+                className="flashcardContentWrapper"
+                id={`flipElement${cardIndex}`}
+            >
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
                     <div
                         dangerouslySetInnerHTML={{
