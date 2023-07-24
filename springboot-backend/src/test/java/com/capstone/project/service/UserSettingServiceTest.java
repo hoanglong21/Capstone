@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -126,7 +127,7 @@ public class UserSettingServiceTest {
             "1, 1, ja ",
             "2, 1 , vi "
     })
-    public void testCreateUserSetting(int userId, int classId,String value) {
+    public void testCreateUserSetting(int userId, int classId, String value) {
         UserSetting userSetting = UserSetting.builder()
                 .user(User.builder().id(1).build())
                 .setting(Setting.builder().id(1).build())
@@ -144,8 +145,8 @@ public class UserSettingServiceTest {
             "1, 1, ja ",
             "2, 1 , vi "
     })
-    public void testUpdateUserSetting(int userId, int classId,String value) {
-        try{
+    public void testUpdateUserSetting(int userId, int classId, String value) {
+        try {
             UserSetting userSetting_new = UserSetting.builder()
                     .user(User.builder().id(1).build())
                     .setting(Setting.builder().id(1).build())
@@ -159,9 +160,9 @@ public class UserSettingServiceTest {
             when(userSettingRepository.findById(any())).thenReturn(Optional.ofNullable(userSetting_new));
             when(userSettingRepository.save(any())).thenReturn(userSetting);
 
-            UserSetting created_usersetting = userSettingService.updateUserSetting(userSetting,1);
+            UserSetting created_usersetting = userSettingService.updateUserSetting(userSetting, 1);
             assertThat(created_usersetting).isEqualTo(userSetting);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -209,18 +210,41 @@ public class UserSettingServiceTest {
             Map<String, String> result = userSettingService.CustomGetUserSettingByUserId(1);
 
             assertThat(result.get("language")).isEqualTo("vn");
-            assertThat(result.get("study reminder")).isEqualTo("7:00");
+            assertThat(result.get("study reminder")).isEqualTo("07:00");
             assertThat(result.get("assignment due date reminder")).isEqualTo("24");
             assertThat(result.get("set added")).isEqualTo("TRUE");
             assertThat(result.get("post added")).isEqualTo("TRUE");
             assertThat(result.get("assignment assigned")).isEqualTo("TRUE");
             assertThat(result.get("test assigned")).isEqualTo("TRUE");
             assertThat(result.get("submission graded")).isEqualTo("TRUE");
-        }catch (ResourceNotFroundException e){
-            throw  new RuntimeException(e);
+        } catch (ResourceNotFroundException e) {
+            throw new RuntimeException(e);
         }
     }
 
+    @Order(9)
+    @Test
+    public void testsaveUserSettingCustom() {
 
+        int userId = 1;
+        int settingId = 1;
+        String validTimeFormat = "07:00";
+
+        UserSetting expectedUserSetting = UserSetting.builder()
+                .value(validTimeFormat)
+                .user(User.builder().id(userId).build())
+                .setting(Setting.builder().id(settingId).build())
+                .build();
+
+        when(userSettingRepository.getUserSettingCustom(userId, settingId)).thenReturn(null);
+        when(userSettingRepository.save(any(UserSetting.class))).thenReturn(expectedUserSetting);
+
+        UserSetting result = userSettingService.saveUserSettingCustom(userId, settingId, validTimeFormat);
+        assertNotNull(result);
+        assertEquals(validTimeFormat, result.getValue());
+
+        verify(userSettingRepository, times(1)).save(any(UserSetting.class));
     }
+
+}
 
