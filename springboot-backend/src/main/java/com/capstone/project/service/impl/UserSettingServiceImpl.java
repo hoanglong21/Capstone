@@ -105,6 +105,9 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public UserSetting saveUserSettingCustom(int userId, int settingId, String newValue) {
         UserSetting userSetting = userSettingRepository.getUserSettingCustom(userId, settingId);
+        if(newValue==null || newValue.equals("")) {
+            userSettingRepository.delete(userSetting);
+        }
         switch (settingId) {
             case 1:
                 if (!UserSettingValidation.isValidTimeFormat(newValue)) {
