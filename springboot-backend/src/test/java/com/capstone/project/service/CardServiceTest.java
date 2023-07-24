@@ -20,7 +20,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CardServiceTest {
     @Mock
