@@ -82,9 +82,10 @@ public class UserSettingController {
     @GetMapping("/customsettings")
     public ResponseEntity<?> updateCustomSettings(@RequestParam("userid") int userId,
                                                   @RequestParam("settingid") int settingId,
-                                                  @RequestParam("value") String value){
+                                                  @RequestParam(value= "value", required = false) String value){
         try {
-            return ResponseEntity.ok(userSettingService.saveUserSettingCustom(userId, settingId, value));
+            userSettingService.saveUserSettingCustom(userId, settingId, value);
+            return ResponseEntity.ok("Update successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

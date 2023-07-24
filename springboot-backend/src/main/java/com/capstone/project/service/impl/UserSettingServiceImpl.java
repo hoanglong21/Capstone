@@ -107,6 +107,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         UserSetting userSetting = userSettingRepository.getUserSettingCustom(userId, settingId);
         if(newValue==null || newValue.equals("")) {
             userSettingRepository.delete(userSetting);
+            return null;
         }
         switch (settingId) {
             case 1:

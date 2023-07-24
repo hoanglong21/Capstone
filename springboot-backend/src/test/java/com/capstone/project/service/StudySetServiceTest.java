@@ -279,7 +279,7 @@ public class StudySetServiceTest {
         when(contentRepository.getContentByCardId(anyInt())).thenReturn(new ArrayList<>());
 
 
-        List<Map<String, Object>> response = studySetServiceImpl.getQuizByStudySetId(1, "multiple choice", 1);
+        List<Map<String, Object>> response = studySetServiceImpl.getQuizByStudySetId(1, new int[]{1}, 1);
         assertThat(response.size()).isEqualTo(0);
 
     }
