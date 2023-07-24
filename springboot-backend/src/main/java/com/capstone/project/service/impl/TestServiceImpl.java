@@ -128,14 +128,13 @@ public class TestServiceImpl  implements TestService {
 
         String query ="select t.id,t.created_date,t.description,t.duration,t.modified_date,t.title,t.author_id,t.class_id,t.due_date,t.is_draft,t.num_attemps,t.start_date," +
                 "(select count(*) from capstone.question where test_id = t.id) as totalquestion," +
-                "(select count(*) from capstone.comment where test_id = t.id) as totalcomment from test t where 1=1 ";
+                "(select count(*) from capstone.comment where test_id = t.id) as totalcomment from test t inner join user u on u.id = author_id where 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
 
         if (author != null && !author.isEmpty()) {
-            query += " AND t.author_id = :authorId";
-            User user = userService.getUserByUsername(author);
-            parameters.put("authorId", user.getId());
+            query += " AND u.username LIKE :authorname";
+            parameters.put("authorname", author);
         }
 
         if (classid != 0) {

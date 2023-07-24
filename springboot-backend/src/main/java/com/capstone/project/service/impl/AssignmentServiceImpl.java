@@ -152,6 +152,9 @@ public class AssignmentServiceImpl implements AssignmentService {
                     .orElseThrow(() -> new ResourceNotFroundException("Assignment not exist with id:" + id));
         for (Submission submission : submissionRepository.getSubmissionByAssignmentId(assignmentclass.getId())) {
             submissionRepository.delete(submission);
+            for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())) {
+                attachmentRepository.delete(attachment);
+            }
         }
         for (Attachment attachment : attachmentRepository.getAttachmentByAssignmentId(assignmentclass.getId())) {
             attachmentRepository.delete(attachment);
@@ -165,49 +168,47 @@ public class AssignmentServiceImpl implements AssignmentService {
                                                    Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="SELECT * FROM assignment WHERE 1=1";
+        String query ="SELECT a.* FROM assignment a LEFT JOIN user u on u.id = a.author_id where 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
 
         if (author != null && !author.isEmpty()) {
-            query += " AND author_id = :authorId";
-            User user = userService.getUserByUsername(author);
-            parameters.put("authorId", user.getId());
+            query += " AND u.username = :authorname";
+            parameters.put("authorname", author);
         }
 
         if (search != null && !search.isEmpty()) {
-            query += " AND (title LIKE :search OR description LIKE :search)";
+            query += " AND (a.title LIKE :search OR a.instruction LIKE :search)";
             parameters.put("search", "%" + search + "%");
         }
 
         if (classid != 0) {
-            query += " AND class_id = :classId";
-            Class classroom = classService.getClassroomById(classid);
-            parameters.put("classId", classroom.getId());
+            query += " AND a.class_id = :classId";
+            parameters.put("classId", classid);
         }
 
         if (isDraft != null) {
-            query += " AND is_draft = :isDraft";
+            query += " AND a.is_draft = :isDraft";
             parameters.put("isDraft", isDraft);
         }
 
         if(fromStart != null){
-            query += " AND start_date >= :from ";
+            query += " AND a.start_date >= :from ";
             parameters.put("from", fromStart);
         }
 
         if(toStart != null){
-            query += " AND start_date <= :to";
+            query += " AND a.start_date <= :to";
             parameters.put("to", toStart);
         }
 
 
         if (fromCreated != null && !fromCreated.equals("")) {
-            query += " AND DATE(created_date) >= :fromCreated";
+            query += " AND DATE(a.created_date) >= :fromCreated";
             parameters.put("fromCreated", fromCreated);
         }
         if (toCreated != null && !toCreated.equals("")) {
-            query += " AND DATE(created_date) <= :toCreated";
+            query += " AND DATE(a.created_date) <= :toCreated";
             parameters.put("toCreated", toCreated);
         }
 

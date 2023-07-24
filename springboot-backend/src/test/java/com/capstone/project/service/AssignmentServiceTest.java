@@ -7,12 +7,15 @@ import com.capstone.project.repository.AssignmentRepository;
 import com.capstone.project.repository.AttachmentRepository;
 import com.capstone.project.repository.SubmissionRepository;
 import com.capstone.project.service.impl.AssignmentServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.text.ParseException;
@@ -29,6 +32,14 @@ import static org.mockito.Mockito.times;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AssignmentServiceTest {
 
+    @Mock
+    private EntityManager em;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private ClassService classService;
     @Mock
     private AssignmentRepository assignmentRepository;
 
@@ -72,31 +83,31 @@ public class AssignmentServiceTest {
          assertThat(retrievedAssignment).isEqualTo(assignments);
     }
 
-//    @Order(3)
-//    @ParameterizedTest(name = "index => userId={0}, classId={1},created_date{2},description{3},due_date{4},modified_date{5},start_date{6} ,title{7}")
-//    @CsvSource({
-//            "1,3,2023-8-9, Luyen thi JLPT N5,2023-7-1,2023-8-7,2023-8-8, On thi N3 ",
-//            "2,4,2023-8-9, Luyen thi JLPT N4,2023-9-9,2023-8-7,2023-8-8, On thi N3 "
-//    })
-//    public void testCreateAssignment(int userId,int classId, String created_date,String description,String due_date,String modified_date,String start_date,String title){
-//        try {
-//            Assignment assignment = Assignment.builder()
-//                    .user(User.builder().id(userId).build())
-//                    .classroom(Class.builder().id(classId).build())
-//                    .created_date(dateFormat.parse(created_date))
-//                    .description(description)
-//                    .due_date(dateFormat.parse(due_date))
-//                    .modified_date(dateFormat.parse(modified_date))
-//                    .start_date(dateFormat.parse(start_date))
-//                    .title(title)
-//                    .build();
-//            when(assignmentRepository.save(any())).thenReturn(assignment);
-//            Assignment createdassignment = assignmentServiceImpl.createAssignment(assignment);
-//            assertThat(assignment).isEqualTo(createdassignment);
-//        } catch (ParseException e){
-//            throw new RuntimeException(e);
-//        }
-//    }
+    @Order(3)
+    @ParameterizedTest(name = "index => userId={0}, classId={1},created_date{2},instruction{3},due_date{4},modified_date{5},start_date{6} ,title{7}")
+    @CsvSource({
+            "1,3,2023-8-9, Luyen thi JLPT N5,2023-7-1,2023-8-7,2023-8-8, On thi N3 ",
+            "2,4,2023-8-9, Luyen thi JLPT N4,2023-9-9,2023-8-7,2023-8-8, On thi N3 "
+    })
+    public void testCreateAssignment(int userId,int classId, String created_date,String instruction,String due_date,String modified_date,String start_date,String title){
+        try {
+            Assignment assignment = Assignment.builder()
+                    .user(User.builder().id(userId).build())
+                    .classroom(Class.builder().id(classId).build())
+                    .created_date(dateFormat.parse(created_date))
+                    .instruction(instruction)
+                    .due_date(dateFormat.parse(due_date))
+                    .modified_date(dateFormat.parse(modified_date))
+                    .start_date(dateFormat.parse(start_date))
+                    .title(title)
+                    .build();
+            when(assignmentRepository.save(any())).thenReturn(assignment);
+            Assignment createdassignment = assignmentServiceImpl.createAssignment(assignment);
+            assertThat(assignment).isEqualTo(createdassignment);
+        } catch (ParseException e){
+            throw new RuntimeException(e);
+        }
+    }
 
     @Order(4)
     @Test
@@ -191,6 +202,36 @@ public class AssignmentServiceTest {
     }
 
 
+    @Order(7)
+    @ParameterizedTest(name = "index => search={0},author{1},fromStart{2}, toStart{3},fromCreated{4},toCreated{5} ,isDraft{6},direction{7}, sortBy{8},classId={9}, page{10}, size{11}")
+    @CsvSource({
+            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,DESC,created_date,1,1,5",
+            "Homwork2,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,DESC,created_date,1,1,5"
+    })
+    public void testGetFilterAssignment(String search, String author, String fromStart, String toStart, String fromCreated, String toCreated,
+                                        Boolean isDraft, String direction, String sortBy, int classid, int page, int size) throws ResourceNotFroundException {
+
+        MockitoAnnotations.openMocks(this);
+            Assignment assignment = Assignment.builder()
+                    .id(1)
+                    .user(User.builder().id(1).build())
+                    .classroom(Class.builder().id(1).build())
+                    .instruction("do excersices")
+                    .title("Assignment 1")
+                    .build();
+
+
+            Query mockedQuery = mock(Query.class);
+            when(em.createNativeQuery(anyString(),eq(Assignment.class))).thenReturn(mockedQuery);
+            when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+            when(mockedQuery.getResultList()).thenReturn(List.of(assignment));
+
+
+            List<Assignment> list = (List<Assignment>) assignmentServiceImpl.getFilterAssignment(search, author, fromStart, toStart, fromCreated, toCreated,
+                    isDraft, direction, sortBy, classid, page, size).get("list");
+            assertThat(list.size()).isGreaterThan(0);
+
+    }
     }
 
 

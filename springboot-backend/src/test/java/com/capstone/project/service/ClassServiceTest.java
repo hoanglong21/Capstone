@@ -6,6 +6,8 @@ import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.AnswerServiceImpl;
 import com.capstone.project.service.impl.ClassServiceImpl;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.hibernate.boot.registry.classloading.internal.ClassLoaderServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,16 @@ import static org.mockito.Mockito.times;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClassServiceTest {
 
+    @Mock
+    private EntityManager em;
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private ClassLearnerRepository classLearnerRepository;
+    @Mock
+    private ClassService classService;
     @Mock
     private ClassRepository classRepository;
 
@@ -280,5 +292,64 @@ public class ClassServiceTest {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Order(9)
+    @ParameterizedTest(name = "index => clasId={0},isDeleted{1},search{2}, author{3},fromDeleted{4},toDeleted{5} ," +
+                                       " fromCreated{6},toCreated{7}, sortBy{8},direction{9},page={10}, size{11} ")
+    @CsvSource({
+            "1,true,JLPT, quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5",
+            "2,false,IELTS,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5"
+    })
+    public void testGetFilterClass(int classId,boolean isDeleted,String search, String author, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
+                                   String sortBy, String direction,int page, int size) throws ResourceNotFroundException {
+
+        MockitoAnnotations.openMocks(this);
+        Class classroom = Class.builder()
+                .id(1)
+                .class_name("luyen thi N3")
+                .description("hoc N3")
+                .build();
+
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(anyString(),eq("ClassCustomListMapping"))).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+        when(mockedQuery.getResultList()).thenReturn(List.of(classroom));
+
+        List<Class> list = (List<Class>) classServiceImpl.getFilterClass(classId,isDeleted,search,author,fromDeleted,toDeleted,fromCreated,toCreated,
+                                                                          sortBy,direction,page,size).get("list");
+        assertThat(list.size()).isGreaterThan(0);
+
+    }
+
+    @Order(10)
+    @ParameterizedTest(name = "index => userId={0},classId{1}")
+    @CsvSource({
+            "1,1 ",
+            "2,1 "
+    })
+    public void testCheckUserClass(int userId,int classId) {
+
+
+        ClassLearner classLearner = new ClassLearner();
+        classLearner.setId(1);
+        classLearner.setUser(User.builder().id(3).build());
+        classLearner.setClassroom(Class.builder().id(1).build());
+
+// Giả lập hàm classLearnerRepository.findByUserIdAndClassroomId trả về classLearner
+        when(classLearnerRepository.findByUserIdAndClassroomId(userId, classId)).thenReturn(classLearner);
+            try {
+                // Gọi phương thức cần kiểm tra
+                Boolean result = classService.CheckUserClass(userId, classId);
+
+                // So sánh kết quả trả về với kết quả dự kiến
+                boolean expectedResult = classLearner != null && classLearner.getUser().getId() == userId;
+                assertThat(result).isEqualTo(expectedResult);
+
+            } catch (ResourceNotFroundException e) {
+                throw new RuntimeException(e);
+            }
+
+
     }
 }

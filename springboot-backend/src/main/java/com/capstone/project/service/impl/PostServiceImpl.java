@@ -150,15 +150,13 @@ public class PostServiceImpl implements PostService {
     public Map<String, Object> getFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy,String direction, int classid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="SELECT p.id,p.content,p.class_id,p.author_id,p.created_date,p.modified_date, " +
-                "(SELECT COUNT(*) from capstone.comment where post_id = p.id) AS count FROM post p WHERE 1=1";
+        String query ="SELECT * FROM post inner join user u on u.id = author_id where 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
 
         if (author != null && !author.isEmpty()) {
-            query += " AND p.author_id = :authorId";
-            User user = userService.getUserByUsername(author);
-            parameters.put("authorId", user.getId());
+            query += " AND u.username LIKE :authorname";
+            parameters.put("authorname", author);
         }
 
         if (search != null && !search.isEmpty()) {
@@ -168,8 +166,7 @@ public class PostServiceImpl implements PostService {
 
         if (classid != 0) {
             query += " AND p.class_id = :classId";
-            Class classroom = classService.getClassroomById(classid);
-            parameters.put("classId", classroom.getId());
+            parameters.put("classId", classid);
         }
 
         if (fromCreated != null && !fromCreated.equals("")) {

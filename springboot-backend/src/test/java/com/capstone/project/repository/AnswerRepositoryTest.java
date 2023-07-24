@@ -1,6 +1,7 @@
 package com.capstone.project.repository;
 
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -26,6 +27,9 @@ public class AnswerRepositoryTest {
     private QuestionRepository questionRepository;
 
     @Autowired
+    private ClassRepository classRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -41,22 +45,20 @@ public class AnswerRepositoryTest {
         User user = User.builder().username("test_stuff").email("teststuff@gmail.com").build();
         userRepository.save(user);
 
-        Test test = Test.builder().description("Test for all").duration(12).title("Progress test").user(user).build();
+        Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
+        classRepository.save(classroom);
+
+        Test test = Test.builder().description("Test for all").classroom(classroom).duration(12).title("Progress test").user(user).build();
          testRepository.save(test);
 
-         Question question = Question.builder().test(test)
-                 .questionType(QuestionType.builder().id(1).build())
+         Question question = Question.builder().test(test).questionType(QuestionType.builder().id(1).build())
                  .question("who kill jack robin")
                  .num_choice(3)
                  .build();
          questionRepository.save(question);
 
-        Answer answer = Answer.builder()
-                .question(question)
-                .is_true(true)
-                .content("Knight").build();
+        Answer answer = Answer.builder().question(question).is_true(true).content("Knight").build();
         answerRepository.save(answer);
-
         if(trueId) {
             List<Answer> result = answerRepository.getAnswerByQuestionId(question.getId());
             assertThat(result.size()).isGreaterThan(0);
