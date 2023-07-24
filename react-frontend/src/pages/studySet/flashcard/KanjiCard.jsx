@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import ContentService from '../../../services/ContentService'
 
-const KanjiCard = ({ card }) => {
+const KanjiCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
     const [character, setCharacter] = useState(null)
     const [name, setName] = useState(null)
     const [strokeOrder, setStrokeOrder] = useState(null)
@@ -60,8 +60,16 @@ const KanjiCard = ({ card }) => {
         }
     }, [card])
 
+    useEffect(() => {
+        if (isAuto) {
+            handleAutoPlay()
+        }
+    }, [isAuto, character])
+
     const toggleFlip = () => {
-        document.getElementById('flipElement')?.classList.toggle('is-flipped')
+        document
+            .getElementById(`flipElement${cardIndex}`)
+            ?.classList.toggle('is-flipped')
     }
 
     // catch press space event
@@ -93,7 +101,10 @@ const KanjiCard = ({ card }) => {
                 toggleFlip()
             }}
         >
-            <div className="flashcardContentWrapper" id="flipElement">
+            <div
+                className="flashcardContentWrapper"
+                id={`flipElement${cardIndex}`}
+            >
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
                     <div
                         dangerouslySetInnerHTML={{
