@@ -60,7 +60,14 @@ export default function CreateClass() {
                 // clear validation
                 form.classList.remove('was-validated')
                 classNameEl.classList.remove('is-invalid')
-                setNewClass({})
+                setNewClass({
+                    class_name: '',
+                    description: '',
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                })
                 setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
