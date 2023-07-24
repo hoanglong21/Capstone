@@ -106,7 +106,7 @@ public class CommentServiceImpl implements CommentService {
     public Map<String, Object> getFilterComment( String search, String author,String direction, int typeid,int postid, int testid,int studysetid, int rootid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query = "SELECT * FROM comment inner join user u on u.id = author_id WHERE 1=1 ";
+        String query = "SELECT comment.* FROM comment inner join user u on u.id = author_id WHERE 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
 
