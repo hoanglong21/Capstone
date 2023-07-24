@@ -23,6 +23,7 @@ public class Achievement {
 
     private String name;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     public Achievement(int typeId, String name, String description) {

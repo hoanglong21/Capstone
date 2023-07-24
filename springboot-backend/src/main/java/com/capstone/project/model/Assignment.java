@@ -40,6 +40,7 @@ public class Assignment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date due_date;
 
+    @Column(columnDefinition="TEXT")
     private String instruction;
 
     @Column
