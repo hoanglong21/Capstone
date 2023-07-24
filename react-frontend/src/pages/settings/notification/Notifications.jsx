@@ -10,16 +10,18 @@ const Notifications = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [isStudyReminder, setIsStudyReminder] = useState(true)
-    const [studyReminder, setStudyReminder] = useState({})
+    const [studyReminder, setStudyReminder] = useState({ value: '00:00' })
     const [isAssignDueDate, setIsAssignDueDate] = useState(true)
-    const [assignDueDate, setAssignDueDate] = useState({})
+    const [assignDueDate, setAssignDueDate] = useState({ value: '0' })
     const [isTestDueDate, setIsTestDueDate] = useState(true)
-    const [testDueDate, setTestDueDate] = useState({})
+    const [testDueDate, setTestDueDate] = useState({ value: '0' })
     const [setAdded, setSetAdded] = useState({ value: true })
     const [postAdded, setPostAdded] = useState({ value: true })
     const [assignAssigned, setAssignAssigned] = useState({ value: true })
     const [testAssigned, setTestAssigned] = useState({ value: true })
     const [submitGraded, setSubmitGraded] = useState({ value: true })
+
+    const [successMess, setSuccessMess] = useState(false)
 
     // fetch data
     useEffect(() => {
@@ -37,9 +39,9 @@ const Notifications = () => {
                     setting: {
                         id: 1,
                     },
-                    value: settings.value,
+                    value: settings['study reminder'],
                 })
-                setIsStudyReminder(settings.value ? true : false)
+                setIsStudyReminder(settings['study reminder'] ? true : false)
                 // assign due date
                 setAssignDueDate({
                     user: {
@@ -49,9 +51,11 @@ const Notifications = () => {
                     setting: {
                         id: 3,
                     },
-                    value: settings.value,
+                    value: settings['assignment due date reminder'],
                 })
-                setIsAssignDueDate(settings.value ? true : false)
+                setIsAssignDueDate(
+                    settings['assignment due date reminder'] ? true : false
+                )
                 // test due date
                 setTestDueDate({
                     user: {
@@ -61,9 +65,11 @@ const Notifications = () => {
                     setting: {
                         id: 4,
                     },
-                    value: settings.value,
+                    value: settings['test due date reminder'],
                 })
-                setIsTestDueDate(settings.value ? true : false)
+                setIsTestDueDate(
+                    settings['test due date reminder'] ? true : false
+                )
                 // set added
                 setSetAdded({
                     user: {
@@ -73,7 +79,7 @@ const Notifications = () => {
                     setting: {
                         id: 5,
                     },
-                    value: settings.value ? settings.value : true,
+                    value: settings['set added'] ? settings['set added'] : true,
                 })
                 // post added
                 setPostAdded({
@@ -84,7 +90,9 @@ const Notifications = () => {
                     setting: {
                         id: 6,
                     },
-                    value: settings.value ? settings.value : true,
+                    value: settings['post added']
+                        ? settings['post added']
+                        : true,
                 })
                 // assign assigned
                 setAssignAssigned({
@@ -95,7 +103,9 @@ const Notifications = () => {
                     setting: {
                         id: 7,
                     },
-                    value: settings.value ? settings.value : true,
+                    value: settings['assignment assigned']
+                        ? settings['assignment assigned']
+                        : true,
                 })
                 // test assigned
                 setTestAssigned({
@@ -106,7 +116,9 @@ const Notifications = () => {
                     setting: {
                         id: 8,
                     },
-                    value: settings.value ? settings.value : true,
+                    value: settings['test assigned']
+                        ? settings['test assigned']
+                        : true,
                 })
                 // submit graded
                 setSubmitGraded({
@@ -117,7 +129,9 @@ const Notifications = () => {
                     setting: {
                         id: 9,
                     },
-                    value: settings.value ? settings.value : true,
+                    value: settings['submission graded']
+                        ? settings['submission graded']
+                        : true,
                 })
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -133,6 +147,7 @@ const Notifications = () => {
     }, [userInfo])
 
     const handleSave = async () => {
+        setSuccessMess(false)
         try {
             // study reminder
             await UserSettingService.updateCustomSettings(
@@ -167,8 +182,8 @@ const Notifications = () => {
             // assign assigned
             await UserSettingService.updateCustomSettings(
                 userInfo.id,
-                setAssignAssigned.setting.id,
-                setAssignAssigned.value
+                assignAssigned.setting.id,
+                assignAssigned.value
             )
             // test assigned
             await UserSettingService.updateCustomSettings(
@@ -182,6 +197,10 @@ const Notifications = () => {
                 submitGraded.setting.id,
                 submitGraded.value
             )
+            setSuccessMess(true)
+            setTimeout(function () {
+                setSuccessMess(false)
+            }, 5000)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -195,6 +214,15 @@ const Notifications = () => {
         <div className="mx-5 ps-5">
             <h4>Email Notification</h4>
             <div className="mt-4">
+                {/* successMess message */}
+                {successMess && (
+                    <div
+                        className="alert alert-success col-12 mb-0"
+                        role="alert"
+                    >
+                        Your changes have been successfully saved!
+                    </div>
+                )}
                 <fieldset className="notification_formContainer form-check mb-3 ps-0">
                     <legend>STUDY REMINDERS</legend>
                     <input

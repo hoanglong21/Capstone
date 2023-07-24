@@ -88,7 +88,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
 
         Map<String, String> userSettingMap = new HashMap<>();
-        userSettingMap.put("study reminder", "7:00");
+        userSettingMap.put("study reminder", "07:00");
         userSettingMap.put("language", "vn");
         userSettingMap.put("assignment due date reminder", "24");
         userSettingMap.put("test due date reminder", "24");

@@ -22,6 +22,7 @@ import {
     DictIcon,
     LibraryIcon,
     SettingIcon,
+    AchievementIcon,
 } from '../icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import './Header.css'
@@ -357,7 +358,26 @@ const Header = () => {
                                             className="dropdown-item py-2 px-3"
                                             type="button"
                                             onClick={() => {
-                                                navigate('account')
+                                                navigate(
+                                                    '/library/achievements'
+                                                )
+                                            }}
+                                        >
+                                            <AchievementIcon
+                                                className="me-3"
+                                                strokeWidth="1.65"
+                                            />
+                                            <span className="align-middle fw-semibold">
+                                                Achievements
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 px-3"
+                                            type="button"
+                                            onClick={() => {
+                                                navigate('/account')
                                             }}
                                         >
                                             <SettingIcon
@@ -374,7 +394,7 @@ const Header = () => {
                                             className="dropdown-item py-2 px-3"
                                             type="button"
                                             onClick={() => {
-                                                navigate('help-center')
+                                                navigate('/help-center')
                                             }}
                                         >
                                             <HelpIcon

@@ -50,7 +50,7 @@ const CreateSet = () => {
                     temp = (await StudySetService.getStudySetById(id)).data
                     const tempCreatedDate = temp.created_date
                     temp.created_date =
-                        tempCreatedDate.replace(/\s/g, 'T') + '.00'
+                        tempCreatedDate.replace(/\s/g, 'T') + '.000' + '+07:00'
                     setType(temp.studySetType.id)
                 } else {
                     const listSets = (
@@ -75,7 +75,10 @@ const CreateSet = () => {
                     if (listSets.totalItems > 0) {
                         temp = listSets.list[0]
                         const tempCreatedDate = temp.created_date
-                        temp.created_date = tempCreatedDate.replace(/\s/g, 'T')
+                        temp.created_date =
+                            tempCreatedDate.replace(/\s/g, 'T') +
+                            '.000' +
+                            '+07:00'
                     } else {
                         temp = (
                             await StudySetService.createStudySet({
@@ -94,6 +97,11 @@ const CreateSet = () => {
                                 deleted_date: '',
                             })
                         ).data
+                        const tempCreatedDate = temp.created_date
+                        temp.created_date =
+                            tempCreatedDate.replace(/\s/g, 'T') +
+                            '.000' +
+                            '+07:00'
                     }
                 }
                 setStudySet(temp)
