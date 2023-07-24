@@ -222,7 +222,13 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion) {
+    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion) throws Exception {
+        if(numberOfQuestion<=0) {
+            throw new Exception("Number of question must at least 1");
+        }
+        if(questionType.length==0) {
+            throw new Exception("Must have at least 1 type");
+        }
         List<Card> cardList = cardService.getAllByStudySetId(studySetId);
         // Shuffle the cardList to randomize the order of cards
         Collections.shuffle(cardList);
