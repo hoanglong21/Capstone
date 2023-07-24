@@ -83,31 +83,31 @@ public class AssignmentServiceTest {
          assertThat(retrievedAssignment).isEqualTo(assignments);
     }
 
-//    @Order(3)
-//    @ParameterizedTest(name = "index => userId={0}, classId={1},created_date{2},description{3},due_date{4},modified_date{5},start_date{6} ,title{7}")
-//    @CsvSource({
-//            "1,3,2023-8-9, Luyen thi JLPT N5,2023-7-1,2023-8-7,2023-8-8, On thi N3 ",
-//            "2,4,2023-8-9, Luyen thi JLPT N4,2023-9-9,2023-8-7,2023-8-8, On thi N3 "
-//    })
-//    public void testCreateAssignment(int userId,int classId, String created_date,String description,String due_date,String modified_date,String start_date,String title){
-//        try {
-//            Assignment assignment = Assignment.builder()
-//                    .user(User.builder().id(userId).build())
-//                    .classroom(Class.builder().id(classId).build())
-//                    .created_date(dateFormat.parse(created_date))
-//                    .description(description)
-//                    .due_date(dateFormat.parse(due_date))
-//                    .modified_date(dateFormat.parse(modified_date))
-//                    .start_date(dateFormat.parse(start_date))
-//                    .title(title)
-//                    .build();
-//            when(assignmentRepository.save(any())).thenReturn(assignment);
-//            Assignment createdassignment = assignmentServiceImpl.createAssignment(assignment);
-//            assertThat(assignment).isEqualTo(createdassignment);
-//        } catch (ParseException e){
-//            throw new RuntimeException(e);
-//        }
-//    }
+    @Order(3)
+    @ParameterizedTest(name = "index => userId={0}, classId={1},created_date{2},instruction{3},due_date{4},modified_date{5},start_date{6} ,title{7}")
+    @CsvSource({
+            "1,3,2023-8-9, Luyen thi JLPT N5,2023-7-1,2023-8-7,2023-8-8, On thi N3 ",
+            "2,4,2023-8-9, Luyen thi JLPT N4,2023-9-9,2023-8-7,2023-8-8, On thi N3 "
+    })
+    public void testCreateAssignment(int userId,int classId, String created_date,String instruction,String due_date,String modified_date,String start_date,String title){
+        try {
+            Assignment assignment = Assignment.builder()
+                    .user(User.builder().id(userId).build())
+                    .classroom(Class.builder().id(classId).build())
+                    .created_date(dateFormat.parse(created_date))
+                    .instruction(instruction)
+                    .due_date(dateFormat.parse(due_date))
+                    .modified_date(dateFormat.parse(modified_date))
+                    .start_date(dateFormat.parse(start_date))
+                    .title(title)
+                    .build();
+            when(assignmentRepository.save(any())).thenReturn(assignment);
+            Assignment createdassignment = assignmentServiceImpl.createAssignment(assignment);
+            assertThat(assignment).isEqualTo(createdassignment);
+        } catch (ParseException e){
+            throw new RuntimeException(e);
+        }
+    }
 
     @Order(4)
     @Test

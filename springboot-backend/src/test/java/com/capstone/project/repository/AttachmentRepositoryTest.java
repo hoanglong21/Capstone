@@ -49,26 +49,19 @@ public class AttachmentRepositoryTest {
         Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
         classRepository.save(classroom);
 
-        Assignment assignment = Assignment.builder()
-                .instruction("Assignment for all")
-                .title("Assignment 1")
+        Assignment assignment = Assignment.builder().instruction("Assignment for all").title("Assignment 1")
                 .classroom(classroom)
                 .user(user).build();
         assignmentRepository.save(assignment);
 
-         Submission submission = Submission.builder()
-                 .description("submit assignment")
-                 .user(user)
-                 .assignment(assignment).build();
+         Submission submission = Submission.builder().description("submit assignment").user(user).assignment(assignment).build();
          submissionRepository.save(submission);
 
-        Attachment attachment = Attachment.builder()
-                .attachmentType(AttachmentType.builder().id(1).build())
+        Attachment attachment = Attachment.builder().attachmentType(AttachmentType.builder().id(1).build())
                 .file_url("tailieu.docx")
                 .assignment(assignment)
                 .submission(submission).build();
         attachmentRepository.save(attachment);
-
         if(trueId) {
             List<Attachment> result = attachmentRepository.getAttachmentBySubmissionId(submission.getId());
             assertThat(result.size()).isGreaterThan(0);
@@ -91,26 +84,18 @@ public class AttachmentRepositoryTest {
         Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
         classRepository.save(classroom);
 
-        Assignment assignment = Assignment.builder()
-                .instruction("Assignment for all")
-                .title("Assignment 1")
+        Assignment assignment = Assignment.builder().instruction("Assignment for all").title("Assignment 1")
                 .classroom(classroom)
                 .user(user).build();
         assignmentRepository.save(assignment);
 
-        Submission submission = Submission.builder()
-                .description("submit assignment")
-                .user(user)
-                .assignment(assignment).build();
+        Submission submission = Submission.builder().description("submit assignment").user(user).assignment(assignment).build();
         submissionRepository.save(submission);
 
-        Attachment attachment = Attachment.builder()
-                .attachmentType(AttachmentType.builder().id(1).build())
-                .file_url("tailieu.docx")
+        Attachment attachment = Attachment.builder().attachmentType(AttachmentType.builder().id(1).build()).file_url("tailieu.docx")
                 .assignment(assignment)
                 .submission(submission).build();
         attachmentRepository.save(attachment);
-
         if(trueId) {
             List<Attachment> result = attachmentRepository.getAttachmentByAssignmentId(assignment.getId());
             assertThat(result.size()).isGreaterThan(0);
@@ -120,7 +105,7 @@ public class AttachmentRepositoryTest {
         }
     }
 
-    @Order(2)
+    @Order(3)
     @ParameterizedTest(name = "{index} => trueId={0}")
     @CsvSource({
             "true", "false"
@@ -132,34 +117,21 @@ public class AttachmentRepositoryTest {
         Class classroom = Class.builder().class_name("Luyen thi N3").description("On thi N3").user(user).build();
         classRepository.save(classroom);
 
-        Assignment assignment = Assignment.builder()
-                .instruction("Assignment for all")
-                .title("Assignment 1")
-                .classroom(classroom)
+        Assignment assignment = Assignment.builder().instruction("Assignment for all").title("Assignment 1").classroom(classroom)
                 .user(user).build();
         assignmentRepository.save(assignment);
 
-        Submission submission = Submission.builder()
-                .description("submit assignment")
-                .user(user)
-                .assignment(assignment).build();
+        Submission submission = Submission.builder().description("submit assignment").user(user).assignment(assignment).build();
         submissionRepository.save(submission);
 
-        Post post = Post.builder()
-                .content("Documents for semester")
-                .classroom(classroom)
-                .user(user).
-                build();
+        Post post = Post.builder().content("Documents for semester").classroom(classroom).user(user).build();
         postRepository.save(post);
 
-        Attachment attachment = Attachment.builder()
-                .attachmentType(AttachmentType.builder().id(1).build())
-                .file_url("tailieu.docx")
+        Attachment attachment = Attachment.builder().attachmentType(AttachmentType.builder().id(1).build()).file_url("tailieu.docx")
                 .assignment(assignment)
                 .post(post)
                 .submission(submission).build();
         attachmentRepository.save(attachment);
-
         if(trueId) {
             List<Attachment> result = attachmentRepository.getAttachmentByPostId(post.getId());
             assertThat(result.size()).isGreaterThan(0);

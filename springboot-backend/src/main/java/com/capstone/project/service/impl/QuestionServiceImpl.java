@@ -105,14 +105,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         if (typeid != 0) {
             query += " AND type_id = :typeId";
-            QuestionType questionType = questionTypeService.getQuestionTypeById(typeid);
-            parameters.put("typeId", questionType.getId());
+            parameters.put("typeId", typeid);
         }
 
         if (testid != 0) {
             query += " AND test_id = :testId";
-           Test test = testService.getTestById(testid);
-            parameters.put("testId", test.getId());
+            parameters.put("testId", testid);
         }
 
 

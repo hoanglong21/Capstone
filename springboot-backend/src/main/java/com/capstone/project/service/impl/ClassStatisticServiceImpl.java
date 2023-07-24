@@ -81,11 +81,8 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
             Map<String, Object> response = classLearnerService.filterClassLeaner(0, id, listDate.get(i), listDate.get(i + 1),
                     "created_date", "DESC", 1, 5);
             result.add( Integer.parseInt(String.valueOf(response.get("totalItems"))));
-
         }
-
         return result;
-
     }
 
     @Override
@@ -107,13 +104,22 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
 //        List<String> listDate = dateRangePicker.getDateRange();
         List<Integer> result = new ArrayList<>();
             Map<String, Object> response = submissionService.getFilterSubmission(null,0,id,0,null,null,"DESC",1,5);
-            result.add( Integer.parseInt(String.valueOf(response.get("markLessThan5Count"))));
-            result.add( Integer.parseInt(String.valueOf(response.get("markBetween5And8Count"))));
-            result.add( Integer.parseInt(String.valueOf(response.get("markGreaterThan8Count"))));
+        result.add(parseIntSafe(response.get("markLessThan5Count")));
+        result.add(parseIntSafe(response.get("markBetween5And8Count")));
+        result.add(parseIntSafe(response.get("markGreaterThan8Count")));
 
         return result;
     }
 
-
+    private int parseIntSafe(Object value) {
+        if (value == null) {
+            return 0; // Hoặc giá trị mặc định khác tùy ý
+        }
+        try {
+            return Integer.parseInt(String.valueOf(value));
+        } catch (NumberFormatException e) {
+            return 0; // Hoặc giá trị mặc định khác tùy ý
+        }
+    }
 }
 

@@ -73,6 +73,19 @@ public class AttachmentServiceTest {
     }
 
     @Order(4)
+    @Test
+    void testGetAttachmentByPostId(){
+        List<Attachment> attachments = new ArrayList<>();
+        Attachment attachment1 = Attachment.builder().file_url("homework1.doc").build();
+        Attachment attachment2 = Attachment.builder().file_url("homework2.doc").build();
+        attachments.add(attachment1);
+        attachments.add(attachment2);
+        when(attachmentRepository.getAttachmentByPostId(any(Integer.class))).thenReturn(attachments);
+        List<Attachment> retrievedAttachments = attachmentServiceImpl.getAllAttachmentByPostId(1);
+        assertThat(retrievedAttachments).isEqualTo(attachments);
+    }
+
+    @Order(5)
     @ParameterizedTest(name = "index => assignmentId={0}, typeId={1},submissionId{2},file{3}")
     @CsvSource({
             "1,2,1,On thi N3 ",
@@ -92,7 +105,27 @@ public class AttachmentServiceTest {
         assertThat(attachment).isEqualTo(createdattachment);
     }
 
-    @Order(5)
+    @Order(6)
+    @Test
+    public void testCreateAttachments() {
+
+        List<Attachment> attachmentList = new ArrayList<>();
+        Attachment attachment1 =  Attachment.builder().assignment(Assignment.builder().id(1).build())
+                .attachmentType(AttachmentType.builder().id(1).build())
+                .submission(Submission.builder().id(1).build())
+                .file_name("guide")
+                .build();
+        Attachment attachment2 =  Attachment.builder().assignment(Assignment.builder().id(2).build())
+                .attachmentType(AttachmentType.builder().id(2).build())
+                .submission(Submission.builder().id(2).build())
+                .file_name("guide")
+                .build();
+
+        attachmentList.add(attachment1);
+        attachmentList.add(attachment2);
+    }
+
+    @Order(7)
     @Test
     void testGetAttachmentById(){
         Attachment attachment = Attachment.builder()
@@ -108,7 +141,7 @@ public class AttachmentServiceTest {
     }
 
 
-    @Order(6)
+    @Order(8)
     @ParameterizedTest(name = "index => assignmentId={0}, typeId={1},submissionId{2},file{3}")
     @CsvSource({
             "1,2,1,On thi N3 ",
@@ -138,7 +171,7 @@ public class AttachmentServiceTest {
             }
     }
 
-    @Order(7)
+    @Order(9)
     @Test
     void testDeleteAttachment() {
 

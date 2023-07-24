@@ -76,8 +76,8 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     @Override
     public Map<String, String> CustomGetUserSettingByUserId(int id) throws ResourceNotFroundException {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFroundException("User not exist with id: " + id));
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new ResourceNotFroundException("User not exist with id: " + id));
 
         List<UserSetting> customUserSettings = userSettingRepository.getByUserId(id);
         Map<String, String> customMap = new HashMap<>();
