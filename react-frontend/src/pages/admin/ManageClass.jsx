@@ -42,7 +42,7 @@ function ManageClass() {
         <div className="col-sm">
           <HeaderAdmin />
           <div className="container">
-            <h3 className="mt-3 mb-4 text-bold text-black">Management Class</h3>
+            <h3 className="mt-3 mb-4 text-bold text-black">View Class</h3>
             <div className="table-responsive">
               <table className="table table-hover">
                 <thead style={{ backgroundColor: "#000" }}>

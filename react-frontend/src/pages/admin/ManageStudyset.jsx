@@ -49,7 +49,7 @@ function ManageFeedback() {
                     <HeaderAdmin />
                     <div className="container">
                         <h3 className="mt-3 mb-4 text-bold text-black">
-                            Management Studyset
+                            View Studyset
                         </h3>
                         <div className="table-responsive">
                             <table className="table table-hover">

@@ -21,6 +21,9 @@ function ManagePost() {
                 '',
                 '',
                 '',
+                '',
+                '',
+                '',
                 '=10',
             )
         ).data.list
@@ -47,7 +50,7 @@ function ManagePost() {
           <HeaderAdmin />
           <div className="container">
             <h3 className="mt-3 mb-4 text-bold text-black">
-              Management Post
+              View Post
             </h3>
             <div className="table-responsive">
               <table className="table table-hover">
