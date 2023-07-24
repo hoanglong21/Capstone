@@ -127,7 +127,7 @@ public class StudySetController {
 
     @GetMapping("/quiz")
     public ResponseEntity<?> getQuizByStudySetId(@RequestParam(value = "id") int id,
-                                                 @RequestParam(value = "type") String type,
+                                                 @RequestParam(value = "type") int[] type,
                                                  @RequestParam(value = "number") int number) {
         return ResponseEntity.ok(studySetService.getQuizByStudySetId(id, type, number));
     }

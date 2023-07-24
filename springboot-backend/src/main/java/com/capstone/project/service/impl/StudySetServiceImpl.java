@@ -222,7 +222,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, String questionType, int numberOfQuestion) {
+    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion) {
         List<Card> cardList = cardService.getAllByStudySetId(studySetId);
         // Shuffle the cardList to randomize the order of cards
         Collections.shuffle(cardList);
@@ -234,22 +234,50 @@ public class StudySetServiceImpl implements StudySetService {
             initCardWrappers.add(cardWrapper);
         }
 
+        int cardsPerType = numberOfQuestion / questionType.length;
+
         List<CardWrapper> questionCardSet = initCardWrappers.subList(0, Math.min(numberOfQuestion, initCardWrappers.size()));
         List<CardWrapper> cardListCloneForAnswers = new ArrayList<>(initCardWrappers);
         List<Map<String, Object>> response = new ArrayList<>();
-        for(CardWrapper cardWrapper : questionCardSet) {
+        Random rand = new Random();
+
+        for (int i = 0; i < questionCardSet.size(); i++) {
+            int currentType;
+            if(i<cardsPerType) {
+                currentType = questionType[0];
+            } else if(i<cardsPerType*2 && questionType.length>=2) {
+                currentType = questionType[1];
+            } else { // remain of cardsPerType
+                currentType = questionType[questionType.length-1];
+            }
             Collections.shuffle(cardListCloneForAnswers);
             List<CardWrapper> answerCardSet = new ArrayList<>();
-            answerCardSet.add(cardWrapper);
 
-            if(questionType.toLowerCase().equals("multiple choice")) {
+
+            if(currentType == 1) {
+                answerCardSet.add(questionCardSet.get(i));
+            }
+            if(currentType == 2) {
+                answerCardSet.add(questionCardSet.get(i));
                 for (CardWrapper randomCard : cardListCloneForAnswers) {
                     if (answerCardSet.size() == 4) {
                         break;
                     }
                     // Make sure not to add the same cardWrapper as the original one
-                    if (!cardWrapper.equals(randomCard)) {
+                    if (!questionCardSet.get(i).equals(randomCard)) {
                         answerCardSet.add(randomCard);
+                    }
+                }
+            }
+            if(currentType == 3) {
+                int x = rand.nextInt(2); // 0, 1
+                if(x==0) {
+                    answerCardSet.add(questionCardSet.get(i));
+                }
+                for (CardWrapper randomCard : cardListCloneForAnswers) {
+                    if (!questionCardSet.get(i).equals(randomCard)) {
+                        answerCardSet.add(randomCard);
+                        break;
                     }
                 }
             }
@@ -257,8 +285,8 @@ public class StudySetServiceImpl implements StudySetService {
             Collections.shuffle(answerCardSet);
 
             Map<String, Object> map = new HashMap<>();
-            map.put("question", cardWrapper);
-            map.put("question_type", questionType);
+            map.put("question", questionCardSet.get(i));
+            map.put("question_type", currentType);
             map.put("answers", answerCardSet);
             response.add(map);
         }
