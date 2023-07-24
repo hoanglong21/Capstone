@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import ContentService from '../../../services/ContentService'
 
-const KanjiCard = ({ card, cardIndex }) => {
+const KanjiCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
     const [character, setCharacter] = useState(null)
     const [name, setName] = useState(null)
     const [strokeOrder, setStrokeOrder] = useState(null)
@@ -59,6 +59,12 @@ const KanjiCard = ({ card, cardIndex }) => {
             fetchData()
         }
     }, [card])
+
+    useEffect(() => {
+        if (isAuto) {
+            handleAutoPlay()
+        }
+    }, [isAuto, character])
 
     const toggleFlip = () => {
         document

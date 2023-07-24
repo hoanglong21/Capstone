@@ -15,6 +15,7 @@ import {
     ArrowRightIcon,
     CloseIcon,
     LearnSolidIcon,
+    PauseSolidIcon,
     PlaySolidIcon,
     ShuffleIcon,
     StudySetSolidIcon,
@@ -123,16 +124,18 @@ const Flashcard = () => {
         const handleUserKeyPress = (event) => {
             switch (event.key) {
                 case 'ArrowLeft':
+                    clearSetTimeout()
                     var tempIndex1 = cardIndex - 1
                     if (tempIndex1 > -1) {
                         setCardIndex(tempIndex1)
                         document
-                            .getElementById('flipElement')
+                            .getElementById(`flipElement${cardIndex}`)
                             ?.classList.remove('is-flipped')
                     }
                     // Do something for "left arrow" key press.
                     break
                 case 'ArrowRight':
+                    clearSetTimeout()
                     var tempIndex2 = cardIndex + 1
                     if (tempIndex2 === cards.length) {
                         setIsEnd(true)
@@ -140,8 +143,9 @@ const Flashcard = () => {
                     if (tempIndex2 < cards.length) {
                         setCardIndex(tempIndex2)
                         document
-                            .getElementById('flipElement')
+                            .getElementById(`flipElement${cardIndex}`)
                             ?.classList.remove('is-flipped')
+                        clearSetTimeout()
                     }
                     // Do something for "right arrow" key press.
                     break
@@ -200,10 +204,7 @@ const Flashcard = () => {
 
     const handleAutoPlay = () => {
         var tempIndex = cardIndex + 1
-        if (tempIndex === cards.length) {
-            setIsEnd(true)
-        }
-        if (tempIndex < cards.length) {
+        if (cardIndex < cards.length) {
             if (
                 document
                     .getElementById(`flipElement${cardIndex}`)
@@ -213,7 +214,11 @@ const Flashcard = () => {
                     document
                         .getElementById(`flipElement${cardIndex}`)
                         ?.classList.remove('is-flipped')
-                    setCardIndex(tempIndex)
+                    if (tempIndex === cards.length) {
+                        setIsEnd(true)
+                    } else {
+                        setCardIndex(tempIndex)
+                    }
                 }, 5000)
             } else {
                 setTimeout(function () {
@@ -225,9 +230,20 @@ const Flashcard = () => {
                     document
                         .getElementById(`flipElement${cardIndex}`)
                         ?.classList.remove('is-flipped')
-                    setCardIndex(tempIndex)
+                    if (tempIndex === cards.length) {
+                        setIsEnd(true)
+                    } else {
+                        setCardIndex(tempIndex)
+                    }
                 }, 10000)
             }
+        }
+    }
+
+    const clearSetTimeout = () => {
+        var id = window.setTimeout(function () {}, 0)
+        while (id--) {
+            window.clearTimeout(id) // will do nothing if no timeout with id is present
         }
     }
 
@@ -374,15 +390,35 @@ const Flashcard = () => {
                     )}
                     <div className="d-flex align-items-center justify-content-between mt-4">
                         <div className="flashcardPlay">
-                            <button
-                                className="flashcardPlay_btn"
-                                onClick={() => {
-                                    setIsAuto(!isAuto)
-                                    setShowAutoMess(true)
-                                }}
-                            >
-                                <PlaySolidIcon size="1.5rem" />
-                            </button>
+                            {isAuto ? (
+                                <button
+                                    className="flashcardPlay_btn"
+                                    onClick={() => {
+                                        setIsAuto(false)
+                                        clearSetTimeout()
+                                        setShowAutoMess(true)
+                                        setTimeout(function () {
+                                            document
+                                                .getElementById(
+                                                    'autoPlayToastClose'
+                                                )
+                                                .click()
+                                        }, 2000)
+                                    }}
+                                >
+                                    <PauseSolidIcon size="1.5rem" />
+                                </button>
+                            ) : (
+                                <button
+                                    className="flashcardPlay_btn"
+                                    onClick={() => {
+                                        setIsAuto(true)
+                                        setShowAutoMess(true)
+                                    }}
+                                >
+                                    <PlaySolidIcon size="1.5rem" />
+                                </button>
+                            )}
                         </div>
                         <div className="flashCardSwitch">
                             <button
@@ -390,7 +426,13 @@ const Flashcard = () => {
                                 style={{ marginRight: '4rem' }}
                                 disabled={cardIndex === 0}
                                 onClick={() => {
+                                    clearSetTimeout()
                                     setCardIndex(cardIndex - 1)
+                                    document
+                                        .getElementById(
+                                            `flipElement${cardIndex}`
+                                        )
+                                        ?.classList.remove('is-flipped')
                                 }}
                             >
                                 <ArrowLeftIcon
@@ -406,7 +448,13 @@ const Flashcard = () => {
                                     if (tempIndex === cards.length) {
                                         setIsEnd(true)
                                     } else {
+                                        clearSetTimeout()
                                         setCardIndex(tempIndex)
+                                        document
+                                            .getElementById(
+                                                `flipElement${cardIndex}`
+                                            )
+                                            ?.classList.remove('is-flipped')
                                     }
                                 }}
                             >
@@ -439,9 +487,7 @@ const Flashcard = () => {
                     onClose={() => {
                         setShowAutoMess(false)
                     }}
-                    delay={3000}
                     className="toast align-items-center text-bg-dark border-0"
-                    autohide
                 >
                     <Toast.Body className="d-flex flex-column p-3">
                         <div className="d-flex justify-content-between">
@@ -449,6 +495,7 @@ const Flashcard = () => {
                                 Auto-play cards is {isAuto ? 'on' : 'off'}.
                             </span>
                             <button
+                                id="autoPlayToastClose"
                                 type="button"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="toast"

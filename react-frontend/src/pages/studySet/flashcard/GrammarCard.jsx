@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import ContentService from '../../../services/ContentService'
 
-const GrammarCard = ({ card, cardIndex }) => {
+const GrammarCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
     const [title, setTitle] = useState(null)
     const [jlptLevel, setJlptLevel] = useState(null)
     const [meaning, setMeaning] = useState(null)
@@ -47,6 +47,12 @@ const GrammarCard = ({ card, cardIndex }) => {
             fetchData()
         }
     }, [card])
+
+    useEffect(() => {
+        if (isAuto) {
+            handleAutoPlay()
+        }
+    }, [isAuto, title])
 
     const toggleFlip = () => {
         document
