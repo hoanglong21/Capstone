@@ -13,6 +13,7 @@ function AdminDashboard() {
   const [studySetnumber, setStudySetNumber] = useState();
   const [accessNumber, setAccessNumber] = useState();
   const [userGrowth, setUserGrowth] = useState();
+  const [studySetGrowth, setStudySetGrowth] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +66,15 @@ function AdminDashboard() {
     };
     fetchDataUserGrowth();
 
-    initializeChartline();
+    const fetchDataStudySetGrowth = async () => {
+      try {
+        const temp = (await AdminService.getStudySetGrowth()).data;
+        setStudySetGrowth(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataStudySetGrowth();
   }, []);
 
   const week = [
@@ -139,16 +148,9 @@ function AdminDashboard() {
     },
   ];
 
-  var optionLine = {
-    series: [
-      {
-        name: "Sales",
-        data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5],
-      },
-    ],
+  const optionLine = {
     chart: {
-      height: 350,
-      type: "line",
+      id: "chartline",
     },
     stroke: {
       width: 7,
@@ -156,26 +158,7 @@ function AdminDashboard() {
     },
     xaxis: {
       type: "datetime",
-      categories: [
-        "1/11/2000",
-        "2/11/2000",
-        "3/11/2000",
-        "4/11/2000",
-        "5/11/2000",
-        "6/11/2000",
-        "7/11/2000",
-        "8/11/2000",
-        "9/11/2000",
-        "10/11/2000",
-        "11/11/2000",
-        "12/11/2000",
-        "1/11/2001",
-        "2/11/2001",
-        "3/11/2001",
-        "4/11/2001",
-        "5/11/2001",
-        "6/11/2001",
-      ],
+      categories: week,
       tickAmount: 10,
       labels: {
         formatter: function (value, timestamp, opts) {
@@ -184,7 +167,7 @@ function AdminDashboard() {
       },
     },
     title: {
-      text: "Set",
+      text: "Study Set",
       align: "left",
       style: {
         fontSize: "16px",
@@ -209,13 +192,12 @@ function AdminDashboard() {
     },
   };
 
-  const initializeChartline = () => {
-    const chartOrigin = document.querySelector("#chartPie");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, optionLine);
-      chart.render();
-    }
-  };
+  const seriesLine = [
+    {
+      name: "Studyset",
+      data: studySetGrowth,
+    },
+  ]
 
   return (
     <div className="container-fluid bg-white">
@@ -349,10 +331,12 @@ function AdminDashboard() {
                 </div>
                 {/*  <!-- Card Body --> */}
                 <div className="card-body">
-                  <div
-                    id="chartPie"
-                    style={{ height: "300px", width: "100%" }}
-                  ></div>
+                <ReactApexChart
+                    options={optionLine}
+                    series={seriesLine}
+                    type="line"
+                    height={350}
+                  />
                 </div>
               </div>
             </div>
