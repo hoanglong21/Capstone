@@ -115,15 +115,17 @@ function AdminDashboard() {
       },
     },
     xaxis: {
-      labels: {
-        rotate: -45,
-      },
       categories: week,
       tickPlacement: "on",
     },
     yaxis: {
       title: {
         text: "Person",
+      },
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(0);
+        },
       },
     },
     fill: {
@@ -153,18 +155,11 @@ function AdminDashboard() {
       id: "chartline",
     },
     stroke: {
-      width: 7,
+      width: 5,
       curve: "smooth",
     },
     xaxis: {
-      type: "datetime",
       categories: week,
-      tickAmount: 10,
-      labels: {
-        formatter: function (value, timestamp, opts) {
-          return opts.dateFormatter(new Date(timestamp), "dd MMM");
-        },
-      },
     },
     title: {
       text: "Study Set",
@@ -187,8 +182,11 @@ function AdminDashboard() {
       },
     },
     yaxis: {
-      min: -10,
-      max: 40,
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(0);
+        },
+      },
     },
   };
 
@@ -197,7 +195,7 @@ function AdminDashboard() {
       name: "Studyset",
       data: studySetGrowth,
     },
-  ]
+  ];
 
   return (
     <div className="container-fluid bg-white">
@@ -331,7 +329,7 @@ function AdminDashboard() {
                 </div>
                 {/*  <!-- Card Body --> */}
                 <div className="card-body">
-                <ReactApexChart
+                  <ReactApexChart
                     options={optionLine}
                     series={seriesLine}
                     type="line"
