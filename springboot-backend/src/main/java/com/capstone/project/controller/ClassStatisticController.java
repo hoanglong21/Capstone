@@ -53,9 +53,13 @@ public class ClassStatisticController {
         }
     }
 
-    @GetMapping("/postgrowth")
-    public ResponseEntity<?> getPostGrowth() throws ResourceNotFroundException {
-        return ResponseEntity.ok(classStatisticService.getPostGrowth());
+    @GetMapping("/postgrowth/{id}")
+    public ResponseEntity<?> getPostGrowth(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(classStatisticService.getPostGrowth(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/pointdistribution/{id}")

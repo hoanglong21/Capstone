@@ -130,7 +130,7 @@ public class ClassStatisticServiceTest {
             response.put("totalItems", 2);
             when(dateRangePicker.getDateActive()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
             when(postService.getFilterPost(any(), any(), any(), any(), any(), any(), anyInt(), anyInt(), anyInt())).thenReturn(response);
-            List<Integer> result = classStatisticService.getPostGrowth();
+            List<Integer> result = classStatisticService.getPostGrowth(1);
             assertThat(result.size()).isGreaterThan(0);
         } catch (ResourceNotFroundException e) {
             throw new RuntimeException(e);

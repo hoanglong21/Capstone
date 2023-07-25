@@ -126,9 +126,11 @@ public class TestServiceImpl  implements TestService {
                                              String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="select t.id,t.created_date,t.description,t.duration,t.modified_date,t.title,t.author_id,t.class_id,t.due_date,t.is_draft,t.num_attemps,t.start_date," +
-                "(select count(*) from capstone.question where test_id = t.id) as totalquestion," +
-                "(select count(*) from capstone.comment where test_id = t.id) as totalcomment from test t inner join user u on u.id = author_id where 1=1 ";
+        String query ="select t.*,u.username as authorname, c.class_name as classname,\n" +
+                "\t   (select count(*) from capstone.question where test_id = t.id) as totalquestion,\n" +
+                "\t   (select count(*) from capstone.comment where test_id = t.id) as totalcomment \n" +
+                "       from test t inner join user u on u.id = author_id\n" +
+                "                   inner join class c on c.id = t.class_id WHERE 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
 
