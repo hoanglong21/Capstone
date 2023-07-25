@@ -64,6 +64,7 @@ public class Test {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified_date;
 
+    @Column(columnDefinition="TEXT")
     private String description;
 
     private float duration;

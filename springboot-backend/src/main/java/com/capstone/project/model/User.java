@@ -45,6 +45,7 @@ public class User {
 
     private String role;
 
+    @Column(columnDefinition="TEXT")
     private String address;
 
     private String bio;
@@ -52,7 +53,6 @@ public class User {
     private String status;
 
     private String avatar;
-
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)

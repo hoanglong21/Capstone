@@ -279,7 +279,12 @@ public class StudySetServiceTest {
         when(contentRepository.getContentByCardId(anyInt())).thenReturn(new ArrayList<>());
 
 
-        List<Map<String, Object>> response = studySetServiceImpl.getQuizByStudySetId(1, new int[]{1}, 1);
+        List<Map<String, Object>> response = null;
+        try {
+            response = studySetServiceImpl.getQuizByStudySetId(1, new int[]{1}, 1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         assertThat(response.size()).isEqualTo(0);
 
     }

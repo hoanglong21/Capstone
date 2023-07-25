@@ -32,7 +32,7 @@ function ManageFeedback() {
                 '',
                 '',
                 '',
-                ''
+                '=10'
             )
         ).data.list
         setSets(temp)
@@ -49,14 +49,14 @@ function ManageFeedback() {
                     <HeaderAdmin />
                     <div className="container">
                         <h3 className="mt-3 mb-4 text-bold text-black">
-                            Management Studyset
+                            View Studyset
                         </h3>
                         <div className="table-responsive">
                             <table className="table table-hover">
                                 <thead style={{ backgroundColor: '#000' }}>
                                     <tr>
                                         <th scope="col">Studyset ID</th>
-                                        <th scope="col">Description</th>
+                                        <th scope="col">Title</th>
                                         <th scope="col">Created Date</th>
                                         <th scope="col">Creator By</th>
                                         <th scope="col">Action</th>
@@ -71,7 +71,7 @@ function ManageFeedback() {
                                             <th scope="row" key={set?.id}>
                                                 {set?.id}
                                             </th>
-                                            <td>{set?.description}</td>
+                                            <td>{set?.title}</td>
                                             <td>{set?.created_date}</td>
                                             <td>{set?.author}</td>
                                             <td>

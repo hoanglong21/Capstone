@@ -6,12 +6,14 @@ import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
 import ApexCharts from "apexcharts";
 import AdminService from "../../services/AdminService";
-
+import ReactApexChart from "react-apexcharts";
 function AdminDashboard() {
   const [registernumber, setRegisterNumber] = useState();
   const [classnumber, setClassNumber] = useState();
   const [studySetnumber, setStudySetNumber] = useState();
   const [accessNumber, setAccessNumber] = useState();
+  const [userGrowth, setUserGrowth] = useState();
+  const [studySetGrowth, setStudySetGrowth] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,27 +55,55 @@ function AdminDashboard() {
       }
     };
     fetchDataAccess();
+
+    const fetchDataUserGrowth = async () => {
+      try {
+        const temp = (await AdminService.getUserGrowth()).data;
+        setUserGrowth(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataUserGrowth();
+
+    const fetchDataStudySetGrowth = async () => {
+      try {
+        const temp = (await AdminService.getStudySetGrowth()).data;
+        setStudySetGrowth(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataStudySetGrowth();
   }, []);
 
-  var optionColumn = {
-    series: [
-      {
-        name: "Person",
-        data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65],
-      },
-    ],
+  const week = [
+    "Week 1",
+    "Week 2",
+    "Week 3",
+    "Week 4",
+    "Week 5",
+    "Week 6",
+    "Week 7",
+    "Week 8",
+    "Week 9",
+    "Week 10",
+    "Week 11",
+    "Week 12",
+  ];
+
+  const options = {
     chart: {
-      height: 350,
-      type: "bar",
+      id: "barchart",
     },
     plotOptions: {
       bar: {
-        borderRadius: 10,
-        columnWidth: "50%",
+        borderRadius: 5,
+        columnWidth: "75%",
       },
     },
     dataLabels: {
-      enabled: false,
+      enabled: true,
     },
     stroke: {
       width: 2,
@@ -85,28 +115,17 @@ function AdminDashboard() {
       },
     },
     xaxis: {
-      labels: {
-        rotate: -45,
-      },
-      categories: [
-        "Week 1",
-        "Week 2",
-        "Week 3",
-        "Week 4",
-        "Week 5",
-        "Week 6",
-        "Week 7",
-        "Week 8",
-        "Week 9",
-        "Week 10",
-        "Week 11",
-        "Week 12",
-      ],
+      categories: week,
       tickPlacement: "on",
     },
     yaxis: {
       title: {
         text: "Person",
+      },
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(0);
+        },
       },
     },
     fill: {
@@ -124,71 +143,26 @@ function AdminDashboard() {
     },
   };
 
-  useEffect(() => {
-    initializeChart(); // Render the chart when the component mounts
-  }, []);
-
-  // useEffect(() => {
-  //   initializeChart();
-  // }, [options]); // Pass any dependencies here that may change and require the chart to be rerendered
-
-  const initializeChart = () => {
-    const chartOrigin = document.querySelector("#chart");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, optionColumn);
-      chart.render();
-    }
-  };
-
-  var optionLine = {
-    series: [
-      {
-        name: "Sales",
-        data: [4, 3, 10, 9, 29, 19, 22, 9, 12, 7, 19, 5, 13, 9, 17, 2, 7, 5],
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "line",
+  const series = [
+    {
+      name: "Person",
+      data: userGrowth,
     },
-    // forecastDataPoints: {
-    //   count: 7
-    // },
+  ];
+
+  const optionLine = {
+    chart: {
+      id: "chartline",
+    },
     stroke: {
-      width: 7,
+      width: 5,
       curve: "smooth",
     },
     xaxis: {
-      type: "datetime",
-      categories: [
-        "1/11/2000",
-        "2/11/2000",
-        "3/11/2000",
-        "4/11/2000",
-        "5/11/2000",
-        "6/11/2000",
-        "7/11/2000",
-        "8/11/2000",
-        "9/11/2000",
-        "10/11/2000",
-        "11/11/2000",
-        "12/11/2000",
-        "1/11/2001",
-        "2/11/2001",
-        "3/11/2001",
-        "4/11/2001",
-        "5/11/2001",
-        "6/11/2001",
-      ],
-      tickAmount: 10,
-      labels: {
-        formatter: function (value, timestamp, opts) {
-          return opts.dateFormatter(new Date(timestamp), "dd MMM");
-        },
-      },
+      categories: week,
     },
     title: {
-      text: "Set",
+      text: "Study Set",
       align: "left",
       style: {
         fontSize: "16px",
@@ -208,22 +182,20 @@ function AdminDashboard() {
       },
     },
     yaxis: {
-      min: -10,
-      max: 40,
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(0);
+        },
+      },
     },
   };
 
-  useEffect(() => {
-    initializeChartline(); // Render the chart when the component mounts
-  }, []);
-
-  const initializeChartline = () => {
-    const chartOrigin = document.querySelector("#chartPie");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, optionLine);
-      chart.render();
-    }
-  };
+  const seriesLine = [
+    {
+      name: "Studyset",
+      data: studySetGrowth,
+    },
+  ];
 
   return (
     <div className="container-fluid bg-white">
@@ -250,7 +222,9 @@ function AdminDashboard() {
                         <div className="fw-bold text-white text-uppercase mb-1">
                           Access Number (Monthly)
                         </div>
-                        <div className="h5 mb-0 fw-bold text-white">{accessNumber}</div>
+                        <div className="h5 mb-0 fw-bold text-white">
+                          {accessNumber}
+                        </div>
                       </div>
                       <div className="col-auto">
                         <i class="bi bi-people fs-2 text-white"></i>
@@ -335,11 +309,12 @@ function AdminDashboard() {
                   </h6>
                 </div>
                 <div className="card-body">
-                  <div
-                    className="chart-area"
-                    id="chart"
-                    style={{ height: "300px", width: "100%" }}
-                  ></div>
+                  <ReactApexChart
+                    options={options}
+                    series={series}
+                    type="bar"
+                    height={350}
+                  />
                 </div>
               </div>
             </div>
@@ -354,10 +329,12 @@ function AdminDashboard() {
                 </div>
                 {/*  <!-- Card Body --> */}
                 <div className="card-body">
-                  <div
-                    id="chartPie"
-                    style={{ height: "300px", width: "100%" }}
-                  ></div>
+                  <ReactApexChart
+                    options={optionLine}
+                    series={seriesLine}
+                    type="line"
+                    height={350}
+                  />
                 </div>
               </div>
             </div>

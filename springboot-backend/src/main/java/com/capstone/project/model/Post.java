@@ -29,6 +29,7 @@ public class Post {
     @JoinColumn(name = "class_id", nullable = false)
     private Class classroom;
 
+    @Column(columnDefinition="TEXT")
     private String content;
 
     @Column

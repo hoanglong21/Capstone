@@ -17,7 +17,7 @@ function ManageComment() {
         temp = (
             await CommentService.getFilterList(
                 '',
-                '',
+                `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
                 '',
@@ -49,24 +49,27 @@ function ManageComment() {
           <HeaderAdmin />
           <div className="container">
             <h3 className="mt-3 mb-4 text-bold text-black">
-              Management Comment
+              View Comment
             </h3>
             <div className="table-responsive">
               <table className="table table-hover">
                 <thead style={{ backgroundColor: "#000" }}>
                   <tr>
                     <th scope="col">Comment ID</th>
-                    <th scope="col">Class Name</th>
+                    <th scope="col">Type</th>
                     <th scope="col">Creator By</th>
                     <th scope="col">Created_Date</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
+                {comment?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {comment?.map((comments) => (
                   <tr>
                     <th scope="row" key={comments.id}>{comments?.id}</th>
-                    <td>{comments?.classroom?.class_name}</td>
+                    <td>{comments?.commentType?.name}</td>
                     <td>{comments?.user?.username}</td>
                     <td>{comments?.created_date}</td>
                     <td>
