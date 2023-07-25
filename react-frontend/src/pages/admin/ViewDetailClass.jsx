@@ -97,7 +97,7 @@ function ViewDetailClass() {
       },
       offsetY: -20,
       style: {
-        fontSize: "10px",
+        fontSize: "12px",
         colors: ["#304758"],
       },
     },
