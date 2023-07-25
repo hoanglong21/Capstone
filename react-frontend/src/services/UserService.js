@@ -125,6 +125,22 @@ export const filterUser = (
     )
 }
 
+export const getStudySetLearnedStatistic = (id) => {
+    return axios.get(API_BASE_URL + '/user/studysetlearned/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+export const getClassJoinedStatistic = (id) => {
+    return axios.get(API_BASE_URL + '/user/classjoined/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 const UserService = {
     getUser,
     updateUser,

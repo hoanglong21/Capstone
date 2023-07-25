@@ -1,14 +1,16 @@
 import React, {useState, useEffect} from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import UserService from "../../services/UserService";
 import ApexCharts from "apexcharts";
 import defaultAvatar from "../../assets/images/avatar-default.jpg"
+import ReactApexChart from "react-apexcharts";
 
 function ViewDetailsUser() {
   const [users, setUsers] = useState([]);
   const {username} = useParams();
+  const [studySetLearned, setStudySetLearned] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,6 +21,97 @@ function ViewDetailsUser() {
       fetchData();
     };
   }, [username]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const temp = (await UserService.getStudySetLearnedStatistic()).data;
+        setStudySetLearned(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchData();
+  })
+
+  const optionsDataLabel = {
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        dataLabels: {
+          position: 'top', // top, center, bottom
+        },
+      }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val;
+      },
+      offsetY: -20,
+      style: {
+        fontSize: '12px',
+        colors: ["#304758"]
+      }
+    },
+    
+    xaxis: {
+      categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      position: 'top',
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false
+      },
+      crosshairs: {
+        fill: {
+          type: 'gradient',
+          gradient: {
+            colorFrom: '#D8E3F0',
+            colorTo: '#BED1E6',
+            stops: [0, 100],
+            opacityFrom: 0.4,
+            opacityTo: 0.5,
+          }
+        }
+      },
+      tooltip: {
+        enabled: true,
+      }
+    },
+    yaxis: {
+      axisBorder: {
+        show: false
+      },
+      axisTicks: {
+        show: false,
+      },
+      labels: {
+        show: false,
+        formatter: function (val) {
+          return val;
+        }
+      }
+    
+    },
+    title: {
+      text: '',
+      floating: true,
+      offsetY: 330,
+      align: 'center',
+      style: {
+        color: '#444'
+      }
+    }
+  };
+
+  const seriesDataLabel = [
+    {
+      name: "Person",
+      data: studySetLearned,
+    },
+  ];
 
   var optionRadar = {
     series: [{
@@ -218,85 +311,85 @@ function ViewDetailsUser() {
     }
   };
 
-  var optionsDataLabel = {
-    series: [{
-    name: 'Inflation',
-    data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
-  }],
-    chart: {
-    height: 350,
-    type: 'bar',
-  },
-  plotOptions: {
-    bar: {
-      borderRadius: 10,
-      dataLabels: {
-        position: 'top', // top, center, bottom
-      },
-    }
-  },
-  dataLabels: {
-    enabled: true,
-    formatter: function (val) {
-      return val + "%";
-    },
-    offsetY: -20,
-    style: {
-      fontSize: '12px',
-      colors: ["#304758"]
-    }
-  },
+  // var optionsDataLabel = {
+  //   series: [{
+  //   name: 'Inflation',
+  //   data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+  // }],
+  //   chart: {
+  //   height: 350,
+  //   type: 'bar',
+  // },
+  // plotOptions: {
+  //   bar: {
+  //     borderRadius: 10,
+  //     dataLabels: {
+  //       position: 'top', // top, center, bottom
+  //     },
+  //   }
+  // },
+  // dataLabels: {
+  //   enabled: true,
+  //   formatter: function (val) {
+  //     return val + "%";
+  //   },
+  //   offsetY: -20,
+  //   style: {
+  //     fontSize: '12px',
+  //     colors: ["#304758"]
+  //   }
+  // },
   
-  xaxis: {
-    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    position: 'top',
-    axisBorder: {
-      show: false
-    },
-    axisTicks: {
-      show: false
-    },
-    crosshairs: {
-      fill: {
-        type: 'gradient',
-        gradient: {
-          colorFrom: '#D8E3F0',
-          colorTo: '#BED1E6',
-          stops: [0, 100],
-          opacityFrom: 0.4,
-          opacityTo: 0.5,
-        }
-      }
-    },
-    tooltip: {
-      enabled: true,
-    }
-  },
-  yaxis: {
-    axisBorder: {
-      show: false
-    },
-    axisTicks: {
-      show: false,
-    },
-    labels: {
-      show: false,
-      formatter: function (val) {
-        return val + "%";
-      }
-    }
+  // xaxis: {
+  //   categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  //   position: 'top',
+  //   axisBorder: {
+  //     show: false
+  //   },
+  //   axisTicks: {
+  //     show: false
+  //   },
+  //   crosshairs: {
+  //     fill: {
+  //       type: 'gradient',
+  //       gradient: {
+  //         colorFrom: '#D8E3F0',
+  //         colorTo: '#BED1E6',
+  //         stops: [0, 100],
+  //         opacityFrom: 0.4,
+  //         opacityTo: 0.5,
+  //       }
+  //     }
+  //   },
+  //   tooltip: {
+  //     enabled: true,
+  //   }
+  // },
+  // yaxis: {
+  //   axisBorder: {
+  //     show: false
+  //   },
+  //   axisTicks: {
+  //     show: false,
+  //   },
+  //   labels: {
+  //     show: false,
+  //     formatter: function (val) {
+  //       return val + "%";
+  //     }
+  //   }
   
-  },
-  title: {
-    text: 'Monthly Inflation in Argentina, 2002',
-    floating: true,
-    offsetY: 330,
-    align: 'center',
-    style: {
-      color: '#444'
-    }
-  }
-  };
+  // },
+  // title: {
+  //   text: 'Monthly Inflation in Argentina, 2002',
+  //   floating: true,
+  //   offsetY: 330,
+  //   align: 'center',
+  //   style: {
+  //     color: '#444'
+  //   }
+  // }
+  // };
 
   useEffect(() => {
     initializeChartDataLabel(); 
@@ -463,15 +556,16 @@ function ViewDetailsUser() {
               <div className="card shadow mb-4">
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 className="m-0 fw-bold text-uppercase text-primary">
-                  Number of times to learn sets
+                  Number sets to learn
                   </h6>
                 </div>
                 <div className="card-body">
-                  <div
-                    className="chart-area"
-                    id="chartDataLabel"
-                    style={{ height: "300px", width: "100%" }}
-                  ></div>
+                <ReactApexChart
+                    options={optionsDataLabel}
+                    series={seriesDataLabel}
+                    type="bar"
+                    height={350}
+                  />
                 </div>
               </div>
             </div>
