@@ -86,7 +86,9 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     }
 
     @Override
-    public List<Integer> getPostGrowth() throws ResourceNotFroundException {
+    public List<Integer> getPostGrowth(int id) throws ResourceNotFroundException {
+        classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
         List<Integer> result = new ArrayList<>();
         List<String[]> listDateRanges = dateRangePicker.getRecent4Weeks();
         for (int i = 0; i < listDateRanges.size(); i++) {
@@ -95,7 +97,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
 
             // Lấy số lượng bài viết trong từng tuần và thêm vào danh sách kết quả
             Map<String, Object> response = postService.getFilterPost(null, null, startDate, endDate,
-                    "created_date", "DESC", 0, 1, 5);
+                    "created_date", "DESC", id, 1, 5);
             result.add(Integer.parseInt(String.valueOf(response.get("totalItems"))));
         }
         return result;

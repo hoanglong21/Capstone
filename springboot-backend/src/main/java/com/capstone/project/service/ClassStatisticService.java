@@ -13,7 +13,7 @@ public interface ClassStatisticService {
     Integer getLeanerJoinedNumber(int id) throws ResourceNotFroundException, ParseException;
 
     List<Integer> getLeanerJoinedGrowth(int id) throws ResourceNotFroundException, ParseException;
-    List<Integer> getPostGrowth() throws ResourceNotFroundException;
+    List<Integer> getPostGrowth(int id) throws ResourceNotFroundException;
 
     List<Integer> getPointDistribution(int id) throws ResourceNotFroundException;
 }
