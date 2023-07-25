@@ -279,15 +279,15 @@ public class StudySetServiceImpl implements StudySetService {
                 int x = rand.nextInt(2); // 0, 1
                 if(x==0) {
                     answerCardSet.add(questionCardSet.get(i));
-                }
-                for (CardWrapper randomCard : cardListCloneForAnswers) {
-                    if (!questionCardSet.get(i).equals(randomCard)) {
-                        answerCardSet.add(randomCard);
-                        break;
+                } else {
+                    for (CardWrapper randomCard : cardListCloneForAnswers) {
+                        if (!questionCardSet.get(i).equals(randomCard)) {
+                            answerCardSet.add(randomCard);
+                            break;
+                        }
                     }
                 }
             }
-
             Collections.shuffle(answerCardSet);
 
             Map<String, Object> map = new HashMap<>();
