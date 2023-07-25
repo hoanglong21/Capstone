@@ -4,7 +4,7 @@ import HeaderAdmin from "./HeaderAdmin";
 import { Link, useParams } from "react-router-dom";
 import ClassService from "../../services/ClassService";
 import ApexCharts from "apexcharts";
-// import dayjs from 'dayjs';
+import ReactApexChart from "react-apexcharts";
 
 function ViewDetailClass() {
   const [classes, setClasses] = useState([]);
@@ -12,7 +12,7 @@ function ViewDetailClass() {
   const [classLearnerJoined, setclassLearnerJoined] = useState([]);
   const [classTest, setClassTest] = useState([]);
   const [classAssignment, setClassAssignment] = useState([]);
-
+  const [learnerJoined, setLearnerJoined] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,8 +54,97 @@ function ViewDetailClass() {
       }
     };
     fetchDataClassTestNumber();
+
+    const fetchDataLearnerJoined = async () => {
+      try {
+        const temp = (await ClassService.getLeanerJoinedGrowth(id)).data;
+        setLearnerJoined(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataLearnerJoined();
   }, [id]);
 
+  const week = [
+    "Week 1",
+    "Week 2",
+    "Week 3",
+    "Week 4",
+    "Week 5",
+    "Week 6",
+    "Week 7",
+    "Week 8",
+    "Week 9",
+    "Week 10",
+    "Week 11",
+    "Week 12",
+  ];
+
+  const optionsLearnJoined = {
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        dataLabels: {
+          position: "top", // top, center, bottom
+        },
+      },
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val;
+      },
+      offsetY: -20,
+      style: {
+        fontSize: "10px",
+        colors: ["#304758"],
+      },
+    },
+    xaxis: {
+      categories: week,
+      tickPlacement: "on",
+    },
+    yaxis: {
+      title: {
+        text: "Person",
+      },
+      labels: {
+        formatter: function (val) {
+          return val.toFixed(0);
+        },
+      },
+    },
+    position: "top",
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+      crosshairs: {
+        fill: {
+          type: "gradient",
+          gradient: {
+            colorFrom: "#D8E3F0",
+            colorTo: "#BED1E6",
+            stops: [0, 100],
+            opacityFrom: 0.4,
+            opacityTo: 0.5,
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+  }
+
+  const seriesLearnerJoined = [
+    {
+      name: "Person",
+      data: learnerJoined,
+    },
+  ];
   var options = {
     series: [
       {
@@ -123,110 +212,110 @@ function ViewDetailClass() {
     }
   };
 
-  var optionsDataLabel = {
-    series: [
-      {
-        name: "Learn Joined",
-        data: [1,3, 4, 6, 7, 5, 6, 6, 2,9, 10, 22],
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "bar",
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 10,
-        dataLabels: {
-          position: "top", // top, center, bottom
-        },
-      },
-    },
-    dataLabels: {
-      enabled: true,
-      formatter: function (val) {
-        return val;
-      },
-      offsetY: -20,
-      style: {
-        fontSize: "12px",
-        colors: ["#304758"],
-      },
-    },
+  // var optionsDataLabel = {
+  //   series: [
+  //     {
+  //       name: "Learn Joined",
+  //       data: [1,3, 4, 6, 7, 5, 6, 6, 2,9, 10, 22],
+  //     },
+  //   ],
+  //   chart: {
+  //     height: 350,
+  //     type: "bar",
+  //   },
+  //   plotOptions: {
+  //     bar: {
+  //       borderRadius: 10,
+  //       dataLabels: {
+  //         position: "top", // top, center, bottom
+  //       },
+  //     },
+  //   },
+  //   dataLabels: {
+  //     enabled: true,
+  //     formatter: function (val) {
+  //       return val;
+  //     },
+  //     offsetY: -20,
+  //     style: {
+  //       fontSize: "12px",
+  //       colors: ["#304758"],
+  //     },
+  //   },
 
-    xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-      position: "top",
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      crosshairs: {
-        fill: {
-          type: "gradient",
-          gradient: {
-            colorFrom: "#D8E3F0",
-            colorTo: "#BED1E6",
-            stops: [0, 100],
-            opacityFrom: 0.4,
-            opacityTo: 0.5,
-          },
-        },
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-    yaxis: {
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      labels: {
-        show: false,
-        formatter: function (val) {
-          return val + "%";
-        },
-      },
-    },
-    title: {
-      floating: true,
-      offsetY: 330,
-      align: "center",
-      style: {
-        color: "#444",
-      },
-    },
-  };
+  //   xaxis: {
+  //     categories: [
+  //       "Jan",
+  //       "Feb",
+  //       "Mar",
+  //       "Apr",
+  //       "May",
+  //       "Jun",
+  //       "Jul",
+  //       "Aug",
+  //       "Sep",
+  //       "Oct",
+  //       "Nov",
+  //       "Dec",
+  //     ],
+  //     position: "top",
+  //     axisBorder: {
+  //       show: false,
+  //     },
+  //     axisTicks: {
+  //       show: false,
+  //     },
+  //     crosshairs: {
+  //       fill: {
+  //         type: "gradient",
+  //         gradient: {
+  //           colorFrom: "#D8E3F0",
+  //           colorTo: "#BED1E6",
+  //           stops: [0, 100],
+  //           opacityFrom: 0.4,
+  //           opacityTo: 0.5,
+  //         },
+  //       },
+  //     },
+  //     tooltip: {
+  //       enabled: true,
+  //     },
+  //   },
+  //   yaxis: {
+  //     axisBorder: {
+  //       show: false,
+  //     },
+  //     axisTicks: {
+  //       show: false,
+  //     },
+  //     labels: {
+  //       show: false,
+  //       formatter: function (val) {
+  //         return val + "%";
+  //       },
+  //     },
+  //   },
+  //   title: {
+  //     floating: true,
+  //     offsetY: 330,
+  //     align: "center",
+  //     style: {
+  //       color: "#444",
+  //     },
+  //   },
+  // };
 
-  useEffect(() => {
-    initializeChartDataLabel();
-  }, []);
+  // useEffect(() => {
+  //   initializeChartDataLabel();
+  // }, []);
 
-  const initializeChartDataLabel = () => {
-    const chartOrigin = document.querySelector("#chartDataLabel");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, optionsDataLabel);
-      chart.render();
-    }
-  };
+  // const initializeChartDataLabel = () => {
+  //   const chartOrigin = document.querySelector("#chartDataLabel");
+  //   if (chartOrigin) {
+  //     const chart = new ApexCharts(chartOrigin, optionsDataLabel);
+  //     chart.render();
+  //   }
+  // };
 
   return (
     <div className="container-fluid">
@@ -372,11 +461,12 @@ function ViewDetailClass() {
                       </h6>
                     </div>
                     <div className="card-body">
-                      <div
-                        className="chart-area"
-                        id="chartDataLabel"
-                        style={{ height: "300px", width: "100%" }}
-                      ></div>
+                    <ReactApexChart
+                    options={optionsLearnJoined}
+                    series={seriesLearnerJoined}
+                    type="bar"
+                    height={350}
+                  />
                     </div>
                   </div>
                 </div>

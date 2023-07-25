@@ -36,6 +36,10 @@ const getAssignmentNumber = (id) =>{
   return axios.get(API_BASE_URL + "/statistic/classassignment/" + id);
 };
 
+const getLeanerJoinedGrowth = (id) =>{
+  return axios.get(API_BASE_URL + "/statistic/learnerjoinedgrowth/" + id);
+};
+
 const resetClassCode = (id) => {
   return axios.post(API_BASE_URL + "/resetclasscode/" + id);
 };
@@ -81,7 +85,8 @@ const ClassService = {
   resetClassCode,
   getLeanerJoined,
   getTestNumber,
-  getAssignmentNumber
+  getAssignmentNumber,
+  getLeanerJoinedGrowth
 };
 
 export default ClassService;
