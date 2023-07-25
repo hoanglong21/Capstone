@@ -9,8 +9,10 @@ import ReactApexChart from "react-apexcharts";
 function ViewDetailsUser() {
   const [users, setUsers] = useState([]);
   const { username } = useParams();
-  const [studySetLearned, setStudySetLearned] = useState();
+  const [studySetLearned, setStudySetLearned] = useState([]);
   const [classJoined, setClassJoined] = useState([]);
+  const [access, setAccess] = useState([]);
+  const [learning, setLearning] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,9 +34,6 @@ function ViewDetailsUser() {
         console.error("Error fetching statistics:", error);
       }
     };
-    if (users.id) {
-      fetchDataStudySetLearned();
-    }
 
     const fetchDataClassJoined = async () => {
       try {
@@ -44,12 +43,33 @@ function ViewDetailsUser() {
         console.error("Error fetching statistics:", error);
       }
     };
+
+    const fetchDataAccess = async () => {
+      try {
+        const temp = (await UserService.getAccessStatistic(users.id)).data;
+        setAccess(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    const fetchDataLearning = async () => {
+      try {
+        const temp = (await UserService.getLearningStatistic(users.id)).data;
+        setLearning(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
     if (users.id) {
+      fetchDataStudySetLearned();
       fetchDataClassJoined();
+      fetchDataAccess();
+      fetchDataLearning();
     }
   }, [users.id]);
+  console.log(access);
 
-  console.log(studySetLearned);
   const optionsDataLabel = {
     plotOptions: {
       bar: {
@@ -178,34 +198,19 @@ function ViewDetailsUser() {
       data: classJoined,
     },
   ];
-  // var optionRadar = {
-  //   series: [{
-  //   name: 'Series 1',
-  //   data: [80, 50, 30, 40, 100, 20],
-  // }],
-  //   chart: {
-  //   height: 350,
-  //   type: 'radar',
-  // },
-  // title: {
-  //   text: 'Basic Radar Chart'
-  // },
-  // xaxis: {
-  //   categories: ['January', 'February', 'March', 'April', 'May', 'June']
-  // }
-  // };
 
-  // useEffect(() => {
-  //   initializeChartRadar();
-  // }, []);
-
-  // const initializeChartRadar = () => {
-  //   const chartOrigin = document.querySelector("#chartRadar");
-  //   if (chartOrigin) {
-  //     const chart = new ApexCharts(chartOrigin, optionRadar);
-  //     chart.render();
-  //   }
-  // };
+  const optionRadar = {
+    xaxis: {
+        categories: ["Kanji", "Vocabulary", "Grammar"]
+      }
+  };
+   
+  const seriesRadar = [
+    {
+      name: "Learning",
+      data: learning,
+    },
+  ];
 
   // function generateData(count, yrange) {
   //   var i = 0;
@@ -506,11 +511,12 @@ function ViewDetailsUser() {
                         </h6>
                       </div>
                       <div className="card-body">
-                        <div
-                          className="chart-area"
-                          id="chartRadar"
-                          style={{ height: "300px", width: "100%" }}
-                        ></div>
+                      <ReactApexChart
+                        options={optionRadar}
+                        series={seriesRadar}
+                        type="radar"
+                        height={350}
+                      />
                       </div>
                     </div>
                   </div>

@@ -141,6 +141,22 @@ const getClassJoinedStatistic = (id) => {
     })
 }
 
+const getAccessStatistic = (id) => {
+    return axios.get(API_BASE_URL + "/statistic/user/access/" + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const getLearningStatistic = (id) => {
+    return axios.get(API_BASE_URL + "/statistic/user/learning/" + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 const UserService = {
     getUser,
     updateUser,
@@ -150,7 +166,9 @@ const UserService = {
     sendResetPasswordEmail,
     filterUser,
     getClassJoinedStatistic,
-    getStudySetLearnedStatistic
+    getStudySetLearnedStatistic,
+    getAccessStatistic,
+    getLearningStatistic
 }
 
 export default UserService
