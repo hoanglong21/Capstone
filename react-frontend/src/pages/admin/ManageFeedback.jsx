@@ -53,7 +53,7 @@ function ManageFeedback() {
           <HeaderAdmin />
           <div className="container">
             <h3 className="mt-3 mb-4 text-bold text-black">
-              Management Feedback
+              View Feedback
             </h3>
             <div className="table-responsive">
               <table className="table table-hover">
@@ -61,17 +61,20 @@ function ManageFeedback() {
                   <tr>
                     <th scope="col">Feedback ID</th>
                     <th scope="col">Create Date</th>
-                    <th scope="col">Feedback Type</th>
+                    <th scope="col">Feedback Title</th>
                     <th scope="col">Creator By</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
+                {feedback?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {feedback?.map((feedbacks) => (
                   <tr>
                     <th scope="row" key={feedbacks.id}>{feedbacks?.id}</th>
                     <td>{feedbacks?.created_date}</td>
-                    <td>{feedbacks?.feedbackType?.name}</td>
+                    <td>{feedbacks?.title}</td>
                     <td>{feedbacks?.user?.username}</td>
                     <td>
                       <Link

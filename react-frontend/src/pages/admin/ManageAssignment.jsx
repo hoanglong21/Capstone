@@ -7,32 +7,25 @@ import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function ManageFeedback() {
-  function getDate(date) {
-    const index = date.lastIndexOf(":00.");
-    return date.replace("T", " ").substring(0, index);
-  }
-
   const [assignments, setAssignments] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [error, setError] = useState("");
 
   const search = searchParams.get("search");
 
-  const { userInfo } = useSelector((state) => state.user);
-
   const fetchData = async (searchKey) => {
     let temp;
     try {
       temp = (
         await AssignmentService.getFilterList(
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
+          '',
+          `${searchKey ? '=' + searchKey : ''}`,
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
           "=10"
         )
       ).data.list;
@@ -59,7 +52,7 @@ function ManageFeedback() {
           <HeaderAdmin />
           <div className="container">
             <h3 className="mt-3 mb-4 text-bold text-black">
-              Management Assignment
+              View Assignment
             </h3>
             <div className="table-responsive">
               <table className="table table-hover">
@@ -75,6 +68,9 @@ function ManageFeedback() {
                   </tr>
                 </thead>
                 <tbody>
+                {assignments?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                   {assignments?.map((assign) => (
                     <tr>
                       <th scope="row" key={assign.id}>

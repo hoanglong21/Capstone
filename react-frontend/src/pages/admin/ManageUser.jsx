@@ -34,7 +34,7 @@ function ManageUser() {
             '',
             '',
             '',
-            ''
+            '=15'
         )
     ).data.list
     setUsers(temp)
@@ -65,6 +65,9 @@ useEffect(() => {
                   </tr>
                 </thead>
                 <tbody>
+                {users?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                   {users?.map((user) => (
                     <tr>
                       <th scope="row">{user?.id}</th>

@@ -26,19 +26,10 @@ function ViewDetailComment() {
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
-              Post Details
+              Comment Details
             </div>
             <div className="card-body">
               <form>
-                <div className="mb-3">
-                  <label className="small mb-1 fs-6">Content</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    readOnly
-                    value={comment.content}
-                  />
-                </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-4">
                     <label className="small mb-1 fs-6">Create Date</label>
@@ -59,12 +50,12 @@ function ViewDetailComment() {
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Class Name</label>
+                    <label className="small mb-1 fs-6">Comment ID</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={comment.classroom?.class_name}
+                      value={comment.id}
                     />
                   </div>
                 </div>
@@ -78,18 +69,65 @@ function ViewDetailComment() {
                       value={comment.modified_date}
                     />
                   </div>
-                  <div className="col-md-8">
-                    <label className="small mb-1 fs-6">Post ID</label>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Post Content</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={comment.id}
+                      value={comment.post?.content}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Type</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      readOnly
+                      value={comment.commentType?.name}
                     />
                   </div>
                 </div>
+                <div className="row gx-3 mb-3">
+                <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Study Set Name</label>
+                    <input
+                      className="form-control"
+                      type="tel"
+                      readOnly
+                      value={comment.studySet?.title}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Test Name</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      readOnly
+                      value={comment.test?.title}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Parent</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      readOnly
+                      value={comment.root?.content}
+                    />
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label className="small mb-1 fs-6">Content</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    readOnly
+                    value={comment.content}
+                  />
+                </div>
                 <div className="text-center">
-                  <Link className="btn btn-secondary me-4" to="/managepost">
+                  <Link className="btn btn-secondary me-4" to="/managecomment">
                     Close
                   </Link>
                 </div>

@@ -25,7 +25,7 @@ function ManageClass() {
                 '',
                 '',
                 '',
-                ''
+                '=10'
             )
         ).data.list
         setClasses(temp)
@@ -42,7 +42,7 @@ function ManageClass() {
         <div className="col-sm">
           <HeaderAdmin />
           <div className="container">
-            <h3 className="mt-3 mb-4 text-bold text-black">Management Class</h3>
+            <h3 className="mt-3 mb-4 text-bold text-black">View Class</h3>
             <div className="table-responsive">
               <table className="table table-hover">
                 <thead style={{ backgroundColor: "#000" }}>
@@ -55,6 +55,9 @@ function ManageClass() {
                   </tr>
                 </thead>
                 <tbody>
+                {classes?.length === 0 && (
+                                        <p>No sets matching {search} found</p>
+                                    )}
                 {classes?.map((classroom) => (
                   <tr key={classroom.id}>
                     <th scope="row">{classroom?.id}</th>
