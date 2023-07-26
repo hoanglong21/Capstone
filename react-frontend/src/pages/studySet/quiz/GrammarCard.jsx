@@ -11,6 +11,8 @@ const GrammarCard = ({
     setProgress,
     progress,
     answers,
+    results,
+    showNote,
 }) => {
     return (
         <div className="card">
@@ -38,27 +40,35 @@ const GrammarCard = ({
                             )
                         }
                     })}
-                    <div className="row">
-                        {ques.question.card.picture && (
-                            <div className="col-6">
-                                <img
-                                    src={ques.question.card.picture}
-                                    className="quizQues_img"
-                                />
-                            </div>
-                        )}
-                        {ques.question.card.audio && (
-                            <div className="col-6">
-                                <audio
-                                    controls
-                                    src={ques.question.card.audio}
-                                />
-                            </div>
-                        )}
-                    </div>
+                    {showNote && (
+                        <div className="row">
+                            {ques.question.card.picture && (
+                                <div className="col-6">
+                                    <img
+                                        src={ques.question.card.picture}
+                                        className="quizQues_img"
+                                    />
+                                </div>
+                            )}
+                            {ques.question.card.audio && (
+                                <div className="col-6">
+                                    <audio
+                                        controls
+                                        src={ques.question.card.audio}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <div className="quizQues_label my-4">Your answer</div>
                     <input
-                        className="form-control quizAns_input"
+                        className={`form-control quizAns_input ${
+                            results[quesIndex] === 0
+                                ? 'incorrect'
+                                : results[quesIndex] === 1
+                                ? 'correct'
+                                : ''
+                        }`}
                         type="text"
                         placeholder="Type your answer here"
                         onChange={(event) =>
@@ -97,31 +107,40 @@ const GrammarCard = ({
                             )
                         }
                     })}
-                    <div className="row">
-                        {ques.question.card.picture && (
-                            <div className="col-6">
-                                <img
-                                    src={ques.question.card.picture}
-                                    className="quizQues_img"
-                                />
-                            </div>
-                        )}
-                        {ques.question.card.audio && (
-                            <div className="col-6">
-                                <audio
-                                    controls
-                                    src={ques.question.card.audio}
-                                />
-                            </div>
-                        )}
-                    </div>
+                    {showNote && (
+                        <div className="row">
+                            {ques.question.card.picture && (
+                                <div className="col-6">
+                                    <img
+                                        src={ques.question.card.picture}
+                                        className="quizQues_img"
+                                    />
+                                </div>
+                            )}
+                            {ques.question.card.audio && (
+                                <div className="col-6">
+                                    <audio
+                                        controls
+                                        src={ques.question.card.audio}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <div className="quizQues_label my-4">Choose the answer</div>
                     <div className="row">
                         {ques.answers.map((ans, ansIndex) => (
                             <div key={ansIndex} className="col-12 mb-3">
                                 <div
                                     className={`quizQues_answer ${
-                                        answers[quesIndex] === ans.card.id
+                                        answers[quesIndex] === ans.card.id &&
+                                        results[quesIndex] === 0
+                                            ? 'incorrect'
+                                            : answers[quesIndex] ===
+                                                  ans.card.id &&
+                                              results[quesIndex] === 1
+                                            ? 'correct'
+                                            : answers[quesIndex] === ans.card.id
                                             ? 'active'
                                             : ''
                                     }`}
@@ -243,30 +262,40 @@ const GrammarCard = ({
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-                        {ques.question.card.picture && (
-                            <div className="col-6">
-                                <img
-                                    src={ques.question.card.picture}
-                                    className="quizQues_img"
-                                />
-                            </div>
-                        )}
-                        {ques.question.card.audio && (
-                            <div className="col-6">
-                                <audio
-                                    controls
-                                    src={ques.question.card.audio}
-                                />
-                            </div>
-                        )}
-                    </div>
+                    {showNote && (
+                        <div className="row">
+                            {ques.question.card.picture && (
+                                <div className="col-6">
+                                    <img
+                                        src={ques.question.card.picture}
+                                        className="quizQues_img"
+                                    />
+                                </div>
+                            )}
+                            {ques.question.card.audio && (
+                                <div className="col-6">
+                                    <audio
+                                        controls
+                                        src={ques.question.card.audio}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <div className="quizQues_label my-4">Choose the answer</div>
                     <div className="row">
                         <div className="col-6">
                             <div
                                 className={`quizQues_answer ${
-                                    answers[quesIndex] === 1 ? 'active' : ''
+                                    answers[quesIndex] === 1 &&
+                                    results[quesIndex] === 0
+                                        ? 'incorrect'
+                                        : answers[quesIndex] === 1 &&
+                                          results[quesIndex] === 1
+                                        ? 'correct'
+                                        : answers[quesIndex] === 1
+                                        ? 'active'
+                                        : ''
                                 }`}
                                 onClick={() => {
                                     if (answers[quesIndex] === 1) {
@@ -286,7 +315,15 @@ const GrammarCard = ({
                         <div className="col-6">
                             <div
                                 className={`quizQues_answer ${
-                                    answers[quesIndex] === 0 ? 'active' : ''
+                                    answers[quesIndex] === 0 &&
+                                    results[quesIndex] === 0
+                                        ? 'incorrect'
+                                        : answers[quesIndex] === 0 &&
+                                          results[quesIndex] === 1
+                                        ? 'correct'
+                                        : answers[quesIndex] === 0
+                                        ? 'active'
+                                        : ''
                                 }`}
                                 onClick={() => {
                                     if (answers[quesIndex] === 0) {

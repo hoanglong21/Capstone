@@ -448,7 +448,6 @@ const CreateSet = () => {
                         ></textarea>
                     </div>
                     {/* Card */}
-                    {console.log(cards)}
                     {cards.map((card, index) => {
                         if (type === 1) {
                             return (

@@ -21,7 +21,7 @@ export const VocabCard = (props) => {
         const fetchData = async () => {
             props.setLoading(true)
             try {
-                const contents = (await ContentService.getAllByCardId(card.id))
+                var contents = (await ContentService.getAllByCardId(card.id))
                     .data
                 if (contents.length === 0) {
                     setTerm(
@@ -64,6 +64,20 @@ export const VocabCard = (props) => {
                         ).data
                     )
                 } else {
+                    for (var content of contents) {
+                        const tempSetCreatedDate =
+                            content.card.studySet.created_date
+                        content.card.studySet.created_date =
+                            tempSetCreatedDate.replace(/\s/g, 'T') +
+                            '.000' +
+                            '+07:00'
+                        const tempUserCreatedDate =
+                            content.card.studySet.user.created_date
+                        content.card.studySet.user.created_date =
+                            tempUserCreatedDate.replace(/\s/g, 'T') +
+                            '.000' +
+                            '+07:00'
+                    }
                     setTerm(contents[0])
                     setDefinition(contents[1])
                     setExample(contents[2])

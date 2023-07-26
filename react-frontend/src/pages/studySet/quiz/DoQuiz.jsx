@@ -38,11 +38,11 @@ const DoQuiz = () => {
     const [multipleAnswerWith, setMultipleAnswerWith] = useState([])
     const [trueFalsePromptWith, setTrueFalsePromptWith] = useState([])
     const [trueFalseAnswerWith, setTrueFalseAnswerWith] = useState([])
-    const [showNote, setShowNote] = useState(true)
+    const [showNote, setShowNote] = useState(false)
 
     const [optionQuestionTypes, setOptionQuestionTypes] = useState([1, 2, 3])
     const [optionNumQues, setOptionNumQues] = useState(0)
-    const [optionShowNote, setOptionShowNote] = useState(true)
+    const [optionShowNote, setOptionShowNote] = useState(false)
     const [optionWrittenPromptWith, setOptionWrittenPromptWith] = useState([])
     const [optionWrittenAnswerWith, setOptionWrittenAnswerWith] = useState(0)
     const [optionMultiplePromptWith, setOptionMultiplePromptWith] = useState([])
@@ -55,13 +55,22 @@ const DoQuiz = () => {
     )
     const [error, setError] = useState(false)
 
+    const [progress, setProgress] = useState(0)
     const [questions, setQuestions] = useState([])
     const [answers, setAnswers] = useState([])
-    const [progress, setProgress] = useState(0)
+    const [results, setResults] = useState([])
+    const [skipAnswer, setSkipAnswer] = useState(null)
+    const [isEnd, setIsEnd] = useState(false)
+    const [correct, setCorrect] = useState(false)
+    const [incorrect, setIncorrect] = useState(false)
+
     const [loading, setLoading] = useState(false)
 
     // initial
     useEffect(() => {
+        setResults([])
+        setIsEnd(false)
+        setSkipAnswer(null)
         setError('')
         document.getElementById('toggleQuizOptionsModalBtn').click()
         const headerHeight = document.getElementById('quizHeader').clientHeight
@@ -125,9 +134,9 @@ const DoQuiz = () => {
                     ).data
                     setQuestions(tempQuestions)
                 }
-                var tempAnswers = []
                 // set answers
-                for (let index = 0; index < numQues; index++) {
+                var tempAnswers = []
+                for (let index = 0; index < tempCards.length; index++) {
                     tempAnswers.push(null)
                 }
                 setAnswers(tempAnswers)
@@ -159,7 +168,11 @@ const DoQuiz = () => {
     }
 
     const handleCreateQuiz = async () => {
+        setProgress(0)
+        setResults([])
+        setIsEnd(false)
         setError('')
+        setSkipAnswer(null)
         // validation
         if (optionQuestionTypes?.length < 1) {
             setError('You must select at least one question type.')
@@ -254,6 +267,11 @@ const DoQuiz = () => {
             setMultipleAnswerWith(optionMultipleAnswerWith)
             setTrueFalsePromptWith(optionTrueFalsePromptWith)
             setTrueFalseAnswerWith(optionTrueFalseAnswerWith)
+            var tempAnswers = []
+            for (let index = 0; index < optionNumQues; index++) {
+                tempAnswers.push(null)
+            }
+            setAnswers(tempAnswers)
             document.getElementById('quizOptionModalCloseBtn').click()
             setError('')
             setLoading(false)
@@ -287,6 +305,71 @@ const DoQuiz = () => {
             tempAnswers[index] = ans
         }
         setAnswers(tempAnswers)
+    }
+
+    const handleCheckSubmit = () => {
+        // validation
+        if (progress < numQues) {
+            for (let index = 0; index < answers.length; index++) {
+                const ans = answers[index]
+                if (!ans) {
+                    setSkipAnswer(index)
+                    document.getElementById('quizSubmitModalToggleBtn').click()
+                    return
+                }
+            }
+        } else {
+            handleSubmit()
+        }
+    }
+
+    const handleSubmit = () => {
+        setLoading(true)
+        var tempCorrect = 0
+        var tempResults = []
+        for (let index = 0; index < questions.length; index++) {
+            const ques = questions[index]
+            if (ques.question_type === 1) {
+                var correctAnswer = ''
+                for (const itemContent of ques.question.content) {
+                    if (itemContent.field.id === writtenAnswerWith) {
+                        const tempContent = itemContent.content
+                            .replaceAll(/(<([^>]+)>)/gi, ' ')
+                            .trim()
+                        correctAnswer = tempContent
+                        break
+                    }
+                }
+                if (answers[index] == correctAnswer) {
+                    tempCorrect += 1
+                    tempResults.push(1)
+                } else {
+                    tempResults.push(0)
+                }
+            } else if (ques.question_type === 2) {
+                if (answers[index] == ques.question.card.id) {
+                    tempCorrect += 1
+                    tempResults.push(1)
+                } else {
+                    tempResults.push(0)
+                }
+            } else if (ques.question_type === 3) {
+                const correctAnswer =
+                    ques.question.card.id === ques.answers[0].card.id
+                if (answers[index] == correctAnswer) {
+                    tempCorrect += 1
+                    tempResults.push(1)
+                } else {
+                    tempResults.push(0)
+                }
+            }
+        }
+        setCorrect(tempCorrect)
+        setResults(tempResults)
+        setIncorrect(numQues - tempCorrect)
+        document.getElementById('quizSubmitModalCloseBtn')?.click()
+        setIsEnd(true)
+        setLoading(false)
     }
 
     return (
@@ -371,14 +454,24 @@ const DoQuiz = () => {
                     <h3 className="quizInfo_title">{studySet?.title}</h3>
                 </div>
                 <div className="quizOptions d-flex">
-                    <button
-                        id="toggleQuizOptionsModalBtn"
-                        className="quizOptions_btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#quizOptionModal"
-                    >
-                        Options
-                    </button>
+                    {isEnd ? (
+                        <button
+                            id="toggleQuizOptionsModalBtn"
+                            className="quizOptions_btn"
+                            onClick={handleCreateQuiz}
+                        >
+                            Take a new test
+                        </button>
+                    ) : (
+                        <button
+                            id="toggleQuizOptionsModalBtn"
+                            className="quizOptions_btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#quizOptionModal"
+                        >
+                            Options
+                        </button>
+                    )}
                     <button
                         className="quizClose_btn ms-3 d-flex align-items-center"
                         onClick={() => {
@@ -390,14 +483,51 @@ const DoQuiz = () => {
                 </div>
             </div>
             {/* Progress */}
-            <div id="quizProgressContainer" className="quizProgressContainer">
+            {isEnd ? (
                 <div
-                    className="quizProgress"
-                    style={{
-                        width: `${(progress / numQues) * 100}%`,
-                    }}
-                ></div>
-            </div>
+                    id="quizProgressContainer"
+                    className="progress-stacked quizEndProgressContainer"
+                >
+                    <div
+                        className="progress"
+                        role="progressbar"
+                        aria-label="Segment one"
+                        aria-valuenow={`${(correct / numQues) * 100}`}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style={{ width: `${(correct / numQues) * 100}%` }}
+                    >
+                        <div className="progress-bar bg-success">
+                            {(correct / numQues) * 100}%
+                        </div>
+                    </div>
+                    <div
+                        className="progress"
+                        role="progressbar"
+                        aria-label="Segment two"
+                        aria-valuenow={`${(incorrect / numQues) * 100}`}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style={{ width: `${(incorrect / numQues) * 100}%` }}
+                    >
+                        <div className="progress-bar bg-danger">
+                            {(incorrect / numQues) * 100}%
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div
+                    id="quizProgressContainer"
+                    className="quizProgressContainer"
+                >
+                    <div
+                        className="quizProgress"
+                        style={{
+                            width: `${(progress / numQues) * 100}%`,
+                        }}
+                    ></div>
+                </div>
+            )}
             {/* Questions sidebar */}
             {questions.length > 0 && (
                 <div className="questionsSidebar">
@@ -438,9 +568,13 @@ const DoQuiz = () => {
                                         key={index}
                                         href={`#question${index}`}
                                         className={`list-group-item list-group-item-action ${
-                                            answers[index]
+                                            results[index] === 0
+                                                ? 'incorrect'
+                                                : results[index] === 1
+                                                ? 'correct'
+                                                : answers[index]
                                                 ? 'selected'
-                                                : 'notSelected'
+                                                : ''
                                         }`}
                                     >
                                         {index + 1}
@@ -472,6 +606,8 @@ const DoQuiz = () => {
                             setProgress={setProgress}
                             progress={progress}
                             answers={answers}
+                            results={results}
+                            showNote={showNote}
                         />
                     )}
                     {type === 2 && (
@@ -488,6 +624,8 @@ const DoQuiz = () => {
                             setProgress={setProgress}
                             progress={progress}
                             answers={answers}
+                            results={results}
+                            showNote={showNote}
                         />
                     )}
                     {type === 3 && (
@@ -504,6 +642,8 @@ const DoQuiz = () => {
                             setProgress={setProgress}
                             progress={progress}
                             answers={answers}
+                            results={results}
+                            showNote={showNote}
                         />
                     )}
                 </section>
@@ -513,7 +653,11 @@ const DoQuiz = () => {
                 <img src={finishQuizImg} alt="finish quiz image" />
                 <h3>All done! Ready to submit?</h3>
                 <div>
-                    <button type="submit" className="btn btn-primary">
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={handleCheckSubmit}
+                    >
                         Submit Quiz
                     </button>
                 </div>
@@ -1156,6 +1300,52 @@ const DoQuiz = () => {
                                 ) : (
                                     'Create new quiz'
                                 )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Submit modal */}
+            <button
+                id="quizSubmitModalToggleBtn"
+                type="button"
+                className="d-none"
+                data-bs-toggle="modal"
+                data-bs-target="#quizSubmitModal"
+            >
+                Submit Quiz
+            </button>
+            <div className="modal fade quizOptionModal" id="quizSubmitModal">
+                <div className="modal-dialog modal-lg">
+                    <button
+                        id="quizSubmitModalCloseBtn"
+                        type="button"
+                        className="d-none"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                    <div className="modal-content">
+                        <div className="modal-body text-center">
+                            <h2 className="modal-title mb-2">
+                                You haven't answered all the questions.
+                            </h2>
+                            <p className="modal-text">
+                                Would you like to review the skipped questions
+                                or submit the test now?
+                            </p>
+                        </div>
+                        <div className="modal-footer border border-0">
+                            <a
+                                className="btn btn-light me-3"
+                                href={`#question${skipAnswer}`}
+                            >
+                                Review skipped questions
+                            </a>
+                            <button
+                                className="btn btn-primary"
+                                onClick={handleSubmit}
+                            >
+                                Submit quiz
                             </button>
                         </div>
                     </div>
