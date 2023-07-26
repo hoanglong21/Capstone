@@ -17,7 +17,7 @@ public class DateRangePicker {
 
         List<String> listOfDate = new ArrayList<>();
         listOfDate.add(dateFormat.format(currentDate));
-        for(int i=0; i<12; i++) {
+        for (int i = 0; i < 12; i++) {
             // Subtract 7 days
             calendar.add(Calendar.DAY_OF_MONTH, -7);
 
@@ -94,4 +94,36 @@ public class DateRangePicker {
 
         return listOfDate;
     }
+
+    public List<String[]> getRecent4Weeks() {
+        List<String[]> listOfDateRanges = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(new Date());
+
+        for (int i = 0; i < 4; i++) {
+
+            int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            int daysToNextSaturday = (Calendar.SATURDAY - currentDayOfWeek + 1) % 7;
+            calendar.add(Calendar.DAY_OF_MONTH, daysToNextSaturday);
+            Date end = calendar.getTime();
+
+
+            calendar.add(Calendar.DAY_OF_MONTH, -6);
+            Date start = calendar.getTime();
+
+            String startDateString = dateFormat.format(start);
+            String endDateString = dateFormat.format(end);
+
+            String[] dateRange = {startDateString, endDateString};
+            listOfDateRanges.add(dateRange);
+
+            calendar.add(Calendar.DAY_OF_MONTH, -7);
+        }
+
+        Collections.reverse(listOfDateRanges);
+        return listOfDateRanges;
+    }
 }
+

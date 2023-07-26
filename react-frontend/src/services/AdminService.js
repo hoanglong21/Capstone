@@ -38,13 +38,31 @@ const getRegisterNumber = () => {
     });
   };
 
+  const getUserGrowth = () => {
+    return axios.get(API_BASE_URL + "/overview/usergrowth",
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+    },
+    });
+  };
 
+  const getStudySetGrowth = () => {
+    return axios.get(API_BASE_URL + "/overview/studysetgrowth",
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+    },
+    });
+  };
 
   const AdminService = {
     getRegisterNumber,
     getClassNumber,
     getStudySetNumber,
-    getAccessNumber
+    getAccessNumber, 
+    getUserGrowth,
+    getStudySetGrowth
   };
 
   export default AdminService;

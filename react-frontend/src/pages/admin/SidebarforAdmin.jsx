@@ -75,7 +75,7 @@ function SidebarforAdmin() {
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/managesubmission" className="nav-link fs-7">
-            <i class="bi bi-question-circle"></i>
+            <i class="bi bi-archive"></i>
               <span className="ms-3 d-none d-sm-inline">
                 Submission
               </span>

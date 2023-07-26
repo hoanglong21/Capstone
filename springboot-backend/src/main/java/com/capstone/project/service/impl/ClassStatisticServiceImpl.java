@@ -75,7 +75,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     public List<Integer> getLeanerJoinedGrowth(int id) throws ResourceNotFroundException, ParseException {
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
-        List<String> listDate = dateRangePicker.getShortDateRange();
+        List<String> listDate = dateRangePicker.getDateRange();
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < listDate.size() - 1; i++) {
             Map<String, Object> response = classLearnerService.filterClassLeaner(0, id, listDate.get(i), listDate.get(i + 1),
@@ -86,12 +86,18 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     }
 
     @Override
-    public List<Integer> getPostGrowth() throws ResourceNotFroundException {
+    public List<Integer> getPostGrowth(int id) throws ResourceNotFroundException {
+        classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
         List<Integer> result = new ArrayList<>();
-        List<String> listDate = dateRangePicker.getDateActive();
-        for(int i=0; i<listDate.size()-1; i++) {
-            Map<String, Object> response = postService.getFilterPost(null,null, listDate.get(i), listDate.get(i + 1),
-                    "created_date","DESC",0,1,5);
+        List<String[]> listDateRanges = dateRangePicker.getRecent4Weeks();
+        for (int i = 0; i < listDateRanges.size(); i++) {
+            String startDate = listDateRanges.get(i)[0];
+            String endDate = listDateRanges.get(i)[1];
+
+            // Lấy số lượng bài viết trong từng tuần và thêm vào danh sách kết quả
+            Map<String, Object> response = postService.getFilterPost(null, null, startDate, endDate,
+                    "created_date", "DESC", id, 1, 5);
             result.add(Integer.parseInt(String.valueOf(response.get("totalItems"))));
         }
         return result;

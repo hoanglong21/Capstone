@@ -57,6 +57,10 @@ public class TestRequest {
 
     private int class_id;
 
+    private String authorname;
+
+    private String classname;
+
     private int totalquestion;
 
     private int totalcomment;
