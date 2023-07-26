@@ -93,10 +93,12 @@ const CreateSet = () => {
                 }
                 const tempSetCreatedDate = temp.created_date
                 temp.created_date =
-                    tempSetCreatedDate.replace(/\s/g, 'T') + '.000' + '+07:00'
-                const tempUserCreatedDate = temp.user.created_date
-                temp.user.created_date =
-                    tempUserCreatedDate.replace(/\s/g, 'T') + '.000' + '+07:00'
+                    tempSetCreatedDate?.replace(/\s/g, 'T') + '.000' + '+07:00'
+                const tempUserCreatedDate = temp.user?.created_date
+                if (tempUserCreatedDate) {
+                    temp.user.created_date =
+                    tempUserCreatedDate?.replace(/\s/g, 'T') + '.000' + '+07:00'
+                }                
                 setStudySet(temp)
                 // cards
                 var tempCards = (await CardService.getAllByStudySetId(temp.id))

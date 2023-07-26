@@ -17,6 +17,7 @@ import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './quiz.css'
 import VocabCard from './VocabCard'
+import KanjiCard from './KanjiCard'
 
 const DoQuiz = () => {
     const navigate = useNavigate()
@@ -238,8 +239,8 @@ const DoQuiz = () => {
             const tempQuestions = (
                 await StudySetService.getQuizByStudySetId(
                     studySet.id,
-                    questionTypes,
-                    numQues
+                    optionQuestionTypes,
+                    optionNumQues
                 )
             ).data
             setQuestions(tempQuestions)
@@ -472,6 +473,22 @@ const DoQuiz = () => {
                             answers={answers}
                         />
                     )}
+                    {type === 2 && (
+                        <KanjiCard
+                            ques={ques}
+                            quesIndex={quesIndex}
+                            numQues={numQues}
+                            writtenPromptWith={writtenPromptWith}
+                            multiplePromptWith={multiplePromptWith}
+                            multipleAnswerWith={multipleAnswerWith}
+                            trueFalsePromptWith={trueFalsePromptWith}
+                            trueFalseAnswerWith={trueFalseAnswerWith}
+                            handleChangeAnswer={handleChangeAnswer}
+                            setProgress={setProgress}
+                            progress={progress}
+                            answers={answers}
+                        />
+                    )}
                 </section>
             ))}
             {/* Submit */}
@@ -504,12 +521,18 @@ const DoQuiz = () => {
                                 Options
                             </h3>
                             <button
-                                id="quizOptionModalCloseBtn"
                                 type="button"
                                 className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
                                 onClick={handleCancelCreateQuiz}
+                            ></button>
+                            <button
+                                id="quizOptionModalCloseBtn"
+                                type="button"
+                                className="d-none"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
                             ></button>
                         </div>
                         <div className="modal-body">

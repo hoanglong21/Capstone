@@ -1,4 +1,4 @@
-const VocabCard = ({
+const KanjiCard = ({
     ques,
     quesIndex,
     numQues,
@@ -27,13 +27,23 @@ const VocabCard = ({
                                     <div className="quizQues_label quizQues_label--sm mb-1">
                                         {itemContent.field.name}
                                     </div>
-                                    <div
-                                        className="quizQues_question"
-                                        dangerouslySetInnerHTML={{
-                                            __html:
-                                                itemContent.content || '...',
-                                        }}
-                                    ></div>
+                                    {itemContent.field.id === 12 ? (
+                                        <div className="quizQues_question">
+                                            <img
+                                                src={itemContent.content || ''}
+                                                className="quizQues_img"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className="quizQues_question"
+                                            dangerouslySetInnerHTML={{
+                                                __html:
+                                                    itemContent.content ||
+                                                    '...',
+                                            }}
+                                        ></div>
+                                    )}
                                 </div>
                             )
                         }
@@ -86,13 +96,23 @@ const VocabCard = ({
                                     <div className="quizQues_label quizQues_label--sm mb-1">
                                         {itemContent.field.name}
                                     </div>
-                                    <div
-                                        className="quizQues_question"
-                                        dangerouslySetInnerHTML={{
-                                            __html:
-                                                itemContent.content || '...',
-                                        }}
-                                    ></div>
+                                    {itemContent.field.id === 12 ? (
+                                        <div className="quizQues_question">
+                                            <img
+                                                src={itemContent.content || ''}
+                                                className="quizQues_img"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className="quizQues_question"
+                                            dangerouslySetInnerHTML={{
+                                                __html:
+                                                    itemContent.content ||
+                                                    '...',
+                                            }}
+                                        ></div>
+                                    )}
                                 </div>
                             )
                         }
@@ -156,14 +176,27 @@ const VocabCard = ({
                                                     <div className="quizAns_label mb-1">
                                                         {itemContent.field.name}
                                                     </div>
-                                                    <div
-                                                        className="quizQues_question"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html:
-                                                                itemContent.content ||
-                                                                '...',
-                                                        }}
-                                                    ></div>
+                                                    {itemContent.field.id ===
+                                                    12 ? (
+                                                        <div className="quizQues_question">
+                                                            <img
+                                                                src={
+                                                                    itemContent.content ||
+                                                                    ''
+                                                                }
+                                                                className="quizQues_img"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="quizQues_question"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                    itemContent.content ||
+                                                                    '...',
+                                                            }}
+                                                        ></div>
+                                                    )}
                                                 </div>
                                             )
                                         }
@@ -195,14 +228,27 @@ const VocabCard = ({
                                                     <div className="quizQues_label quizQues_label--sm mb-1">
                                                         {itemContent.field.name}
                                                     </div>
-                                                    <div
-                                                        className="quizQues_question"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html:
-                                                                itemContent.content ||
-                                                                '...',
-                                                        }}
-                                                    ></div>
+                                                    {itemContent.field.id ===
+                                                    12 ? (
+                                                        <div className="quizQues_question">
+                                                            <img
+                                                                src={
+                                                                    itemContent.content ||
+                                                                    ''
+                                                                }
+                                                                className="quizQues_img"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="quizQues_question"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                    itemContent.content ||
+                                                                    '...',
+                                                            }}
+                                                        ></div>
+                                                    )}
                                                 </div>
                                             )
                                         }
@@ -227,14 +273,27 @@ const VocabCard = ({
                                                     <div className="quizQues_label quizQues_label--sm mb-1">
                                                         {itemContent.field.name}
                                                     </div>
-                                                    <div
-                                                        className="quizQues_question"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html:
-                                                                itemContent.content ||
-                                                                '...',
-                                                        }}
-                                                    ></div>
+                                                    {itemContent.field.id ===
+                                                    12 ? (
+                                                        <div className="quizQues_question">
+                                                            <img
+                                                                src={
+                                                                    itemContent.content ||
+                                                                    ''
+                                                                }
+                                                                className="quizQues_img"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="quizQues_question"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                    itemContent.content ||
+                                                                    '...',
+                                                            }}
+                                                        ></div>
+                                                    )}
                                                 </div>
                                             )
                                         }
@@ -309,4 +368,4 @@ const VocabCard = ({
         </div>
     )
 }
-export default VocabCard
+export default KanjiCard

@@ -164,7 +164,7 @@ h3.quizInfo_title {
 
 /* question */
 .quizQues_container {
-    max-width: 52.5rem;
+    max-width: 60rem;
     padding: 0 2rem;
     margin: 0 auto;
 }
@@ -244,8 +244,8 @@ h3.quizInfo_title {
 }
 
 .quizQues_img {
-    max-height: 104px;
-    max-width: 104px;
+    max-height: 150px;
+    max-width: 100%;
 }
 
 .quizAns_input {
