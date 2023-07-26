@@ -3,7 +3,6 @@ import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import { Link, useParams } from "react-router-dom";
 import ClassService from "../../services/ClassService";
-import ApexCharts from "apexcharts";
 import ReactApexChart from "react-apexcharts";
 
 function ViewDetailClass() {
@@ -92,12 +91,7 @@ function ViewDetailClass() {
     "Week 12",
   ];
 
-  const weekInMonth = [
-    "Week 1",
-    "Week 2",
-    "Week 3",
-    "Week 4"
-  ]
+  const weekInMonth = ["Week 1", "Week 2", "Week 3", "Week 4"];
   const optionsLearnJoined = {
     plotOptions: {
       bar: {
@@ -127,34 +121,34 @@ function ViewDetailClass() {
         text: "Person",
       },
       labels: {
-        formatter: function (val) {
-          return val.toFixed(0);
+        formatter: function (val1) {
+          return Number(val1).toFixed(0);
         },
       },
     },
     position: "top",
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      crosshairs: {
-        fill: {
-          type: "gradient",
-          gradient: {
-            colorFrom: "#D8E3F0",
-            colorTo: "#BED1E6",
-            stops: [0, 100],
-            opacityFrom: 0.4,
-            opacityTo: 0.5,
-          },
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
+    crosshairs: {
+      fill: {
+        type: "gradient",
+        gradient: {
+          colorFrom: "#D8E3F0",
+          colorTo: "#BED1E6",
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
         },
       },
-      tooltip: {
-        enabled: true,
-      },
-  }
+    },
+    tooltip: {
+      enabled: true,
+    },
+  };
 
   const seriesLearnerJoined = [
     {
@@ -162,7 +156,6 @@ function ViewDetailClass() {
       data: learnerJoined,
     },
   ];
- 
 
   const optionsPostGrowth = {
     xaxis: {
@@ -181,85 +174,19 @@ function ViewDetailClass() {
       },
       labels: {
         formatter: function (val) {
-          return val.toFixed(0);
+          return Number(val).toFixed(0);
         },
       },
     },
-  }
+  };
 
   const seriesPostGrowth = [
     {
       name: "Person",
-      data: postGrowth, 
+      data: postGrowth,
     },
   ];
-  // var options = {
-  //   series: [
-  //     {
-  //       name: "sales",
-  //       data: [
-  //         {
-  //           x: "2019/01/01",
-  //           y: 400,
-  //         },
-  //         {
-  //           x: "2019/04/01",
-  //           y: 430,
-  //         },
-  //         {
-  //           x: "2019/07/01",
-  //           y: 448,
-  //         },
-  //         {
-  //           x: "2019/10/01",
-  //           y: 470,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  //   chart: {
-  //     type: "bar",
-  //     height: 380,
-  //   },
-  //   xaxis: {
-  //     type: "category",
-  //     labels: {
-  //       formatter: function (val) {
-  //         // return "Q" + dayjs(val).quarter()
-  //       },
-  //     },
-  //     group: {
-  //       style: {
-  //         fontSize: "10px",
-  //         fontWeight: 700,
-  //       },
-  //       groups: [{ title: "2019", cols: 4 }],
-  //     },
-  //   },
-  //   title: {
-  //     text: "Grouped Labels on the X-axis",
-  //   },
-  //   tooltip: {
-  //     x: {
-  //       formatter: function (val) {
-  //         // return "Q" + dayjs(val).quarter() + " " + dayjs(val).format("YYYY")
-  //       },
-  //     },
-  //   },
-  // };
-
-  // useEffect(() => {
-  //   initializeChartline(); // Render the chart when the component mounts
-  // }, []);
-
-  // const initializeChartline = () => {
-  //   const chartOrigin = document.querySelector("#chart");
-  //   if (chartOrigin) {
-  //     const chart = new ApexCharts(chartOrigin, options);
-  //     chart.render();
-  //   }
-  // };
-
+  
   return (
     <div className="container-fluid">
       <div className="row">
@@ -278,7 +205,7 @@ function ViewDetailClass() {
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
                           <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                           Member's Joined
+                            Member's Joined
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-gray-800">
                             {classLearnerJoined}
@@ -388,12 +315,12 @@ function ViewDetailClass() {
                       </h6>
                     </div>
                     <div className="card-body">
-                    <ReactApexChart
-                    options={optionsPostGrowth}
-                    series={seriesPostGrowth}
-                    type="bar"
-                    height={350}
-                  />
+                      <ReactApexChart
+                        options={optionsPostGrowth}
+                        series={seriesPostGrowth}
+                        type="bar"
+                        height={350}
+                      />
                     </div>
                   </div>
                 </div>
@@ -405,12 +332,12 @@ function ViewDetailClass() {
                       </h6>
                     </div>
                     <div className="card-body">
-                    <ReactApexChart
-                    options={optionsLearnJoined}
-                    series={seriesLearnerJoined}
-                    type="bar"
-                    height={350}
-                  />
+                      <ReactApexChart
+                        options={optionsLearnJoined}
+                        series={seriesLearnerJoined}
+                        type="bar"
+                        height={350}
+                      />
                     </div>
                   </div>
                 </div>
