@@ -29,6 +29,8 @@ import java.util.List;
                         @ColumnResult(name = "is_draft", type = Boolean.class),
                         @ColumnResult(name = "num_attemps", type = Integer.class),
                         @ColumnResult(name = "start_date", type = Date.class),
+                        @ColumnResult(name = "authorname", type = String.class),
+                        @ColumnResult(name = "classname", type = String.class),
                         @ColumnResult(name = "totalquestion", type = Integer.class),
                         @ColumnResult(name = "totalcomment", type = Integer.class)
                 }
