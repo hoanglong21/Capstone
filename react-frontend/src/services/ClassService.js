@@ -40,6 +40,10 @@ const getLeanerJoinedGrowth = (id) =>{
   return axios.get(API_BASE_URL + "/statistic/learnerjoinedgrowth/" + id);
 };
 
+const getPostGrowth = (id) =>{
+  return axios.get(API_BASE_URL + "/statistic/postgrowth/" + id);
+};
+
 const resetClassCode = (id) => {
   return axios.post(API_BASE_URL + "/resetclasscode/" + id);
 };
@@ -86,7 +90,8 @@ const ClassService = {
   getLeanerJoined,
   getTestNumber,
   getAssignmentNumber,
-  getLeanerJoinedGrowth
+  getLeanerJoinedGrowth, 
+  getPostGrowth
 };
 
 export default ClassService;

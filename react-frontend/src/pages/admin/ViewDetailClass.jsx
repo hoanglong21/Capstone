@@ -13,6 +13,7 @@ function ViewDetailClass() {
   const [classTest, setClassTest] = useState([]);
   const [classAssignment, setClassAssignment] = useState([]);
   const [learnerJoined, setLearnerJoined] = useState([]);
+  const [postGrowth, setPostGrowth] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,6 +65,16 @@ function ViewDetailClass() {
       }
     };
     fetchDataLearnerJoined();
+
+    const fetchDataPostGrowth = async () => {
+      try {
+        const temp = (await ClassService.getPostGrowth(id)).data;
+        setPostGrowth(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataPostGrowth();
   }, [id]);
 
   const week = [
@@ -81,6 +92,12 @@ function ViewDetailClass() {
     "Week 12",
   ];
 
+  const weekInMonth = [
+    "Week 1",
+    "Week 2",
+    "Week 3",
+    "Week 4"
+  ]
   const optionsLearnJoined = {
     plotOptions: {
       bar: {
@@ -145,174 +162,100 @@ function ViewDetailClass() {
       data: learnerJoined,
     },
   ];
-  var options = {
-    series: [
-      {
-        name: "sales",
-        data: [
-          {
-            x: "2019/01/01",
-            y: 400,
-          },
-          {
-            x: "2019/04/01",
-            y: 430,
-          },
-          {
-            x: "2019/07/01",
-            y: 448,
-          },
-          {
-            x: "2019/10/01",
-            y: 470,
-          },
-        ],
-      },
-    ],
-    chart: {
-      type: "bar",
-      height: 380,
-    },
+ 
+
+  const optionsPostGrowth = {
     xaxis: {
-      type: "category",
-      labels: {
-        formatter: function (val) {
-          // return "Q" + dayjs(val).quarter()
-        },
-      },
+      categories: weekInMonth,
       group: {
         style: {
-          fontSize: "10px",
+          fontSize: "12px",
           fontWeight: 700,
         },
-        groups: [{ title: "2019", cols: 4 }],
+        groups: [{ title: "In Month", cols: 4 }],
       },
     },
-    title: {
-      text: "Grouped Labels on the X-axis",
-    },
-    tooltip: {
-      x: {
+    yaxis: {
+      title: {
+        text: "Post",
+      },
+      labels: {
         formatter: function (val) {
-          // return "Q" + dayjs(val).quarter() + " " + dayjs(val).format("YYYY")
+          return val.toFixed(0);
         },
       },
     },
-  };
+  }
 
-  useEffect(() => {
-    initializeChartline(); // Render the chart when the component mounts
-  }, []);
-
-  const initializeChartline = () => {
-    const chartOrigin = document.querySelector("#chart");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, options);
-      chart.render();
-    }
-  };
-
-  // var optionsDataLabel = {
+  const seriesPostGrowth = [
+    {
+      name: "Person",
+      data: postGrowth, 
+    },
+  ];
+  // var options = {
   //   series: [
   //     {
-  //       name: "Learn Joined",
-  //       data: [1,3, 4, 6, 7, 5, 6, 6, 2,9, 10, 22],
+  //       name: "sales",
+  //       data: [
+  //         {
+  //           x: "2019/01/01",
+  //           y: 400,
+  //         },
+  //         {
+  //           x: "2019/04/01",
+  //           y: 430,
+  //         },
+  //         {
+  //           x: "2019/07/01",
+  //           y: 448,
+  //         },
+  //         {
+  //           x: "2019/10/01",
+  //           y: 470,
+  //         },
+  //       ],
   //     },
   //   ],
   //   chart: {
-  //     height: 350,
   //     type: "bar",
+  //     height: 380,
   //   },
-  //   plotOptions: {
-  //     bar: {
-  //       borderRadius: 10,
-  //       dataLabels: {
-  //         position: "top", // top, center, bottom
-  //       },
-  //     },
-  //   },
-  //   dataLabels: {
-  //     enabled: true,
-  //     formatter: function (val) {
-  //       return val;
-  //     },
-  //     offsetY: -20,
-  //     style: {
-  //       fontSize: "12px",
-  //       colors: ["#304758"],
-  //     },
-  //   },
-
   //   xaxis: {
-  //     categories: [
-  //       "Jan",
-  //       "Feb",
-  //       "Mar",
-  //       "Apr",
-  //       "May",
-  //       "Jun",
-  //       "Jul",
-  //       "Aug",
-  //       "Sep",
-  //       "Oct",
-  //       "Nov",
-  //       "Dec",
-  //     ],
-  //     position: "top",
-  //     axisBorder: {
-  //       show: false,
-  //     },
-  //     axisTicks: {
-  //       show: false,
-  //     },
-  //     crosshairs: {
-  //       fill: {
-  //         type: "gradient",
-  //         gradient: {
-  //           colorFrom: "#D8E3F0",
-  //           colorTo: "#BED1E6",
-  //           stops: [0, 100],
-  //           opacityFrom: 0.4,
-  //           opacityTo: 0.5,
-  //         },
-  //       },
-  //     },
-  //     tooltip: {
-  //       enabled: true,
-  //     },
-  //   },
-  //   yaxis: {
-  //     axisBorder: {
-  //       show: false,
-  //     },
-  //     axisTicks: {
-  //       show: false,
-  //     },
+  //     type: "category",
   //     labels: {
-  //       show: false,
   //       formatter: function (val) {
-  //         return val + "%";
+  //         // return "Q" + dayjs(val).quarter()
   //       },
+  //     },
+  //     group: {
+  //       style: {
+  //         fontSize: "10px",
+  //         fontWeight: 700,
+  //       },
+  //       groups: [{ title: "2019", cols: 4 }],
   //     },
   //   },
   //   title: {
-  //     floating: true,
-  //     offsetY: 330,
-  //     align: "center",
-  //     style: {
-  //       color: "#444",
+  //     text: "Grouped Labels on the X-axis",
+  //   },
+  //   tooltip: {
+  //     x: {
+  //       formatter: function (val) {
+  //         // return "Q" + dayjs(val).quarter() + " " + dayjs(val).format("YYYY")
+  //       },
   //     },
   //   },
   // };
 
   // useEffect(() => {
-  //   initializeChartDataLabel();
+  //   initializeChartline(); // Render the chart when the component mounts
   // }, []);
 
-  // const initializeChartDataLabel = () => {
-  //   const chartOrigin = document.querySelector("#chartDataLabel");
+  // const initializeChartline = () => {
+  //   const chartOrigin = document.querySelector("#chart");
   //   if (chartOrigin) {
-  //     const chart = new ApexCharts(chartOrigin, optionsDataLabel);
+  //     const chart = new ApexCharts(chartOrigin, options);
   //     chart.render();
   //   }
   // };
@@ -445,11 +388,12 @@ function ViewDetailClass() {
                       </h6>
                     </div>
                     <div className="card-body">
-                      <div
-                        className="chart-area"
-                        id="chart"
-                        style={{ height: "300px", width: "100%" }}
-                      ></div>
+                    <ReactApexChart
+                    options={optionsPostGrowth}
+                    series={seriesPostGrowth}
+                    type="bar"
+                    height={350}
+                  />
                     </div>
                   </div>
                 </div>
