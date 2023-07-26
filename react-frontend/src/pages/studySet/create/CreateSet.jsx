@@ -97,9 +97,15 @@ const CreateSet = () => {
                 const tempUserCreatedDate = temp.user?.created_date
                 if (tempUserCreatedDate) {
                     temp.user.created_date =
-                    tempUserCreatedDate?.replace(/\s/g, 'T') + '.000' + '+07:00'
-                }                
+                        tempUserCreatedDate?.replace(/\s/g, 'T') +
+                        '.000' +
+                        '+07:00'
+                }
                 setStudySet(temp)
+                // type
+                setType(
+                    Number(searchParams.get('type')) || temp.studySetType.id
+                )
                 // cards
                 var tempCards = (await CardService.getAllByStudySetId(temp.id))
                     .data
@@ -129,7 +135,6 @@ const CreateSet = () => {
             setLoading(false)
         }
         setError('')
-        setType(Number(searchParams.get('type')))
         if (userInfo.username) {
             fetchData(Number(searchParams.get('type')))
         }
@@ -274,9 +279,9 @@ const CreateSet = () => {
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setSaving(false)
@@ -308,9 +313,9 @@ const CreateSet = () => {
             toggleShowDiscardMess()
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setLoading(false)
@@ -443,6 +448,7 @@ const CreateSet = () => {
                         ></textarea>
                     </div>
                     {/* Card */}
+                    {console.log(cards)}
                     {cards.map((card, index) => {
                         if (type === 1) {
                             return (

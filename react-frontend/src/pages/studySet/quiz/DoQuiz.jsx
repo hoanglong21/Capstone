@@ -18,6 +18,7 @@ import FormStyles from '../../../assets/styles/Form.module.css'
 import './quiz.css'
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
+import GrammarCard from './GrammarCard'
 
 const DoQuiz = () => {
     const navigate = useNavigate()
@@ -475,6 +476,22 @@ const DoQuiz = () => {
                     )}
                     {type === 2 && (
                         <KanjiCard
+                            ques={ques}
+                            quesIndex={quesIndex}
+                            numQues={numQues}
+                            writtenPromptWith={writtenPromptWith}
+                            multiplePromptWith={multiplePromptWith}
+                            multipleAnswerWith={multipleAnswerWith}
+                            trueFalsePromptWith={trueFalsePromptWith}
+                            trueFalseAnswerWith={trueFalseAnswerWith}
+                            handleChangeAnswer={handleChangeAnswer}
+                            setProgress={setProgress}
+                            progress={progress}
+                            answers={answers}
+                        />
+                    )}
+                    {type === 3 && (
+                        <GrammarCard
                             ques={ques}
                             quesIndex={quesIndex}
                             numQues={numQues}
