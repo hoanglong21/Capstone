@@ -7,18 +7,27 @@ const ViewCard = ({ card }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempContents = (await ContentService.getAllByCardId(card.id))
-                .data
-            const type = card.studySet.studySetType.id
-            if (type === 1) {
-                setTerm(tempContents[0].content)
-                setDefinition(tempContents[1].content)
-            } else if (type === 2) {
-                setTerm(tempContents[0].content)
-                setDefinition(tempContents[1].content)
-            } else if (type === 3) {
-                setTerm(tempContents[0].content)
-                setDefinition(tempContents[2].content)
+            try {
+                const tempContents = (
+                    await ContentService.getAllByCardId(card.id)
+                ).data
+                const type = card.studySet.studySetType.id
+                if (type === 1) {
+                    setTerm(tempContents[0]?.content)
+                    setDefinition(tempContents[1]?.content)
+                } else if (type === 2) {
+                    setTerm(tempContents[0]?.content)
+                    setDefinition(tempContents[1]?.content)
+                } else if (type === 3) {
+                    setTerm(tempContents[0]?.content)
+                    setDefinition(tempContents[2]?.content)
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
         }
         fetchData()
