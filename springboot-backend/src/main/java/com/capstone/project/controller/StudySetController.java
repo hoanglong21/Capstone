@@ -132,6 +132,7 @@ public class StudySetController {
         try {
             return ResponseEntity.ok(studySetService.getQuizByStudySetId(id, type, number));
         } catch (Exception e) {
+
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

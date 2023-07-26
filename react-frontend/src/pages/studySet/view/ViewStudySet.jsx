@@ -234,6 +234,7 @@ const ViewStudySet = () => {
                     <ViewCard card={card} key={card.id} />
                 ))}
             </div>
+            {/* delete set modal */}
             <DeleteSet studySet={studySet} />
         </div>
     )
