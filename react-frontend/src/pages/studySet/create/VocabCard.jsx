@@ -105,7 +105,15 @@ export const VocabCard = (props) => {
 
     const doUpdateCard = async (tempCard) => {
         props.setSaving(true)
-        await CardService.updateCard(tempCard.id, tempCard)
+        try {
+            await CardService.updateCard(tempCard.id, tempCard)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         props.setSaving(false)
     }
 

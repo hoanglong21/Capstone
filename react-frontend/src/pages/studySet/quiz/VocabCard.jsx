@@ -38,6 +38,12 @@ const VocabCard = ({
                             )
                         }
                     })}
+                    {ques.question.card.picture && (
+                        <img
+                            src={ques.question.card.picture}
+                            className="quizQues_img"
+                        />
+                    )}
                     <div className="quizQues_label my-4">Your answer</div>
                     <input
                         className="form-control quizAns_input"

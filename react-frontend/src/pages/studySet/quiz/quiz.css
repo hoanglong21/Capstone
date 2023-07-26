@@ -243,6 +243,11 @@ h3.quizInfo_title {
     background-color: #edefff;
 }
 
+.quizQues_img {
+    max-height: 104px;
+    max-width: 104px;
+}
+
 .quizAns_input {
     padding: 0.5rem 1rem;
 }

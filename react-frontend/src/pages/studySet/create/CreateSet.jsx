@@ -45,13 +45,10 @@ const CreateSet = () => {
         const fetchData = async (tempType) => {
             setLoading(true)
             try {
+                // study set
                 let temp = {}
                 if (id) {
                     temp = (await StudySetService.getStudySetById(id)).data
-                    const tempCreatedDate = temp.created_date
-                    temp.created_date =
-                        tempCreatedDate.replace(/\s/g, 'T') + '.000' + '+07:00'
-                    setType(temp.studySetType.id)
                 } else {
                     const listSets = (
                         await StudySetService.getFilterList(
@@ -74,11 +71,6 @@ const CreateSet = () => {
                     ).data
                     if (listSets.totalItems > 0) {
                         temp = listSets.list[0]
-                        const tempCreatedDate = temp.created_date
-                        temp.created_date =
-                            tempCreatedDate.replace(/\s/g, 'T') +
-                            '.000' +
-                            '+07:00'
                     } else {
                         temp = (
                             await StudySetService.createStudySet({
@@ -97,15 +89,31 @@ const CreateSet = () => {
                                 deleted_date: '',
                             })
                         ).data
-                        const tempCreatedDate = temp.created_date
-                        temp.created_date =
-                            tempCreatedDate.replace(/\s/g, 'T') +
-                            '.000' +
-                            '+07:00'
                     }
                 }
+                const tempSetCreatedDate = temp.created_date
+                temp.created_date =
+                    tempSetCreatedDate.replace(/\s/g, 'T') + '.000' + '+07:00'
+                const tempUserCreatedDate = temp.user.created_date
+                temp.user.created_date =
+                    tempUserCreatedDate.replace(/\s/g, 'T') + '.000' + '+07:00'
                 setStudySet(temp)
-                setCards((await CardService.getAllByStudySetId(temp.id)).data)
+                // cards
+                var tempCards = (await CardService.getAllByStudySetId(temp.id))
+                    .data
+                for (var card of tempCards) {
+                    const tempSetCreatedDate = card.studySet.created_date
+                    card.studySet.created_date =
+                        tempSetCreatedDate.replace(/\s/g, 'T') +
+                        '.000' +
+                        '+07:00'
+                    const tempUserCreatedDate = card.studySet.user.created_date
+                    card.studySet.user.created_date =
+                        tempUserCreatedDate.replace(/\s/g, 'T') +
+                        '.000' +
+                        '+07:00'
+                }
+                setCards(tempCards)
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)
