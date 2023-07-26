@@ -319,7 +319,7 @@ function ViewDetailsUser() {
 
   useEffect(() => {
     initializeChartHeatMap();
-  }, []);
+  });
 
   const initializeChartHeatMap = () => {
     const chartOrigin = document.querySelector("#chartMap");
