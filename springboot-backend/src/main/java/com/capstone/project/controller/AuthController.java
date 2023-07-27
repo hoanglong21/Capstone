@@ -78,8 +78,9 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public void logout() {
-        return;
+    public ResponseEntity<?> logout(@RequestParam("token") String token) {
+        jwtService.invalidateToken(token);
+        return ResponseEntity.ok("Logout successful");
     }
 
 }
