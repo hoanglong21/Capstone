@@ -90,6 +90,12 @@ const getFilterList = (
     )
 }
 
+const getQuizByStudySetId = (id, type, number) => {
+    return axios.get(
+        API_BASE_URL + '/quiz?id=' + id + '&type=' + type + '&number=' + number
+    )
+}
+
 const StudySetService = {
     createStudySet,
     updateStudySet,
@@ -98,6 +104,7 @@ const StudySetService = {
     checkStudySet,
     getAllStudySetByUser,
     getFilterList,
+    getQuizByStudySetId,
 }
 
 export default StudySetService
