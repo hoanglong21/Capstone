@@ -229,9 +229,27 @@ public class StudySetServiceImpl implements StudySetService {
         if(questionType.length==0) {
             throw new Exception("Must have at least 1 type");
         }
-        List<Card> cardList = cardService.getAllByStudySetId(studySetId);
+        List<Card> cardList = cardRepository.getCardByStudySetId(studySetId);
+        return getLearningMethod(cardList, questionType, numberOfQuestion, true);
+    }
+
+    @Override
+    public List<Map<String, Object>> getLearningStudySetId(int userId, int studySetId, int[] questionType, String[] progressType, boolean isRandom) throws Exception {
+        if(questionType.length==0) {
+            throw new Exception("Must have at least 1 type");
+        }
+        if(progressType.length==0) {
+            throw new Exception("Must have at least 1 type");
+        }
+        List<Card> cardList = cardRepository.findCardByProgress(userId, progressType, studySetId);
+        return getLearningMethod(cardList, questionType, cardList.size(), isRandom);
+    }
+
+    private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom) {
         // Shuffle the cardList to randomize the order of cards
-        Collections.shuffle(cardList);
+        if(isRandom) {
+            Collections.shuffle(cardList);
+        }
         List<CardWrapper> initCardWrappers = new ArrayList<>();
 
         for (Card card : cardList) {

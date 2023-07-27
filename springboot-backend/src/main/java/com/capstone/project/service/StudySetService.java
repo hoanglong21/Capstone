@@ -33,4 +33,6 @@ public interface StudySetService {
                                       String sortBy, String direction, int page, int size);
 
     List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion) throws Exception;
+
+    List<Map<String, Object>> getLearningStudySetId(int userId, int studySetId, int[] questionType, String[] progressType, boolean isRandom) throws Exception;
 }
