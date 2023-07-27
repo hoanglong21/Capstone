@@ -52,4 +52,12 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "test_id", referencedColumnName = "id")
     private Test test;
+
+    @ManyToOne
+    @JoinColumn(name = "assignment_id", referencedColumnName = "id")
+    private Assignment assignment;
+
+    @ManyToOne
+    @JoinColumn(name = "submission_id", referencedColumnName = "id")
+    private Submission submission;
 }
