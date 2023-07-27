@@ -3,15 +3,19 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
+import { deleteFolder } from '../../../features/fileManagement'
 
 import { OptionHorIcon } from '../../../components/icons'
 
 const Instructions = () => {
     const navigate = useNavigate()
+
+    const { id } = useParams()
     const { assign_id } = useParams()
 
     const [assignment, setAssignment] = useState({})
     const [attachments, setAttachments] = useState([])
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,6 +30,33 @@ const Instructions = () => {
         }
         fetchData()
     }, [])
+
+    const handleDelete = async (e) => {
+        e.preventDefault()
+        // clear validation
+        setLoading(true)
+        try {
+            await AssignmentService.deleteAssignment(assign_id)
+            await deleteFolder(
+                `files/${assignment.classroom.user.username}/class/${id}/assignment/${assign_id}`
+            )
+            document
+                .getElementById(`closeDeleteAssignmentDetailModal${assign_id}`)
+                .click()
+            navigate(`/class/${id}/assignments`)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoading(false)
+    }
+
+    const handleCopyLink = (event) => {
+        navigator.clipboard.writeText(window.location.href)
+    }
 
     return (
         <div className="instruction_container">
@@ -59,7 +90,7 @@ const Instructions = () => {
                                     className="dropdown-item py-1 px-3 d-flex align-items-center"
                                     type="button"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#deleteClassModal"
+                                    data-bs-target={`#deleteAssignmentDetailModal${assign_id}`}
                                 >
                                     Delete
                                 </button>
@@ -68,8 +99,7 @@ const Instructions = () => {
                                 <button
                                     className="dropdown-item py-1 px-3 d-flex align-items-center"
                                     type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteClassModal"
+                                    onClick={handleCopyLink}
                                 >
                                     Copy link
                                 </button>
@@ -100,6 +130,7 @@ const Instructions = () => {
                     </div>
                 </div>
             </div>
+            {/* attchments */}
             <div className="row">
                 {attachments.map((file, index) => (
                     <div className="col-6" key={index}>
@@ -121,6 +152,58 @@ const Instructions = () => {
                         </a>
                     </div>
                 ))}
+            </div>
+            {/* delete modal */}
+            <div
+                className="modal fade assignDeleteModal"
+                tabIndex="-1"
+                id={`deleteAssignmentDetailModal${assign_id}`}
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Delete assignment?</h5>
+                            <button
+                                id={`closeDeleteAssignmentDetailModal${assign_id}`}
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            <p>Grades and comments will also be deleted</p>
+                            <div className="text-end mt-4">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary me-3"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={handleDelete}
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <div
+                                            className="spinner-border text-secondary mx-auto mb-1"
+                                            role="status"
+                                            id="loading"
+                                        >
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        'Delete'
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     )
