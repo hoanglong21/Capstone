@@ -15,12 +15,12 @@ import {
 } from '../../../components/icons'
 import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
-import './quiz.css'
+import './learn.css'
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
 import GrammarCard from './GrammarCard'
 
-const DoQuiz = () => {
+const Learn = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
@@ -388,20 +388,17 @@ const DoQuiz = () => {
                 className="quizHeader d-flex justify-content-between align-items-center"
             >
                 <div className="d-flex align-items-center">
-                    <TestSolidIcon className="quizModeIcon" size="2rem" />
+                    <LearnSolidIcon className="quizModeIcon" size="2rem" />
                     <div className="quizMode dropdown d-flex align-items-center">
                         <button
                             type="button dropdown-toggle"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <span className="ps-2 me-2">Quiz</span>
+                            <span className="ps-2 me-2">Learn</span>
                             <ArrowDownIcon size="1rem" strokeWidth="2.6" />
                         </button>
-                        <ul
-                            className="dropdown-menu"
-                            style={{ zIndex: '100000' }}
-                        >
+                        <ul className="dropdown-menu">
                             <li>
                                 <button
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
@@ -424,16 +421,16 @@ const DoQuiz = () => {
                                     className="dropdown-item quizModeIcon py-2 px-3 d-flex align-items-center"
                                     type="button"
                                     onClick={() => {
-                                        navigate(`/learn/${id}`)
+                                        navigate(`/quiz/${id}`)
                                     }}
                                 >
-                                    <LearnSolidIcon
+                                    <TestSolidIcon
                                         className="me-3 quizModeIcon"
                                         size="1.3rem"
                                         strokeWidth="2"
                                     />
                                     <span className="align-middle fw-semibold">
-                                        Learn
+                                        Quiz
                                     </span>
                                 </button>
                             </li>
@@ -1361,4 +1358,4 @@ const DoQuiz = () => {
     )
 }
 
-export default DoQuiz
+export default Learn

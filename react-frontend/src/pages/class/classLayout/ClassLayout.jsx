@@ -210,7 +210,6 @@ const ClassLayout = () => {
                         </li>
                     </ul>
                 </div>
-
                 <div className="mt-4">
                     <Outlet />
                 </div>
