@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useParams } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 
@@ -7,6 +7,8 @@ import ClassService from '../../../services/ClassService'
 import { ClassIcon } from '../../../components/icons'
 
 const TutorViewAssignment = () => {
+    const navigate = useNavigate()
+
     const { userInfo } = useSelector((state) => state.user)
 
     const { id } = useParams()
@@ -24,7 +26,13 @@ const TutorViewAssignment = () => {
 
     return (
         <div className="mainClass_container mx-auto">
-            <div className="d-flex align-items-center">
+            <div
+                className="d-flex align-items-center"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                    navigate(`/class/${id}`)
+                }}
+            >
                 <ClassIcon
                     size="3.125rem"
                     className="mainClassHeader_icon"

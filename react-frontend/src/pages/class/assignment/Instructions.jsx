@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import AssignmentService from '../../../services/AssignmentService'
-import { DeleteIcon, EditIcon, OptionHorIcon } from '../../../components/icons'
+import AttachmentService from '../../../services/AttachmentService'
+
+import { OptionHorIcon } from '../../../components/icons'
 
 const Instructions = () => {
+    const navigate = useNavigate()
     const { assign_id } = useParams()
 
     const [assignment, setAssignment] = useState({})
+    const [attachments, setAttachments] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -15,6 +19,10 @@ const Instructions = () => {
                 await AssignmentService.getAssignmentById(assign_id)
             ).data
             setAssignment(tempAssignment)
+            const tempAttachments = (
+                await AttachmentService.getAttachmentsByAssignmentId(assign_id)
+            ).data
+            setAttachments(tempAttachments)
         }
         fetchData()
     }, [])
@@ -37,14 +45,14 @@ const Instructions = () => {
                         </button>
                         <ul className="dropdown-menu">
                             <li>
-                                <button
+                                <Link
                                     className="dropdown-item py-1 px-3 d-flex align-items-center"
                                     type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#updateClassModal"
+                                    to={`../../../edit-assignment/${assign_id}`}
+                                    relative="path"
                                 >
                                     Edit
-                                </button>
+                                </Link>
                             </li>
                             <li>
                                 <button
@@ -69,9 +77,9 @@ const Instructions = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="d-flex mb-2">
+                <div className="d-flex mb-2 instruction_info">
                     <div>{assignment?.user?.username}</div>
-                    <div>·</div>
+                    <div className="mx-1">·</div>
                     <div>
                         {assignment?.created_date}{' '}
                         {assignment?.modified_date
@@ -79,6 +87,40 @@ const Instructions = () => {
                             : ''}
                     </div>
                 </div>
+                <div className="d-flex justify-content-between mb-3 instruction_date">
+                    <div>
+                        {assignment?.start_date
+                            ? `Start ${assignment?.start_date}`
+                            : 'No start date'}
+                    </div>
+                    <div>
+                        {assignment?.due_date
+                            ? `Due ${assignment?.due_date}`
+                            : 'No due date'}
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                {attachments.map((file, index) => (
+                    <div className="col-6" key={index}>
+                        <a
+                            className="card mb-2 text-decoration-none"
+                            href={file.file_url}
+                            target="_blank"
+                        >
+                            <div className="card-body d-flex justify-content-between">
+                                <div className="fileUploadContainer">
+                                    <div className="fileUploadName">
+                                        {file.file_name}
+                                    </div>
+                                    <div className="fileUploadType">
+                                        {file.file_type}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                ))}
             </div>
         </div>
     )
