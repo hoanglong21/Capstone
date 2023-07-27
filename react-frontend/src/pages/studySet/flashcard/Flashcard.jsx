@@ -269,6 +269,9 @@ const Flashcard = () => {
                                 <button
                                     className="dropdown-item flashcardModeIcon py-2 px-3 d-flex align-items-center"
                                     type="button"
+                                    onClick={() => {
+                                        navigate(`/learn/${id}`)
+                                    }}
                                 >
                                     <LearnSolidIcon
                                         className="me-3 flashcardModeIcon"
@@ -284,6 +287,9 @@ const Flashcard = () => {
                                 <button
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
                                     type="button"
+                                    onClick={() => {
+                                        navigate(`/quiz/${id}`)
+                                    }}
                                 >
                                     <TestSolidIcon
                                         className="me-3 flashcardModeIcon"

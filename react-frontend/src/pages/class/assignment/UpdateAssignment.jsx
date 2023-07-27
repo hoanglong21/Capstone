@@ -32,8 +32,7 @@ function UpdateAssignment() {
     const [loadingUpdateAssign, setLoadingUpdateAssign] = useState(false)
 
     function toFEDate(date) {
-        const index = date?.lastIndexOf(':00.')
-        return date?.replace(' ', 'T').substring(0, index)
+        return date?.replace(' ', 'T')
     }
 
     useEffect(() => {
@@ -47,13 +46,11 @@ function UpdateAssignment() {
                 ...tempAssignment,
                 start_date: toFEDate(tempAssignment.start_date),
                 due_date: toFEDate(tempAssignment.due_date),
-                created_date: toFEDate(tempAssignment.created_date),
             })
             setUpdateAssignment({
                 ...tempAssignment,
                 start_date: toFEDate(tempAssignment.start_date),
                 due_date: toFEDate(tempAssignment.due_date),
-                created_date: toFEDate(tempAssignment.created_date),
             })
             const tempAttachments = (
                 await AttachmentService.getAttachmentsByAssignmentId(
@@ -114,12 +111,50 @@ function UpdateAssignment() {
     const handleSubmit = async (draft) => {
         setLoadingUpdateAssign(true)
         try {
-            const tempAssignment = (
-                await AssignmentService.updateAssignment(updateAssignment.id, {
-                    ...updateAssignment,
-                    _draft: draft,
-                })
-            ).data
+            var tempAssignment = { ...updateAssignment }
+            tempAssignment.classroom.created_date =
+                updateAssignment.classroom.created_date.replace(/\s/g, 'T') +
+                '.000' +
+                '+07:00'
+            tempAssignment.classroom.user.created_date =
+                updateAssignment.classroom.user.created_date.replace(
+                    /\s/g,
+                    'T'
+                ) +
+                '.000' +
+                '+07:00'
+            tempAssignment.user.created_date =
+                updateAssignment.user.created_date.replace(/\s/g, 'T') +
+                '.000' +
+                '+07:00'
+            if (tempAssignment.created_date) {
+                tempAssignment.created_date =
+                    updateAssignment.created_date.replace(/\s/g, 'T') +
+                    '.000' +
+                    '+07:00'
+            }
+            if (tempAssignment.modified_date) {
+                tempAssignment.modified_date =
+                    updateAssignment.modified_date.replace(/\s/g, 'T') +
+                    '.000' +
+                    '+07:00'
+            }
+            if (tempAssignment.start_date) {
+                tempAssignment.start_date =
+                    updateAssignment.start_date.replace(/\s/g, 'T') +
+                    '.000' +
+                    '+07:00'
+            }
+            if (tempAssignment.due_date) {
+                tempAssignment.due_date =
+                    updateAssignment.due_date.replace(/\s/g, 'T') +
+                    '.000' +
+                    '+07:00'
+            }
+            await AssignmentService.updateAssignment(updateAssignment.id, {
+                ...tempAssignment,
+                _draft: draft,
+            })
             // add attachments
             await AttachmentService.createAttachments(uploadFiles)
             navigate('../assignments')

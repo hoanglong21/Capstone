@@ -32,7 +32,6 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(post)
             try {
                 const tempFiles = (
                     await AttachmentService.getAttachmentsByPostId(post.id)

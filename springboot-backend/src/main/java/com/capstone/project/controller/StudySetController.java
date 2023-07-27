@@ -132,6 +132,20 @@ public class StudySetController {
         try {
             return ResponseEntity.ok(studySetService.getQuizByStudySetId(id, type, number));
         } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/learn")
+    public ResponseEntity<?> getLearningStudySetId(@RequestParam(value = "userid") int userId,
+                                                   @RequestParam(value = "studysetid") int studySetId,
+                                                   @RequestParam(value = "questiontype") int[] questionType,
+                                                   @RequestParam(value = "progresstype") String[] progressType,
+                                                   @RequestParam(value = "random") boolean isRandom) {
+        try {
+            return ResponseEntity.ok(studySetService.getLearningStudySetId(userId, studySetId, questionType, progressType, isRandom));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

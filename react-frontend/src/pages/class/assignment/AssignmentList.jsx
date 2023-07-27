@@ -101,7 +101,14 @@ function AssignmentList() {
                                         : 'No due date'}
                                 </p>
                                 <div className="mt-2 d-flex justify-content-between">
-                                    <button className="viewAssign_btn">
+                                    <button
+                                        className="viewAssign_btn"
+                                        onClick={() =>
+                                            navigate(
+                                                `../assignment/${assign.id}/details`
+                                            )
+                                        }
+                                    >
                                         View details
                                     </button>
                                     <div className="d-flex">
