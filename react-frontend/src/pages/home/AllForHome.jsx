@@ -108,7 +108,7 @@ function AllForHome() {
                     )}
                     {sets.map((set) => (
                         <div className="col-12 col-md-6 col-xl-4" key={set?.id}>
-                            <div key={set?.id} className="set-item">
+                            <div key={set?.id} className="set-item h-100">
                                 <Link to={`/set/${set?.id}`}>
                                     <div className="set-body">
                                         <div className="set-title mb-2">

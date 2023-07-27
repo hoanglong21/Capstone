@@ -65,8 +65,6 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         return classLearnerRepository.getClassLeanerByUserId(id);
     }
 
-
-
     @Autowired
     private EntityManager entityManager;
     @Override
