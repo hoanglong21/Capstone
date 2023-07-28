@@ -156,7 +156,7 @@ public class ClassLearnerServiceTest {
                 TypedQuery<Long> countQueryMock = mock(TypedQuery.class);
                 when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(countQueryMock);
             }
-            List<ClassLearner> list = (List<ClassLearner>) classLeanerService.filterClassLeaner(userId,classId,fromCreated,toCreated,sortBy,direction,page,size).get("list");
+            List<ClassLearner> list = (List<ClassLearner>) classLeanerService.filterClassLearner(userId,classId,fromCreated,toCreated,sortBy,direction,page,size).get("list");
             assertThat(list.size() > 0).isEqualTo(greaterThanZero);
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -103,7 +103,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Map<String, Object> getFilterComment( String search, String author,String direction, int typeid,int postid, int testid,int studysetid, int rootid, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterComment( String search, String author,String direction, int typeid,int postid, int testid,int studysetid,int assignmentid,int submissionid, int rootid, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query = "SELECT comment.* FROM comment inner join user u on u.id = author_id WHERE 1=1 ";
@@ -136,6 +136,16 @@ public class CommentServiceImpl implements CommentService {
             parameters.put("testId", testid);
         }
 
+        if (assignmentid != 0) {
+            query += " AND assignment_id = :assignmentId";
+            parameters.put("assignmentId", assignmentid);
+        }
+
+        if (submissionid != 0) {
+            query += " AND submission_id = :submissionId";
+            parameters.put("submissionId", submissionid);
+        }
+
         if (rootid != 0) {
             query += " AND root_id = :rootId";
             parameters.put("rootId", rootid);
@@ -151,8 +161,6 @@ public class CommentServiceImpl implements CommentService {
 //            CommentType commentType = commentTypeService.getCommentTypeByName(type);
 //            parameters.put("typeId", commentType.getId());
 //        }
-
-
 
 
         String direct = "desc";

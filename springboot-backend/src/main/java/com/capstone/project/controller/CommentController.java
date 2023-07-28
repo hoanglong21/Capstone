@@ -124,12 +124,14 @@ public class CommentController {
                                            @RequestParam(value = "postid", required = false) Optional<Integer> postid,
                                            @RequestParam(value = "testid", required = false) Optional<Integer> testid,
                                            @RequestParam(value = "studysetid", required = false) Optional<Integer> studysetid,
+                                           @RequestParam(value = "assignmentid", required = false) Optional<Integer> assignmentid,
+                                           @RequestParam(value = "submissionid", required = false) Optional<Integer> submissionid,
                                            @RequestParam(value = "rootid", required = false) Optional<Integer> roottid,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
 
         try{
-            return ResponseEntity.ok(commentService.getFilterComment(search,author,direction,typeid.orElse(0),postid.orElse(0),testid.orElse(0),studysetid.orElse(0),roottid.orElse(0),page,size));
+            return ResponseEntity.ok(commentService.getFilterComment(search,author,direction,typeid.orElse(0),postid.orElse(0),testid.orElse(0),studysetid.orElse(0),assignmentid.orElse(0),submissionid.orElse(0),roottid.orElse(0),page,size));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
