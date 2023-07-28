@@ -116,7 +116,7 @@ const Instructions = () => {
                                 assignment?.classroom?.user?.id && (
                                 <div>
                                     <li>
-                                        <hr class="dropdown-divider" />
+                                        <hr className="dropdown-divider" />
                                     </li>
                                     <li>
                                         <button
