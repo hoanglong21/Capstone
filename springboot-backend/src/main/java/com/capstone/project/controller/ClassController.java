@@ -165,4 +165,13 @@ public class ClassController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/checkuserclasswaiting")
+    public ResponseEntity<?> checkUserClassWaiting(@RequestParam int userId,@RequestParam int classId) {
+        try {
+            return ResponseEntity.ok(classService.CheckUserClassWaiting(userId,classId));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
