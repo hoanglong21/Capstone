@@ -1,12 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import AssignmentService from '../../../services/AssignmentService'
 import ClassService from '../../../services/ClassService'
 
 import DeleteAssignment from './DeleteAssignment'
 
-import { AddIcon } from '../../../components/icons'
+import { AccountIcon, AddIcon } from '../../../components/icons'
 import empty from '../../../assets/images/assign_empty.jpg'
 import './assignment.css'
 
@@ -15,11 +16,15 @@ function AssignmentList() {
 
     const { id } = useParams()
 
+    const { userInfo } = useSelector((state) => state.user)
+
     const [assignments, setAssignments] = useState([])
+    const [classroom, setClassroom] = useState({})
 
     useEffect(() => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
+            setClassroom(tempClass)
             const tempAssignments = (
                 await AssignmentService.getFilterList(
                     '',
@@ -42,21 +47,34 @@ function AssignmentList() {
 
     return (
         <div>
-            <div>
-                <button
-                    className="createAssign_btn"
-                    onClick={() => {
-                        navigate('../create-assignment')
-                    }}
-                >
-                    <AddIcon
-                        className="createAssignIcon_btn"
-                        size="1.125rem"
-                        strokeWidth="2.25"
-                    />
-                    Create
-                </button>
-            </div>
+            {userInfo?.id === classroom?.user?.id ? (
+                <div>
+                    <button
+                        className="createAssign_btn"
+                        onClick={() => {
+                            navigate('../create-assignment')
+                        }}
+                    >
+                        <AddIcon
+                            className="createAssignIcon_btn"
+                            size="1.125rem"
+                            strokeWidth="2.25"
+                        />
+                        Create
+                    </button>
+                </div>
+            ) : (
+                <div>
+                    <button className="btn btn-outline-primary fw-semibold d-flex align-items-center">
+                        <AccountIcon
+                            className="createAssignIcon_btn"
+                            size="20px"
+                            strokeWidth="2.25"
+                        />
+                        <span>View your work</span>
+                    </button>
+                </div>
+            )}
             {assignments.length === 0 && (
                 <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
                     <img src={empty} alt="" />
@@ -95,12 +113,12 @@ function AssignmentList() {
                             data-bs-parent="#accordionTests"
                         >
                             <div className="accordion-body">
-                                <p>
-                                    {assign?.due_date
-                                        ? `Posted ${assign?.created_date}`
-                                        : 'No due date'}
-                                </p>
-                                <div className="mt-2 d-flex justify-content-between">
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <p>
+                                        {assign?.due_date
+                                            ? `Posted ${assign?.created_date}`
+                                            : 'No due date'}
+                                    </p>
                                     <button
                                         className="viewAssign_btn"
                                         onClick={() =>
@@ -111,45 +129,61 @@ function AssignmentList() {
                                     >
                                         View details
                                     </button>
-                                    <div className="d-flex">
-                                        <div className="asignInfo_block">
-                                            <div className="assignInfo_number">
-                                                0
-                                            </div>
-                                            <div className="assignInfo_title">
-                                                Turned in
+                                </div>
+                                {userInfo?.id === assign?.user?.id && (
+                                    <div>
+                                        <div className="mt-2 d-flex justify-content-between">
+                                            <button
+                                                className="viewAssign_btn"
+                                                onClick={() =>
+                                                    navigate(
+                                                        `../assignment/${assign.id}/details`
+                                                    )
+                                                }
+                                            >
+                                                View details
+                                            </button>
+                                            <div className="d-flex">
+                                                <div className="asignInfo_block">
+                                                    <div className="assignInfo_number">
+                                                        0
+                                                    </div>
+                                                    <div className="assignInfo_title">
+                                                        Turned in
+                                                    </div>
+                                                </div>
+                                                <div className="asignInfo_block">
+                                                    <div className="assignInfo_number">
+                                                        1
+                                                    </div>
+                                                    <div className="assignInfo_title">
+                                                        Assigned
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="asignInfo_block">
-                                            <div className="assignInfo_number">
-                                                1
-                                            </div>
-                                            <div className="assignInfo_title">
-                                                Assigned
-                                            </div>
+                                        <div className="mt-5 d-flex justify-content-between">
+                                            <button
+                                                className="editAssign_btn"
+                                                onClick={() => {
+                                                    navigate(
+                                                        `../edit-assignment/${assign?.id}`
+                                                    )
+                                                }}
+                                            >
+                                                Edit assignment
+                                            </button>
+                                            <button
+                                                className="deleteAssign_btn"
+                                                type="button"
+                                                data-bs-toggle="modal"
+                                                data-bs-target={`#deleteAssignmentModal${assign?.id}`}
+                                            >
+                                                Delete assignment
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="mt-5 d-flex justify-content-between">
-                                    <button
-                                        className="editAssign_btn"
-                                        onClick={() => {
-                                            navigate(
-                                                `../edit-assignment/${assign?.id}`
-                                            )
-                                        }}
-                                    >
-                                        Edit assignment
-                                    </button>
-                                    <button
-                                        className="deleteAssign_btn"
-                                        type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target={`#deleteAssignmentModal${assign?.id}`}
-                                    >
-                                        Delete assignment
-                                    </button>
-                                </div>
+                                )}
                             </div>
                             <DeleteAssignment
                                 index={index}

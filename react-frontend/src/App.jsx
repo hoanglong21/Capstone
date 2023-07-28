@@ -85,7 +85,7 @@ import Achievements from './pages/library/Achievements'
 import Statistics from './pages/library/Statistics'
 import ClassStatistics from './pages/class/ClassStatistics'
 import Learn from './pages/studySet/learn/Learn'
-import TutorViewAssignment from './pages/class/assignment/TutorViewAssignment'
+import ViewAssignment from './pages/class/assignment/ViewAssignment'
 import Instructions from './pages/class/assignment/Instructions'
 import Submissions from './pages/class/assignment/Submissions'
 
@@ -176,7 +176,7 @@ const App = () => {
                         {/* Tutor view assignment */}
                         <Route
                             path="class/:id/assignment/:assign_id"
-                            element={<TutorViewAssignment />}
+                            element={<ViewAssignment />}
                         >
                             <Route path="details" element={<Instructions />} />
                             <Route

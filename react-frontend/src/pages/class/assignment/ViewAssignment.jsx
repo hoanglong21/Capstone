@@ -6,7 +6,7 @@ import ClassService from '../../../services/ClassService'
 
 import { ClassIcon } from '../../../components/icons'
 
-const TutorViewAssignment = () => {
+const ViewAssignment = () => {
     const navigate = useNavigate()
 
     const { userInfo } = useSelector((state) => state.user)
@@ -75,4 +75,4 @@ const TutorViewAssignment = () => {
     )
 }
 
-export default TutorViewAssignment
+export default ViewAssignment
