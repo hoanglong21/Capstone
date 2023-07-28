@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
@@ -12,6 +13,8 @@ const Instructions = () => {
 
     const { id } = useParams()
     const { assign_id } = useParams()
+
+    const { userInfo } = useSelector((state) => state.user)
 
     const [assignment, setAssignment] = useState({})
     const [attachments, setAttachments] = useState([])
@@ -75,26 +78,31 @@ const Instructions = () => {
                             <OptionHorIcon />
                         </button>
                         <ul className="dropdown-menu">
-                            <li>
-                                <Link
-                                    className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                    type="button"
-                                    to={`../../../edit-assignment/${assign_id}`}
-                                    relative="path"
-                                >
-                                    Edit
-                                </Link>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                    type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target={`#deleteAssignmentDetailModal${assign_id}`}
-                                >
-                                    Delete
-                                </button>
-                            </li>
+                            {userInfo?.id ===
+                                assignment?.classroom?.user?.id && (
+                                <div>
+                                    <li>
+                                        <Link
+                                            className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                            type="button"
+                                            to={`../../../edit-assignment/${assign_id}`}
+                                            relative="path"
+                                        >
+                                            Edit
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target={`#deleteAssignmentDetailModal${assign_id}`}
+                                        >
+                                            Delete
+                                        </button>
+                                    </li>
+                                </div>
+                            )}
                             <li>
                                 <button
                                     className="dropdown-item py-1 px-3 d-flex align-items-center"
@@ -104,6 +112,22 @@ const Instructions = () => {
                                     Copy link
                                 </button>
                             </li>
+                            {userInfo?.id !==
+                                assignment?.classroom?.user?.id && (
+                                <div>
+                                    <li>
+                                        <hr className="dropdown-divider" />
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                            type="button"
+                                        >
+                                            Report
+                                        </button>
+                                    </li>
+                                </div>
+                            )}
                         </ul>
                     </div>
                 </div>
