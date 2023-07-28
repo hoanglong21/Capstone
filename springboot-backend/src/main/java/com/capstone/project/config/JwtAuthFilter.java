@@ -42,18 +42,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = null;
 
         try {
-            HandlerMethod handlerMethod = (HandlerMethod) requestMappingHandlerMapping.getHandler(request).getHandler();
-            PreAuthorize preAuthorizeAnnotation = handlerMethod.getMethodAnnotation(PreAuthorize.class);
-            if (preAuthorizeAnnotation != null && authHeader == null) {
-                throw new Exception("Not authorized");
-            }
+            Object handler = requestMappingHandlerMapping.getHandler(request).getHandler();
 
-            if (authHeader != null && authHeader.startsWith("Bearer ") && preAuthorizeAnnotation != null) {
-                token = authHeader.substring(7);
-                if (token == null || token.equals("")) {
-                    throw new Exception("Invalid JWT Token");
+            if (handler instanceof HandlerMethod) {
+                HandlerMethod handlerMethod = (HandlerMethod) handler;
+                PreAuthorize preAuthorizeAnnotation = handlerMethod.getMethodAnnotation(PreAuthorize.class);
+                if (preAuthorizeAnnotation != null && authHeader == null) {
+                    throw new Exception("Not authorized");
                 }
-                username = jwtService.extractUsername(token);
+
+                if (authHeader != null && authHeader.startsWith("Bearer ") && preAuthorizeAnnotation != null) {
+                    token = authHeader.substring(7);
+                    if (token == null || token.equals("")) {
+                        throw new Exception("Invalid JWT Token");
+                    }
+                    username = jwtService.extractUsername(token);
+                }
             }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -67,6 +71,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         } catch (Exception e) {
+            System.out.println(e);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write("You need to login first to continue");
             response.getWriter().flush();
