@@ -72,15 +72,18 @@ const ViewStudySet = () => {
                     </Link>
                 </div>
                 <div className="col-4">
-                    <div className="studyModesItem d-flex align-items-center justify-content-center">
+                    <Link
+                        to={`/learn/${studySet.id}`}
+                        className="studyModesItem d-flex align-items-center justify-content-center"
+                    >
                         <LearnSolidIcon
                             className="StudyModesIcon"
                             size="2rem"
                         />
-                        <a className="studyModesItemName" href="/learn">
+                        <span className="studyModesItemName" href="/learn">
                             Learn
-                        </a>
-                    </div>
+                        </span>
+                    </Link>
                 </div>
                 <div className="col-4">
                     <Link

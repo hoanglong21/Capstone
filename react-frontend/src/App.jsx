@@ -84,6 +84,10 @@ import RegisterAdmin from './pages/admin/RegiserAdmin'
 import Achievements from './pages/library/Achievements'
 import Statistics from './pages/library/Statistics'
 import ClassStatistics from './pages/class/ClassStatistics'
+import Learn from './pages/studySet/learn/Learn'
+import TutorViewAssignment from './pages/class/assignment/TutorViewAssignment'
+import Instructions from './pages/class/assignment/Instructions'
+import Submissions from './pages/class/assignment/Submissions'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -169,6 +173,17 @@ const App = () => {
                                 element={<ClassStatistics />}
                             />
                         </Route>
+                        {/* Tutor view assignment */}
+                        <Route
+                            path="class/:id/assignment/:assign_id"
+                            element={<TutorViewAssignment />}
+                        >
+                            <Route path="details" element={<Instructions />} />
+                            <Route
+                                path="submissions"
+                                element={<Submissions />}
+                            />
+                        </Route>
                         {/* Test */}
                         <Route path="/dotest" element={<DoTest />} />
                         <Route
@@ -236,8 +251,10 @@ const App = () => {
                 </Route>
                 {/* Access deny */}
                 <Route element={<ProtectedRoute />}>
+                    {/* study set */}
                     <Route path="flashcards/:id" element={<Flashcard />} />
                     <Route path="quiz/:id" element={<DoQuiz />} />
+                    <Route path="learn/:id" element={<Learn />} />
                 </Route>
 
                 <Route path="/banuser" element={<BanUser />} />
@@ -260,17 +277,41 @@ const App = () => {
                     element={<ViewDetailFeedback />}
                 />
                 <Route path="/managestudyset" element={<ManageStudyset />} />
-                <Route path="/viewdetailset/:id" element={<ViewDetailStudyset />} />
-                <Route path='/manageassignment' element={<ManageAssignment />} />
-                <Route path='/viewdetailassign/:id' element={<ViewDetailAssignment />}/>
-                <Route path='/managetest' element={<ManageTest />}/>
-                <Route path="/viewdetailtest/:id" element={<ViewDetailTestForAdmin />} />
-                <Route path='/managepost' element={<ManagePost />}/>
-                <Route path="/viewdetailpost/:id" element={<ViewDetailPost />} />
-                <Route path='/managecomment' element={<ManageComment />}/>
-                <Route path="/viewdetailcomment/:id" element={<ViewDetailComment />} />
-                <Route path="/managesubmission" element={<ManageSubmission />} />
-                <Route path="/viewdetailsubmission/:id" element={<ViewDetailSubmission />} />
+                <Route
+                    path="/viewdetailset/:id"
+                    element={<ViewDetailStudyset />}
+                />
+                <Route
+                    path="/manageassignment"
+                    element={<ManageAssignment />}
+                />
+                <Route
+                    path="/viewdetailassign/:id"
+                    element={<ViewDetailAssignment />}
+                />
+                <Route path="/managetest" element={<ManageTest />} />
+                <Route
+                    path="/viewdetailtest/:id"
+                    element={<ViewDetailTestForAdmin />}
+                />
+                <Route path="/managepost" element={<ManagePost />} />
+                <Route
+                    path="/viewdetailpost/:id"
+                    element={<ViewDetailPost />}
+                />
+                <Route path="/managecomment" element={<ManageComment />} />
+                <Route
+                    path="/viewdetailcomment/:id"
+                    element={<ViewDetailComment />}
+                />
+                <Route
+                    path="/managesubmission"
+                    element={<ManageSubmission />}
+                />
+                <Route
+                    path="/viewdetailsubmission/:id"
+                    element={<ViewDetailSubmission />}
+                />
                 <Route path="/chatbox" element={<Chat />} />
                 <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
                 <Route
