@@ -61,6 +61,16 @@ public class ClassLeanerController {
         return ResponseEntity.ok(classLearnerService.getClassLeanerByUserId(id));
     }
 
+    @DeleteMapping("/classlearner/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> deleteClassLearner(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(classLearnerService.deleteClassLearner(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     @GetMapping("/filterclassleaner")
 //    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
