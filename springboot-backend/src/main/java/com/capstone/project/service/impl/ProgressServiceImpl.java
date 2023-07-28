@@ -1,7 +1,9 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.Card;
 import com.capstone.project.model.Progress;
+import com.capstone.project.model.User;
 import com.capstone.project.repository.ProgressRepository;
 import com.capstone.project.service.ProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +66,67 @@ public class ProgressServiceImpl implements ProgressService {
                 .orElseThrow(() -> new ResourceNotFroundException("Progress not exist with id: " + id));
         progressRepository.delete(progress);
         return true;
+    }
+
+    @Override
+    public Progress updateScore(int userId, int cardId, int score) {
+        Progress progress = progressRepository.findByCardIdAndUserId(userId, cardId);
+        if(progress == null) {
+            progress = Progress.builder()
+                    .user(User.builder().id(userId).build())
+                    .card(Card.builder().id(cardId).build())
+                    .build();
+        }
+        if(score>0) {
+            progress.setRight(progress.getRight()+1);
+        } else if(score<0) {
+            progress.setWrong(progress.getWrong()+1);
+            progress.setTotal_wrong(progress.getTotal_wrong()+1);
+        }
+
+        if (progress.getRight()==0 && progress.getWrong()==0) {
+            progress.setStatus("not studied");
+        } else if(progress.getRight()>0 || progress.getWrong()>0) {
+            progress.setStatus("still learning");
+        } else if(progress.getRight()>=2) {
+            progress.setStatus("mastered");
+        }
+        return progressRepository.save(progress);
+    }
+
+    @Override
+    public Progress customUpdateProgress(int userId, int cardId, boolean isStar, String picture, String audio, String note) {
+        Progress progress = progressRepository.findByCardIdAndUserId(userId, cardId);
+        if(progress == null) {
+            progress = Progress.builder()
+                    .user(User.builder().id(userId).build())
+                    .card(Card.builder().id(cardId).build())
+                    .build();
+        }
+        progress.set_star(isStar);
+        progress.setNote(note);
+        progress.setAudio(audio);
+        progress.setPicture(picture);
+        return progressRepository.save(progress);
+    }
+
+    @Override
+    public Boolean resetProgress(int userId, int studySetId) {
+        List<Progress> progressList = progressRepository.findByStudySetIdAndUserId(userId, studySetId);
+        for(Progress item: progressList) {
+            item.setStatus("not studied");
+            item.setRight(0);
+            item.setWrong(0);
+        }
+        return true;
+    }
+
+    @Override
+    public Progress getProgressByUserIdAndCardId(int userId, int cardId) throws ResourceNotFroundException {
+        Progress progress = progressRepository.findByCardIdAndUserId(userId, cardId);
+        if(progress == null) {
+            throw new ResourceNotFroundException("Progress not exist with userId: " + userId + " and cardId: " + cardId);
+        }
+        return progress;
     }
 }
