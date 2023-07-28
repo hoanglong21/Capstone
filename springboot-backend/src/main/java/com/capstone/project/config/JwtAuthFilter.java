@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -42,6 +43,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = null;
 
         try {
+            Object check = requestMappingHandlerMapping.getHandler(request);
+            if (check == null) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                response.getWriter().write("Requested URL does not exist: " + request.getRequestURL());
+                response.getWriter().flush();
+                return;
+            }
             Object handler = requestMappingHandlerMapping.getHandler(request).getHandler();
 
             if (handler instanceof HandlerMethod) {
