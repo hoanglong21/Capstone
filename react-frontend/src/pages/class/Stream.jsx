@@ -176,7 +176,7 @@ const Stream = () => {
             {/* Side */}
             <div className="col-3">
                 {/* Class code */}
-                {userInfo.role !== 'ROLE_LEANER' && (
+                {userInfo?.id === classroom?.user?.id && (
                     <div className="card classCode_container mb-4">
                         <div className="card-body">
                             <div className="card-title mainClass_sectionTitle d-flex justify-content-between align-items-center">

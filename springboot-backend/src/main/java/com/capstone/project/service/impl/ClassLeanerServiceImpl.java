@@ -4,7 +4,6 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Class;
 import com.capstone.project.model.ClassLearner;
 import com.capstone.project.model.UserAchievement;
-import com.capstone.project.model.UserSetting;
 import com.capstone.project.repository.ClassLearnerRepository;
 import com.capstone.project.service.ClassLearnerService;
 import jakarta.persistence.EntityManager;
@@ -39,6 +38,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     public ClassLearner createClassLearner(ClassLearner classLearner) {
         try {
             classLearner.setCreated_date(new Date());
+            classLearner.set_accepted(false);
             return classLearnerRepository.save(classLearner);
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException("Duplicate entry, make sure id of user and class are not duplicated");
@@ -51,14 +51,6 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
                 .orElseThrow(() -> new ResourceNotFroundException("ClassLearner not exist with id:" + id));
         classLearner.set_accepted(classroomLearner.is_accepted());
         return classLearnerRepository.save(classLearner);
-    }
-
-    @Override
-    public Boolean deleteClassLearner(int id) throws ResourceNotFroundException {
-        ClassLearner classLearner = classLearnerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFroundException("UserSetting not exist with id:" + id));
-        classLearnerRepository.delete(classLearner);
-        return true;
     }
 
 
