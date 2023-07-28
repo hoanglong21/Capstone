@@ -1,11 +1,14 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.Class;
 import com.capstone.project.model.ClassLearner;
 import com.capstone.project.model.UserAchievement;
 import com.capstone.project.repository.ClassLearnerRepository;
 import com.capstone.project.service.ClassLearnerService;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,6 +20,8 @@ import java.util.*;
 
 @Service
 public class ClassLeanerServiceImpl implements ClassLearnerService {
+    @PersistenceContext
+    private EntityManager em;
 
     private final ClassLearnerRepository classLearnerRepository;
 
@@ -40,6 +45,15 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     }
 
     @Override
+    public ClassLearner updateClassLearner(ClassLearner classroomLearner, int id) throws ResourceNotFroundException {
+        ClassLearner classLearner = classLearnerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("ClassLearner not exist with id:" + id));
+        classLearner.set_accepted(classroomLearner.is_accepted());
+        return classLearnerRepository.save(classLearner);
+    }
+
+
+    @Override
     public ClassLearner getClassLeanerById(int id) throws ResourceNotFroundException {
         ClassLearner classLearner = classLearnerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Not exist with id: " + id));
@@ -51,12 +65,10 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         return classLearnerRepository.getClassLeanerByUserId(id);
     }
 
-
-
     @Autowired
     private EntityManager entityManager;
     @Override
-    public Map<String, Object> filterClassLeaner(int userId, int classId, String fromCreated, String toCreated, String sortBy, String direction, int page, int size) throws ParseException {
+    public Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated, String sortBy, String direction, int page, int size) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "FROM ClassLearner f LEFT JOIN FETCH f.classroom WHERE 1=1 ";
         Map<String, Object> params = new HashMap<>();
@@ -111,6 +123,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         return response;
     }
 
+
     private int getTotalCount(String jpql, Map<String, Object> params) {
         // Remove the ORDER BY clause from the original JPQL query
         int orderByIndex = jpql.toUpperCase().lastIndexOf("ORDER BY");
@@ -131,4 +144,60 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         Long countResult = countQuery.getSingleResult();
         return countResult != null ? countResult.intValue() : 0;
     }
+
+
+
+    @Override
+    public Map<String, Object> filterGetLearner(int userId, int classId, Boolean isAccepted, String sortBy, String direction, int page, int size) {
+
+        int offset = (page - 1) * size;
+
+        String query = "SELECT cl.id, u.username as username,u.avatar as avatar, cl.is_accepted as accepted, cl.created_date as created_date\n" +
+                "FROM class_learner cl \n" +
+                "INNER JOIN user u  ON u.id = cl.user_id\n" +
+                "INNER JOIN class c on c.id = cl.class_id\n" +
+                "WHERE 1=1 ";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (classId != 0) {
+            query += " AND class_id = :classId";
+            parameters.put("classId", classId);
+        }
+
+        if (userId != 0) {
+            query += " AND user_id = :userId";
+            parameters.put("userId", userId);
+        }
+
+        if (isAccepted != null) {
+            query += " AND is_accepted = :isAccepted";
+            parameters.put("isAccepted", isAccepted);
+
+        }
+
+        query += " ORDER BY cl." + sortBy + " " + direction;
+
+        Query q = em.createNativeQuery(query, "ClassLearnerListMapping");
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<ClassLearner> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+
+        return response;
+    }
+
 }

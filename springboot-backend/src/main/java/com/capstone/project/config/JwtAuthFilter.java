@@ -58,6 +58,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.getWriter().write("You need to login first to continue");
+                response.getWriter().flush();
+                return;
             }
         }
 

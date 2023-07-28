@@ -216,12 +216,12 @@ public class CommentSerivceTest {
     }
 
     @Order(10)
-    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, typeId{3},postId{4},testId{5} ,studysetId{6},rootId{7}, page{8}, size{9}")
+    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, typeId{3},postId{4},testId{5} ,studysetId{6},int assignmentid{7},int submissionid{8},rootId{9}, page{10}, size{11}")
     @CsvSource({
-            "Hello,quantruong,DESC,1,2,1,2,1,1,5",
-            "hello,ngocnguyen,DESC,1,2,1,2,1,1,5"
+            "Hello,quantruong,DESC,1,2,1,2,1,1,1,1,5",
+            "hello,ngocnguyen,DESC,1,2,1,2,1,1,1,1,5"
     })
-    public void testGetFilterAssignment(String search, String author, String direction, int typeid,int postid,int testid, int studysetid,int rootid, int page, int size) throws ResourceNotFroundException {
+    public void testGetFilterAssignment(String search, String author, String direction, int typeid,int postid,int testid, int studysetid,int assignmentid,int submissionid,int rootid, int page, int size) throws ResourceNotFroundException {
 
         MockitoAnnotations.openMocks(this);
         Comment comment = Comment.builder()
@@ -235,7 +235,7 @@ public class CommentSerivceTest {
         when(em.createNativeQuery(anyString(),eq(Comment.class))).thenReturn(mockedQuery);
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(comment));
-        List<Comment> list = (List<Comment>) commentServiceImpl.getFilterComment(search, author, direction, typeid, postid,testid,studysetid,rootid, page, size).get("list");
+        List<Comment> list = (List<Comment>) commentServiceImpl.getFilterComment(search, author, direction, typeid, postid,testid,studysetid,assignmentid,submissionid, rootid, page, size).get("list");
         assertThat(list.size()).isGreaterThan(0);
 
     }

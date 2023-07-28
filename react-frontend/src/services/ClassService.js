@@ -25,22 +25,22 @@ const getClassroomById = (id) => {
 };
 
 const getLeanerJoined = (id) => {
-    return axios.get(API_BASE_URL + "/statistic/leanerjoinednum/" + id);
-  };
+  return axios.get(API_BASE_URL + "/statistic/leanerjoinednum/" + id);
+};
 
-const getTestNumber = (id) =>{
+const getTestNumber = (id) => {
   return axios.get(API_BASE_URL + "/statistic/classtest/" + id);
 };
 
-const getAssignmentNumber = (id) =>{
+const getAssignmentNumber = (id) => {
   return axios.get(API_BASE_URL + "/statistic/classassignment/" + id);
 };
 
-const getLeanerJoinedGrowth = (id) =>{
+const getLeanerJoinedGrowth = (id) => {
   return axios.get(API_BASE_URL + "/statistic/learnerjoinedgrowth/" + id);
 };
 
-const getPostGrowth = (id) =>{
+const getPostGrowth = (id) => {
   return axios.get(API_BASE_URL + "/statistic/postgrowth/" + id);
 };
 
@@ -77,7 +77,11 @@ const getFilterList = (
   );
 };
 
-
+const checkUserClass = (classId, userId) => {
+  return axios.get(
+    API_BASE_URL + "/checkuserclass?classId=" + classId + "&userId=" + userId
+  );
+};
 
 const ClassService = {
   createClassroom,
@@ -90,8 +94,9 @@ const ClassService = {
   getLeanerJoined,
   getTestNumber,
   getAssignmentNumber,
-  getLeanerJoinedGrowth, 
-  getPostGrowth
+  getLeanerJoinedGrowth,
+  getPostGrowth,
+  checkUserClass,
 };
 
 export default ClassService;
