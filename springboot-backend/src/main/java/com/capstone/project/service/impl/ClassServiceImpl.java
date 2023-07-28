@@ -269,7 +269,7 @@ public class ClassServiceImpl implements ClassService {
 
         ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
         if (classLearner!= null) {
-            if(classLearner.getUser().getId() == userId){
+            if(classLearner.getUser().getId() == userId && classLearner.is_accepted()){
                 return true;}
         }
 

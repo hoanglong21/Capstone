@@ -22,4 +22,6 @@ public interface UserSettingService {
     Map<String, String> CustomGetUserSettingByUserId(int id) throws ResourceNotFroundException;
 
     UserSetting saveUserSettingCustom(int userId, int settingId, String newValue);
+
+    void sendStudyReminderMails();
 }

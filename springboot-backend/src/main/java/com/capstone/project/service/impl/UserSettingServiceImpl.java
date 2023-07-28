@@ -6,14 +6,19 @@ import com.capstone.project.model.User;
 import com.capstone.project.model.UserSetting;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.repository.UserSettingRepository;
-import com.capstone.project.service.SettingService;
 import com.capstone.project.service.UserSettingService;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.capstone.project.util.UserSettingValidation;
@@ -21,12 +26,15 @@ import com.capstone.project.util.UserSettingValidation;
 @Service
 public class UserSettingServiceImpl implements UserSettingService {
 
+    private final JavaMailSender mailSender;
+
     private final UserSettingRepository userSettingRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    public UserSettingServiceImpl(UserSettingRepository userSettingRepository) {
+    public UserSettingServiceImpl(JavaMailSender mailSender, UserSettingRepository userSettingRepository) {
+        this.mailSender = mailSender;
         this.userSettingRepository = userSettingRepository;
     }
 
@@ -146,5 +154,64 @@ public class UserSettingServiceImpl implements UserSettingService {
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException("Invalid input, check id again");
         }
+    }
+
+    public void sendStudyReminderMail(UserSetting userSetting) {
+        try {
+            String toAddress = userSetting.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            String subject = "[NihongoLevelUp]: Time to study";
+            String content = "Dear [[name]],<br><br>"
+                    + "It's time to study, don't lose your momentum. Join with us and study new things  "
+                    + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Start Studying</a><br><br>"
+                    + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                    + "Best regards,<br>"
+                    + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", userSetting.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<Integer, Boolean> userSettingMailSent = new HashMap<>();
+    @Scheduled(fixedRate = 60000)
+    public void sendStudyReminderMails() {
+        List<UserSetting> userSettings = userSettingRepository.findAll();
+
+        for (UserSetting userSetting : userSettings) {
+            int userSettingId = userSetting.getId();
+            String studytime = userSetting.getValue();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateTime = LocalDateTime.parse(studytime, formatter);
+            if (userSetting.getSetting().getId() == 1 && !userSettingMailSent.getOrDefault(userSettingId, false)) {
+                if (isDateTimeReached(dateTime)) {
+                    sendStudyReminderMail(userSetting);
+                    userSettingMailSent.put(userSettingId, true);
+                }
+            }
+        }
+    }
+
+
+    private boolean isDateTimeReached(LocalDateTime dateTime) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return now.isEqual(dateTime) || now.isAfter(dateTime);
     }
 }
