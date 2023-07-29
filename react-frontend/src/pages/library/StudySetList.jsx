@@ -69,7 +69,6 @@ const StudySetList = () => {
                     <img
                         src={empty}
                         alt="No sets found in your library"
-                        className="w-50"
                     />
                     <h3>You have no sets yet</h3>
                     <p>Sets you create or study will be shown here</p>
