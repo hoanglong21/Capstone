@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Class;
 import com.capstone.project.model.ClassLearner;
 import com.capstone.project.model.UserAchievement;
+import com.capstone.project.model.UserSetting;
 import com.capstone.project.repository.ClassLearnerRepository;
 import com.capstone.project.service.ClassLearnerService;
 import jakarta.persistence.EntityManager;
@@ -52,6 +53,14 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         return classLearnerRepository.save(classLearner);
     }
 
+    @Override
+    public Boolean deleteClassLearner(int id) throws ResourceNotFroundException {
+        ClassLearner classLearner = classLearnerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("UserSetting not exist with id:" + id));
+        classLearnerRepository.delete(classLearner);
+        return true;
+    }
+
 
     @Override
     public ClassLearner getClassLeanerById(int id) throws ResourceNotFroundException {
@@ -61,7 +70,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     }
 
     @Override
-    public List<ClassLearner> getClassLeanerByUserId(int id) {
+    public ClassLearner getClassLeanerByUserId(int id) {
         return classLearnerRepository.getClassLeanerByUserId(id);
     }
 

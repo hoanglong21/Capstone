@@ -213,7 +213,6 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public Class joinClass(String classCode, String username) throws ResourceNotFroundException {
-
         Class classroom = classRepository.findByClasscode(classCode);
         if (classroom == null) {
             throw new ResourceNotFroundException("Class not exist with code: " +classCode);
@@ -234,7 +233,7 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("You are already in the class !");
         }
 
-        if(classroom.is_deleted() ==true){
+        if(classroom.is_deleted() == true) {
             throw new ResourceNotFroundException("Class is not exist !");
         }
 
@@ -242,6 +241,7 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setUser(user);
         classLearner.setClassroom(classroom);
         classLearner.setCreated_date(new Date());
+        classLearner.set_accepted(true);
         classLearnerRepository.save(classLearner);
         // add user to classroom
         return classRepository.save(classroom);
@@ -269,7 +269,7 @@ public class ClassServiceImpl implements ClassService {
 
         ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
         if (classLearner!= null) {
-            if(classLearner.getUser().getId() == userId){
+            if(classLearner.getUser().getId() == userId && classLearner.is_accepted()){
                 return true;}
         }
 
@@ -278,6 +278,25 @@ public class ClassServiceImpl implements ClassService {
         }
 
 
+        return false;
+    }
+
+    @Override
+    public Boolean CheckUserClassWaiting(int userId, int classId) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(classId)
+                .orElseThrow(() -> new ResourceNotFoundException("Class not exist with id:" + classId));
+
+
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with id: " + userId);
+        }
+
+        ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
+        if (classLearner!= null) {
+            if(classLearner.getUser().getId() == userId && !classLearner.is_accepted()){
+                return true;}
+        }
         return false;
     }
 

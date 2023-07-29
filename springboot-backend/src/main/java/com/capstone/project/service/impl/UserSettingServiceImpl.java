@@ -1,19 +1,25 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Setting;
-import com.capstone.project.model.User;
-import com.capstone.project.model.UserSetting;
+import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
+import com.capstone.project.repository.AssignmentRepository;
+import com.capstone.project.repository.ClassLearnerRepository;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.repository.UserSettingRepository;
-import com.capstone.project.service.SettingService;
+import com.capstone.project.service.ClassService;
 import com.capstone.project.service.UserSettingService;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import com.capstone.project.util.UserSettingValidation;
@@ -21,13 +27,24 @@ import com.capstone.project.util.UserSettingValidation;
 @Service
 public class UserSettingServiceImpl implements UserSettingService {
 
+    private final JavaMailSender mailSender;
+
     private final UserSettingRepository userSettingRepository;
 
-    @Autowired
+    private final ClassLearnerRepository classLearnerRepository;
+
+    private final ClassService classService;
+    private final AssignmentRepository assignmentRepository;
+
     private UserRepository userRepository;
 
-    public UserSettingServiceImpl(UserSettingRepository userSettingRepository) {
+    @Autowired
+    public UserSettingServiceImpl(JavaMailSender mailSender, UserSettingRepository userSettingRepository, ClassLearnerRepository classLearnerRepository, ClassService classService, AssignmentRepository assignmentRepository) {
+        this.mailSender = mailSender;
         this.userSettingRepository = userSettingRepository;
+        this.classLearnerRepository = classLearnerRepository;
+        this.classService = classService;
+        this.assignmentRepository = assignmentRepository;
     }
 
     @Override
@@ -146,5 +163,102 @@ public class UserSettingServiceImpl implements UserSettingService {
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException("Invalid input, check id again");
         }
+    }
+
+    public void sendStudyReminderMail(UserSetting userSetting) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = userSetting.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            if(userSetting.getSetting().getId() == 1) {
+                subject = "[NihongoLevelUp]: Time to study";
+                content = "Hi [[name]],<br><br>"
+                        + "It's time to study, don't lose your momentum. Join with us and study new things <br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Start Studying</a><br><br>"
+                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                        + "Best regards,<br>"
+                        + "NihongoLevelUp Team";
+            }
+
+            if(userSetting.getSetting().getId() == 3) {
+                subject = "[NihongoLevelUp]: Assignment due date";
+                content = "Hi [[name]],<br><br>"
+                        + "Your assignment is due soon. Complete it before the time is due!<br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete assignment</a><br><br>"
+                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                        + "Best regards,<br>"
+                        + "NihongoLevelUp Team";
+            }
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", userSetting.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<Integer, Boolean> studyRemindMailSent = new HashMap<>();
+    @Scheduled(fixedRate = 10000)
+    public void sendStudyReminderMails() {
+        List<UserSetting> userSettings = userSettingRepository.findAll();
+
+        for (UserSetting userSetting : userSettings) {
+            int userSettingId = userSetting.getId();
+            String studytime = userSetting.getValue();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateTime = LocalDateTime.parse(studytime, formatter);
+            if (userSetting.getSetting().getId() == 1 && !studyRemindMailSent.getOrDefault(userSettingId, false)) {
+                if (isDateTimeReached(dateTime)) {
+                    sendStudyReminderMail(userSetting);
+                    studyRemindMailSent.put(userSettingId, true);
+                }
+            }
+        }
+    }
+
+
+    private Set<LocalDateTime> sentDueDates = new HashSet<>();
+    @Scheduled(fixedRate = 10000)
+    public void sendAssignmentDueDateMails() throws ResourceNotFroundException {
+        List<UserSetting> userSettings = userSettingRepository.findAll();
+
+        for (UserSetting userSetting : userSettings) {
+            int userSettingId = userSetting.getId();
+            ClassLearner classLearner = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
+            Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
+            List<Assignment> assignments = assignmentRepository.getAssignmentByClassroomId(classroom.getId());
+
+            for(Assignment assignment : assignments) {
+                String duedate= String.valueOf(assignment.getDue_date());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
+                if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && isDateTimeReached(duedateTime)) {
+                    sendStudyReminderMail(userSetting);
+                    sentDueDates.add(duedateTime);
+
+                }
+            }
+        }
+    }
+
+    private boolean isDateTimeReached(LocalDateTime dateTime) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return now.isEqual(dateTime) || now.isAfter(dateTime);
     }
 }

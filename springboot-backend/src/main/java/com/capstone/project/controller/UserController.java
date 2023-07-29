@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getUser(@PathVariable("username") String username) {
         try {
             return ResponseEntity.ok(userService.getUserByUsername(username));

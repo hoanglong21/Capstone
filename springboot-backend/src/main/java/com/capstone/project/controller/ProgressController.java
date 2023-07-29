@@ -69,4 +69,41 @@ public class ProgressController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/scoreprogress")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> updateScore(@RequestParam("userid") int userId,
+                                         @RequestParam("cardid") int cardId,
+                                         @RequestParam("score") int score) {
+        return ResponseEntity.ok(progressService.updateScore(userId, cardId, score));
+    }
+
+    @GetMapping("/customprogress")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> customUpdateProgress(@RequestParam("userid") int userId,
+                                                  @RequestParam("cardid") int cardId,
+                                                  @RequestParam("star") boolean isStar,
+                                                  @RequestParam("picture") String picture,
+                                                  @RequestParam("audio") String audio,
+                                                  @RequestParam("note") String note) {
+        return ResponseEntity.ok(progressService.customUpdateProgress(userId, cardId, isStar, picture, audio, note));
+    }
+
+    @GetMapping("/resetprogress")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> resetProgress(@RequestParam("userid") int userId,
+                                           @RequestParam("studysetid") int studySetId) {
+        return ResponseEntity.ok(progressService.resetProgress(userId, studySetId));
+    }
+
+    @GetMapping("/progressbyuserandcard")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> getProgressByUserIdAndCardId(@RequestParam("userid") int userId,
+                                                          @RequestParam("cardid") int cardId) {
+        try {
+            return ResponseEntity.ok(progressService.getProgressByUserIdAndCardId(userId, cardId));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
