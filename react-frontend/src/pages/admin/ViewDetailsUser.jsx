@@ -14,6 +14,11 @@ function ViewDetailsUser() {
   const [access, setAccess] = useState([]);
   const [learning, setLearning] = useState([]);
 
+  const [seriesDataHeapChart, setSeriesDataHeapChart] = useState([]);
+  // const [seriesDataLabel, setSeriesDataLabel] = useState([]);
+  // const [seriesDataChart, setSeriesDataChart] = useState([]);
+  // const [seriesRadar, setSeriesRadar] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       const temp = (await UserService.getUser(username)).data;
@@ -23,51 +28,6 @@ function ViewDetailsUser() {
       fetchData();
     }
   }, [username]);
-
-  useEffect(() => {
-    const fetchDataStudySetLearned = async () => {
-      try {
-        const temp = (await UserService.getStudySetLearnedStatistic(users.id))
-          .data;
-        setStudySetLearned(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataClassJoined = async () => {
-      try {
-        const temp = (await UserService.getClassJoinedStatistic(users.id)).data;
-        setClassJoined(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataAccess = async () => {
-      try {
-        const temp = (await UserService.getAccessStatistic(users.id)).data;
-        setAccess(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataLearning = async () => {
-      try {
-        const temp = (await UserService.getLearningStatistic(users.id)).data;
-        setLearning(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-    if (users.id) {
-      fetchDataStudySetLearned();
-      fetchDataClassJoined();
-      fetchDataAccess();
-      fetchDataLearning();
-    }
-  }, [users.id]);
 
   const optionsDataLabel = {
     plotOptions: {
@@ -89,7 +49,6 @@ function ViewDetailsUser() {
         colors: ["#304758"],
       },
     },
-
     xaxis: {
       categories: [
         "Jan",
@@ -176,8 +135,14 @@ function ViewDetailsUser() {
   ];
 
   const day = [
-    "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-  ]
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   const optionsDataChart = {
     xaxis: {
@@ -195,6 +160,7 @@ function ViewDetailsUser() {
       },
     },
   };
+
   const seriesDataChart = [
     {
       name: "Class Joined",
@@ -204,10 +170,10 @@ function ViewDetailsUser() {
 
   const optionRadar = {
     xaxis: {
-        categories: ["Kanji", "Vocabulary", "Grammar"]
-      }
+      categories: ["Kanji", "Vocabulary", "Grammar"],
+    },
   };
-   
+
   const seriesRadar = [
     {
       name: "Learning",
@@ -216,16 +182,88 @@ function ViewDetailsUser() {
   ];
 
   const optionDataHeapChart = {
-    colors: ["#008FFB"]
-  }
-
-  const seriesDataHeapChart = [
-    {
-      name: day,
-      data: [10, 10, 100, 10],
+    dataLabels: {
+      enabled: false,
     },
-  ];
+    colors: ["#008FFB"],
+  };
 
+  useEffect(() => {
+    const fetchDataStudySetLearned = async () => {
+      try {
+        const temp = (await UserService.getStudySetLearnedStatistic(users.id))
+          .data;
+        setStudySetLearned(temp);
+        // const tempSeriesDataLabel = [
+        //   {
+        //     name: "Person",
+        //     data: temp,
+        //   },
+        // ];
+        // setSeriesDataLabel(tempSeriesDataLabel);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    const fetchDataClassJoined = async () => {
+      try {
+        const temp = (await UserService.getClassJoinedStatistic(users.id)).data;
+        setClassJoined(temp);
+        // const tempSeriesDataChart = [
+        //   {
+        //     name: "Class Joined",
+        //     data: temp,
+        //   },
+        // ];
+        // setSeriesDataChart(tempSeriesDataChart);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    const fetchDataAccess = async () => {
+      try {
+        const temp = (await UserService.getAccessStatistic(users.id)).data;
+        setAccess(temp);
+        var tempSeriesDataHeapChart = []
+        for (let index = 0; index < day.length; index++) {
+          const tempDay = day[index];
+          const tempArr = temp[index];
+          tempSeriesDataHeapChart.push({
+            name: tempDay,
+            data: tempArr,
+          },)
+        }
+        setSeriesDataHeapChart(tempSeriesDataHeapChart);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    const fetchDataLearning = async () => {
+      try {
+        const temp = (await UserService.getLearningStatistic(users.id)).data;
+        setLearning(temp);
+        // const tempSeriesRadar = [
+        //   {
+        //     name: "Learning",
+        //     data: temp,
+        //   },
+        // ];
+        // setSeriesRadar(tempSeriesRadar);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    if (users.id) {
+      fetchDataStudySetLearned();
+      fetchDataClassJoined();
+      fetchDataAccess();
+      fetchDataLearning();
+    }
+  }, [users.id]);
 
   return (
     <div className="container-fluid">
@@ -366,12 +404,14 @@ function ViewDetailsUser() {
                       </h6>
                     </div>
                     <div className="card-body">
-                    <ReactApexChart
-                        options={optionDataHeapChart}
-                        series={seriesDataHeapChart}
-                        type="heatmap"
-                        height={350}
-                      />
+                      {seriesDataHeapChart?.length > 0 && (
+                        <ReactApexChart
+                          options={optionDataHeapChart}
+                          series={seriesDataHeapChart}
+                          type="heatmap"
+                          height={350}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -385,12 +425,14 @@ function ViewDetailsUser() {
                       </h6>
                     </div>
                     <div className="card-body">
-                      <ReactApexChart
-                        options={optionsDataLabel}
-                        series={seriesDataLabel}
-                        type="bar"
-                        height={350}
-                      />
+                      {seriesDataLabel?.length > 0 && (
+                        <ReactApexChart
+                          options={optionsDataLabel}
+                          series={seriesDataLabel}
+                          type="bar"
+                          height={350}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -402,12 +444,12 @@ function ViewDetailsUser() {
                       </h6>
                     </div>
                     <div className="card-body">
-                      <ReactApexChart
-                        options={optionsDataChart}
-                        series={seriesDataChart}
-                        type="bar"
-                        height={350}
-                      />
+                        <ReactApexChart
+                          options={optionsDataChart}
+                          series={seriesDataChart}
+                          type="bar"
+                          height={350}
+                        />
                     </div>
                   </div>
                 </div>
@@ -420,12 +462,12 @@ function ViewDetailsUser() {
                         </h6>
                       </div>
                       <div className="card-body">
-                      <ReactApexChart
-                        options={optionRadar}
-                        series={seriesRadar}
-                        type="radar"
-                        height={350}
-                      />
+                          <ReactApexChart
+                            options={optionRadar}
+                            series={seriesRadar}
+                            type="radar"
+                            height={350}
+                          />
                       </div>
                     </div>
                   </div>
