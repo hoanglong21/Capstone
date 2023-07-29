@@ -56,8 +56,11 @@ const CreateTest = () => {
     }
 
     function toFEDate(date) {
-        const index = date?.lastIndexOf(':00.')
-        return date?.replace(' ', 'T').substring(0, index)
+        return date ? date?.replace(' ', 'T') : ''
+    }
+
+    function toBEDate(date) {
+        return date ? date?.replace(/\s/g, 'T') + '.000' + '+07:00' : ''
     }
 
     // fetch data
@@ -67,24 +70,56 @@ const CreateTest = () => {
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
                 if (test_id) {
-                    const tempTest = (await TestService.getTestById(test_id))
-                        .data
+                    var tempTest = (await TestService.getTestById(test_id)).data
+                    const testClassCreated = toBEDate(
+                        tempTest.classroom.created_date
+                    )
+                    const testClassUserCreated = toBEDate(
+                        tempTest.classroom.user.created_date
+                    )
+                    const testUserCreated = toBEDate(tempTest.user.created_date)
+                    const testCreated = toBEDate(tempTest.created_date)
+                    const testModified = toBEDate(tempTest.modified_date)
+                    const testStart = toBEDate(tempTest.start_date)
+                    const testDue = toBEDate(tempTest.due_date)
+                    tempTest.classroom.created_date = testClassCreated
+                    tempTest.classroom.user.created_date = testClassUserCreated
+                    tempTest.user.created_date = testUserCreated
                     setTest({
                         ...tempTest,
                         start_date: toFEDate(tempTest.start_date),
                         created_date: toFEDate(tempTest.created_date),
-                        due_date: tempTest.due_date
-                            ? toFEDate(tempTest.due_date)
-                            : null,
+                        due_date: toFEDate(tempTest.due_date),
                     })
                     const tempQuestions = (
                         await QuestionService.getAllByTestId(tempTest.id)
                     ).data
                     var tempUpdateQuestions = []
-                    for (const ques of tempQuestions) {
-                        const tempAnswers = (
+                    for (var ques of tempQuestions) {
+                        // change date format
+                        ques.test.classroom.created_date = testClassCreated
+                        ques.test.classroom.user.created_date =
+                            testClassUserCreated
+                        ques.test.user.created_date = testUserCreated
+                        ques.test.created_date = testCreated
+                        ques.test.modified_date = testModified
+                        ques.test.start_date = testStart
+                        ques.test.due_date = testDue
+                        var tempAnswers = (
                             await AnswerService.getAllByQuestionId(ques.id)
                         ).data
+                        for (var ans of tempAnswers) {
+                            ans.question.test.classroom.created_date =
+                                testClassCreated
+                            ans.question.test.classroom.user.created_date =
+                                testClassUserCreated
+                            ans.question.test.user.created_date =
+                                testUserCreated
+                            ans.question.test.created_date = testCreated
+                            ans.question.test.modified_date = testModified
+                            ans.question.test.start_date = testStart
+                            ans.question.test.due_date = testDue
+                        }
                         tempUpdateQuestions.push({
                             ...ques,
                             answers: tempAnswers,
@@ -138,7 +173,7 @@ const CreateTest = () => {
     // handle sticky header
     useEffect(() => {
         const handleScroll = () => {
-            setIsScroll(window.scrollY > 250)
+            setIsScroll(window.scrollY > 200)
         }
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
@@ -150,7 +185,6 @@ const CreateTest = () => {
         // check duration > 0
         if (test?.duration && test?.duration <= 0) {
             setError('Duration must be a positive number')
-            navigate('#first')
             return
         }
         // check num attempts > 0
@@ -159,13 +193,11 @@ const CreateTest = () => {
             (test?.num_attemps <= 0 || !Number.isInteger(test?.num_attemps))
         ) {
             setError('Number of attempts must be a positive integer number')
-            navigate('#first')
             return
         }
         // check question.length > 0
         if (questions?.length <= 0) {
             setError('There must be at least one question')
-            navigate('#first')
             return
         }
         for (let indexQues = 0; indexQues < questions?.length; indexQues++) {
@@ -175,15 +207,13 @@ const CreateTest = () => {
                 setError(
                     `The content of <a href="#question${indexQues}">this</a> question cannot be left blank.`
                 )
-                navigate('#first')
                 return
             }
             // check answer length of multiple choice
-            if (ques?.answers?.length < 2 && ques?.questionType === 1) {
+            if (ques?.answers?.length < 2 && ques?.questionType?.id === 2) {
                 setError(
                     `Please add at least 2 answer options for <a href="#question${indexQues}">this</a> question.`
                 )
-                navigate('#first')
                 return
             }
             var isSelectCorrectAns = false
@@ -198,7 +228,6 @@ const CreateTest = () => {
                     setError(
                         `The answer to <a href="#question${indexQues}">this</a> question cannot be left blank.`
                     )
-                    navigate('#first')
                     return
                 }
                 if (ans?._true) {
@@ -210,7 +239,6 @@ const CreateTest = () => {
                 setError(
                     `Please mark the correct answer to <a href="#question${indexQues}">this</a> question.`
                 )
-                navigate('#first')
                 return
             }
         }
@@ -219,6 +247,10 @@ const CreateTest = () => {
             await TestService.updateTest(test.id, {
                 ...test,
                 _draft: false,
+                created_date: toBEDate(test.created_date),
+                modified_date: toBEDate(test.modified_date),
+                start_date: toBEDate(test.start_date),
+                due_date: toBEDate(test.due_date),
             })
             navigate('../tests')
             // clear
@@ -240,7 +272,13 @@ const CreateTest = () => {
     const handleUpdateTest = async () => {
         setSaving(true)
         try {
-            await TestService.updateTest(test.id, test)
+            await TestService.updateTest(test.id, {
+                ...test,
+                created_date: toBEDate(test.created_date),
+                modified_date: toBEDate(test.modified_date),
+                start_date: toBEDate(test.start_date),
+                due_date: toBEDate(test.due_date),
+            })
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -292,7 +330,7 @@ const CreateTest = () => {
                 await QuestionService.createQuestion({
                     question: '',
                     questionType: {
-                        id: 1,
+                        id: 3,
                     },
                     picture: null,
                     audio: null,
@@ -302,22 +340,24 @@ const CreateTest = () => {
                     },
                 })
             ).data
-            const answers = await AnswerService.createAnswers([
-                {
-                    question: {
-                        id: ques.id,
+            const answers = (
+                await AnswerService.createAnswers([
+                    {
+                        question: {
+                            id: ques.id,
+                        },
+                        content: 'True',
+                        _true: false,
                     },
-                    content: 'True',
-                    _true: false,
-                },
-                {
-                    question: {
-                        id: ques.id,
+                    {
+                        question: {
+                            id: ques.id,
+                        },
+                        content: 'False',
+                        _true: false,
                     },
-                    content: 'False',
-                    _true: false,
-                },
-            ])
+                ])
+            ).data
             setQuestions([
                 ...questions,
                 {
@@ -342,7 +382,7 @@ const CreateTest = () => {
                 await QuestionService.createQuestion({
                     question: '',
                     questionType: {
-                        id: 3,
+                        id: 1,
                     },
                     picture: null,
                     audio: null,
@@ -642,13 +682,15 @@ const CreateTest = () => {
                 </div>
                 {test?._draft ? (
                     <div className="d-flex">
-                        <button
-                            className="createTest_submitBtn"
-                            onClick={handleCreate}
-                            disabled={!test?.title}
-                        >
-                            Create
-                        </button>
+                        <a href="#first">
+                            <button
+                                className="createTest_submitBtn"
+                                onClick={handleCreate}
+                                disabled={!test?.title}
+                            >
+                                Create
+                            </button>
+                        </a>
                         <button
                             className="createTest_draftBtn"
                             onClick={() => {
@@ -659,17 +701,19 @@ const CreateTest = () => {
                         </button>
                     </div>
                 ) : (
-                    <button
-                        className="createTest_submitBtn"
-                        onClick={handleCreate}
-                        disabled={!test?.title}
-                    >
-                        Save
-                    </button>
+                    <a href="#first">
+                        <button
+                            className="createTest_submitBtn"
+                            onClick={handleCreate}
+                            disabled={!test?.title}
+                        >
+                            Save
+                        </button>
+                    </a>
                 )}
             </div>
             {/* Test */}
-            <div className="card mt-4" id="#first">
+            <div className="card mt-4" id="first">
                 <div className="card-body p-4">
                     {error && (
                         <div
@@ -800,7 +844,7 @@ const CreateTest = () => {
                 </div>
             </div>
             {/* Question */}
-            {questions.map((ques, quesIndex) => (
+            {questions?.map((ques, quesIndex) => (
                 <div
                     className="card mt-4"
                     key={quesIndex}
@@ -979,7 +1023,7 @@ const CreateTest = () => {
                             )}
                         </div>
                         {/* true false answer */}
-                        {ques?.questionType?.id === 1 && (
+                        {ques?.questionType?.id === 3 && (
                             <div>
                                 {ques?.answers?.map((ans, ansIndex) => (
                                     <div key={ansIndex}>
@@ -1293,7 +1337,7 @@ const CreateTest = () => {
                             </div>
                         )}
                         {/* Written answer */}
-                        {ques?.questionType?.id === 3 && (
+                        {ques?.questionType?.id === 1 && (
                             <div className="createTest_formGroup-sm d-flex align-items-center w-100">
                                 <input
                                     type="text"
@@ -1303,6 +1347,9 @@ const CreateTest = () => {
                                     onChange={(event) =>
                                         handleChangeAnswer(event, quesIndex, 0)
                                     }
+                                    onBlur={() => {
+                                        handleUpdateAnswer(ques?.answers[0])
+                                    }}
                                 />
                             </div>
                         )}
