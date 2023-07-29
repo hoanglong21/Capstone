@@ -70,7 +70,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     }
 
     @Override
-    public List<ClassLearner> getClassLeanerByUserId(int id) {
+    public ClassLearner getClassLeanerByUserId(int id) {
         return classLearnerRepository.getClassLeanerByUserId(id);
     }
 

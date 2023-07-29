@@ -281,6 +281,25 @@ public class ClassServiceImpl implements ClassService {
         return false;
     }
 
+    @Override
+    public Boolean CheckUserClassWaiting(int userId, int classId) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(classId)
+                .orElseThrow(() -> new ResourceNotFoundException("Class not exist with id:" + classId));
+
+
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new ResourceNotFroundException("User not exist with id: " + userId);
+        }
+
+        ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
+        if (classLearner!= null) {
+            if(classLearner.getUser().getId() == userId && !classLearner.is_accepted()){
+                return true;}
+        }
+        return false;
+    }
+
 
 }
 

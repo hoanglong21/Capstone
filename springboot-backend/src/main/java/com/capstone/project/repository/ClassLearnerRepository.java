@@ -11,5 +11,5 @@ import java.util.List;
 public interface ClassLearnerRepository extends JpaRepository<ClassLearner,Integer> {
     ClassLearner findByUserIdAndClassroomId(int user,int classroom);
 
-    List<ClassLearner> getClassLeanerByUserId(int id);
+    ClassLearner getClassLeanerByUserId(int id);
 }
