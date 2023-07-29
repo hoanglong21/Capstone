@@ -1,5 +1,7 @@
 package com.capstone.project.model;
 
+import com.capstone.project.dto.AssignmentRequest;
+import com.capstone.project.dto.ClassRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +12,24 @@ import org.hibernate.annotations.Formula;
 import java.util.Date;
 import java.util.List;
 
+@SqlResultSetMapping(
+        name = "AssignmentCustomListMapping",
+        classes = @ConstructorResult(
+                targetClass = AssignmentRequest.class,
+                columns = {
+                        @ColumnResult(name = "id", type = Integer.class),
+                        @ColumnResult(name = "title", type = String.class),
+                        @ColumnResult(name = "due_date", type = Date.class),
+                        @ColumnResult(name = "created_date", type = Date.class),
+                        @ColumnResult(name = "instruction", type = String.class),
+                        @ColumnResult(name = "modified_date", type =Date.class),
+                        @ColumnResult(name = "start_date", type = Date.class),
+                        @ColumnResult(name = "is_draft", type = Boolean.class),
+                        @ColumnResult(name = "numbersubmit", type = Integer.class),
+                        @ColumnResult(name = "author", type = String.class)
+                }
+        )
+)
 @Entity
 @Data
 @AllArgsConstructor

@@ -168,7 +168,10 @@ public class AssignmentServiceImpl implements AssignmentService {
                                                    Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="SELECT a.* FROM assignment a LEFT JOIN user u on u.id = a.author_id where 1=1";
+        String query ="SELECT a.*, COUNT(s.id) as numbersubmit, u.username as author FROM assignment a \n" +
+                "LEFT JOIN user u on u.id = a.author_id \n" +
+                "LEFT JOIN submission s on s.assignment_id = a.id\n" +
+                "GROUP BY a.id,s.is_done HAVING 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
 
@@ -212,9 +215,9 @@ public class AssignmentServiceImpl implements AssignmentService {
             parameters.put("toCreated", toCreated);
         }
 
-        query += " ORDER BY " + sortBy + " " + direction;
+        query += " AND s.is_done = true ORDER BY " + sortBy + " " + direction;
 
-        Query q = em.createNativeQuery(query, Assignment.class);
+        Query q = em.createNativeQuery(query, "AssignmentCustomListMapping");
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             q.setParameter(entry.getKey(), entry.getValue());
         }
@@ -235,5 +238,36 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         return response;
     }
+
+    @Override
+    public Map<String, Object> getNumSubmitAssignment(int assignmentid) throws ResourceNotFroundException {
+        String query ="SELECT COUNT(CASE WHEN is_done = true THEN 1 END) AS submitted,\n" +
+                "       COUNT(CASE WHEN is_done = false THEN 1 END) AS notsubmitted\n" +
+                "FROM submission s inner join assignment a on s.assignment_id = a.id";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (assignmentid != 0) {
+            query += " WHERE a.id = :assignmentId";
+            parameters.put("assignmentId", assignmentid);
+        }
+        Query q = em.createNativeQuery(query);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        Object[] result = (Object[]) q.getSingleResult();
+
+        Long submittedCount = ((Number) result[0]).longValue();
+        Long notSubmittedCount = ((Number) result[1]).longValue();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("submitted", submittedCount);
+        response.put("notsubmitted", notSubmittedCount);
+
+        return response;
+    }
+
+
 }
 

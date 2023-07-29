@@ -26,4 +26,6 @@ public interface AssignmentService {
 
     Map<String, Object> getFilterAssignment(String search, String author, String fromStart, String toStart, String fromCreated, String toCreated,
                                             Boolean isDraft, String direction, String sortBy, int classid, int page, int size) throws ResourceNotFroundException;
+
+    Map<String, Object> getNumSubmitAssignment(int id) throws ResourceNotFroundException;
 }

@@ -73,6 +73,16 @@ public class SubmissionController {
     }
     }
 
+    @GetMapping("/submissionbyauthorandassignment")
+    public ResponseEntity<?> getSubmissionByAuthorIdandAssignmentId(@RequestParam(value = "authorid", required = false) int authorid,
+                                                                    @RequestParam(value = "assignmentid", required = false) int  assignmentid) {
+        try {
+            return ResponseEntity.ok(submissionService.getByAuthorIdandAssignmentId(authorid,assignmentid));
+        } catch (ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     @PutMapping("/submissions/{id}")
     public ResponseEntity<?> updateSubmission(@Valid @RequestBody SubmissionRequest submissionRequest, @PathVariable int id,BindingResult result) {

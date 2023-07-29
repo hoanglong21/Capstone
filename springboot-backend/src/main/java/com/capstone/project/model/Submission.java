@@ -41,6 +41,8 @@ public class Submission {
     @Column(columnDefinition="TEXT")
     private String description;
 
+    private boolean is_done;
+
     @Column
     private double mark;
 }
