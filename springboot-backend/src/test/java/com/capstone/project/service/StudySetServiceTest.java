@@ -281,7 +281,7 @@ public class StudySetServiceTest {
 
         List<Map<String, Object>> response = null;
         try {
-            response = studySetServiceImpl.getQuizByStudySetId(1, new int[]{1}, 1);
+            response = studySetServiceImpl.getQuizByStudySetId(1, new int[]{1}, 1, 1);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
