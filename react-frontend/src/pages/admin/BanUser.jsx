@@ -5,14 +5,19 @@ import { useNavigate } from "react-router-dom";
 const BanUser = ({ user }) => {
   let navigate = useNavigate();
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false)
+  const [banUser, setBanUser] = useState({});
 
-  const handleSubmit = async () => {
-    setLoading(true)
+  useEffect(() => {
+    if (user.username) {
+      setBanUser({ ...user });
+    }
+  }, [user]);
+
+  const handleBan = async () => {
     try {
       await UserService.banUser(user.username);
-      document.getElementById(`banModal${user?.username}`).click();
-      navigate("/");
+      document.getElementsById(`closeUserModal${user?.username}`).click()
+      navigate("/")
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);
@@ -20,28 +25,34 @@ const BanUser = ({ user }) => {
         setError(error.message);
       }
     }
-    
-    setLoading(false)
   };
+  
   return (
-    <div class="modal" tabindex="-1" role="dialog" id={`banModal${user?.username}`}>
+    <div
+      class="modal"
+      tabindex="-1"
+      role="dialog"
+      id={`banModal${user?.username}`}
+    >
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">BAN USER</h5>
             <button
-              type="button"
               id={`closeUserModal${user?.username}`}
+              type="button"
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
           </div>
           <div class="modal-body">
-            <p>Are you sure ban {user.username} ?</p>
+            <p>
+              Are you sure ban <strong>{user.username}</strong> ?
+            </p>
           </div>
           <div class="modal-footer">
-          <button
+            <button
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
@@ -49,31 +60,14 @@ const BanUser = ({ user }) => {
             >
               Cancel
             </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              onClick={handleSubmit}
-              disabled={loading}
-              >
-                  {loading ? (
-                      <div
-                          className="spinner-border text-secondary mx-auto mb-1"
-                          role="status"
-                          id="loading"
-                      >
-                          <span className="visually-hidden">
-                              Loading...
-                          </span>
-                      </div>
-                  ) : (
-                      'Delete'
-                  )}
+            <button type="button" class="btn btn-danger" onClick={handleBan}>
+              Ban
             </button>
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default BanUser;

@@ -18,6 +18,14 @@ export const banUser = (username) => {
     })
 }
 
+export const recoverUser = (username) => {
+    return axios.get(API_BASE_URL + '/users/' + username + '/recover', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 
 export const updateUser = (username, userDetails) => {
     return axios.put(API_BASE_URL + '/users/' + username, userDetails, {
@@ -165,6 +173,8 @@ const UserService = {
     deleteUser,
     sendResetPasswordEmail,
     filterUser,
+    banUser, 
+    recoverUser,
     getClassJoinedStatistic,
     getStudySetLearnedStatistic,
     getAccessStatistic,

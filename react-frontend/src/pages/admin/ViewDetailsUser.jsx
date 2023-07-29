@@ -5,7 +5,6 @@ import HeaderAdmin from "./HeaderAdmin";
 import UserService from "../../services/UserService";
 import defaultAvatar from "../../assets/images/avatar-default.jpg";
 import ReactApexChart from "react-apexcharts";
-import ApexCharts from "apexcharts";
 
 function ViewDetailsUser() {
   const [users, setUsers] = useState([]);
@@ -69,7 +68,6 @@ function ViewDetailsUser() {
       fetchDataLearning();
     }
   }, [users.id]);
-  console.log(access);
 
   const optionsDataLabel = {
     plotOptions: {
@@ -217,117 +215,17 @@ function ViewDetailsUser() {
     },
   ];
 
-  // const optionDataHeapChart = {
-    
-  // }
+  const optionDataHeapChart = {
+    colors: ["#008FFB"]
+  }
 
-  // const seriesDataHeapChart = [
-    
-  // ];
+  const seriesDataHeapChart = [
+    {
+      name: day,
+      data: [10, 10, 100, 10],
+    },
+  ];
 
-  function generateData(count, yrange) {
-    var i = 0;
-    var series = [];
-    while (i < count) {
-      var x = (i + 1).toString();
-      var y =
-      Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-
-      series.push({
-        x: x,
-        y: y
-      });
-      i++;
-    }
-    return series;
-    }
-
-  var optionHeatMap = {
-    series: [{
-    name: day,
-    data: generateData(7, {
-      min: 0,
-      max: 90
-    })
-  },
-  // {
-  //   name: 'Metric2',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // },
-  // {
-  //   name: 'Metric3',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // },
-  // {
-  //   name: 'Metric4',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // },
-  // {
-  //   name: 'Metric5',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // },
-  // {
-  //   name: 'Metric6',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // },
-  // {
-  //   name: 'Metric7',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // },
-  // {
-  //   name: 'Metric8',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // },
-  // {
-  //   name: 'Metric9',
-  //   data: generateData(18, {
-  //     min: 0,
-  //     max: 90
-  //   })
-  // }
-  ],
-    chart: {
-    height: 350,
-    type: 'heatmap',
-  },
-  dataLabels: {
-    enabled: false
-  },
-  colors: ["#008FFB"],
-  };
-
-  useEffect(() => {
-    initializeChartHeatMap();
-  });
-
-  const initializeChartHeatMap = () => {
-    const chartOrigin = document.querySelector("#chartMap");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, optionHeatMap);
-      chart.render();
-    }
-  };
 
   return (
     <div className="container-fluid">
@@ -468,11 +366,12 @@ function ViewDetailsUser() {
                       </h6>
                     </div>
                     <div className="card-body">
-                    <div
-                        className="chart-area"
-                        id="chartMap"
-                        style={{ height: "300px", width: "100%" }}
-                      ></div>
+                    <ReactApexChart
+                        options={optionDataHeapChart}
+                        series={seriesDataHeapChart}
+                        type="heatmap"
+                        height={350}
+                      />
                     </div>
                   </div>
                 </div>

@@ -26,7 +26,7 @@ function ManageUser() {
             '',
             '',
             '',
-            '=active,pending',
+            '',
             '',
             '',
             '',
@@ -66,7 +66,7 @@ useEffect(() => {
                 </thead>
                 <tbody>
                 {users?.length === 0 && (
-                                        <p>No sets matching {search} found</p>
+                                        <p>No data matching {search} found</p>
                                     )}
                   {users?.map((user) => (
                     <tr>
@@ -90,11 +90,12 @@ useEffect(() => {
                           type="button"
                           className="btn btn-success me-3"
                           data-bs-toggle="modal"
-                          data-bs-target="#unbanModal"
+                          data-bs-target={`#unbanModal${user?.username}`}
                         >
                           <i class="bi bi-person-fill-check me-2"></i>
                           Unban
                         </button>
+                        <UnBanUser user={user}/>
                         <button
                           type="button"
                           className="btn btn-danger "
@@ -112,7 +113,6 @@ useEffect(() => {
 
               </table>
             </div>
-            <UnBanUser />
           </div>
         </div>
       </div>
