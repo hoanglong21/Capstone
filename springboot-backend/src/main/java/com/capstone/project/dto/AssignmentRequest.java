@@ -28,6 +28,9 @@ public class AssignmentRequest {
     @Length(min = 2, message = "Title must have at least 2 characters")
     private String title;
 
+    private Date created_date;
+
+    private Date modified_date;
 
 
 //    @FutureOrPresent
@@ -36,6 +39,9 @@ public class AssignmentRequest {
     private Date start_date;
 
     private boolean is_draft;
+
+    int submitted;
+    int notsubmitted;
 
 
 //    @Future
@@ -46,6 +52,9 @@ public class AssignmentRequest {
 //    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = " Can only contain letters, numbers, and spaces")
     private String instruction;
 
+    int numbersubmit;
+
+    String author;
 
     public String getTitle() {
         if (title != null) {
