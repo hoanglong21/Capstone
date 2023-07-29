@@ -13,6 +13,8 @@ const Submissions = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [assignment, setAssignment] = useState({})
+    const [attachments, setAttachments] = useState([])
+    const [loadingUploadFile, setLoadingUploadFile] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,6 +25,18 @@ const Submissions = () => {
         }
         fetchData()
     }, [id])
+
+    const handleUploadFile = async (event) => {
+        setLoadingUploadFile(true)
+        const file = event.target.files[0]
+        if (file) {
+            setAttachments([
+                ...attachments,
+                { file_name: file.name, file_type: file.type, file: file },
+            ])
+        }
+        setLoadingUploadFile(false)
+    }
 
     return (
         <div>
@@ -39,13 +53,43 @@ const Submissions = () => {
                                 <div className="submission_heading">
                                     Your work
                                 </div>
-                                <button className="submission_btn d-flex align-items-center justify-content-center w-100 mt-3">
-                                    <AddIcon
-                                        size="18px"
-                                        strokeWidth="2"
-                                        className="me-2"
-                                    />
-                                    Add
+                                <input
+                                    type="file"
+                                    id="uploadSubmissionFile"
+                                    className="postUpload"
+                                    onChange={handleUploadFile}
+                                />
+                                <button
+                                    disabled={loadingUploadFile}
+                                    className="w-100 submission_btn d-flex align-items-center justify-content-center mt-3"
+                                >
+                                    <label
+                                        htmlFor="uploadSubmissionFile"
+                                        className=""
+                                    >
+                                        {loadingUploadFile ? (
+                                            <div
+                                                className="spinner-border spinner-border-sm text-secondary"
+                                                role="status"
+                                            >
+                                                <span className="visually-hidden">
+                                                    LoadingUpload...
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <AddIcon
+                                                    size="18px"
+                                                    strokeWidth="2"
+                                                    className="me-2"
+                                                />
+                                                Add
+                                            </div>
+                                        )}
+                                    </label>
+                                </button>
+                                <button className="submission_doneBtn w-100 mt-2">
+                                    Mark as done
                                 </button>
                             </div>
                         </div>

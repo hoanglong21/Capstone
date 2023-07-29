@@ -11,7 +11,9 @@ const login = (user) => {
 }
 
 const logout = () => {
+    const temptToken = localStorage.getItem('token')
     localStorage.removeItem('token')
+    return axios.get(API_BASE_URL + '/logout', temptToken)
 }
 
 const AuthService = {
