@@ -99,18 +99,19 @@ useEffect(() => {
                           type="button"
                           className="btn btn-danger "
                           data-bs-toggle="modal"
-                          data-bs-target="#banModal"
+                          data-bs-target={`#banModal${user?.username}`}
                         >
                           <i class="bi bi-person-fill-slash me-2"></i>
                           Ban
                         </button>
+                        <BanUser user={user}/>
                       </td>
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             </div>
-            <BanUser />
             <UnBanUser />
           </div>
         </div>
