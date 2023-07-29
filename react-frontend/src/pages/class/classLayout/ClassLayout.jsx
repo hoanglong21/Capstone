@@ -15,6 +15,7 @@ import {
     OptionHorIcon,
     ReportIcon,
     StudySetIcon,
+    UnenrollIcon,
 } from '../../../components/icons'
 import './classLayout.css'
 
@@ -128,23 +129,43 @@ const ClassLayout = () => {
                                 <li>
                                     <hr className="dropdown-divider" />
                                 </li>
-                                <li>
-                                    <button
-                                        className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
-                                        type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteClassModal"
-                                    >
-                                        <DeleteIcon
-                                            className="me-3"
-                                            size="1.3rem"
-                                            strokeWidth="2"
-                                        />
-                                        <span className="align-middle fw-semibold">
-                                            Delete
-                                        </span>
-                                    </button>
-                                </li>
+                                {userInfo?.id === classroom?.user?.id ? (
+                                    <li>
+                                        <button
+                                            className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteClassModal"
+                                        >
+                                            <DeleteIcon
+                                                className="me-3"
+                                                size="1.3rem"
+                                                strokeWidth="2"
+                                            />
+                                            <span className="align-middle fw-semibold">
+                                                Delete
+                                            </span>
+                                        </button>
+                                    </li>
+                                ) : (
+                                    <li>
+                                        <button
+                                            className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteClassModal"
+                                        >
+                                            <UnenrollIcon
+                                                className="me-3"
+                                                size="1.3rem"
+                                                strokeWidth="2"
+                                            />
+                                            <span className="align-middle fw-semibold">
+                                                Unenroll
+                                            </span>
+                                        </button>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     ) : (
@@ -219,34 +240,42 @@ const ClassLayout = () => {
                                         </span>
                                     </NavLink>
                                 </li>
-                                <li>
-                                    <NavLink
-                                        to="mark"
-                                        className={
-                                            'mainClass_navlink ' +
-                                            (({ isActive }) =>
-                                                isActive ? 'active' : '')
-                                        }
-                                    >
-                                        <span className="align-middle">
-                                            Mark
-                                        </span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <NavLink
-                                        to="statistics"
-                                        className={
-                                            'mainClass_navlink ' +
-                                            (({ isActive }) =>
-                                                isActive ? 'active' : '')
-                                        }
-                                    >
-                                        <span className="align-middle">
-                                            Statistics
-                                        </span>
-                                    </NavLink>
-                                </li>
+                                {userInfo?.id === classroom?.user?.id && (
+                                    <div className="d-flex">
+                                        <li>
+                                            <NavLink
+                                                to="grades"
+                                                className={
+                                                    'mainClass_navlink ' +
+                                                    (({ isActive }) =>
+                                                        isActive
+                                                            ? 'active'
+                                                            : '')
+                                                }
+                                            >
+                                                <span className="align-middle">
+                                                    Grades
+                                                </span>
+                                            </NavLink>
+                                        </li>
+                                        <li>
+                                            <NavLink
+                                                to="statistics"
+                                                className={
+                                                    'mainClass_navlink ' +
+                                                    (({ isActive }) =>
+                                                        isActive
+                                                            ? 'active'
+                                                            : '')
+                                                }
+                                            >
+                                                <span className="align-middle">
+                                                    Statistics
+                                                </span>
+                                            </NavLink>
+                                        </li>
+                                    </div>
+                                )}
                             </ul>
                         </div>
                         <div className="mt-4">
@@ -256,7 +285,7 @@ const ClassLayout = () => {
                 ) : (
                     <div className="row mt-5">
                         <div className="col-8 text-center">
-                            <h3 className='mainClass_infoTitle'>
+                            <h3 className="mainClass_infoTitle">
                                 Join this class to get access to its content
                             </h3>
                         </div>

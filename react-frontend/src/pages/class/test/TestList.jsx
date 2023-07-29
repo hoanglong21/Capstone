@@ -1,12 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import ClassService from '../../../services/ClassService'
 import TestService from '../../../services/TestService'
 
 import DeleteTest from './DeleteTest'
 
-import { AddIcon } from '../../../components/icons'
+import { AccountIcon, AddIcon } from '../../../components/icons'
 import empty from '../../../assets/images/assign_empty.jpg'
 import './test.css'
 
@@ -14,6 +15,8 @@ const TestList = () => {
     const navigate = useNavigate()
 
     const { id } = useParams()
+
+    const { userInfo } = useSelector((state) => state.user)
 
     const [tests, setTests] = useState([])
     const [classroom, setClassroom] = useState({})
@@ -46,19 +49,32 @@ const TestList = () => {
     return (
         <div>
             <div>
-                <button
-                    className="createTest_btn"
-                    onClick={() => {
-                        navigate('../create-test')
-                    }}
-                >
-                    <AddIcon
-                        className="createTestIcon_btn"
-                        size="1.125rem"
-                        strokeWidth="2.25"
-                    />
-                    Create
-                </button>
+                {userInfo?.id === classroom?.user?.id ? (
+                    <button
+                        className="createTest_btn"
+                        onClick={() => {
+                            navigate('../create-test')
+                        }}
+                    >
+                        <AddIcon
+                            className="createTestIcon_btn"
+                            size="1.125rem"
+                            strokeWidth="2.25"
+                        />
+                        Create
+                    </button>
+                ) : (
+                    <div>
+                        <button className="btn btn-outline-primary fw-semibold d-flex align-items-center">
+                            <AccountIcon
+                                className="createAssignIcon_btn"
+                                size="20px"
+                                strokeWidth="2.25"
+                            />
+                            <span>View your work</span>
+                        </button>
+                    </div>
+                )}
             </div>
             {tests?.length === 0 && (
                 <div className="emptyTests_container d-flex flex-column align-items-center justify-content-center">
@@ -110,43 +126,49 @@ const TestList = () => {
                                     <button className="viewTest_btn">
                                         View details
                                     </button>
-                                    <div className="d-flex">
-                                        <div className="asignInfo_block">
-                                            <div className="assignInfo_number">
-                                                0
+                                    {userInfo?.id === classroom?.user?.id && (
+                                        <div className="d-flex">
+                                            <div className="asignInfo_block">
+                                                <div className="assignInfo_number">
+                                                    0
+                                                </div>
+                                                <div className="assignInfo_title">
+                                                    Turned in
+                                                </div>
                                             </div>
-                                            <div className="assignInfo_title">
-                                                Turned in
+                                            <div className="asignInfo_block">
+                                                <div className="assignInfo_number">
+                                                    1
+                                                </div>
+                                                <div className="assignInfo_title">
+                                                    Assigned
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="asignInfo_block">
-                                            <div className="assignInfo_number">
-                                                1
-                                            </div>
-                                            <div className="assignInfo_title">
-                                                Assigned
-                                            </div>
-                                        </div>
+                                    )}
+                                </div>
+                                {userInfo?.id === classroom?.user?.id && (
+                                    <div className="mt-5 d-flex justify-content-between">
+                                        <button
+                                            className="editTest_btn"
+                                            onClick={() => {
+                                                navigate(
+                                                    `../edit-test/${test?.id}`
+                                                )
+                                            }}
+                                        >
+                                            Edit test
+                                        </button>
+                                        <button
+                                            className="deleteTest_btn"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target={`#deleteTestModal${test?.id}`}
+                                        >
+                                            Delete test
+                                        </button>
                                     </div>
-                                </div>
-                                <div className="mt-5 d-flex justify-content-between">
-                                    <button
-                                        className="editTest_btn"
-                                        onClick={() => {
-                                            navigate(`../edit-test/${test?.id}`)
-                                        }}
-                                    >
-                                        Edit test
-                                    </button>
-                                    <button
-                                        className="deleteTest_btn"
-                                        type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target={`#deleteTestModal${test?.id}`}
-                                    >
-                                        Delete test
-                                    </button>
-                                </div>
+                                )}
                             </div>
                             <DeleteTest
                                 index={index}

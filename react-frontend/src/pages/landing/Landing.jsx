@@ -51,7 +51,6 @@ const Landing = () => {
                                 role="button"
                                 tabIndex="0"
                                 to="/login"
-                                onClick="return true"
                             >
                                 <span>Start With Us</span>
                             </Link>
@@ -92,7 +91,6 @@ const Landing = () => {
                                 role="button"
                                 tabIndex="0"
                                 to="/sets"
-                                onClick="return true"
                             >
                                 <span>Explore More</span>
                             </Link>

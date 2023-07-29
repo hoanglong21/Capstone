@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom'
 import ClassService from '../../services/ClassService'
 import PostService from '../../services/PostService'
 import { uploadFile } from '../../features/fileManagement'
+import AttachmentService from '../../services/AttachmentService'
 
 import Post from './post/Post'
 import PostEditor from '../../components/textEditor/PostEditor'
@@ -21,7 +22,6 @@ import {
     ResetIcon,
     UploadIcon,
 } from '../../components/icons'
-import AttachmentService from '../../services/AttachmentService'
 
 const Stream = () => {
     const { userInfo } = useSelector((state) => state.user)
