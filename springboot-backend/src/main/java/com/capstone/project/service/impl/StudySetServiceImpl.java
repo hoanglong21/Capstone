@@ -3,14 +3,8 @@ package com.capstone.project.service.impl;
 import com.capstone.project.dto.CardWrapper;
 import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Card;
-import com.capstone.project.model.Content;
-import com.capstone.project.model.StudySet;
-import com.capstone.project.model.User;
-import com.capstone.project.repository.CardRepository;
-import com.capstone.project.repository.ContentRepository;
-import com.capstone.project.repository.StudySetRepository;
-import com.capstone.project.repository.UserRepository;
+import com.capstone.project.model.*;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.CardService;
 import com.capstone.project.service.StudySetService;
 import com.capstone.project.service.UserService;
@@ -29,6 +23,8 @@ public class StudySetServiceImpl implements StudySetService {
     private final StudySetRepository studySetRepository;
     private final CardRepository cardRepository;
     private final ContentRepository contentRepository;
+
+    private final ProgressRepository progressRepository;
     private final CardService cardService;
     private final UserService userService;
 
@@ -36,13 +32,14 @@ public class StudySetServiceImpl implements StudySetService {
     private EntityManager em;
     private final UserRepository userRepository;
     @Autowired
-    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService, UserRepository userRepository, UserService userService) {
+    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService, UserRepository userRepository, UserService userService, ProgressRepository progressRepository) {
         this.studySetRepository = studySetRepository;
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
         this.cardService = cardService;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.progressRepository = progressRepository;
     }
 
     @Override
@@ -222,7 +219,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion) throws Exception {
+    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion, int userId) throws Exception {
         if(numberOfQuestion<=0) {
             throw new Exception("Number of question must at least 1");
         }
@@ -230,7 +227,7 @@ public class StudySetServiceImpl implements StudySetService {
             throw new Exception("Must have at least 1 type");
         }
         List<Card> cardList = cardRepository.getCardByStudySetId(studySetId);
-        return getLearningMethod(cardList, questionType, numberOfQuestion, true);
+        return getLearningMethod(cardList, questionType, numberOfQuestion, true, userId);
     }
 
     @Override
@@ -242,10 +239,10 @@ public class StudySetServiceImpl implements StudySetService {
             throw new Exception("Must have at least 1 type");
         }
         List<Card> cardList = cardRepository.findCardByProgress(userId, progressType, studySetId);
-        return getLearningMethod(cardList, questionType, cardList.size(), isRandom);
+        return getLearningMethod(cardList, questionType, cardList.size(), isRandom, userId);
     }
 
-    private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom) {
+    private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom, int userId) {
         // Shuffle the cardList to randomize the order of cards
         if(isRandom) {
             Collections.shuffle(cardList);
@@ -254,7 +251,8 @@ public class StudySetServiceImpl implements StudySetService {
 
         for (Card card : cardList) {
             List<Content> contents = contentRepository.getContentByCardId(card.getId());
-            CardWrapper cardWrapper = new CardWrapper(card, contents);
+            Progress progress = progressRepository.findByCardIdAndUserId(userId, card.getId());
+            CardWrapper cardWrapper = new CardWrapper(card, contents, progress);
             initCardWrappers.add(cardWrapper);
         }
 

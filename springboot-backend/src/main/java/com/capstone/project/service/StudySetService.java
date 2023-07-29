@@ -32,7 +32,7 @@ public interface StudySetService {
                                       String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                                       String sortBy, String direction, int page, int size);
 
-    List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion) throws Exception;
+    List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion, int userId) throws Exception;
 
     List<Map<String, Object>> getLearningStudySetId(int userId, int studySetId, int[] questionType, String[] progressType, boolean isRandom) throws Exception;
 }

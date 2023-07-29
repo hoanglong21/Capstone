@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 public class CardWrapper {
     private Card card;
     private Object content;
+    private Object progress;
 }
