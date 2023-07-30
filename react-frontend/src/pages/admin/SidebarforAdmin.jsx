@@ -7,7 +7,7 @@ import "../../assets/styles/sidebar.css";
 
 function SidebarforAdmin() {
   return (
-    <div className="header__admin col-auto col-md-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
+    <div className="header__admin col-sm-2 col-lg-2 col-md-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
       <section id="navbar">
         <Link
           href=""

@@ -10,6 +10,7 @@ import { getUser } from '../../features/user/userAction'
 
 import { ArrowLeftLongIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
+import "./auth.css"
 
 const Login = () => {
     const navigate = useNavigate()
@@ -83,7 +84,7 @@ const Login = () => {
                 <ArrowLeftLongIcon />
             </button>
             <div className="container me-5">
-                <h2>Welcome Back!</h2>
+                <h2 className='auth-header'>Welcome Back!</h2>
                 <h5
                     className="fw-normal mb-5"
                     style={{ color: 'var(--text-light)' }}
