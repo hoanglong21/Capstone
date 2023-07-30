@@ -21,10 +21,13 @@ public class Question {
     @Column(columnDefinition="TEXT")
     private String question;
 
+    @Column(columnDefinition="TEXT")
     private String picture;
 
+    @Column(columnDefinition="TEXT")
     private String audio;
 
+    @Column(columnDefinition="TEXT")
     private String video;
 
     @ManyToOne
