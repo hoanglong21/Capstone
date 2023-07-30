@@ -119,6 +119,8 @@ function AssignmentList() {
                                             ? `Posted ${assign?.created_date}`
                                             : 'No due date'}
                                     </p>
+                                </div>
+                                <div className="mt-2 d-flex justify-content-between">
                                     <button
                                         className="viewAssign_btn"
                                         onClick={() =>
@@ -129,59 +131,47 @@ function AssignmentList() {
                                     >
                                         View details
                                     </button>
-                                </div>
-                                {userInfo?.id === assign?.user?.id && (
-                                    <div>
-                                        <div className="mt-2 d-flex justify-content-between">
-                                            <button
-                                                className="viewAssign_btn"
-                                                onClick={() =>
-                                                    navigate(
-                                                        `../assignment/${assign.id}/details`
-                                                    )
-                                                }
-                                            >
-                                                View details
-                                            </button>
-                                            <div className="d-flex">
-                                                <div className="asignInfo_block">
-                                                    <div className="assignInfo_number">
-                                                        0
-                                                    </div>
-                                                    <div className="assignInfo_title">
-                                                        Turned in
-                                                    </div>
+                                    {userInfo?.id === assign?.user?.id && (
+                                        <div className="d-flex">
+                                            <div className="asignInfo_block">
+                                                <div className="assignInfo_number">
+                                                    0
                                                 </div>
-                                                <div className="asignInfo_block">
-                                                    <div className="assignInfo_number">
-                                                        1
-                                                    </div>
-                                                    <div className="assignInfo_title">
-                                                        Assigned
-                                                    </div>
+                                                <div className="assignInfo_title">
+                                                    Turned in
+                                                </div>
+                                            </div>
+                                            <div className="asignInfo_block">
+                                                <div className="assignInfo_number">
+                                                    1
+                                                </div>
+                                                <div className="assignInfo_title">
+                                                    Assigned
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="mt-5 d-flex justify-content-between">
-                                            <button
-                                                className="editAssign_btn"
-                                                onClick={() => {
-                                                    navigate(
-                                                        `../edit-assignment/${assign?.id}`
-                                                    )
-                                                }}
-                                            >
-                                                Edit assignment
-                                            </button>
-                                            <button
-                                                className="deleteAssign_btn"
-                                                type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target={`#deleteAssignmentModal${assign?.id}`}
-                                            >
-                                                Delete assignment
-                                            </button>
-                                        </div>
+                                    )}
+                                </div>
+                                {userInfo?.id === assign?.user?.id && (
+                                    <div className="mt-5 d-flex justify-content-between">
+                                        <button
+                                            className="editAssign_btn"
+                                            onClick={() => {
+                                                navigate(
+                                                    `../edit-assignment/${assign?.id}`
+                                                )
+                                            }}
+                                        >
+                                            Edit assignment
+                                        </button>
+                                        <button
+                                            className="deleteAssign_btn"
+                                            type="button"
+                                            data-bs-toggle="modal"
+                                            data-bs-target={`#deleteAssignmentModal${assign?.id}`}
+                                        >
+                                            Delete assignment
+                                        </button>
                                     </div>
                                 )}
                             </div>

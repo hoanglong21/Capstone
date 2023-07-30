@@ -3,9 +3,12 @@ package com.capstone.project.service;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Post;
 import com.capstone.project.model.Test;
+import com.capstone.project.model.TestLearner;
+import com.capstone.project.model.TestResult;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +28,7 @@ public interface TestService {
 
     Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid,
                                       String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException;
+
+    TestLearner startTest(int testId, int userId);
+    double endTest(List<TestResult> testResultList) throws ResourceNotFroundException;
 }

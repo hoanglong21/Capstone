@@ -19,10 +19,7 @@ import org.springframework.test.annotation.Rollback;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -126,7 +123,11 @@ public class UserRepositoryTest {
 
         userRepository.saveAll(userList);
 
-        List<String> names = userRepository.findAllNameExcept(find);
+        List<User> names = userRepository.findAllNameExcept("", find);
+        List<String> strings = new ArrayList<>();
+        for(User s: names) {
+            strings.add(s.getUsername());
+        }
         Assertions.assertThat(names).doesNotContain(find);
     }
 
