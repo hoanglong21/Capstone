@@ -90,7 +90,7 @@ const Landing = () => {
                 className="landing__btn"
                 role="button"
                 tabIndex="0"
-                to="/sets"
+                to="/discovery/sets"
               >
                 <span>Explore More</span>
               </Link>
@@ -99,12 +99,11 @@ const Landing = () => {
         </div>
       </div>
       <div className="section-title">
-        <h4 className="title mb-4 text-center">
+        <h4 className="title text-center">
           Have Question ? Get in touch!
         </h4>
         <p
           className="text-muted para-desc mx-auto text-center"
-          style={{ fontSize: "1.2rem" }}
         >
           Start working with{" "}
           <span className="text-primary fw-bold">NihongoLevelUp</span> that can
@@ -112,9 +111,9 @@ const Landing = () => {
         </p>
       </div>
       <div
-        className="row"
+        className="row feedback"
         style={{
-          marginTop: "100px",
+          marginTop: "50px",
           width: "80%",
           height: "40%",
           marginLeft: "auto",
