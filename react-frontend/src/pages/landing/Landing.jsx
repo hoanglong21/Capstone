@@ -130,7 +130,7 @@ const Landing = () => {
             </div>
             <div className="blog-content p-4">
               <ul className="meta-info d-flex justify-content-between">
-                <li>By Anna Sword</li>
+                <li>By Anna</li>
                 <li>
                   <a href="/">Feb 05, 2019</a>
                 </li>
@@ -161,7 +161,7 @@ const Landing = () => {
             </div>
             <div className="blog-content p-4">
               <ul className="meta-info d-flex justify-content-between">
-                <li>By Jassica William</li>
+                <li>By Jessica</li>
                 <li>
                   <a href="/">Feb 05, 2019</a>
                 </li>
@@ -192,7 +192,7 @@ const Landing = () => {
             </div>
             <div className="blog-content p-4">
               <ul className="meta-info d-flex justify-content-between">
-                <li>By John Doe</li>
+                <li>By John</li>
                 <li>
                   <a href="/">Mar 05, 2019</a>
                 </li>
