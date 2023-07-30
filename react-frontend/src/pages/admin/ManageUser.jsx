@@ -5,15 +5,12 @@ import BanUser from "./BanUser";
 import UnBanUser from "./UnBanUser";
 import HeaderAdmin from "./HeaderAdmin";
 import { useSearchParams } from "react-router-dom";
-import { useSelector } from 'react-redux'
 import UserService from '../../services/UserService'
 
 function ManageUser() {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const search = searchParams.get("search");
-  const { userInfo } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const fetchData = async (searchKey) => {
     const temp = (
@@ -23,7 +20,7 @@ function ManageUser() {
             '',
             '',
             '',
-            '',
+            '=tutor,learner',
             '',
             '',
             '',

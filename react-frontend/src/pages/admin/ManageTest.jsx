@@ -72,8 +72,8 @@ function ManageTest() {
                 {tests?.map((test) => (
                   <tr>
                     <th scope="row" key={test.id}>{test?.id}</th>
-                    <td>{test?.classroom?.class_name}</td>
-                    <td>{test?.author}</td>
+                    <td>{test?.classname}</td>
+                    <td>{test?.authorname}</td>
                     <td>{test?.title}</td>
                     <td>{test?.description}</td>
                     <td>
