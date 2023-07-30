@@ -8,7 +8,8 @@ import ClassService from '../../../services/ClassService'
 import DeleteAssignment from './DeleteAssignment'
 
 import { AccountIcon, AddIcon } from '../../../components/icons'
-import empty from '../../../assets/images/assign_empty.jpg'
+import tutorEmpty from '../../../assets/images/tutor_assign_empty.jpg'
+import learnerEmpty from '../../../assets/images/learner_assign_empty.png'
 import './assignment.css'
 
 function AssignmentList() {
@@ -76,15 +77,26 @@ function AssignmentList() {
                 </div>
             )}
             {assignments.length === 0 && (
-                <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
-                    <img src={empty} alt="" />
-                    <p className="mb-2 emptyAssignments_heading">
-                        This is where you’ll assign work
-                    </p>
-                    <p className="emptyAssignments_content">
-                        You can add assignments for the class, then organize it
-                        into topics
-                    </p>
+                <div>
+                    {userInfo?.id === classroom?.user?.id ? (
+                        <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
+                            <img src={tutorEmpty} alt="" />
+                            <p className="mb-2 emptyAssignments_heading">
+                                This is where you’ll assign work
+                            </p>
+                            <p className="emptyAssignments_content">
+                                You can add assignments for the class, then
+                                organize it into topics
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
+                            <img src={learnerEmpty} alt="" />
+                            <p className="emptyAssignments_heading">
+                                No assignments yet. Lucky you!
+                            </p>
+                        </div>
+                    )}
                 </div>
             )}
             <div className="accordion mt-4 accordionTests" id="accordionTests">

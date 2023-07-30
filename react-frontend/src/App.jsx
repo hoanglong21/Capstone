@@ -3,10 +3,8 @@ import { useSelector } from 'react-redux'
 
 import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
-import VideoChatContainer from './components/Chat/VideoChatContainer'
-import ChatContainer from './components/Chat/ChatContainer'
+import Chat from './pages/Chat'
 import Layout from './components/layouts/Layout'
-import GPTContainer from './components/Chat/GPTContainer'
 import Flashcard from './pages/studySet/flashcard/Flashcard'
 import ClassLayout from './pages/class/classLayout/ClassLayout'
 import Landing from './pages/landing/Landing'
@@ -56,7 +54,6 @@ import ViewDetailPost from './pages/admin/ViewDetailPost'
 import ManageComment from './pages/admin/ManageComment'
 import ViewDetailComment from './pages/admin/ViewDetailComment'
 import CreateSet from './pages/studySet/create/CreateSet'
-import Chat from './pages/Chat'
 import VocabDict from './pages/dictionary/VocabDict'
 import GrammarDict from './pages/dictionary/GrammarDict'
 import KanjiDict from './pages/dictionary/KanjiDict'
@@ -194,17 +191,6 @@ const App = () => {
                         <Route
                             path="help-center/send-feedback"
                             element={<SendFeedback />}
-                        />
-                        {/* Chat */}
-                        <Route path="chat" element={<ChatContainer />} />
-                        <Route path="gpt" element={<GPTContainer />} />
-                        <Route
-                            path="video-chat"
-                            element={<VideoChatContainer />}
-                        />
-                        <Route
-                            path="video-chat/:call"
-                            element={<VideoChatContainer />}
                         />
                     </Route>
                     {/* Study set */}

@@ -83,6 +83,16 @@ const checkUserClass = (classId, userId) => {
     )
 }
 
+const checkUserClassWaiting = (classId, userId) => {
+    return axios.get(
+        API_BASE_URL +
+            '/checkuserclasswaiting?classId=' +
+            classId +
+            '&userId=' +
+            userId
+    )
+}
+
 const ClassService = {
     createClassroom,
     getFilterList,
@@ -95,6 +105,7 @@ const ClassService = {
     getTestNumber,
     getAssignmentNumber,
     checkUserClass,
+    checkUserClassWaiting,
 }
 
 export default ClassService

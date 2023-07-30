@@ -68,7 +68,7 @@ const sendMessage = (event) => {
     update(ref(database), updates)
 }
 
-const ChatContainer = () => {
+const Chat = () => {
     const navigate = useNavigate()
 
     const [show, setShow] = useState(false)
@@ -266,4 +266,4 @@ const ChatContainer = () => {
     )
 }
 
-export default ChatContainer
+export default Chat

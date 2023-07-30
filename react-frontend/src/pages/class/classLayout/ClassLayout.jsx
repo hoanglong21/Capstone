@@ -18,6 +18,7 @@ import {
     UnenrollIcon,
 } from '../../../components/icons'
 import './classLayout.css'
+import ClassLearnerService from '../../../services/ClassLearnerService'
 
 const ClassLayout = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -26,41 +27,71 @@ const ClassLayout = () => {
 
     const [classroom, setClassroom] = useState({})
     const [hasAccess, setHasAccess] = useState(false)
+    const [isWaiting, setIsWaiting] = useState(false)
 
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const tempClass = (await ClassService.getClassroomById(id)).data
-            setClassroom(tempClass)
-            const tempHasAccess = (
-                await ClassService.checkUserClass(id, userInfo.id)
-            ).data
-            setHasAccess(tempHasAccess)
+            try {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                const tempHasAccess = (
+                    await ClassService.checkUserClass(id, userInfo.id)
+                ).data
+                setHasAccess(tempHasAccess)
+                if (!tempHasAccess) {
+                    const tempIsWaiting = (
+                        await ClassService.checkUserClassWaiting(
+                            id,
+                            userInfo.id
+                        )
+                    ).data
+                    setIsWaiting(tempIsWaiting)
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (userInfo.username) {
             fetchData()
         }
     }, [userInfo, id])
 
-    // ignore error
-    useEffect(() => {
-        window.addEventListener('error', (e) => {
-            if (e.message === 'ResizeObserver loop limit exceeded') {
-                const resizeObserverErrDiv = document.getElementById(
-                    'webpack-dev-server-client-overlay-div'
-                )
-                const resizeObserverErr = document.getElementById(
-                    'webpack-dev-server-client-overlay'
-                )
-                if (resizeObserverErr) {
-                    resizeObserverErr.setAttribute('style', 'display: none')
-                }
-                if (resizeObserverErrDiv) {
-                    resizeObserverErrDiv.setAttribute('style', 'display: none')
-                }
+    const handleRequest = async () => {
+        try {
+            // await ClassLearnerService.createClassLeaner({
+            //     user: { id: userInfo.id, username: userInfo.username },
+            //     classroom: {
+            //         id: classroom.id,
+            //     },
+            //     _accepted: false,
+            // })
+            setIsWaiting(true)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
             }
-        })
-    }, [])
+        }
+    }
+
+    const handleCancelRequest = async () => {
+        try {
+            // await ClassLearnerService.deleteClassLearner()
+            setIsWaiting(false)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
 
     return (
         <div>
@@ -168,12 +199,23 @@ const ClassLayout = () => {
                         </div>
                     ) : (
                         <div>
-                            <button
-                                className="btn btn-outline-primary rounded"
-                                type="button"
-                            >
-                                Request to join class
-                            </button>
+                            {isWaiting ? (
+                                <button
+                                    className="btn btn-outline-primary rounded"
+                                    type="button"
+                                    onClick={handleCancelRequest}
+                                >
+                                    Cancel Request
+                                </button>
+                            ) : (
+                                <button
+                                    className="btn btn-outline-primary rounded"
+                                    type="button"
+                                    onClick={handleRequest}
+                                >
+                                    Request to join class
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -282,11 +324,24 @@ const ClassLayout = () => {
                     </div>
                 ) : (
                     <div className="row mt-5">
-                        <div className="col-8 text-center">
-                            <h3 className="mainClass_infoTitle">
-                                Join this class to get access to its content
-                            </h3>
-                        </div>
+                        {isWaiting ? (
+                            <div className="col-8 text-center">
+                                <h3 className="mainClass_infoTitle">
+                                    Your request to join this class has been
+                                    sent
+                                </h3>
+                                <p>
+                                    Once a class owner approves, you'll start
+                                    receiving class announcements
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="col-8 text-center">
+                                <h3 className="mainClass_infoTitle">
+                                    Join this class to get access to its content
+                                </h3>
+                            </div>
+                        )}
                         <div className="col-4">
                             <h6 className="mainClass_infoLabel">
                                 CLASS DETAILS
