@@ -171,7 +171,7 @@ h3 > a {
   margin-bottom: 30px;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width:768px) {
   /* For mobile phones: */
   .landing__ti .lead {
     margin: 10px;
@@ -214,7 +214,7 @@ h3 > a {
   }
 
   .landing__btn {
-    padding: 5px 10px;
+    padding: 5px 5px;
     font-size: 14px;
     border-radius: 5px;
   }
