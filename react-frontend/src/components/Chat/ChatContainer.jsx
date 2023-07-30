@@ -14,6 +14,10 @@ import {
 } from 'firebase/database'
 
 import ChatService from '../../services/ChatService'
+
+import './chat.css'
+import { CloseIcon, EditSquareSolidIcon } from '../icons'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 // import { AES, enc } from 'crypto-js';
 
 const firebaseConfig = {
@@ -65,10 +69,12 @@ const sendMessage = (event) => {
 }
 
 const ChatContainer = () => {
+    const navigate = useNavigate()
+
+    const [show, setShow] = useState(false)
     const [messages, setMessages] = useState([])
     const [usernames, setUsernames] = useState([])
-    const [receiverUsername, setreceiverUsername] = useState(null)
-    const navigate = useNavigate()
+    const [receiverUsername, setReceiverUsername] = useState(null)
 
     useEffect(() => {
         // This code will run only once after initial render
@@ -111,6 +117,8 @@ const ChatContainer = () => {
         })
     }, [])
 
+    const tooltip = <Tooltip>New message</Tooltip>
+
     // console.log(receiverUsername)
 
     const deleteMessage = (messageId) => {
@@ -125,7 +133,7 @@ const ChatContainer = () => {
 
     const choseUser = () => {
         const newReceiver = document.getElementById('receiver').value
-        setreceiverUsername(newReceiver)
+        setReceiverUsername(newReceiver)
     }
     // const key = "6A576E5A7234753778217A25432A462D4A614E645267556B5870327335763879"; //256-bit && hex
     // TODO when done add to backend all of key
@@ -147,75 +155,113 @@ const ChatContainer = () => {
     }
 
     return (
-        <div>
-            <select name="receiver" id="receiver" onChange={choseUser}>
-                {usernames.map((username) => (
-                    <option key={username} value={username}>
-                        {username}
-                    </option>
-                ))}
-            </select>
+        <div className="d-flex">
+            {show && (
+                <div className="chat_container">
+                    <div className="chat_header">
+                        <div className="d-flex justify-content-between">
+                            <div className="chat-heading">New message</div>
+                            <button
+                                className="chat_closeBtn"
+                                onClick={() => {
+                                    setShow(false)
+                                }}
+                            >
+                                <CloseIcon />
+                            </button>
+                        </div>
+                        <div className="chat_searchContainer d-flex align-items-center">
+                            <div>To:</div>
+                            <input type="text" className="chat_search" />
+                        </div>
+                    </div>
+                    <select name="receiver" id="receiver" onChange={choseUser}>
+                        {usernames.map((username) => (
+                            <option key={username} value={username}>
+                                {username}
+                            </option>
+                        ))}
+                    </select>
 
-            <button className="btn btn-success" onClick={openVideoChat}>
-                {' '}
-                Call
-            </button>
-            {messages
-                .filter(
-                    (message) =>
-                        ((message.sender === myUsername &&
-                            message.receiver === receiverUsername) ||
-                            (message.sender === receiverUsername &&
-                                message.receiver === myUsername)) &&
-                        message.video_call === true
-                )
-                .map((message) => (
-                    <a href={'video-chat/' + message.message}>Answer</a>
-                ))}
-            <form onSubmit={sendMessage}>
-                <input
-                    id="message"
-                    placeholder="Enter message"
-                    autoComplete="off"
-                />
-                <input type="submit" />
-            </form>
+                    <button className="btn btn-success" onClick={openVideoChat}>
+                        {' '}
+                        Call
+                    </button>
+                    {messages
+                        .filter(
+                            (message) =>
+                                ((message.sender === myUsername &&
+                                    message.receiver === receiverUsername) ||
+                                    (message.sender === receiverUsername &&
+                                        message.receiver === myUsername)) &&
+                                message.video_call === true
+                        )
+                        .map((message) => (
+                            <a href={'video-chat/' + message.message}>Answer</a>
+                        ))}
+                    <form onSubmit={sendMessage}>
+                        <input
+                            id="message"
+                            placeholder="Enter message"
+                            autoComplete="off"
+                        />
+                        <input type="submit" />
+                    </form>
 
-            {/* <ul id="messages"></ul> */}
-            {/* Render a list of messages */}
-            <ul id="messages">
-                {messages
-                    .filter(
-                        (message) =>
-                            ((message.sender === myUsername &&
-                                message.receiver === receiverUsername) ||
-                                (message.sender === receiverUsername &&
-                                    message.receiver === myUsername)) &&
-                            message.video_call !== true
-                    )
-                    .map((message) => (
-                        <li key={message.key}>
-                            {message.sender === myUsername && (
-                                <button
-                                    data-id={message.key}
-                                    onClick={() => deleteMessage(message.key)}
-                                >
-                                    Delete
-                                </button>
-                            )}
+                    {/* <ul id="messages"></ul> */}
+                    {/* Render a list of messages */}
+                    <ul id="messages">
+                        {messages
+                            .filter(
+                                (message) =>
+                                    ((message.sender === myUsername &&
+                                        message.receiver ===
+                                            receiverUsername) ||
+                                        (message.sender === receiverUsername &&
+                                            message.receiver === myUsername)) &&
+                                    message.video_call !== true
+                            )
+                            .map((message) => (
+                                <li key={message.key}>
+                                    {message.sender === myUsername && (
+                                        <button
+                                            data-id={message.key}
+                                            onClick={() =>
+                                                deleteMessage(message.key)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
 
-                            {message.video_call ? (
-                                <a href={'videochat/' + message.message}>
-                                    Call
-                                </a>
-                            ) : (
-                                <span>
-                                    {message.sender}: {message.message}
-                                </span>
-                            )}
-                        </li>
-                    ))}
-            </ul>
+                                    {message.video_call ? (
+                                        <a
+                                            href={
+                                                'videochat/' + message.message
+                                            }
+                                        >
+                                            Call
+                                        </a>
+                                    ) : (
+                                        <span>
+                                            {message.sender}: {message.message}
+                                        </span>
+                                    )}
+                                </li>
+                            ))}
+                    </ul>
+                </div>
+            )}
+            <OverlayTrigger placement="left" overlay={tooltip}>
+                <button
+                    className="chat_btn"
+                    onClick={() => {
+                        setShow(!show)
+                    }}
+                >
+                    <EditSquareSolidIcon size="20px" />
+                </button>
+            </OverlayTrigger>
         </div>
     )
 }

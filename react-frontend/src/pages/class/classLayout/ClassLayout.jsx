@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
+import { NavLink, Outlet, useParams } from 'react-router-dom'
 
 import ClassService from '../../../services/ClassService'
 
@@ -20,8 +20,6 @@ import {
 import './classLayout.css'
 
 const ClassLayout = () => {
-    const navigate = useNavigate()
-
     const { userInfo } = useSelector((state) => state.user)
 
     const { id } = useParams()

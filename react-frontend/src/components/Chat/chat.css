@@ -1,0 +1,66 @@
+.chat_btn {
+    position: fixed;
+    bottom: 50px;
+    right: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 12px 28px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 0;
+    height: 48px;
+    width: 48px;
+    transition: all 0.2s;
+}
+
+.chat_btn:hover {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1), 0 16px 28px rgba(0, 0, 0, 0.2);
+    background-color: #f2f2f2;
+}
+
+.chat_container {
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+    right: 80px;
+    height: 50vh;
+    width: 330px;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.333;
+    box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.chat_header {
+    padding: 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #ced0d4;
+}
+
+.chat-heading {
+    font-weight: 500;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.chat_closeBtn {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 50%;
+    color: #ced0d4;
+    transition: all 0.2s;
+}
+
+.chat_closeBtn:hover {
+    background-color: #f2f2f2;
+}
+
+.chat_searchContainer {
+    margin-top: 8px;
+}
+
+.chat_search {
+    padding: 10px 15px;
+    overflow: hidden;
+    width: 100%;
+    outline: none;
+    border: none;
+}
