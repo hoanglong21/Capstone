@@ -8,7 +8,7 @@ import ClassService from '../../../services/ClassService'
 import DeleteAssignment from './DeleteAssignment'
 
 import { AccountIcon, AddIcon } from '../../../components/icons'
-import tutorEmpty from '../../../assets/images/tutor_assign_empty.jpg'
+import tutorEmpty from '../../../assets/images/tutor_assign_empty.png'
 import learnerEmpty from '../../../assets/images/learner_assign_empty.png'
 import './assignment.css'
 

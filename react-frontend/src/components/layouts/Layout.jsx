@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import Header from '../header/Header'
 import Footer from '../footer/Footer'
-import ChatContainer from '../Chat/Chat'
+import ChatContainer from '../chat/Chat'
 
 export default function Layout() {
     const { userToken } = useSelector((state) => state.auth)

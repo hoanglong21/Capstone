@@ -25,6 +25,7 @@ const ViewStudySet = () => {
     const navigate = useNavigate()
 
     const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
 
     const { id } = useParams()
 
@@ -234,7 +235,7 @@ const ViewStudySet = () => {
             {/* Terms */}
             <div className="setPageTerms">
                 {cards.map((card) => (
-                    <ViewCard card={card} key={card.id} />
+                    <ViewCard card={card} key={card.id} userInfo={userInfo} />
                 ))}
             </div>
             {/* delete set modal */}

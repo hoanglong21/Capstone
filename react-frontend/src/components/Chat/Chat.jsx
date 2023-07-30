@@ -12,12 +12,12 @@ import {
     remove,
     onChildRemoved,
 } from 'firebase/database'
-
-import ChatService from '../../services/ChatService'
-
-import './chat.css'
-import { CloseIcon, EditSquareSolidIcon } from '../icons'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+
+import UserService from '../../services/UserService'
+
+import { CloseIcon, EditSquareSolidIcon } from '../icons'
+import './chat.css'
 // import { AES, enc } from 'crypto-js';
 
 const firebaseConfig = {
@@ -72,6 +72,7 @@ const Chat = () => {
     const navigate = useNavigate()
 
     const [show, setShow] = useState(false)
+    const [search, setSearch] = useState('')
     const [messages, setMessages] = useState([])
     const [usernames, setUsernames] = useState([])
     const [receiverUsername, setReceiverUsername] = useState(null)
@@ -92,7 +93,10 @@ const Chat = () => {
         }
 
         async function fetchData() {
-            const response = await ChatService.findAllName(myUsername)
+            const response = await UserService.findAllNameExcept(
+                search,
+                myUsername
+            )
             setUsernames(response.data)
         }
 
