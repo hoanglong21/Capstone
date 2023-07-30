@@ -3,8 +3,7 @@ import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 import { Link, useParams } from "react-router-dom";
 import ClassService from "../../services/ClassService";
-import ApexCharts from "apexcharts";
-// import dayjs from 'dayjs';
+import ReactApexChart from "react-apexcharts";
 
 function ViewDetailClass() {
   const [classes, setClasses] = useState([]);
@@ -12,7 +11,8 @@ function ViewDetailClass() {
   const [classLearnerJoined, setclassLearnerJoined] = useState([]);
   const [classTest, setClassTest] = useState([]);
   const [classAssignment, setClassAssignment] = useState([]);
-
+  const [learnerJoined, setLearnerJoined] = useState([]);
+  const [postGrowth, setPostGrowth] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,86 +54,45 @@ function ViewDetailClass() {
       }
     };
     fetchDataClassTestNumber();
+
+    const fetchDataLearnerJoined = async () => {
+      try {
+        const temp = (await ClassService.getLeanerJoinedGrowth(id)).data;
+        setLearnerJoined(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataLearnerJoined();
+
+    const fetchDataPostGrowth = async () => {
+      try {
+        const temp = (await ClassService.getPostGrowth(id)).data;
+        setPostGrowth(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    fetchDataPostGrowth();
   }, [id]);
 
-  var options = {
-    series: [
-      {
-        name: "sales",
-        data: [
-          {
-            x: "2019/01/01",
-            y: 400,
-          },
-          {
-            x: "2019/04/01",
-            y: 430,
-          },
-          {
-            x: "2019/07/01",
-            y: 448,
-          },
-          {
-            x: "2019/10/01",
-            y: 470,
-          },
-        ],
-      },
-    ],
-    chart: {
-      type: "bar",
-      height: 380,
-    },
-    xaxis: {
-      type: "category",
-      labels: {
-        formatter: function (val) {
-          // return "Q" + dayjs(val).quarter()
-        },
-      },
-      group: {
-        style: {
-          fontSize: "10px",
-          fontWeight: 700,
-        },
-        groups: [{ title: "2019", cols: 4 }],
-      },
-    },
-    title: {
-      text: "Grouped Labels on the X-axis",
-    },
-    tooltip: {
-      x: {
-        formatter: function (val) {
-          // return "Q" + dayjs(val).quarter() + " " + dayjs(val).format("YYYY")
-        },
-      },
-    },
-  };
+  const week = [
+    "Week 1",
+    "Week 2",
+    "Week 3",
+    "Week 4",
+    "Week 5",
+    "Week 6",
+    "Week 7",
+    "Week 8",
+    "Week 9",
+    "Week 10",
+    "Week 11",
+    "Week 12",
+  ];
 
-  useEffect(() => {
-    initializeChartline(); // Render the chart when the component mounts
-  }, []);
-
-  const initializeChartline = () => {
-    const chartOrigin = document.querySelector("#chart");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, options);
-      chart.render();
-    }
-  };
-
-  var optionsDataLabel = {
-    series: [
-      {
-        name: "Learn Joined",
-        data: [1,3, 4, 6, 7, 5, 6, 6, 2,9, 10, 22],
-      },
-    ],
-    chart: {
-      height: 350,
-      type: "bar",
-    },
+  const weekInMonth = ["Week 1", "Week 2", "Week 3", "Week 4"];
+  const optionsLearnJoined = {
     plotOptions: {
       bar: {
         borderRadius: 10,
@@ -153,81 +112,81 @@ function ViewDetailClass() {
         colors: ["#304758"],
       },
     },
-
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-      position: "top",
-      axisBorder: {
-        show: false,
+      categories: week,
+      tickPlacement: "on",
+    },
+    yaxis: {
+      title: {
+        text: "Person",
       },
-      axisTicks: {
-        show: false,
-      },
-      crosshairs: {
-        fill: {
-          type: "gradient",
-          gradient: {
-            colorFrom: "#D8E3F0",
-            colorTo: "#BED1E6",
-            stops: [0, 100],
-            opacityFrom: 0.4,
-            opacityTo: 0.5,
-          },
+      labels: {
+        formatter: function (val1) {
+          return Number(val1).toFixed(0);
         },
       },
-      tooltip: {
-        enabled: true,
+    },
+    position: "top",
+    axisBorder: {
+      show: false,
+    },
+    axisTicks: {
+      show: false,
+    },
+    crosshairs: {
+      fill: {
+        type: "gradient",
+        gradient: {
+          colorFrom: "#D8E3F0",
+          colorTo: "#BED1E6",
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        },
+      },
+    },
+    tooltip: {
+      enabled: true,
+    },
+  };
+
+  const seriesLearnerJoined = [
+    {
+      name: "Person",
+      data: learnerJoined,
+    },
+  ];
+
+  const optionsPostGrowth = {
+    xaxis: {
+      categories: weekInMonth,
+      group: {
+        style: {
+          fontSize: "12px",
+          fontWeight: 700,
+        },
+        groups: [{ title: "In Month", cols: 4 }],
       },
     },
     yaxis: {
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
+      title: {
+        text: "Post",
       },
       labels: {
-        show: false,
         formatter: function (val) {
-          return val + "%";
+          return Number(val).toFixed(0);
         },
       },
     },
-    title: {
-      floating: true,
-      offsetY: 330,
-      align: "center",
-      style: {
-        color: "#444",
-      },
+  };
+
+  const seriesPostGrowth = [
+    {
+      name: "Person",
+      data: postGrowth,
     },
-  };
-
-  useEffect(() => {
-    initializeChartDataLabel();
-  }, []);
-
-  const initializeChartDataLabel = () => {
-    const chartOrigin = document.querySelector("#chartDataLabel");
-    if (chartOrigin) {
-      const chart = new ApexCharts(chartOrigin, optionsDataLabel);
-      chart.render();
-    }
-  };
-
+  ];
+  
   return (
     <div className="container-fluid">
       <div className="row">
@@ -246,7 +205,7 @@ function ViewDetailClass() {
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
                           <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                           Member's Joined
+                            Member's Joined
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-gray-800">
                             {classLearnerJoined}
@@ -356,11 +315,12 @@ function ViewDetailClass() {
                       </h6>
                     </div>
                     <div className="card-body">
-                      <div
-                        className="chart-area"
-                        id="chart"
-                        style={{ height: "300px", width: "100%" }}
-                      ></div>
+                      <ReactApexChart
+                        options={optionsPostGrowth}
+                        series={seriesPostGrowth}
+                        type="bar"
+                        height={350}
+                      />
                     </div>
                   </div>
                 </div>
@@ -372,11 +332,12 @@ function ViewDetailClass() {
                       </h6>
                     </div>
                     <div className="card-body">
-                      <div
-                        className="chart-area"
-                        id="chartDataLabel"
-                        style={{ height: "300px", width: "100%" }}
-                      ></div>
+                      <ReactApexChart
+                        options={optionsLearnJoined}
+                        series={seriesLearnerJoined}
+                        type="bar"
+                        height={350}
+                      />
                     </div>
                   </div>
                 </div>

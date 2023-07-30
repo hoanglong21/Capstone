@@ -57,6 +57,11 @@ public class TestController {
         }
     }
 
+    @GetMapping("/testbyclassid/{id}")
+    public ResponseEntity<?> getAllTestByClassId(@PathVariable int id) {
+        return ResponseEntity.ok(testService.getAllTestByClassId(id));
+    }
+
     @PostMapping("/test")
     public ResponseEntity<?> createTest(@RequestBody Test test) {
             try{

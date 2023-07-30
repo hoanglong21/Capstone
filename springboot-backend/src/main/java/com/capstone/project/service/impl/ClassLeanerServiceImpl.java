@@ -54,9 +54,8 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     }
 
     @Override
-    public Boolean deleteClassLearner(int id) throws ResourceNotFroundException {
-        ClassLearner classLearner = classLearnerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFroundException("UserSetting not exist with id:" + id));
+    public Boolean deleteClassLearner(int userid, int classid) throws ResourceNotFroundException {
+        ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(userid,classid);
         classLearnerRepository.delete(classLearner);
         return true;
     }

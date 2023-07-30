@@ -23,6 +23,9 @@ public class ClassServiceImpl implements ClassService {
 
     private final ClassRepository classRepository;
     private final PostRepository postRepository;
+    private final TestRepository testRepository;
+    private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
     private final AssignmentRepository assignmentRepository;
     private final AttachmentRepository attachmentRepository;
@@ -33,9 +36,12 @@ public class ClassServiceImpl implements ClassService {
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
+        this.testRepository = testRepository;
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
         this.commentRepository = commentRepository;
         this.assignmentRepository = assignmentRepository;
         this.attachmentRepository = attachmentRepository;
@@ -108,6 +114,18 @@ public class ClassServiceImpl implements ClassService {
                 commentRepository.delete(comment);
             }
             postRepository.delete(post);
+        }
+        for(Test test : testRepository.getTestByClassroomId(classroom.getId())){
+            for(Question question: questionRepository.getQuestionByTestId(test.getId())){
+                for(Answer answer : answerRepository.getAnswerByQuestionId(question.getId())){
+                    answerRepository.delete(answer);
+                }
+                questionRepository.delete(question);
+            }
+            for(Comment comment : commentRepository.getCommentByTestId(test.getId())){
+                commentRepository.delete(comment);
+            }
+            testRepository.delete(test);
         }
         for(Assignment assignment : assignmentRepository.getAssignmentByClassroomId(classroom.getId())){
             for(Submission submission : submissionRepository.getSubmissionByAssignmentId(assignment.getId())){
