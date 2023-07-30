@@ -11,7 +11,7 @@ import java.util.Map;
 public interface UserService {
     User createUser(User User);
 
-    List<String> findAllNameExcept(String username, String except);
+    List<User> findAllNameExcept(String username, String except);
 
     User getUserByUsername(String username) throws ResourceNotFroundException;
 

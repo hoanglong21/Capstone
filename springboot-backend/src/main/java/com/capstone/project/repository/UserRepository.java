@@ -21,8 +21,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findUserById(int id);
 
-    @Query("SELECT username FROM User WHERE username LIKE %:username% AND username != :except AND role != 'ROLE_ADMIN'")
-    List<String> findAllNameExcept(@Param("username") String username,
+    @Query(value = "SELECT * FROM User WHERE username LIKE %:username% AND username != :except AND role != 'ROLE_ADMIN'", nativeQuery = true)
+    List<User> findAllNameExcept(@Param("username") String username,
                                    @Param("except") String except);
 
     boolean existsByUsername(String username);

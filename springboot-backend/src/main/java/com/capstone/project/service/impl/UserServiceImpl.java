@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> findAllNameExcept(String username, String except) {
+    public List<User> findAllNameExcept(String username, String except) {
         return userRepository.findAllNameExcept(username, except);
     }
 
