@@ -137,7 +137,7 @@ const App = () => {
                             />
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
-                            <Route path="statistics" element={<Statistics />} />
+                            <Route path="statistics/:id" element={<Statistics />} />
                         </Route>
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />

@@ -236,6 +236,7 @@ function ViewDetailsUser() {
           },)
         }
         setSeriesDataHeapChart(tempSeriesDataHeapChart);
+        console.log(seriesDataHeapChart)
       } catch (error) {
         console.error("Error fetching statistics:", error);
       }

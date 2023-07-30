@@ -4,57 +4,36 @@ import ReactApexChart from "react-apexcharts";
 import { useParams } from "react-router-dom";
 
 function Statistics() {
-  const {id} = useParams();
+  const { id } = useParams();
   const [studySetLearned, setStudySetLearned] = useState([]);
   const [classJoined, setClassJoined] = useState([]);
   const [access, setAccess] = useState([]);
   const [learning, setLearning] = useState([]);
+  const [seriesDataHeapChart, setSeriesDataHeapChart] = useState([]);
+  const week = [
+    "Week 1",
+    "Week 2",
+    "Week 3",
+    "Week 4",
+    "Week 5",
+    "Week 6",
+    "Week 7",
+    "Week 8",
+    "Week 9",
+    "Week 10",
+    "Week 11",
+    "Week 12",
+  ];
 
-  useEffect(() => {
-    const fetchDataStudySetLearned = async () => {
-      try {
-        const temp = (await UserService.getStudySetLearnedStatistic(id))
-          .data;
-        setStudySetLearned(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataClassJoined = async () => {
-      try {
-        const temp = (await UserService.getClassJoinedStatistic(id)).data;
-        setClassJoined(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataAccess = async () => {
-      try {
-        const temp = (await UserService.getAccessStatistic(id)).data;
-        setAccess(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataLearning = async () => {
-      try {
-        const temp = (await UserService.getLearningStatistic(id)).data;
-        setLearning(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-    if (id) {
-      fetchDataStudySetLearned();
-      fetchDataClassJoined();
-      fetchDataAccess();
-      fetchDataLearning();
-    }
-  }, [id]);
-
+  const day = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
   const optionsDataLabel = {
     plotOptions: {
       bar: {
@@ -146,31 +125,6 @@ function Statistics() {
     },
   ];
 
-  const week = [
-    "Week 1",
-    "Week 2",
-    "Week 3",
-    "Week 4",
-    "Week 5",
-    "Week 6",
-    "Week 7",
-    "Week 8",
-    "Week 9",
-    "Week 10",
-    "Week 11",
-    "Week 12",
-  ];
-
-//   const day = [
-//     "Monday",
-//     "Tuesday",
-//     "Wednesday",
-//     "Thursday",
-//     "Friday",
-//     "Saturday",
-//     "Sunday",
-//   ];
-
   const optionsDataChart = {
     xaxis: {
       categories: week,
@@ -206,6 +160,67 @@ function Statistics() {
       data: learning,
     },
   ];
+  const optionDataHeapChart = {
+    dataLabels: {
+      enabled: false,
+    },
+    colors: ["#008FFB"],
+  };
+
+  useEffect(() => {
+    const fetchDataStudySetLearned = async () => {
+      try {
+        const temp = (await UserService.getStudySetLearnedStatistic(id)).data;
+        setStudySetLearned(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    const fetchDataClassJoined = async () => {
+      try {
+        const temp = (await UserService.getClassJoinedStatistic(id)).data;
+        setClassJoined(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    const fetchDataAccess = async () => {
+      try {
+        const temp = (await UserService.getAccessStatistic(id)).data;
+        setAccess(temp);
+        var tempSeriesDataHeapChart = [];
+        for (let index = 0; index < day.length; index++) {
+          const tempDay = day[index];
+          const tempArr = access[index];
+          tempSeriesDataHeapChart.push({
+            name: tempDay,
+            data: tempArr,
+          });
+        }
+        setSeriesDataHeapChart(tempSeriesDataHeapChart);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    const fetchDataLearning = async () => {
+      try {
+        const temp = (await UserService.getLearningStatistic(id)).data;
+        setLearning(temp);
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    if (id) {
+      fetchDataStudySetLearned();
+      fetchDataClassJoined();
+      fetchDataAccess();
+      fetchDataLearning();
+    }
+  }, [id]);
+
   return (
     <div>
       <div className="row gx-3 mb-3 mt-3">
@@ -217,11 +232,14 @@ function Statistics() {
               </h6>
             </div>
             <div className="card-body">
-              <div
-                className="chart-area"
-                id="chartMap"
-                style={{ height: "300px", width: "100%" }}
-              ></div>
+              {seriesDataHeapChart?.length > 0 && (
+                <ReactApexChart
+                  options={optionDataHeapChart}
+                  series={seriesDataHeapChart}
+                  type="heatmap"
+                  height={350}
+                />
+              )}
             </div>
           </div>
         </div>
