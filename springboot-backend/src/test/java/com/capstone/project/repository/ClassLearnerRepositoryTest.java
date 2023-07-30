@@ -66,8 +66,8 @@ public class ClassLearnerRepositoryTest {
 
             classLearnerRepository.save(classLearner);
 
-            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(2);
-            assertThat(classLearners.size()).isGreaterThan(0);
+            ClassLearner classLearners = classLearnerRepository.getClassLeanerByUserId(2);
+            assertThat(classLearners).isNotNull();
 
         } catch (ParseException e) {
             throw new RuntimeException(e);

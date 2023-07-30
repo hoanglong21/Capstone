@@ -69,6 +69,12 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
+    public List<Test> getAllTestByClassId(int id) {
+        return testRepository.getTestByClassroomId(id);
+    }
+
+
+    @Override
     public List<Test> getTestByUser(String username) throws ResourceNotFroundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
