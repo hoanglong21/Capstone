@@ -61,18 +61,19 @@ public class ClassLeanerController {
         return ResponseEntity.ok(classLearnerService.getClassLeanerByUserId(id));
     }
 
-    @DeleteMapping("/classlearner/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
-    public ResponseEntity<?> deleteClassLearner(@PathVariable int id) {
+    @DeleteMapping("/delclasslearner")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> deleteClassLearner(@RequestParam(value = "userid", required = false, defaultValue = "0") int userid,
+                                                @RequestParam(value = "classid", required = false, defaultValue = "0") int classid) {
         try {
-            return ResponseEntity.ok(classLearnerService.deleteClassLearner(id));
+            return ResponseEntity.ok(classLearnerService.deleteClassLearner(userid,classid));
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
 
-    @GetMapping("/filterclassleaner")
+    @GetMapping("/filterclasslearner")
 //    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> filterClassLeaner(@RequestParam(value = "userid", required = false, defaultValue = "0") int userId,
                                                    @RequestParam(value = "classid", required = false, defaultValue = "0") int classId,
@@ -91,7 +92,7 @@ public class ClassLeanerController {
     }
 
 
-    @GetMapping("/filtergetleaner")
+    @GetMapping("/filtergetlearner")
 //    @PreAuthorize(" hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> filterGetLeaner(@RequestParam(value = "userid", required = false, defaultValue = "0") int userId,
                                                @RequestParam(value = "classid", required = false, defaultValue = "0") int classId,
