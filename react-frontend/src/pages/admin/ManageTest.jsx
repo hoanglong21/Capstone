@@ -67,13 +67,13 @@ function ManageTest() {
                 </thead>
                 <tbody>
                 {tests?.length === 0 && (
-                                        <p>No sets matching {search} found</p>
+                                        <p>No data matching {search} found</p>
                                     )}
                 {tests?.map((test) => (
                   <tr>
                     <th scope="row" key={test.id}>{test?.id}</th>
-                    <td>{test?.classroom?.class_name}</td>
-                    <td>{test?.author}</td>
+                    <td>{test?.classname}</td>
+                    <td>{test?.authorname}</td>
                     <td>{test?.title}</td>
                     <td>{test?.description}</td>
                     <td>

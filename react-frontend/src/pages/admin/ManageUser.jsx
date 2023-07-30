@@ -5,15 +5,12 @@ import BanUser from "./BanUser";
 import UnBanUser from "./UnBanUser";
 import HeaderAdmin from "./HeaderAdmin";
 import { useSearchParams } from "react-router-dom";
-import { useSelector } from 'react-redux'
 import UserService from '../../services/UserService'
 
 function ManageUser() {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const search = searchParams.get("search");
-  const { userInfo } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
   const fetchData = async (searchKey) => {
     const temp = (
@@ -23,10 +20,10 @@ function ManageUser() {
             '',
             '',
             '',
+            '=tutor,learner',
             '',
             '',
             '',
-            '=active,pending',
             '',
             '',
             '',
@@ -66,7 +63,7 @@ useEffect(() => {
                 </thead>
                 <tbody>
                 {users?.length === 0 && (
-                                        <p>No sets matching {search} found</p>
+                                        <p>No data matching {search} found</p>
                                     )}
                   {users?.map((user) => (
                     <tr>
@@ -90,28 +87,29 @@ useEffect(() => {
                           type="button"
                           className="btn btn-success me-3"
                           data-bs-toggle="modal"
-                          data-bs-target="#unbanModal"
+                          data-bs-target={`#unbanModal${user?.username}`}
                         >
                           <i class="bi bi-person-fill-check me-2"></i>
                           Unban
                         </button>
+                        <UnBanUser user={user}/>
                         <button
                           type="button"
                           className="btn btn-danger "
                           data-bs-toggle="modal"
-                          data-bs-target="#banModal"
+                          data-bs-target={`#banModal${user?.username}`}
                         >
                           <i class="bi bi-person-fill-slash me-2"></i>
                           Ban
                         </button>
+                        <BanUser user={user}/>
                       </td>
                     </tr>
                   ))}
                 </tbody>
+
               </table>
             </div>
-            <BanUser />
-            <UnBanUser />
           </div>
         </div>
       </div>

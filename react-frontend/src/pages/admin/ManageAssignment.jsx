@@ -69,7 +69,7 @@ function ManageFeedback() {
                 </thead>
                 <tbody>
                 {assignments?.length === 0 && (
-                                        <p>No sets matching {search} found</p>
+                                        <p>No data matching {search} found</p>
                                     )}
                   {assignments?.map((assign) => (
                     <tr>

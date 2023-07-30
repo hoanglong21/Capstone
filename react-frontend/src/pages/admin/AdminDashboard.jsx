@@ -4,7 +4,6 @@ import HeaderAdmin from "./HeaderAdmin";
 import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
-import ApexCharts from "apexcharts";
 import AdminService from "../../services/AdminService";
 import ReactApexChart from "react-apexcharts";
 function AdminDashboard() {
