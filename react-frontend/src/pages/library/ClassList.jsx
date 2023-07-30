@@ -7,7 +7,6 @@ import ClassService from '../../services/ClassService'
 
 import { ClassIcon, SearchIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
-import '../../assets/styles/Classroom.css'
 import '../../assets/styles/LibrarySearchList.css'
 
 const ClassList = () => {
@@ -71,30 +70,30 @@ const ClassList = () => {
     return (
         <div className="container mt-4 mb-5">
             {isEmpty ? (
-                <div className="noClass__container">
+                <div className="setsEmpty d-flex flex-column align-items-center justify-content-center">
                     <img
-                        className="noClass__img"
                         src="https://www.gstatic.com/classroom/empty_states_home.svg"
-                        alt=""
+                        alt="No classes found in your library"
                     />
-                    <p className="noClass__message">
-                        One more class to get started
-                    </p>
-                    <div className="noClass__link">
-                        <a
-                            className="noClass__link1"
+                    <h3>You haven't created or joined any classes</h3>
+                    <p>Your classes will be shown here</p>
+                    <div>
+                        <button
+                            className="btn btn-outline-primary me-3"
+                            type="button"
                             data-bs-toggle="modal"
                             data-bs-target="#createClassModal"
                         >
                             Create Class
-                        </a>
-                        <a
-                            className="noClass__link2"
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            type="button"
                             data-bs-toggle="modal"
                             data-bs-target="#joinClassModal"
                         >
                             Join Class
-                        </a>
+                        </button>
                     </div>
                 </div>
             ) : (

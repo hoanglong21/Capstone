@@ -3,6 +3,7 @@ package com.capstone.project.controller;
 import com.capstone.project.dto.TestRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Test;
+import com.capstone.project.model.TestResult;
 import com.capstone.project.service.TestService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -108,4 +109,18 @@ public class TestController {
         }
     }
 
+    @GetMapping("/starttest")
+    public ResponseEntity<?> startTest(@RequestParam("userid") int userId,
+                                       @RequestParam("testid") int testId){
+        return ResponseEntity.ok(testService.startTest(testId, userId));
+    }
+
+    @PostMapping("/endtest")
+    public ResponseEntity<?> createTest(@RequestBody List<TestResult> testResultList) {
+        try{
+            return ResponseEntity.ok(testService.endTest(testResultList));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

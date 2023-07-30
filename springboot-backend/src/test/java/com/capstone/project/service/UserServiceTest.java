@@ -115,9 +115,9 @@ public class UserServiceTest {
 
         names.remove(excludedName);
 
-        when(userRepository.findAllNameExcept(excludedName)).thenReturn(names);
+        when(userRepository.findAllNameExcept("",excludedName)).thenReturn(names);
 
-        List<String> result = userServiceImpl.findAllNameExcept(excludedName);
+        List<String> result = userServiceImpl.findAllNameExcept("", excludedName);
         Assertions.assertThat(result.size()).isEqualTo(expectedNumber);
     }
 

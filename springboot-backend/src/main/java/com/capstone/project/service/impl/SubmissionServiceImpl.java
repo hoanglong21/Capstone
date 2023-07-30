@@ -41,6 +41,9 @@ public class SubmissionServiceImpl implements SubmissionService {
         return submissionRepository.getSubmissionByAssignmentId(id);
     }
 
+
+
+
     @Override
     public List<Submission> getAllSubmission() {
         return submissionRepository.findAll();
@@ -83,6 +86,12 @@ public class SubmissionServiceImpl implements SubmissionService {
     public Submission getSubmissionById(int id) throws ResourceNotFroundException {
         Submission submission = submissionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Submission not exist with id:" + id));
+        return submission;
+    }
+
+    @Override
+    public Submission getByAuthorIdandAssignmentId(int authorid, int assignmentid) {
+        Submission submission = submissionRepository.getByUserIdAndAssignmentId(authorid,assignmentid);
         return submission;
     }
 

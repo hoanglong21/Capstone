@@ -75,7 +75,7 @@ import AssignmentList from './pages/class/assignment/AssignmentList'
 import AuthVerify from './components/common/authVerify'
 import AuthService from './services/AuthService'
 import People from './pages/class/People'
-import Mark from './pages/class/Mark'
+import Grades from './pages/class/Grades'
 import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
 import ManageTest from './pages/admin/ManageTest'
 import ManageSubmission from './pages/admin/ManageSubmission'
@@ -167,7 +167,7 @@ const App = () => {
                                 element={<CreateTest />}
                             />
                             <Route path="people" element={<People />} />
-                            <Route path="mark" element={<Mark />} />
+                            <Route path="Grades" element={<Grades />} />
                             <Route
                                 path="statistics"
                                 element={<ClassStatistics />}

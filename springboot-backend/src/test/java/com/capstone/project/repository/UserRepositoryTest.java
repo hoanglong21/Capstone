@@ -126,7 +126,7 @@ public class UserRepositoryTest {
 
         userRepository.saveAll(userList);
 
-        List<String> names = userRepository.findAllNameExcept(find);
+        List<String> names = userRepository.findAllNameExcept("", find);
         Assertions.assertThat(names).doesNotContain(find);
     }
 

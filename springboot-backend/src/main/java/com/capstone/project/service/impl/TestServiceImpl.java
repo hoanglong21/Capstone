@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TestServiceImpl  implements TestService {
@@ -32,6 +29,11 @@ public class TestServiceImpl  implements TestService {
 
     private final UserRepository userRepository;
 
+    @Autowired
+    private TestLearnerRepository testLearnerRepository;
+
+    @Autowired
+    private TestResultRepository testResultRepository;
 
     @Autowired
     public TestServiceImpl(TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
@@ -202,5 +204,47 @@ public class TestServiceImpl  implements TestService {
 
         return response;
 
+    }
+
+    @Override
+    public TestLearner startTest(int testId, int userId) {
+        TestLearner testLearner = TestLearner.builder()
+                .test(Test.builder().id(testId).build())
+                .user(User.builder().id(userId).build())
+                .start(new Date())
+                .build();
+        return testLearnerRepository.save(testLearner);
+    }
+
+    @Override
+    public double endTest(List<TestResult> testResultList) throws ResourceNotFroundException {
+        if(testResultList.size()==0) {
+            return 0;
+        } else {
+            Date end = new Date();
+            TestLearner testLearner = testLearnerRepository.findById(testResultList.get(0).getTestLearner().getId())
+                    .orElseThrow(() -> new ResourceNotFroundException("Test leaner not exist with id: " + testResultList.get(0).getTestLearner().getId()));
+
+            List<TestLearner> attemptList = testLearnerRepository.findByTestIdAndUserId(testLearner.getId(), testLearner.getUser().getId());
+            int attempt = attemptList.size();
+
+            int countTrue = 0;
+            for(TestResult testResult : testResultList) {
+                if (testResult.is_true()) {
+                    countTrue++;
+                }
+            }
+
+            double mark = (countTrue/testResultList.size())*100;
+            double roundedMark = Math.round(mark * 100.0) / 100.0;
+
+            testLearner.setEnd(end);
+            testLearner.setMark(roundedMark);
+            testLearner.setNum_attempt(attempt);
+            testLearnerRepository.save(testLearner);
+
+            testResultRepository.saveAll(testResultList);
+            return roundedMark;
+        }
     }
 }

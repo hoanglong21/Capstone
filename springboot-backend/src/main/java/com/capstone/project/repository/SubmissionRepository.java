@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface SubmissionRepository extends JpaRepository<Submission,Integer> {
     List<Submission> getSubmissionByAssignmentId(int id);
+
+    Submission getByUserIdAndAssignmentId(int userid, int assignmentId);
 }
