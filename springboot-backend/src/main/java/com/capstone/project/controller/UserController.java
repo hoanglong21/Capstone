@@ -71,10 +71,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/otherusers/{except}")
+    @GetMapping("/otherusers")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
-    public ResponseEntity<?> findAllNameExcept(@PathVariable("except") String username) {
-        return ResponseEntity.ok(userService.findAllNameExcept(username));
+    public ResponseEntity<?> findAllNameExcept(@RequestParam("username") String username,
+                                               @RequestParam("except") String except) {
+        return ResponseEntity.ok(userService.findAllNameExcept(username, except));
     }
 
     @GetMapping("/users/{username}/ban")
