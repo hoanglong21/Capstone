@@ -82,10 +82,10 @@ public class ProgressController {
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> customUpdateProgress(@RequestParam("userid") int userId,
                                                   @RequestParam("cardid") int cardId,
-                                                  @RequestParam("star") boolean isStar,
-                                                  @RequestParam("picture") String picture,
-                                                  @RequestParam("audio") String audio,
-                                                  @RequestParam("note") String note) {
+                                                  @RequestParam(value = "star", required = false, defaultValue = "false") boolean isStar,
+                                                  @RequestParam(value = "picture", required = false, defaultValue = "") String picture,
+                                                  @RequestParam(value = "audio", required = false, defaultValue = "") String audio,
+                                                  @RequestParam(value = "note", required = false, defaultValue = "") String note) {
         return ResponseEntity.ok(progressService.customUpdateProgress(userId, cardId, isStar, picture, audio, note));
     }
 
