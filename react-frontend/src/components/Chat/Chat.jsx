@@ -142,7 +142,7 @@ const Chat = () => {
     function openVideoChat() {
         const myParameter = receiverUser.username
         // const url = 'http://localhost:3000/videochat?param=' + AES.encrypt(myParameter, key).toString();
-        const url = 'http://localhost:3000/video-chat?param=' + myParameter
+        const url = 'http://localhost:3000/video-call?param=' + myParameter
         // Try to get a reference to the existing video chat window
         var myWindow = window.open('', 'myWindow')
         // Check if the window is already open
@@ -266,23 +266,6 @@ const Chat = () => {
                         </div>
                     </div>
                     <div className="flex-grow-1 chat_messages p-2">
-                        {messages
-                            .filter(
-                                (message) =>
-                                    ((message.sender === userInfo.username &&
-                                        message.receiver ===
-                                            receiverUser.username) ||
-                                        (message.sender ===
-                                            receiverUser.username &&
-                                            message.receiver ===
-                                                userInfo.username)) &&
-                                    message.video_call === true
-                            )
-                            .map((message) => (
-                                <a href={'video-chat/' + message.message}>
-                                    Answer
-                                </a>
-                            ))}
                         {/* Render a list of messages */}
                         {messages
                             .filter(
