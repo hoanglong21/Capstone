@@ -6,6 +6,8 @@ import createfirstset from "../../assets/achievements/CreatedFirstSet.svg";
 import studywithtest from "../../assets/achievements/StudiedWithTest.svg";
 import earkyBird from "../../assets/achievements/EarlyBird.svg";
 import streak from "../../assets/achievements/streak.svg";
+import setStudied from "../../assets/achievements/badge-SetsStudied.svg";
+import member from "../../assets/achievements/badge-Week.svg";
 import "../../assets/styles/achievement.css";
 
 function Achievements() {
@@ -41,7 +43,11 @@ function Achievements() {
               <div className="achievement-streak">
                 <div className="streak-ct">
                   <div className="streak-img">
-                    <img src={committedLearner} alt="nightowl" className="img1" />
+                    <img
+                      src={committedLearner}
+                      alt="nightowl"
+                      className="img1"
+                    />
                   </div>
                   Committed learner
                   <span className="streak-date">24 tháng 3, 2023</span>
@@ -51,7 +57,6 @@ function Achievements() {
                 <div className="streak-ct">
                   <div className="streak-img">
                     <img src={createfirstset} alt="nightowl" className="img1" />
-                  
                   </div>
                   Set builder
                   <span className="streak-date">24 tháng 3, 2023</span>
@@ -61,7 +66,6 @@ function Achievements() {
                 <div className="streak-ct">
                   <div className="streak-img">
                     <img src={studywithtest} alt="nightowl" className="img1" />
-                   
                   </div>
                   Test acer
                   <span className="streak-date">24 tháng 3, 2023</span>
@@ -71,7 +75,6 @@ function Achievements() {
                 <div className="streak-ct">
                   <div className="streak-img">
                     <img src={earkyBird} alt="nightowl" className="img1" />
-                  
                   </div>
                   Early bird
                   <span className="streak-date">24 tháng 3, 2023</span>
@@ -342,7 +345,218 @@ function Achievements() {
                 Studied
               </h5>
             </div>
-            <div className="card-body"></div>
+            <div className="card-body">
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">1</span>
+                  </div>
+                  Studied first set
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">3</span>
+                  </div>
+                  3 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">5</span>
+                  </div>
+                  5 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">7</span>
+                  </div>
+                  7 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">10</span>
+                  </div>
+                  10 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">25</span>
+                  </div>
+                  25 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">50</span>
+                  </div>
+                  50 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">75</span>
+                  </div>
+                  75 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">100</span>
+                  </div>
+                  100 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">150</span>
+                  </div>
+                  150 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">250</span>
+                  </div>
+                  250 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">300</span>
+                  </div>
+                  300 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">350</span>
+                  </div>
+                  350 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">400</span>
+                  </div>
+                  400 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">450</span>
+                  </div>
+                  450 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">500</span>
+                  </div>
+                  500 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">600</span>
+                  </div>
+                  600 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">700</span>
+                  </div>
+                  700 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">800</span>
+                  </div>
+                  800 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">900</span>
+                  </div>
+                  900 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={setStudied} alt="nightowl" className="img1" />
+                    <span className="forspan-set">1k</span>
+                  </div>
+                  1000 sets studied
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -354,7 +568,98 @@ function Achievements() {
                 Member
               </h5>
             </div>
-            <div className="card-body"></div>
+            <div className="card-body">
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">1</span>
+                  </div>
+                  First member
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">5</span>
+                  </div>
+                  5 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">10</span>
+                  </div>
+                  10 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">20</span>
+                  </div>
+                  20 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">50</span>
+                  </div>
+                  50 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">100</span>
+                  </div>
+                  100 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">200</span>
+                  </div>
+                200 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">500</span>
+                  </div>
+                  500 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+              <div className="achievement-streak">
+                <div className="streak-ct">
+                  <div className="streak-img">
+                    <img src={member} alt="nightowl" className="img1" />
+                    <span className="forspan-mem">1000</span>
+                  </div>
+                  1000 members
+                  <span className="streak-date">24 tháng 3, 2023</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

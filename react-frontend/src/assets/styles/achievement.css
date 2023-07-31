@@ -53,3 +53,28 @@
     line-height: 1.4;
     font-size: 1rem;
 }
+
+.forspan-set{
+    top: 2.5rem;
+    color: #282e3e;
+    font-size: 1.5rem;
+    letter-spacing: normal;
+    line-height: 1.3;
+    font-weight: 700;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+.forspan-mem{
+    left: 50%;
+    position: absolute;
+    font-weight: 700;
+    color: #282e3e;
+    font-size: 1.5rem;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    letter-spacing: normal;
+    line-height: 1.3;
+}
