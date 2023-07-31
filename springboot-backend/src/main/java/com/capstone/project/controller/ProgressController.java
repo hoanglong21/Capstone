@@ -1,8 +1,11 @@
 package com.capstone.project.controller;
 
+import com.capstone.project.dto.ProgressUpdateRequest;
+import com.capstone.project.dto.UserUpdateRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Progress;
 import com.capstone.project.service.ProgressService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -78,15 +81,11 @@ public class ProgressController {
         return ResponseEntity.ok(progressService.updateScore(userId, cardId, score));
     }
 
-    @GetMapping("/customprogress")
+    @PutMapping("/customprogress")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
-    public ResponseEntity<?> customUpdateProgress(@RequestParam("userid") int userId,
-                                                  @RequestParam("cardid") int cardId,
-                                                  @RequestParam(value = "star", required = false, defaultValue = "false") boolean isStar,
-                                                  @RequestParam(value = "picture", required = false, defaultValue = "") String picture,
-                                                  @RequestParam(value = "audio", required = false, defaultValue = "") String audio,
-                                                  @RequestParam(value = "note", required = false, defaultValue = "") String note) {
-        return ResponseEntity.ok(progressService.customUpdateProgress(userId, cardId, isStar, picture, audio, note));
+    public ResponseEntity<?> customUpdateProgress(@RequestBody ProgressUpdateRequest update) {
+        return ResponseEntity.ok(progressService.customUpdateProgress(update.getUserId(),
+                update.getCardId(), update.isStar(), update.getPicture(), update.getAudio(), update.getNote()));
     }
 
     @GetMapping("/resetprogress")
