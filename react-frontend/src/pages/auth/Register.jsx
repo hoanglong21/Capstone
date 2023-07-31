@@ -8,7 +8,7 @@ import { reset } from '../../features/auth/authSlice'
 
 import { ArrowLeftLongIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
-
+import "./auth.css"
 const Register = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -137,24 +137,25 @@ const Register = () => {
     }
 
     return (
-        <div className="pe-5" style={{ position: 'relative' }}>
+        <div className="auth-login">
             <button className="backHomeBtn" onClick={() => navigate('/')}>
                 <ArrowLeftLongIcon />
             </button>
-            <h2>Get Started</h2>
-            <h5 className="fw-normal" style={{ color: 'var(--text-light)' }}>
+            <div className="container auth me-5">
+            <h2 className='auth-header'>Get Started</h2>
+            <h5 className="auth-header-h5 fw-normal" style={{ color: 'var(--text-light)' }}>
                 Create your account now
             </h5>
             <form
                 id="registerForm"
-                className="form me-5 pe-5"
-                style={{ marginTop: '4rem' }}
+                className="authform form"
+                // style={{ marginTop: '4rem' }}
                 onSubmit={handleSubmit(submitForm)}
                 noValidate
             >
                 {/* error message */}
                 {(emptyMess || error) && (
-                    <div className="alert alert-danger" role="alert">
+                    <div className="error alert alert-danger" role="alert">
                         <div>{emptyMess}</div>
                         {Array.isArray(error) ? (
                             <ul className="m-0">
@@ -169,7 +170,7 @@ const Register = () => {
                 )}
                 {/* success message */}
                 {success && (
-                    <div className="alert alert-success" role="alert">
+                    <div className="error alert alert-success" role="alert">
                         Registered successfully. Please{' '}
                         <Link to="/login" className="link-success">
                             Login
@@ -294,7 +295,7 @@ const Register = () => {
                     </div>
                 </div>
                 {/* register btn */}
-                <div className="form-group mt-5">
+                <div className="auth-forgot form-group mt-5">
                     <button
                         type="submit"
                         className={`btn btn-primary col-12 ${styles.btn}`}
@@ -316,7 +317,7 @@ const Register = () => {
                     </button>
                 </div>
             </form>
-            <div className="d-flex">
+            <div className="auth-forgot d-flex">
                 <p>Have an account?</p>
                 <Link
                     to="/login"
@@ -324,6 +325,7 @@ const Register = () => {
                 >
                     Login
                 </Link>
+            </div>
             </div>
         </div>
     )

@@ -79,27 +79,27 @@ const Login = () => {
     }
 
     return (
-        <div className="mt-4 me-5 pe-5" style={{ position: 'relative' }}>
+        <div className="auth-login">
             <button className="backHomeBtn" onClick={() => navigate('/')}>
                 <ArrowLeftLongIcon />
             </button>
-            <div className="container me-5">
+            <div className="container auth me-5">
                 <h2 className='auth-header'>Welcome Back!</h2>
                 <h5
-                    className="fw-normal mb-5"
+                    className="auth-header-h5 fw-normal"
                     style={{ color: 'var(--text-light)' }}
                 >
                     Login to continue
                 </h5>
                 <form
-                    className="form needs-validation pe-4"
-                    style={{ marginTop: '5rem' }}
+                    className="authform form needs-validation"
+                    // style={{ marginTop: '5rem' }}
                     onSubmit={handleSubmit(submitForm)}
                     noValidate
                 >
                     {/* error message */}
                     {(emptyMess || error) && (
-                        <div className="alert alert-danger" role="alert">
+                        <div className="error alert alert-danger" role="alert">
                             {emptyMess || error}
                         </div>
                     )}
@@ -129,16 +129,16 @@ const Login = () => {
                         />
                     </div>
                     {/* forgot */}
-                    <div className="d-flex justify-content-end">
+                    <div className="auth-forgot d-flex justify-content-end">
                         <Link
                             to="/forgotten"
-                            className="mb-5 link-primary text-decoration-none fw-semibold"
+                            className="auth-link link-primary text-decoration-none fw-semibold"
                         >
                             Forgot Password?
                         </Link>
                     </div>
                     {/* login btn */}
-                    <div className="form-group mt-4">
+                    <div className="auth-forgot form-group">
                         <button
                             type="submit"
                             className={`btn btn-primary col-12 ${styles.btn}`}
@@ -160,7 +160,7 @@ const Login = () => {
                         </button>
                     </div>
                 </form>
-                <div className="d-flex mt-4">
+                <div className="auth-forgot d-flex mt-4">
                     <p>New User?</p>
                     <Link
                         to="/register"
