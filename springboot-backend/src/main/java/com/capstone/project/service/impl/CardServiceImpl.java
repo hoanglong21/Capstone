@@ -89,4 +89,9 @@ public class CardServiceImpl implements CardService {
         return false;
     }
 
+    @Override
+    public List<Card> getFilterCard(int studySetId, int userId, String[] status, boolean star) {
+        return cardRepository.getCardInSetWithCondition(studySetId, userId, status, star);
+    }
+
 }

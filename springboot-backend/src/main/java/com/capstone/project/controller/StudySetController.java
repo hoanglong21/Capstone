@@ -129,9 +129,10 @@ public class StudySetController {
     public ResponseEntity<?> getQuizByStudySetId(@RequestParam(value = "id") int id,
                                                  @RequestParam(value = "type") int[] type,
                                                  @RequestParam(value = "number") int number,
-                                                 @RequestParam(value = "userid") int userId) {
+                                                 @RequestParam(value = "userid") int userId,
+                                                 @RequestParam(value = "star") boolean star) {
         try {
-            return ResponseEntity.ok(studySetService.getQuizByStudySetId(id, type, number, userId));
+            return ResponseEntity.ok(studySetService.getQuizByStudySetId(id, type, number, userId, star));
         } catch (Exception e) {
 
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -143,9 +144,20 @@ public class StudySetController {
                                                    @RequestParam(value = "studysetid") int studySetId,
                                                    @RequestParam(value = "questiontype") int[] questionType,
                                                    @RequestParam(value = "progresstype") String[] progressType,
-                                                   @RequestParam(value = "random") boolean isRandom) {
+                                                   @RequestParam(value = "random") boolean isRandom,
+                                                   @RequestParam(value = "star") boolean star) {
         try {
-            return ResponseEntity.ok(studySetService.getLearningStudySetId(userId, studySetId, questionType, progressType, isRandom));
+            return ResponseEntity.ok(studySetService.getLearningStudySetId(userId, studySetId, questionType, progressType, isRandom, star));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/countinfoset")
+    public ResponseEntity<?> countCardInSet(@RequestParam(value = "userid") int userId,
+                                            @RequestParam(value = "studysetid") int studySetId) {
+        try {
+            return ResponseEntity.ok(studySetService.countCardInSet(studySetId, userId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
