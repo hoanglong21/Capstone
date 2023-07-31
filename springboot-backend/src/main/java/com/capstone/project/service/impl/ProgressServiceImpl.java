@@ -95,12 +95,12 @@ public class ProgressServiceImpl implements ProgressService {
     }
 
     @Override
-    public Progress customUpdateProgress(int userId, int cardId, boolean isStar, String picture, String audio, String note) {
-        Progress progress = progressRepository.findByCardIdAndUserId(userId, cardId);
+    public Progress customUpdateProgress(User user, Card card, boolean isStar, String picture, String audio, String note) {
+        Progress progress = progressRepository.findByCardIdAndUserId(user.getId(), card.getId());
         if(progress == null) {
             progress = Progress.builder()
-                    .user(User.builder().id(userId).build())
-                    .card(Card.builder().id(cardId).build())
+                    .user(user)
+                    .card(card)
                     .build();
         }
         progress.set_star(isStar);

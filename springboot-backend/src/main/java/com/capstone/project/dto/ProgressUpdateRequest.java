@@ -1,5 +1,7 @@
 package com.capstone.project.dto;
 
+import com.capstone.project.model.Card;
+import com.capstone.project.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @AllArgsConstructor
 @Builder
 public class ProgressUpdateRequest {
-    int userId;
-    int cardId;
+    User user;
+    Card card;
     boolean isStar;
     String picture;
     String audio;
