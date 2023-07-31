@@ -22,6 +22,7 @@ public class Attachment {
 
     private String file_type; //extension name
 
+    @Column(columnDefinition="TEXT")
     private String file_url;
 
     @ManyToOne

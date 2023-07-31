@@ -18,8 +18,10 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(columnDefinition="TEXT")
     private String picture;
 
+    @Column(columnDefinition="TEXT")
     private String audio;
 
     @ManyToOne

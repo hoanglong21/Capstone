@@ -26,7 +26,6 @@ export const recoverUser = (username) => {
     })
 }
 
-
 export const updateUser = (username, userDetails) => {
     return axios.put(API_BASE_URL + '/users/' + username, userDetails, {
         headers: {
@@ -142,7 +141,7 @@ const getStudySetLearnedStatistic = (id) => {
 }
 
 const getClassJoinedStatistic = (id) => {
-    return axios.get(API_BASE_URL + "/statistic/user/classjoined/" + id, {
+    return axios.get(API_BASE_URL + '/statistic/user/classjoined/' + id, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
@@ -150,7 +149,7 @@ const getClassJoinedStatistic = (id) => {
 }
 
 const getAccessStatistic = (id) => {
-    return axios.get(API_BASE_URL + "/statistic/user/access/" + id, {
+    return axios.get(API_BASE_URL + '/statistic/user/access/' + id, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
@@ -158,11 +157,22 @@ const getAccessStatistic = (id) => {
 }
 
 const getLearningStatistic = (id) => {
-    return axios.get(API_BASE_URL + "/statistic/user/learning/" + id, {
+    return axios.get(API_BASE_URL + '/statistic/user/learning/' + id, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('userToken')}`,
         },
     })
+}
+
+const findAllNameExcept = (username, except) => {
+    return axios.get(
+        API_BASE_URL + '/otherusers?username=' + username + '&except=' + except,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+        }
+    )
 }
 
 const UserService = {
@@ -173,12 +183,13 @@ const UserService = {
     deleteUser,
     sendResetPasswordEmail,
     filterUser,
-    banUser, 
+    banUser,
     recoverUser,
     getClassJoinedStatistic,
     getStudySetLearnedStatistic,
     getAccessStatistic,
-    getLearningStatistic
+    getLearningStatistic,
+    findAllNameExcept,
 }
 
 export default UserService

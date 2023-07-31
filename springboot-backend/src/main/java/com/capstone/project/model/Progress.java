@@ -41,10 +41,13 @@ public class Progress {
 
     private boolean is_star;
 
+    @Column(columnDefinition="TEXT")
     private String note;
 
+    @Column(columnDefinition="TEXT")
     private String picture;
 
+    @Column(columnDefinition="TEXT")
     private String audio;
 
 }

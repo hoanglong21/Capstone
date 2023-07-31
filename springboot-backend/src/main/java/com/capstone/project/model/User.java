@@ -52,6 +52,7 @@ public class User {
 
     private String status;
 
+    @Column(columnDefinition="TEXT")
     private String avatar;
 
     @Column

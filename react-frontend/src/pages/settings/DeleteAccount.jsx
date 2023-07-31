@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+import UserService from '../../services/UserService'
+import { logout } from '../../features/auth/authSlice'
 
 import FormStyles from '../../assets/styles/Form.module.css'
-import UserService from '../../services/UserService'
-import { useNavigate } from 'react-router-dom'
-import { logout } from '../../features/auth/authSlice'
 
 const DeleteAccount = () => {
     const navigate = useNavigate()
