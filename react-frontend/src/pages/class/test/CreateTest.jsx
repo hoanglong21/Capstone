@@ -60,7 +60,10 @@ const CreateTest = () => {
     }
 
     function toBEDate(date) {
-        return date ? date?.replace(/\s/g, 'T') + '.000' + '+07:00' : ''
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
     }
 
     // fetch data
@@ -263,6 +266,7 @@ const CreateTest = () => {
                 console.log(error.message)
             }
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
     }
 
     const handleChangeTest = (event) => {
@@ -682,15 +686,13 @@ const CreateTest = () => {
                 </div>
                 {test?._draft ? (
                     <div className="d-flex">
-                        <a href="#first">
-                            <button
-                                className="createTest_submitBtn"
-                                onClick={handleCreate}
-                                disabled={!test?.title}
-                            >
-                                Create
-                            </button>
-                        </a>
+                        <button
+                            className="createTest_submitBtn"
+                            onClick={handleCreate}
+                            disabled={!test?.title}
+                        >
+                            Create
+                        </button>
                         <button
                             className="createTest_draftBtn"
                             onClick={() => {
@@ -701,19 +703,17 @@ const CreateTest = () => {
                         </button>
                     </div>
                 ) : (
-                    <a href="#first">
-                        <button
-                            className="createTest_submitBtn"
-                            onClick={handleCreate}
-                            disabled={!test?.title}
-                        >
-                            Save
-                        </button>
-                    </a>
+                    <button
+                        className="createTest_submitBtn"
+                        onClick={handleCreate}
+                        disabled={!test?.title}
+                    >
+                        Save
+                    </button>
                 )}
             </div>
             {/* Test */}
-            <div className="card mt-4" id="first">
+            <div className="card mt-4">
                 <div className="card-body p-4">
                     {error && (
                         <div

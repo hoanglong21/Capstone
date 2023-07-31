@@ -33,6 +33,13 @@ const CreateSet = () => {
     const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     // draft can go to edit, back to create
     useEffect(() => {
         if (id && studySet._draft) {
@@ -92,15 +99,9 @@ const CreateSet = () => {
                     }
                 }
                 const tempSetCreatedDate = temp.created_date
-                temp.created_date =
-                    tempSetCreatedDate?.replace(/\s/g, 'T') + '.000' + '+07:00'
+                temp.created_date = toBEDate(tempSetCreatedDate)
                 const tempUserCreatedDate = temp.user?.created_date
-                if (tempUserCreatedDate) {
-                    temp.user.created_date =
-                        tempUserCreatedDate?.replace(/\s/g, 'T') +
-                        '.000' +
-                        '+07:00'
-                }
+                temp.user.created_date = toBEDate(tempUserCreatedDate)
                 setStudySet(temp)
                 // type
                 setType(
@@ -111,15 +112,10 @@ const CreateSet = () => {
                     .data
                 for (var card of tempCards) {
                     const tempSetCreatedDate = card.studySet.created_date
-                    card.studySet.created_date =
-                        tempSetCreatedDate.replace(/\s/g, 'T') +
-                        '.000' +
-                        '+07:00'
+                    card.studySet.created_date = toBEDate(tempSetCreatedDate)
                     const tempUserCreatedDate = card.studySet.user.created_date
                     card.studySet.user.created_date =
-                        tempUserCreatedDate.replace(/\s/g, 'T') +
-                        '.000' +
-                        '+07:00'
+                        toBEDate(tempUserCreatedDate)
                 }
                 setCards(tempCards)
             } catch (error) {
@@ -242,6 +238,7 @@ const CreateSet = () => {
                 setError(error.message)
             }
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
         setLoading(false)
     }
 
@@ -345,7 +342,6 @@ const CreateSet = () => {
                                     {saving ? 'Saving...' : 'Saved'}
                                 </div>
                             </div>
-
                             <button
                                 type="submit"
                                 className="btn btn-primary"

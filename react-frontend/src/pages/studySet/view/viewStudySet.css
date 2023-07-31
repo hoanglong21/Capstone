@@ -108,6 +108,7 @@
     min-height: 3.625rem;
     box-shadow: 0 0.125rem 0.25rem #00000014;
     padding: 1rem;
+    padding-right: 0;
 }
 
 .setPageTerm_termText {
@@ -137,6 +138,11 @@
 .setPageTerm_imageWrap img {
     max-height: 100%;
     max-width: 100%;
+}
+
+.setPageTerm_btn.star,
+.setPageTerm_btn.star:hover {
+    color: #ffdc62;
 }
 
 .setPage_noteModal {
