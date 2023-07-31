@@ -84,8 +84,8 @@ public class ProgressController {
     @PutMapping("/customprogress")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> customUpdateProgress(@RequestBody ProgressUpdateRequest update) {
-        return ResponseEntity.ok(progressService.customUpdateProgress(update.getUserId(),
-                update.getCardId(), update.isStar(), update.getPicture(), update.getAudio(), update.getNote()));
+        return ResponseEntity.ok(progressService.customUpdateProgress(update.getUser(),
+                update.getCard(), update.isStar(), update.getPicture(), update.getAudio(), update.getNote()));
     }
 
     @GetMapping("/resetprogress")
