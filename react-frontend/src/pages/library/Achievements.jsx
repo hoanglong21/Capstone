@@ -11,6 +11,7 @@ import member from "../../assets/achievements/badge-Week.svg";
 import "../../assets/styles/achievement.css";
 
 function Achievements() {
+  
   return (
     <div>
       <div className="row gx-3 mb-3 mt-3">
@@ -332,7 +333,7 @@ function Achievements() {
                   1000-day streak
                   <span className="streak-date">24 tháng 3, 2023</span>
                 </div>
-              </div>
+              </div>           
             </div>
           </div>
         </div>
