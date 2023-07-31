@@ -97,7 +97,7 @@ public class ProgressServiceImpl implements ProgressService {
     @Override
     public Progress customUpdateProgress(User user, Card card, boolean isStar, String picture, String audio, String note) {
         Progress progress = progressRepository.findByCardIdAndUserId(user.getId(), card.getId());
-        if(progress == null) {
+        if(progress == null) { 
             progress = Progress.builder()
                     .user(user)
                     .card(card)
