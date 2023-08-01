@@ -86,7 +86,6 @@
 .flashcardMain {
     width: 80vw;
     margin: 1.5rem 1rem 0;
-    z-index: 1000000;
 }
 
 .flashcardContentContainer {

@@ -486,7 +486,6 @@ const DoQuiz = () => {
                 <div className="quizOptions d-flex">
                     {isEnd ? (
                         <button
-                            id="toggleQuizOptionsModalBtn"
                             className="quizOptions_btn"
                             onClick={handleCreateQuiz}
                         >

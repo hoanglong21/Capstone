@@ -12,7 +12,8 @@ const VocabCard = ({
     isAuto,
     fullCards,
     setFullCards,
-    setShowNote,
+    setShowNoteModal,
+    handleUpdateNumStar,
 }) => {
     const [card, setCard] = useState({})
     const [contents, setContents] = useState([])
@@ -68,7 +69,7 @@ const VocabCard = ({
         return () => {
             window.removeEventListener('keydown', handleUserSpacePress, true)
         }
-    }, [])
+    }, [cardIndex])
 
     const handleChangeStar = async () => {
         var tempCard = { ...card }
@@ -93,10 +94,15 @@ const VocabCard = ({
         tempProgress = (
             await ProgressService.customUpdateProgress(tempProgress)
         ).data
+        // update progress
         setProgress(tempProgress)
+        // update list cards
         var tempFullCards = [...fullCards]
         tempFullCards[cardIndex] = { ...fullCard, progress: tempProgress }
         setFullCards(tempFullCards)
+        // update number star
+        console.log(tempProgress)
+        // handleUpdateNumStar(tempProgress.status, tempProgress._star)
     }
 
     return (
@@ -127,7 +133,7 @@ const VocabCard = ({
                             name="flashcardContent_noteBtn"
                             className="btn btn-customLight"
                             onClick={() => {
-                                setShowNote(true)
+                                setShowNoteModal(true)
                             }}
                         >
                             <NoteSolidIcon size="16px" />
@@ -142,6 +148,7 @@ const VocabCard = ({
                 <div className="flashcardBack">
                     <div className="flashcardContent_noteBtn">
                         <button
+                            name="flashcardContent_noteBtn"
                             className={`setPageTerm_btn btn btn-customLight ${
                                 progress?._star ? 'star' : ''
                             }`}
@@ -150,9 +157,10 @@ const VocabCard = ({
                             <StarSolidIcon size="16px" />
                         </button>
                         <button
+                            name="flashcardContent_noteBtn"
                             className="btn btn-customLight"
                             onClick={() => {
-                                setShowNote(true)
+                                setShowNoteModal(true)
                             }}
                         >
                             <NoteSolidIcon size="16px" />

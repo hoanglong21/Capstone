@@ -32,6 +32,7 @@ import './Flashcard.css'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 import ProgressService from '../../../services/ProgressService'
 import NoteEditor from '../../../components/textEditor/NoteEditor'
+import StudySetService from '../../../services/StudySetService'
 
 const Confettiful = function (el) {
     this.el = el
@@ -112,7 +113,7 @@ const Flashcard = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [cards, setCards] = useState([])
-    const [cardIndex, setCardIndex] = useState(null)
+    const [cardIndex, setCardIndex] = useState(0)
     const [type, setType] = useState(1)
 
     const [isEnd, setIsEnd] = useState(false)
@@ -125,9 +126,29 @@ const Flashcard = () => {
     const [picture, setPicture] = useState('')
     const [audio, setAudio] = useState('')
     const [note, setNote] = useState('')
-    const [showNote, setShowNote] = useState(false)
+    const [showNoteModal, setShowNoteModal] = useState(false)
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
+
+    const [progressStatus, setProgressStatus] = useState([
+        'not studied',
+        'still learning',
+        'mastered',
+    ])
+    const [isStar, setIsStar] = useState(false)
+    const [optionProgressStatus, setOptionProgressStatus] = useState([
+        'not studied',
+        'still learning',
+        'mastered',
+    ])
+    const [optionIsStar, setOptionIsStar] = useState(false)
+
+    const [numNot, setNumNot] = useState(0)
+    const [numStill, setNumStill] = useState(0)
+    const [numMaster, setNumMaster] = useState(0)
+    const [numNotStar, setNumNotStar] = useState(0)
+    const [numStillStar, setNumStillStar] = useState(0)
+    const [numMasterStar, setNumMasterStar] = useState(0)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -143,6 +164,10 @@ const Flashcard = () => {
             return file
         }
     }
+
+    useEffect(() => {
+        document.getElementById('toggleFlashcardsOptionsModalBtn').click()
+    }, [])
 
     // fetch user info
     useEffect(() => {
@@ -164,6 +189,15 @@ const Flashcard = () => {
                     )
                 ).data
                 setCards(tempCards)
+                const tempCounts = (
+                    await StudySetService.countCardInSet(userInfo.id, id)
+                ).data
+                setNumNot(tempCounts['Not studied'])
+                setNumStill(tempCounts['Still learning'])
+                setNumMaster(tempCounts['Mastered'])
+                setNumNotStar(tempCounts['Not studied star'])
+                setNumStillStar(tempCounts['Still learning star'])
+                setNumMasterStar(tempCounts['Mastered star'])
                 setCardIndex(0)
                 setPicture(tempCards[0].progress?.picture || '')
                 setAudio(tempCards[0].progress?.audio || '')
@@ -183,36 +217,41 @@ const Flashcard = () => {
     }, [userInfo, id])
 
     const nextCard = () => {
-        clearSetTimeout()
-        var tempIndex1 = cardIndex - 1
-        if (tempIndex1 > -1) {
-            const progress = cards[tempIndex1].progress
-            setCardIndex(tempIndex1)
-            setPicture(progress?.picture || '')
-            setAudio(progress?.audio || '')
-            setNote(progress?.note || '')
-            document
-                .getElementById(`flipElement${cardIndex}`)
-                ?.classList.remove('is-flipped')
+        if (!isEnd) {
+            clearSetTimeout()
+            var tempIndex2 = cardIndex + 1
+            if (tempIndex2 === cards.length) {
+                setIsEnd(true)
+            }
+            console.log(tempIndex2, cards)
+            if (tempIndex2 < cards.length) {
+                const progress = cards[tempIndex2].progress
+                setCardIndex(tempIndex2)
+                setPicture(progress?.picture || '')
+                setAudio(progress?.audio || '')
+                setNote(progress?.note || '')
+                document
+                    .getElementById(`flipElement${cardIndex}`)
+                    ?.classList.remove('is-flipped')
+                clearSetTimeout()
+            }
         }
     }
 
     const prevCard = () => {
-        clearSetTimeout()
-        var tempIndex2 = cardIndex + 1
-        if (tempIndex2 === cards.length) {
-            setIsEnd(true)
-        }
-        if (tempIndex2 < cards.length) {
-            const progress = cards[tempIndex2].progress
-            setCardIndex(tempIndex2)
-            setPicture(progress?.picture || '')
-            setAudio(progress?.audio || '')
-            setNote(progress?.note || '')
-            document
-                .getElementById(`flipElement${cardIndex}`)
-                ?.classList.remove('is-flipped')
+        if (!isEnd) {
             clearSetTimeout()
+            var tempIndex1 = cardIndex - 1
+            if (tempIndex1 > -1) {
+                const progress = cards[tempIndex1].progress
+                setCardIndex(cardIndex - 1)
+                setPicture(progress?.picture || '')
+                setAudio(progress?.audio || '')
+                setNote(progress?.note || '')
+                document
+                    .getElementById(`flipElement${cardIndex}`)
+                    ?.classList.remove('is-flipped')
+            }
         }
     }
 
@@ -221,17 +260,16 @@ const Flashcard = () => {
         const handleUserKeyPress = (event) => {
             switch (event.key) {
                 case 'ArrowLeft':
-                    nextCard()
+                    prevCard()
                     // Do something for "left arrow" key press.
                     break
                 case 'ArrowRight':
-                    prevCard()
+                    nextCard()
                     // Do something for "right arrow" key press.
                     break
                 default:
                     return // Quit when this doesn't handle the key event.
             }
-
             // Cancel the default action to avoid it being handled twice
             event.preventDefault()
         }
@@ -239,7 +277,7 @@ const Flashcard = () => {
         return () => {
             window.removeEventListener('keydown', handleUserKeyPress, true)
         }
-    }, [cardIndex])
+    }, [cardIndex, cards])
 
     // congratulation animation
     useEffect(() => {
@@ -276,6 +314,10 @@ const Flashcard = () => {
     const handleEndReset = (index) => {
         setIsEnd(false)
         setCardIndex(index)
+        const progress = cards[index].progress
+        setPicture(progress?.picture || '')
+        setAudio(progress?.audio || '')
+        setNote(progress?.note || '')
         document
             .querySelector('#flashcardAnimation .confetti-container')
             .remove()
@@ -341,7 +383,7 @@ const Flashcard = () => {
         name === 'picture' ? setPicture('') : setAudio('')
     }
 
-    const handleSave = async () => {
+    const handleSaveNote = async () => {
         setLoading(true)
         const card = cards[cardIndex].card
         const progress = cards[cardIndex].progress
@@ -433,7 +475,7 @@ const Flashcard = () => {
             var tempCards = [...cards]
             tempCards[cardIndex].progress = tempProgress
             setCards(tempCards)
-            setShowNote(false)
+            setShowNoteModal(false)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -444,12 +486,83 @@ const Flashcard = () => {
         setLoading(false)
     }
 
-    const handleCancel = () => {
+    const handleCancelNote = () => {
         const progress = cards[cardIndex].progress
-        setShowNote(false)
+        setShowNoteModal(false)
         setPicture(progress?.picture || '')
         setAudio(progress?.audio || '')
         setNote(progress?.note || '')
+    }
+
+    const handleChangeProgressStatus = (event) => {
+        var tempProgressStatus = [...optionProgressStatus]
+        const value = event.target.value
+        if (event.target.checked) {
+            tempProgressStatus.push(value)
+        } else {
+            tempProgressStatus = tempProgressStatus.filter(
+                (item) => item != value
+            )
+        }
+        setOptionProgressStatus(tempProgressStatus)
+    }
+
+    const handleCreateFlashCards = async () => {
+        document
+            .querySelector('#flashcardAnimation .confetti-container')
+            ?.remove()
+        setIsEnd(false)
+        setError('')
+        // validation
+        if (optionProgressStatus?.length < 1) {
+            setError('You must select at least one progress status.')
+            setLoading(false)
+            return
+        }
+        // create
+        try {
+            setLoading(true)
+            const tempCards = (
+                await CardService.countCardInSet(
+                    `=${userInfo.id}`,
+                    `=${id}`,
+                    `=${optionProgressStatus}`,
+                    `=${optionIsStar}`
+                )
+            ).data
+            setCards(tempCards)
+            setCardIndex(0)
+            setPicture(tempCards[0].progress?.picture || '')
+            setAudio(tempCards[0].progress?.audio || '')
+            setNote(tempCards[0].progress?.note || '')
+            setProgressStatus(optionProgressStatus)
+            setIsStar(optionIsStar)
+            document.getElementById('flashcardsOptionModalCloseBtn').click()
+            setError('')
+            setLoading(false)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
+
+    const handleCancelCreateFlashcards = () => {
+        setError('')
+        setOptionProgressStatus(progressStatus)
+        setOptionIsStar(isStar)
+    }
+
+    const handleUpdateNumStar = (status, isStar) => {
+        if (status == 'not studied') {
+            setNumNotStar(isStar ? numNotStar + 1 : numNotStar - 1)
+        } else if (status == 'sill learning') {
+            setNumStillStar(isStar ? numStillStar + 1 : numStillStar - 1)
+        } else {
+            setNumStillStar(isStar ? numMasterStar + 1 : numMasterStar - 1)
+        }
     }
 
     return (
@@ -531,15 +644,14 @@ const Flashcard = () => {
                 <div className="quizOptions d-flex">
                     {isEnd ? (
                         <button
-                            id="toggleQuizOptionsModalBtn"
                             className="quizOptions_btn"
-                            // onClick={handleCreateQuiz}
+                            onClick={handleCreateFlashCards}
                         >
-                            Take a new test
+                            Study again
                         </button>
                     ) : (
                         <button
-                            id="toggleQuizOptionsModalBtn"
+                            id="toggleFlashcardsOptionsModalBtn"
                             className="quizOptions_btn"
                             data-bs-toggle="modal"
                             data-bs-target="#flashcardOptionModal"
@@ -608,7 +720,8 @@ const Flashcard = () => {
                             isAuto={isAuto}
                             fullCards={cards}
                             setFullCards={setCards}
-                            setShowNote={setShowNote}
+                            setShowNoteModal={setShowNoteModal}
+                            handleUpdateNumStar={handleUpdateNumStar}
                         />
                     ) : type === 2 ? (
                         <KanjiCard
@@ -625,139 +738,143 @@ const Flashcard = () => {
                             isAuto={isAuto}
                         />
                     )}
-                    {showNote && (
+                    {showNoteModal && (
                         <div className="flashcardContent_noteModal">
-                            <div className="modal-content">
-                                <div className="d-flex justify-content-between mb-3">
-                                    <div>
-                                        <input
-                                            type="file"
-                                            id="noteUploadImage"
-                                            accept="image/*"
-                                            name="picture"
-                                            className="d-none"
-                                            onClick={(event) => {
-                                                event.target.value = null
-                                            }}
-                                            onChange={(event) =>
-                                                handleChangeFile(event)
-                                            }
-                                        />
-                                        <label htmlFor="noteUploadImage">
-                                            <ImageIcon className="ms-3 icon-warning" />
-                                        </label>
-                                        <input
-                                            type="file"
-                                            id="noteUploadAudio"
-                                            accept="audio/*"
-                                            name="audio"
-                                            className="d-none"
-                                            onClick={(event) => {
-                                                event.target.value = null
-                                            }}
-                                            onChange={(event) =>
-                                                handleChangeFile(event)
-                                            }
-                                        />
-                                        <label htmlFor="noteUploadAudio">
-                                            <MicIcon className="ms-3 icon-warning" />
-                                        </label>
-                                    </div>
-                                    <button
-                                        className="close p-0"
-                                        onClick={handleCancel}
-                                    >
-                                        <CloseIcon size="1.875rem" />
-                                    </button>
-                                </div>
-                                <div className="setPage_noteEditor">
-                                    <NoteEditor
-                                        data={note}
-                                        onChange={(event, editor) => {
-                                            setNote(editor.getData())
-                                        }}
-                                    />
-                                </div>
-                                {(loadingPicture ||
-                                    loadingAudio ||
-                                    picture ||
-                                    audio) && (
-                                    <div className="row mt-2 setPage_noteUploadFile">
-                                        <div className="col-6 d-flex flex-column align-items-center">
-                                            {loadingPicture && (
-                                                <div
-                                                    className="spinner-border text-secondary mb-3"
-                                                    role="status"
-                                                >
-                                                    <span className="visually-hidden">
-                                                        LoadingUpload...
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {!loadingPicture && picture && (
-                                                <div className="d-flex align-self-start align-items-center">
-                                                    <img
-                                                        src={getUrl(picture)}
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        name="picture"
-                                                        className="btn btn-danger ms-5 p-0 rounded-circle"
-                                                        onClick={(event) =>
-                                                            handleDeleteFile(
-                                                                event
-                                                            )
-                                                        }
-                                                    >
-                                                        <DeleteIcon size="1.25rem" />
-                                                    </button>
-                                                </div>
-                                            )}
+                            <div className="modal-content d-flex">
+                                <div className="flex-grow-1">
+                                    <div className="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <input
+                                                type="file"
+                                                id="noteUploadImage"
+                                                accept="image/*"
+                                                name="picture"
+                                                className="d-none"
+                                                onClick={(event) => {
+                                                    event.target.value = null
+                                                }}
+                                                onChange={(event) =>
+                                                    handleChangeFile(event)
+                                                }
+                                            />
+                                            <label htmlFor="noteUploadImage">
+                                                <ImageIcon className="ms-3 icon-warning" />
+                                            </label>
+                                            <input
+                                                type="file"
+                                                id="noteUploadAudio"
+                                                accept="audio/*"
+                                                name="audio"
+                                                className="d-none"
+                                                onClick={(event) => {
+                                                    event.target.value = null
+                                                }}
+                                                onChange={(event) =>
+                                                    handleChangeFile(event)
+                                                }
+                                            />
+                                            <label htmlFor="noteUploadAudio">
+                                                <MicIcon className="ms-3 icon-warning" />
+                                            </label>
                                         </div>
-                                        <div className="col-6 d-flex flex-column align-items-center">
-                                            {loadingAudio && (
-                                                <div
-                                                    className="spinner-border text-secondary mb-3"
-                                                    role="status"
-                                                >
-                                                    <span className="visually-hidden">
-                                                        LoadingUpload...
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {!loadingAudio && audio && (
-                                                <div className="d-flex align-self-start align-items-center">
-                                                    <audio
-                                                        controls
-                                                        src={getUrl(audio)}
-                                                    ></audio>
-                                                    <button
-                                                        type="button"
-                                                        name="audio"
-                                                        className="btn btn-danger ms-5 p-0 rounded-circle"
-                                                        onClick={(event) =>
-                                                            handleDeleteFile(
-                                                                event
-                                                            )
-                                                        }
-                                                    >
-                                                        <DeleteIcon size="1.25rem" />
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
+                                        <button
+                                            className="close p-0"
+                                            onClick={handleCancelNote}
+                                        >
+                                            <CloseIcon size="1.875rem" />
+                                        </button>
                                     </div>
-                                )}
+                                    <div className="setPage_noteEditor">
+                                        <NoteEditor
+                                            data={note}
+                                            onChange={(event, editor) => {
+                                                setNote(editor.getData())
+                                            }}
+                                        />
+                                    </div>
+                                    {(loadingPicture ||
+                                        loadingAudio ||
+                                        picture ||
+                                        audio) && (
+                                        <div className="row mt-2 setPage_noteUploadFile">
+                                            <div className="col-6 d-flex flex-column align-items-center">
+                                                {loadingPicture && (
+                                                    <div
+                                                        className="spinner-border text-secondary mb-3"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            LoadingUpload...
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {!loadingPicture && picture && (
+                                                    <div className="d-flex align-self-start align-items-center">
+                                                        <img
+                                                            src={getUrl(
+                                                                picture
+                                                            )}
+                                                        />
+                                                        <button
+                                                            type="button"
+                                                            name="picture"
+                                                            className="btn btn-danger ms-5 p-0 rounded-circle"
+                                                            onClick={(event) =>
+                                                                handleDeleteFile(
+                                                                    event
+                                                                )
+                                                            }
+                                                        >
+                                                            <DeleteIcon size="1.25rem" />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="col-6 d-flex flex-column align-items-center">
+                                                {loadingAudio && (
+                                                    <div
+                                                        className="spinner-border text-secondary mb-3"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            LoadingUpload...
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {!loadingAudio && audio && (
+                                                    <div className="d-flex align-self-start align-items-center">
+                                                        <audio
+                                                            controls
+                                                            src={getUrl(audio)}
+                                                        ></audio>
+                                                        <button
+                                                            type="button"
+                                                            name="audio"
+                                                            className="btn btn-danger ms-5 p-0 rounded-circle"
+                                                            onClick={(event) =>
+                                                                handleDeleteFile(
+                                                                    event
+                                                                )
+                                                            }
+                                                        >
+                                                            <DeleteIcon size="1.25rem" />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                                 <div className="d-flex justify-content-end mt-3">
                                     <button
                                         className="btn btn-secondary me-3"
-                                        onClick={handleCancel}
+                                        onClick={handleCancelNote}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         className="btn btn-primary"
-                                        onClick={handleSave}
+                                        onClick={handleSaveNote}
                                         disabled={loading}
                                     >
                                         {loading ? 'Saving' : 'Save'}
@@ -805,7 +922,7 @@ const Flashcard = () => {
                                 style={{ marginRight: '4rem' }}
                                 disabled={cardIndex === 0}
                                 onClick={() => {
-                                    nextCard()
+                                    prevCard()
                                 }}
                             >
                                 <ArrowLeftIcon
@@ -817,7 +934,7 @@ const Flashcard = () => {
                                 className="flashCardSwitch_btn"
                                 style={{ marginRight: '4rem' }}
                                 onClick={() => {
-                                    prevCard()
+                                    nextCard()
                                 }}
                             >
                                 <ArrowRightIcon
@@ -856,10 +973,10 @@ const Flashcard = () => {
                                 className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
-                                // onClick={handleCancelCreateQuiz}
+                                onClick={handleCancelCreateFlashcards}
                             ></button>
                             <button
-                                id="quizOptionModalCloseBtn"
+                                id="flashcardsOptionModalCloseBtn"
                                 type="button"
                                 className="d-none"
                                 data-bs-dismiss="modal"
@@ -880,142 +997,117 @@ const Flashcard = () => {
                                 <div className="col-6">
                                     {/* types */}
                                     <div className="quizOptionBlock">
-                                        <legend>QUESTION TYPES</legend>
+                                        <legend>PROGRESS STATUS</legend>
                                         <div className="mb-2">
                                             <input
                                                 className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                                                 type="checkbox"
-                                                value={1}
-                                                // checked={
-                                                //     optionQuestionTypes?.includes(
-                                                //         1
-                                                //     ) || ''
-                                                // }
-                                                id="written"
-                                                // onChange={
-                                                //     handleChangeQuestionType
-                                                // }
+                                                value="not studied"
+                                                checked={
+                                                    optionProgressStatus?.includes(
+                                                        'not studied'
+                                                    ) || ''
+                                                }
+                                                id="notStudied"
+                                                onChange={
+                                                    handleChangeProgressStatus
+                                                }
+                                                disabled={
+                                                    optionIsStar
+                                                        ? numNotStar == 0
+                                                        : numNot == 0
+                                                }
                                             />
                                             <label
                                                 className="form-check-label"
-                                                htmlFor="written"
+                                                htmlFor="notStudied"
                                             >
-                                                Written
+                                                Not studied
                                             </label>
                                         </div>
                                         <div className="mb-2">
                                             <input
                                                 className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                                                 type="checkbox"
-                                                value={2}
-                                                // checked={
-                                                //     optionQuestionTypes?.includes(
-                                                //         2
-                                                //     ) || ''
-                                                // }
-                                                id="mupltipleChoice"
-                                                // onChange={
-                                                //     handleChangeQuestionType
-                                                // }
+                                                value="still learning"
+                                                checked={
+                                                    optionProgressStatus?.includes(
+                                                        'still learning'
+                                                    ) || ''
+                                                }
+                                                id="stillLearning"
+                                                onChange={
+                                                    handleChangeProgressStatus
+                                                }
+                                                disabled={
+                                                    optionIsStar
+                                                        ? numStillStar == 0
+                                                        : numStill == 0
+                                                }
                                             />
                                             <label
                                                 className="form-check-label"
-                                                htmlFor="mupltipleChoice"
+                                                htmlFor="stillLearning"
                                             >
-                                                Multiple choice
+                                                Still learning
                                             </label>
                                         </div>
                                         <div>
                                             <input
                                                 className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                                                 type="checkbox"
-                                                value={3}
-                                                // checked={
-                                                //     optionQuestionTypes?.includes(
-                                                //         3
-                                                //     ) || ''
-                                                // }
-                                                id="trueFalse"
-                                                // onChange={
-                                                //     handleChangeQuestionType
-                                                // }
+                                                value="mastered"
+                                                checked={
+                                                    optionProgressStatus?.includes(
+                                                        'mastered'
+                                                    ) || ''
+                                                }
+                                                id="mastered"
+                                                onChange={
+                                                    handleChangeProgressStatus
+                                                }
+                                                disabled={
+                                                    optionIsStar
+                                                        ? numMasterStar == 0
+                                                        : numMaster == 0
+                                                }
                                             />
                                             <label
                                                 className="form-check-label"
-                                                htmlFor="trueFalse"
+                                                htmlFor="mastered"
                                             >
-                                                True/False
+                                                Mastered
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-6">
-                                    {/* picture */}
+                                    {/* star */}
                                     <div className="quizOptionBlock">
-                                        <legend>PICTURE</legend>
+                                        <legend>STAR</legend>
                                         <div className="mb-2">
                                             <input
                                                 className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                                                 type="checkbox"
-                                                // checked={optionShowPicture}
-                                                id="showPicture"
-                                                // onChange={() => {
-                                                //     setOptionShowPicture(
-                                                //         !optionShowPicture
-                                                //     )
-                                                // }}
+                                                checked={optionIsStar}
+                                                id="isStar"
+                                                onChange={() => {
+                                                    setOptionIsStar(
+                                                        !optionIsStar
+                                                    )
+                                                }}
+                                                disabled={
+                                                    numNotStar +
+                                                        numStillStar +
+                                                        numMasterStar ==
+                                                    0
+                                                }
                                             />
                                             <label
                                                 className="form-check-label"
-                                                htmlFor="showPicture"
+                                                htmlFor="isStar"
                                             >
-                                                Show picture
-                                            </label>
-                                        </div>
-                                    </div>
-                                    {/* audio */}
-                                    <div className="quizOptionBlock">
-                                        <legend>AUDIO</legend>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                // checked={optionShowAudio}
-                                                id="showAudio"
-                                                // onChange={() => {
-                                                //     setOptionShowAudio(
-                                                //         !optionShowAudio
-                                                //     )
-                                                // }}
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="showAudio"
-                                            >
-                                                Show audio
-                                            </label>
-                                        </div>
-                                    </div>
-                                    {/* note */}
-                                    <div className="quizOptionBlock">
-                                        <legend>NOTE</legend>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                // checked={optionShowNote}
-                                                id="note"
-                                                // onChange={() => {
-                                                //     setOptionShowNote(
-                                                //         !optionShowNote
-                                                //     )
-                                                // }}
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="note"
-                                            >
-                                                Show note
+                                                Study starred terms only
                                             </label>
                                         </div>
                                     </div>
@@ -1027,13 +1119,13 @@ const Flashcard = () => {
                                 type="button"
                                 className="btn btn-secondary classModalBtn me-3"
                                 data-bs-dismiss="modal"
-                                // onClick={handleCancelCreateQuiz}
+                                onClick={handleCancelCreateFlashcards}
                             >
                                 Cancel
                             </button>
                             <button
                                 className="btn btn-primary classModalBtn"
-                                // onClick={handleCreateQuiz}
+                                onClick={handleCreateFlashCards}
                                 disabled={loading}
                             >
                                 {loading ? (
@@ -1048,7 +1140,7 @@ const Flashcard = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    'Create new quiz'
+                                    'Create new flashcards'
                                 )}
                             </button>
                         </div>
