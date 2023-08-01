@@ -85,6 +85,7 @@ import Learn from './pages/studySet/learn/Learn'
 import ViewAssignment from './pages/class/assignment/ViewAssignment'
 import Instructions from './pages/class/assignment/Instructions'
 import Submissions from './pages/class/assignment/Submissions'
+import VideoCall from './components/chat/VideoCall'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -134,7 +135,10 @@ const App = () => {
                             />
                             <Route path="sets" element={<StudySetList />} />
                             <Route path="classes" element={<ClassList />} />
-                            <Route path="statistics/:id" element={<Statistics />} />
+                            <Route
+                                path="statistics/:id"
+                                element={<Statistics />}
+                            />
                         </Route>
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />
@@ -241,6 +245,11 @@ const App = () => {
                     <Route path="flashcards/:id" element={<Flashcard />} />
                     <Route path="quiz/:id" element={<DoQuiz />} />
                     <Route path="learn/:id" element={<Learn />} />
+                    <Route path="video-call" element={<VideoCall />} />
+                    <Route
+                        path="video-call/:call"
+                        element={<VideoCall />}
+                    />
                 </Route>
 
                 <Route path="/banuser" element={<BanUser />} />

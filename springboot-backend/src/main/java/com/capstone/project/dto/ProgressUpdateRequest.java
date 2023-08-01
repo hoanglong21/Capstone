@@ -19,4 +19,5 @@ public class ProgressUpdateRequest {
     String picture;
     String audio;
     String note;
+    String status;
 }

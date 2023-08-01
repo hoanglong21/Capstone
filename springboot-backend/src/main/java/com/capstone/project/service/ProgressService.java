@@ -21,7 +21,7 @@ public interface ProgressService {
 
     Progress updateScore(int userId, int cardId, int score);
 
-    Progress customUpdateProgress(User user, Card card, boolean isStar, String picture, String audio, String note);
+    Progress customUpdateProgress(User user, Card card, boolean isStar, String picture, String audio, String note, String status);
 
     Boolean resetProgress(int userId, int studySetId);
 

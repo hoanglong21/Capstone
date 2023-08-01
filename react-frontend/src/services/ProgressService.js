@@ -17,26 +17,12 @@ const getProgressByUserIdAndCardId = (userId, cardId) => {
     )
 }
 
-const customUpdateProgress = (userId, cardId, isStar, picture, audio, note) => {
-    return axios.get(
-        API_BASE_URL +
-            '/customprogress?userid' +
-            userId +
-            '&cardid' +
-            cardId +
-            (isStar ? `&star${isStar}` : '') +
-            '&picture' +
-            picture +
-            '&audio' +
-            audio +
-            '&note' +
-            note,
-        {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-            },
-        }
-    )
+const customUpdateProgress = (progress) => {
+    return axios.put(API_BASE_URL + '/customprogress', progress, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const ProgressService = {

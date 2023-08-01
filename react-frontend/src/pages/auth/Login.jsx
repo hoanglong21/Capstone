@@ -75,6 +75,7 @@ const Login = () => {
         passwordEl.classList.remove('is-invalid')
         dispatch(reset())
         setEmptyMess('')
+        document.body.scrollTop = document.documentElement.scrollTop = 0
         setLoading(false)
     }
 

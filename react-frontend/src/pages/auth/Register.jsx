@@ -109,7 +109,6 @@ const Register = () => {
         passEl.classList.remove('is-invalid')
         dispatch(reset())
         setEmptyMess('')
-
         form.classList.add('was-validated')
         if (
             !data.username ||
@@ -134,6 +133,7 @@ const Register = () => {
             passEl.classList.remove('is-invalid')
             setEmptyMess('')
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
     }
 
     return (
