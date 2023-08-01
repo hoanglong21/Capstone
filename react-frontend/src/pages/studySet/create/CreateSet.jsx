@@ -98,10 +98,12 @@ const CreateSet = () => {
                         ).data
                     }
                 }
-                const tempSetCreatedDate = temp.created_date
+                const tempSetCreatedDate = temp?.created_date
                 temp.created_date = toBEDate(tempSetCreatedDate)
-                const tempUserCreatedDate = temp.user?.created_date
-                temp.user.created_date = toBEDate(tempUserCreatedDate)
+                if (temp.user) {
+                    const tempUserCreatedDate = temp?.user?.created_date
+                    temp.user.created_date = toBEDate(tempUserCreatedDate)
+                }
                 setStudySet(temp)
                 // type
                 setType(
@@ -111,7 +113,7 @@ const CreateSet = () => {
                 var tempCards = (await CardService.getAllByStudySetId(temp.id))
                     .data
                 for (var card of tempCards) {
-                    const tempSetCreatedDate = card.studySet.created_date
+                    const tempSetCreatedDate = card?.studySet?.created_date
                     card.studySet.created_date = toBEDate(tempSetCreatedDate)
                     const tempUserCreatedDate = card.studySet.user.created_date
                     card.studySet.user.created_date =
@@ -120,18 +122,19 @@ const CreateSet = () => {
                 setCards(tempCards)
             } catch (error) {
                 if (error.response && error.response.data) {
-                    setError(error.response.data)
+                    console.log(error.response.data)
                     if (error.response.data.includes('not exist')) {
                         navigate('/')
                     }
                 } else {
-                    setError(error.message)
+                    console.log(error.message)
                 }
             }
             setLoading(false)
         }
         setError('')
         if (userInfo.username) {
+            setError('')
             fetchData(Number(searchParams.get('type')))
         }
     }, [userInfo, searchParams.get('type')])
@@ -179,6 +182,10 @@ const CreateSet = () => {
                     audio: '',
                     studySet: {
                         id: studySet.id,
+                        user: {
+                            id: userInfo.id,
+                            username: userInfo.username,
+                        },  
                     },
                 })
             ).data

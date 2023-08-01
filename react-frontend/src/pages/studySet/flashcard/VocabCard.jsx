@@ -1,20 +1,40 @@
 import { useState, useEffect } from 'react'
 
-import ContentService from '../../../services/ContentService'
+import ProgressService from '../../../services/ProgressService'
 
-const VocabCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
+import { NoteSolidIcon, StarSolidIcon } from '../../../components/icons'
+
+const VocabCard = ({
+    userInfo,
+    fullCard,
+    cardIndex,
+    handleAutoPlay,
+    isAuto,
+    fullCards,
+    setFullCards,
+    setShowNote,
+}) => {
+    const [card, setCard] = useState({})
     const [contents, setContents] = useState([])
+    const [progress, setProgress] = useState({})
+
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempContents = (await ContentService.getAllByCardId(card.id))
-                .data
-            setContents(tempContents)
+            setCard(fullCard?.card)
+            setContents(fullCard.content)
+            setProgress(fullCard.progress)
         }
-        if (card?.id) {
+        if (fullCard?.card?.id) {
             fetchData()
         }
-    }, [card])
+    }, [fullCard])
 
     useEffect(() => {
         if (isAuto) {
@@ -50,11 +70,42 @@ const VocabCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
         }
     }, [])
 
+    const handleChangeStar = async () => {
+        var tempCard = { ...card }
+        tempCard.studySet.created_date = toBEDate(
+            tempCard.studySet.created_date
+        )
+        tempCard.studySet.user.created_date = toBEDate(
+            tempCard.studySet.user.created_date
+        )
+        var tempUser = {
+            ...userInfo,
+            created_date: toBEDate(userInfo.created_date),
+        }
+        var tempProgress = {
+            user: tempUser,
+            card: tempCard,
+            star: progress?.id ? !progress?._star : 0,
+            audio: progress?.audio || '',
+            picture: progress?.picture || '',
+            note: progress?.note || '',
+        }
+        tempProgress = (
+            await ProgressService.customUpdateProgress(tempProgress)
+        ).data
+        setProgress(tempProgress)
+        var tempFullCards = [...fullCards]
+        tempFullCards[cardIndex] = { ...fullCard, progress: tempProgress }
+        setFullCards(tempFullCards)
+    }
+
     return (
         <div
             className="flashcardContentContainer"
-            onClick={() => {
-                toggleFlip()
+            onClick={(event) => {
+                if (event.target.name !== 'flashcardContent_noteBtn') {
+                    toggleFlip()
+                }
             }}
         >
             <div
@@ -62,6 +113,26 @@ const VocabCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
                 id={`flipElement${cardIndex}`}
             >
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
+                    <div className="flashcardContent_noteBtn">
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className={`setPageTerm_btn btn btn-customLight ${
+                                progress?._star ? 'star' : ''
+                            }`}
+                            onClick={handleChangeStar}
+                        >
+                            <StarSolidIcon size="16px" />
+                        </button>
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowNote(true)
+                            }}
+                        >
+                            <NoteSolidIcon size="16px" />
+                        </button>
+                    </div>
                     <div
                         dangerouslySetInnerHTML={{
                             __html: contents[0]?.content,
@@ -69,6 +140,24 @@ const VocabCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
                     ></div>
                 </div>
                 <div className="flashcardBack">
+                    <div className="flashcardContent_noteBtn">
+                        <button
+                            className={`setPageTerm_btn btn btn-customLight ${
+                                progress?._star ? 'star' : ''
+                            }`}
+                            onClick={handleChangeStar}
+                        >
+                            <StarSolidIcon size="16px" />
+                        </button>
+                        <button
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowNote(true)
+                            }}
+                        >
+                            <NoteSolidIcon size="16px" />
+                        </button>
+                    </div>
                     <div className="row h-100 p-5 d-flex align-items-center">
                         <div className="col-12 col-lg-8">
                             {contents.map((contentItem, index) => {

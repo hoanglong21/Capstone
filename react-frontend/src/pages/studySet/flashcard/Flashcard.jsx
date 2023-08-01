@@ -2,9 +2,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
+import { useDispatch, useSelector } from 'react-redux'
 
 import CardService from '../../../services/CardService'
 import VocabCard from './VocabCard'
+import { getUser } from '../../../features/user/userAction'
 
 import KanjiCard from './KanjiCard'
 import GrammarCard from './GrammarCard'
@@ -14,7 +16,10 @@ import {
     ArrowLeftIcon,
     ArrowRightIcon,
     CloseIcon,
+    DeleteIcon,
+    ImageIcon,
     LearnSolidIcon,
+    MicIcon,
     PauseSolidIcon,
     PlaySolidIcon,
     ShuffleIcon,
@@ -22,7 +27,11 @@ import {
     TestSolidIcon,
 } from '../../../components/icons'
 import illustration from '../../../assets/images/permafetti.png'
+import FormStyles from '../../../assets/styles/Form.module.css'
 import './Flashcard.css'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import ProgressService from '../../../services/ProgressService'
+import NoteEditor from '../../../components/textEditor/NoteEditor'
 
 const Confettiful = function (el) {
     this.el = el
@@ -95,8 +104,12 @@ Confettiful.prototype._renderConfetti = function () {
 
 const Flashcard = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const { id } = useParams()
+
+    const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
 
     const [cards, setCards] = useState([])
     const [cardIndex, setCardIndex] = useState(null)
@@ -106,47 +119,113 @@ const Flashcard = () => {
     const [isAuto, setIsAuto] = useState(false)
     const [showAutoMess, setShowAutoMess] = useState(false)
 
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(false)
+
+    const [picture, setPicture] = useState('')
+    const [audio, setAudio] = useState('')
+    const [note, setNote] = useState('')
+    const [showNote, setShowNote] = useState(false)
+    const [loadingPicture, setLoadingPicture] = useState(false)
+    const [loadingAudio, setLoadingAudio] = useState(false)
+
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
+    function getUrl(file) {
+        try {
+            return URL.createObjectURL(file)
+        } catch (error) {
+            return file
+        }
+    }
+
+    // fetch user info
+    useEffect(() => {
+        if (userToken) {
+            dispatch(getUser(userToken))
+        }
+    }, [userToken])
+
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
-            const tempCards = (await CardService.getAllByStudySetId(id)).data
-            setCards(tempCards)
-            setCardIndex(0)
-            setType(tempCards[0]?.studySet?.studySetType?.id)
+            try {
+                const tempCards = (
+                    await CardService.countCardInSet(
+                        `=${userInfo.id}`,
+                        `=${id}`,
+                        '=still learning,mastered,not studied',
+                        `=0`
+                    )
+                ).data
+                setCards(tempCards)
+                setCardIndex(0)
+                setPicture(tempCards[0].progress?.picture || '')
+                setAudio(tempCards[0].progress?.audio || '')
+                setNote(tempCards[0].progress?.note || '')
+                setType(tempCards[0].card?.studySet?.studySetType?.id)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
-        if (id) {
+        if (id && userInfo.id) {
             fetchData()
         }
-    }, [id])
+    }, [userInfo, id])
+
+    const nextCard = () => {
+        clearSetTimeout()
+        var tempIndex1 = cardIndex - 1
+        if (tempIndex1 > -1) {
+            const progress = cards[tempIndex1].progress
+            setCardIndex(tempIndex1)
+            setPicture(progress?.picture || '')
+            setAudio(progress?.audio || '')
+            setNote(progress?.note || '')
+            document
+                .getElementById(`flipElement${cardIndex}`)
+                ?.classList.remove('is-flipped')
+        }
+    }
+
+    const prevCard = () => {
+        clearSetTimeout()
+        var tempIndex2 = cardIndex + 1
+        if (tempIndex2 === cards.length) {
+            setIsEnd(true)
+        }
+        if (tempIndex2 < cards.length) {
+            const progress = cards[tempIndex2].progress
+            setCardIndex(tempIndex2)
+            setPicture(progress?.picture || '')
+            setAudio(progress?.audio || '')
+            setNote(progress?.note || '')
+            document
+                .getElementById(`flipElement${cardIndex}`)
+                ?.classList.remove('is-flipped')
+            clearSetTimeout()
+        }
+    }
 
     // catch press arrow event event
     useEffect(() => {
         const handleUserKeyPress = (event) => {
             switch (event.key) {
                 case 'ArrowLeft':
-                    clearSetTimeout()
-                    var tempIndex1 = cardIndex - 1
-                    if (tempIndex1 > -1) {
-                        setCardIndex(tempIndex1)
-                        document
-                            .getElementById(`flipElement${cardIndex}`)
-                            ?.classList.remove('is-flipped')
-                    }
+                    nextCard()
                     // Do something for "left arrow" key press.
                     break
                 case 'ArrowRight':
-                    clearSetTimeout()
-                    var tempIndex2 = cardIndex + 1
-                    if (tempIndex2 === cards.length) {
-                        setIsEnd(true)
-                    }
-                    if (tempIndex2 < cards.length) {
-                        setCardIndex(tempIndex2)
-                        document
-                            .getElementById(`flipElement${cardIndex}`)
-                            ?.classList.remove('is-flipped')
-                        clearSetTimeout()
-                    }
+                    prevCard()
                     // Do something for "right arrow" key press.
                     break
                 default:
@@ -247,8 +326,135 @@ const Flashcard = () => {
         }
     }
 
+    const handleChangeFile = async (event) => {
+        const name = event.target.name
+        name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
+        const file = event.target.files[0]
+        if (file) {
+            name === 'picture' ? setPicture(file) : setAudio(file)
+        }
+        name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
+    }
+
+    const handleDeleteFile = async (event) => {
+        const name = event.target.name
+        name === 'picture' ? setPicture('') : setAudio('')
+    }
+
+    const handleSave = async () => {
+        setLoading(true)
+        const card = cards[cardIndex].card
+        const progress = cards[cardIndex].progress
+        var tempCard = { ...card }
+        tempCard.studySet.created_date = toBEDate(
+            tempCard.studySet.created_date
+        )
+        tempCard.studySet.user.created_date = toBEDate(
+            tempCard.studySet.user.created_date
+        )
+        var tempUser = {
+            ...userInfo,
+            created_date: toBEDate(userInfo.created_date),
+        }
+        var tempProgress = {
+            user: tempUser,
+            card: tempCard,
+            star: progress?.id ? progress?._star : 0,
+            note: note,
+        }
+        try {
+            if (progress?.id) {
+                // delete old
+                if (picture?.type && progress?.picture) {
+                    await deleteFileByUrl(
+                        progress.picture,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${progress.id}`
+                    )
+                }
+                if (audio?.type && progress?.audio) {
+                    await deleteFileByUrl(
+                        progress.audio,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${progress.id}`
+                    )
+                }
+                // upload new
+                var tempPicture = picture
+                if (picture && picture != progress.picture) {
+                    tempPicture = await uploadFile(
+                        picture,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${progress.id}`
+                    )
+                    setPicture(tempPicture)
+                }
+                var tempAudio = audio
+                if (audio && audio != progress.audio) {
+                    tempAudio = await uploadFile(
+                        audio,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${progress.id}`
+                    )
+                    setAudio(tempAudio)
+                }
+                tempProgress = {
+                    ...tempProgress,
+                    picture: tempPicture,
+                    audio: tempAudio,
+                }
+            } else {
+                tempProgress = (
+                    await ProgressService.customUpdateProgress(tempProgress)
+                ).data
+                // upload new
+                var tempPicture = picture
+                if (picture) {
+                    tempPicture = await uploadFile(
+                        picture,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${tempProgress.id}`
+                    )
+                    setPicture(tempPicture)
+                }
+                var tempAudio = audio
+                if (audio) {
+                    tempAudio = await uploadFile(
+                        audio,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${tempProgress.id}`
+                    )
+                    setAudio(tempAudio)
+                }
+                tempProgress = {
+                    ...tempProgress,
+                    picture: tempPicture,
+                    audio: tempAudio,
+                }
+            }
+            tempProgress = { ...tempProgress, user: tempUser, card: tempCard }
+            tempProgress = (
+                await ProgressService.customUpdateProgress(tempProgress)
+            ).data
+            var tempCards = [...cards]
+            tempCards[cardIndex].progress = tempProgress
+            setCards(tempCards)
+            setShowNote(false)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoading(false)
+    }
+
+    const handleCancel = () => {
+        const progress = cards[cardIndex].progress
+        setShowNote(false)
+        setPicture(progress?.picture || '')
+        setAudio(progress?.audio || '')
+        setNote(progress?.note || '')
+    }
+
     return (
         <div>
+            {/* header */}
             <div className="flashcardHeader d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center">
                     <StudySetSolidIcon
@@ -322,15 +528,36 @@ const Flashcard = () => {
                     </h3>
                     <h3>{cards[cardIndex]?.studySet?.title}</h3>
                 </div>
-                <button
-                    className="flashcardClose_btn ms-3 d-flex align-items-center"
-                    onClick={() => {
-                        navigate(`/set/${cards[cardIndex]?.studySet?.id}`)
-                    }}
-                >
-                    <CloseIcon strokeWidth="2" />
-                </button>
+                <div className="quizOptions d-flex">
+                    {isEnd ? (
+                        <button
+                            id="toggleQuizOptionsModalBtn"
+                            className="quizOptions_btn"
+                            // onClick={handleCreateQuiz}
+                        >
+                            Take a new test
+                        </button>
+                    ) : (
+                        <button
+                            id="toggleQuizOptionsModalBtn"
+                            className="quizOptions_btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#flashcardOptionModal"
+                        >
+                            Options
+                        </button>
+                    )}
+                    <button
+                        className="quizClose_btn ms-3 d-flex align-items-center"
+                        onClick={() => {
+                            navigate(`/set/${id}`)
+                        }}
+                    >
+                        <CloseIcon strokeWidth="2" />
+                    </button>
+                </div>
             </div>
+            {/* progress */}
             <div className="flashcardProgressContainer">
                 <div
                     className="flashcardProgress"
@@ -374,10 +601,14 @@ const Flashcard = () => {
                 <div className="flashcardMain mx-auto mb-5">
                     {type === 1 ? (
                         <VocabCard
-                            card={cards[cardIndex]}
+                            userInfo={userInfo}
+                            fullCard={cards[cardIndex]}
                             cardIndex={cardIndex}
                             handleAutoPlay={handleAutoPlay}
                             isAuto={isAuto}
+                            fullCards={cards}
+                            setFullCards={setCards}
+                            setShowNote={setShowNote}
                         />
                     ) : type === 2 ? (
                         <KanjiCard
@@ -394,6 +625,148 @@ const Flashcard = () => {
                             isAuto={isAuto}
                         />
                     )}
+                    {showNote && (
+                        <div className="flashcardContent_noteModal">
+                            <div className="modal-content">
+                                <div className="d-flex justify-content-between mb-3">
+                                    <div>
+                                        <input
+                                            type="file"
+                                            id="noteUploadImage"
+                                            accept="image/*"
+                                            name="picture"
+                                            className="d-none"
+                                            onClick={(event) => {
+                                                event.target.value = null
+                                            }}
+                                            onChange={(event) =>
+                                                handleChangeFile(event)
+                                            }
+                                        />
+                                        <label htmlFor="noteUploadImage">
+                                            <ImageIcon className="ms-3 icon-warning" />
+                                        </label>
+                                        <input
+                                            type="file"
+                                            id="noteUploadAudio"
+                                            accept="audio/*"
+                                            name="audio"
+                                            className="d-none"
+                                            onClick={(event) => {
+                                                event.target.value = null
+                                            }}
+                                            onChange={(event) =>
+                                                handleChangeFile(event)
+                                            }
+                                        />
+                                        <label htmlFor="noteUploadAudio">
+                                            <MicIcon className="ms-3 icon-warning" />
+                                        </label>
+                                    </div>
+                                    <button
+                                        className="close p-0"
+                                        onClick={handleCancel}
+                                    >
+                                        <CloseIcon size="1.875rem" />
+                                    </button>
+                                </div>
+                                <div className="setPage_noteEditor">
+                                    <NoteEditor
+                                        data={note}
+                                        onChange={(event, editor) => {
+                                            setNote(editor.getData())
+                                        }}
+                                    />
+                                </div>
+                                {(loadingPicture ||
+                                    loadingAudio ||
+                                    picture ||
+                                    audio) && (
+                                    <div className="row mt-2 setPage_noteUploadFile">
+                                        <div className="col-6 d-flex flex-column align-items-center">
+                                            {loadingPicture && (
+                                                <div
+                                                    className="spinner-border text-secondary mb-3"
+                                                    role="status"
+                                                >
+                                                    <span className="visually-hidden">
+                                                        LoadingUpload...
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {!loadingPicture && picture && (
+                                                <div className="d-flex align-self-start align-items-center">
+                                                    <img
+                                                        src={getUrl(picture)}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        name="picture"
+                                                        className="btn btn-danger ms-5 p-0 rounded-circle"
+                                                        onClick={(event) =>
+                                                            handleDeleteFile(
+                                                                event
+                                                            )
+                                                        }
+                                                    >
+                                                        <DeleteIcon size="1.25rem" />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="col-6 d-flex flex-column align-items-center">
+                                            {loadingAudio && (
+                                                <div
+                                                    className="spinner-border text-secondary mb-3"
+                                                    role="status"
+                                                >
+                                                    <span className="visually-hidden">
+                                                        LoadingUpload...
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {!loadingAudio && audio && (
+                                                <div className="d-flex align-self-start align-items-center">
+                                                    <audio
+                                                        controls
+                                                        src={getUrl(audio)}
+                                                    ></audio>
+                                                    <button
+                                                        type="button"
+                                                        name="audio"
+                                                        className="btn btn-danger ms-5 p-0 rounded-circle"
+                                                        onClick={(event) =>
+                                                            handleDeleteFile(
+                                                                event
+                                                            )
+                                                        }
+                                                    >
+                                                        <DeleteIcon size="1.25rem" />
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="d-flex justify-content-end mt-3">
+                                    <button
+                                        className="btn btn-secondary me-3"
+                                        onClick={handleCancel}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={handleSave}
+                                        disabled={loading}
+                                    >
+                                        {loading ? 'Saving' : 'Save'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {/* action button */}
                     <div className="d-flex align-items-center justify-content-between mt-4">
                         <div className="flashcardPlay">
                             {isAuto ? (
@@ -432,13 +805,7 @@ const Flashcard = () => {
                                 style={{ marginRight: '4rem' }}
                                 disabled={cardIndex === 0}
                                 onClick={() => {
-                                    clearSetTimeout()
-                                    setCardIndex(cardIndex - 1)
-                                    document
-                                        .getElementById(
-                                            `flipElement${cardIndex}`
-                                        )
-                                        ?.classList.remove('is-flipped')
+                                    nextCard()
                                 }}
                             >
                                 <ArrowLeftIcon
@@ -450,18 +817,7 @@ const Flashcard = () => {
                                 className="flashCardSwitch_btn"
                                 style={{ marginRight: '4rem' }}
                                 onClick={() => {
-                                    const tempIndex = cardIndex + 1
-                                    if (tempIndex === cards.length) {
-                                        setIsEnd(true)
-                                    } else {
-                                        clearSetTimeout()
-                                        setCardIndex(tempIndex)
-                                        document
-                                            .getElementById(
-                                                `flipElement${cardIndex}`
-                                            )
-                                            ?.classList.remove('is-flipped')
-                                    }
+                                    prevCard()
                                 }}
                             >
                                 <ArrowRightIcon
@@ -481,7 +837,224 @@ const Flashcard = () => {
                     </div>
                 </div>
             )}
-
+            {/* Option modal */}
+            <div
+                className="modal fade quizOptionModal"
+                id="flashcardOptionModal"
+                data-bs-backdrop="static"
+                data-bs-keyboard="false"
+                tabIndex="-1"
+                aria-labelledby="staticBackdropLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog modal-lg">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h3 className="modal-title">Options</h3>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                // onClick={handleCancelCreateQuiz}
+                            ></button>
+                            <button
+                                id="quizOptionModalCloseBtn"
+                                type="button"
+                                className="d-none"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="modal-body">
+                            {/* error message */}
+                            {error && (
+                                <div
+                                    className="alert alert-danger"
+                                    role="alert"
+                                >
+                                    {error}
+                                </div>
+                            )}
+                            <div className="row mb-3">
+                                <div className="col-6">
+                                    {/* types */}
+                                    <div className="quizOptionBlock">
+                                        <legend>QUESTION TYPES</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value={1}
+                                                // checked={
+                                                //     optionQuestionTypes?.includes(
+                                                //         1
+                                                //     ) || ''
+                                                // }
+                                                id="written"
+                                                // onChange={
+                                                //     handleChangeQuestionType
+                                                // }
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="written"
+                                            >
+                                                Written
+                                            </label>
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value={2}
+                                                // checked={
+                                                //     optionQuestionTypes?.includes(
+                                                //         2
+                                                //     ) || ''
+                                                // }
+                                                id="mupltipleChoice"
+                                                // onChange={
+                                                //     handleChangeQuestionType
+                                                // }
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="mupltipleChoice"
+                                            >
+                                                Multiple choice
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value={3}
+                                                // checked={
+                                                //     optionQuestionTypes?.includes(
+                                                //         3
+                                                //     ) || ''
+                                                // }
+                                                id="trueFalse"
+                                                // onChange={
+                                                //     handleChangeQuestionType
+                                                // }
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="trueFalse"
+                                            >
+                                                True/False
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-6">
+                                    {/* picture */}
+                                    <div className="quizOptionBlock">
+                                        <legend>PICTURE</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                // checked={optionShowPicture}
+                                                id="showPicture"
+                                                // onChange={() => {
+                                                //     setOptionShowPicture(
+                                                //         !optionShowPicture
+                                                //     )
+                                                // }}
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="showPicture"
+                                            >
+                                                Show picture
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/* audio */}
+                                    <div className="quizOptionBlock">
+                                        <legend>AUDIO</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                // checked={optionShowAudio}
+                                                id="showAudio"
+                                                // onChange={() => {
+                                                //     setOptionShowAudio(
+                                                //         !optionShowAudio
+                                                //     )
+                                                // }}
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="showAudio"
+                                            >
+                                                Show audio
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/* note */}
+                                    <div className="quizOptionBlock">
+                                        <legend>NOTE</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                // checked={optionShowNote}
+                                                id="note"
+                                                // onChange={() => {
+                                                //     setOptionShowNote(
+                                                //         !optionShowNote
+                                                //     )
+                                                // }}
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="note"
+                                            >
+                                                Show note
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-secondary classModalBtn me-3"
+                                data-bs-dismiss="modal"
+                                // onClick={handleCancelCreateQuiz}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="btn btn-primary classModalBtn"
+                                // onClick={handleCreateQuiz}
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <div className="d-flex justify-content-center">
+                                        <div
+                                            className="spinner-border"
+                                            role="status"
+                                        >
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    'Create new quiz'
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {/* auto play message */}
             <ToastContainer
                 className="p-3"
