@@ -71,10 +71,10 @@ public class CardController {
     }
 
     @GetMapping("/filtercard")
-    public ResponseEntity<?> countCardInSet(@RequestParam(value = "userid") int userId,
-                                            @RequestParam(value = "studysetid") int studySetId,
-                                            @RequestParam(value = "status") String[] status,
-                                            @RequestParam(value = "star") boolean star) {
+    public ResponseEntity<?> getFilterCard(@RequestParam(value = "userid") int userId,
+                                           @RequestParam(value = "studysetid") int studySetId,
+                                           @RequestParam(value = "status") String[] status,
+                                           @RequestParam(value = "star") boolean star) {
         try {
             return ResponseEntity.ok(cardService.getFilterCard(studySetId, userId, status, star));
         } catch (Exception e) {

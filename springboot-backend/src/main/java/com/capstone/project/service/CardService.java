@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.dto.CardWrapper;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
 
@@ -21,6 +22,6 @@ public interface CardService {
 
     Boolean checkBlank(int id) throws ResourceNotFroundException;
 
-    List<Card> getFilterCard(int studySetId, int userId, String[] status, boolean star);
+    List<CardWrapper> getFilterCard(int studySetId, int userId, String[] status, boolean star);
 
 }
