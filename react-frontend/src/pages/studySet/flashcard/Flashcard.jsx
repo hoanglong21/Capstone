@@ -772,17 +772,27 @@ const Flashcard = () => {
                         />
                     ) : type === 2 ? (
                         <KanjiCard
-                            card={cards[cardIndex]}
+                            userInfo={userInfo}
+                            fullCard={cards[cardIndex]}
                             cardIndex={cardIndex}
                             handleAutoPlay={handleAutoPlay}
                             isAuto={isAuto}
+                            fullCards={cards}
+                            setFullCards={setCards}
+                            setShowNoteModal={setShowNoteModal}
+                            handleUpdateNumStar={handleUpdateNumStar}
                         />
                     ) : (
                         <GrammarCard
-                            card={cards[cardIndex]}
+                            userInfo={userInfo}
+                            fullCard={cards[cardIndex]}
                             cardIndex={cardIndex}
                             handleAutoPlay={handleAutoPlay}
                             isAuto={isAuto}
+                            fullCards={cards}
+                            setFullCards={setCards}
+                            setShowNoteModal={setShowNoteModal}
+                            handleUpdateNumStar={handleUpdateNumStar}
                         />
                     )}
                     {showNoteModal && (
