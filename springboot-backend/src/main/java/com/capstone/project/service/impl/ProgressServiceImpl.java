@@ -101,13 +101,14 @@ public class ProgressServiceImpl implements ProgressService {
             progress = Progress.builder()
                     .user(user)
                     .card(card)
+                    .status("not studied")
                     .build();
         }
         progress.set_star(isStar);
         progress.setNote(note);
         progress.setAudio(audio);
         progress.setPicture(picture);
-        if(!progress.getStatus().equals("master")) {
+        if(status!=null && !progress.getStatus().equals("master")) {
             progress.setStatus(status);
         }
         return progressRepository.save(progress);
