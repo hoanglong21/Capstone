@@ -104,6 +104,16 @@ const getQuizByStudySetId = (id, type, number, userId) => {
     )
 }
 
+const countCardInSet = (userId, studySetId) => {
+    return axios.get(
+        API_BASE_URL +
+            '/countinfoset?userid=' +
+            userId +
+            '&studysetid=' +
+            studySetId
+    )
+}
+
 const StudySetService = {
     createStudySet,
     updateStudySet,
@@ -113,6 +123,7 @@ const StudySetService = {
     getAllStudySetByUser,
     getFilterList,
     getQuizByStudySetId,
+    countCardInSet,
 }
 
 export default StudySetService

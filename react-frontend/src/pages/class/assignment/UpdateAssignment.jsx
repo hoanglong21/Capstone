@@ -167,6 +167,7 @@ function UpdateAssignment() {
                 console.log(error.message)
             }
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
         setLoadingUpdateAssign(false)
     }
 

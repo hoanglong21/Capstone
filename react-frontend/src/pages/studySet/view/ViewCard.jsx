@@ -6,6 +6,7 @@ import {
     ImageIcon,
     MicIcon,
     NoteSolidIcon,
+    StarSolidIcon,
 } from '../../../components/icons'
 import NoteEditor from '../../../components/textEditor/NoteEditor'
 import ProgressService from '../../../services/ProgressService'
@@ -20,6 +21,7 @@ const ViewCard = ({ card, userInfo }) => {
     const [showNote, setShowNote] = useState(false)
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [progress, setProgress] = useState({})
 
     useEffect(() => {
@@ -93,17 +95,34 @@ const ViewCard = ({ card, userInfo }) => {
     }
 
     const handleSave = async () => {
-        var tempProgress = {}
+        setLoading(true)
+        var tempCard = { ...card }
+        tempCard.studySet.created_date = toBEDate(
+            tempCard.studySet.created_date
+        )
+        tempCard.studySet.user.created_date = toBEDate(
+            tempCard.studySet.user.created_date
+        )
+        var tempUser = {
+            ...userInfo,
+            created_date: toBEDate(userInfo.created_date),
+        }
+        var tempProgress = {
+            user: tempUser,
+            card: tempCard,
+            star: progress?.id ? progress?._star : 0,
+            note: note,
+        }
         try {
             if (progress?.id) {
                 // delete old
-                if (progress?.picture) {
+                if (picture?.type && progress?.picture) {
                     await deleteFileByUrl(
                         progress.picture,
                         `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${progress.id}`
                     )
                 }
-                if (progress?.audio) {
+                if (audio?.type && progress?.audio) {
                     await deleteFileByUrl(
                         progress.audio,
                         `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}/progress/${progress.id}`
@@ -126,26 +145,14 @@ const ViewCard = ({ card, userInfo }) => {
                     )
                     setAudio(tempAudio)
                 }
-                tempProgress = (
-                    await ProgressService.customUpdateProgress(
-                        `=${userInfo.id}`,
-                        `=${card.id}`,
-                        `${progress?.id ? `=${progress._star}` : ''}`,
-                        `${picture ? `=${tempPicture}` : ''}`,
-                        `${audio ? `=${tempAudio}` : ''}`,
-                        `${note ? `=${note}` : ''}`
-                    )
-                ).data
+                tempProgress = {
+                    ...tempProgress,
+                    picture: tempPicture,
+                    audio: tempAudio,
+                }
             } else {
                 tempProgress = (
-                    await ProgressService.customUpdateProgress(
-                        `=${userInfo.id}`,
-                        `=${card.id}`,
-                        '',
-                        '',
-                        '',
-                        ''
-                    )
+                    await ProgressService.customUpdateProgress(tempProgress)
                 ).data
                 // upload new
                 var tempPicture = picture
@@ -164,18 +171,17 @@ const ViewCard = ({ card, userInfo }) => {
                     )
                     setAudio(tempAudio)
                 }
-                tempProgress = (
-                    await ProgressService.customUpdateProgress(
-                        `=${userInfo.id}`,
-                        `=${card.id}`,
-                        `${tempProgress?.id ? `=${tempProgress._star}` : ''}`,
-                        `${picture ? `=${tempPicture}` : ''}`,
-                        `${audio ? `=${tempAudio}` : ''}`,
-                        `${note ? `=${note}` : ''}`
-                    )
-                ).data
+                tempProgress = {
+                    ...tempProgress,
+                    picture: tempPicture,
+                    audio: tempAudio,
+                }
             }
+            tempProgress = (
+                await ProgressService.customUpdateProgress(tempProgress)
+            ).data
             setProgress(tempProgress)
+            setShowNote(false)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -183,6 +189,7 @@ const ViewCard = ({ card, userInfo }) => {
                 console.log(error.message)
             }
         }
+        setLoading(false)
     }
 
     const handleCancel = () => {
@@ -200,6 +207,39 @@ const ViewCard = ({ card, userInfo }) => {
         }
     }
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
+    const handleChangeStar = async () => {
+        var tempCard = { ...card }
+        tempCard.studySet.created_date = toBEDate(
+            tempCard.studySet.created_date
+        )
+        tempCard.studySet.user.created_date = toBEDate(
+            tempCard.studySet.user.created_date
+        )
+        var tempUser = {
+            ...userInfo,
+            created_date: toBEDate(userInfo.created_date),
+        }
+        var tempProgress = {
+            user: tempUser,
+            card: tempCard,
+            star: progress?.id ? !progress?._star : 0,
+            audio: audio,
+            picture: picture,
+            note: note,
+        }
+        tempProgress = (
+            await ProgressService.customUpdateProgress(tempProgress)
+        ).data
+        setProgress(tempProgress)
+    }
+
     return (
         <div className="setPageTerm mb-3">
             <div className="row">
@@ -215,7 +255,7 @@ const ViewCard = ({ card, userInfo }) => {
                         ></div>
                     </div>
                 </div>
-                <div className="col-8">
+                <div className="col-7">
                     <div className="d-flex align-items-center justify-content-between">
                         <div className="setPageTerm_definitionText">
                             <div
@@ -229,7 +269,15 @@ const ViewCard = ({ card, userInfo }) => {
                         </div>
                     </div>
                 </div>
-                <div className="col-1 d-flex justify-content-center">
+                <div className="col-2 d-flex justify-content-center">
+                    <button
+                        className={`setPageTerm_btn btn btn-customLight ${
+                            progress?._star ? 'star' : ''
+                        }`}
+                        onClick={handleChangeStar}
+                    >
+                        <StarSolidIcon size="20px" />
+                    </button>
                     <button
                         className="btn btn-customLight"
                         onClick={() => {
@@ -285,7 +333,12 @@ const ViewCard = ({ card, userInfo }) => {
                                     </button>
                                 </div>
                                 <div className="setPage_noteEditor">
-                                    <NoteEditor />
+                                    <NoteEditor
+                                        data={note}
+                                        onChange={(event, editor) => {
+                                            setNote(editor.getData())
+                                        }}
+                                    />
                                 </div>
                                 {(loadingPicture ||
                                     loadingAudio ||
@@ -367,8 +420,9 @@ const ViewCard = ({ card, userInfo }) => {
                                     <button
                                         className="btn btn-primary"
                                         onClick={handleSave}
+                                        disabled={loading}
                                     >
-                                        Save
+                                        {loading ? 'Saving' : 'Save'}
                                     </button>
                                 </div>
                             </div>

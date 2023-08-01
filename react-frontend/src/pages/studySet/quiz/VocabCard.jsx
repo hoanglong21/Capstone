@@ -14,7 +14,6 @@ const VocabCard = ({
     results,
     showPicture,
     showAudio,
-    showNote,
 }) => {
     return (
         <div className="card">

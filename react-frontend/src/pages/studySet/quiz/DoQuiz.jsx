@@ -5,6 +5,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
 import CardService from '../../../services/CardService'
+import { getUser } from '../../../features/user/userAction'
+
+import VocabCard from './VocabCard'
+import KanjiCard from './KanjiCard'
+import GrammarCard from './GrammarCard'
 
 import {
     StudySetSolidIcon,
@@ -17,10 +22,6 @@ import {
 import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './quiz.css'
-import VocabCard from './VocabCard'
-import KanjiCard from './KanjiCard'
-import GrammarCard from './GrammarCard'
-import { getUser } from '../../../features/user/userAction'
 
 const DoQuiz = () => {
     const navigate = useNavigate()
@@ -485,7 +486,6 @@ const DoQuiz = () => {
                 <div className="quizOptions d-flex">
                     {isEnd ? (
                         <button
-                            id="toggleQuizOptionsModalBtn"
                             className="quizOptions_btn"
                             onClick={handleCreateQuiz}
                         >

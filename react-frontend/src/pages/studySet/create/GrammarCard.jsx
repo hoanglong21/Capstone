@@ -134,22 +134,18 @@ export const GrammarCard = (props) => {
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
-            if (
-                e.message === 'ResizeObserver loop limit exceeded' ||
-                e.message.includes('t.getStyle is not a function')
-            ) {
-                const resizeObserverErrDiv = document.getElementById(
-                    'webpack-dev-server-client-overlay-div'
-                )
-                const resizeObserverErr = document.getElementById(
-                    'webpack-dev-server-client-overlay'
-                )
-                if (resizeObserverErr) {
-                    resizeObserverErr.setAttribute('style', 'display: none')
-                }
-                if (resizeObserverErrDiv) {
-                    resizeObserverErrDiv.setAttribute('style', 'display: none')
-                }
+            console.log(e)
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            )
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            )
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none')
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none')
             }
         })
     }, [])
@@ -169,14 +165,14 @@ export const GrammarCard = (props) => {
             const urlOld = String(card[name])
             const url = await uploadFile(
                 file,
-                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
             )
             const tempCard = { ...card, [name]: url }
             setCard(tempCard)
             if (urlOld) {
                 await deleteFileByUrl(
                     urlOld,
-                    `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                    `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
                 )
             }
             doUpdateCard(tempCard)
@@ -195,7 +191,7 @@ export const GrammarCard = (props) => {
         if (urlOld) {
             await deleteFileByUrl(
                 urlOld,
-                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
             )
         }
         doUpdateCard(tempCard)

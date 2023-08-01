@@ -33,6 +33,13 @@ const CreateSet = () => {
     const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     // draft can go to edit, back to create
     useEffect(() => {
         if (id && studySet._draft) {
@@ -91,15 +98,11 @@ const CreateSet = () => {
                         ).data
                     }
                 }
-                const tempSetCreatedDate = temp.created_date
-                temp.created_date =
-                    tempSetCreatedDate?.replace(/\s/g, 'T') + '.000' + '+07:00'
-                const tempUserCreatedDate = temp.user?.created_date
-                if (tempUserCreatedDate) {
-                    temp.user.created_date =
-                        tempUserCreatedDate?.replace(/\s/g, 'T') +
-                        '.000' +
-                        '+07:00'
+                const tempSetCreatedDate = temp?.created_date
+                temp.created_date = toBEDate(tempSetCreatedDate)
+                if (temp.user) {
+                    const tempUserCreatedDate = temp?.user?.created_date
+                    temp.user.created_date = toBEDate(tempUserCreatedDate)
                 }
                 setStudySet(temp)
                 // type
@@ -110,32 +113,28 @@ const CreateSet = () => {
                 var tempCards = (await CardService.getAllByStudySetId(temp.id))
                     .data
                 for (var card of tempCards) {
-                    const tempSetCreatedDate = card.studySet.created_date
-                    card.studySet.created_date =
-                        tempSetCreatedDate.replace(/\s/g, 'T') +
-                        '.000' +
-                        '+07:00'
+                    const tempSetCreatedDate = card?.studySet?.created_date
+                    card.studySet.created_date = toBEDate(tempSetCreatedDate)
                     const tempUserCreatedDate = card.studySet.user.created_date
                     card.studySet.user.created_date =
-                        tempUserCreatedDate.replace(/\s/g, 'T') +
-                        '.000' +
-                        '+07:00'
+                        toBEDate(tempUserCreatedDate)
                 }
                 setCards(tempCards)
             } catch (error) {
                 if (error.response && error.response.data) {
-                    setError(error.response.data)
+                    console.log(error.response.data)
                     if (error.response.data.includes('not exist')) {
                         navigate('/')
                     }
                 } else {
-                    setError(error.message)
+                    console.log(error.message)
                 }
             }
             setLoading(false)
         }
         setError('')
         if (userInfo.username) {
+            setError('')
             fetchData(Number(searchParams.get('type')))
         }
     }, [userInfo, searchParams.get('type')])
@@ -183,6 +182,10 @@ const CreateSet = () => {
                     audio: '',
                     studySet: {
                         id: studySet.id,
+                        user: {
+                            id: userInfo.id,
+                            username: userInfo.username,
+                        },  
                     },
                 })
             ).data
@@ -242,6 +245,7 @@ const CreateSet = () => {
                 setError(error.message)
             }
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
         setLoading(false)
     }
 
@@ -345,7 +349,6 @@ const CreateSet = () => {
                                     {saving ? 'Saving...' : 'Saved'}
                                 </div>
                             </div>
-
                             <button
                                 type="submit"
                                 className="btn btn-primary"
