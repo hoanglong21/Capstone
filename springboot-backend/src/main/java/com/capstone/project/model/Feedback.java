@@ -32,6 +32,7 @@ public class Feedback {
 
     private String destination;
 
+    @Column(columnDefinition="TEXT")
     private String content;
 
     @Column
