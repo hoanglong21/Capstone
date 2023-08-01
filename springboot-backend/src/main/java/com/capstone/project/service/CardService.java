@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CardService {
     List<Card> getAllCards();
@@ -19,5 +20,7 @@ public interface CardService {
     Boolean deleteCard (int id) throws ResourceNotFroundException;
 
     Boolean checkBlank(int id) throws ResourceNotFroundException;
+
+    List<Card> getFilterCard(int studySetId, int userId, String[] status, boolean star);
 
 }
