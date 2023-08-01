@@ -101,8 +101,7 @@ const VocabCard = ({
         tempFullCards[cardIndex] = { ...fullCard, progress: tempProgress }
         setFullCards(tempFullCards)
         // update number star
-        console.log(tempProgress)
-        // handleUpdateNumStar(tempProgress.status, tempProgress._star)
+        handleUpdateNumStar(tempProgress.status, tempProgress._star)
     }
 
     return (

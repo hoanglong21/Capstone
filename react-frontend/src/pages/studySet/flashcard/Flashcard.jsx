@@ -180,6 +180,7 @@ const Flashcard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // cards
                 const tempCards = (
                     await CardService.countCardInSet(
                         `=${userInfo.id}`,
@@ -189,6 +190,7 @@ const Flashcard = () => {
                     )
                 ).data
                 setCards(tempCards)
+                // number
                 const tempCounts = (
                     await StudySetService.countCardInSet(userInfo.id, id)
                 ).data
@@ -198,6 +200,20 @@ const Flashcard = () => {
                 setNumNotStar(tempCounts['Not studied star'])
                 setNumStillStar(tempCounts['Still learning star'])
                 setNumMasterStar(tempCounts['Mastered star'])
+                // set progress
+                var tempProgressStatus = []
+                if (tempCounts['Not studied'] != 0) {
+                    tempProgressStatus.push('not studied')
+                }
+                if (tempCounts['Still learning'] != 0) {
+                    tempProgressStatus.push('still learning')
+                }
+                if (tempCounts['Mastered'] != 0) {
+                    tempProgressStatus.push('mastered')
+                }
+                setProgressStatus([...tempProgressStatus])
+                setOptionProgressStatus([...tempProgressStatus])
+                // initial data
                 setCardIndex(0)
                 setPicture(tempCards[0].progress?.picture || '')
                 setAudio(tempCards[0].progress?.audio || '')
@@ -216,20 +232,49 @@ const Flashcard = () => {
         }
     }, [userInfo, id])
 
+    const handleUpdateStatus = async () => {
+        var progress = cards[cardIndex].progress
+        if (progress.status == 'not studied') {
+            // set date
+            progress.card.studySet.created_date = toBEDate(
+                progress.card.studySet.created_date
+            )
+            progress.card.studySet.user.created_date = toBEDate(
+                progress.card.studySet.user.created_date
+            )
+            progress.user.created_date = toBEDate(progress.user.created_date)
+            // update
+            const tempProgress = (
+                await ProgressService.customUpdateProgress({
+                    ...progress,
+                    status: 'still learning',
+                })
+            ).data
+            setNumNot(numNot - 1)
+            setNumStill(numStill + 1)
+            var tempCards = [...cards]
+            tempCards[cardIndex].progress = tempProgress
+            setCards(tempCards)
+        }
+    }
+
     const nextCard = () => {
         if (!isEnd) {
             clearSetTimeout()
             var tempIndex2 = cardIndex + 1
             if (tempIndex2 === cards.length) {
                 setIsEnd(true)
+                // update status
+                handleUpdateStatus()
             }
-            console.log(tempIndex2, cards)
             if (tempIndex2 < cards.length) {
                 const progress = cards[tempIndex2].progress
                 setCardIndex(tempIndex2)
                 setPicture(progress?.picture || '')
                 setAudio(progress?.audio || '')
                 setNote(progress?.note || '')
+                // update status
+                handleUpdateStatus()
                 document
                     .getElementById(`flipElement${cardIndex}`)
                     ?.classList.remove('is-flipped')
@@ -238,7 +283,7 @@ const Flashcard = () => {
         }
     }
 
-    const prevCard = () => {
+    const prevCard = async () => {
         if (!isEnd) {
             clearSetTimeout()
             var tempIndex1 = cardIndex - 1
@@ -248,6 +293,8 @@ const Flashcard = () => {
                 setPicture(progress?.picture || '')
                 setAudio(progress?.audio || '')
                 setNote(progress?.note || '')
+                // update status
+                handleUpdateStatus()
                 document
                     .getElementById(`flipElement${cardIndex}`)
                     ?.classList.remove('is-flipped')
