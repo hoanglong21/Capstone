@@ -41,7 +41,6 @@ if (!firebase.apps.length) {
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(firebaseApp)
-
 export default function Layout() {
     const navigate = useNavigate()
 
@@ -70,14 +69,29 @@ export default function Layout() {
         })
     }, [])
 
-    const deleteMessage = (messageId) => {
-        // console.log(self);
-        // var messageId = self.getAttribute("data-id");
+    const deleteMessage = async (message) => {
+        // var myWindow = window.open('', 'myWindow')
+        // // Check if the window is already open
+        // if (myWindow.location.href === 'about:blank') {
+        //     // If the window is not yet navigated to a page, navigate to the desired page
+        //     myWindow.location.href =
+        //         '/video-call/' + message.message + '/' + true
+        // } else {
+        //     // If the window is already open and navigated to a page, focus it
+        //     myWindow.focus()
+        // }
+    }
 
-        const rootRef = ref(database, 'messages/')
-        const messageRef = child(rootRef, messageId) // Retrieve the Reference object for the message
-        remove(messageRef) // Remove the message from the database
-        // rootRef.child(messageId).remove();
+    const answerCall = async (message) => {
+        var myWindow = window.open('', 'myWindow')
+        // Check if the window is already open
+        if (myWindow.location.href === 'about:blank') {
+            // If the window is not yet navigated to a page, navigate to the desired page
+            myWindow.location.href = '/video-call/' + message.message
+        } else {
+            // If the window is already open and navigated to a page, focus it
+            myWindow.focus()
+        }
     }
 
     return (
@@ -96,12 +110,12 @@ export default function Layout() {
                         message.receiver === userInfo.username
                 )
                 .map((message, index) => (
-                    <div className="chat_callModal" key={message.message}>
+                    <div className="chat_callModal" key={index}>
                         <div className="chat_callModalContent">
                             <button
                                 className="chat_btn chat_callModalClose"
                                 onClick={() => {
-                                    deleteMessage(message.key)
+                                    deleteMessage(message)
                                 }}
                             >
                                 <CloseIcon />
@@ -119,12 +133,11 @@ export default function Layout() {
                                         accept
                                     </div>
                                 </div>
-
                                 <div>
                                     <button
                                         className="chat_callModalBtn chat_callModalBtn--decline me-3"
                                         onClick={() => {
-                                            deleteMessage(message.key)
+                                            deleteMessage(message)
                                         }}
                                     >
                                         <CloseIcon strokeWidth="2" />
@@ -132,9 +145,7 @@ export default function Layout() {
                                     <button
                                         className="chat_callModalBtn chat_callModalBtn--accept"
                                         onClick={() => {
-                                            navigate(
-                                                '/video-call/' + message.message
-                                            )
+                                            answerCall(message)
                                         }}
                                     >
                                         <VideoCallSolidIcon />

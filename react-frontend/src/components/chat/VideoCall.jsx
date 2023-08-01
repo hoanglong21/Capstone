@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 // v9 compat packages are API compatible with v8 code
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
@@ -17,6 +17,7 @@ import jwt_decode from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUser } from '../../features/user/userAction'
+import { useState } from 'react'
 // import { AES, enc } from 'crypto-js';
 
 const firebaseConfig = {
@@ -77,28 +78,12 @@ const VideoCall = () => {
 
     const { userInfo } = useSelector((state) => state.user)
 
-    useEffect(() => {
-        const token = localStorage.getItem('userToken')
-        dispatch(getUser(token))
-    }, [])
-
-    var webcamButton,
-        webcamVideo,
-        callButton,
-        callInput,
-        answerButton,
-        remoteVideo,
-        hangupButton
+    const [loadingSender, setLoadingSender] = useState(false)
+    const [loadingReceiver, setLoadingReceiver] = useState(false)
+    const [isCalling, setIsCalling] = useState(false)
+    const [callId, setCallId] = useState('')
 
     useEffect(() => {
-        webcamButton = document.getElementById('webcamButton')
-        webcamVideo = document.getElementById('webcamVideo')
-        callButton = document.getElementById('callButton')
-        callInput = document.getElementById('callInput')
-        answerButton = document.getElementById('answerButton')
-        remoteVideo = document.getElementById('remoteVideo')
-        hangupButton = document.getElementById('hangupButton')
-
         let string = localStorage.getItem('userToken')
         // console.log(string)
         if (string == null) {
@@ -108,17 +93,15 @@ const VideoCall = () => {
             let decode = jwt_decode(string)
             myUsername = decode.sub
         }
-        if (call != null) {
-            document.getElementById('callInput').value = call
-        }
-        // start call
-        if (userInfo?.id) {
-            webcamButton.click()
-            callButton.click()
-        }
+        webcamButtonClick()
     }, [userInfo])
 
+    useEffect(() => {
+        dispatch(getUser(localStorage.getItem('userToken')))
+    }, [])
+
     let webcamButtonClick = async () => {
+        setLoadingSender(true)
         localStream = await navigator.mediaDevices.getUserMedia({
             video: true,
             audio: true,
@@ -140,10 +123,9 @@ const VideoCall = () => {
             }
         }
 
-        webcamVideo.srcObject = localStream
-        remoteVideo.srcObject = remoteStream
-
-        answerButton.disabled = false
+        document.getElementById('webcamVideo').srcObject = localStream
+        document.getElementById('remoteVideo').srcObject = remoteStream
+        setLoadingSender(false)
     }
 
     let callButtonClick = async () => {
@@ -153,7 +135,7 @@ const VideoCall = () => {
         const offerCandidates = callDoc.collection('offerCandidates')
         const answerCandidates = callDoc.collection('answerCandidates')
 
-        callInput.value = callDoc.id
+        setCallId(callDoc.id)
         // Get candidates for caller, save to db
         pc.onicecandidate = (event) => {
             event.candidate && offerCandidates.add(event.candidate.toJSON())
@@ -189,14 +171,12 @@ const VideoCall = () => {
             })
         })
 
-        hangupButton.disabled = false
-
         // for short
         const searchParams = new URLSearchParams(location.search)
         const paramValue = searchParams.get('param')
         // const key = "6A576E5A7234753778217A25432A462D4A614E645267556B5870327335763879"; //256-bit && hex
         // TODO when done add to backend all of key
-        var message = document.getElementById('callInput').value
+        var message = call
         // var receiverUsername = AES.decrypt(param, key).toString(enc.Utf8);
         var receiverUsername = paramValue
 
@@ -206,7 +186,7 @@ const VideoCall = () => {
             sender: myUsername,
             senderAvatar: userInfo.avatar,
             receiver: receiverUsername,
-            message: message,
+            message: callDoc.id,
             video_call: true,
         }
 
@@ -216,10 +196,12 @@ const VideoCall = () => {
         const updates = {}
         updates['/messages/' + newPostKey] = postData
         update(ref(database), updates)
+        setIsCalling(true)
     }
 
     let answerButtonClick = async () => {
-        const callId = callInput.value
+        setLoadingReceiver(true)
+        const callId = call
         const callDoc = firestore.collection('calls').doc(callId)
         const answerCandidates = callDoc.collection('answerCandidates')
         const offerCandidates = callDoc.collection('offerCandidates')
@@ -229,6 +211,7 @@ const VideoCall = () => {
         }
 
         const callData = (await callDoc.get()).data()
+        console.log((await callDoc.get()).data())
 
         const offerDescription = callData.offer
         await pc.setRemoteDescription(
@@ -254,6 +237,7 @@ const VideoCall = () => {
                 }
             })
         })
+        setLoadingReceiver(false)
     }
 
     let hangupButtonClick = () => {
@@ -272,16 +256,13 @@ const VideoCall = () => {
         localStream = null
         remoteStream = null
 
-        webcamVideo.srcObject = null
-        remoteVideo.srcObject = null
-
-        answerButton.disabled = true
-        hangupButton.disabled = true
+        document.getElementById('webcamVideo').srcObject = null
+        document.getElementById('remoteVideo').srcObject = null
 
         // Reference Firestore collections for signaling
-        const callId = callInput.value
-        if (callId) {
-            const callDoc = firestore.collection('calls').doc(callId)
+        const tempCallId = call || callId
+        if (tempCallId) {
+            const callDoc = firestore.collection('calls').doc(tempCallId)
             const offerCandidates = callDoc.collection('offerCandidates')
             const answerCandidates = callDoc.collection('answerCandidates')
 
@@ -341,45 +322,62 @@ const VideoCall = () => {
 
     return (
         <div>
-            <h2>1. Start your Webcam</h2>
-            <div className="videos">
-                <span>
-                    <h3>Local Stream</h3>
-                    <video id="webcamVideo" autoPlay playsInline></video>
-                </span>
-                <span>
-                    <h3>Remote Stream</h3>
-                    <video id="remoteVideo" autoPlay playsInline></video>
-                </span>
-            </div>
-            <button
-                id="webcamButton"
-                className="d-none"
-                onClick={webcamButtonClick}
-            >
-                Start webcam
-            </button>
-            <h2>2. Create a new Call</h2>
-            <button
-                id="callButton"
-                className="d-none"
-                onClick={callButtonClick}
-            >
-                Create Call (offer)
-            </button>
-            <h2>3. Join a Call</h2>
-            <p>Answer the call from a different browser window or device</p>
-            <input id="callInput" />
-            <button id="answerButton" onClick={answerButtonClick}>
-                Answer
-            </button>
-            <h2>4. Hangup</h2>
-            <button id="hangupButton" onClick={hangupButtonClick}>
-                Hangup
-            </button>
-            <div id="videoEndMessage" style={{ display: 'none' }}>
-                Video end
-            </div>
+            {loadingSender && (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">
+                            LoadingSender...
+                        </span>
+                    </div>
+                </div>
+            )}
+            <video
+                id="webcamVideo"
+                className={loadingSender ? 'd-none' : ''}
+                autoPlay
+                playsInline
+            ></video>
+            {loadingReceiver && (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">
+                            LoadingSender...
+                        </span>
+                    </div>
+                </div>
+            )}
+            <video
+                id="remoteVideo"
+                className={loadingReceiver ? 'd-none' : ''}
+                autoPlay
+                playsInline
+            ></video>
+            {isCalling || call ? (
+                <div className="d-flex justify-content-center">
+                    <button id="answerButton" onClick={answerButtonClick}>
+                        Answer
+                    </button>
+                    <button id="hangupButton" onClick={hangupButtonClick}>
+                        Hangup
+                    </button>
+                </div>
+            ) : (
+                <div className="d-flex justify-content-center">
+                    <button
+                        id="callButton"
+                        className="btn btn-outline-primary"
+                        onClick={callButtonClick}
+                        disabled={
+                            isCalling &&
+                            document
+                                .getElementById('remoteVideo')
+                                .classList.contains('d-none')
+                        }
+                    >
+                        Create Call (offer)
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

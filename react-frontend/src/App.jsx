@@ -246,7 +246,10 @@ const App = () => {
                     <Route path="quiz/:id" element={<DoQuiz />} />
                     <Route path="learn/:id" element={<Learn />} />
                     <Route path="video-call" element={<VideoCall />} />
-                    <Route path="video-call/:call" element={<VideoCall />} />
+                    <Route
+                        path="video-call/:call"
+                        element={<VideoCall />}
+                    />
                 </Route>
 
                 <Route path="/banuser" element={<BanUser />} />
