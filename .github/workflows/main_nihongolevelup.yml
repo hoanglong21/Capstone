@@ -16,11 +16,12 @@ jobs:
       - name: Set up Node.js version 16
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: '16'
 
       - name: Set up Java version
         uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Change to the springboot-backend directory
