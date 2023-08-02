@@ -62,11 +62,21 @@ public class ClassLeanerController {
     }
 
     @DeleteMapping("/delclasslearner")
-//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteClassLearner(@RequestParam(value = "userid", required = false, defaultValue = "0") int userid,
                                                 @RequestParam(value = "classid", required = false, defaultValue = "0") int classid) {
         try {
             return ResponseEntity.ok(classLearnerService.deleteClassLearner(userid,classid));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delclasslearnerbyid/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> deleteClassLearnerById(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(classLearnerService.deleteClassLearnerById(id));
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -79,12 +89,13 @@ public class ClassLeanerController {
                                                    @RequestParam(value = "classid", required = false, defaultValue = "0") int classId,
                                                    @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
                                                    @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
+                                                   @RequestParam(value = "accepted", required = false) Boolean isAccepted,
                                                    @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
                                                    @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                    @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         try {
-            return ResponseEntity.ok(classLearnerService.filterClassLearner(userId, classId, fromCreated, toCreated,
+            return ResponseEntity.ok(classLearnerService.filterClassLearner(userId, classId, fromCreated, toCreated,isAccepted,
                     sortBy, direction, page, size));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Check the input again");
