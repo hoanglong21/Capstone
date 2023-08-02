@@ -13,11 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set up Node.js version 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
       - name: Set up Java version
         uses: actions/setup-java@v1
         with:
           java-version: '17'
-          node-version: '16'
 
       - name: Change to the springboot-backend directory
         run: cd springboot-backend
