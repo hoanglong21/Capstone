@@ -13,7 +13,7 @@ import {
 
 import Header from '../header/Header'
 import Footer from '../footer/Footer'
-import ChatContainer from '../Chat/Chat'
+import ChatContainer from '../chat/Chat'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import { CloseIcon, VideoCallSolidIcon } from '../icons'

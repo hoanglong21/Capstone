@@ -22,7 +22,7 @@ function Achievements() {
                 Award
               </h5>
             </div>
-            <div className="card-body">
+            <div className="card-body achievement">
               <div className="achievement-streak">
                 <div className="streak-ct">
                   <div className="streak-img">
@@ -93,7 +93,7 @@ function Achievements() {
                 Streak
               </h5>
             </div>
-            <div className="card-body">
+            <div className="card-body achievement">
               <div className="achievement-streak">
                 <div className="streak-ct">
                   <div className="streak-img">
@@ -346,7 +346,7 @@ function Achievements() {
                 Studied
               </h5>
             </div>
-            <div className="card-body">
+            <div className="card-body achievement">
               <div className="achievement-streak">
                 <div className="streak-ct">
                   <div className="streak-img">
@@ -569,7 +569,7 @@ function Achievements() {
                 Member
               </h5>
             </div>
-            <div className="card-body">
+            <div className="card-body achievement">
               <div className="achievement-streak">
                 <div className="streak-ct">
                   <div className="streak-img">

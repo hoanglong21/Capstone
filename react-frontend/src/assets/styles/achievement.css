@@ -1,4 +1,4 @@
-.card-body{
+.achievement{
     display: flex;
     flex-flow: row wrap;
     gap: 3rem 2rem;
