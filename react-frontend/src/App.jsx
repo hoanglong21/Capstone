@@ -87,6 +87,7 @@ import Instructions from './pages/class/assignment/Instructions'
 import Submissions from './pages/class/assignment/Submissions'
 import VideoCall from './components/chat/VideoCall'
 import UseAccount from './pages/help/UseAccount'
+import UseStudySet from './pages/help/UseStudySet'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -234,6 +235,7 @@ const App = () => {
                         <Route path="users" element={<UsersForHome />} />
                     </Route>
                     <Route path="/useaccount" element={<UseAccount />} />
+                    <Route path="/usestudyset" element={<UseStudySet />} />
                 </Route>
                 {/* No header + footer */}
                 {/* Auth */}
