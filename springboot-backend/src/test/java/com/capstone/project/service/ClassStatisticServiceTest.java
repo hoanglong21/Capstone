@@ -98,7 +98,7 @@ public class ClassStatisticServiceTest {
             response.put("totalItems", 2);
             when(classRepository.findById(anyInt())).thenReturn(Optional.ofNullable(Class.builder().build()));
             when(dateRangePicker.getDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-            when(classLearnerService.filterClassLearner(anyInt(), anyInt(), any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
+            when(classLearnerService.filterClassLearner(anyInt(), anyInt(), any(),any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
             Integer result = classStatisticService.getLeanerJoinedNumber(1);
             assertThat(result).isEqualTo(2);
         } catch (ResourceNotFroundException | ParseException e) {
@@ -114,7 +114,7 @@ public class ClassStatisticServiceTest {
             response.put("totalItems", 2);
             when(classRepository.findById(anyInt())).thenReturn(Optional.ofNullable(Class.builder().build()));
             when(dateRangePicker.getShortDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-            when(classLearnerService.filterClassLearner(anyInt(), anyInt(), any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
+            when(classLearnerService.filterClassLearner(anyInt(), anyInt(), any(),any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
             List<Integer> result = classStatisticService.getLeanerJoinedGrowth(1);
             assertThat(result.size()).isGreaterThan(0);
         } catch (ResourceNotFroundException | ParseException e) {

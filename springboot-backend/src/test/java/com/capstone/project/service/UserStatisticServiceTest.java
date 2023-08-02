@@ -87,7 +87,7 @@ public class UserStatisticServiceTest {
             when(userRepository.findById(anyInt())).thenReturn(Optional.ofNullable(User.builder().build()));
             when(dateRangePicker.getDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
             when(classLearnerService.filterClassLearner(anyInt(), anyInt(), any(), any(),
-                    any(), any(), anyInt(), anyInt())).thenReturn(response);
+                    any(),any(), any(), anyInt(), anyInt())).thenReturn(response);
             List<Integer> list = userStatisticService.getClassJoinedStatistic(1);
             assertThat(list.size()).isEqualTo(1);
         } catch (Exception e) {

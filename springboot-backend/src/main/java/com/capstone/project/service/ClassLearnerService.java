@@ -18,11 +18,13 @@ public interface ClassLearnerService {
 
     Boolean deleteClassLearner(int userid ,int classid) throws ResourceNotFroundException;
 
+    Boolean deleteClassLearnerById(int id) throws ResourceNotFroundException;
+
     ClassLearner getClassLeanerById(int id) throws ResourceNotFroundException;
 
     ClassLearner getClassLeanerByUserId(int id);
 
-    Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,
+    Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,Boolean isAccepted,
                                               String sortBy, String direction, int page, int size) throws ParseException;
 
     Map<String, Object> filterGetLearner(int userId, int classId, Boolean isAccepted,

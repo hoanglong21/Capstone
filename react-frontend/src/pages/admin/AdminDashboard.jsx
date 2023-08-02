@@ -345,7 +345,7 @@ function AdminDashboard() {
               <div className="card shadow mb-4">
                 <div className="card-header py-3">
                   <h6 className="m-0 font-weight-bold text-primary">
-                    Projects
+                    System
                   </h6>
                 </div>
                 <div className="card-body">
@@ -363,7 +363,7 @@ function AdminDashboard() {
                     ></div>
                   </div>
                   <h4 className="small font-weight-bold">
-                    Sales Tracking <span className="float-right">40%</span>
+                    User Tracking <span className="float-right">40%</span>
                   </h4>
                   <div className="progress mb-4">
                     <div
@@ -376,7 +376,7 @@ function AdminDashboard() {
                     ></div>
                   </div>
                   <h4 className="small font-weight-bold">
-                    Customer Database <span className="float-right">60%</span>
+                    User Database <span className="float-right">60%</span>
                   </h4>
                   <div className="progress mb-4">
                     <div
@@ -389,7 +389,7 @@ function AdminDashboard() {
                     ></div>
                   </div>
                   <h4 className="small font-weight-bold">
-                    Payout Details <span className="float-right">80%</span>
+                    User Details <span className="float-right">80%</span>
                   </h4>
                   <div className="progress mb-4">
                     <div

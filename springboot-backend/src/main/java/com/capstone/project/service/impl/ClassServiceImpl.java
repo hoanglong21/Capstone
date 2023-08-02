@@ -259,7 +259,7 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setUser(user);
         classLearner.setClassroom(classroom);
         classLearner.setCreated_date(new Date());
-        classLearner.set_accepted(true);
+        classLearner.set_accepted(false);
         classLearnerRepository.save(classLearner);
         // add user to classroom
         return classRepository.save(classroom);

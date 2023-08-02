@@ -60,6 +60,14 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         return true;
     }
 
+    @Override
+    public Boolean deleteClassLearnerById(int id) throws ResourceNotFroundException {
+        ClassLearner classLearner = classLearnerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Not exist with id:" + id));
+        classLearnerRepository.delete(classLearner);
+        return true;
+    }
+
 
     @Override
     public ClassLearner getClassLeanerById(int id) throws ResourceNotFroundException {
@@ -76,7 +84,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     @Autowired
     private EntityManager entityManager;
     @Override
-    public Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated, String sortBy, String direction, int page, int size) throws ParseException {
+    public Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,Boolean isAccepted, String sortBy, String direction, int page, int size) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "FROM ClassLearner f LEFT JOIN FETCH f.classroom WHERE 1=1 ";
         Map<String, Object> params = new HashMap<>();
@@ -98,6 +106,12 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         if (toCreated != null && !toCreated.equals("")) {
             jpql += " AND DATE(f.created_date) <= :toCreated ";
             params.put("toCreated", formatter.parse(toCreated));
+        }
+
+        if (isAccepted != null) {
+            jpql += " AND is_accepted = :isAccepted";
+            params.put("isAccepted", isAccepted);
+
         }
 
         sortBy = "f." + sortBy;
