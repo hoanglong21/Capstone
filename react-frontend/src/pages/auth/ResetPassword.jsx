@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import UserService from '../../services/UserService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
+import "./auth.css"
 
 const ResetPassword = () => {
     const navigate = useNavigate()
@@ -72,12 +73,12 @@ const ResetPassword = () => {
 
     return (
         <div className="container">
-            <h2>Reset Password</h2>
+            <h2 className='auth-header'>Reset Password</h2>
             <form className="needs-validation mt-4" noValidate>
                 {/* error message */}
                 {error && (
                     <div
-                        className="alert alert-danger"
+                        className="error alert alert-danger"
                         role="alert"
                         dangerouslySetInnerHTML={{ __html: error }}
                     ></div>
