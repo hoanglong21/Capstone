@@ -34,7 +34,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: springboot-backend/target/*.jar  # Adjust the path here to include the relative path to the .jar file
+          # path: springboot-backend/target/*.jar  # Adjust the path here to include the relative path to the .jar file
+          path: /home/runner/work/Capstone/Capstone/springboot-backend/target/capstone-0.0.1-SNAPSHOT.jar
 
   deploy:
     runs-on: ubuntu-latest
@@ -57,4 +58,5 @@ jobs:
           app-name: 'nihongolevelup'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EAAE3A1DD95432E843B97CEA25E77C2 }}
-          package: '*.jar'
+          # package: '*.jar'
+          package: 'capstone-0.0.1-SNAPSHOT.jar'
