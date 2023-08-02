@@ -21,10 +21,13 @@ const deleteAssignment = (id) => {
 const getFilterList = (
     search,
     author,
-    from,
-    to,
+    fromStart,
+    toStart,
+    fromCreated,
+    toCreated,
     draft,
     direction,
+    sortBy,
     classId,
     page,
     size
@@ -35,12 +38,16 @@ const getFilterList = (
             search +
             '&author' +
             author +
-            (from ? `&from${from}` : '') +
-            (to ? `&to${to}` : '') +
+            (fromStart ? `&fromstarted${fromStart}` : '') +
+            (toStart ? `&tostarted${toStart}` : '') +
+            (fromCreated ? `&fromcreated${fromCreated}` : '') +
+            (toCreated ? `&tocreated${toCreated}` : '') +
             '&draft' +
             draft +
             '&direction' +
             direction +
+            '&sortby' +
+            sortBy +
             '&classid' +
             classId +
             '&page' +

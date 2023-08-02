@@ -233,8 +233,8 @@ const Flashcard = () => {
     }, [userInfo, id])
 
     const handleUpdateStatus = async () => {
-        var progress = cards[cardIndex].progress
-        if (progress.status == 'not studied') {
+        var progress = cards[cardIndex]?.progress
+        if (progress?.status == 'not studied') {
             // set date
             progress.card.studySet.created_date = toBEDate(
                 progress.card.studySet.created_date

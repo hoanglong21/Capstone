@@ -31,7 +31,7 @@ const filterGetLeaner = (
 ) => {
     return axios.get(
         API_BASE_URL +
-            '/filtergetleaner?userid' +
+            '/filtergetlearner?userid' +
             userId +
             '&classid' +
             classId +

@@ -90,7 +90,7 @@ const getFilterList = (
     )
 }
 
-const getQuizByStudySetId = (id, type, number, userId) => {
+const getQuizByStudySetId = (id, type, number, userId, star) => {
     return axios.get(
         API_BASE_URL +
             '/quiz?id=' +
@@ -100,7 +100,9 @@ const getQuizByStudySetId = (id, type, number, userId) => {
             '&number=' +
             number +
             '&userid=' +
-            userId
+            userId +
+            '&star=' +
+            star
     )
 }
 
