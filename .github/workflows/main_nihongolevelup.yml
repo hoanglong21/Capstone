@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: target/*.jar
+          path: springboot-backend/target/*.jar  # Adjust the path here to include the relative path to the .jar file
 
   deploy:
     runs-on: ubuntu-latest
