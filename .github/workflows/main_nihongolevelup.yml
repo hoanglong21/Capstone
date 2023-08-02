@@ -31,7 +31,7 @@ jobs:
         run: mvn -f /home/runner/work/Capstone/Capstone/springboot-backend/pom.xml clean install -Dmaven.test.skip=true
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: java-app
           path: target/*.jar
@@ -45,7 +45,7 @@ jobs:
     
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: java-app
 
