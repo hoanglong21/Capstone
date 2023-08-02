@@ -80,7 +80,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         List<Integer> result = new ArrayList<>();
         List<String> listDate = dateRangePicker.getDateRange();
         for(int i=0; i<listDate.size()-1; i++) {
-            Map<String, Object> response = classLearnerService.filterClassLearner(id, 0, listDate.get(i), listDate.get(i+1),
+            Map<String, Object> response = classLearnerService.filterClassLearner(id, 0, listDate.get(i), listDate.get(i+1),true,
                     "created_date", "DESC", 1, 5);
             result.add(Integer.parseInt(String.valueOf(response.get("totalItems"))));
         }
