@@ -109,9 +109,9 @@ public class UserServiceTest {
             "VeryLongName, 2",
     })
     void testFindAllNameExcept(String excludedName, int expectedNumber) {
-        List<String> names = new ArrayList<>();
-        names.add("Long1");
-        names.add("Long2");
+        List<User> names = new ArrayList<>();
+        names.add(User.builder().username("Long1").build());
+        names.add(User.builder().username("Long2").build());
 
         names.remove(excludedName);
 

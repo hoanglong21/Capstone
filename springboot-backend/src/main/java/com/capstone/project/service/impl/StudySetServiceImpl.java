@@ -219,7 +219,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion, int userId) throws Exception {
+    public List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion, int userId, boolean star) throws Exception {
         if(numberOfQuestion<=0) {
             throw new Exception("Number of question must at least 1");
         }
@@ -227,11 +227,11 @@ public class StudySetServiceImpl implements StudySetService {
             throw new Exception("Must have at least 1 type");
         }
         List<Card> cardList = cardRepository.getCardByStudySetId(studySetId);
-        return getLearningMethod(cardList, questionType, numberOfQuestion, true, userId);
+        return getLearningMethod(cardList, questionType, numberOfQuestion, true, userId, star);
     }
 
     @Override
-    public List<Map<String, Object>> getLearningStudySetId(int userId, int studySetId, int[] questionType, String[] progressType, boolean isRandom) throws Exception {
+    public List<Map<String, Object>> getLearningStudySetId(int userId, int studySetId, int[] questionType, String[] progressType, boolean isRandom, boolean star) throws Exception {
         if(questionType.length==0) {
             throw new Exception("Must have at least 1 type");
         }
@@ -239,10 +239,22 @@ public class StudySetServiceImpl implements StudySetService {
             throw new Exception("Must have at least 1 type");
         }
         List<Card> cardList = cardRepository.findCardByProgress(userId, progressType, studySetId);
-        return getLearningMethod(cardList, questionType, cardList.size(), isRandom, userId);
+        return getLearningMethod(cardList, questionType, cardList.size(), isRandom, userId, star);
     }
 
-    private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom, int userId) {
+    @Override
+    public Map<String, Integer> countCardInSet(int studySetId, int userId) {
+        Map<String, Integer> result = new HashMap<>();
+        result.put("Not studied", studySetRepository.countCardInSetWithCondition(studySetId, userId, "not studied", false));
+        result.put("Still learning", studySetRepository.countCardInSetWithCondition(studySetId, userId, "still learning", false));
+        result.put("Mastered", studySetRepository.countCardInSetWithCondition(studySetId, userId, "mastered", false));
+        result.put("Not studied star", studySetRepository.countCardInSetWithCondition(studySetId, userId, "not studied", true));
+        result.put("Still learning star", studySetRepository.countCardInSetWithCondition(studySetId, userId, "still learning", true));
+        result.put("Mastered star", studySetRepository.countCardInSetWithCondition(studySetId, userId, "mastered", true));
+        return result;
+    }
+
+    private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom, int userId, boolean star) {
         // Shuffle the cardList to randomize the order of cards
         if(isRandom) {
             Collections.shuffle(cardList);
@@ -258,7 +270,17 @@ public class StudySetServiceImpl implements StudySetService {
 
         int cardsPerType = numberOfQuestion / questionType.length;
 
-        List<CardWrapper> questionCardSet = initCardWrappers.subList(0, Math.min(numberOfQuestion, initCardWrappers.size()));
+//        List<CardWrapper> questionCardSet = initCardWrappers.subList(0, Math.min(numberOfQuestion, initCardWrappers.size()));
+        List<CardWrapper> questionCardSet = new ArrayList<>();
+        for(int i=0; i<initCardWrappers.size(); i++) {
+            if(!star || (star && initCardWrappers.get(i).getProgress().is_star())){
+                questionCardSet.add(initCardWrappers.get(i));
+            }
+            if(questionCardSet.size()==numberOfQuestion) {
+                break;
+            }
+        }
+
         List<CardWrapper> cardListCloneForAnswers = new ArrayList<>(initCardWrappers);
         List<Map<String, Object>> response = new ArrayList<>();
         Random rand = new Random();

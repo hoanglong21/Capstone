@@ -1,9 +1,15 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
 import CardService from '../../../services/CardService'
+import { getUser } from '../../../features/user/userAction'
+
+import VocabCard from './VocabCard'
+import KanjiCard from './KanjiCard'
+import GrammarCard from './GrammarCard'
 
 import {
     StudySetSolidIcon,
@@ -16,14 +22,15 @@ import {
 import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './quiz.css'
-import VocabCard from './VocabCard'
-import KanjiCard from './KanjiCard'
-import GrammarCard from './GrammarCard'
 
 const DoQuiz = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const { id } = useParams()
+
+    const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
 
     const [studySet, setStudySet] = useState({})
     const [type, setType] = useState(1)
@@ -38,10 +45,14 @@ const DoQuiz = () => {
     const [multipleAnswerWith, setMultipleAnswerWith] = useState([])
     const [trueFalsePromptWith, setTrueFalsePromptWith] = useState([])
     const [trueFalseAnswerWith, setTrueFalseAnswerWith] = useState([])
+    const [showPicture, setShowPicture] = useState(false)
+    const [showAudio, setShowAudio] = useState(false)
     const [showNote, setShowNote] = useState(false)
 
     const [optionQuestionTypes, setOptionQuestionTypes] = useState([1, 2, 3])
     const [optionNumQues, setOptionNumQues] = useState(0)
+    const [optionShowPicture, setOptionShowPicture] = useState(false)
+    const [optionShowAudio, setOptionShowAudio] = useState(false)
     const [optionShowNote, setOptionShowNote] = useState(false)
     const [optionWrittenPromptWith, setOptionWrittenPromptWith] = useState([])
     const [optionWrittenAnswerWith, setOptionWrittenAnswerWith] = useState(0)
@@ -77,6 +88,13 @@ const DoQuiz = () => {
         document.getElementById('quizProgressContainer').style.top =
             headerHeight
     }, [])
+
+    // fetch user info
+    useEffect(() => {
+        if (userToken) {
+            dispatch(getUser(userToken))
+        }
+    }, [userToken])
 
     // fetch data
     useEffect(() => {
@@ -129,7 +147,8 @@ const DoQuiz = () => {
                         await StudySetService.getQuizByStudySetId(
                             tempStudySet.id,
                             questionTypes,
-                            tempCards.length
+                            tempCards.length,
+                            userInfo.id
                         )
                     ).data
                     setQuestions(tempQuestions)
@@ -149,10 +168,10 @@ const DoQuiz = () => {
             }
             setLoading(false)
         }
-        if (id) {
+        if (id && userInfo?.id) {
             fetchData()
         }
-    }, [id])
+    }, [userInfo, id])
 
     const handleChangeQuestionType = (event) => {
         var tempQuestionsTypes = [...optionQuestionTypes]
@@ -254,11 +273,14 @@ const DoQuiz = () => {
                 await StudySetService.getQuizByStudySetId(
                     studySet.id,
                     optionQuestionTypes,
-                    optionNumQues
+                    optionNumQues,
+                    userInfo?.id
                 )
             ).data
             setQuestions(tempQuestions)
             setNumQues(optionNumQues)
+            setShowPicture(optionShowPicture)
+            setShowAudio(optionShowAudio)
             setShowNote(optionShowNote)
             setQuestionTypes(optionQuestionTypes)
             setWrittenPromptWith(optionWrittenPromptWith)
@@ -288,6 +310,8 @@ const DoQuiz = () => {
         setError('')
         setOptionQuestionTypes(questionTypes)
         setOptionNumQues(numQues)
+        setOptionShowPicture(showPicture)
+        setOptionShowAudio(showAudio)
         setOptionShowNote(showNote)
         setOptionWrittenPromptWith(writtenPromptWith)
         setOptionWrittenAnswerWith(writtenAnswerWith)
@@ -462,7 +486,6 @@ const DoQuiz = () => {
                 <div className="quizOptions d-flex">
                     {isEnd ? (
                         <button
-                            id="toggleQuizOptionsModalBtn"
                             className="quizOptions_btn"
                             onClick={handleCreateQuiz}
                         >
@@ -613,6 +636,8 @@ const DoQuiz = () => {
                             progress={progress}
                             answers={answers}
                             results={results}
+                            showPicture={showPicture}
+                            showAudio={showAudio}
                             showNote={showNote}
                         />
                     )}
@@ -631,6 +656,8 @@ const DoQuiz = () => {
                             progress={progress}
                             answers={answers}
                             results={results}
+                            showPicture={showPicture}
+                            showAudio={showAudio}
                             showNote={showNote}
                         />
                     )}
@@ -649,6 +676,8 @@ const DoQuiz = () => {
                             progress={progress}
                             answers={answers}
                             results={results}
+                            showPicture={showPicture}
+                            showAudio={showAudio}
                             showNote={showNote}
                         />
                     )}
@@ -804,6 +833,52 @@ const DoQuiz = () => {
                                             <p className="form-check-label m-0">
                                                 of {cards?.length} questions
                                             </p>
+                                        </div>
+                                    </div>
+                                    {/* picture */}
+                                    <div className="quizOptionBlock">
+                                        <legend>PICTURE</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                checked={optionShowPicture}
+                                                id="showPicture"
+                                                onChange={() => {
+                                                    setOptionShowPicture(
+                                                        !optionShowPicture
+                                                    )
+                                                }}
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="showPicture"
+                                            >
+                                                Show picture
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/* audio */}
+                                    <div className="quizOptionBlock">
+                                        <legend>AUDIO</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                checked={optionShowAudio}
+                                                id="showAudio"
+                                                onChange={() => {
+                                                    setOptionShowAudio(
+                                                        !optionShowAudio
+                                                    )
+                                                }}
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="showAudio"
+                                            >
+                                                Show audio
+                                            </label>
                                         </div>
                                     </div>
                                     {/* note */}

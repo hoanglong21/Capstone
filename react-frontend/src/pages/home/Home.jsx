@@ -23,11 +23,10 @@ function Home() {
             <div className="container mt-4 mb-5">
                 <div className="dictionary_header bg-light">
                     <div className="container mx-auto py-8">
-                        <div className="justify-center mt-4">
-                            <div className="text-center form-inline">
+                        <div className="mobile justify-center mt-4">
+                            <div className="form123 text-center form-inline">
                                 <form
-                                    className="form-inline w-50"
-                                    style={{ display: 'inline-flex' }}
+                                    className="form-search form-inline w-50"
                                 >
                                     <input
                                         className="form-control mr-sm-2"

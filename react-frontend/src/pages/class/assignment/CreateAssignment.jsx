@@ -131,6 +131,7 @@ function CreateAssignment() {
                 console.log(error.message)
             }
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
         setLoadingCreateAssign(false)
     }
 

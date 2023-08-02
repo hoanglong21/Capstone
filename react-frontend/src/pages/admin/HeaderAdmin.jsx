@@ -3,9 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../assets/styles/sidebar.css";
 import {
-  NotifyIcon,
   SettingIcon,
-  HelpIcon,
   LogoutIcon,
 } from "../../components/icons";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -115,18 +113,6 @@ function HeaderAdmin() {
                 <SettingIcon className="me-3" strokeWidth="2" />
                 <span className="align-middle fw-semibold">Settings</span>
               </Link>
-            </li>
-            <li>
-              <button
-                className="dropdown-item py-2 px-3"
-                type="button"
-                onClick={() => {
-                  navigate("help-center");
-                }}
-              >
-                <HelpIcon className="me-3" strokeWidth="2" />
-                <span className="align-middle fw-semibold">Help Center</span>
-              </button>
             </li>
             <li>
               <hr className="dropdown-divider" />

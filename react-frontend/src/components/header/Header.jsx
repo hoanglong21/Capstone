@@ -77,10 +77,10 @@ const Header = () => {
 
     return (
         <header className="px-4 border-bottom">
-            <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <nav className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start navbar navbar-expand-sm">
                 <a
                     href="/"
-                    className="d-flex align-items-center mb-2 mb-lg-0 me-2 text-white text-decoration-none"
+                    className="navbar-brand d-flex align-items-center mb-2 mb-lg-0 me-2 text-white text-decoration-none"
                 >
                     <img
                         className="bi me-5"
@@ -90,75 +90,94 @@ const Header = () => {
                     />
                 </a>
 
-                <ul className="nav d-flex align-items-center flex-grow-1 me-3 mb-2 mb-md-0 fw-semibold">
-                    <li>
-                        <NavLink
-                            to={'.'}
-                            className={
-                                'nav-link px-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <HomeIcon className="mx-2" />
-                            <span className="align-middle">Home</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="vocab"
-                            className={
-                                'nav-link px-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <DictIcon className="mx-2" />
-                            <span className="align-middle">Dictionary</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink
-                            to="translate"
-                            className={
-                                'nav-link px-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <TranslateIcon className="mx-2" />
-                            <span className="align-middle">Translate</span>
-                        </NavLink>
-                    </li>
-                    {userToken ? (
-                        <li>
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-expanded="false"
+                    aria-controls="collapseExample"
+                >
+                    <span className="navbar-toggler-icon fs-7"></span>
+                </button>
+
+                <div className="collapse navbar-collapse" id="navbarNav">
+                    <ul className="navbar-nav d-flex align-items-center flex-grow-1 me-3 mb-2 mb-md-0 fw-semibold">
+                        <li className="nav-item">
                             <NavLink
-                                to="/library/sets"
+                                to={'.'}
                                 className={
                                     'nav-link px-3 ' +
                                     (({ isActive }) =>
                                         isActive ? 'active' : '')
                                 }
                             >
-                                <LibraryIcon className="mx-2" />
-                                <span className="align-middle">
-                                    Your Library
-                                </span>
+                                <HomeIcon className="mx-2" />
+                                <span className="align-middle">Home</span>
                             </NavLink>
                         </li>
-                    ) : (
-                        <li>
+                        <li className="nav-item">
                             <NavLink
-                                to="/discovery"
+                                to="vocab"
                                 className={
                                     'nav-link px-3 ' +
                                     (({ isActive }) =>
                                         isActive ? 'active' : '')
                                 }
                             >
-                                <LibraryIcon className="mx-2" />
-                                <span className="align-middle">Discovery</span>
+                                <DictIcon className="mx-2" />
+                                <span className="align-middle">Dictionary</span>
                             </NavLink>
                         </li>
-                    )}
-                </ul>
+                        <li className="nav-item">
+                            <NavLink
+                                to="translate"
+                                className={
+                                    'nav-link px-3 ' +
+                                    (({ isActive }) =>
+                                        isActive ? 'active' : '')
+                                }
+                            >
+                                <TranslateIcon className="mx-2" />
+                                <span className="align-middle">Translate</span>
+                            </NavLink>
+                        </li>
+                        {userToken ? (
+                            <li className="nav-item">
+                                <NavLink
+                                    to="/library/sets"
+                                    className={
+                                        'nav-link px-3 ' +
+                                        (({ isActive }) =>
+                                            isActive ? 'active' : '')
+                                    }
+                                >
+                                    <LibraryIcon className="mx-2" />
+                                    <span className="align-middle">
+                                        Your Library
+                                    </span>
+                                </NavLink>
+                            </li>
+                        ) : (
+                            <li className="nav-item">
+                                <NavLink
+                                    to="/discovery"
+                                    className={
+                                        'nav-link px-3 ' +
+                                        (({ isActive }) =>
+                                            isActive ? 'active' : '')
+                                    }
+                                >
+                                    <LibraryIcon className="mx-2" />
+                                    <span className="align-middle">
+                                        Discovery
+                                    </span>
+                                </NavLink>
+                            </li>
+                        )}
+                    </ul>
+                </div>
+
                 <div className="d-flex align-items-center">
                     {/* Add button */}
                     <div className="dropdown d-inline-flex">
@@ -448,7 +467,7 @@ const Header = () => {
                         </>
                     )}
                 </div>
-            </div>
+            </nav>
             {/* Logout message */}
             <ToastContainer
                 className="p-3 mt-5"

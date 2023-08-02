@@ -1,8 +1,22 @@
 import { useState, useEffect } from 'react'
 
-import ContentService from '../../../services/ContentService'
+import ProgressService from '../../../services/ProgressService'
 
-const GrammarCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
+import { NoteSolidIcon, StarSolidIcon } from '../../../components/icons'
+
+const GrammarCard = ({
+    userInfo,
+    fullCard,
+    cardIndex,
+    handleAutoPlay,
+    isAuto,
+    fullCards,
+    setFullCards,
+    setShowNoteModal,
+    handleUpdateNumStar,
+}) => {
+    const [card, setCard] = useState({})
+    const [progress, setProgress] = useState({})
     const [title, setTitle] = useState(null)
     const [jlptLevel, setJlptLevel] = useState(null)
     const [meaning, setMeaning] = useState(null)
@@ -11,10 +25,18 @@ const GrammarCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
     const [note, setNote] = useState(null)
     const [structure, setStructure] = useState(null)
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     useEffect(() => {
         const fetchData = async () => {
-            const tempContents = (await ContentService.getAllByCardId(card.id))
-                .data
+            setCard(fullCard.card)
+            setProgress(fullCard.progress)
+            const tempContents = fullCard.content
             for (const content of tempContents) {
                 switch (content.field.name) {
                     case 'title':
@@ -43,10 +65,10 @@ const GrammarCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
                 }
             }
         }
-        if (card?.id) {
+        if (fullCard?.card?.id) {
             fetchData()
         }
-    }, [card])
+    }, [fullCard])
 
     useEffect(() => {
         if (isAuto) {
@@ -82,11 +104,46 @@ const GrammarCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
         }
     }, [])
 
+    const handleChangeStar = async () => {
+        var tempCard = { ...card }
+        tempCard.studySet.created_date = toBEDate(
+            tempCard.studySet.created_date
+        )
+        tempCard.studySet.user.created_date = toBEDate(
+            tempCard.studySet.user.created_date
+        )
+        var tempUser = {
+            ...userInfo,
+            created_date: toBEDate(userInfo.created_date),
+        }
+        var tempProgress = {
+            user: tempUser,
+            card: tempCard,
+            star: progress?.id ? !progress?._star : 0,
+            audio: progress?.audio || '',
+            picture: progress?.picture || '',
+            note: progress?.note || '',
+        }
+        tempProgress = (
+            await ProgressService.customUpdateProgress(tempProgress)
+        ).data
+        // update progress
+        setProgress(tempProgress)
+        // update list cards
+        var tempFullCards = [...fullCards]
+        tempFullCards[cardIndex] = { ...fullCard, progress: tempProgress }
+        setFullCards(tempFullCards)
+        // update number star
+        handleUpdateNumStar(tempProgress.status, tempProgress._star)
+    }
+
     return (
         <div
             className="flashcardContentContainer"
-            onClick={() => {
-                toggleFlip()
+            onClick={(event) => {
+                if (event.target.name !== 'flashcardContent_noteBtn') {
+                    toggleFlip()
+                }
             }}
         >
             <div
@@ -94,6 +151,26 @@ const GrammarCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
                 id={`flipElement${cardIndex}`}
             >
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
+                    <div className="flashcardContent_noteBtn">
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className={`setPageTerm_btn btn btn-customLight ${
+                                progress?._star ? 'star' : ''
+                            }`}
+                            onClick={handleChangeStar}
+                        >
+                            <StarSolidIcon size="16px" />
+                        </button>
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowNoteModal(true)
+                            }}
+                        >
+                            <NoteSolidIcon size="16px" />
+                        </button>
+                    </div>
                     <div
                         dangerouslySetInnerHTML={{
                             __html: title?.content,
@@ -101,6 +178,26 @@ const GrammarCard = ({ card, cardIndex, handleAutoPlay, isAuto }) => {
                     ></div>
                 </div>
                 <div className="flashcardBack">
+                    <div className="flashcardContent_noteBtn">
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className={`setPageTerm_btn btn btn-customLight ${
+                                progress?._star ? 'star' : ''
+                            }`}
+                            onClick={handleChangeStar}
+                        >
+                            <StarSolidIcon size="16px" />
+                        </button>
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowNoteModal(true)
+                            }}
+                        >
+                            <NoteSolidIcon size="16px" />
+                        </button>
+                    </div>
                     <div className="row">
                         {structure && (
                             <div className="col-12 col-xl-6 mb-3">

@@ -1,7 +1,9 @@
 package com.capstone.project.service;
 
 import com.capstone.project.exception.ResourceNotFroundException;
+import com.capstone.project.model.Card;
 import com.capstone.project.model.Progress;
+import com.capstone.project.model.User;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public interface ProgressService {
 
     Progress updateScore(int userId, int cardId, int score);
 
-    Progress customUpdateProgress(int userId, int cardId, boolean isStar, String picture, String audio, String note);
+    Progress customUpdateProgress(User user, Card card, boolean isStar, String picture, String audio, String note, String status);
 
     Boolean resetProgress(int userId, int studySetId);
 

@@ -191,22 +191,17 @@ export const KanjiCard = (props) => {
     useEffect(() => {
         window.addEventListener('error', (e) => {
             console.log(e)
-            if (
-                e.message === 'ResizeObserver loop limit exceeded' ||
-                e.message.includes('t.getStyle is not a function')
-            ) {
-                const resizeObserverErrDiv = document.getElementById(
-                    'webpack-dev-server-client-overlay-div'
-                )
-                const resizeObserverErr = document.getElementById(
-                    'webpack-dev-server-client-overlay'
-                )
-                if (resizeObserverErr) {
-                    resizeObserverErr.setAttribute('style', 'display: none')
-                }
-                if (resizeObserverErrDiv) {
-                    resizeObserverErrDiv.setAttribute('style', 'display: none')
-                }
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            )
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            )
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none')
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none')
             }
         })
     }, [])
@@ -235,7 +230,7 @@ export const KanjiCard = (props) => {
             const urlOld = String(card[name])
             const url = await uploadFile(
                 file,
-                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
             )
             if (name === 'strokeOrder') {
                 // update stroke order
@@ -249,7 +244,7 @@ export const KanjiCard = (props) => {
                 if (urlOld) {
                     await deleteFileByUrl(
                         urlOld,
-                        `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
                     )
                 }
                 doUpdateCard(tempCard)
@@ -297,7 +292,7 @@ export const KanjiCard = (props) => {
         if (urlOld) {
             await deleteFileByUrl(
                 urlOld,
-                `${card.studySet.username}/studySet/${card.studySet.id}/card/${card.id}`
+                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
             )
         }
         // set loading

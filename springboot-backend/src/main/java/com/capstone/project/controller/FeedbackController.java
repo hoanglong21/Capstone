@@ -87,7 +87,7 @@ public class FeedbackController {
 
     @GetMapping("/replyfeedback")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<?> getFeedbackById(@RequestParam("id") int id,
+    public ResponseEntity<?> replyFeedback(@RequestParam("id") int id,
                                              @RequestParam("title") String title,
                                              @RequestParam("content") String content) {
         try {

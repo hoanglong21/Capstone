@@ -12,7 +12,8 @@ const VocabCard = ({
     progress,
     answers,
     results,
-    showNote,
+    showPicture,
+    showAudio,
 }) => {
     return (
         <div className="card">
@@ -40,9 +41,9 @@ const VocabCard = ({
                             )
                         }
                     })}
-                    {showNote && (
+                    {(showPicture || showAudio) && (
                         <div className="row">
-                            {ques.question.card.picture && (
+                            {showPicture && ques.question.card.picture && (
                                 <div className="col-6">
                                     <img
                                         src={ques.question.card.picture}
@@ -50,7 +51,7 @@ const VocabCard = ({
                                     />
                                 </div>
                             )}
-                            {ques.question.card.audio && (
+                            {showAudio && ques.question.card.audio && (
                                 <div className="col-6">
                                     <audio
                                         controls
@@ -107,9 +108,9 @@ const VocabCard = ({
                             )
                         }
                     })}
-                    {showNote && (
+                    {(showPicture || showAudio) && (
                         <div className="row">
-                            {ques.question.card.picture && (
+                            {showPicture && ques.question.card.picture && (
                                 <div className="col-6">
                                     <img
                                         src={ques.question.card.picture}
@@ -117,7 +118,7 @@ const VocabCard = ({
                                     />
                                 </div>
                             )}
-                            {ques.question.card.audio && (
+                            {showAudio && ques.question.card.audio && (
                                 <div className="col-6">
                                     <audio
                                         controls
@@ -262,9 +263,9 @@ const VocabCard = ({
                             </div>
                         </div>
                     </div>
-                    {showNote && (
+                    {(showPicture || showAudio) && (
                         <div className="row">
-                            {ques.question.card.picture && (
+                            {showPicture && ques.question.card.picture && (
                                 <div className="col-6">
                                     <img
                                         src={ques.question.card.picture}
@@ -272,7 +273,7 @@ const VocabCard = ({
                                     />
                                 </div>
                             )}
-                            {ques.question.card.audio && (
+                            {showAudio && ques.question.card.audio && (
                                 <div className="col-6">
                                     <audio
                                         controls

@@ -1,16 +1,18 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.dto.CardWrapper;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Card;
 import com.capstone.project.model.Content;
 import com.capstone.project.repository.CardRepository;
 import com.capstone.project.repository.ContentRepository;
-import com.capstone.project.repository.StudySetRepository;
+import com.capstone.project.repository.ProgressRepository;
 import com.capstone.project.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,11 +21,13 @@ public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
 
     private final ContentRepository contentRepository;
+    private final ProgressRepository progressRepository;
 
     @Autowired
-    public CardServiceImpl(CardRepository cardRepository, ContentRepository contentRepository) {
+    public CardServiceImpl(CardRepository cardRepository, ContentRepository contentRepository, ProgressRepository progressRepository) {
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
+        this.progressRepository = progressRepository;
     }
 
     @Override
@@ -87,6 +91,20 @@ public class CardServiceImpl implements CardService {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<CardWrapper> getFilterCard(int studySetId, int userId, String[] status, boolean star) {
+        List<Card> cardList = cardRepository.getCardInSetWithCondition(studySetId, userId, status, star);
+        List<CardWrapper> cardWrappers = new ArrayList<>();
+        for(Card card : cardList) {
+            CardWrapper responseCard = new CardWrapper();
+            responseCard.setCard(card);
+            responseCard.setContent(contentRepository.getContentByCardId(card.getId()));
+            responseCard.setProgress(progressRepository.findByCardIdAndUserId(userId, card.getId()));
+            cardWrappers.add(responseCard);
+        }
+        return cardWrappers;
     }
 
 }

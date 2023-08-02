@@ -64,7 +64,7 @@ function ManageComment() {
                 </thead>
                 <tbody>
                 {comment?.length === 0 && (
-                                        <p>No sets matching {search} found</p>
+                                        <p>No data matching {search} found</p>
                                     )}
                 {comment?.map((comments) => (
                   <tr>

@@ -26,9 +26,12 @@ public class Answer {
 
     private boolean is_true;
 
+    @Column(columnDefinition="TEXT")
     private String picture;
 
+    @Column(columnDefinition="TEXT")
     private String audio;
 
+    @Column(columnDefinition="TEXT")
     private String video;
 }

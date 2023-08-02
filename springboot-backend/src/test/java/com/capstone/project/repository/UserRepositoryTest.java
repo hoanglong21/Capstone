@@ -128,7 +128,7 @@ public class UserRepositoryTest {
         for(User s: names) {
             strings.add(s.getUsername());
         }
-        Assertions.assertThat(names).doesNotContain(find);
+        Assertions.assertThat(strings).doesNotContain(find);
     }
 
 

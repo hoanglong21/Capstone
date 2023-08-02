@@ -6,6 +6,15 @@ const createFeedback = (feedback) => {
   return axios.post(API_BASE_URL + "/feedbacks", feedback);
 };
 
+const replyfeedback = (id, title, content) => {
+  return axios.post(API_BASE_URL + "/replyfeedback", id, title, content,
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+  },
+  });
+};
+
 const getFeedbackById = (id) => {
   return axios.get(API_BASE_URL + "/feedbacks/" + id,
   {
@@ -58,6 +67,7 @@ const FeedbackService = {
   createFeedback,
   getFeedbackById,
   filterFeedbackList,
+  replyfeedback
 };
 
 export default FeedbackService;

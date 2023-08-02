@@ -8,9 +8,8 @@ import {
     listAll,
     list,
     uploadBytes,
-    getMetadata
+    getMetadata,
 } from 'firebase/storage'
-
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM',
@@ -36,6 +35,7 @@ const storage = getStorage(firebaseApp)
 
 export const uploadFile = async (file, folderName, file_type) => {
     return new Promise(function (resolve, reject) {
+        console.log(file.type)
         const metadata = {
             contentType: file_type ? file_type : file.type,
         }

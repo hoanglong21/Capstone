@@ -90,9 +90,27 @@ const getFilterList = (
     )
 }
 
-const getQuizByStudySetId = (id, type, number) => {
+const getQuizByStudySetId = (id, type, number, userId) => {
     return axios.get(
-        API_BASE_URL + '/quiz?id=' + id + '&type=' + type + '&number=' + number
+        API_BASE_URL +
+            '/quiz?id=' +
+            id +
+            '&type=' +
+            type +
+            '&number=' +
+            number +
+            '&userid=' +
+            userId
+    )
+}
+
+const countCardInSet = (userId, studySetId) => {
+    return axios.get(
+        API_BASE_URL +
+            '/countinfoset?userid=' +
+            userId +
+            '&studysetid=' +
+            studySetId
     )
 }
 
@@ -105,6 +123,7 @@ const StudySetService = {
     getAllStudySetByUser,
     getFilterList,
     getQuizByStudySetId,
+    countCardInSet,
 }
 
 export default StudySetService

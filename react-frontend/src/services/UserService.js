@@ -18,6 +18,13 @@ export const banUser = (username) => {
     })
 }
 
+export const recoverUser = (username) => {
+    return axios.get(API_BASE_URL + '/users/' + username + '/recover', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
 
 export const updateUser = (username, userDetails) => {
     return axios.put(API_BASE_URL + '/users/' + username, userDetails, {
@@ -125,6 +132,49 @@ export const filterUser = (
     )
 }
 
+const getStudySetLearnedStatistic = (id) => {
+    return axios.get(API_BASE_URL + '/statistic/user/studysetlearned/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const getClassJoinedStatistic = (id) => {
+    return axios.get(API_BASE_URL + '/statistic/user/classjoined/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const getAccessStatistic = (id) => {
+    return axios.get(API_BASE_URL + '/statistic/user/access/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const getLearningStatistic = (id) => {
+    return axios.get(API_BASE_URL + '/statistic/user/learning/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const findAllNameExcept = (username, except) => {
+    return axios.get(
+        API_BASE_URL + '/otherusers?username=' + username + '&except=' + except,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+        }
+    )
+}
+
 const UserService = {
     getUser,
     updateUser,
@@ -133,6 +183,13 @@ const UserService = {
     deleteUser,
     sendResetPasswordEmail,
     filterUser,
+    banUser,
+    recoverUser,
+    getClassJoinedStatistic,
+    getStudySetLearnedStatistic,
+    getAccessStatistic,
+    getLearningStatistic,
+    findAllNameExcept,
 }
 
 export default UserService

@@ -4,7 +4,6 @@ import HeaderAdmin from "./HeaderAdmin";
 import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
-import ApexCharts from "apexcharts";
 import AdminService from "../../services/AdminService";
 import ReactApexChart from "react-apexcharts";
 function AdminDashboard() {
@@ -201,7 +200,7 @@ function AdminDashboard() {
     <div className="container-fluid bg-white">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm">
+        <div className="col-sm-10 col-lg-10 col-md-10">
           <HeaderAdmin />
           <div className="container">
             <div className="d-sm-flex align-items-center justify-content-between mb-4">

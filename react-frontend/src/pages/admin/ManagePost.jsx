@@ -65,7 +65,7 @@ function ManagePost() {
                 </thead>
                 <tbody>
                 {post?.length === 0 && (
-                                        <p>No sets matching {search} found</p>
+                                        <p>No data matching {search} found</p>
                                     )}
                 {post?.map((posts) => (
                   <tr>

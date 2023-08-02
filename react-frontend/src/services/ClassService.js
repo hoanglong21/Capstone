@@ -83,6 +83,24 @@ const checkUserClass = (classId, userId) => {
     )
 }
 
+const checkUserClassWaiting = (classId, userId) => {
+    return axios.get(
+        API_BASE_URL +
+            '/checkuserclasswaiting?classId=' +
+            classId +
+            '&userId=' +
+            userId
+    )
+}
+
+const getLeanerJoinedGrowth = (id) => {
+    return axios.get(API_BASE_URL + '/statistic/learnerjoinedgrowth/' + id)
+}
+
+const getPostGrowth = (id) => {
+    return axios.get(API_BASE_URL + '/statistic/postgrowth/' + id)
+}
+
 const ClassService = {
     createClassroom,
     getFilterList,
@@ -95,6 +113,9 @@ const ClassService = {
     getTestNumber,
     getAssignmentNumber,
     checkUserClass,
+    checkUserClassWaiting,
+    getLeanerJoinedGrowth,
+    getPostGrowth,
 }
 
 export default ClassService
