@@ -49,6 +49,7 @@ const DeleteAccount = () => {
                 setError(error.message)
             }
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
     }
 
     const handleDelete = async () => {

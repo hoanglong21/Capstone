@@ -10,12 +10,14 @@ const createClassLeaner = (classLearner) => {
     })
 }
 
-const deleteClassLearner = (classLearner) => {
-    return axios.delete(API_BASE_URL + '/classlearner/', classLearner, {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },
-    })
+const deleteClassLearner = (userid, classid) => {
+    return axios.delete(
+        API_BASE_URL +
+            '/delclasslearner?userid=' +
+            userid +
+            '&classid=' +
+            classid
+    )
 }
 
 const filterGetLeaner = (
@@ -29,7 +31,7 @@ const filterGetLeaner = (
 ) => {
     return axios.get(
         API_BASE_URL +
-            '/filtergetleaner?userid' +
+            '/filtergetlearner?userid' +
             userId +
             '&classid' +
             classId +

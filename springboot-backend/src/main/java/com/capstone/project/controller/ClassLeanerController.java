@@ -37,7 +37,7 @@ public class ClassLeanerController {
 
     @PutMapping ("/classleaner")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
-    public ResponseEntity<?> updateClassLeaner(@RequestBody ClassLearner classLearner,@PathVariable int id) {
+    public ResponseEntity<?> updateClassLeaner(@RequestBody ClassLearner classLearner, @PathVariable int id) {
         try {
             return ResponseEntity.ok(classLearnerService.updateClassLearner(classLearner,id));
         } catch (ResourceNotFroundException e) {

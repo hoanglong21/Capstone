@@ -115,6 +115,7 @@ const Profile = () => {
         } else {
             dispatch(updateUser(newUser))
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
     }
 
     function padTo2Digits(num) {

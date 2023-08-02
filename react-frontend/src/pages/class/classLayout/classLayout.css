@@ -245,3 +245,32 @@
     font-weight: 500;
     line-height: 1.25rem;
 }
+
+.people_btn {
+    padding: 0.75rem;
+    border: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.285;
+    transition: all 0.12s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+.people_btn:hover {
+    color: #ffcd1f;
+}
+
+.people_btn--accept {
+    color: #0c36ff;
+    padding-right: 0;
+}
+
+.people_btn--decline {
+    color: #ff725b;
+    padding-left: 0;
+}
+
+.people_btnDivider {
+    height: 1rem;
+    border-right: 0.125rem solid #dbdfff;
+    margin: 0 0.625rem;
+}
