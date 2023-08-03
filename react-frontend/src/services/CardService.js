@@ -30,7 +30,16 @@ const deleteCard = (id) => {
     })
 }
 
-const countCardInSet = (userId, studySetId, status, star) => {
+const countCardInSet = (
+    userId,
+    studySetId,
+    status,
+    star,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
     return axios.get(
         API_BASE_URL +
             '/filtercard?userid' +
@@ -40,7 +49,15 @@ const countCardInSet = (userId, studySetId, status, star) => {
             '&status' +
             status +
             '&star' +
-            star
+            star +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
+            '&page' +
+            page +
+            '&size' +
+            size
     )
 }
 

@@ -172,16 +172,6 @@ const Flashcard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // cards
-                const tempCards = (
-                    await CardService.countCardInSet(
-                        `=${userInfo.id}`,
-                        `=${id}`,
-                        '=still learning,mastered,not studied',
-                        `=0`
-                    )
-                ).data
-                setCards(tempCards)
                 // number
                 const tempCounts = (
                     await StudySetService.countCardInSet(userInfo.id, id)
@@ -205,12 +195,28 @@ const Flashcard = () => {
                 }
                 setProgressStatus([...tempProgressStatus])
                 setOptionProgressStatus([...tempProgressStatus])
+                // cards
+                const tempCards = (
+                    await CardService.countCardInSet(
+                        `=${userInfo.id}`,
+                        `=${id}`,
+                        `=${tempProgressStatus}`,
+                        `=0`,
+                        '',
+                        '',
+                        '',
+                        ''
+                    )
+                ).data.list
+                setCards(tempCards)
                 // initial data
                 setCardIndex(0)
-                setPicture(tempCards[0].progress?.picture || '')
-                setAudio(tempCards[0].progress?.audio || '')
-                setNote(tempCards[0].progress?.note || '')
-                setType(tempCards[0].card?.studySet?.studySetType?.id)
+                if (tempCards[0]?.progress) {
+                    setPicture(tempCards[0].progress?.picture || '')
+                    setAudio(tempCards[0].progress?.audio || '')
+                    setNote(tempCards[0].progress?.note || '')
+                    setType(tempCards[0].card?.studySet?.studySetType?.id)
+                }
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -226,27 +232,51 @@ const Flashcard = () => {
 
     const handleUpdateStatus = async () => {
         var progress = cards[cardIndex]?.progress
+        if (!progress) {
+            progress = {
+                user: { ...userInfo },
+                card: { ...cards[cardIndex].card },
+                star: 0,
+                status: 'not studied',
+            }
+        }
         if (progress?.status == 'not studied') {
-            // set date
-            progress.card.studySet.created_date = toBEDate(
-                progress.card.studySet.created_date
-            )
-            progress.card.studySet.user.created_date = toBEDate(
-                progress.card.studySet.user.created_date
-            )
-            progress.user.created_date = toBEDate(progress.user.created_date)
-            // update
-            const tempProgress = (
-                await ProgressService.customUpdateProgress({
-                    ...progress,
-                    status: 'still learning',
-                })
-            ).data
-            setNumNot(numNot - 1)
-            setNumStill(numStill + 1)
-            var tempCards = [...cards]
-            tempCards[cardIndex].progress = tempProgress
-            setCards(tempCards)
+            try {
+                // set date
+                if (progress?.card?.studySet) {
+                    progress.card.studySet.created_date = toBEDate(
+                        progress.card.studySet.created_date
+                    )
+                }
+                if (progress?.card?.studySet?.user) {
+                    progress.card.studySet.user.created_date = toBEDate(
+                        progress.card.studySet.user.created_date
+                    )
+                }
+                if (progress?.user) {
+                    progress.user.created_date = toBEDate(
+                        progress.user.created_date
+                    )
+                }
+                // update
+                const tempProgress = (
+                    await ProgressService.customUpdateProgress({
+                        ...progress,
+                        status: 'still learning',
+                    })
+                ).data
+                setNumNot(numNot - 1)
+                setNumStill(numStill + 1)
+                var tempCards = [...cards]
+                tempCards[cardIndex].progress = tempProgress
+                setCards(tempCards)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
     }
 
