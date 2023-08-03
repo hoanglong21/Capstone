@@ -53,6 +53,22 @@
     display: none;
 }
 
+.accordionAssign_icon {
+    background-color: rgb(66, 133, 244);
+    color: #fff;
+    height: 2.25rem;
+    width: 2.25rem;
+    margin-right: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accordionAssign_icon.disabled {
+    background-color: #bdc1c6;
+}
+
 .editAssign_btn,
 .deleteAssign_btn,
 .viewAssign_btn {
@@ -271,8 +287,7 @@
     line-height: 1.25rem;
 }
 
-.submission_btn,
-.submission_doneBtn {
+.submission_btn {
     color: rgb(25, 103, 210);
     border: 1px solid rgb(218, 220, 224);
     padding: 0 15px 0 11px;
@@ -307,7 +322,12 @@
     color: #fff;
 }
 
-.submission_doneBtn:hover {
+.submission_doneBtn:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+
+.submission_doneBtn:hover:not(:disabled) {
     opacity: 0.92;
     box-shadow: 0 2px 1px -1px rgba(25, 103, 210, 0.2),
         0 1px 1px 0 rgba(25, 103, 210, 0.14),

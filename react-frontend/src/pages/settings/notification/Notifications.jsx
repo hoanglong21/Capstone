@@ -208,6 +208,7 @@ const Notifications = () => {
                 console.log(error.message)
             }
         }
+        document.body.scrollTop = document.documentElement.scrollTop = 0
     }
 
     return (

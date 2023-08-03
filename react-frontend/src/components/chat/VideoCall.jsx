@@ -81,6 +81,7 @@ const VideoCall = () => {
     const [loadingSender, setLoadingSender] = useState(false)
     const [loadingReceiver, setLoadingReceiver] = useState(false)
     const [isCalling, setIsCalling] = useState(false)
+    const [isWaiting, setIsWaiting] = useState(false)
     const [callId, setCallId] = useState('')
 
     useEffect(() => {
@@ -117,6 +118,7 @@ const VideoCall = () => {
         pc.ontrack = (event) => {
             //Add a bit - if
             if (remoteStream != null) {
+                setIsWaiting(false)
                 event.streams[0].getTracks().forEach((track) => {
                     remoteStream.addTrack(track)
                 })
@@ -129,6 +131,8 @@ const VideoCall = () => {
     }
 
     let callButtonClick = async () => {
+        setIsCalling(true)
+        setIsWaiting(true)
         // Reference Firestore collections for signaling
         const callDoc = firestore.collection('calls').doc()
 
@@ -211,7 +215,6 @@ const VideoCall = () => {
         }
 
         const callData = (await callDoc.get()).data()
-        console.log((await callDoc.get()).data())
 
         const offerDescription = callData.offer
         await pc.setRemoteDescription(
@@ -352,7 +355,7 @@ const VideoCall = () => {
                 autoPlay
                 playsInline
             ></video>
-            {isCalling || call ? (
+            {(isCalling && !isWaiting) || call ? (
                 <div className="d-flex justify-content-center">
                     <button id="answerButton" onClick={answerButtonClick}>
                         Answer
@@ -363,19 +366,21 @@ const VideoCall = () => {
                 </div>
             ) : (
                 <div className="d-flex justify-content-center">
-                    <button
-                        id="callButton"
-                        className="btn btn-outline-primary"
-                        onClick={callButtonClick}
-                        disabled={
-                            isCalling &&
-                            document
-                                .getElementById('remoteVideo')
-                                .classList.contains('d-none')
-                        }
-                    >
-                        Create Call (offer)
-                    </button>
+                    {isWaiting ? (
+                        <div className="spinner-border" role="status">
+                            <span className="visually-hidden">
+                                LoadingSender...
+                            </span>
+                        </div>
+                    ) : (
+                        <button
+                            id="callButton"
+                            className="btn btn-outline-primary"
+                            onClick={callButtonClick}
+                        >
+                            Create Call (offer)
+                        </button>
+                    )}
                 </div>
             )}
         </div>

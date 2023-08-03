@@ -48,6 +48,7 @@ export default function Layout() {
     const { userInfo } = useSelector((state) => state.user)
 
     const [messages, setMessages] = useState([])
+    const [isAccept, setIsAccept] = useState(false)
 
     useEffect(() => {
         const getData = ref(database, 'messages/')
@@ -69,20 +70,15 @@ export default function Layout() {
         })
     }, [])
 
-    const deleteMessage = async (message) => {
-        // var myWindow = window.open('', 'myWindow')
-        // // Check if the window is already open
-        // if (myWindow.location.href === 'about:blank') {
-        //     // If the window is not yet navigated to a page, navigate to the desired page
-        //     myWindow.location.href =
-        //         '/video-call/' + message.message + '/' + true
-        // } else {
-        //     // If the window is already open and navigated to a page, focus it
-        //     myWindow.focus()
-        // }
+    const rejectCall = async (message) => {
+        setIsAccept(false)
+        const rootRef = ref(database, 'messages/')
+        const messageRef = child(rootRef, message.key) // Retrieve the Reference object for the message
+        remove(messageRef) // Remove the message from the database
     }
 
     const answerCall = async (message) => {
+        setIsAccept(true)
         var myWindow = window.open('', 'myWindow')
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
@@ -103,7 +99,7 @@ export default function Layout() {
             </div>
             <Footer />
             {/* video call modal */}
-            {messages
+            {!isAccept && messages
                 ?.filter(
                     (message) =>
                         message.video_call === true &&
@@ -115,7 +111,7 @@ export default function Layout() {
                             <button
                                 className="chat_btn chat_callModalClose"
                                 onClick={() => {
-                                    deleteMessage(message)
+                                    rejectCall(message)
                                 }}
                             >
                                 <CloseIcon />
@@ -137,7 +133,7 @@ export default function Layout() {
                                     <button
                                         className="chat_callModalBtn chat_callModalBtn--decline me-3"
                                         onClick={() => {
-                                            deleteMessage(message)
+                                            rejectCall(message)
                                         }}
                                     >
                                         <CloseIcon strokeWidth="2" />

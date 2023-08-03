@@ -280,21 +280,21 @@ const GrammarCard = ({
                     </div>
                     <div className="row my-2 flashCardNote">
                         <div className="col-12 col-xl-6">
-                            {card?.picture && (
+                            {(progress?.picture || card?.picture) && (
                                 <div className="flashCardField_img d-flex align-items-center">
                                     <img
-                                        src={card?.picture}
+                                        src={progress?.picture || card?.picture}
                                         alt="card picture"
                                     />
                                 </div>
                             )}
                         </div>
                         <div className="col-12 col-xl-6">
-                            {card?.audio && (
+                            {(progress?.audio || card?.audio) && (
                                 <div className="d-flex align-items-center">
                                     <audio
                                         controls
-                                        src={card?.audio}
+                                        src={progress?.audio || card?.audio}
                                         alt="card audio"
                                     />
                                 </div>

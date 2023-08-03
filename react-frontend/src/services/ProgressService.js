@@ -25,9 +25,27 @@ const customUpdateProgress = (progress) => {
     })
 }
 
+const updateScore = (userId, cardId, score) => {
+    return axios.get(
+        API_BASE_URL +
+            '/scoreprogress?userid=' +
+            userId +
+            '&cardid=' +
+            cardId +
+            '&score=' +
+            score,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+        }
+    )
+}
+
 const ProgressService = {
     getProgressByUserIdAndCardId,
     customUpdateProgress,
+    updateScore,
 }
 
 export default ProgressService

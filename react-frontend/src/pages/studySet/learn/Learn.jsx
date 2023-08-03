@@ -1,9 +1,14 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
-import CardService from '../../../services/CardService'
+import { getUser } from '../../../features/user/userAction'
+
+import VocabCard from './VocabCard'
+import KanjiCard from './KanjiCard'
+import GrammarCard from './GrammarCard'
 
 import {
     StudySetSolidIcon,
@@ -11,37 +16,50 @@ import {
     CloseIcon,
     LearnSolidIcon,
     TestSolidIcon,
-    ListIcon,
 } from '../../../components/icons'
 import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './learn.css'
-import VocabCard from './VocabCard'
-import KanjiCard from './KanjiCard'
-import GrammarCard from './GrammarCard'
 
 const Learn = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const { id } = useParams()
+
+    const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
 
     const [studySet, setStudySet] = useState({})
     const [type, setType] = useState(1)
     const [fields, setFields] = useState([])
-    const [cards, setCards] = useState([])
+    const [numNot, setNumNot] = useState(0)
+    const [numStill, setNumStill] = useState(0)
+    const [numMaster, setNumMaster] = useState(0)
+    const [numNotStar, setNumNotStar] = useState(0)
+    const [numStillStar, setNumStillStar] = useState(0)
+    const [numMasterStar, setNumMasterStar] = useState(0)
 
     const [questionTypes, setQuestionTypes] = useState([1, 2, 3])
-    const [numQues, setNumQues] = useState(0)
+    const [progressStatus, setProgressStatus] = useState([])
+    const [isStar, setIsStar] = useState(false)
+    const [isShuffle, setIsShuffle] = useState(false)
     const [writtenPromptWith, setWrittenPromptWith] = useState([])
     const [writtenAnswerWith, setWrittenAnswerWith] = useState(0)
     const [multiplePromptWith, setMultiplePromptWith] = useState([])
     const [multipleAnswerWith, setMultipleAnswerWith] = useState([])
     const [trueFalsePromptWith, setTrueFalsePromptWith] = useState([])
     const [trueFalseAnswerWith, setTrueFalseAnswerWith] = useState([])
+    const [showPicture, setShowPicture] = useState(false)
+    const [showAudio, setShowAudio] = useState(false)
     const [showNote, setShowNote] = useState(false)
 
     const [optionQuestionTypes, setOptionQuestionTypes] = useState([1, 2, 3])
-    const [optionNumQues, setOptionNumQues] = useState(0)
+    const [optionProgressStatus, setOptionProgressStatus] = useState([])
+    const [optionIsStar, setOptionIsStar] = useState(false)
+    const [optionIsShuffle, setOptionIsShuffle] = useState(false)
+    const [optionShowPicture, setOptionShowPicture] = useState(false)
+    const [optionShowAudio, setOptionShowAudio] = useState(false)
     const [optionShowNote, setOptionShowNote] = useState(false)
     const [optionWrittenPromptWith, setOptionWrittenPromptWith] = useState([])
     const [optionWrittenAnswerWith, setOptionWrittenAnswerWith] = useState(0)
@@ -57,26 +75,26 @@ const Learn = () => {
 
     const [progress, setProgress] = useState(0)
     const [questions, setQuestions] = useState([])
-    const [answers, setAnswers] = useState([])
-    const [results, setResults] = useState([])
-    const [skipAnswer, setSkipAnswer] = useState(null)
     const [isEnd, setIsEnd] = useState(false)
-    const [correct, setCorrect] = useState(false)
-    const [incorrect, setIncorrect] = useState(false)
 
     const [loading, setLoading] = useState(false)
 
     // initial
     useEffect(() => {
-        setResults([])
         setIsEnd(false)
-        setSkipAnswer(null)
         setError('')
         document.getElementById('toggleQuizOptionsModalBtn').click()
         const headerHeight = document.getElementById('quizHeader').clientHeight
         document.getElementById('quizProgressContainer').style.top =
             headerHeight
     }, [])
+
+    // fetch user info
+    useEffect(() => {
+        if (userToken) {
+            dispatch(getUser(userToken))
+        }
+    }, [userToken])
 
     // fetch data
     useEffect(() => {
@@ -96,14 +114,29 @@ const Learn = () => {
                     )
                 ).data
                 setFields(tempFields)
-                // cards
-                const tempCards = (
-                    await CardService.getAllByStudySetId(tempStudySet.id)
+                // count
+                const tempCounts = (
+                    await StudySetService.countCardInSet(userInfo.id, id)
                 ).data
-                setCards(tempCards)
-                // number of questions
-                setNumQues(tempCards.length)
-                setOptionNumQues(tempCards.length)
+                setNumNot(tempCounts['Not studied'])
+                setNumStill(tempCounts['Still learning'])
+                setNumMaster(tempCounts['Mastered'])
+                setNumNotStar(tempCounts['Not studied star'])
+                setNumStillStar(tempCounts['Still learning star'])
+                setNumMasterStar(tempCounts['Mastered star'])
+                // set progress
+                var tempProgressStatus = []
+                if (tempCounts['Not studied'] != 0) {
+                    tempProgressStatus.push('not studied')
+                }
+                if (tempCounts['Still learning'] != 0) {
+                    tempProgressStatus.push('still learning')
+                }
+                if (tempCounts['Mastered'] != 0) {
+                    tempProgressStatus.push('mastered')
+                }
+                setProgressStatus([...tempProgressStatus])
+                setOptionProgressStatus([...tempProgressStatus])
                 // prompt with + answer with
                 var tempWrittenPromptWith = [tempFields[0].id]
                 var tempWrittenAnsWith = []
@@ -123,23 +156,21 @@ const Learn = () => {
                 setTrueFalseAnswerWith([...tempWrittenAnsWith])
                 setOptionTrueFalsePromptWith([...tempWrittenPromptWith])
                 setOptionTrueFalseAnswerWith([...tempWrittenAnsWith])
-                // get quiz
-                if (tempCards?.length > 0) {
+                // get learn
+                const tempNumCards = numNot + numStill + numMaster
+                if (tempNumCards > 0) {
                     const tempQuestions = (
-                        await StudySetService.getQuizByStudySetId(
+                        await StudySetService.getLearningStudySetId(
+                            userInfo.id,
                             tempStudySet.id,
                             questionTypes,
-                            tempCards.length
+                            tempProgressStatus,
+                            isShuffle,
+                            isStar
                         )
                     ).data
                     setQuestions(tempQuestions)
                 }
-                // set answers
-                var tempAnswers = []
-                for (let index = 0; index < tempCards.length; index++) {
-                    tempAnswers.push(null)
-                }
-                setAnswers(tempAnswers)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -149,10 +180,10 @@ const Learn = () => {
             }
             setLoading(false)
         }
-        if (id) {
+        if (userInfo?.id) {
             fetchData()
         }
-    }, [id])
+    }, [id, userInfo])
 
     const handleChangeQuestionType = (event) => {
         var tempQuestionsTypes = [...optionQuestionTypes]
@@ -167,20 +198,19 @@ const Learn = () => {
         setOptionQuestionTypes(tempQuestionsTypes)
     }
 
-    const handleCreateQuiz = async () => {
+    const handleCreateLearn = async () => {
         setProgress(0)
-        setResults([])
         setIsEnd(false)
         setError('')
-        setSkipAnswer(null)
         // validation
-        if (optionQuestionTypes?.length < 1) {
-            setError('You must select at least one question type.')
+        if (optionProgressStatus?.length < 1) {
+            setError('You must select at least one progress status.')
             setLoading(false)
             return
         }
-        if (optionNumQues < 1) {
-            setError('Please enter a valid number of questions.')
+        if (optionQuestionTypes?.length < 1) {
+            setError('You must select at least one question type.')
+            setLoading(false)
             return
         }
         if (optionQuestionTypes.includes(1)) {
@@ -251,14 +281,21 @@ const Learn = () => {
         try {
             setLoading(true)
             const tempQuestions = (
-                await StudySetService.getQuizByStudySetId(
+                await StudySetService.getLearningStudySetId(
+                    userInfo.id,
                     studySet.id,
                     optionQuestionTypes,
-                    optionNumQues
+                    optionProgressStatus,
+                    optionIsShuffle,
+                    optionIsStar
                 )
             ).data
             setQuestions(tempQuestions)
-            setNumQues(optionNumQues)
+            setProgressStatus(optionProgressStatus)
+            setIsStar(optionIsStar)
+            setIsShuffle(optionIsShuffle)
+            setShowPicture(optionShowPicture)
+            setShowAudio(optionShowAudio)
             setShowNote(optionShowNote)
             setQuestionTypes(optionQuestionTypes)
             setWrittenPromptWith(optionWrittenPromptWith)
@@ -267,12 +304,7 @@ const Learn = () => {
             setMultipleAnswerWith(optionMultipleAnswerWith)
             setTrueFalsePromptWith(optionTrueFalsePromptWith)
             setTrueFalseAnswerWith(optionTrueFalseAnswerWith)
-            var tempAnswers = []
-            for (let index = 0; index < optionNumQues; index++) {
-                tempAnswers.push(null)
-            }
-            setAnswers(tempAnswers)
-            document.getElementById('quizOptionModalCloseBtn').click()
+            document.getElementById('learnOptionModalCloseBtn').click()
             setError('')
             setLoading(false)
         } catch (error) {
@@ -284,11 +316,15 @@ const Learn = () => {
         }
     }
 
-    const handleCancelCreateQuiz = () => {
+    const handleCancelCreateLearn = () => {
         setError('')
-        setOptionQuestionTypes(questionTypes)
-        setOptionNumQues(numQues)
+        setOptionProgressStatus(progressStatus)
+        setOptionIsStar(isStar)
+        setOptionIsShuffle(isShuffle)
+        setOptionShowPicture(showPicture)
+        setOptionShowAudio(showAudio)
         setOptionShowNote(showNote)
+        setOptionQuestionTypes(questionTypes)
         setOptionWrittenPromptWith(writtenPromptWith)
         setOptionWrittenAnswerWith(writtenAnswerWith)
         setOptionMultiplePromptWith(multiplePromptWith)
@@ -297,79 +333,17 @@ const Learn = () => {
         setOptionTrueFalseAnswerWith(trueFalseAnswerWith)
     }
 
-    const handleChangeAnswer = (ans, index) => {
-        var tempAnswers = [...answers]
-        if (ans) {
-            tempAnswers[index] = ans
+    const handleChangeProgressStatus = (event) => {
+        var tempProgressStatus = [...optionProgressStatus]
+        const value = event.target.value
+        if (event.target.checked) {
+            tempProgressStatus.push(value)
         } else {
-            tempAnswers[index] = ans
+            tempProgressStatus = tempProgressStatus.filter(
+                (item) => item != value
+            )
         }
-        setAnswers(tempAnswers)
-    }
-
-    const handleCheckSubmit = () => {
-        // validation
-        if (progress < numQues) {
-            for (let index = 0; index < answers.length; index++) {
-                const ans = answers[index]
-                if (!ans) {
-                    setSkipAnswer(index)
-                    document.getElementById('quizSubmitModalToggleBtn').click()
-                    return
-                }
-            }
-        } else {
-            handleSubmit()
-        }
-    }
-
-    const handleSubmit = () => {
-        setLoading(true)
-        var tempCorrect = 0
-        var tempResults = []
-        for (let index = 0; index < questions.length; index++) {
-            const ques = questions[index]
-            if (ques.question_type === 1) {
-                var correctAnswer = ''
-                for (const itemContent of ques.question.content) {
-                    if (itemContent.field.id === writtenAnswerWith) {
-                        const tempContent = itemContent.content
-                            .replaceAll(/(<([^>]+)>)/gi, ' ')
-                            .trim()
-                        correctAnswer = tempContent
-                        break
-                    }
-                }
-                if (answers[index] == correctAnswer) {
-                    tempCorrect += 1
-                    tempResults.push(1)
-                } else {
-                    tempResults.push(0)
-                }
-            } else if (ques.question_type === 2) {
-                if (answers[index] == ques.question.card.id) {
-                    tempCorrect += 1
-                    tempResults.push(1)
-                } else {
-                    tempResults.push(0)
-                }
-            } else if (ques.question_type === 3) {
-                const correctAnswer =
-                    ques.question.card.id === ques.answers[0].card.id
-                if (answers[index] == correctAnswer) {
-                    tempCorrect += 1
-                    tempResults.push(1)
-                } else {
-                    tempResults.push(0)
-                }
-            }
-        }
-        setCorrect(tempCorrect)
-        setResults(tempResults)
-        setIncorrect(numQues - tempCorrect)
-        document.getElementById('quizSubmitModalCloseBtn')?.click()
-        setIsEnd(true)
-        setLoading(false)
+        setOptionProgressStatus(tempProgressStatus)
     }
 
     return (
@@ -452,7 +426,10 @@ const Learn = () => {
                 </div>
                 <div className="quizInfo d-flex flex-column align-items-center">
                     <h3>
-                        {progress} / {numQues}
+                        {progress} /{' '}
+                        {isStar
+                            ? numNotStar + numStillStar + numMasterStar
+                            : numNot + numStill + numMaster}
                     </h3>
                     <h3 className="quizInfo_title">{studySet?.title}</h3>
                 </div>
@@ -461,7 +438,7 @@ const Learn = () => {
                         <button
                             id="toggleQuizOptionsModalBtn"
                             className="quizOptions_btn"
-                            onClick={handleCreateQuiz}
+                            onClick={handleCreateLearn}
                         >
                             Take a new test
                         </button>
@@ -486,7 +463,7 @@ const Learn = () => {
                 </div>
             </div>
             {/* Progress */}
-            {isEnd ? (
+            {/* {isEnd ? (
                 <div
                     id="quizProgressContainer"
                     className="progress-stacked quizEndProgressContainer"
@@ -518,153 +495,22 @@ const Learn = () => {
                         </div>
                     </div>
                 </div>
-            ) : (
+            ) : ( */}
+            <div id="quizProgressContainer" className="quizProgressContainer">
                 <div
-                    id="quizProgressContainer"
-                    className="quizProgressContainer"
-                >
-                    <div
-                        className="quizProgress"
-                        style={{
-                            width: `${(progress / numQues) * 100}%`,
-                        }}
-                    ></div>
-                </div>
-            )}
-            {/* Questions sidebar */}
-            {questions.length > 0 && (
-                <div className="questionsSidebar">
-                    <button
-                        id="questionsListBtn"
-                        className="btn quizQuesList_Btn"
-                        type="button"
-                        data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasQuestionsList"
-                        aria-controls="offcanvasQuestionsList"
-                    >
-                        <ListIcon strokeWidth="2" />
-                    </button>
-                    <div
-                        className="offcanvas offcanvas-start"
-                        tabIndex="-1"
-                        id="offcanvasQuestionsList"
-                        aria-labelledby="offcanvasQuestionsListLabel"
-                    >
-                        <div className="offcanvas-header">
-                            <h5
-                                className="offcanvas-title"
-                                id="offcanvasQuestionsListLabel"
-                            >
-                                Questions List
-                            </h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="offcanvas"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="offcanvas-body">
-                            <div className="list-group list-group-flush text-center">
-                                {questions.map((ques, index) => (
-                                    <a
-                                        key={index}
-                                        href={`#question${index}`}
-                                        className={`list-group-item list-group-item-action ${
-                                            results[index] === 0
-                                                ? 'incorrect'
-                                                : results[index] === 1
-                                                ? 'correct'
-                                                : answers[index]
-                                                ? 'selected'
-                                                : ''
-                                        }`}
-                                    >
-                                        {index + 1}
-                                    </a>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {/* Questions list */}
-            {questions?.map((ques, quesIndex) => (
-                <section
-                    key={quesIndex}
-                    id={`question${quesIndex}`}
-                    className="quizQues_container mt-5"
-                >
-                    {type === 1 && (
-                        <VocabCard
-                            ques={ques}
-                            quesIndex={quesIndex}
-                            numQues={numQues}
-                            writtenPromptWith={writtenPromptWith}
-                            multiplePromptWith={multiplePromptWith}
-                            multipleAnswerWith={multipleAnswerWith}
-                            trueFalsePromptWith={trueFalsePromptWith}
-                            trueFalseAnswerWith={trueFalseAnswerWith}
-                            handleChangeAnswer={handleChangeAnswer}
-                            setProgress={setProgress}
-                            progress={progress}
-                            answers={answers}
-                            results={results}
-                            showNote={showNote}
-                        />
-                    )}
-                    {type === 2 && (
-                        <KanjiCard
-                            ques={ques}
-                            quesIndex={quesIndex}
-                            numQues={numQues}
-                            writtenPromptWith={writtenPromptWith}
-                            multiplePromptWith={multiplePromptWith}
-                            multipleAnswerWith={multipleAnswerWith}
-                            trueFalsePromptWith={trueFalsePromptWith}
-                            trueFalseAnswerWith={trueFalseAnswerWith}
-                            handleChangeAnswer={handleChangeAnswer}
-                            setProgress={setProgress}
-                            progress={progress}
-                            answers={answers}
-                            results={results}
-                            showNote={showNote}
-                        />
-                    )}
-                    {type === 3 && (
-                        <GrammarCard
-                            ques={ques}
-                            quesIndex={quesIndex}
-                            numQues={numQues}
-                            writtenPromptWith={writtenPromptWith}
-                            multiplePromptWith={multiplePromptWith}
-                            multipleAnswerWith={multipleAnswerWith}
-                            trueFalsePromptWith={trueFalsePromptWith}
-                            trueFalseAnswerWith={trueFalseAnswerWith}
-                            handleChangeAnswer={handleChangeAnswer}
-                            setProgress={setProgress}
-                            progress={progress}
-                            answers={answers}
-                            results={results}
-                            showNote={showNote}
-                        />
-                    )}
-                </section>
-            ))}
-            {/* Submit */}
-            <div className="quizSubmit_container d-flex flex-column align-items-center justify-content-center">
-                <img src={finishQuizImg} alt="finish quiz image" />
-                <h3>All done! Ready to submit?</h3>
-                <div>
-                    <button
-                        type="button"
-                        className="btn btn-primary"
-                        onClick={handleCheckSubmit}
-                    >
-                        Submit Quiz
-                    </button>
-                </div>
+                    className="quizProgress"
+                    style={{
+                        width: `${
+                            (progress / isStar
+                                ? numNotStar + numStillStar + numMasterStar
+                                : numNot + numStill + numMaster) * 100
+                        }%`,
+                    }}
+                ></div>
             </div>
+            {/* )} */}
+            {/* Questions */}
+
             {/* Option modal */}
             <div
                 className="modal fade quizOptionModal"
@@ -689,10 +535,10 @@ const Learn = () => {
                                 className="btn-close"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
-                                onClick={handleCancelCreateQuiz}
+                                onClick={handleCancelCreateLearn}
                             ></button>
                             <button
-                                id="quizOptionModalCloseBtn"
+                                id="learnOptionModalCloseBtn"
                                 type="button"
                                 className="d-none"
                                 data-bs-dismiss="modal"
@@ -758,7 +604,7 @@ const Learn = () => {
                                                 Multiple choice
                                             </label>
                                         </div>
-                                        <div>
+                                        <div className="mb-2">
                                             <input
                                                 className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                                                 type="checkbox"
@@ -781,26 +627,50 @@ const Learn = () => {
                                             </label>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-6">
-                                    {/* num ques */}
-                                    <div className="quizOptionBlock mb-4">
-                                        <legend>QUESTION LIMIT</legend>
-                                        <div className="mb-2 d-flex align-items-center">
+                                    {/* picture */}
+                                    <div className="quizOptionBlock">
+                                        <legend>PICTURE</legend>
+                                        <div className="mb-2">
                                             <input
-                                                className="form-control"
-                                                type="number"
-                                                id="quesLimit"
-                                                value={optionNumQues}
-                                                onChange={(event) => {
-                                                    setOptionNumQues(
-                                                        event.target.value
+                                                id="picture"
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                checked={optionShowPicture}
+                                                onChange={() => {
+                                                    setOptionShowPicture(
+                                                        !optionShowPicture
                                                     )
                                                 }}
                                             />
-                                            <p className="form-check-label m-0">
-                                                of {cards?.length} questions
-                                            </p>
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="picture"
+                                            >
+                                                Show picture
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/* audio */}
+                                    <div className="quizOptionBlock">
+                                        <legend>AUDIO</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                id="audio"
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                checked={optionShowAudio}
+                                                onChange={() => {
+                                                    setOptionShowAudio(
+                                                        !optionShowAudio
+                                                    )
+                                                }}
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="audio"
+                                            >
+                                                Show audio
+                                            </label>
                                         </div>
                                     </div>
                                     {/* note */}
@@ -823,6 +693,145 @@ const Learn = () => {
                                                 htmlFor="note"
                                             >
                                                 Show note
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-6">
+                                    {/* status */}
+                                    <div className="quizOptionBlock">
+                                        <legend>PROGRESS STATUS</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value="not studied"
+                                                checked={
+                                                    optionProgressStatus?.includes(
+                                                        'not studied'
+                                                    ) || ''
+                                                }
+                                                id="notStudied"
+                                                onChange={
+                                                    handleChangeProgressStatus
+                                                }
+                                                disabled={
+                                                    optionIsStar
+                                                        ? numNotStar == 0
+                                                        : numNot == 0
+                                                }
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="notStudied"
+                                            >
+                                                Not studied
+                                            </label>
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value="still learning"
+                                                checked={
+                                                    optionProgressStatus?.includes(
+                                                        'still learning'
+                                                    ) || ''
+                                                }
+                                                id="stillLearning"
+                                                onChange={
+                                                    handleChangeProgressStatus
+                                                }
+                                                disabled={
+                                                    optionIsStar
+                                                        ? numStillStar == 0
+                                                        : numStill == 0
+                                                }
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="stillLearning"
+                                            >
+                                                Still learning
+                                            </label>
+                                        </div>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                value="mastered"
+                                                checked={
+                                                    optionProgressStatus?.includes(
+                                                        'mastered'
+                                                    ) || ''
+                                                }
+                                                id="mastered"
+                                                onChange={
+                                                    handleChangeProgressStatus
+                                                }
+                                                disabled={
+                                                    optionIsStar
+                                                        ? numMasterStar == 0
+                                                        : numMaster == 0
+                                                }
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="mastered"
+                                            >
+                                                Mastered
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/* star */}
+                                    <div className="quizOptionBlock">
+                                        <legend>STAR</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                checked={optionIsStar}
+                                                id="isStar"
+                                                onChange={() => {
+                                                    setOptionIsStar(
+                                                        !optionIsStar
+                                                    )
+                                                }}
+                                                disabled={
+                                                    numNotStar +
+                                                        numStillStar +
+                                                        numMasterStar ==
+                                                    0
+                                                }
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="isStar"
+                                            >
+                                                Study starred terms only
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/* shuffle  */}
+                                    <div className="quizOptionBlock">
+                                        <legend>SHUFFLE</legend>
+                                        <div className="mb-2">
+                                            <input
+                                                id="shuffle"
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                checked={optionIsShuffle}
+                                                onChange={() => {
+                                                    setOptionIsShuffle(
+                                                        !optionIsShuffle
+                                                    )
+                                                }}
+                                            />
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="shuffle"
+                                            >
+                                                Shuffle cards
                                             </label>
                                         </div>
                                     </div>
@@ -1280,13 +1289,13 @@ const Learn = () => {
                                 type="button"
                                 className="btn btn-secondary classModalBtn me-3"
                                 data-bs-dismiss="modal"
-                                onClick={handleCancelCreateQuiz}
+                                onClick={handleCancelCreateLearn}
                             >
                                 Cancel
                             </button>
                             <button
                                 className="btn btn-primary classModalBtn"
-                                onClick={handleCreateQuiz}
+                                onClick={handleCreateLearn}
                                 disabled={loading}
                             >
                                 {loading ? (
@@ -1303,52 +1312,6 @@ const Learn = () => {
                                 ) : (
                                     'Create new quiz'
                                 )}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Submit modal */}
-            <button
-                id="quizSubmitModalToggleBtn"
-                type="button"
-                className="d-none"
-                data-bs-toggle="modal"
-                data-bs-target="#quizSubmitModal"
-            >
-                Submit Quiz
-            </button>
-            <div className="modal fade quizOptionModal" id="quizSubmitModal">
-                <div className="modal-dialog modal-lg">
-                    <button
-                        id="quizSubmitModalCloseBtn"
-                        type="button"
-                        className="d-none"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                    ></button>
-                    <div className="modal-content">
-                        <div className="modal-body text-center">
-                            <h2 className="modal-title mb-2">
-                                You haven't answered all the questions.
-                            </h2>
-                            <p className="modal-text">
-                                Would you like to review the skipped questions
-                                or submit the test now?
-                            </p>
-                        </div>
-                        <div className="modal-footer border border-0">
-                            <a
-                                className="btn btn-light me-3"
-                                href={`#question${skipAnswer}`}
-                            >
-                                Review skipped questions
-                            </a>
-                            <button
-                                className="btn btn-primary"
-                                onClick={handleSubmit}
-                            >
-                                Submit quiz
                             </button>
                         </div>
                     </div>

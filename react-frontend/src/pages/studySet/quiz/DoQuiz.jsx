@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
-import CardService from '../../../services/CardService'
 import { getUser } from '../../../features/user/userAction'
 
 import VocabCard from './VocabCard'
@@ -22,6 +21,7 @@ import {
 import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './quiz.css'
+import ProgressService from '../../../services/ProgressService'
 
 const DoQuiz = () => {
     const navigate = useNavigate()
@@ -35,7 +35,12 @@ const DoQuiz = () => {
     const [studySet, setStudySet] = useState({})
     const [type, setType] = useState(1)
     const [fields, setFields] = useState([])
-    const [cards, setCards] = useState([])
+    const [numNot, setNumNot] = useState(0)
+    const [numStill, setNumStill] = useState(0)
+    const [numMaster, setNumMaster] = useState(0)
+    const [numNotStar, setNumNotStar] = useState(0)
+    const [numStillStar, setNumStillStar] = useState(0)
+    const [numMasterStar, setNumMasterStar] = useState(0)
 
     const [questionTypes, setQuestionTypes] = useState([1, 2, 3])
     const [numQues, setNumQues] = useState(0)
@@ -47,13 +52,12 @@ const DoQuiz = () => {
     const [trueFalseAnswerWith, setTrueFalseAnswerWith] = useState([])
     const [showPicture, setShowPicture] = useState(false)
     const [showAudio, setShowAudio] = useState(false)
-    const [showNote, setShowNote] = useState(false)
+    const [isStar, setIsStar] = useState(false)
 
     const [optionQuestionTypes, setOptionQuestionTypes] = useState([1, 2, 3])
     const [optionNumQues, setOptionNumQues] = useState(0)
     const [optionShowPicture, setOptionShowPicture] = useState(false)
     const [optionShowAudio, setOptionShowAudio] = useState(false)
-    const [optionShowNote, setOptionShowNote] = useState(false)
     const [optionWrittenPromptWith, setOptionWrittenPromptWith] = useState([])
     const [optionWrittenAnswerWith, setOptionWrittenAnswerWith] = useState(0)
     const [optionMultiplePromptWith, setOptionMultiplePromptWith] = useState([])
@@ -64,6 +68,7 @@ const DoQuiz = () => {
     const [optionTrueFalseAnswerWith, setOptionTrueFalseAnswerWith] = useState(
         []
     )
+    const [optionIsStar, setOptionIsStar] = useState(false)
     const [error, setError] = useState(false)
 
     const [progress, setProgress] = useState(0)
@@ -82,6 +87,7 @@ const DoQuiz = () => {
         setResults([])
         setIsEnd(false)
         setSkipAnswer(null)
+        setProgress(0)
         setError('')
         document.getElementById('toggleQuizOptionsModalBtn').click()
         const headerHeight = document.getElementById('quizHeader').clientHeight
@@ -114,14 +120,23 @@ const DoQuiz = () => {
                     )
                 ).data
                 setFields(tempFields)
-                // cards
-                const tempCards = (
-                    await CardService.getAllByStudySetId(tempStudySet.id)
+                // count
+                const tempCounts = (
+                    await StudySetService.countCardInSet(userInfo.id, id)
                 ).data
-                setCards(tempCards)
+                setNumNot(tempCounts['Not studied'])
+                setNumStill(tempCounts['Still learning'])
+                setNumMaster(tempCounts['Mastered'])
+                setNumNotStar(tempCounts['Not studied star'])
+                setNumStillStar(tempCounts['Still learning star'])
+                setNumMasterStar(tempCounts['Mastered star'])
                 // number of questions
-                setNumQues(tempCards.length)
-                setOptionNumQues(tempCards.length)
+                const tempNumQues =
+                    tempCounts['Not studied'] +
+                    tempCounts['Still learning'] +
+                    tempCounts['Mastered']
+                setNumQues(tempNumQues)
+                setOptionNumQues(tempNumQues)
                 // prompt with + answer with
                 var tempWrittenPromptWith = [tempFields[0].id]
                 var tempWrittenAnsWith = []
@@ -142,20 +157,21 @@ const DoQuiz = () => {
                 setOptionTrueFalsePromptWith([...tempWrittenPromptWith])
                 setOptionTrueFalseAnswerWith([...tempWrittenAnsWith])
                 // get quiz
-                if (tempCards?.length > 0) {
+                if (tempNumQues > 0) {
                     const tempQuestions = (
                         await StudySetService.getQuizByStudySetId(
                             tempStudySet.id,
                             questionTypes,
-                            tempCards.length,
-                            userInfo.id
+                            tempNumQues,
+                            userInfo.id,
+                            isStar
                         )
                     ).data
                     setQuestions(tempQuestions)
                 }
                 // set answers
                 var tempAnswers = []
-                for (let index = 0; index < tempCards.length; index++) {
+                for (let index = 0; index < tempNumQues; index++) {
                     tempAnswers.push(null)
                 }
                 setAnswers(tempAnswers)
@@ -274,14 +290,15 @@ const DoQuiz = () => {
                     studySet.id,
                     optionQuestionTypes,
                     optionNumQues,
-                    userInfo?.id
+                    userInfo?.id,
+                    optionIsStar
                 )
             ).data
             setQuestions(tempQuestions)
             setNumQues(optionNumQues)
+            setIsStar(optionIsStar)
             setShowPicture(optionShowPicture)
             setShowAudio(optionShowAudio)
-            setShowNote(optionShowNote)
             setQuestionTypes(optionQuestionTypes)
             setWrittenPromptWith(optionWrittenPromptWith)
             setWrittenAnswerWith(optionWrittenAnswerWith)
@@ -310,9 +327,9 @@ const DoQuiz = () => {
         setError('')
         setOptionQuestionTypes(questionTypes)
         setOptionNumQues(numQues)
+        setOptionIsStar(isStar)
         setOptionShowPicture(showPicture)
         setOptionShowAudio(showAudio)
-        setOptionShowNote(showNote)
         setOptionWrittenPromptWith(writtenPromptWith)
         setOptionWrittenAnswerWith(writtenAnswerWith)
         setOptionMultiplePromptWith(multiplePromptWith)
@@ -347,53 +364,70 @@ const DoQuiz = () => {
         }
     }
 
-    const handleSubmit = () => {
-        setLoading(true)
-        var tempCorrect = 0
-        var tempResults = []
-        for (let index = 0; index < questions.length; index++) {
-            const ques = questions[index]
-            if (ques.question_type === 1) {
-                var correctAnswer = ''
-                for (const itemContent of ques.question.content) {
-                    if (itemContent.field.id === writtenAnswerWith) {
-                        const tempContent = itemContent.content
-                            .replaceAll(/(<([^>]+)>)/gi, ' ')
-                            .trim()
-                        correctAnswer = tempContent
-                        break
+    const handleSubmit = async () => {
+        try {
+            setLoading(true)
+            var tempCorrect = 0
+            var tempResults = []
+            for (let index = 0; index < questions.length; index++) {
+                const ques = questions[index]
+                var tempIsCorrect = false
+                if (ques.question_type === 1) {
+                    var correctAnswer = ''
+                    for (const itemContent of ques.question.content) {
+                        if (itemContent.field.id === writtenAnswerWith) {
+                            const tempContent = itemContent.content
+                                .replaceAll(/(<([^>]+)>)/gi, ' ')
+                                .trim()
+                            correctAnswer = tempContent
+                            break
+                        }
+                    }
+                    if (answers[index] == correctAnswer) {
+                        tempCorrect += 1
+                        tempResults.push(1)
+                        tempIsCorrect = true
+                    } else {
+                        tempResults.push(0)
+                    }
+                } else if (ques.question_type === 2) {
+                    if (answers[index] == ques.question.card.id) {
+                        tempCorrect += 1
+                        tempResults.push(1)
+                        tempIsCorrect = true
+                    } else {
+                        tempResults.push(0)
+                    }
+                } else if (ques.question_type === 3) {
+                    const correctAnswer =
+                        ques.question.card.id === ques.answers[0].card.id
+                    if (answers[index] == correctAnswer) {
+                        tempCorrect += 1
+                        tempResults.push(1)
+                        tempIsCorrect = true
+                    } else {
+                        tempResults.push(0)
                     }
                 }
-                if (answers[index] == correctAnswer) {
-                    tempCorrect += 1
-                    tempResults.push(1)
-                } else {
-                    tempResults.push(0)
-                }
-            } else if (ques.question_type === 2) {
-                if (answers[index] == ques.question.card.id) {
-                    tempCorrect += 1
-                    tempResults.push(1)
-                } else {
-                    tempResults.push(0)
-                }
-            } else if (ques.question_type === 3) {
-                const correctAnswer =
-                    ques.question.card.id === ques.answers[0].card.id
-                if (answers[index] == correctAnswer) {
-                    tempCorrect += 1
-                    tempResults.push(1)
-                } else {
-                    tempResults.push(0)
-                }
+                await ProgressService.updateScore(
+                    userInfo.id,
+                    ques.question.card.id,
+                    tempIsCorrect ? 1 : -1
+                )
+            }
+            setCorrect(tempCorrect)
+            setResults(tempResults)
+            setIncorrect(numQues - tempCorrect)
+            document.getElementById('quizSubmitModalCloseBtn')?.click()
+            setIsEnd(true)
+            setLoading(false)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
             }
         }
-        setCorrect(tempCorrect)
-        setResults(tempResults)
-        setIncorrect(numQues - tempCorrect)
-        document.getElementById('quizSubmitModalCloseBtn')?.click()
-        setIsEnd(true)
-        setLoading(false)
     }
 
     return (
@@ -638,7 +672,6 @@ const DoQuiz = () => {
                             results={results}
                             showPicture={showPicture}
                             showAudio={showAudio}
-                            showNote={showNote}
                         />
                     )}
                     {type === 2 && (
@@ -658,7 +691,6 @@ const DoQuiz = () => {
                             results={results}
                             showPicture={showPicture}
                             showAudio={showAudio}
-                            showNote={showNote}
                         />
                     )}
                     {type === 3 && (
@@ -678,7 +710,6 @@ const DoQuiz = () => {
                             results={results}
                             showPicture={showPicture}
                             showAudio={showAudio}
-                            showNote={showNote}
                         />
                     )}
                 </section>
@@ -743,11 +774,40 @@ const DoQuiz = () => {
                             )}
                             <div className="row mb-3">
                                 <div className="col-6">
+                                    {/* num ques */}
+                                    <div className="quizOptionBlock mb-4">
+                                        <legend>QUESTION LIMIT</legend>
+                                        <div className="mb-2 d-flex align-items-center">
+                                            <input
+                                                className="form-control"
+                                                type="number"
+                                                id="quesLimit"
+                                                value={optionNumQues}
+                                                onChange={(event) => {
+                                                    setOptionNumQues(
+                                                        event.target.value
+                                                    )
+                                                }}
+                                            />
+                                            <p className="form-check-label m-0">
+                                                of{' '}
+                                                {optionIsStar
+                                                    ? numNotStar +
+                                                      numStillStar +
+                                                      numMasterStar
+                                                    : numNot +
+                                                      numStill +
+                                                      numMaster}{' '}
+                                                questions
+                                            </p>
+                                        </div>
+                                    </div>
                                     {/* types */}
                                     <div className="quizOptionBlock">
                                         <legend>QUESTION TYPES</legend>
                                         <div className="mb-2">
                                             <input
+                                                id="written"
                                                 className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                                                 type="checkbox"
                                                 value={1}
@@ -756,7 +816,6 @@ const DoQuiz = () => {
                                                         1
                                                     ) || ''
                                                 }
-                                                id="written"
                                                 onChange={
                                                     handleChangeQuestionType
                                                 }
@@ -815,24 +874,33 @@ const DoQuiz = () => {
                                     </div>
                                 </div>
                                 <div className="col-6">
-                                    {/* num ques */}
-                                    <div className="quizOptionBlock mb-4">
-                                        <legend>QUESTION LIMIT</legend>
-                                        <div className="mb-2 d-flex align-items-center">
+                                    {/* star */}
+                                    <div className="quizOptionBlock">
+                                        <legend>STAR</legend>
+                                        <div className="mb-2">
                                             <input
-                                                className="form-control"
-                                                type="number"
-                                                id="quesLimit"
-                                                value={optionNumQues}
-                                                onChange={(event) => {
-                                                    setOptionNumQues(
-                                                        event.target.value
+                                                id="isStar"
+                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                type="checkbox"
+                                                checked={optionIsStar}
+                                                onChange={() => {
+                                                    setOptionIsStar(
+                                                        !optionIsStar
                                                     )
                                                 }}
+                                                disabled={
+                                                    numNotStar +
+                                                        numStillStar +
+                                                        numMasterStar ==
+                                                    0
+                                                }
                                             />
-                                            <p className="form-check-label m-0">
-                                                of {cards?.length} questions
-                                            </p>
+                                            <label
+                                                className="form-check-label"
+                                                htmlFor="isStar"
+                                            >
+                                                Study starred terms only
+                                            </label>
                                         </div>
                                     </div>
                                     {/* picture */}
@@ -878,29 +946,6 @@ const DoQuiz = () => {
                                                 htmlFor="showAudio"
                                             >
                                                 Show audio
-                                            </label>
-                                        </div>
-                                    </div>
-                                    {/* note */}
-                                    <div className="quizOptionBlock">
-                                        <legend>NOTE</legend>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                checked={optionShowNote}
-                                                id="note"
-                                                onChange={() => {
-                                                    setOptionShowNote(
-                                                        !optionShowNote
-                                                    )
-                                                }}
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="note"
-                                            >
-                                                Show note
                                             </label>
                                         </div>
                                     </div>
