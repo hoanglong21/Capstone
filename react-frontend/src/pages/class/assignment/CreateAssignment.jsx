@@ -287,7 +287,7 @@ function CreateAssignment() {
                         className="postUpload"
                         onChange={handleUploadFile}
                     />
-                    <button type="btn" disabled={loadingUploadFile}>
+                    <button disabled={loadingUploadFile}>
                         <label
                             htmlFor="uploadPostFile"
                             className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
