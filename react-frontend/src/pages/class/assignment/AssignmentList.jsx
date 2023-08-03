@@ -7,7 +7,7 @@ import ClassService from '../../../services/ClassService'
 
 import DeleteAssignment from './DeleteAssignment'
 
-import { AccountIcon, AddIcon } from '../../../components/icons'
+import { AccountIcon, AddIcon, AssignmentIcon } from '../../../components/icons'
 import tutorEmpty from '../../../assets/images/tutor_assign_empty.png'
 import learnerEmpty from '../../../assets/images/learner_assign_empty.png'
 import './assignment.css'
@@ -22,27 +22,65 @@ function AssignmentList() {
     const [assignments, setAssignments] = useState([])
     const [classroom, setClassroom] = useState({})
 
+    const [today, setToday] = useState(getToday())
+
+    function padWithLeadingZeros(num, totalLength) {
+        return String(num).padStart(totalLength, '0')
+    }
+
+    function getToday() {
+        const today = new Date()
+        const tempSecond = padWithLeadingZeros(today.getSeconds(), 2).slice(
+            0,
+            0
+        )
+        return (
+            today.getFullYear() +
+            '-' +
+            padWithLeadingZeros(today.getMonth() + 1, 2) +
+            '-' +
+            padWithLeadingZeros(today.getDate(), 2) +
+            'T' +
+            padWithLeadingZeros(today.getHours(), 2) +
+            ':' +
+            padWithLeadingZeros(today.getMinutes(), 2) +
+            tempSecond +
+            '.000' +
+            '+07:00'
+        )
+    }
+
     useEffect(() => {
         const fetchData = async () => {
-            const tempClass = (await ClassService.getClassroomById(id)).data
-            setClassroom(tempClass)
-            const tempAssignments = (
-                await AssignmentService.getFilterList(
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    `=${tempClass.id}`,
-                    '',
-                    '=10'
-                )
-            ).data.list
-            setAssignments(tempAssignments)
+            try {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                const tempAssignments = (
+                    await AssignmentService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        `${
+                            userInfo.id === tempClass.user.id ? '' : `=${today}`
+                        }`,
+                        '',
+                        '',
+                        `${userInfo.id === tempClass.user.id ? '' : `=0`}`,
+                        '',
+                        '',
+                        `=${tempClass.id}`,
+                        '',
+                        '=10'
+                    )
+                ).data.list
+                setAssignments(tempAssignments)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (id) {
             fetchData()
@@ -102,7 +140,10 @@ function AssignmentList() {
                     )}
                 </div>
             )}
-            <div className="accordion mt-4 accordionTests" id="accordionTests">
+            <div
+                className="accordion mt-4 accordionAssignments"
+                id="accordionAssignments"
+            >
                 {assignments.map((assign, index) => (
                     <div className="accordion-item" key={index}>
                         <button
@@ -113,10 +154,29 @@ function AssignmentList() {
                             aria-expanded="false"
                             aria-controls={`assign${assign?.id}`}
                         >
-                            <div>{assign.title}</div>
+                            <div className="d-flex align-items-center">
+                                <div
+                                    className={`accordionAssign_icon ${
+                                        (assign._draft ||
+                                            (!assign._draft &&
+                                                new Date(assign.start_date) >=
+                                                    new Date())) &&
+                                        'disabled'
+                                    }`}
+                                >
+                                    <AssignmentIcon
+                                        size="24px"
+                                        strokeWidth="1.75"
+                                    />
+                                </div>
+                                <div>{assign.title}</div>
+                            </div>
                             <div>
                                 {assign._draft
                                     ? 'Draft'
+                                    : assign?.start_date &&
+                                      assign?.start_date < today
+                                    ? `Scheduled for ${assign?.start_date}`
                                     : assign?.due_date
                                     ? `Due ${assign?.due_date}`
                                     : `Posted ${assign?.created_date}`}
@@ -125,7 +185,7 @@ function AssignmentList() {
                         <div
                             id={`assign${assign?.id}`}
                             className="accordion-collapse collapse"
-                            data-bs-parent="#accordionTests"
+                            data-bs-parent="#accordionAssignments"
                         >
                             <div className="accordion-body">
                                 <div className="d-flex align-items-center justify-content-between">

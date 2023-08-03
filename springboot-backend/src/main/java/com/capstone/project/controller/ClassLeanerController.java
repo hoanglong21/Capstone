@@ -35,7 +35,7 @@ public class ClassLeanerController {
         }
     }
 
-    @PutMapping ("/classleaner")
+    @PutMapping ("/classleaner/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> updateClassLeaner(@RequestBody ClassLearner classLearner, @PathVariable int id) {
         try {

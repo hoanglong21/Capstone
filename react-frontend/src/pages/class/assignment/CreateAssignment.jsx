@@ -34,7 +34,7 @@ function CreateAssignment() {
             '-' +
             padWithLeadingZeros(today.getMonth() + 1, 2) +
             '-' +
-            padWithLeadingZeros(today.getDate() + 1, 2) +
+            padWithLeadingZeros(today.getDate(), 2) +
             'T' +
             padWithLeadingZeros(today.getHours(), 2) +
             ':' +

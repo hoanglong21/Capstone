@@ -116,6 +116,31 @@ const countCardInSet = (userId, studySetId) => {
     )
 }
 
+const getLearningStudySetId = (
+    userId,
+    studySetId,
+    questionType,
+    progressType,
+    isRandom,
+    star
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/learn?userid=' +
+            userId +
+            '&studysetid=' +
+            studySetId +
+            '&questiontype=' +
+            questionType +
+            '&progresstype=' +
+            progressType +
+            '&random=' +
+            isRandom +
+            '&star=' +
+            star
+    )
+}
+
 const StudySetService = {
     createStudySet,
     updateStudySet,
@@ -126,6 +151,7 @@ const StudySetService = {
     getFilterList,
     getQuizByStudySetId,
     countCardInSet,
+    getLearningStudySetId,
 }
 
 export default StudySetService

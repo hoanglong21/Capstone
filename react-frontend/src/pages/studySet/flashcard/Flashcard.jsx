@@ -130,17 +130,9 @@ const Flashcard = () => {
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
 
-    const [progressStatus, setProgressStatus] = useState([
-        'not studied',
-        'still learning',
-        'mastered',
-    ])
+    const [progressStatus, setProgressStatus] = useState([])
     const [isStar, setIsStar] = useState(false)
-    const [optionProgressStatus, setOptionProgressStatus] = useState([
-        'not studied',
-        'still learning',
-        'mastered',
-    ])
+    const [optionProgressStatus, setOptionProgressStatus] = useState([])
     const [optionIsStar, setOptionIsStar] = useState(false)
 
     const [numNot, setNumNot] = useState(0)
@@ -324,7 +316,7 @@ const Flashcard = () => {
         return () => {
             window.removeEventListener('keydown', handleUserKeyPress, true)
         }
-    }, [cardIndex, cards])
+    }, [cardIndex, cards, isEnd])
 
     // congratulation animation
     useEffect(() => {
@@ -934,7 +926,7 @@ const Flashcard = () => {
                                         onClick={handleSaveNote}
                                         disabled={loading}
                                     >
-                                        {loading ? 'Saving' : 'Save'}
+                                        {loading ? 'Saving...' : 'Save'}
                                     </button>
                                 </div>
                             </div>
@@ -1052,7 +1044,7 @@ const Flashcard = () => {
                             )}
                             <div className="row mb-3">
                                 <div className="col-6">
-                                    {/* types */}
+                                    {/* status */}
                                     <div className="quizOptionBlock">
                                         <legend>PROGRESS STATUS</legend>
                                         <div className="mb-2">
