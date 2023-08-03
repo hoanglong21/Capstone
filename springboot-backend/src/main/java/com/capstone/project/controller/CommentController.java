@@ -60,6 +60,16 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getAllCommentByTestId(id));
     }
 
+    @GetMapping("/commentbasignmentid/{id}")
+    public ResponseEntity<?> getAllCommentByAssignmentId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentByAssignmentId(id));
+    }
+
+    @GetMapping("/commentbysubmisionid/{id}")
+    public ResponseEntity<?> getAllCommentBySubmisionId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentBySubmisionId(id));
+    }
+
     @GetMapping("/comments/{id}")
     public ResponseEntity<?> getCommentById(@PathVariable int id){
         try {

@@ -25,6 +25,7 @@ import java.util.List;
                         @ColumnResult(name = "modified_date", type =Date.class),
                         @ColumnResult(name = "start_date", type = Date.class),
                         @ColumnResult(name = "is_draft", type = Boolean.class),
+                        @ColumnResult(name = "userid", type = Integer.class),
                         @ColumnResult(name = "numbersubmit", type = Integer.class),
                         @ColumnResult(name = "author", type = String.class)
                 }

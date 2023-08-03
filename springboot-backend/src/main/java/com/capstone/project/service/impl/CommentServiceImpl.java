@@ -72,6 +72,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<Comment> getAllCommentByAssignmentId(int id) {
+        return commentRepository.getCommentByAssignmentId(id);
+    }
+
+    @Override
+    public List<Comment> getAllCommentBySubmisionId(int id) {
+        return commentRepository.getCommentBySubmissionId(id);
+    }
+
+
+    @Override
     public Comment getCommentById(int id) throws ResourceNotFroundException {
         Comment comment = commentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Comment not exist with id:" + id));

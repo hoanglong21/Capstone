@@ -13,6 +13,8 @@ public interface CommentService {
     List<Comment> getAllCommentByRootId(int id);
     List<Comment> getAllCommentByStudySetId(int id);
     List<Comment> getAllCommentByTestId(int id);
+    List<Comment> getAllCommentByAssignmentId(int id);
+    List<Comment> getAllCommentBySubmisionId(int id);
 
     Comment getCommentById(int id) throws ResourceNotFroundException;
 

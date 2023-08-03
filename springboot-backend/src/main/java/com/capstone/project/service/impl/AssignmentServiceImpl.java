@@ -168,7 +168,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                                                    Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
-        String query ="SELECT a.*, COUNT(CASE WHEN s.is_done = true THEN 1 ELSE NULL END) as numbersubmit, u.username as author FROM assignment a \n" +
+        String query ="SELECT a.*, COUNT(CASE WHEN s.is_done = true THEN 1 ELSE NULL END) as numbersubmit,u.id as userid, u.username as author FROM assignment a \n" +
                 "LEFT JOIN user u on u.id = a.author_id \n" +
                 "LEFT JOIN submission s on s.assignment_id = a.id\n" +
                 "GROUP BY a.id,u.username HAVING 1=1";

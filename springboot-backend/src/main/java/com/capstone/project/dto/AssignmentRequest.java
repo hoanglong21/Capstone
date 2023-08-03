@@ -54,6 +54,8 @@ public class AssignmentRequest {
 
     int numbersubmit;
 
+    int userid;
+
     String author;
 
     public String getTitle() {

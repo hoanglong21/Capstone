@@ -113,6 +113,9 @@ public class ClassServiceImpl implements ClassService {
             for(Comment comment : commentRepository.getCommentByPostId(post.getId())){
                 commentRepository.delete(comment);
             }
+            for(Attachment attachment : attachmentRepository.getAttachmentByPostId(post.getId())){
+                attachmentRepository.delete(attachment);
+            }
             postRepository.delete(post);
         }
         for(Test test : testRepository.getTestByClassroomId(classroom.getId())){
@@ -132,7 +135,16 @@ public class ClassServiceImpl implements ClassService {
                 for(Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())){
                     attachmentRepository.delete(attachment);
                 }
+                for(Comment comment : commentRepository.getCommentBySubmissionId(submission.getId())){
+                    commentRepository.delete(comment);
+                }
                 submissionRepository.delete(submission);
+            }
+            for(Attachment attachment : attachmentRepository.getAttachmentByAssignmentId(assignment.getId())){
+                attachmentRepository.delete(attachment);
+            }
+            for(Comment comment : commentRepository.getCommentByAssignmentId(assignment.getId())){
+                commentRepository.delete(comment);
             }
             assignmentRepository.delete(assignment);
         }
