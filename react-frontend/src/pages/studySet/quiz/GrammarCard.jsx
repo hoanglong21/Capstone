@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 const GrammarCard = ({
     ques,
     quesIndex,
@@ -14,8 +16,13 @@ const GrammarCard = ({
     results,
     showPicture,
     showAudio,
-    showNote,
 }) => {
+    useEffect(() => {
+        if (document.getElementById(`answerQues${quesIndex}`)) {
+            document.getElementById(`answerQues${quesIndex}`).value = ''
+        }
+    }, [ques])
+
     return (
         <div className="card">
             <div className="quizQues_number">
@@ -44,22 +51,33 @@ const GrammarCard = ({
                     })}
                     {(showPicture || showAudio) && (
                         <div className="row">
-                            {showPicture && ques.question.card.picture && (
-                                <div className="col-6">
-                                    <img
-                                        src={ques.question.card.picture}
-                                        className="quizQues_img"
-                                    />
-                                </div>
-                            )}
-                            {showAudio && ques.question.card.audio && (
-                                <div className="col-6">
-                                    <audio
-                                        controls
-                                        src={ques.question.card.audio}
-                                    />
-                                </div>
-                            )}
+                            {showPicture &&
+                                (ques.question.progress.picture ||
+                                    ques.question.card.picture) && (
+                                    <div className="col-6">
+                                        <img
+                                            src={
+                                                ques.question.progress
+                                                    .picture ||
+                                                ques.question.card.picture
+                                            }
+                                            className="quizQues_img"
+                                        />
+                                    </div>
+                                )}
+                            {showAudio &&
+                                (ques.question.progress.audio ||
+                                    ques.question.card.audio) && (
+                                    <div className="col-6">
+                                        <audio
+                                            controls
+                                            src={
+                                                ques.question.progress.audio ||
+                                                ques.question.card.audio
+                                            }
+                                        />
+                                    </div>
+                                )}
                         </div>
                     )}
                     <div className="quizQues_label my-4">Your answer</div>
@@ -111,22 +129,33 @@ const GrammarCard = ({
                     })}
                     {(showPicture || showAudio) && (
                         <div className="row">
-                            {showPicture && ques.question.card.picture && (
-                                <div className="col-6">
-                                    <img
-                                        src={ques.question.card.picture}
-                                        className="quizQues_img"
-                                    />
-                                </div>
-                            )}
-                            {showAudio && ques.question.card.audio && (
-                                <div className="col-6">
-                                    <audio
-                                        controls
-                                        src={ques.question.card.audio}
-                                    />
-                                </div>
-                            )}
+                            {showPicture &&
+                                (ques.question.progress.picture ||
+                                    ques.question.card.picture) && (
+                                    <div className="col-6">
+                                        <img
+                                            src={
+                                                ques.question.progress
+                                                    .picture ||
+                                                ques.question.card.picture
+                                            }
+                                            className="quizQues_img"
+                                        />
+                                    </div>
+                                )}
+                            {showAudio &&
+                                (ques.question.progress.audio ||
+                                    ques.question.card.audio) && (
+                                    <div className="col-6">
+                                        <audio
+                                            controls
+                                            src={
+                                                ques.question.progress.audio ||
+                                                ques.question.card.audio
+                                            }
+                                        />
+                                    </div>
+                                )}
                         </div>
                     )}
                     <div className="quizQues_label my-4">Choose the answer</div>
@@ -266,22 +295,33 @@ const GrammarCard = ({
                     </div>
                     {(showPicture || showAudio) && (
                         <div className="row">
-                            {showPicture && ques.question.card.picture && (
-                                <div className="col-6">
-                                    <img
-                                        src={ques.question.card.picture}
-                                        className="quizQues_img"
-                                    />
-                                </div>
-                            )}
-                            {showAudio && ques.question.card.audio && (
-                                <div className="col-6">
-                                    <audio
-                                        controls
-                                        src={ques.question.card.audio}
-                                    />
-                                </div>
-                            )}
+                            {showPicture &&
+                                (ques.question.progress.picture ||
+                                    ques.question.card.picture) && (
+                                    <div className="col-6">
+                                        <img
+                                            src={
+                                                ques.question.progress
+                                                    .picture ||
+                                                ques.question.card.picture
+                                            }
+                                            className="quizQues_img"
+                                        />
+                                    </div>
+                                )}
+                            {showAudio &&
+                                (ques.question.progress.audio ||
+                                    ques.question.card.audio) && (
+                                    <div className="col-6">
+                                        <audio
+                                            controls
+                                            src={
+                                                ques.question.progress.audio ||
+                                                ques.question.card.audio
+                                            }
+                                        />
+                                    </div>
+                                )}
                         </div>
                     )}
                     <div className="quizQues_label my-4">Choose the answer</div>

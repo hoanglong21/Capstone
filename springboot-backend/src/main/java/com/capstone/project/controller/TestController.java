@@ -121,7 +121,7 @@ public class TestController {
     }
 
     @PostMapping("/endtest")
-    public ResponseEntity<?> createTest(@RequestBody List<TestResult> testResultList) {
+    public ResponseEntity<?> endTest(@RequestBody List<TestResult> testResultList) {
         try{
             return ResponseEntity.ok(testService.endTest(testResultList));
         } catch (ResourceNotFroundException e) {

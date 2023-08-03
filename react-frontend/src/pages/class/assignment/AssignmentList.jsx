@@ -34,6 +34,9 @@ function AssignmentList() {
                     '',
                     '',
                     '',
+                    '',
+                    '',
+                    '',
                     `=${tempClass.id}`,
                     '',
                     '=10'

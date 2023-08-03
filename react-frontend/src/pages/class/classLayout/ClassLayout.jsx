@@ -63,13 +63,13 @@ const ClassLayout = () => {
 
     const handleRequest = async () => {
         try {
-            // await ClassLearnerService.createClassLeaner({
-            //     user: { id: userInfo.id, username: userInfo.username },
-            //     classroom: {
-            //         id: classroom.id,
-            //     },
-            //     _accepted: false,
-            // })
+            await ClassLearnerService.createClassLeaner({
+                user: { id: userInfo.id, username: userInfo.username },
+                classroom: {
+                    id: classroom.id,
+                },
+                _accepted: false,
+            })
             setIsWaiting(true)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -82,7 +82,10 @@ const ClassLayout = () => {
 
     const handleCancelRequest = async () => {
         try {
-            // await ClassLearnerService.deleteClassLearner()
+            await ClassLearnerService.deleteClassLearner(
+                userInfo.id,
+                classroom.id
+            )
             setIsWaiting(false)
         } catch (error) {
             if (error.response && error.response.data) {
