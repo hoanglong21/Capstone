@@ -323,7 +323,7 @@ function AdminDashboard() {
               <div className="card shadow mb-4">
                 <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 className="m-0 font-weight-bold text-secondary text-uppercase">
-                    Sets created by users within 1 month
+                    Sets created by users over the last 3 months
                   </h6>
                 </div>
                 {/*  <!-- Card Body --> */}
