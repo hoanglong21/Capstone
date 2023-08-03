@@ -328,7 +328,7 @@ function ViewDetailClass() {
                   <div className="card shadow mb-4">
                     <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                       <h6 className="m-0 fw-bold text-uppercase text-primary">
-                        number of learners join class by month
+                        number of learners join class OVER 3 MONTHS
                       </h6>
                     </div>
                     <div className="card-body">
