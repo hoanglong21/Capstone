@@ -363,5 +363,5 @@ svg {
 }
 
 .alert {
-    white-space: pre-wrap;
+    word-break: break-word;
 }
