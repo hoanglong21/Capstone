@@ -53,6 +53,22 @@
     display: none;
 }
 
+.accordionAssign_icon {
+    background-color: rgb(66, 133, 244);
+    color: #fff;
+    height: 2.25rem;
+    width: 2.25rem;
+    margin-right: 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accordionAssign_icon.disabled {
+    background-color: #bdc1c6;
+}
+
 .editAssign_btn,
 .deleteAssign_btn,
 .viewAssign_btn {
