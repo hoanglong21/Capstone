@@ -191,19 +191,19 @@ const VocabCard = ({
                             })}
                         </div>
                         <div className="col-12 col-lg-4">
-                            {card?.picture && (
+                            {(progress?.picture || card?.picture) && (
                                 <div className="mb-4 flashCardField_img d-flex align-items-center">
                                     <img
-                                        src={card?.picture}
+                                        src={progress?.picture || card?.picture}
                                         alt="card picture"
                                     />
                                 </div>
                             )}
-                            {card?.audio && (
+                            {(progress?.audio || card?.audio) && (
                                 <div className="d-flex align-items-center">
                                     <audio
                                         controls
-                                        src={card?.audio}
+                                        src={progress?.audio || card?.audio}
                                         alt="card audio"
                                     />
                                 </div>

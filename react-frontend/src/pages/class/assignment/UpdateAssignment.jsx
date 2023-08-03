@@ -35,6 +35,13 @@ function UpdateAssignment() {
         return date?.replace(' ', 'T')
     }
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             const tempClass = (await ClassService.getClassroomById(id)).data
@@ -112,44 +119,32 @@ function UpdateAssignment() {
         setLoadingUpdateAssign(true)
         try {
             var tempAssignment = { ...updateAssignment }
-            tempAssignment.classroom.created_date =
-                updateAssignment.classroom.created_date.replace(/\s/g, 'T') +
-                '.000' +
-                '+07:00'
-            tempAssignment.classroom.user.created_date =
-                updateAssignment.classroom.user.created_date.replace(
-                    /\s/g,
-                    'T'
-                ) +
-                '.000' +
-                '+07:00'
-            tempAssignment.user.created_date =
-                updateAssignment.user.created_date.replace(/\s/g, 'T') +
-                '.000' +
-                '+07:00'
+            tempAssignment.classroom.created_date = toBEDate(
+                updateAssignment.classroom.created_date
+            )
+            tempAssignment.classroom.user.created_date = toBEDate(
+                updateAssignment.classroom.user.created_date
+            )
+            tempAssignment.user.created_date = toBEDate(
+                updateAssignment.user.created_date
+            )
             if (tempAssignment.created_date) {
-                tempAssignment.created_date =
-                    updateAssignment.created_date.replace(/\s/g, 'T') +
-                    '.000' +
-                    '+07:00'
+                tempAssignment.created_date = toBEDate(
+                    updateAssignment.created_date
+                )
             }
             if (tempAssignment.modified_date) {
-                tempAssignment.modified_date =
-                    updateAssignment.modified_date.replace(/\s/g, 'T') +
-                    '.000' +
-                    '+07:00'
+                tempAssignment.modified_date = toBEDate(
+                    updateAssignment.modified_date
+                )
             }
             if (tempAssignment.start_date) {
-                tempAssignment.start_date =
-                    updateAssignment.start_date.replace(/\s/g, 'T') +
-                    '.000' +
-                    '+07:00'
+                tempAssignment.start_date = toBEDate(
+                    updateAssignment.start_date
+                )
             }
             if (tempAssignment.due_date) {
-                tempAssignment.due_date =
-                    updateAssignment.due_date.replace(/\s/g, 'T') +
-                    '.000' +
-                    '+07:00'
+                tempAssignment.due_date = toBEDate(updateAssignment.due_date)
             }
             await AssignmentService.updateAssignment(updateAssignment.id, {
                 ...tempAssignment,

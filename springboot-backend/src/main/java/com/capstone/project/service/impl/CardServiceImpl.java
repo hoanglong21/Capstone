@@ -13,7 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -94,17 +96,42 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<CardWrapper> getFilterCard(int studySetId, int userId, String[] status, boolean star) {
-        List<Card> cardList = cardRepository.getCardInSetWithCondition(studySetId, userId, status, star);
+    public Map<String, Object> getFilterCard(int studySetId, int userId, String[] status, boolean star,
+                                             String sortBy, String direction, int page, int size) {
+        if(sortBy=="star") {
+            sortBy = "p.is_star";
+        } else {
+            sortBy = "p.status";
+        }
+        if(direction!="ASC") {
+            direction="DESC";
+        }
+        List<Card> cardList = cardRepository.getCardInSetWithCondition(studySetId, userId, status, star, sortBy, direction);
+
+        int totalItems = cardList.size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        // Calculate the start and end index for the requested page
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, totalItems);
+
         List<CardWrapper> cardWrappers = new ArrayList<>();
-        for(Card card : cardList) {
+        for (int i = startIndex; i < endIndex; i++) {
+            Card card = cardList.get(i);
             CardWrapper responseCard = new CardWrapper();
             responseCard.setCard(card);
             responseCard.setContent(contentRepository.getContentByCardId(card.getId()));
             responseCard.setProgress(progressRepository.findByCardIdAndUserId(userId, card.getId()));
             cardWrappers.add(responseCard);
         }
-        return cardWrappers;
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", cardWrappers);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return response;
     }
 
 }

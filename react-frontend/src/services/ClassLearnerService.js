@@ -10,14 +10,20 @@ const createClassLeaner = (classLearner) => {
     })
 }
 
-const deleteClassLearner = (userid, classid) => {
-    return axios.delete(
-        API_BASE_URL +
-            '/delclasslearner?userid=' +
-            userid +
-            '&classid=' +
-            classid
-    )
+const deleteClassLearnerById = (id) => {
+    return axios.delete(API_BASE_URL + '/delclasslearnerbyid/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const updateClassLeaner = (classLearner, id) => {
+    return axios.put(API_BASE_URL + '/classleaner/' + id, classLearner, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const filterGetLeaner = (
@@ -48,10 +54,46 @@ const filterGetLeaner = (
     )
 }
 
+const filterClassLeaner = (
+    userId,
+    classId,
+    fromCreated,
+    toCreated,
+    isAccepted,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterclasslearner?userid' +
+            userId +
+            '&classid' +
+            classId +
+            '&fromcreated' +
+            fromCreated +
+            '&tocreated' +
+            toCreated +
+            '&accepted' +
+            isAccepted +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
+            'page' +
+            page +
+            'size' +
+            size
+    )
+}
+
 const ClassLearnerService = {
     filterGetLeaner,
     createClassLeaner,
-    deleteClassLearner,
+    deleteClassLearnerById,
+    filterClassLeaner,
+    updateClassLeaner,
 }
 
 export default ClassLearnerService

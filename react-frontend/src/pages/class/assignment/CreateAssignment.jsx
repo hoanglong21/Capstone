@@ -34,7 +34,7 @@ function CreateAssignment() {
             '-' +
             padWithLeadingZeros(today.getMonth() + 1, 2) +
             '-' +
-            padWithLeadingZeros(today.getDate() + 1, 2) +
+            padWithLeadingZeros(today.getDate(), 2) +
             'T' +
             padWithLeadingZeros(today.getHours(), 2) +
             ':' +
@@ -287,7 +287,7 @@ function CreateAssignment() {
                         className="postUpload"
                         onChange={handleUploadFile}
                     />
-                    <button type="btn" disabled={loadingUploadFile}>
+                    <button disabled={loadingUploadFile}>
                         <label
                             htmlFor="uploadPostFile"
                             className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"

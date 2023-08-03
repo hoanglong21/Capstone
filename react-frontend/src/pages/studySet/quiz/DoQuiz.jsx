@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
-import CardService from '../../../services/CardService'
 import { getUser } from '../../../features/user/userAction'
 
 import VocabCard from './VocabCard'
@@ -792,7 +791,7 @@ const DoQuiz = () => {
                                             />
                                             <p className="form-check-label m-0">
                                                 of{' '}
-                                                {isStar
+                                                {optionIsStar
                                                     ? numNotStar +
                                                       numStillStar +
                                                       numMasterStar
