@@ -20,6 +20,14 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
 
     @Query(value = "SELECT c.* FROM progress p RIGHT JOIN card c ON p.card_id = c.id " +
             " WHERE COALESCE(p.user_id, :userId) = :userId AND COALESCE(p.status, 'not studied') IN :status " +
-            " AND c.studyset_id = :studySetId AND (:star = false OR COALESCE(p.is_star, false) = :star) ", nativeQuery = true)
-    List<Card> getCardInSetWithCondition(int studySetId, int userId, String[] status, boolean star);
+            " AND c.studyset_id = :studySetId AND (:star = false OR COALESCE(p.is_star, false) = :star) " +
+            " ORDER BY CASE COALESCE(p.status, 'not studied') " +
+            "          WHEN 'not studied' THEN 1 " +
+            "          WHEN 'still learning' THEN 2 " +
+            "          WHEN 'mastered' THEN 3 " +
+            "          ELSE 4 " +
+            "          END, " +
+            " CASE WHEN :direction = 'asc' THEN :sortBy END ASC, " +
+            " CASE WHEN :direction = 'desc' THEN :sortBy END DESC", nativeQuery = true)
+    List<Card> getCardInSetWithCondition(int studySetId, int userId, String[] status, boolean star, String sortBy, String direction);
 }

@@ -74,9 +74,13 @@ public class CardController {
     public ResponseEntity<?> getFilterCard(@RequestParam(value = "userid") int userId,
                                            @RequestParam(value = "studysetid") int studySetId,
                                            @RequestParam(value = "status") String[] status,
-                                           @RequestParam(value = "star") boolean star) {
+                                           @RequestParam(value = "star") boolean star,
+                                           @RequestParam(value = "sortby", required = false, defaultValue = "status") String sortBy,
+                                           @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         try {
-            return ResponseEntity.ok(cardService.getFilterCard(studySetId, userId, status, star));
+            return ResponseEntity.ok(cardService.getFilterCard(studySetId, userId, status, star, sortBy, direction, page, size));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
