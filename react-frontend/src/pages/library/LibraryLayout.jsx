@@ -50,7 +50,7 @@ const LibraryLayout = () => {
                     </li>
                     <li>
                         <NavLink
-                            to="statistics"
+                            to={`statistics`}
                             className={
                                 'nav-link sub-nav-link px-3 me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
