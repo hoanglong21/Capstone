@@ -198,18 +198,25 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Map<String, Object> getNumSubmitAssignment(int assignmentid) throws ResourceNotFroundException {
+    public Map<String, Object> getNumSubmitAssignment(int assignmentid, int classid) throws ResourceNotFroundException {
         String query ="SELECT COUNT(CASE WHEN is_done = true THEN 1 END) AS submitted,\n" +
                 "                      COUNT(DISTINCT cl.user_id) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END) AS notsubmitted\n" +
-                "FROM class_learner cl ";
+                "FROM class_learner cl \n" +
+                "LEFT JOIN assignment a ON cl.class_id = a.class_id ";
 
         Map<String, Object> parameters = new HashMap<>();
 
         if (assignmentid != 0) {
             assignmentRepository.findById(assignmentid);
-            query += " LEFT JOIN  submission s ON s.assignment_id = :assignmentId AND s.author_id = cl.user_id";
+            query += " LEFT JOIN  submission s ON a.id = s.assignment_id AND s.author_id = cl.user_id where a.id = :assignmentId ";
             parameters.put("assignmentId", assignmentid);
         }
+
+        if (classid != 0) {
+            query += " AND cl.class_id = :classId";
+            parameters.put("classId", classid);
+        }
+
         Query q = em.createNativeQuery(query);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             q.setParameter(entry.getKey(), entry.getValue());

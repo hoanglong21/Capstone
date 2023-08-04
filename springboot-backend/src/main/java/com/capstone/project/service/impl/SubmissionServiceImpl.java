@@ -105,11 +105,6 @@ public class SubmissionServiceImpl implements SubmissionService {
         existingSubmission.setModified_date(date);
         existingSubmission.setMark(submission.getMark());
         existingSubmission.set_done(submission.is_done());
-        List<Attachment> attachments = attachmentRepository.getAttachmentBySubmissionId(existingSubmission.getId());
-
-        for (Attachment attachment : attachments) {
-            attachmentRepository.delete(attachment);
-        }
 
         return submissionRepository.save(existingSubmission);
     }
