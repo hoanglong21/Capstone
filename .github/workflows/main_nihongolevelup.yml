@@ -1,4 +1,7 @@
-name: Build and deploy JAR app to Azure Web App - nihongolevelup
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy WAR app to Azure Web App - nihongolevelup
 
 on:
   push:
@@ -24,18 +27,15 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Change to the springboot-backend directory
-        run: cd springboot-backend
-
       - name: Build with Maven
-        run: mvn -f /home/runner/work/Capstone/Capstone/springboot-backend/pom.xml clean install -Dmaven.test.skip=true
+        run: mvn clean install -Dmaven.test.skip=true
+        working-directory: 'springboot-backend' # Replace 'springboot-backend' with the correct subfolder if needed
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: java-app
-          # path: springboot-backend/target/*.jar  # Adjust the path here to include the relative path to the .jar file
-          path: /home/runner/work/Capstone/Capstone/springboot-backend/target/capstone-0.0.1-SNAPSHOT.jar
+          path: 'springboot-backend/target/*.jar' # Change the path to the subfolder
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,9 +43,8 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    
+
     steps:
-      - uses: actions/checkout@v3
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
@@ -57,6 +56,5 @@ jobs:
         with:
           app-name: 'nihongolevelup'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7EAAE3A1DD95432E843B97CEA25E77C2 }}
-          # package: '*.jar'
-          package: 'capstone-0.0.1-SNAPSHOT.jar'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_42DA6C7EB0964450842F5CE67AF5931C }}
+          package: '*.jar' # Change the path to the JAR file if needed

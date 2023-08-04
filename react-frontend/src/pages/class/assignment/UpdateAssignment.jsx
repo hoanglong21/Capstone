@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 
 import {
     deleteFileByUrl,
-    deleteFolder,
     uploadFile,
 } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'

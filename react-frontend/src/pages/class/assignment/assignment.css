@@ -290,7 +290,6 @@
 .submission_btn {
     color: rgb(25, 103, 210);
     border: 1px solid rgb(218, 220, 224);
-    padding: 0 15px 0 11px;
     font-size: 0.875rem;
     letter-spacing: 0.01;
     font-weight: 500;
@@ -300,6 +299,10 @@
     height: 36px;
     border-radius: 4px;
     min-width: 100px;
+}
+
+.submission_btn label {
+    padding: 0 15px 0 11px;
 }
 
 .submission_btn:hover,
@@ -345,9 +348,33 @@
 }
 
 /* tutor submission */
+.submission_container {
+    background-color: #fff;
+}
+
+.submission_title {
+    overflow: hidden;
+    word-wrap: break-word;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.75rem;
+}
+
+.submission_heading {
+    padding: 24px;
+}
+
+.submission_table tr {
+    box-sizing: none;
+}
+
 .submission_table td {
     height: 4rem;
     padding: 0 1.5rem;
+}
+
+.submission_item {
+    cursor: pointer;
 }
 
 .submission_learnerAvatar {
@@ -360,4 +387,41 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+}
+
+.submission_detail {
+    padding: 24px;
+}
+
+.submission_status {
+    color: rgba(0, 0, 0, 0.549);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.25rem;
+}
+
+.submission_status--error {
+    color: #ff6347;
+}
+
+.submission_grade {
+    color: rgba(0, 0, 0, 0.549);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.75rem;
+}
+
+.submission_inputGradeWrapper {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    padding-bottom: 0.25rem;
+    transition: all 0.015s;
+}
+
+.submission_inputGrade {
+    color: rgba(0, 0, 0, 0.87);
+    border: none;
+    outline: none;
+    max-width: 50px;
+    text-align: right;
+    padding: 0;
 }
