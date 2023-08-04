@@ -13,6 +13,14 @@ const LearnerSubmission = ({ assignment }) => {
     const [submission, setSubmission] = useState({})
     const [attachments, setAttachments] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
+    const [loadingSubmit, setLoadingSubmit] = useState(false)
+
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -112,14 +120,45 @@ const LearnerSubmission = ({ assignment }) => {
     }
 
     const handleDone = async () => {
+        setLoadingSubmit(true)
         try {
-            const tempSubmission = (
-                await SubmissionService.updateSubmission(submission.id, {
-                    ...submission,
-                    _done: submission?.done ? false : true,
-                })
-            ).data
-            setSubmission(tempSubmission)
+            var tempSubmission = {
+                ...submission,
+                _done: submission?._done ? false : true,
+            }
+            tempSubmission.assignment.classroom.created_date = toBEDate(
+                tempSubmission.assignment.classroom.created_date
+            )
+            tempSubmission.assignment.classroom.user.created_date = toBEDate(
+                tempSubmission.assignment.classroom.user.created_date
+            )
+            tempSubmission.assignment.created_date = toBEDate(
+                tempSubmission.assignment.created_date
+            )
+            tempSubmission.assignment.modified_date = toBEDate(
+                tempSubmission.assignment.modified_date
+            )
+            tempSubmission.assignment.start_date = toBEDate(
+                tempSubmission.assignment.start_date
+            )
+            tempSubmission.assignment.user.created_date = toBEDate(
+                tempSubmission.assignment.user.created_date
+            )
+            tempSubmission.created_date = toBEDate(tempSubmission.created_date)
+            tempSubmission.modified_date = toBEDate(
+                tempSubmission.modified_date
+            )
+            tempSubmission.user.created_date = toBEDate(
+                tempSubmission.user.created_date
+            )
+            setSubmission(
+                (
+                    await SubmissionService.updateSubmission(
+                        submission.id,
+                        tempSubmission
+                    )
+                ).data
+            )
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -127,6 +166,7 @@ const LearnerSubmission = ({ assignment }) => {
                 console.log(error.message)
             }
         }
+        setLoadingSubmit(false)
     }
 
     return (
@@ -134,7 +174,7 @@ const LearnerSubmission = ({ assignment }) => {
             <div className="col-4">
                 <div className="card submission_card mt-4">
                     <div className="card-body py-3 px-4">
-                        <div className="submission_heading mb-3">Your work</div>
+                        <div className="submission_heading">Your work</div>
                         {/* attchment */}
                         {attachments.map((file, index) => (
                             <div className="card mb-2" key={index}>
@@ -160,22 +200,13 @@ const LearnerSubmission = ({ assignment }) => {
                                 </div>
                             </div>
                         ))}
-                        {/* upload file */}
-                        <input
-                            type="file"
-                            id="uploadSubmissionFile"
-                            className="d-none"
-                            onChange={handleUploadFile}
-                        />
-                        <button
-                            disabled={loadingUploadFile}
-                            className="w-100 submission_btn d-flex align-items-center justify-content-center mt-3"
-                        >
-                            <label
-                                htmlFor="uploadSubmissionFile"
-                                className="w-100"
+                        {submission?._done ? (
+                            <button
+                                className="submission_btn w-100 mt-2"
+                                disabled={attachments?.length < 1}
+                                onClick={handleDone}
                             >
-                                {loadingUploadFile ? (
+                                {loadingSubmit ? (
                                     <div
                                         className="spinner-border spinner-border-sm text-secondary"
                                         role="status"
@@ -185,25 +216,68 @@ const LearnerSubmission = ({ assignment }) => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <div>
-                                        <AddIcon
-                                            size="18px"
-                                            strokeWidth="2"
-                                            className="me-2"
-                                        />
-                                        Add
-                                    </div>
+                                    'Unsubmit'
                                 )}
-                            </label>
-                        </button>
-                        {/* mark as done */}
-                        <button
-                            className="submission_doneBtn w-100 mt-2"
-                            disabled={attachments?.length < 1}
-                            onClick={handleDone}
-                        >
-                            Mark as done
-                        </button>
+                            </button>
+                        ) : (
+                            <div>
+                                {/* upload file */}
+                                <input
+                                    type="file"
+                                    id="uploadSubmissionFile"
+                                    className="d-none"
+                                    onChange={handleUploadFile}
+                                />
+                                <button
+                                    disabled={loadingUploadFile}
+                                    className="w-100 submission_btn mt-3"
+                                >
+                                    <label
+                                        htmlFor="uploadSubmissionFile"
+                                        className="w-100 h-100 d-flex align-items-center justify-content-center"
+                                    >
+                                        {loadingUploadFile ? (
+                                            <div
+                                                className="spinner-border spinner-border-sm text-secondary"
+                                                role="status"
+                                            >
+                                                <span className="visually-hidden">
+                                                    LoadingUpload...
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div>
+                                                <AddIcon
+                                                    size="18px"
+                                                    strokeWidth="2"
+                                                    className="me-2"
+                                                />
+                                                Add
+                                            </div>
+                                        )}
+                                    </label>
+                                </button>
+                                {/* mark as done */}
+                                <button
+                                    className="submission_doneBtn w-100 mt-2"
+                                    disabled={attachments?.length < 1}
+                                    onClick={handleDone}
+                                >
+                                    {loadingSubmit ? (
+                                        <div
+                                            className="spinner-border spinner-border-sm text-secondary"
+                                            role="status"
+                                        >
+                                            <span className="visually-hidden">
+                                                LoadingUpload...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        'Mark as done'
+                                    )}
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
