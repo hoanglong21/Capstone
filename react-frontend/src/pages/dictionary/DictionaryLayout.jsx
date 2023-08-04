@@ -1,10 +1,13 @@
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import './dictionary.css'
+import { useState } from 'react'
 
 function DictionaryLayout() {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
+
+    const [searchKey, setSearchKey] = useState(search)
 
     return (
         <div className="container">
@@ -27,11 +30,9 @@ function DictionaryLayout() {
                                 className="form-control mr-sm-2"
                                 type="search"
                                 placeholder="日本, Japanese, Nhật Bản"
-                                value={search || ''}
+                                value={searchKey || ''}
                                 onChange={(event) =>
-                                    setSearchParams({
-                                        search: event.target.value,
-                                    })
+                                    setSearchKey(event.target.value)
                                 }
                             />
                             <button
@@ -39,6 +40,9 @@ function DictionaryLayout() {
                                 style={{ marginLeft: '1rem' }}
                                 onClick={(event) => {
                                     event.preventDefault()
+                                    setSearchParams({
+                                        search: searchKey,
+                                    })
                                 }}
                             >
                                 Search
@@ -52,7 +56,10 @@ function DictionaryLayout() {
                 <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
                     <li>
                         <NavLink
-                            to="vocab"
+                            to={{
+                                pathname: 'vocab',
+                                search: `?${searchParams.toString()}`,
+                            }}
                             className={
                                 'nav-link px-3 sub-nav-link me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -63,7 +70,10 @@ function DictionaryLayout() {
                     </li>
                     <li>
                         <NavLink
-                            to="kanji"
+                            to={{
+                                pathname: 'kanji',
+                                search: `?${searchParams.toString()}`,
+                            }}
                             className={
                                 'nav-link sub-nav-link px-3 me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
@@ -74,7 +84,10 @@ function DictionaryLayout() {
                     </li>
                     <li>
                         <NavLink
-                            to="grammar"
+                            to={{
+                                pathname: 'grammar',
+                                search: `?${searchParams.toString()}`,
+                            }}
                             className={
                                 'nav-link px-3 sub-nav-link me-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))

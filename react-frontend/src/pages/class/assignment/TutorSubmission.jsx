@@ -15,6 +15,7 @@ const TutorSubmission = ({ assignment }) => {
     const [attachments, setAttachments] = useState([])
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState(false)
+    const [loadingSelect, setLoadingSelect] = useState(false)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -142,6 +143,37 @@ const TutorSubmission = ({ assignment }) => {
         setSaving(false)
     }
 
+    const handleSelectLearner = async (learner) => {
+        setLoadingSelect(true)
+        try {
+            var tempSubmission = (
+                await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
+                    learner.id,
+                    assignment.id
+                )
+            ).data
+            if (!tempSubmission?.id) {
+                tempSubmission = { user: learner }
+            } else {
+                // attachments
+                const tempAttachments = (
+                    await AttachmentService.getAttachmentsBySubmissionId(
+                        tempSubmission.id
+                    )
+                ).data
+                setAttachments(tempAttachments)
+            }
+            setSubmission(tempSubmission)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingSelect(false)
+    }
+
     return (
         <div className="submission_container">
             {/* header */}
@@ -167,15 +199,22 @@ const TutorSubmission = ({ assignment }) => {
                 <div className="col-4 pe-0 border-end">
                     <table className="table table-hover submission_table mb-0">
                         <tbody>
-                            {learners?.map((learn, index) => (
+                            {learners?.map((learner, index) => (
                                 <tr key={index}>
-                                    <td className="d-flex align-items-center">
+                                    <td
+                                        className="d-flex align-items-center submission_item"
+                                        onClick={() =>
+                                            handleSelectLearner(learner)
+                                        }
+                                    >
                                         <img
                                             className="submission_learnerAvatar"
-                                            src={learn?.avatar || defaultAvatar}
+                                            src={
+                                                learner?.avatar || defaultAvatar
+                                            }
                                         />
                                         <span className="submission_learnerUsername ms-4">
-                                            {learn?.username}
+                                            {learner?.username}
                                         </span>
                                     </td>
                                 </tr>
@@ -185,85 +224,93 @@ const TutorSubmission = ({ assignment }) => {
                 </div>
                 {/* detail */}
                 <div className="col-8 ps-0">
-                    <div className="submission_detail">
-                        <div className="d-flex justify-content-between">
-                            <div>
-                                <div className="submission_title mb-1">
-                                    {submission?.user?.username}
-                                </div>
-                                <div className="submission_status">
-                                    {submission?._done
-                                        ? 'Turned in'
-                                        : 'Assigned'}
-                                </div>
-                            </div>
-                            <div className="submission_grade d-flex flex-column align-items-end">
-                                <div
-                                    id="submission_inputGradeWrapper"
-                                    className="submission_inputGradeWrapper"
-                                >
-                                    <input
-                                        type="number"
-                                        className="submission_inputGrade"
-                                        value={submission?.mark || ''}
-                                        onChange={(event) => {
-                                            setSubmission({
-                                                ...submission,
-                                                mark: event.target.value,
-                                            })
-                                        }}
-                                        onFocus={() => {
-                                            document.getElementById(
-                                                'submission_inputGradeWrapper'
-                                            ).style.borderBottom =
-                                                '2px solid rgb(66,133,244)'
-                                        }}
-                                        onBlur={() => {
-                                            document.getElementById(
-                                                'submission_inputGradeWrapper'
-                                            ).style.borderBottom =
-                                                '1px solid rgba(0, 0, 0, 0.12)'
-                                            handleUpdateGrade()
-                                        }}
-                                    />
-                                    /100
-                                </div>
-                                {saving && (
-                                    <div className="submission_status text-end">
-                                        Saving...
-                                    </div>
-                                )}
-                                {error && (
-                                    <div className="submission_status submission_status--error text-end">
-                                        Mark must be between 0 and 100
-                                    </div>
-                                )}
+                    {loadingSelect ? (
+                        <div class="d-flex justify-content-center mt-5">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
-                        <div className="row mt-4">
-                            {/* attchment */}
-                            {attachments.map((file, index) => (
-                                <div className="col-6" key={index}>
-                                    <a
-                                        className="card mb-2 text-decoration-none"
-                                        href={file.file_url}
-                                        target="_blank"
+                    ) : (
+                        <div className="submission_detail">
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    <div className="submission_title mb-1">
+                                        {submission?.user?.username}
+                                    </div>
+                                    <div className="submission_status">
+                                        {submission?._done
+                                            ? 'Turned in'
+                                            : 'Assigned'}
+                                    </div>
+                                </div>
+                                <div className="submission_grade d-flex flex-column align-items-end">
+                                    <div
+                                        id="submission_inputGradeWrapper"
+                                        className="submission_inputGradeWrapper"
                                     >
-                                        <div className="card-body d-flex justify-content-between">
-                                            <div className="fileUploadContainer">
-                                                <div className="fileUploadName">
-                                                    {file.file_name}
-                                                </div>
-                                                <div className="fileUploadType">
-                                                    {file.file_type}
+                                        <input
+                                            type="number"
+                                            className="submission_inputGrade"
+                                            value={submission?.mark || ''}
+                                            onChange={(event) => {
+                                                setSubmission({
+                                                    ...submission,
+                                                    mark: event.target.value,
+                                                })
+                                            }}
+                                            onFocus={() => {
+                                                document.getElementById(
+                                                    'submission_inputGradeWrapper'
+                                                ).style.borderBottom =
+                                                    '2px solid rgb(66,133,244)'
+                                            }}
+                                            onBlur={() => {
+                                                document.getElementById(
+                                                    'submission_inputGradeWrapper'
+                                                ).style.borderBottom =
+                                                    '1px solid rgba(0, 0, 0, 0.12)'
+                                                handleUpdateGrade()
+                                            }}
+                                        />
+                                        /100
+                                    </div>
+                                    {saving && (
+                                        <div className="submission_status text-end">
+                                            Saving...
+                                        </div>
+                                    )}
+                                    {error && (
+                                        <div className="submission_status submission_status--error text-end">
+                                            Mark must be between 0 and 100
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="row mt-4">
+                                {/* attchment */}
+                                {attachments.map((file, index) => (
+                                    <div className="col-6" key={index}>
+                                        <a
+                                            className="card mb-2 text-decoration-none"
+                                            href={file.file_url}
+                                            target="_blank"
+                                        >
+                                            <div className="card-body d-flex justify-content-between">
+                                                <div className="fileUploadContainer">
+                                                    <div className="fileUploadName">
+                                                        {file.file_name}
+                                                    </div>
+                                                    <div className="fileUploadType">
+                                                        {file.file_type}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            ))}
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
