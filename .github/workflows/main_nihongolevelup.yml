@@ -29,6 +29,7 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
+        working-directory: 'springboot-backend' # Replace 'springboot-backend' with the correct subfolder if needed
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
