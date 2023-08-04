@@ -18,10 +18,7 @@ function ViewDetailAssignment() {
     }
   }, [id]);
 
-  function getDate(date) {
-    const index = date.lastIndexOf(":00.");
-    return date.replace("T", " ").substring(0, index);
-  }
+
   return (
     <div className="container-fluid">
       <div className="row">

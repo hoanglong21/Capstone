@@ -209,14 +209,14 @@ function ClassStatistics() {
                           </div>
                         </div>
                         <div className="col-auto">
-                          <i className="bi bi-file-earmark-text fs-2 text-secondary"></i>
+                          <i className="bi bi-clipboard2-check fs-2 text-secondary"></i>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="col-xl-4 col-md-4 mb-4">
-                  <div className="card border-left border-success shadow h-100 py-2">
+                  <div className="card border-left border-primary shadow h-100 py-2">
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
