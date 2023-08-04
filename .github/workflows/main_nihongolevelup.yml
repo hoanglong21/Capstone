@@ -57,4 +57,4 @@ jobs:
           app-name: 'nihongolevelup'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_42DA6C7EB0964450842F5CE67AF5931C }}
-          package: 'springboot-backend/target/*.jar' # Change the path to the subfolder
+          package: '*.jar' # Change the path to the JAR file if needed
