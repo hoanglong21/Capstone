@@ -61,33 +61,15 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public Assignment createAssignment(Assignment assignment) {
+    public Assignment createAssignment(Assignment assignment) throws ResourceNotFroundException {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
         assignment.setCreated_date(date);
+        if (assignment.getStart_date() != null && assignment.getCreated_date() != null &&
+                assignment.getStart_date().before(assignment.getCreated_date())) {
+            throw new ResourceNotFroundException("Start date must be >= created date");
+        }
         Assignment savedAssignment = assignmentRepository.save(assignment);
-
-//        if (file_names != null && urls != null && file_types != null  && type != 0) {
-//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-//            for (int i = 0; i < numOfAttachments; i++) {
-//                String file_name = file_names.get(i);
-//                String url = urls.get(i);
-//                String file_type = file_types.get(i);
-//
-//                Attachment attachment = new Attachment();
-//                attachment.setFile_name(file_name);
-//                attachment.setFile_type(file_type);
-//                attachment.setFile_url(url);
-//
-//                AttachmentType attachmentType = new AttachmentType();
-//                attachmentType.setId(type);
-//
-//                attachment.setAttachmentType(attachmentType);
-//                attachment.setAssignment(savedAssignment);
-//
-//                attachmentRepository.save(attachment);
-//            }
-//        }
 
         return savedAssignment;
     }
@@ -103,10 +85,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     public Assignment updateAssignment(int id, Assignment assignment) throws ResourceNotFroundException {
         Assignment existingAssignment = assignmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Assignment does not exist with id: " + id));
-        if (assignment.getStart_date() != null && existingAssignment.getCreated_date() != null &&
-                assignment.getStart_date().before(existingAssignment.getCreated_date())) {
-            throw new ResourceNotFroundException("Start date must be >= created date");
-        }
+
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
         existingAssignment.setInstruction(assignment.getInstruction());
@@ -122,27 +101,6 @@ public class AssignmentServiceImpl implements AssignmentService {
             attachmentRepository.delete(attachment);
         }
 
-//        if (file_names != null && urls != null && file_types != null  && type != 0) {
-//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-//            for (int i = 0; i < numOfAttachments; i++) {
-//                String file_name = file_names.get(i);
-//                String url = urls.get(i);
-//                String file_type = file_types.get(i);
-//
-//                Attachment attachment = new Attachment();
-//                attachment.setFile_name(file_name);
-//                attachment.setFile_type(file_type);
-//                attachment.setFile_url(url);
-//
-//                AttachmentType attachmentType = new AttachmentType();
-//                attachmentType.setId(type);
-//
-//                attachment.setAttachmentType(attachmentType);
-//                attachment.setAssignment(existingAssignment);
-//
-//                attachmentRepository.save(attachment);
-//            }
-//        }
         return assignmentRepository.save(existingAssignment);
     }
 
@@ -217,7 +175,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
         query += " ORDER BY " + sortBy + " " + direction;
 
-        Query q = em.createNativeQuery(query, "AssignmentCustomListMapping");
+        Query q = em.createNativeQuery(query, Assignment.class);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             q.setParameter(entry.getKey(), entry.getValue());
         }
@@ -242,13 +200,14 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Map<String, Object> getNumSubmitAssignment(int assignmentid) throws ResourceNotFroundException {
         String query ="SELECT COUNT(CASE WHEN is_done = true THEN 1 END) AS submitted,\n" +
-                "       COUNT(CASE WHEN is_done = false THEN 1 END) AS notsubmitted\n" +
-                "FROM submission s inner join assignment a on s.assignment_id = a.id";
+                "                      COUNT(DISTINCT cl.user_id) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END) AS notsubmitted\n" +
+                "FROM class_learner cl ";
 
         Map<String, Object> parameters = new HashMap<>();
 
         if (assignmentid != 0) {
-            query += " WHERE a.id = :assignmentId";
+            assignmentRepository.findById(assignmentid);
+            query += " LEFT JOIN  submission s ON s.assignment_id = :assignmentId AND s.author_id = cl.user_id";
             parameters.put("assignmentId", assignmentid);
         }
         Query q = em.createNativeQuery(query);

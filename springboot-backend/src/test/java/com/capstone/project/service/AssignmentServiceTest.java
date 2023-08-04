@@ -104,7 +104,7 @@ public class AssignmentServiceTest {
             when(assignmentRepository.save(any())).thenReturn(assignment);
             Assignment createdassignment = assignmentServiceImpl.createAssignment(assignment);
             assertThat(assignment).isEqualTo(createdassignment);
-        } catch (ParseException e){
+        } catch (ParseException | ResourceNotFroundException e){
             throw new RuntimeException(e);
         }
     }

@@ -129,11 +129,11 @@ public class AssignmentController {
 
 
 
-    @GetMapping("/getsubmitassignment")
-    public ResponseEntity<?> getNumSubmitAssignment(@RequestParam(value = "id", required = false) Optional<Integer> assignmentid) {
+    @GetMapping("/getsubmitassignment/{assignmentid}")
+    public ResponseEntity<?> getNumSubmitAssignment(@PathVariable int assignmentid) {
 
         try{
-            return ResponseEntity.ok(assignmentService.getNumSubmitAssignment(assignmentid.orElse(0)));
+            return ResponseEntity.ok(assignmentService.getNumSubmitAssignment(assignmentid));
         }catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

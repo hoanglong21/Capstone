@@ -14,7 +14,7 @@ public interface AssignmentService {
 
 //    Assignment createAssignment(Assignment assignment, List<String> files_name, int type, List<String> urls, List<String> file_types);
 
-    Assignment createAssignment(Assignment assignment);
+    Assignment createAssignment(Assignment assignment) throws ResourceNotFroundException;
 
     Assignment getAssignmentById (int id) throws ResourceNotFroundException;
 

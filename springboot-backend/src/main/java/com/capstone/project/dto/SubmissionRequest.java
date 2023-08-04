@@ -21,6 +21,8 @@ public class SubmissionRequest {
 
     private double mark;
 
+    private boolean is_done;
+
 
     @Pattern(regexp = ".*|[a-zA-Z0-9\\s.,+&()-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;

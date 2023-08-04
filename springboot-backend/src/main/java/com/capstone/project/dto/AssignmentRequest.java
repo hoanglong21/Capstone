@@ -34,7 +34,7 @@ public class AssignmentRequest {
 
 
 //    @FutureOrPresent
-    @NotNull(message = "Start date cannot be null")
+    @Nullable
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date start_date;
 
@@ -79,9 +79,9 @@ public class AssignmentRequest {
         return due_date == null || start_date == null || due_date.compareTo(start_date) >= 0;
     }
 
-    @AssertTrue(message = "Start date must be equal or after created date")
-    public boolean isStartDateValid() {
-        return start_date == null || start_date.compareTo(new Date()) >= 0;
-    }
+//    @AssertTrue(message = "Start date must be equal or after created date")
+//    public boolean isStartDateValid() {
+//        return start_date == null || start_date.compareTo(new Date()) >= 0;
+//    }
 
 }
