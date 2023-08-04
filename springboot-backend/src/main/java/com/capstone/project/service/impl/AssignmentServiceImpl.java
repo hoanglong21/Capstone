@@ -100,7 +100,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         for (Attachment attachment : attachments) {
             attachmentRepository.delete(attachment);
         }
-        
+
         return assignmentRepository.save(existingAssignment);
     }
 
@@ -200,13 +200,14 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Map<String, Object> getNumSubmitAssignment(int assignmentid) throws ResourceNotFroundException {
         String query ="SELECT COUNT(CASE WHEN is_done = true THEN 1 END) AS submitted,\n" +
-                "       COUNT(CASE WHEN is_done = false THEN 1 END) AS notsubmitted\n" +
-                "FROM submission s inner join assignment a on s.assignment_id = a.id";
+                "                      COUNT(DISTINCT cl.user_id) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END) AS notsubmitted\n" +
+                "FROM class_learner cl ";
 
         Map<String, Object> parameters = new HashMap<>();
 
         if (assignmentid != 0) {
-            query += " WHERE a.id = :assignmentId";
+            assignmentRepository.findById(assignmentid);
+            query += " LEFT JOIN  submission s ON s.assignment_id = :assignmentId AND s.author_id = cl.user_id";
             parameters.put("assignmentId", assignmentid);
         }
         Query q = em.createNativeQuery(query);
