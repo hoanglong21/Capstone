@@ -179,14 +179,25 @@ public class ClassServiceImpl implements ClassService {
 
         }
 
-        if (author != null && !author.isEmpty()) {
-            query += " AND u.username LIKE :authorname OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username LIKE :authorname)";
+//        if (author != null && !author.isEmpty() && search == null || search.isEmpty() ) {
+//            query += " AND u.username LIKE :authorname OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username LIKE :authorname)";
+//            parameters.put("authorname", author);
+//        }
+
+        if (author != null && !author.isEmpty() && search == null || search.isEmpty() ) {
+            query += " AND u.username = :authorname ";
             parameters.put("authorname", author);
         }
 
-        if (search != null && !search.isEmpty()) {
+        if (search != null && !search.isEmpty() && author == null || author.isEmpty() ) {
             query += " AND (class_name LIKE :search OR description LIKE :search)";
             parameters.put("search", "%" + search + "%");
+        }
+
+        if (search != null && !search.isEmpty() && author != null && !author.isEmpty()) {
+            query += " AND (class_name LIKE :search OR description LIKE :search) AND u.username = :authorname";
+            parameters.put("search", "%" + search + "%");
+            parameters.put("authorname", author);
         }
 
         if ((isDeleted == null || isDeleted)) {
