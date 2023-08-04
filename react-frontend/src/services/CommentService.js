@@ -31,7 +31,6 @@ const getFilterList = (search, author, direction, typeid, postid, rootId, page, 
 const CommentService = {
     getCommentById,
     getFilterList
-
 }
 
 export default CommentService

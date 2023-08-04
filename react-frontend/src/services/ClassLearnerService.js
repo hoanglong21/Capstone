@@ -54,45 +54,10 @@ const filterGetLeaner = (
     )
 }
 
-const filterClassLeaner = (
-    userId,
-    classId,
-    fromCreated,
-    toCreated,
-    isAccepted,
-    sortBy,
-    direction,
-    page,
-    size
-) => {
-    return axios.get(
-        API_BASE_URL +
-            '/filterclasslearner?userid' +
-            userId +
-            '&classid' +
-            classId +
-            '&fromcreated' +
-            fromCreated +
-            '&tocreated' +
-            toCreated +
-            '&accepted' +
-            isAccepted +
-            '&sortby' +
-            sortBy +
-            '&direction' +
-            direction +
-            'page' +
-            page +
-            'size' +
-            size
-    )
-}
-
 const ClassLearnerService = {
     filterGetLeaner,
     createClassLeaner,
     deleteClassLearnerById,
-    filterClassLeaner,
     updateClassLeaner,
 }
 

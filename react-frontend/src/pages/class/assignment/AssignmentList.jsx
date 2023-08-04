@@ -175,7 +175,7 @@ function AssignmentList() {
                                 {assign._draft
                                     ? 'Draft'
                                     : assign?.start_date &&
-                                      assign?.start_date < today
+                                      new Date(assign?.start_date) < today
                                     ? `Scheduled for ${assign?.start_date}`
                                     : assign?.due_date
                                     ? `Due ${assign?.due_date}`

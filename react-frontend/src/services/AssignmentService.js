@@ -57,12 +57,23 @@ const getFilterList = (
     )
 }
 
+const getNumSubmitAssignment = (assignmentId, classId) => {
+    return axios.get(
+        API_BASE_URL +
+            '/getsubmitassignment?assignmentid=' +
+            assignmentId +
+            '&classid=' +
+            classId
+    )
+}
+
 const AssignmentService = {
     createAssignment,
     getFilterList,
     getAssignmentById,
     updateAssignment,
     deleteAssignment,
+    getNumSubmitAssignment,
 }
 
 export default AssignmentService
