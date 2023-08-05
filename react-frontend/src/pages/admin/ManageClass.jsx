@@ -18,8 +18,13 @@ function ManageClass() {
     const fetchData = async (searchKey) => {
         const temp = (
             await ClassService.getFilterList(
-                '=0',
+                '',
                 `${searchKey ? '=' + searchKey : ''}`,
+                `=${userInfo.username}`,
+                `=${userInfo.username}`,
+                '',
+                '',
+                '',
                 '',
                 '',
                 '',

@@ -76,6 +76,7 @@ function AdminDashboard() {
     fetchDataStudySetGrowth();
   }, []);
 
+  console.log(classnumber)
   const week = [
     "Week 1",
     "Week 2",
@@ -205,12 +206,12 @@ function AdminDashboard() {
           <div className="container">
             <div className="d-sm-flex align-items-center justify-content-between mb-4">
               <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
-              <Link
+              {/* <Link
                 to="/"
                 className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
               >
                 <i className="bi bi-download text-white"></i> Generate Report
-              </Link>
+              </Link> */}
             </div>
             <div className="row">
               <div className="col-xl-3 col-md-6 mb-4">
@@ -264,7 +265,7 @@ function AdminDashboard() {
                         <div className="row no-gutters align-items-center">
                           <div className="col-auto">
                             <div className="h5 mb-0 mr-3 font-weight-bold text-white">
-                              {classnumber}
+                            {classnumber}
                             </div>
                           </div>
                         </div>
