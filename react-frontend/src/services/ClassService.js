@@ -45,27 +45,40 @@ const resetClassCode = (id) => {
 }
 
 const getFilterList = (
-    is_deleted,
+    classId,
+    isDeleted,
     search,
     author,
     learner,
-    from,
-    to,
+    fromDeleted,
+    toDeleted,
+    fromCreated,
+    toCreated,
+    sortBy,
+    direction,
     page,
     size
 ) => {
     return axios.get(
         API_BASE_URL +
-            '/filterclass?deleted' +
-            is_deleted +
+            '/filterclass?classid' +
+            classId +
+            '&deleted' +
+            isDeleted +
             '&search' +
             search +
             '&author' +
             author +
             '&learner' +
             learner +
-            (from ? `&from${from}` : '') +
-            (to ? `&to${to}` : '') +
+            (fromDeleted ? `&fromdeleted${fromDeleted}` : '') +
+            (toDeleted ? `&todeleted${toDeleted}` : '') +
+            (fromCreated ? `&fromcreated${fromCreated}` : '') +
+            (toCreated ? `&tocreated${toCreated}` : '') +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
             '&page' +
             page +
             '&size' +

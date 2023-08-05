@@ -7,6 +7,8 @@ import com.capstone.project.service.CommentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentTypeServiceImpl implements CommentTypeService {
 
@@ -15,6 +17,12 @@ public class CommentTypeServiceImpl implements CommentTypeService {
     @Autowired
     public CommentTypeServiceImpl(CommentTypeRepository commentTypeRepository) {
         this.commentTypeRepository = commentTypeRepository;
+    }
+
+
+    @Override
+    public List<CommentType> getAll() {
+        return commentTypeRepository.findAll();
     }
 
     @Override

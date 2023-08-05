@@ -373,6 +373,10 @@
     padding: 0 1.5rem;
 }
 
+.submission_item {
+    cursor: pointer;
+}
+
 .submission_learnerAvatar {
     width: 32px;
     height: 32px;
