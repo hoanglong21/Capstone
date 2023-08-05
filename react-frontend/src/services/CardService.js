@@ -61,12 +61,44 @@ const countCardInSet = (
     )
 }
 
+const getFilterCard = (
+    userId,
+    studySetId,
+    status,
+    star,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filtercard?userid' +
+            userId +
+            '&studysetid' +
+            studySetId +
+            '&status' +
+            status +
+            '&star' +
+            star +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
+
 const CardService = {
     createCard,
     updateCard,
     getAllByStudySetId,
     deleteCard,
     countCardInSet,
+    getFilterCard,
 }
 
 export default CardService
