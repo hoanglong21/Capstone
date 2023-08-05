@@ -75,7 +75,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
     @Override
     public Integer getClassNumber() throws ResourceNotFroundException {
         List<String> listDate = dateRangePicker.getShortDateRange();
-        Map<String, Object> response = classService.getFilterClass(0, null, null, null, null,
+        Map<String, Object> response = classService.getFilterClass(0, null, null, null, null,null,
                 null, listDate.get(0), listDate.get(1),"created_date", "DESC", 1, 5);
         return Integer.parseInt(String.valueOf(response.get("totalItems")));
     }
