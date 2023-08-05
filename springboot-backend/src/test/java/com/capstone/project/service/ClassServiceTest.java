@@ -295,13 +295,13 @@ public class ClassServiceTest {
     }
 
     @Order(9)
-    @ParameterizedTest(name = "index => clasId={0},isDeleted{1},search{2}, author{3},fromDeleted{4},toDeleted{5} ," +
-                                       " fromCreated{6},toCreated{7}, sortBy{8},direction{9},page={10}, size{11} ")
+    @ParameterizedTest(name = "index => clasId={0},isDeleted{1},search{2}, author{3},learner{4},fromDeleted{5},toDeleted{6} ," +
+                                       " fromCreated{7},toCreated{8}, sortBy{9},direction{10},page={11}, size{12} ")
     @CsvSource({
             "1,true,JLPT, quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5",
             "2,false,IELTS,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5"
     })
-    public void testGetFilterClass(int classId,boolean isDeleted,String search, String author, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
+    public void testGetFilterClass(int classId,boolean isDeleted,String search, String author,String learner, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                                    String sortBy, String direction,int page, int size) throws ResourceNotFroundException {
 
         MockitoAnnotations.openMocks(this);
@@ -316,7 +316,7 @@ public class ClassServiceTest {
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(classroom));
 
-        List<Class> list = (List<Class>) classServiceImpl.getFilterClass(classId,isDeleted,search,author,fromDeleted,toDeleted,fromCreated,toCreated,
+        List<Class> list = (List<Class>) classServiceImpl.getFilterClass(classId,isDeleted,search,author,learner,fromDeleted,toDeleted,fromCreated,toCreated,
                                                                           sortBy,direction,page,size).get("list");
         assertThat(list.size()).isGreaterThan(0);
 

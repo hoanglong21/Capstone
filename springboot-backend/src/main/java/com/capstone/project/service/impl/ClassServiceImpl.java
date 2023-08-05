@@ -153,7 +153,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClass(int classid,Boolean isDeleted, String search, String author, String fromDeleted, String toDeleted,
+    public Map<String, Object> getFilterClass(int classid,Boolean isDeleted, String search, String author,String learner, String fromDeleted, String toDeleted,
                                               String fromCreated, String toCreated,String sortBy,String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
@@ -179,17 +179,13 @@ public class ClassServiceImpl implements ClassService {
 
         }
 
-//        if (author != null && !author.isEmpty() && search == null || search.isEmpty() ) {
-//            query += " AND u.username LIKE :authorname OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username LIKE :authorname)";
-//            parameters.put("authorname", author);
-//        }
 
-        if (author != null && !author.isEmpty() && search == null || search.isEmpty() ) {
+        if (author != null && !author.isEmpty() && search == null && search.isEmpty() ) {
             query += " AND u.username = :authorname ";
             parameters.put("authorname", author);
         }
 
-        if (search != null && !search.isEmpty() && author == null || author.isEmpty() ) {
+        if (search != null && !search.isEmpty() && author ==null && learner == null ) {
             query += " AND (class_name LIKE :search OR description LIKE :search)";
             parameters.put("search", "%" + search + "%");
         }
@@ -198,6 +194,17 @@ public class ClassServiceImpl implements ClassService {
             query += " AND (class_name LIKE :search OR description LIKE :search) AND u.username = :authorname";
             parameters.put("search", "%" + search + "%");
             parameters.put("authorname", author);
+        }
+
+        if (learner != null && !learner.isEmpty() && search == null && search.isEmpty() ) {
+            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner) ";
+            parameters.put("learner", learner);
+        }
+
+        if (learner != null && !learner.isEmpty() && search != null && !search.isEmpty() ) {
+            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner) and (class_name LIKE :search OR description LIKE :search)";
+            parameters.put("learner", learner);
+            parameters.put("search", "%" + search + "%");
         }
 
         if ((isDeleted == null || isDeleted)) {
