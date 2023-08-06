@@ -10,6 +10,7 @@
 	Java: 20.0.1
 	OpenJDK: 20.0.1
 	SpringBoot: 3.0.6
+ 	Apache Tomcat: 10.1.8
 	MySQL Server: 8.0.27
 	Node: 14.18.0
 	React: 18.2.0
@@ -17,9 +18,9 @@
 	Run SpringBoot Back-End by run project in Intellij
 	Run React Front-End by run "npm start" in Terminal
 
-	Front-end (AWS Hosting): https://main.d3epy9zsaktp6t.amplifyapp.com
-	Back-end (AWS Hosting): http://capstone.us-east-1.elasticbeanstalk.com
-	(Demo Back-end: http://capstone.us-east-1.elasticbeanstalk.com/api/v1/kanjivg/人) 
+	Front-end: https://nihongolevelup.com/
+	Back-end: https://nihongolevelup.com/api/v1/
+	(Demo Back-end: https://nihongolevelup.com/api/v1/vocabulary?page=1&size=20&search=確実) 
 
 	For env file: https://drive.google.com/drive/folders/1ylk6j-H1gzI6i3yzTEoKWblDl2sgri7W?usp=sharing
 </body>
