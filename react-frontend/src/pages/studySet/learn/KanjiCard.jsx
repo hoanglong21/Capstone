@@ -1,9 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const KanjiCard = ({
     ques,
     quesIndex,
-    numQues,
     writtenPromptWith,
     writtenAnswerWith,
     multiplePromptWith,
@@ -21,6 +20,13 @@ const KanjiCard = ({
     setIsCurrentCorrect,
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
+    const [example, setExample] = useState(null)
+
+    useEffect(() => {
+        if (ques?.question_type) {
+            setExample(ques.question.content[9].content)
+        }
+    }, [ques])
 
     const handleAnswerWritten = (event) => {
         if (ques.question_type === 1) {
@@ -49,9 +55,6 @@ const KanjiCard = ({
 
     return (
         <div className="card learnQuestionCard">
-            <div className="quizQues_number">
-                {quesIndex + 1} of {numQues}
-            </div>
             {/* written */}
             {ques.question_type === 1 && (
                 <div className="card-body d-flex flex-column">
@@ -159,12 +162,24 @@ const KanjiCard = ({
                             <div className="quizQues_label my-4">
                                 Correct answer
                             </div>
-                            <div
-                                className="quizQues_answer correct"
-                                dangerouslySetInnerHTML={{
-                                    __html: correctAnswer,
-                                }}
-                            ></div>
+                            <div className="quizQues_answer correct">
+                                <div
+                                    className="learnCorrectAnswer"
+                                    dangerouslySetInnerHTML={{
+                                        __html: correctAnswer,
+                                    }}
+                                ></div>
+                                <div className="learnExampleSection">
+                                    <div className="learnExample_label">
+                                        Example
+                                    </div>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: example || '...',
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

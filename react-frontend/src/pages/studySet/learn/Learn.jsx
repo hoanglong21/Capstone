@@ -112,13 +112,6 @@ const Learn = () => {
                 setStudySet(tempStudySet)
                 // set type
                 setType(tempStudySet.studySetType.id)
-                // fields
-                const tempFields = (
-                    await FieldService.getFieldsByStudySetTypeId(
-                        tempStudySet.id
-                    )
-                ).data
-                setFields(tempFields)
                 // count
                 const tempCounts = (
                     await StudySetService.countCardInSet(userInfo.id, id)
@@ -142,6 +135,20 @@ const Learn = () => {
                 }
                 setProgressStatus([...tempProgressStatus])
                 setOptionProgressStatus([...tempProgressStatus])
+                // fields
+                var tempFields = (
+                    await FieldService.getFieldsByStudySetTypeId(
+                        tempStudySet.id
+                    )
+                ).data
+                if (tempStudySet.studySetType.id === 1) {
+                    tempFields.splice(2, 1)
+                } else if (tempStudySet.studySetType.id === 2) {
+                    tempFields.splice(9, 1)
+                } else if (tempStudySet.studySetType.id === 2) {
+                    tempFields.splice(3, 1)
+                }
+                setFields(tempFields)
                 // prompt with + answer with
                 var tempWrittenPromptWith = [tempFields[0].id]
                 var tempWrittenAnsWith = []
@@ -473,15 +480,7 @@ const Learn = () => {
                         </ul>
                     </div>
                 </div>
-                <div className="quizInfo d-flex flex-column align-items-center">
-                    <h3>
-                        {progress} /{' '}
-                        {isStar
-                            ? numNotStar + numStillStar + numMasterStar
-                            : numNot + numStill + numMaster}
-                    </h3>
-                    <h3 className="quizInfo_title">{studySet?.title}</h3>
-                </div>
+                <h3 className="learnTitle">{studySet?.title}</h3>
                 <div className="quizOptions d-flex">
                     {isEnd ? (
                         <button
@@ -550,9 +549,11 @@ const Learn = () => {
                     className="quizProgress"
                     style={{
                         width: `${
-                            (progress / isStar
-                                ? numNotStar + numStillStar + numMasterStar
-                                : numNot + numStill + numMaster) * 100
+                            (progress /
+                                (isStar
+                                    ? numNotStar + numStillStar + numMasterStar
+                                    : numNot + numStill + numMaster)) *
+                            100
                         }%`,
                     }}
                 ></div>
@@ -567,7 +568,6 @@ const Learn = () => {
                     <VocabCard
                         ques={currentQuestion}
                         quesIndex={currentIndex}
-                        numQues={numQues}
                         writtenPromptWith={writtenPromptWith}
                         writtenAnswerWith={writtenAnswerWith}
                         multiplePromptWith={multiplePromptWith}
@@ -589,7 +589,6 @@ const Learn = () => {
                     <KanjiCard
                         ques={currentQuestion}
                         quesIndex={currentIndex}
-                        numQues={numQues}
                         writtenPromptWith={writtenPromptWith}
                         multiplePromptWith={multiplePromptWith}
                         multipleAnswerWith={multipleAnswerWith}
@@ -610,7 +609,6 @@ const Learn = () => {
                     <GrammarCard
                         ques={currentQuestion}
                         quesIndex={currentIndex}
-                        numQues={numQues}
                         writtenPromptWith={writtenPromptWith}
                         multiplePromptWith={multiplePromptWith}
                         multipleAnswerWith={multipleAnswerWith}
@@ -1029,7 +1027,12 @@ const Learn = () => {
                                                     >
                                                         <input
                                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
+                                                            name="writtenPromptWith"
+                                                            type={`${
+                                                                type === 1
+                                                                    ? 'radio'
+                                                                    : 'checkbox'
+                                                            }`}
                                                             id={`writtenPromptWith${field.id}`}
                                                             checked={
                                                                 optionWrittenPromptWith?.includes(
@@ -1149,7 +1152,12 @@ const Learn = () => {
                                                     >
                                                         <input
                                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
+                                                            name="multiplePromptWith"
+                                                            type={`${
+                                                                type === 1
+                                                                    ? 'radio'
+                                                                    : 'checkbox'
+                                                            }`}
                                                             id={`multiplePromptWith${field.id}`}
                                                             checked={
                                                                 optionMultiplePromptWith?.includes(
@@ -1210,7 +1218,12 @@ const Learn = () => {
                                                     >
                                                         <input
                                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
+                                                            name="multipleAnswerWith"
+                                                            type={`${
+                                                                type === 1
+                                                                    ? 'radio'
+                                                                    : 'checkbox'
+                                                            }`}
                                                             checked={
                                                                 optionMultipleAnswerWith?.includes(
                                                                     field.id
@@ -1285,7 +1298,12 @@ const Learn = () => {
                                                     >
                                                         <input
                                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
+                                                            name="trueFalsePromptWith"
+                                                            type={`${
+                                                                type === 1
+                                                                    ? 'radio'
+                                                                    : 'checkbox'
+                                                            }`}
                                                             id={`trueFalsePromptWith${field.id}`}
                                                             checked={
                                                                 optionTrueFalsePromptWith?.includes(
@@ -1346,7 +1364,12 @@ const Learn = () => {
                                                     >
                                                         <input
                                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
+                                                            name="trueFalseAnswerWith"
+                                                            type={`${
+                                                                type === 1
+                                                                    ? 'radio'
+                                                                    : 'checkbox'
+                                                            }`}
                                                             checked={
                                                                 optionTrueFalseAnswerWith?.includes(
                                                                     field.id

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 const VocabCard = ({
     ques,
     quesIndex,
-    numQues,
     writtenPromptWith,
     writtenAnswerWith,
     multiplePromptWith,
@@ -21,6 +20,13 @@ const VocabCard = ({
     setIsCurrentCorrect,
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
+    const [example, setExample] = useState(null)
+
+    useEffect(() => {
+        if (ques?.question_type) {
+            setExample(ques.question.content[2].content)
+        }
+    }, [ques])
 
     const handleAnswerWritten = (event) => {
         if (ques.question_type === 1) {
@@ -49,9 +55,6 @@ const VocabCard = ({
 
     return (
         <div className="card learnQuestionCard">
-            <div className="quizQues_number">
-                {quesIndex + 1} of {numQues}
-            </div>
             {/* written */}
             {ques.question_type === 1 && (
                 <div className="card-body d-flex flex-column">
@@ -127,6 +130,7 @@ const VocabCard = ({
                                     ? 'correct'
                                     : ''
                             }`}
+                            readOnly={isCurrentCorrect !== null}
                             type="text"
                             placeholder="Type your answer here"
                             onChange={(event) =>
@@ -147,12 +151,30 @@ const VocabCard = ({
                             <div className="quizQues_label my-4">
                                 Correct answer
                             </div>
-                            <div
-                                className="quizQues_answer correct"
-                                dangerouslySetInnerHTML={{
-                                    __html: correctAnswer,
-                                }}
-                            ></div>
+                            <div className="quizQues_answer correct">
+                                <div className="row">
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        <div
+                                            className="learnCorrectAnswer"
+                                            dangerouslySetInnerHTML={{
+                                                __html: correctAnswer,
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        <div className="learnExampleSection">
+                                            <div className="learnExample_label">
+                                                Example
+                                            </div>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: example || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
@@ -218,9 +240,12 @@ const VocabCard = ({
                     <div className="quizQues_label my-4">Choose the answer</div>
                     <div className="row">
                         {ques.answers.map((ans, ansIndex) => (
-                            <div key={ansIndex} className="col-12 mb-3">
+                            <div
+                                key={ansIndex}
+                                className="col-12 col-md-6 mb-3"
+                            >
                                 <div
-                                    className={`quizQues_answer ${
+                                    className={`quizQues_answer h-100 ${
                                         currentAnswer === ans.card.id &&
                                         isCurrentCorrect === false
                                             ? 'incorrect'
