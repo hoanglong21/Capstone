@@ -18,4 +18,6 @@ public class ChangePasswordRequest {
     @Pattern(regexp = ".*\\d.*", message = "Password must contain at least one digit (number)")
     @Length(min = 8, message = "Password at least 8 characters")
     private String password;
+
+    private String oldPassword;
 }
