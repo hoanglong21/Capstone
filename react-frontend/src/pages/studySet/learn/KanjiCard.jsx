@@ -1,8 +1,11 @@
+import { useState } from 'react'
+
 const KanjiCard = ({
     ques,
     quesIndex,
     numQues,
     writtenPromptWith,
+    writtenAnswerWith,
     multiplePromptWith,
     multipleAnswerWith,
     trueFalsePromptWith,
@@ -15,7 +18,35 @@ const KanjiCard = ({
     setCurrentAnswer,
     currentAnswer,
     isCurrentCorrect,
+    setIsCurrentCorrect,
 }) => {
+    const [correctAnswer, setCorrectAnswer] = useState(null)
+
+    const handleAnswerWritten = (event) => {
+        if (ques.question_type === 1) {
+            document.getElementById(`quizQuesInput${quesIndex}`).blur()
+            event.preventDefault()
+            // get correct answer
+            var correctAnswer = ''
+            for (const itemContent of ques.question.content) {
+                if (itemContent.field.id === writtenAnswerWith) {
+                    const tempContent = itemContent.content
+                        .replaceAll(/(<([^>]+)>)/gi, ' ')
+                        .trim()
+                    correctAnswer = tempContent
+                    setCorrectAnswer(itemContent.content)
+                    break
+                }
+            }
+            // check is correct
+            if (currentAnswer == correctAnswer) {
+                setIsCurrentCorrect(true)
+            } else {
+                setIsCurrentCorrect(false)
+            }
+        }
+    }
+
     return (
         <div className="card learnQuestionCard">
             <div className="quizQues_number">
@@ -98,27 +129,44 @@ const KanjiCard = ({
                     </div>
                     {/* answer */}
                     <div className="quizQues_label my-4">Your answer</div>
-                    <input
-                        className={`form-control quizAns_input ${
-                            isCurrentCorrect === 0
-                                ? 'incorrect'
-                                : isCurrentCorrect === 1
-                                ? 'correct'
-                                : ''
-                        }`}
-                        type="text"
-                        placeholder="Type your answer here"
-                        onChange={(event) =>
-                            setCurrentAnswer(event.target.value)
-                        }
-                        onBlur={(event) => {
-                            if (event.target.value) {
-                                setProgress(progress + 1)
-                            } else {
-                                setProgress(progress > 0 ? progress - 1 : 0)
+                    <form className="d-flex">
+                        <input
+                            id={`quizQuesInput${quesIndex}`}
+                            className={`form-control quizAns_input removeEvent ${
+                                isCurrentCorrect === false
+                                    ? 'incorrect'
+                                    : isCurrentCorrect === true
+                                    ? 'correct'
+                                    : ''
+                            }`}
+                            type="text"
+                            placeholder="Type your answer here"
+                            onChange={(event) =>
+                                setCurrentAnswer(event.target.value)
                             }
-                        }}
-                    />
+                        />
+                        <button
+                            type="submit"
+                            className="btn btn-primary ms-2"
+                            onClick={handleAnswerWritten}
+                            disabled={isCurrentCorrect !== null}
+                        >
+                            Answer
+                        </button>
+                    </form>
+                    {isCurrentCorrect === false && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div
+                                className="quizQues_answer correct"
+                                dangerouslySetInnerHTML={{
+                                    __html: correctAnswer,
+                                }}
+                            ></div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* multiple */}
@@ -196,10 +244,10 @@ const KanjiCard = ({
                                 <div
                                     className={`quizQues_answer ${
                                         currentAnswer === ans.card.id &&
-                                        isCurrentCorrect === 0
+                                        isCurrentCorrect === false
                                             ? 'incorrect'
                                             : currentAnswer === ans.card.id &&
-                                              isCurrentCorrect === 1
+                                              isCurrentCorrect === true
                                             ? 'correct'
                                             : isCurrentCorrect === ans.card.id
                                             ? 'active'
@@ -407,10 +455,10 @@ const KanjiCard = ({
                             <div
                                 className={`quizQues_answer ${
                                     currentAnswer === 1 &&
-                                    isCurrentCorrect === 0
+                                    isCurrentCorrect === false
                                         ? 'incorrect'
                                         : currentAnswer === 1 &&
-                                          isCurrentCorrect === 1
+                                          isCurrentCorrect === true
                                         ? 'correct'
                                         : currentAnswer === 1
                                         ? 'active'
@@ -435,10 +483,10 @@ const KanjiCard = ({
                             <div
                                 className={`quizQues_answer ${
                                     currentAnswer === 0 &&
-                                    isCurrentCorrect === 0
+                                    isCurrentCorrect === false
                                         ? 'incorrect'
                                         : currentAnswer === 0 &&
-                                          isCurrentCorrect === 1
+                                          isCurrentCorrect === true
                                         ? 'correct'
                                         : currentAnswer === 0
                                         ? 'active'

@@ -362,6 +362,39 @@ const Learn = () => {
         setOptionProgressStatus(tempProgressStatus)
     }
 
+    const nextQuestion = () => {
+        if (currentIndex < questions.length - 1) {
+            setCurrentQuestion(questions[currentIndex + 1])
+            setCurrentIndex(currentIndex + 1)
+            setCurrentAnswer(null)
+            setIsCurrentCorrect(null)
+            setProgress(progress + 1)
+        }
+    }
+
+    useEffect(() => {
+        if (isCurrentCorrect === true) {
+            if (currentIndex < questions.length - 1) {
+                setTimeout(nextQuestion(), 2500)
+            }
+        }
+    }, [isCurrentCorrect])
+
+    // catch event to next card
+    useEffect(() => {
+        const handleUserKeyPress = (event) => {
+            if (!event.target.classList.contains('removeEvent')) {
+                nextQuestion()
+                // Cancel the default action to avoid it being handled twice
+                event.preventDefault()
+            }
+        }
+        window.addEventListener('keydown', handleUserKeyPress, true)
+        return () => {
+            window.removeEventListener('keydown', handleUserKeyPress, true)
+        }
+    }, [currentIndex, questions, progress])
+
     return (
         <div>
             {/* loading */}
@@ -536,6 +569,7 @@ const Learn = () => {
                         quesIndex={currentIndex}
                         numQues={numQues}
                         writtenPromptWith={writtenPromptWith}
+                        writtenAnswerWith={writtenAnswerWith}
                         multiplePromptWith={multiplePromptWith}
                         multipleAnswerWith={multipleAnswerWith}
                         trueFalsePromptWith={trueFalsePromptWith}
@@ -548,6 +582,7 @@ const Learn = () => {
                         setCurrentAnswer={setCurrentAnswer}
                         currentAnswer={currentAnswer}
                         isCurrentCorrect={isCurrentCorrect}
+                        setIsCurrentCorrect={setIsCurrentCorrect}
                     />
                 )}
                 {type === 2 && (
@@ -568,6 +603,7 @@ const Learn = () => {
                         setCurrentAnswer={setCurrentAnswer}
                         currentAnswer={currentAnswer}
                         isCurrentCorrect={isCurrentCorrect}
+                        setIsCurrentCorrect={setIsCurrentCorrect}
                     />
                 )}
                 {type === 3 && (
@@ -588,6 +624,7 @@ const Learn = () => {
                         setCurrentAnswer={setCurrentAnswer}
                         currentAnswer={currentAnswer}
                         isCurrentCorrect={isCurrentCorrect}
+                        setIsCurrentCorrect={setIsCurrentCorrect}
                     />
                 )}
             </section>
@@ -1397,6 +1434,22 @@ const Learn = () => {
                     </div>
                 </div>
             </div>
+            {/* continue box */}
+            {isCurrentCorrect === false && (
+                <div className="learnIncorrectBox">
+                    <div className="quizQues_container h-100 d-flex align-items-center justify-content-between">
+                        <span className="quizQues_label">
+                            Press any key to continue
+                        </span>
+                        <button
+                            className="btn btn-primary"
+                            onClick={nextQuestion}
+                        >
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

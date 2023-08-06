@@ -42,7 +42,7 @@ const VocabCard = ({
         if (fullCard?.card?.id) {
             fetchData()
         }
-    }, [fullCard])
+    }, [fullCard, fullCard?.progress])
 
     useEffect(() => {
         if (isAuto) {
