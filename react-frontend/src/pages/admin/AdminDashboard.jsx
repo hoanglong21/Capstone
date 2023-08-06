@@ -76,7 +76,6 @@ function AdminDashboard() {
     fetchDataStudySetGrowth();
   }, []);
 
-  console.log(classnumber)
   const week = [
     "Week 1",
     "Week 2",
@@ -239,10 +238,10 @@ function AdminDashboard() {
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
+                        <div className="text-xs fw-bold text-white text-uppercase mb-1">
                           Register (Monthly)
                         </div>
-                        <div className="h5 mb-0 font-weight-bold text-white">
+                        <div className="h5 mb-0 fw-bold text-white">
                           {registernumber}
                         </div>
                       </div>
@@ -259,12 +258,12 @@ function AdminDashboard() {
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
+                        <div className="text-xs fw-bold text-white text-uppercase mb-1">
                           Classes created (Monthly)
                         </div>
                         <div className="row no-gutters align-items-center">
                           <div className="col-auto">
-                            <div className="h5 mb-0 mr-3 font-weight-bold text-white">
+                            <div className="h5 mb-0 mr-3 fw-bold text-white">
                             {classnumber}
                             </div>
                           </div>
@@ -283,10 +282,10 @@ function AdminDashboard() {
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
-                        <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
+                        <div className="text-xs fw-bold text-white text-uppercase mb-1">
                           Sets created (Monthly)
                         </div>
-                        <div className="h5 mb-0 font-weight-bold text-white">
+                        <div className="h5 mb-0 fw-bold text-white">
                           {studySetnumber}
                         </div>
                       </div>
