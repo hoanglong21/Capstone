@@ -22,7 +22,6 @@ export const authSlice = createSlice({
             state.success = null
         },
         logout: (state) => {
-            localStorage.removeItem('userToken') // deletes token from storage
             state.userToken = null
             state.error = null
         },

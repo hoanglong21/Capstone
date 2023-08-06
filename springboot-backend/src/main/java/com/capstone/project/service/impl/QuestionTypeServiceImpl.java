@@ -7,6 +7,8 @@ import com.capstone.project.service.QuestionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class QuestionTypeServiceImpl implements QuestionTypeService {
 
@@ -15,6 +17,13 @@ public class QuestionTypeServiceImpl implements QuestionTypeService {
     public QuestionTypeServiceImpl(QuestionTypeRepository questionTypeRepository) {
         this.questionTypeRepository = questionTypeRepository;
     }
+
+
+    @Override
+    public List<QuestionType> getAll() {
+        return questionTypeRepository.findAll();
+    }
+
 
     @Override
     public QuestionType getQuestionTypeById(int id) {

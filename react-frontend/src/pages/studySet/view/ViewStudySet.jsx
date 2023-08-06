@@ -31,21 +31,63 @@ const ViewStudySet = () => {
 
     const [studySet, setStudySet] = useState({})
     const [cards, setCards] = useState([])
+    const [numCards, setNumCards] = useState(0)
+
+    const [numNot, setNumNot] = useState(0)
+    const [numStill, setNumStill] = useState(0)
+    const [numMaster, setNumMaster] = useState(0)
+    const [numNotStar, setNumNotStar] = useState(0)
+    const [numStillStar, setNumStillStar] = useState(0)
+    const [numMasterStar, setNumMasterStar] = useState(0)
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempStudySet = (await StudySetService.getStudySetById(id))
-                .data
-            setStudySet(tempStudySet)
-            const tempCards = (
-                await CardService.getAllByStudySetId(tempStudySet.id)
-            ).data
-            setCards(tempCards)
+            try {
+                // study set
+                const tempStudySet = (await StudySetService.getStudySetById(id))
+                    .data
+                setStudySet(tempStudySet)
+                // number
+                const tempCounts = (
+                    await StudySetService.countCardInSet(userInfo.id, id)
+                ).data
+                setNumNot(tempCounts['Not studied'])
+                setNumStill(tempCounts['Still learning'])
+                setNumMaster(tempCounts['Mastered'])
+                setNumNotStar(tempCounts['Not studied star'])
+                setNumStillStar(tempCounts['Still learning star'])
+                setNumMasterStar(tempCounts['Mastered star'])
+                setNumCards(
+                    tempCounts['Not studied'] +
+                        tempCounts['Still learning'] +
+                        tempCounts['Mastered']
+                )
+                // cards
+                const tempCards = (
+                    await CardService.getFilterCard(
+                        `=${userInfo.id}`,
+                        `=${tempStudySet.id}`,
+                        '=not studied,still learning,mastered',
+                        '=0',
+                        '',
+                        '',
+                        '',
+                        ''
+                    )
+                ).data.list
+                setCards(tempCards)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
-        if (id) {
+        if (id && userInfo?.id) {
             fetchData()
         }
-    }, [id])
+    }, [id, userInfo])
 
     function checkAuth() {
         if (!userToken) {
@@ -182,7 +224,7 @@ const ViewStudySet = () => {
             {/* Details */}
             <div className="setPageTermsHeader d-flex align-items-center justify-content-between">
                 <span className="setPageTermsHeading">
-                    Terms in this set ({cards.length})
+                    Terms in this set ({numCards})
                 </span>
                 <div className="dropdown setPageTermsHeader_controls">
                     <button
@@ -234,8 +276,12 @@ const ViewStudySet = () => {
             </div>
             {/* Terms */}
             <div className="setPageTerms">
-                {cards.map((card) => (
-                    <ViewCard card={card} key={card.id} userInfo={userInfo} />
+                {cards.map((fullCard) => (
+                    <ViewCard
+                        fullCard={fullCard}
+                        key={fullCard.card.id}
+                        userInfo={userInfo}
+                    />
                 ))}
             </div>
             {/* delete set modal */}

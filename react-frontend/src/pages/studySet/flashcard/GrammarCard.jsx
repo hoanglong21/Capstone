@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react'
 
 import ProgressService from '../../../services/ProgressService'
 
-import { NoteSolidIcon, StarSolidIcon } from '../../../components/icons'
+import {
+    EditIcon,
+    ImageSolidIcon,
+    MicIconSolid,
+    StarSolidIcon,
+} from '../../../components/icons'
 
 const GrammarCard = ({
     userInfo,
@@ -12,6 +17,8 @@ const GrammarCard = ({
     isAuto,
     fullCards,
     setFullCards,
+    setShowPictureModal,
+    setShowAudioModal,
     setShowNoteModal,
     handleUpdateNumStar,
 }) => {
@@ -80,6 +87,15 @@ const GrammarCard = ({
         document
             .getElementById(`flipElement${cardIndex}`)
             ?.classList.toggle('is-flipped')
+        if (
+            document
+                .getElementById(`progressNote${card?.id}`)
+                ?.classList.contains('show')
+        ) {
+            document
+                .getElementById(`toggleAccordionNoteBtn${card?.id}`)
+                ?.click()
+        }
     }
 
     // catch press space event
@@ -150,6 +166,7 @@ const GrammarCard = ({
                 className="flashcardContentWrapper"
                 id={`flipElement${cardIndex}`}
             >
+                {/* front */}
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
                     <div className="flashcardContent_noteBtn">
                         <button
@@ -165,10 +182,19 @@ const GrammarCard = ({
                             name="flashcardContent_noteBtn"
                             className="btn btn-customLight"
                             onClick={() => {
-                                setShowNoteModal(true)
+                                setShowPictureModal(true)
                             }}
                         >
-                            <NoteSolidIcon size="16px" />
+                            <ImageSolidIcon size="16px" />
+                        </button>
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowAudioModal(true)
+                            }}
+                        >
+                            <MicIconSolid size="16px" />
                         </button>
                     </div>
                     <div
@@ -177,6 +203,7 @@ const GrammarCard = ({
                         }}
                     ></div>
                 </div>
+                {/* back */}
                 <div className="flashcardBack">
                     <div className="flashcardContent_noteBtn">
                         <button
@@ -192,113 +219,177 @@ const GrammarCard = ({
                             name="flashcardContent_noteBtn"
                             className="btn btn-customLight"
                             onClick={() => {
-                                setShowNoteModal(true)
+                                setShowPictureModal(true)
                             }}
                         >
-                            <NoteSolidIcon size="16px" />
+                            <ImageSolidIcon size="16px" />
+                        </button>
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowAudioModal(true)
+                            }}
+                        >
+                            <MicIconSolid size="16px" />
                         </button>
                     </div>
-                    <div className="row">
-                        {structure && (
-                            <div className="col-12 col-xl-6 mb-3">
-                                <div className="flashCardField_label mb-2">
-                                    Structure
+                    <div className="flashcardContent_wrapper">
+                        <div className="row">
+                            {structure && (
+                                <div className="col-12 col-xl-6 mb-3">
+                                    <div className="flashCardField_label mb-2">
+                                        Structure
+                                    </div>
+                                    <div
+                                        className="flashCardField_content"
+                                        dangerouslySetInnerHTML={{
+                                            __html: structure?.content || '...',
+                                        }}
+                                    ></div>
                                 </div>
-                                <div
-                                    className="flashCardField_content"
-                                    dangerouslySetInnerHTML={{
-                                        __html: structure?.content || '...',
-                                    }}
-                                ></div>
-                            </div>
-                        )}
-                        {jlptLevel && (
-                            <div className="col-12 col-xl mb-3">
-                                <div className="flashCardField_label mb-2">
-                                    JLPT Level
+                            )}
+                            {jlptLevel && (
+                                <div className="col-12 col-xl mb-3">
+                                    <div className="flashCardField_label mb-2">
+                                        JLPT Level
+                                    </div>
+                                    <div
+                                        className="flashCardField_content"
+                                        dangerouslySetInnerHTML={{
+                                            __html: jlptLevel?.content || '...',
+                                        }}
+                                    ></div>
                                 </div>
-                                <div
-                                    className="flashCardField_content"
-                                    dangerouslySetInnerHTML={{
-                                        __html: jlptLevel?.content || '...',
-                                    }}
-                                ></div>
-                            </div>
-                        )}
-                        {meaning && (
-                            <div className="col-12 col-xl-6 mb-3">
-                                <div className="flashCardField_label mb-2">
-                                    Meaning
+                            )}
+                            {meaning && (
+                                <div className="col-12 col-xl-6 mb-3">
+                                    <div className="flashCardField_label mb-2">
+                                        Meaning
+                                    </div>
+                                    <div
+                                        className="flashCardField_content"
+                                        dangerouslySetInnerHTML={{
+                                            __html: meaning?.content || '...',
+                                        }}
+                                    ></div>
                                 </div>
-                                <div
-                                    className="flashCardField_content"
-                                    dangerouslySetInnerHTML={{
-                                        __html: meaning?.content || '...',
-                                    }}
-                                ></div>
-                            </div>
-                        )}
-                        {example && (
-                            <div className="col-12 col-xl-6 mb-3">
-                                <div className="flashCardField_label mb-2">
-                                    Example
+                            )}
+                            {example && (
+                                <div className="col-12 col-xl-6 mb-3">
+                                    <div className="flashCardField_label mb-2">
+                                        Example
+                                    </div>
+                                    <div
+                                        className="flashCardField_content"
+                                        dangerouslySetInnerHTML={{
+                                            __html: example?.content || '...',
+                                        }}
+                                    ></div>
                                 </div>
-                                <div
-                                    className="flashCardField_content"
-                                    dangerouslySetInnerHTML={{
-                                        __html: example?.content || '...',
-                                    }}
-                                ></div>
-                            </div>
-                        )}
-                        {explanation && (
-                            <div className="col-12 col-xl-6 mb-3">
-                                <div className="flashCardField_label mb-2">
-                                    Explanation
+                            )}
+                            {explanation && (
+                                <div className="col-12 col-xl-6 mb-3">
+                                    <div className="flashCardField_label mb-2">
+                                        Explanation
+                                    </div>
+                                    <div
+                                        className="flashCardField_content"
+                                        dangerouslySetInnerHTML={{
+                                            __html:
+                                                explanation?.content || '...',
+                                        }}
+                                    ></div>
                                 </div>
-                                <div
-                                    className="flashCardField_content"
-                                    dangerouslySetInnerHTML={{
-                                        __html: explanation?.content || '...',
-                                    }}
-                                ></div>
-                            </div>
-                        )}
-                        {note && (
-                            <div className="col-12 col-xl mb-3">
-                                <div className="flashCardField_label mb-2">
-                                    Note
-                                </div>
-                                <div
-                                    className="flashCardField_content"
-                                    dangerouslySetInnerHTML={{
-                                        __html: note?.content || '...',
-                                    }}
-                                ></div>
-                            </div>
-                        )}
-                    </div>
-                    <div className="row my-2 flashCardNote">
-                        <div className="col-12 col-xl-6">
-                            {(progress?.picture || card?.picture) && (
-                                <div className="flashCardField_img d-flex align-items-center">
-                                    <img
-                                        src={progress?.picture || card?.picture}
-                                        alt="card picture"
-                                    />
+                            )}
+                            {note && (
+                                <div className="col-12 col-xl mb-3">
+                                    <div className="flashCardField_label mb-2">
+                                        Note
+                                    </div>
+                                    <div
+                                        className="flashCardField_content"
+                                        dangerouslySetInnerHTML={{
+                                            __html: note?.content || '...',
+                                        }}
+                                    ></div>
                                 </div>
                             )}
                         </div>
-                        <div className="col-12 col-xl-6">
-                            {(progress?.audio || card?.audio) && (
-                                <div className="d-flex align-items-center">
-                                    <audio
-                                        controls
-                                        src={progress?.audio || card?.audio}
-                                        alt="card audio"
-                                    />
+                        <div className="row my-2 flashCardNote">
+                            <div className="col-12 col-xl-6">
+                                {(progress?.picture || card?.picture) && (
+                                    <div className="flashCardField_img d-flex align-items-center">
+                                        <img
+                                            src={
+                                                progress?.picture ||
+                                                card?.picture
+                                            }
+                                            alt="card picture"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="col-12 col-xl-6">
+                                {(progress?.audio || card?.audio) && (
+                                    <div className="d-flex align-items-center">
+                                        <audio
+                                            controls
+                                            src={progress?.audio || card?.audio}
+                                            alt="card audio"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div
+                            className="accordion flashcard_accordion"
+                            id={`accordionNote${card?.id}`}
+                        >
+                            <div className="accordion-item border-0">
+                                <h2 className="accordion-header">
+                                    <button
+                                        id={`toggleAccordionNoteBtn${card?.id}`}
+                                        name="flashcardContent_noteBtn"
+                                        className="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target={`#progressNote${card?.id}`}
+                                        aria-expanded="false"
+                                        aria-controls="progressNote"
+                                    >
+                                        <span>Note</span>
+                                    </button>
+                                </h2>
+                                <div
+                                    id={`progressNote${card?.id}`}
+                                    className="accordion-collapse collapse"
+                                    data-bs-parent={`#accordionNote${card?.id}`}
+                                >
+                                    <div className="row">
+                                        <div className="col-11">
+                                            <div
+                                                className="accordion-body"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        progress?.note || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                        <div className="col-1">
+                                            <button
+                                                name="flashcardContent_noteBtn"
+                                                className="btn btn-customLight btn-customLight--sm ms-1 mt-2"
+                                                onClick={() => {
+                                                    setShowNoteModal(true)
+                                                }}
+                                            >
+                                                <EditIcon size="1rem" />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -126,6 +126,8 @@ const Flashcard = () => {
     const [picture, setPicture] = useState('')
     const [audio, setAudio] = useState('')
     const [note, setNote] = useState('')
+    const [showPictureModal, setShowPictureModal] = useState(false)
+    const [showAudioModal, setShowAudioModal] = useState(false)
     const [showNoteModal, setShowNoteModal] = useState(false)
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
@@ -326,7 +328,7 @@ const Flashcard = () => {
 
     // catch press arrow event event
     useEffect(() => {
-        const handleUserKeyPress = (event) => {
+        const handleUserKeyPress = (event, editor) => {
             switch (event.key) {
                 case 'ArrowLeft':
                     prevCard()
@@ -452,7 +454,7 @@ const Flashcard = () => {
         name === 'picture' ? setPicture('') : setAudio('')
     }
 
-    const handleSaveNote = async () => {
+    const handleSaveProgress = async () => {
         setLoading(true)
         const card = cards[cardIndex].card
         const progress = cards[cardIndex].progress
@@ -545,6 +547,8 @@ const Flashcard = () => {
             tempCards[cardIndex].progress = tempProgress
             setCards(tempCards)
             setShowNoteModal(false)
+            setShowPictureModal(false)
+            setShowAudioModal(false)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -555,9 +559,11 @@ const Flashcard = () => {
         setLoading(false)
     }
 
-    const handleCancelNote = () => {
+    const handleCancelProgressModal = () => {
         const progress = cards[cardIndex].progress
         setShowNoteModal(false)
+        setShowPictureModal(false)
+        setShowAudioModal(false)
         setPicture(progress?.picture || '')
         setAudio(progress?.audio || '')
         setNote(progress?.note || '')
@@ -789,6 +795,8 @@ const Flashcard = () => {
                             isAuto={isAuto}
                             fullCards={cards}
                             setFullCards={setCards}
+                            setShowPictureModal={setShowPictureModal}
+                            setShowAudioModal={setShowAudioModal}
                             setShowNoteModal={setShowNoteModal}
                             handleUpdateNumStar={handleUpdateNumStar}
                         />
@@ -801,6 +809,8 @@ const Flashcard = () => {
                             isAuto={isAuto}
                             fullCards={cards}
                             setFullCards={setCards}
+                            setShowPictureModal={setShowPictureModal}
+                            setShowAudioModal={setShowAudioModal}
                             setShowNoteModal={setShowNoteModal}
                             handleUpdateNumStar={handleUpdateNumStar}
                         />
@@ -813,147 +823,207 @@ const Flashcard = () => {
                             isAuto={isAuto}
                             fullCards={cards}
                             setFullCards={setCards}
+                            setShowPictureModal={setShowPictureModal}
+                            setShowAudioModal={setShowAudioModal}
                             setShowNoteModal={setShowNoteModal}
                             handleUpdateNumStar={handleUpdateNumStar}
                         />
                     )}
+                    {/* note modal */}
                     {showNoteModal && (
-                        <div className="flashcardContent_noteModal">
+                        <div className="setPage_editCardModal setPage_noteModal">
                             <div className="modal-content d-flex">
-                                <div className="flex-grow-1">
-                                    <div className="d-flex justify-content-between mb-3">
-                                        <div>
-                                            <input
-                                                type="file"
-                                                id="noteUploadImage"
-                                                accept="image/*"
-                                                name="picture"
-                                                className="d-none"
-                                                onClick={(event) => {
-                                                    event.target.value = null
-                                                }}
-                                                onChange={(event) =>
-                                                    handleChangeFile(event)
-                                                }
-                                            />
-                                            <label htmlFor="noteUploadImage">
-                                                <ImageIcon className="ms-3 icon-warning" />
-                                            </label>
-                                            <input
-                                                type="file"
-                                                id="noteUploadAudio"
-                                                accept="audio/*"
-                                                name="audio"
-                                                className="d-none"
-                                                onClick={(event) => {
-                                                    event.target.value = null
-                                                }}
-                                                onChange={(event) =>
-                                                    handleChangeFile(event)
-                                                }
-                                            />
-                                            <label htmlFor="noteUploadAudio">
-                                                <MicIcon className="ms-3 icon-warning" />
-                                            </label>
-                                        </div>
-                                        <button
-                                            className="close p-0"
-                                            onClick={handleCancelNote}
-                                        >
-                                            <CloseIcon size="1.875rem" />
-                                        </button>
-                                    </div>
-                                    <div className="setPage_noteEditor">
-                                        <NoteEditor
-                                            data={note}
-                                            onChange={(event, editor) => {
-                                                setNote(editor.getData())
-                                            }}
-                                        />
-                                    </div>
-                                    {(loadingPicture ||
-                                        loadingAudio ||
-                                        picture ||
-                                        audio) && (
-                                        <div className="row mt-2 setPage_noteUploadFile">
-                                            <div className="col-6 d-flex flex-column align-items-center">
-                                                {loadingPicture && (
-                                                    <div
-                                                        className="spinner-border text-secondary mb-3"
-                                                        role="status"
-                                                    >
-                                                        <span className="visually-hidden">
-                                                            LoadingUpload...
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {!loadingPicture && picture && (
-                                                    <div className="d-flex align-self-start align-items-center">
-                                                        <img
-                                                            src={getUrl(
-                                                                picture
-                                                            )}
-                                                        />
-                                                        <button
-                                                            type="button"
-                                                            name="picture"
-                                                            className="btn btn-danger ms-5 p-0 rounded-circle"
-                                                            onClick={(event) =>
-                                                                handleDeleteFile(
-                                                                    event
-                                                                )
-                                                            }
-                                                        >
-                                                            <DeleteIcon size="1.25rem" />
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="col-6 d-flex flex-column align-items-center">
-                                                {loadingAudio && (
-                                                    <div
-                                                        className="spinner-border text-secondary mb-3"
-                                                        role="status"
-                                                    >
-                                                        <span className="visually-hidden">
-                                                            LoadingUpload...
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {!loadingAudio && audio && (
-                                                    <div className="d-flex align-self-start align-items-center">
-                                                        <audio
-                                                            controls
-                                                            src={getUrl(audio)}
-                                                        ></audio>
-                                                        <button
-                                                            type="button"
-                                                            name="audio"
-                                                            className="btn btn-danger ms-5 p-0 rounded-circle"
-                                                            onClick={(event) =>
-                                                                handleDeleteFile(
-                                                                    event
-                                                                )
-                                                            }
-                                                        >
-                                                            <DeleteIcon size="1.25rem" />
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
+                                <button
+                                    className="close p-0 mb-3 text-end"
+                                    onClick={handleCancelProgressModal}
+                                >
+                                    <CloseIcon size="1.875rem" />
+                                </button>
+                                <div className="setPage_noteEditor flex-grow-1">
+                                    <NoteEditor
+                                        data={note}
+                                        onChange={(event, editor) => {
+                                            setNote(editor.getData())
+                                        }}
+                                    />
                                 </div>
-                                <div className="d-flex justify-content-end mt-3">
+                                <div className="d-flex justify-content-end mt-5">
                                     <button
                                         className="btn btn-secondary me-3"
-                                        onClick={handleCancelNote}
+                                        onClick={handleCancelProgressModal}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         className="btn btn-primary"
-                                        onClick={handleSaveNote}
+                                        onClick={handleSaveProgress}
+                                        disabled={loading}
+                                    >
+                                        {loading ? 'Saving' : 'Save'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {/* picture modal */}
+                    {showPictureModal && (
+                        <div className="setPage_editCardModal setPage_pictureModal">
+                            <div className="modal-content d-flex">
+                                <button
+                                    className="close p-0 mb-3 text-end"
+                                    onClick={handleCancelProgressModal}
+                                >
+                                    <CloseIcon size="1.875rem" />
+                                </button>
+                                <div className="flex-grow-1">
+                                    {picture ? (
+                                        <div className="ms-2 setPage_pictureWrapper">
+                                            <img src={getUrl(picture)} />
+                                            <button
+                                                type="button"
+                                                name="picture"
+                                                className="btn btn-danger p-1 rounded-circle"
+                                                onClick={(event) =>
+                                                    handleDeleteFile(event)
+                                                }
+                                            >
+                                                <DeleteIcon size="1.125rem" />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <label
+                                            htmlFor="uploadProgressPicture"
+                                            className="d-flex justify-content-center align-items-center setPage_uploadImage"
+                                        >
+                                            <input
+                                                type="file"
+                                                id="uploadProgressPicture"
+                                                name="picture"
+                                                className="d-none"
+                                                accept="image/*"
+                                                onClick={(event) => {
+                                                    event.target.value = null
+                                                }}
+                                                onChange={(event) =>
+                                                    handleChangeFile(event)
+                                                }
+                                            />
+                                            {loadingPicture ? (
+                                                <div
+                                                    className="spinner-border text-secondary"
+                                                    role="status"
+                                                >
+                                                    <span className="visually-hidden">
+                                                        LoadingUpload...
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div className="d-flex flex-column align-items-center">
+                                                    <ImageIcon
+                                                        className="icon-warning"
+                                                        size="2.5rem"
+                                                    />
+                                                    <div>Add picture</div>
+                                                </div>
+                                            )}
+                                        </label>
+                                    )}
+                                </div>
+                                <div className="d-flex justify-content-end mt-5">
+                                    <button
+                                        className="btn btn-secondary me-3"
+                                        onClick={handleCancelProgressModal}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={handleSaveProgress}
+                                        disabled={loading}
+                                    >
+                                        {loading ? 'Saving...' : 'Save'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {/* audio modal */}
+                    {showAudioModal && (
+                        <div className="setPage_editCardModal setPage_audioModal">
+                            <div className="modal-content d-flex">
+                                <button
+                                    className="close p-0 mb-3 text-end"
+                                    onClick={handleCancelProgressModal}
+                                >
+                                    <CloseIcon size="1.875rem" />
+                                </button>
+                                <div className="flex-grow-1">
+                                    {audio ? (
+                                        <div className="ms-2 setPage_audioWrapper">
+                                            <audio
+                                                controls
+                                                src={getUrl(audio)}
+                                            />
+                                            <button
+                                                type="button"
+                                                name="audio"
+                                                className="btn btn-danger p-1 rounded-circle"
+                                                onClick={(event) =>
+                                                    handleDeleteFile(event)
+                                                }
+                                            >
+                                                <DeleteIcon size="1.125rem" />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <label
+                                            htmlFor="uploadProgressPicture"
+                                            className="d-flex justify-content-center align-items-center setPage_uploadImage"
+                                        >
+                                            <input
+                                                type="file"
+                                                id="uploadProgressPicture"
+                                                name="audio"
+                                                className="d-none"
+                                                accept="audio/*"
+                                                onClick={(event) => {
+                                                    event.target.value = null
+                                                }}
+                                                onChange={(event) =>
+                                                    handleChangeFile(event)
+                                                }
+                                            />
+                                            {loadingAudio ? (
+                                                <div
+                                                    className="spinner-border text-secondary"
+                                                    role="status"
+                                                >
+                                                    <span className="visually-hidden">
+                                                        LoadingUpload...
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div className="d-flex flex-column align-items-center">
+                                                    <MicIcon
+                                                        className="icon-warning"
+                                                        size="1.75rem"
+                                                    />
+                                                    <div>Add audio</div>
+                                                </div>
+                                            )}
+                                        </label>
+                                    )}
+                                </div>
+                                <div className="d-flex justify-content-end mt-5">
+                                    <button
+                                        className="btn btn-secondary me-3"
+                                        onClick={handleCancelProgressModal}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={handleSaveProgress}
                                         disabled={loading}
                                     >
                                         {loading ? 'Saving...' : 'Save'}

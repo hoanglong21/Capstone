@@ -11,9 +11,11 @@ const login = (user) => {
 }
 
 const logout = () => {
-    const temptToken = localStorage.getItem('token')
-    localStorage.removeItem('token')
-    return axios.get(API_BASE_URL + '/logout', temptToken)
+    const temptToken = localStorage.getItem('userToken')
+    if (temptToken) {
+        localStorage.removeItem('userToken')
+        return axios.get(API_BASE_URL + '/logout', temptToken)
+    }
 }
 
 const AuthService = {

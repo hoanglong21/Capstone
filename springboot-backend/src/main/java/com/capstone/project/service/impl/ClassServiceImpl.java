@@ -176,35 +176,27 @@ public class ClassServiceImpl implements ClassService {
         if (isDeleted != null) {
             query += " AND is_deleted = :isDeleted";
             parameters.put("isDeleted", isDeleted);
-
         }
 
-
-        if (author != null && !author.isEmpty() && search == null && search.isEmpty() ) {
-            query += " AND u.username = :authorname ";
-            parameters.put("authorname", author);
-        }
-
-        if (search != null && !search.isEmpty() && author ==null && learner == null ) {
-            query += " AND (class_name LIKE :search OR description LIKE :search)";
+        if (search == null || search.isEmpty()) {
+            query += " AND (:search OR description LIKE :search)";
             parameters.put("search", "%" + search + "%");
         }
 
-        if (search != null && !search.isEmpty() && author != null && !author.isEmpty()) {
-            query += " AND (class_name LIKE :search OR description LIKE :search) AND u.username = :authorname";
-            parameters.put("search", "%" + search + "%");
+        boolean checkAuthorNull = author == null || author.isEmpty();
+        boolean checkLearnerNull = learner == null || learner.isEmpty();
+        if (!checkAuthorNull && !checkLearnerNull) {
+            query += " AND u.username = :authorname OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner)";
             parameters.put("authorname", author);
-        }
-
-        if (learner != null && !learner.isEmpty() && search == null && search.isEmpty() ) {
-            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner) ";
             parameters.put("learner", learner);
         }
-
-        if (learner != null && !learner.isEmpty() && search != null && !search.isEmpty() ) {
-            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner) and (class_name LIKE :search OR description LIKE :search)";
+        if (!checkAuthorNull && checkLearnerNull) {
+            query += " AND u.username = :authorname";
+            parameters.put("authorname", author);
+        }
+        if (checkAuthorNull && !checkLearnerNull) {
+            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner)";
             parameters.put("learner", learner);
-            parameters.put("search", "%" + search + "%");
         }
 
         if ((isDeleted == null || isDeleted)) {
@@ -289,7 +281,7 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setUser(user);
         classLearner.setClassroom(classroom);
         classLearner.setCreated_date(new Date());
-        classLearner.set_accepted(false);
+        classLearner.set_accepted(true);
         classLearnerRepository.save(classLearner);
         // add user to classroom
         return classRepository.save(classroom);

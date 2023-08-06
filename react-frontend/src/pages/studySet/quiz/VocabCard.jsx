@@ -52,28 +52,29 @@ const VocabCard = ({
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
-                                (ques.question.progress.picture ||
-                                    ques.question.card.picture) && (
+                                (ques?.question?.progress?.picture ||
+                                    ques?.question?.card?.picture) && (
                                     <div className="col-6">
                                         <img
                                             src={
-                                                ques.question.progress
-                                                    .picture ||
-                                                ques.question.card.picture
+                                                ques?.question?.progress
+                                                    ?.picture ||
+                                                ques?.question?.card?.picture
                                             }
                                             className="quizQues_img"
                                         />
                                     </div>
                                 )}
                             {showAudio &&
-                                (ques.question.progress.audio ||
-                                    ques.question.card.audio) && (
+                                (ques?.question?.progress?.audio ||
+                                    ques?.question?.card?.audio) && (
                                     <div className="col-6">
                                         <audio
                                             controls
                                             src={
-                                                ques.question.progress.audio ||
-                                                ques.question.card.audio
+                                                ques?.question?.progress
+                                                    ?.audio ||
+                                                ques?.question?.card?.audio
                                             }
                                         />
                                     </div>
@@ -131,28 +132,29 @@ const VocabCard = ({
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
-                                (ques.question.progress.picture ||
-                                    ques.question.card.picture) && (
+                                (ques?.question?.progress?.picture ||
+                                    ques?.question?.card?.picture) && (
                                     <div className="col-6">
                                         <img
                                             src={
-                                                ques.question.progress
-                                                    .picture ||
-                                                ques.question.card.picture
+                                                ques?.question?.progress
+                                                    ?.picture ||
+                                                ques?.question?.card?.picture
                                             }
                                             className="quizQues_img"
                                         />
                                     </div>
                                 )}
                             {showAudio &&
-                                (ques.question.progress.audio ||
-                                    ques.question.card.audio) && (
+                                (ques?.question?.progress?.audio ||
+                                    ques?.question?.card?.audio) && (
                                     <div className="col-6">
                                         <audio
                                             controls
                                             src={
-                                                ques.question.progress.audio ||
-                                                ques.question.card.audio
+                                                ques?.question?.progress
+                                                    ?.audio ||
+                                                ques?.question?.card?.audio
                                             }
                                         />
                                     </div>
@@ -297,28 +299,29 @@ const VocabCard = ({
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
-                                (ques.question.progress.picture ||
-                                    ques.question.card.picture) && (
+                                (ques?.question?.progress?.picture ||
+                                    ques?.question?.card?.picture) && (
                                     <div className="col-6">
                                         <img
                                             src={
-                                                ques.question.progress
-                                                    .picture ||
-                                                ques.question.card.picture
+                                                ques?.question?.progress
+                                                    ?.picture ||
+                                                ques?.question?.card?.picture
                                             }
                                             className="quizQues_img"
                                         />
                                     </div>
                                 )}
                             {showAudio &&
-                                (ques.question.progress.audio ||
-                                    ques.question.card.audio) && (
+                                (ques?.question?.progress?.audio ||
+                                    ques?.question?.card?.audio) && (
                                     <div className="col-6">
                                         <audio
                                             controls
                                             src={
-                                                ques.question.progress.audio ||
-                                                ques.question.card.audio
+                                                ques?.question?.progress
+                                                    ?.audio ||
+                                                ques?.question?.card?.audio
                                             }
                                         />
                                     </div>
