@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react'
 
 import ProgressService from '../../../services/ProgressService'
 
-import { NoteSolidIcon, StarSolidIcon } from '../../../components/icons'
+import {
+    EditIcon,
+    ImageSolidIcon,
+    MicIconSolid,
+    StarSolidIcon,
+} from '../../../components/icons'
 
 const KanjiCard = ({
     userInfo,
@@ -12,6 +17,8 @@ const KanjiCard = ({
     isAuto,
     fullCards,
     setFullCards,
+    setShowPictureModal,
+    setShowAudioModal,
     setShowNoteModal,
     handleUpdateNumStar,
 }) => {
@@ -92,6 +99,15 @@ const KanjiCard = ({
         document
             .getElementById(`flipElement${cardIndex}`)
             ?.classList.toggle('is-flipped')
+        if (
+            document
+                .getElementById(`progressNote${card?.id}`)
+                ?.classList.contains('show')
+        ) {
+            document
+                .getElementById(`toggleAccordionNoteBtn${card?.id}`)
+                ?.click()
+        }
     }
 
     // catch press space event
@@ -162,6 +178,7 @@ const KanjiCard = ({
                 className="flashcardContentWrapper"
                 id={`flipElement${cardIndex}`}
             >
+                {/* front */}
                 <div className="flashcardFront d-flex align-items-center justify-content-center">
                     <div className="flashcardContent_noteBtn">
                         <button
@@ -177,10 +194,19 @@ const KanjiCard = ({
                             name="flashcardContent_noteBtn"
                             className="btn btn-customLight"
                             onClick={() => {
-                                setShowNoteModal(true)
+                                setShowPictureModal(true)
                             }}
                         >
-                            <NoteSolidIcon size="16px" />
+                            <ImageSolidIcon size="16px" />
+                        </button>
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowAudioModal(true)
+                            }}
+                        >
+                            <MicIconSolid size="16px" />
                         </button>
                     </div>
                     <div
@@ -189,6 +215,7 @@ const KanjiCard = ({
                         }}
                     ></div>
                 </div>
+                {/* back */}
                 <div className="flashcardBack">
                     <div className="flashcardContent_noteBtn">
                         <button
@@ -204,164 +231,235 @@ const KanjiCard = ({
                             name="flashcardContent_noteBtn"
                             className="btn btn-customLight"
                             onClick={() => {
-                                setShowNoteModal(true)
+                                setShowPictureModal(true)
                             }}
                         >
-                            <NoteSolidIcon size="16px" />
+                            <ImageSolidIcon size="16px" />
+                        </button>
+                        <button
+                            name="flashcardContent_noteBtn"
+                            className="btn btn-customLight"
+                            onClick={() => {
+                                setShowAudioModal(true)
+                            }}
+                        >
+                            <MicIconSolid size="16px" />
                         </button>
                     </div>
-                    <div className="row">
-                        {strokeOrder?.content && (
-                            <div className="col-3 mb-3">
-                                <div className="flashCardField_img">
-                                    <img
-                                        src={strokeOrder?.content}
-                                        alt="stroke order img"
-                                    />
+                    <div className="flashcardContent_wrapper">
+                        <div className="row">
+                            {strokeOrder?.content && (
+                                <div className="col-3 mb-3">
+                                    <div className="flashCardField_img">
+                                        <img
+                                            src={strokeOrder?.content}
+                                            alt="stroke order img"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                            <div
+                                className={
+                                    strokeOrder?.content ? 'col-9' : 'col-12'
+                                }
+                            >
+                                <div className="row">
+                                    {name && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                Name
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        name?.content || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
+                                    {meanings && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                Meanings
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        meanings?.content ||
+                                                        '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
+                                    {onyomi && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                Onyomi
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        onyomi?.content ||
+                                                        '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
+                                    {kunyomi && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                Kunyomi
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        kunyomi?.content ||
+                                                        '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
+                                    {radical && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                Radical
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        radical?.content ||
+                                                        '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
+                                    {example && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                Example
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        example?.content ||
+                                                        '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
+                                    {jlptLevel && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                JLPT Level
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        jlptLevel?.content ||
+                                                        '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
+                                    {strokes && (
+                                        <div className="col-6 mb-3">
+                                            <div className="flashCardField_label mb-2">
+                                                Strokes
+                                            </div>
+                                            <div
+                                                className="flashCardField_content"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        strokes?.content ||
+                                                        '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                        )}
+                        </div>
+                        <div className="row my-2">
+                            <div className="col-6">
+                                {(progress?.picture || card?.picture) && (
+                                    <div className="flashCardField_img d-flex align-items-center">
+                                        <img
+                                            src={
+                                                progress?.picture ||
+                                                card?.picture
+                                            }
+                                            alt="card picture"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="col-6">
+                                {(progress?.audio || card?.audio) && (
+                                    <div className="d-flex align-items-center">
+                                        <audio
+                                            controls
+                                            src={progress?.audio || card?.audio}
+                                            alt="card audio"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                         <div
-                            className={
-                                strokeOrder?.content ? 'col-9' : 'col-12'
-                            }
+                            className="accordion flashcard_accordion"
+                            id={`accordionNote${card?.id}`}
                         >
-                            <div className="row">
-                                {name && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            Name
+                            <div className="accordion-item border-0">
+                                <h2 className="accordion-header">
+                                    <button
+                                        id={`toggleAccordionNoteBtn${card?.id}`}
+                                        name="flashcardContent_noteBtn"
+                                        className="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target={`#progressNote${card?.id}`}
+                                        aria-expanded="false"
+                                        aria-controls="progressNote"
+                                    >
+                                        <span>Note</span>
+                                    </button>
+                                </h2>
+                                <div
+                                    id={`progressNote${card?.id}`}
+                                    className="accordion-collapse collapse"
+                                    data-bs-parent={`#accordionNote${card?.id}`}
+                                >
+                                    <div className="row">
+                                        <div className="col-11">
+                                            <div
+                                                className="accordion-body"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        progress?.note || '...',
+                                                }}
+                                            ></div>
                                         </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html: name?.content || '...',
-                                            }}
-                                        ></div>
-                                    </div>
-                                )}
-                                {meanings && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            Meanings
+                                        <div className="col-1">
+                                            <button
+                                                name="flashcardContent_noteBtn"
+                                                className="btn btn-customLight btn-customLight--sm ms-1 mt-2"
+                                                onClick={() => {
+                                                    setShowNoteModal(true)
+                                                }}
+                                            >
+                                                <EditIcon size="1rem" />
+                                            </button>
                                         </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    meanings?.content || '...',
-                                            }}
-                                        ></div>
                                     </div>
-                                )}
-                                {onyomi && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            Onyomi
-                                        </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    onyomi?.content || '...',
-                                            }}
-                                        ></div>
-                                    </div>
-                                )}
-                                {kunyomi && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            Kunyomi
-                                        </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    kunyomi?.content || '...',
-                                            }}
-                                        ></div>
-                                    </div>
-                                )}
-                                {radical && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            Radical
-                                        </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    radical?.content || '...',
-                                            }}
-                                        ></div>
-                                    </div>
-                                )}
-                                {example && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            Example
-                                        </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    example?.content || '...',
-                                            }}
-                                        ></div>
-                                    </div>
-                                )}
-                                {jlptLevel && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            JLPT Level
-                                        </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    jlptLevel?.content || '...',
-                                            }}
-                                        ></div>
-                                    </div>
-                                )}
-                                {strokes && (
-                                    <div className="col-6 mb-3">
-                                        <div className="flashCardField_label mb-2">
-                                            Strokes
-                                        </div>
-                                        <div
-                                            className="flashCardField_content"
-                                            dangerouslySetInnerHTML={{
-                                                __html:
-                                                    strokes?.content || '...',
-                                            }}
-                                        ></div>
-                                    </div>
-                                )}
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div className="row mt-2">
-                        <div className="col-6">
-                            {(progress?.picture || card?.picture) && (
-                                <div className="flashCardField_img d-flex align-items-center">
-                                    <img
-                                        src={progress?.picture || card?.picture}
-                                        alt="card picture"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                        <div className="col-6">
-                            {(progress?.audio || card?.audio) && (
-                                <div className="d-flex align-items-center">
-                                    <audio
-                                        controls
-                                        src={progress?.audio || card?.audio}
-                                        alt="card audio"
-                                    />
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

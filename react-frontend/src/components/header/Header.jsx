@@ -177,7 +177,6 @@ const Header = () => {
                         )}
                     </ul>
                 </div>
-
                 <div className="d-flex align-items-center">
                     {/* Add button */}
                     <div className="dropdown d-inline-flex">
