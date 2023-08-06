@@ -231,6 +231,11 @@ h6 {
     height: 2.5rem;
 }
 
+.btn-customLight--sm {
+    width: 2rem;
+    height: 2rem;
+}
+
 .btn-customLight:hover {
     background-color: #edeff4;
     color: #586380;

@@ -10,7 +10,7 @@ import { getUser } from '../../features/user/userAction'
 
 import { ArrowLeftLongIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
-import "./auth.css"
+import './auth.css'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -35,7 +35,7 @@ const Login = () => {
     }, [userToken])
 
     useEffect(() => {
-        if (userInfo.username) {
+        if (userInfo?.username) {
             if (userInfo.role === 'ROLE_ADMIN') {
                 navigate('/dashboard')
             } else {
@@ -85,7 +85,7 @@ const Login = () => {
                 <ArrowLeftLongIcon />
             </button>
             <div className="container auth me-5">
-                <h2 className='auth-header'>Welcome Back!</h2>
+                <h2 className="auth-header">Welcome Back!</h2>
                 <h5
                     className="auth-header-h5 fw-normal"
                     style={{ color: 'var(--text-light)' }}

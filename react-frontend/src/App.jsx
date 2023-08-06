@@ -1,6 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useCallback } from 'react'
 
+import { logout as authLogout } from './features/auth/authSlice'
+import { logout as userLogout } from './features/user/userSlice'
+import AuthService from './services/AuthService'
+
+import AuthVerify from './components/common/authVerify'
 import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
 import Chat from './pages/Chat'
@@ -69,8 +75,6 @@ import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/studySet/quiz/DoQuiz'
 import AssignmentList from './pages/class/assignment/AssignmentList'
-import AuthVerify from './components/common/authVerify'
-import AuthService from './services/AuthService'
 import People from './pages/class/People'
 import Grades from './pages/class/Grades'
 import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
@@ -91,10 +95,21 @@ import UseStudySet from './pages/help/UseStudySet'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
+    const dispatch = useDispatch()
 
-    const logOut = () => {
-        AuthService.logout()
-    }
+    const logOut = useCallback(async () => {
+        try {
+            dispatch(authLogout())
+            dispatch(userLogout())
+            await AuthService.logout()
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }, [dispatch])
 
     return (
         <BrowserRouter>

@@ -73,8 +73,13 @@ const Learn = () => {
     )
     const [error, setError] = useState(false)
 
+    const [numQues, setNumQues] = useState(0)
     const [progress, setProgress] = useState(0)
     const [questions, setQuestions] = useState([])
+    const [currentQuestion, setCurrentQuestion] = useState({})
+    const [currentIndex, setCurrentIndex] = useState(0)
+    const [currentAnswer, setCurrentAnswer] = useState(null)
+    const [isCurrentCorrect, setIsCurrentCorrect] = useState(null)
     const [isEnd, setIsEnd] = useState(false)
 
     const [loading, setLoading] = useState(false)
@@ -156,8 +161,13 @@ const Learn = () => {
                 setTrueFalseAnswerWith([...tempWrittenAnsWith])
                 setOptionTrueFalsePromptWith([...tempWrittenPromptWith])
                 setOptionTrueFalseAnswerWith([...tempWrittenAnsWith])
+                // num cards
+                const tempNumCards =
+                    tempCounts['Not studied'] +
+                    tempCounts['Still learning'] +
+                    tempCounts['Mastered']
+                setNumQues(tempNumCards)
                 // get learn
-                const tempNumCards = numNot + numStill + numMaster
                 if (tempNumCards > 0) {
                     const tempQuestions = (
                         await StudySetService.getLearningStudySetId(
@@ -170,6 +180,7 @@ const Learn = () => {
                         )
                     ).data
                     setQuestions(tempQuestions)
+                    setCurrentQuestion(tempQuestions[0])
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -180,7 +191,7 @@ const Learn = () => {
             }
             setLoading(false)
         }
-        if (userInfo?.id) {
+        if (userInfo?.id && id) {
             fetchData()
         }
     }, [id, userInfo])
@@ -280,17 +291,22 @@ const Learn = () => {
         // create
         try {
             setLoading(true)
-            const tempQuestions = (
-                await StudySetService.getLearningStudySetId(
-                    userInfo.id,
-                    studySet.id,
-                    optionQuestionTypes,
-                    optionProgressStatus,
-                    optionIsShuffle,
-                    optionIsStar
-                )
-            ).data
-            setQuestions(tempQuestions)
+            if (numQues > 0) {
+                const tempQuestions = (
+                    await StudySetService.getLearningStudySetId(
+                        userInfo.id,
+                        studySet.id,
+                        optionQuestionTypes,
+                        optionProgressStatus,
+                        optionIsShuffle,
+                        optionIsStar
+                    )
+                ).data
+                setQuestions(tempQuestions)
+                setCurrentQuestion(tempQuestions[0])
+                setCurrentIndex(0)
+                setCurrentAnswer(null)
+            }
             setProgressStatus(optionProgressStatus)
             setIsStar(optionIsStar)
             setIsShuffle(optionIsShuffle)
@@ -510,7 +526,71 @@ const Learn = () => {
             </div>
             {/* )} */}
             {/* Questions */}
-
+            <section
+                id={`question${currentIndex}`}
+                className="quizQues_container my-5"
+            >
+                {type === 1 && (
+                    <VocabCard
+                        ques={currentQuestion}
+                        quesIndex={currentIndex}
+                        numQues={numQues}
+                        writtenPromptWith={writtenPromptWith}
+                        multiplePromptWith={multiplePromptWith}
+                        multipleAnswerWith={multipleAnswerWith}
+                        trueFalsePromptWith={trueFalsePromptWith}
+                        trueFalseAnswerWith={trueFalseAnswerWith}
+                        setProgress={setProgress}
+                        progress={progress}
+                        showPicture={showPicture}
+                        showAudio={showAudio}
+                        showNote={showNote}
+                        setCurrentAnswer={setCurrentAnswer}
+                        currentAnswer={currentAnswer}
+                        isCurrentCorrect={isCurrentCorrect}
+                    />
+                )}
+                {type === 2 && (
+                    <KanjiCard
+                        ques={currentQuestion}
+                        quesIndex={currentIndex}
+                        numQues={numQues}
+                        writtenPromptWith={writtenPromptWith}
+                        multiplePromptWith={multiplePromptWith}
+                        multipleAnswerWith={multipleAnswerWith}
+                        trueFalsePromptWith={trueFalsePromptWith}
+                        trueFalseAnswerWith={trueFalseAnswerWith}
+                        setProgress={setProgress}
+                        progress={progress}
+                        showPicture={showPicture}
+                        showAudio={showAudio}
+                        showNote={showNote}
+                        setCurrentAnswer={setCurrentAnswer}
+                        currentAnswer={currentAnswer}
+                        isCurrentCorrect={isCurrentCorrect}
+                    />
+                )}
+                {type === 3 && (
+                    <GrammarCard
+                        ques={currentQuestion}
+                        quesIndex={currentIndex}
+                        numQues={numQues}
+                        writtenPromptWith={writtenPromptWith}
+                        multiplePromptWith={multiplePromptWith}
+                        multipleAnswerWith={multipleAnswerWith}
+                        trueFalsePromptWith={trueFalsePromptWith}
+                        trueFalseAnswerWith={trueFalseAnswerWith}
+                        setProgress={setProgress}
+                        progress={progress}
+                        showPicture={showPicture}
+                        showAudio={showAudio}
+                        showNote={showNote}
+                        setCurrentAnswer={setCurrentAnswer}
+                        currentAnswer={currentAnswer}
+                        isCurrentCorrect={isCurrentCorrect}
+                    />
+                )}
+            </section>
             {/* Option modal */}
             <div
                 className="modal fade quizOptionModal"

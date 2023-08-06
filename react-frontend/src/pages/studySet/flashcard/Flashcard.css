@@ -129,7 +129,6 @@
 .flashcardBack {
     transform: rotateY(180deg);
     width: 100%;
-    overflow: auto;
 }
 
 .flashCardField_label {
@@ -177,6 +176,11 @@
     color: #d9dde8;
     cursor: default;
     background: #fff;
+}
+
+.flashcardContent_wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .flashCardNote {
@@ -445,4 +449,8 @@
     border: 1px solid #888;
     width: 70vw;
     height: 80vh;
+}
+
+.flashcard_accordion .accordion-button:focus {
+    box-shadow: none;
 }
