@@ -91,14 +91,5 @@ public class UserSettingController {
         }
     }
 
-    @PostMapping("/studyremindmail")
-    public ResponseEntity<?> sendReminderMail() {
-        try {
-            userSettingService.sendStudyReminderMails();
-            return ResponseEntity.ok("Successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 
 }
