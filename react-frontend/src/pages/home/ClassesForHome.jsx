@@ -48,10 +48,10 @@ const ClassesForHome = () => {
                     <div key={classroom.id} className="set-item mb-3">
                         <Link to={`/class/${classroom.id}`}>
                             <div className="set-body row mb-2">
-                                <div className="term-count col-1">
+                                <div className="class-home term-count">
                                     {classroom?.member} member
                                 </div>
-                                <div className="term-count col-1">
+                                <div className="class-home term-count">
                                     {classroom?.studyset} sets
                                 </div>
                                 <div className="set-author col d-flex ">
@@ -72,7 +72,7 @@ const ClassesForHome = () => {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="set-title col-2 d-flex align-items-center">
+                                <div className="class-title set-title d-flex align-items-center">
                                     <ClassIcon className="me-2" />
                                     {classroom?.class_name}
                                 </div>

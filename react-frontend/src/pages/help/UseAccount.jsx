@@ -163,17 +163,6 @@ function UseAccount() {
           <li>Then, click <strong>"Join class"</strong> to join.</li>
         </ul>
       </div>
-      <div className="useaccount">
-        <h4>Join Class?</h4>
-        <ul className="useaccount-ul">
-          <li>With Tutor or Learner access, user can join class in header sidebar with icon <strong>"+"</strong> button.</li>
-          <li>
-          Select <strong>"Join Class"</strong>.
-          </li>
-          <li>Fill all field requirement on the screen and then click <strong>"Create"</strong> button.</li>
-          <li>The class created will be displayed on the screen</li>
-        </ul>
-      </div>
     </div>
   );
 }
