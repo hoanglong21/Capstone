@@ -1,4 +1,4 @@
 react-frontend/public/env.js
 react-fonntend/.env
 springboot-backend/.env
-springboot-backend/target/**
+*/target/**
