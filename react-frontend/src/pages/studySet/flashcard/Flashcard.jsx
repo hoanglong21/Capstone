@@ -326,23 +326,44 @@ const Flashcard = () => {
         }
     }
 
+    // ignore error
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            console.log(e)
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            )
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            )
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none')
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none')
+            }
+        })
+    }, [])
+
     // catch press arrow event event
     useEffect(() => {
-        const handleUserKeyPress = (event, editor) => {
-            switch (event.key) {
-                case 'ArrowLeft':
-                    prevCard()
-                    // Do something for "left arrow" key press.
-                    break
-                case 'ArrowRight':
-                    nextCard()
-                    // Do something for "right arrow" key press.
-                    break
-                default:
-                    return // Quit when this doesn't handle the key event.
+        const handleUserKeyPress = (event) => {
+            if (!event.target.classList.contains('ck-editor__editable')) {
+                switch (event.key) {
+                    case 'ArrowLeft':
+                        prevCard()
+                        // Do something for "left arrow" key press.
+                        break
+                    case 'ArrowRight':
+                        nextCard()
+                        // Do something for "right arrow" key press.
+                        break
+                    default:
+                        return // Quit when this doesn't handle the key event.
+                }
+                // Cancel the default action to avoid it being handled twice
+                event.preventDefault()
             }
-            // Cancel the default action to avoid it being handled twice
-            event.preventDefault()
         }
         window.addEventListener('keydown', handleUserKeyPress, true)
         return () => {
