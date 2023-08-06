@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import '../../assets/styles/Helpcenter.css'
 
@@ -30,7 +30,7 @@ function HelpCenter() {
                     <ul className="hkb-archive  hkb-archive--2cols">
                         <li>
                             <div className="hkb-category  hkb-category--withdesc hkb-category--style7 hkb-category--withicon hkb-category--4">
-                                <a className="hkb-category__link" href="/">
+                                <Link className="hkb-category__link" to="/useaccount">
                                     <div className="hkb-category__iconwrap">
                                         <img
                                             src="https://demo.herothemes.com/knowall/wp-content/uploads/sites/23/2016/03/17-1.png"
@@ -49,7 +49,7 @@ function HelpCenter() {
                                             features.
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             </div>
                         </li>
                         <li>
