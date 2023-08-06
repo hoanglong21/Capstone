@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080/api/v1/statistic";
+const API_BASE_URL = process.env.REACT_APP_HOST + '/statistic'
 
 const getRegisterNumber = () => {
     return axios.get(API_BASE_URL + "/overview/registernumber",

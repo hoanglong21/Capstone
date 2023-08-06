@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:8080/api/v1/translate'
+const API_BASE_URL = process.env.REACT_APP_HOST + '/translate'
 
 const translateClients5 = (text, to) => {
     return axios.get(API_BASE_URL + '/clients5?text=' + text + '&to=' + to)

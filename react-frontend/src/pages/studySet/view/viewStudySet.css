@@ -212,6 +212,7 @@
 
 .setPage_noteEditor {
     height: 30vh;
+    z-index: 9999999;
 }
 
 .setPage_noteEditor .ck.ck-editor__editable_inline {
