@@ -257,8 +257,12 @@ h3.quizInfo_title {
     word-break: break-word;
 }
 
-.quizQues_answer:hover {
+.quizQues_answer:hover:not([disabled]) {
     border-color: #939bb4;
+}
+
+.quizQues_answer[disabled] {
+    cursor: default;
 }
 
 .quizQues_answer.active {

@@ -313,6 +313,7 @@ const Learn = () => {
                 setCurrentQuestion(tempQuestions[0])
                 setCurrentIndex(0)
                 setCurrentAnswer(null)
+                setIsCurrentCorrect(null)
             }
             setProgressStatus(optionProgressStatus)
             setIsStar(optionIsStar)
@@ -382,7 +383,9 @@ const Learn = () => {
     useEffect(() => {
         if (isCurrentCorrect === true) {
             if (currentIndex < questions.length - 1) {
-                setTimeout(nextQuestion(), 2500)
+                setTimeout(function name() {
+                    nextQuestion()
+                }, 2500)
             }
         }
     }, [isCurrentCorrect])
@@ -390,7 +393,10 @@ const Learn = () => {
     // catch event to next card
     useEffect(() => {
         const handleUserKeyPress = (event) => {
-            if (!event.target.classList.contains('removeEvent')) {
+            if (
+                !event.target.classList.contains('removeEvent') &&
+                isCurrentCorrect === false
+            ) {
                 nextQuestion()
                 // Cancel the default action to avoid it being handled twice
                 event.preventDefault()
@@ -400,7 +406,7 @@ const Learn = () => {
         return () => {
             window.removeEventListener('keydown', handleUserKeyPress, true)
         }
-    }, [currentIndex, questions, progress])
+    }, [currentIndex, questions, progress, isCurrentCorrect])
 
     return (
         <div>

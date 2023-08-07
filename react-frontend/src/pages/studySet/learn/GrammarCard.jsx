@@ -24,32 +24,45 @@ const GrammarCard = ({
 
     useEffect(() => {
         if (ques?.question_type) {
-            setExample(ques.question.content[3].content)
+            setExample(ques.question.content[2].content)
+            if (ques?.question_type === 2) {
+                setCorrectAnswer(ques.question.card.id)
+            }
         }
     }, [ques])
 
     const handleAnswerWritten = (event) => {
-        if (ques.question_type === 1) {
-            document.getElementById(`quizQuesInput${quesIndex}`).blur()
-            event.preventDefault()
-            // get correct answer
-            var correctAnswer = ''
-            for (const itemContent of ques.question.content) {
-                if (itemContent.field.id === writtenAnswerWith) {
-                    const tempContent = itemContent.content
-                        .replaceAll(/(<([^>]+)>)/gi, ' ')
-                        .trim()
-                    correctAnswer = tempContent
-                    setCorrectAnswer(itemContent.content)
-                    break
-                }
+        document.getElementById(`quizQuesInput${quesIndex}`).blur()
+        event.preventDefault()
+        // get correct answer
+        var correctAnswer = ''
+        for (const itemContent of ques.question.content) {
+            if (itemContent.field.id === writtenAnswerWith) {
+                const tempContent = itemContent.content
+                    .replaceAll(/(<([^>]+)>)/gi, ' ')
+                    .trim()
+                correctAnswer = tempContent
+                setCorrectAnswer(itemContent.content)
+                break
             }
-            // check is correct
-            if (currentAnswer == correctAnswer) {
-                setIsCurrentCorrect(true)
-            } else {
-                setIsCurrentCorrect(false)
-            }
+        }
+        // check is correct
+        if (currentAnswer == correctAnswer) {
+            setIsCurrentCorrect(true)
+        } else {
+            setIsCurrentCorrect(false)
+        }
+    }
+
+    const handleAnswerMultiple = (ans) => {
+        // get correct answer
+        const tempCurrent = ans.card.id
+        setCurrentAnswer(tempCurrent)
+        // check is correct
+        if (tempCurrent === correctAnswer) {
+            setIsCurrentCorrect(true)
+        } else {
+            setIsCurrentCorrect(false)
         }
     }
 
@@ -239,24 +252,15 @@ const GrammarCard = ({
                                         currentAnswer === ans.card.id &&
                                         isCurrentCorrect === false
                                             ? 'incorrect'
-                                            : currentAnswer === ans.card.id &&
-                                              isCurrentCorrect === true
+                                            : (currentAnswer === ans.card.id &&
+                                                  isCurrentCorrect === true) ||
+                                              (correctAnswer === ans.card.id &&
+                                                  isCurrentCorrect === false)
                                             ? 'correct'
-                                            : currentAnswer === ans.card.id
-                                            ? 'active'
                                             : ''
                                     }`}
-                                    onClick={() => {
-                                        if (currentAnswer === ans.card.id) {
-                                            setCurrentAnswer(null)
-                                            setProgress(
-                                                progress > 0 ? progress - 1 : 0
-                                            )
-                                        } else {
-                                            setCurrentAnswer(ans.card.id)
-                                            setProgress(progress + 1)
-                                        }
-                                    }}
+                                    disabled={isCurrentCorrect !== null}
+                                    onClick={() => handleAnswerMultiple(ans)}
                                 >
                                     {ans.content.map((itemContent, index) => {
                                         if (
@@ -288,6 +292,16 @@ const GrammarCard = ({
                             </div>
                         ))}
                     </div>
+                    {isCurrentCorrect === false && (
+                        <div className="learnExampleSection">
+                            <div className="learnExample_label">Example</div>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: example || '...',
+                                }}
+                            ></div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* true false */}
