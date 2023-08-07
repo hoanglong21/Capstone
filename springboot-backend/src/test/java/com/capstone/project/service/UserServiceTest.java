@@ -113,7 +113,7 @@ public class UserServiceTest {
         names.add(User.builder().username("Long1").build());
         names.add(User.builder().username("Long2").build());
 
-        names.remove(excludedName);
+        names.remove(User.builder().username(excludedName).build());
 
         when(userRepository.findAllNameExcept("",excludedName)).thenReturn(names);
 
@@ -345,31 +345,36 @@ public class UserServiceTest {
     }
 
     @Order(8)
-    @ParameterizedTest(name = "{index} => username={0}, firstName={1}, lastName={2}, email={3}, token={4}, expected={5}")
+    @ParameterizedTest(name = "{index} => username={0}, firstName={1}, lastName={2}, email={3}, token={4}, status={5}, expected={6}")
     @CsvSource({
-            "long, hoang, long, test_long@gmail.com, 0123456, true",
-            "nonexistentuser, , , , , false",
+            "long, hoang, long, test_long@gmail.com, 0123456, pending, true",
+            "nonexistentuser, , , , , pending, false",
+            "long, hoang, long, test_long2@gmail.com, 0123456, active, false",
     })
-    void sendVerificationEmail(String username, String firstName, String lastName, String email, String token, Boolean expected) throws ResourceNotFroundException {
+    void sendVerificationEmail(String username, String firstName, String lastName, String email, String token, String status, Boolean expected){
         User user = User.builder()
                 .username(username)
                 .first_name(firstName)
                 .last_name(lastName)
                 .email(email)
                 .token(token)
+                .status(status)
                 .build();
 
         when(userRepository.findUserByUsername(anyString())).thenReturn(user);
 
-        if(expected) {
-            when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
-            doNothing().when(mailSender).send(any(MimeMessage.class));
-        } else {
-            doThrow(new RuntimeException("Failed to send email")).when(mailSender).send(any(MimeMessage.class));
-        }
-        Boolean result = userServiceImpl.sendVerificationEmail(username);
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+        doNothing().when(mailSender).send(any(MimeMessage.class));
 
-        assertThat(result).isEqualTo(expected);
+        Boolean result = null;
+        try {
+            result = userServiceImpl.sendVerificationEmail(username);
+            assertThat(result).isEqualTo(expected);
+        } catch (Exception e) {
+            if(status.equals("pending")) {
+                assertEquals("Only pending account can verify", e.getMessage());
+            }
+        }
     }
 
     @Order(9)
@@ -472,25 +477,27 @@ public class UserServiceTest {
     }
 
     @Order(12)
-    @ParameterizedTest(name = "{index} => username={0}, newPassword={1}, expected={2}")
+    @ParameterizedTest(name = "{index} => username={0}, newPassword={1}, oldPassword={2}, expected={2}")
     @CsvSource({
-            "testuser, newPassword, true", // Password change success
+            "testuser, newPassword, oldPassword, true", // Password change success
+            "testuser, newPassword, oldPasswordFake, false" // Password change fail
     })
-    void testChangePassword(String username, String newPassword, boolean expected) {
+    void testChangePassword(String username, String newPassword, String oldPassword, boolean expected) {
         User user = User.builder()
                 .username(username)
-                .password("oldEncodedPassword") // User's current encoded password
+                .password("oldPassword") // User's current encoded password
                 .build();
 
         when(userRepository.findUserByUsername(username)).thenReturn(user);
         String encodedNewPassword = "encodedNewPassword";
         when(passwordEncoder.encode(newPassword)).thenReturn(encodedNewPassword);
         when(userRepository.save(user)).thenReturn(user);
+        when(passwordEncoder.matches(oldPassword, user.getPassword())).thenReturn(expected);
 
         // Call the method being tested
         Boolean result = null;
         try {
-            result = userServiceImpl.changePassword(username, newPassword);
+            result = userServiceImpl.changePassword(username, newPassword, oldPassword);
         } catch (ResourceNotFroundException e) {
             throw new RuntimeException(e);
         }

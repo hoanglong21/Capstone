@@ -25,7 +25,7 @@ public interface UserService {
 
     Boolean verifyAccount(String token) throws ResourceNotFroundException;
 
-    Boolean sendVerificationEmail(String username) throws ResourceNotFroundException;
+    Boolean sendVerificationEmail(String username) throws Exception;
 
     Boolean resetPassword(String username, String pin, String password) throws ResourceNotFroundException;
 
@@ -33,7 +33,7 @@ public interface UserService {
 
     Boolean checkMatchPassword(String username, String checkPassword) throws ResourceNotFroundException;
 
-    Boolean changePassword(String username, String password) throws ResourceNotFroundException;
+    Boolean changePassword(String username, String password, String oldPassword) throws ResourceNotFroundException;
 
     Map<String, Object> filterUser(String name, String username, String email, String gender, String phone, String[] role, String address, String bio, String[] status,
                                    String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
