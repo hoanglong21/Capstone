@@ -121,7 +121,7 @@ public class UserController {
     public ResponseEntity<?> sendVerificationEmail(@RequestParam("username") String username) {
         try {
             return ResponseEntity.ok(userService.sendVerificationEmail(username));
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -202,7 +202,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(errors);
         } else {
             try {
-                if(userService.changePassword(username, changePasswordRequest.getPassword())) {
+                if(userService.changePassword(username, changePasswordRequest.getPassword(), changePasswordRequest.getOldPassword())) {
                     return ResponseEntity.ok("Change password successfully");
                 } else {
                     return ResponseEntity.badRequest().body("Change password fail");
