@@ -164,10 +164,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean sendVerificationEmail(String username) throws ResourceNotFroundException {
+    public Boolean sendVerificationEmail(String username) throws Exception {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with token: " + username);
+        }
+        if (!user.getStatus().equals("pending")) {
+            throw new Exception("Only pending account can verify");
         }
         try {
             // for current version only
@@ -317,19 +320,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean changePassword(String username, String password) throws ResourceNotFroundException {
+    public Boolean changePassword(String username, String password, String oldPassword) throws ResourceNotFroundException {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
         }
-        try {
+
+        if(passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
             return true;
-        } catch (Exception e) {
+        } else {
             return false;
         }
-
     }
 
     @Autowired

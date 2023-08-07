@@ -3,10 +3,7 @@ package com.capstone.project.service.impl;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
-import com.capstone.project.repository.AssignmentRepository;
-import com.capstone.project.repository.ClassLearnerRepository;
-import com.capstone.project.repository.UserRepository;
-import com.capstone.project.repository.UserSettingRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.UserSettingService;
 import jakarta.mail.internet.MimeMessage;
@@ -21,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.capstone.project.util.UserSettingValidation;
 
@@ -30,6 +28,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     private final JavaMailSender mailSender;
 
     private final UserSettingRepository userSettingRepository;
+    private final TestRepository testRepository;
 
     private final ClassLearnerRepository classLearnerRepository;
 
@@ -39,9 +38,10 @@ public class UserSettingServiceImpl implements UserSettingService {
     private UserRepository userRepository;
 
     @Autowired
-    public UserSettingServiceImpl(JavaMailSender mailSender, UserSettingRepository userSettingRepository, ClassLearnerRepository classLearnerRepository, ClassService classService, AssignmentRepository assignmentRepository) {
+    public UserSettingServiceImpl(JavaMailSender mailSender, UserSettingRepository userSettingRepository, TestRepository testRepository, ClassLearnerRepository classLearnerRepository, ClassService classService, AssignmentRepository assignmentRepository) {
         this.mailSender = mailSender;
         this.userSettingRepository = userSettingRepository;
+        this.testRepository = testRepository;
         this.classLearnerRepository = classLearnerRepository;
         this.classService = classService;
         this.assignmentRepository = assignmentRepository;
@@ -165,7 +165,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
-    public void sendStudyReminderMail(UserSetting userSetting) {
+    public void sendMail(UserSetting userSetting) {
         String subject = null;
         String content = null;
         try {
@@ -186,12 +186,25 @@ public class UserSettingServiceImpl implements UserSettingService {
             if(userSetting.getSetting().getId() == 3) {
                 subject = "[NihongoLevelUp]: Assignment due date";
                 content = "Hi [[name]],<br><br>"
-                        + "Your assignment is due soon. Complete it before the time is due!<br><br>"
+                        + "You have an assignment in class [[classname]] will be due in 30 minutes. Complete it before the time is due!<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete assignment</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
                         + "NihongoLevelUp Team";
             }
+
+            if(userSetting.getSetting().getId() == 4) {
+                subject = "[NihongoLevelUp]: Test due date";
+                content = "Hi [[name]],<br><br>"
+                        + "You have a test in class [[classname]] will be due in 30 minutes. Complete it before the time is due!<br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete assignment</a><br><br>"
+                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                        + "Best regards,<br>"
+                        + "NihongoLevelUp Team";
+            }
+
+            ClassLearner classLearner = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
+            Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -201,7 +214,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             helper.setSubject(subject);
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
-
+            content = content.replace("[[classname]]", classroom.getClass_name());
             String URL = "https://www.nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
@@ -225,7 +238,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             LocalDateTime dateTime = LocalDateTime.parse(studytime, formatter);
             if (userSetting.getSetting().getId() == 1 && !studyRemindMailSent.getOrDefault(userSettingId, false)) {
                 if (isDateTimeReached(dateTime)) {
-                    sendStudyReminderMail(userSetting);
+                    sendMail(userSetting);
                     studyRemindMailSent.put(userSettingId, true);
                 }
             }
@@ -244,13 +257,57 @@ public class UserSettingServiceImpl implements UserSettingService {
             Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
             List<Assignment> assignments = assignmentRepository.getAssignmentByClassroomId(classroom.getId());
 
-            for(Assignment assignment : assignments) {
-                String duedate= String.valueOf(assignment.getDue_date());
+            List<Assignment> validAssignments = assignments.stream()
+                    .filter(assignment -> assignment.getDue_date() != null)
+                    .collect(Collectors.toList());
+
+            for (Assignment assignment : validAssignments) {
+                String duedate = String.valueOf(assignment.getDue_date());
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                 LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
-                if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && isDateTimeReached(duedateTime)) {
-                    sendStudyReminderMail(userSetting);
+
+                // Giảm thời gian due date đi 30 phút
+                LocalDateTime reminderTime = duedateTime.minusMinutes(30);
+
+                // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
+                LocalDateTime currentTime = LocalDateTime.now();
+                if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime)) {
+                    sendMail(userSetting);
                     sentDueDates.add(duedateTime);
+
+                }
+            }
+        }
+    }
+
+    private Set<LocalDateTime> sentTestDueDates = new HashSet<>();
+    @Scheduled(fixedRate = 10000)
+    public void sendTestDueDateMails() throws ResourceNotFroundException {
+        List<UserSetting> userSettings = userSettingRepository.findAll();
+
+        for (UserSetting userSetting : userSettings) {
+            int userSettingId = userSetting.getId();
+            ClassLearner classLearner = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
+            Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
+            List<Test> tests = testRepository.getTestByClassroomId(classroom.getId());
+
+            List<Test> validTests = tests.stream()
+                    .filter(test -> test.getDue_date() != null)
+                    .collect(Collectors.toList());
+
+            for (Test test: validTests) {
+                String duedate = String.valueOf(test.getDue_date());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
+
+                // Giảm thời gian due date đi 30 phút
+                LocalDateTime reminderTime = duedateTime.minusMinutes(30);
+
+                // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
+                LocalDateTime currentTime = LocalDateTime.now();
+                if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime)) {
+                    sendMail(userSetting);
+                    sentTestDueDates.add(duedateTime);
 
                 }
             }
