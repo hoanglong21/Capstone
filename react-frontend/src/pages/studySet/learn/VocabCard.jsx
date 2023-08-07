@@ -28,6 +28,11 @@ const VocabCard = ({
             if (ques?.question_type === 2) {
                 setCorrectAnswer(ques.question.card.id)
             }
+            if (ques?.question_type === 3) {
+                setCorrectAnswer(
+                    ques.question.card.id === ques.answers[0].card.id
+                )
+            }
         }
     }, [ques])
 
@@ -60,6 +65,17 @@ const VocabCard = ({
         setCurrentAnswer(tempCurrent)
         // check is correct
         if (tempCurrent === correctAnswer) {
+            setIsCurrentCorrect(true)
+        } else {
+            setIsCurrentCorrect(false)
+        }
+    }
+
+    const handleAnswerTrueFalse = (ans) => {
+        // get correct answer
+        setCurrentAnswer(ans)
+        // check is correct
+        if (ans === correctAnswer) {
             setIsCurrentCorrect(true)
         } else {
             setIsCurrentCorrect(false)
@@ -325,12 +341,6 @@ const VocabCard = ({
                                                         key={index}
                                                         className="mb-2"
                                                     >
-                                                        <div className="quizQues_label quizQues_label--sm mb-1">
-                                                            {
-                                                                itemContent
-                                                                    .field.name
-                                                            }
-                                                        </div>
                                                         <div
                                                             className="quizQues_question"
                                                             dangerouslySetInnerHTML={{
@@ -360,12 +370,6 @@ const VocabCard = ({
                                                         key={index}
                                                         className="mb-2"
                                                     >
-                                                        <div className="quizQues_label quizQues_label--sm mb-1">
-                                                            {
-                                                                itemContent
-                                                                    .field.name
-                                                            }
-                                                        </div>
                                                         <div
                                                             className="quizQues_question"
                                                             dangerouslySetInnerHTML={{
@@ -423,27 +427,16 @@ const VocabCard = ({
                         <div className="col-6">
                             <div
                                 className={`quizQues_answer ${
-                                    currentAnswer === 1 &&
+                                    currentAnswer === true &&
                                     isCurrentCorrect === false
                                         ? 'incorrect'
-                                        : currentAnswer === 1 &&
+                                        : currentAnswer === true &&
                                           isCurrentCorrect === true
                                         ? 'correct'
-                                        : currentAnswer === 1
-                                        ? 'active'
                                         : ''
                                 }`}
-                                onClick={() => {
-                                    if (currentAnswer === 1) {
-                                        setCurrentAnswer(null)
-                                        setProgress(
-                                            progress > 0 ? progress - 1 : 0
-                                        )
-                                    } else {
-                                        setCurrentAnswer(1)
-                                        setProgress(progress + 1)
-                                    }
-                                }}
+                                disabled={isCurrentCorrect !== null}
+                                onClick={() => handleAnswerTrueFalse(true)}
                             >
                                 True
                             </div>
@@ -451,27 +444,16 @@ const VocabCard = ({
                         <div className="col-6">
                             <div
                                 className={`quizQues_answer ${
-                                    currentAnswer === 0 &&
+                                    currentAnswer === false &&
                                     isCurrentCorrect === false
                                         ? 'incorrect'
-                                        : currentAnswer === 0 &&
+                                        : currentAnswer === false &&
                                           isCurrentCorrect === true
                                         ? 'correct'
-                                        : currentAnswer === 0
-                                        ? 'active'
                                         : ''
                                 }`}
-                                onClick={() => {
-                                    if (currentAnswer === 0) {
-                                        setCurrentAnswer(null)
-                                        setProgress(
-                                            progress > 0 ? progress - 1 : 0
-                                        )
-                                    } else {
-                                        setCurrentAnswer(0)
-                                        setProgress(progress + 1)
-                                    }
-                                }}
+                                disabled={isCurrentCorrect !== null}
+                                onClick={() => handleAnswerTrueFalse(false)}
                             >
                                 False
                             </div>
