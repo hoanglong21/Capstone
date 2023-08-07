@@ -8,6 +8,7 @@ import ClassService from '../../services/ClassService'
 import { ClassIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
+import '../../assets/styles/Home.css'
 
 const ClassesForHome = () => {
     const [searchParams, setSearchParams] = useSearchParams()

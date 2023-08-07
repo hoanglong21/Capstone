@@ -25,6 +25,11 @@
     width: 16.66666667% !important;
 }
 
+.library-layout{
+    margin-right: 3rem !important;
+    margin-left: 3rem !important;
+}
+
 @media only screen and (max-width: 768px) {
     /* For mobile phones: */
     .form-home{
@@ -62,12 +67,16 @@
 
     .class-home{
         flex: 0 0 auto;
-        width: 16.66666667% !important;
+        width: 25% !important;
     }
 
     .class-title{
         flex: 0 0 auto;
-        width: 33.33333333% !important;
+        width: 50% !important;
     }
 
+    .library-layout{
+        margin-right: 1rem !important;
+        margin-left: 1rem !important;
+    }
   }
