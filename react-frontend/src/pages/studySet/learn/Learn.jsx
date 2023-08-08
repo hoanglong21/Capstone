@@ -9,6 +9,7 @@ import { getUser } from '../../../features/user/userAction'
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
 import GrammarCard from './GrammarCard'
+import ViewCard from '../view/ViewCard'
 
 import {
     StudySetSolidIcon,
@@ -155,6 +156,8 @@ const Learn = () => {
     const [isCurrentCorrect, setIsCurrentCorrect] = useState(null)
     const [isEnd, setIsEnd] = useState(false)
     const [isFinish, setIsFinish] = useState(false)
+    const [correct, setCorrect] = useState(false)
+    const [incorrect, setIncorrect] = useState(false)
 
     const [loading, setLoading] = useState(false)
 
@@ -317,6 +320,7 @@ const Learn = () => {
     const handleCreateLearn = async () => {
         setProgress(0)
         setIsEnd(false)
+        setIsFinish(false)
         setError('')
         // validation
         if (optionProgressStatus?.length < 1) {
@@ -436,7 +440,7 @@ const Learn = () => {
             setLoading(false)
             document
                 .querySelector('#learnAnimation .confetti-container')
-                .remove()
+                ?.remove()
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -477,6 +481,10 @@ const Learn = () => {
     }
 
     const nextQuestion = () => {
+        if (isEnd) {
+            nextRound()
+            return
+        }
         if (currentIndex < currentRound.length - 1) {
             setCurrentQuestion(currentRound[currentIndex + 1])
             setCurrentIndex(currentIndex + 1)
@@ -484,22 +492,42 @@ const Learn = () => {
             setIsCurrentCorrect(null)
             setProgress(progress + 1)
         }
-        if (currentIndex + 1 === questions.length) {
-            setIsFinish(true)
-            return
-        }
+
         if (currentIndex + 1 === currentRound.length) {
+            if (endRound === questions.length) {
+                setIsFinish(true)
+                return
+            }
             setIsEnd(true)
         }
     }
 
+    const nextRound = () => {
+        setIsEnd(false)
+        setStartRound(endRound)
+        const tempEndRound =
+            questions.length - endRound < 7 ? questions.length : endRound + 7
+        setEndRound(tempEndRound)
+        const tempCurrentRound = questions.slice(endRound, tempEndRound)
+        setCurrentRound(tempCurrentRound)
+        setCurrentQuestion(tempCurrentRound[0])
+        setCurrentIndex(0)
+        setCurrentAnswer(null)
+        setIsCurrentCorrect(null)
+        setProgress(0)
+    }
+
     useEffect(() => {
         if (isCurrentCorrect === true) {
+            setCorrect(correct + 1)
             if (currentIndex < currentRound.length) {
                 setTimeout(function nextQuesTimeOut() {
                     nextQuestion()
                 }, 2000)
             }
+        }
+        if (isCurrentCorrect === false) {
+            setIncorrect(incorrect + 1)
         }
     }, [isCurrentCorrect])
 
@@ -507,8 +535,9 @@ const Learn = () => {
     useEffect(() => {
         const handleUserKeyPress = (event) => {
             if (
-                !event.target.classList.contains('removeEvent') &&
-                isCurrentCorrect === false
+                (!event.target.classList.contains('removeEvent') &&
+                    isCurrentCorrect === false) ||
+                isEnd
             ) {
                 nextQuestion()
                 // Cancel the default action to avoid it being handled twice
@@ -519,7 +548,7 @@ const Learn = () => {
         return () => {
             window.removeEventListener('keydown', handleUserKeyPress, true)
         }
-    }, [currentIndex, currentRound, progress, isCurrentCorrect])
+    }, [currentIndex, currentRound, progress, isCurrentCorrect, isEnd])
 
     return (
         <div>
@@ -664,7 +693,64 @@ const Learn = () => {
                     </div>
                 </div>
             ) : isEnd ? (
-                <div></div>
+                <div>
+                    <div className="learnEndProgressContainer">
+                        <div className="learnEndProgress">
+                            <h2>Great job! You’re making progress.</h2>
+                            <div className="learnEndProgressNumber mt-5 mb-2">
+                                {endRound} / {questions.length} terms
+                            </div>
+                            <div className="progress-stacked">
+                                <div
+                                    className="progress"
+                                    role="progressbar"
+                                    aria-label="Segment one"
+                                    aria-valuenow={
+                                        (correct / questions.length) * 100
+                                    }
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style={{
+                                        width: `${
+                                            (correct / questions.length) * 100
+                                        }%`,
+                                    }}
+                                >
+                                    <div className="progress-bar bg-success"></div>
+                                </div>
+                                <div
+                                    className="progress"
+                                    role="progressbar"
+                                    aria-label="Segment two"
+                                    aria-valuenow={
+                                        (incorrect / questions.length) * 100
+                                    }
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style={{
+                                        width: `${
+                                            (incorrect / questions.length) * 100
+                                        }%`,
+                                    }}
+                                >
+                                    <div className="progress-bar bg-danger"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="learnEndTerms mt-4">
+                        <div className="learnEndProgressNumber mb-4">
+                            Terms studied in this round
+                        </div>
+                        {currentRound.map((round) => (
+                            <ViewCard
+                                fullCard={round.question}
+                                key={round.question.card.id}
+                                userInfo={userInfo}
+                            />
+                        ))}
+                    </div>
+                </div>
             ) : (
                 <section
                     id={`question${currentIndex}`}
@@ -1565,7 +1651,7 @@ const Learn = () => {
                 </div>
             </div>
             {/* continue box */}
-            {isCurrentCorrect === false && !isFinish && (
+            {((isCurrentCorrect === false && !isFinish) || isEnd) && (
                 <div className="learnIncorrectBox">
                     <div className="quizQues_container h-100 d-flex align-items-center justify-content-between">
                         <span className="quizQues_label">

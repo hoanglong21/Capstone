@@ -90,3 +90,35 @@
 .learnFinish_btn--primary:hover {
     background: #423ed8;
 }
+
+.learnEndProgressContainer {
+    background-color: #fff;
+    width: 100vw;
+    padding: 3rem 2rem 3rem 0;
+}
+
+.learnEndProgress {
+    max-width: 80vw;
+    margin: 0 auto;
+}
+
+.learnEndProgress h2 {
+    font-size: 2rem;
+    letter-spacing: normal;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.learnEndProgressNumber {
+    font-size: 1rem;
+    letter-spacing: normal;
+    line-height: 1.5;
+    font-weight: 600;
+    color: #586380;
+}
+
+.learnEndTerms {
+    max-width: 80vw;
+    margin: 0 auto;
+    margin-bottom: 10rem;
+}

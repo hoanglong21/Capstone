@@ -74,9 +74,9 @@ const DoQuiz = () => {
     const [progress, setProgress] = useState(0)
     const [questions, setQuestions] = useState([])
     const [answers, setAnswers] = useState([])
-    const [results, setResults] = useState([])
     const [skipAnswer, setSkipAnswer] = useState(null)
     const [isEnd, setIsEnd] = useState(false)
+    const [results, setResults] = useState([])
     const [correct, setCorrect] = useState(false)
     const [incorrect, setIncorrect] = useState(false)
 

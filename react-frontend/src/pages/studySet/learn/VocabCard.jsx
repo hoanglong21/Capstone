@@ -25,6 +25,9 @@ const VocabCard = ({
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
+            if (ques?.question_type === 1) {
+                document.getElementById(`quizQuesInput${quesIndex}`).value = ''
+            }
             if (ques?.question_type === 2) {
                 setCorrectAnswer(ques.question.card.id)
             }

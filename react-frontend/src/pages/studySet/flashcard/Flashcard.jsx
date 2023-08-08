@@ -412,7 +412,7 @@ const Flashcard = () => {
         setNote(progress?.note || '')
         document
             .querySelector('#flashcardAnimation .confetti-container')
-            .remove()
+            ?.remove()
     }
 
     const handleAutoPlay = () => {
