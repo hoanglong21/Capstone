@@ -217,8 +217,9 @@ const Flashcard = () => {
                     setPicture(tempCards[0].progress?.picture || '')
                     setAudio(tempCards[0].progress?.audio || '')
                     setNote(tempCards[0].progress?.note || '')
-                    setType(tempCards[0].card?.studySet?.studySetType?.id)
                 }
+                // type
+                setType(tempCards[0].card?.studySet?.studySetType?.id)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)

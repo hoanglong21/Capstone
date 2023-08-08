@@ -93,11 +93,7 @@ const VocabCard = ({
                     <div className="flex-grow-1">
                         {/* question */}
                         {ques.question.content.map((itemContent, index) => {
-                            if (
-                                writtenPromptWith?.includes(
-                                    itemContent.field.id
-                                )
-                            ) {
+                            if (writtenPromptWith === itemContent.field.id) {
                                 return (
                                     <div key={index} className="mb-2">
                                         <div className="quizQues_label quizQues_label--sm mb-1">
@@ -216,9 +212,7 @@ const VocabCard = ({
                 <div className="card-body">
                     {/* question */}
                     {ques.question.content.map((itemContent, index) => {
-                        if (
-                            multiplePromptWith?.includes(itemContent.field.id)
-                        ) {
+                        if (multiplePromptWith === itemContent.field.id) {
                             return (
                                 <div key={index} className="mb-2">
                                     <div className="quizQues_label quizQues_label--sm mb-1">
@@ -293,9 +287,8 @@ const VocabCard = ({
                                 >
                                     {ans.content.map((itemContent, index) => {
                                         if (
-                                            multipleAnswerWith?.includes(
-                                                itemContent.field.id
-                                            )
+                                            multipleAnswerWith ===
+                                            itemContent.field.id
                                         ) {
                                             return (
                                                 <div
@@ -344,9 +337,8 @@ const VocabCard = ({
                                     {ques.question.content.map(
                                         (itemContent, index) => {
                                             if (
-                                                trueFalsePromptWith?.includes(
-                                                    itemContent.field.id
-                                                )
+                                                trueFalsePromptWith ===
+                                                itemContent.field.id
                                             ) {
                                                 return (
                                                     <div
@@ -379,9 +371,8 @@ const VocabCard = ({
                                     {ques.answers[0].content.map(
                                         (itemContent, index) => {
                                             if (
-                                                trueFalseAnswerWith?.includes(
-                                                    itemContent.field.id
-                                                )
+                                                trueFalseAnswerWith ===
+                                                itemContent.field.id
                                             ) {
                                                 return (
                                                     <div
@@ -494,9 +485,8 @@ const VocabCard = ({
                                         {ques.question.content.map(
                                             (itemContent, index) => {
                                                 if (
-                                                    trueFalseAnswerWith?.includes(
-                                                        itemContent.field.id
-                                                    )
+                                                    trueFalseAnswerWith ===
+                                                    itemContent.field.id
                                                 ) {
                                                     return (
                                                         <div
