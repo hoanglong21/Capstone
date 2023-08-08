@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
 import { getUser } from '../../../features/user/userAction'
+import ProgressService from '../../../services/ProgressService'
 
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
@@ -525,9 +526,20 @@ const Learn = () => {
                     nextQuestion()
                 }, 2000)
             }
+            ProgressService.updateScore(
+                userInfo.id,
+                currentQuestion.question.card.id,
+                1
+            )
         }
         if (isCurrentCorrect === false) {
             setIncorrect(incorrect + 1)
+            ProgressService.updateScore(
+                userInfo.id,
+                currentQuestion.question.card.id,
+                -1
+            )
+
         }
     }, [isCurrentCorrect])
 

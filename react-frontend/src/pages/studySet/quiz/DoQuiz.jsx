@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
 import { getUser } from '../../../features/user/userAction'
+import ProgressService from '../../../services/ProgressService'
 
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
@@ -21,7 +22,6 @@ import {
 import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './quiz.css'
-import ProgressService from '../../../services/ProgressService'
 
 const DoQuiz = () => {
     const navigate = useNavigate()
