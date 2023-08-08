@@ -188,16 +188,18 @@ public class TestServiceTest {
                 .build();
         Answer answer = Answer.builder().question(Question.builder().id(1).build()).content("Mango").is_true(false).build();
 
-        Comment comment = Comment.builder().commentType(CommentType.builder().id(1).build()).content("Forcus").build();
+        Comment comment = Comment.builder().commentType(CommentType.builder().id(1).build()).content("Focus").build();
+
         doNothing().when(testRepository).delete(test);
         doNothing().when(questionRepository).delete(question);
         doNothing().when(answerRepository).delete(answer);
         doNothing().when(commentRepository).delete(comment);
 
         when(testRepository.findById(1)).thenReturn(Optional.of(test));
-        when(questionRepository.getQuestionByTestId(1)).thenReturn(List.of(question));
-        when(answerRepository.getAnswerByQuestionId(1)).thenReturn(List.of(answer));
-        when(commentRepository.getCommentByTestId(1)).thenReturn(List.of(comment));
+        when(questionRepository.getQuestionByTestId(test.getId())).thenReturn(List.of(question));
+        when(answerRepository.getAnswerByQuestionId(question.getId())).thenReturn(List.of(answer));
+        when(commentRepository.getCommentByTestId(test.getId())).thenReturn(List.of(comment));
+        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
         try {
             testServiceImpl.deleteTest(1);
         } catch (ResourceNotFroundException e) {
@@ -206,7 +208,7 @@ public class TestServiceTest {
         verify(testRepository, times(1)).delete(test);
         verify(questionRepository, times(1)).delete(question);
         verify(answerRepository, times(1)).delete(answer);
-        verify(commentRepository, times(1)).delete(comment);
+        verify(commentRepository, times(2)).delete(comment);
     }
 
     @Order(7)

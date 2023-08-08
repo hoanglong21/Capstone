@@ -122,8 +122,11 @@ public class TestServiceImpl  implements TestService {
             }
               questionRepository.delete(question);
         }
-        for(Comment comment : commentRepository.getCommentByTestId(testclass.getId())){
-            commentRepository.delete(comment);
+        for(Comment commentroot : commentRepository.getCommentByTestId(testclass.getId())){
+            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                commentRepository.delete(comment);
+            }
+            commentRepository.delete(commentroot);
         }
         testRepository.delete(testclass);
         return true;
