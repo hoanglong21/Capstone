@@ -14,7 +14,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -186,5 +188,37 @@ public class CardServiceTest {
         } catch (ResourceNotFroundException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Order(8)
+    @ParameterizedTest
+    @CsvSource({
+            "1, 123, status1, true, star, DESC, 1, 10",
+            "1, 123, status1, true, star, DESC, 0, 10",
+            "1, 123, status1, true, star, DESC, -1, 10",
+            "1, 123, status1, true, star, DESC, 2, 0",
+            "1, 123, status1, true, star, DESC, 2, -1",
+    })
+    void testGetFilterCard(int studySetId, int userId, String status, String star, String sortBy,
+                           String direction, int page, int size) {
+        // Convert star to boolean
+        boolean isStar = Boolean.parseBoolean(star);
+
+        // Prepare mock responses
+        List<Card> mockCardList = new ArrayList<>();
+        // Add mock Card objects to the list
+        when(cardRepository.getCardInSetWithCondition(anyInt(), anyInt(), any(String[].class), anyBoolean(), anyString(), anyString()))
+                .thenReturn(mockCardList);
+
+        // Mock other repository calls if needed
+
+        // Call the method to test
+        Map<String, Object> result = null;
+        try {
+            result = cardService.getFilterCard(studySetId, userId, status.split(","), isStar, sortBy, direction, page, size);
+            assertThat(result.get("list")).isEqualTo(mockCardList);
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
+
     }
 }
