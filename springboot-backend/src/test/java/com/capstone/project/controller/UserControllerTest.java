@@ -24,14 +24,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.*;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
 
@@ -148,22 +151,35 @@ public class UserControllerTest {
                 .bio(bio)
                 .avatar(avatar)
                 .build();
-        // TODO change a bit
 
-        userDetails.setFirst_name(first_name);
-        userDetails.setLast_name(last_name);
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest();
+        userUpdateRequest.setFirst_name("John");
+        userUpdateRequest.setLast_name("Doe");
 
-        BindingResult bindingResult = Mockito.mock(BindingResult.class);
+        // get error list from api
+//        userUpdateRequest.setFirst_name("");
+//        userUpdateRequest.setLast_name("");
 
-        when(userService.updateUser(any(), any())).thenReturn(user);
-        when(bindingResult.hasErrors()).thenReturn(!success);
+        when(modelMapper.map(eq(userUpdateRequest), eq(User.class))).thenReturn(user);
+        when(userService.updateUser(anyString(), any(User.class))).thenReturn(user);
 
-        ResponseEntity<?> response = userController.updateUser(username, userDetails, bindingResult);
-        if(success) {
-            Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        } else {
-            Assertions.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        }
+        // Convert the UserUpdateRequest object to JSON format
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(userUpdateRequest);
+
+        ResultActions result = mockMvc.perform(put("/api/v1/users/{username}", username)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody));
+
+        MvcResult mvcResult = result.andReturn();
+        int statusPerform = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+
+        System.out.println(statusPerform);
+        System.out.println(content);
+
+        verify(userService, times(1)).updateUser(eq(username), any(User.class));
+        verifyNoMoreInteractions(userService);
 
     }
 
