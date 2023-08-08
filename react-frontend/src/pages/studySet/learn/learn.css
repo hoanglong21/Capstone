@@ -40,3 +40,53 @@
     line-height: 1.5;
     color: #939bb4;
 }
+
+.learnFinish {
+    text-align: center;
+    max-width: 75rem;
+}
+
+.learnFinish h2 {
+    font-size: 2rem;
+    letter-spacing: normal;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.learnFinish img {
+    margin-top: 1rem;
+    max-width: 100%;
+    max-height: 15rem;
+}
+
+.learnFinish_btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    letter-spacing: normal;
+    line-height: 1.5;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    min-height: 3rem;
+    transition: all 0.12s cubic-bezier(0.47, 0, 0.745, 0.715);
+    width: 16.875rem;
+    z-index: 10;
+}
+
+.learnFinish_btn--light {
+    background: #fff;
+    border: 0.0625rem solid #d9dde8;
+    color: #586380;
+}
+
+.learnFinish_btn--light:hover {
+    background: #edeff4;
+}
+
+.learnFinish_btn--primary {
+    background: #4255ff;
+    color: #fff;
+}
+
+.learnFinish_btn--primary:hover {
+    background: #423ed8;
+}

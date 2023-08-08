@@ -470,6 +470,48 @@ const GrammarCard = ({
                             </div>
                         </div>
                     </div>
+                    {isCurrentCorrect === false && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct">
+                                {ques.question.content.map((itemContent, index) => {
+                                    if (
+                                        trueFalseAnswerWith?.includes(
+                                            itemContent.field.id
+                                        )
+                                    ) {
+                                        return (
+                                            <div key={index} className="mb-2">
+                                                <div className="quizAns_label mb-1">
+                                                    {itemContent.field.name}
+                                                </div>
+                                                <div
+                                                    className="quizQues_question"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html:
+                                                            itemContent.content ||
+                                                            '...',
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        )
+                                    }
+                                })}
+                                <div className="learnExampleSection">
+                                    <div className="learnExample_label">
+                                        Example
+                                    </div>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: example || '...',
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

@@ -17,9 +17,78 @@ import {
     LearnSolidIcon,
     TestSolidIcon,
 } from '../../../components/icons'
-import finishQuizImg from '../../../assets/images/finish_quiz.png'
+import illustration from '../../../assets/images/learn_finish.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './learn.css'
+
+const Confettiful = function (el) {
+    this.el = el
+    this.containerEl = null
+
+    this.confettiFrequency = 3
+    this.confettiColors = [
+        '#EF2964',
+        '#00C09D',
+        '#2D87B0',
+        '#48485E',
+        '#EFFF1D',
+    ]
+    this.confettiAnimations = ['slow', 'medium', 'fast']
+
+    this._setupElements()
+    this._renderConfetti()
+}
+
+Confettiful.prototype._setupElements = function () {
+    const containerEl = document.createElement('div')
+    const elPosition = this.el.style.position
+
+    if (elPosition !== 'relative' || elPosition !== 'absolute') {
+        this.el.style.position = 'relative'
+    }
+
+    containerEl.classList.add('confetti-container')
+
+    this.el.appendChild(containerEl)
+
+    this.containerEl = containerEl
+}
+
+Confettiful.prototype._renderConfetti = function () {
+    const confettiInterval = setInterval(() => {
+        const confettiEl = document.createElement('div')
+        const confettiSize = Math.floor(Math.random() * 3) + 7 + 'px'
+        const confettiBackground =
+            this.confettiColors[
+                Math.floor(Math.random() * this.confettiColors.length)
+            ]
+        const confettiLeft =
+            Math.floor(Math.random() * this.el.offsetWidth) + 'px'
+        const confettiAnimation =
+            this.confettiAnimations[
+                Math.floor(Math.random() * this.confettiAnimations.length)
+            ]
+
+        confettiEl.classList.add(
+            'confetti',
+            'confetti--animation-' + confettiAnimation
+        )
+        confettiEl.style.left = confettiLeft
+        confettiEl.style.width = confettiSize
+        confettiEl.style.height = confettiSize
+        confettiEl.style.backgroundColor = confettiBackground
+
+        confettiEl.removeTimeout = setTimeout(function () {
+            confettiEl.parentNode.removeChild(confettiEl)
+        }, 10000)
+
+        this.containerEl.appendChild(confettiEl)
+    }, 25)
+
+    setTimeout(function () {
+        clearInterval(confettiInterval)
+    }, 3000)
+}
 
 const Learn = () => {
     const navigate = useNavigate()
@@ -75,12 +144,17 @@ const Learn = () => {
 
     const [numQues, setNumQues] = useState(0)
     const [progress, setProgress] = useState(0)
+    const [totalProgress, setTotalProgress] = useState(0)
     const [questions, setQuestions] = useState([])
+    const [currentRound, setCurrentRound] = useState([])
+    const [startRound, setStartRound] = useState(0)
+    const [endRound, setEndRound] = useState(0)
     const [currentQuestion, setCurrentQuestion] = useState({})
     const [currentIndex, setCurrentIndex] = useState(0)
     const [currentAnswer, setCurrentAnswer] = useState(null)
     const [isCurrentCorrect, setIsCurrentCorrect] = useState(null)
     const [isEnd, setIsEnd] = useState(false)
+    const [isFinish, setIsFinish] = useState(false)
 
     const [loading, setLoading] = useState(false)
 
@@ -90,8 +164,10 @@ const Learn = () => {
         setError('')
         document.getElementById('toggleQuizOptionsModalBtn').click()
         const headerHeight = document.getElementById('quizHeader').clientHeight
-        document.getElementById('quizProgressContainer').style.top =
-            headerHeight
+        if (document.getElementById('quizProgressContainer')) {
+            document.getElementById('quizProgressContainer').style.top =
+                headerHeight
+        }
     }, [])
 
     // fetch user info
@@ -176,6 +252,7 @@ const Learn = () => {
                 setNumQues(tempNumCards)
                 // get learn
                 if (tempNumCards > 0) {
+                    // questions
                     const tempQuestions = (
                         await StudySetService.getLearningStudySetId(
                             userInfo.id,
@@ -187,6 +264,15 @@ const Learn = () => {
                         )
                     ).data
                     setQuestions(tempQuestions)
+                    // current round
+                    setStartRound(0)
+                    const tempEndRound =
+                        tempQuestions.length < 7 ? tempQuestions.length : 7
+                    setEndRound(tempEndRound)
+                    setCurrentRound(tempQuestions.slice(0, tempEndRound))
+                    // total progress
+                    setTotalProgress(tempEndRound + 1)
+                    // current questions
                     setCurrentQuestion(tempQuestions[0])
                 }
             } catch (error) {
@@ -202,6 +288,18 @@ const Learn = () => {
             fetchData()
         }
     }, [id, userInfo])
+
+    // congratulation animation
+    useEffect(() => {
+        if (isFinish) {
+            document
+                .querySelector('#learnAnimation .confetti-container')
+                ?.remove()
+            window.confettiful = new Confettiful(
+                document.getElementById('learnAnimation')
+            )
+        }
+    }, [isFinish])
 
     const handleChangeQuestionType = (event) => {
         var tempQuestionsTypes = [...optionQuestionTypes]
@@ -310,6 +408,11 @@ const Learn = () => {
                     )
                 ).data
                 setQuestions(tempQuestions)
+                setStartRound(0)
+                const tempEndRound =
+                    tempQuestions.length < 7 ? tempQuestions.length : 7
+                setEndRound(tempEndRound)
+                setCurrentRound(tempQuestions.slice(0, tempEndRound))
                 setCurrentQuestion(tempQuestions[0])
                 setCurrentIndex(0)
                 setCurrentAnswer(null)
@@ -331,6 +434,9 @@ const Learn = () => {
             document.getElementById('learnOptionModalCloseBtn').click()
             setError('')
             setLoading(false)
+            document
+                .querySelector('#learnAnimation .confetti-container')
+                .remove()
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -371,21 +477,28 @@ const Learn = () => {
     }
 
     const nextQuestion = () => {
-        if (currentIndex < questions.length - 1) {
-            setCurrentQuestion(questions[currentIndex + 1])
+        if (currentIndex < currentRound.length - 1) {
+            setCurrentQuestion(currentRound[currentIndex + 1])
             setCurrentIndex(currentIndex + 1)
             setCurrentAnswer(null)
             setIsCurrentCorrect(null)
             setProgress(progress + 1)
         }
+        if (currentIndex + 1 === questions.length) {
+            setIsFinish(true)
+            return
+        }
+        if (currentIndex + 1 === currentRound.length) {
+            setIsEnd(true)
+        }
     }
 
     useEffect(() => {
         if (isCurrentCorrect === true) {
-            if (currentIndex < questions.length - 1) {
-                setTimeout(function name() {
+            if (currentIndex < currentRound.length) {
+                setTimeout(function nextQuesTimeOut() {
                     nextQuestion()
-                }, 2500)
+                }, 2000)
             }
         }
     }, [isCurrentCorrect])
@@ -406,7 +519,7 @@ const Learn = () => {
         return () => {
             window.removeEventListener('keydown', handleUserKeyPress, true)
         }
-    }, [currentIndex, questions, progress, isCurrentCorrect])
+    }, [currentIndex, currentRound, progress, isCurrentCorrect])
 
     return (
         <div>
@@ -488,24 +601,14 @@ const Learn = () => {
                 </div>
                 <h3 className="learnTitle">{studySet?.title}</h3>
                 <div className="quizOptions d-flex">
-                    {isEnd ? (
-                        <button
-                            id="toggleQuizOptionsModalBtn"
-                            className="quizOptions_btn"
-                            onClick={handleCreateLearn}
-                        >
-                            Take a new test
-                        </button>
-                    ) : (
-                        <button
-                            id="toggleQuizOptionsModalBtn"
-                            className="quizOptions_btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#quizOptionModal"
-                        >
-                            Options
-                        </button>
-                    )}
+                    <button
+                        id="toggleQuizOptionsModalBtn"
+                        className="quizOptions_btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#quizOptionModal"
+                    >
+                        Options
+                    </button>
                     <button
                         className="quizClose_btn ms-3 d-flex align-items-center"
                         onClick={() => {
@@ -517,121 +620,119 @@ const Learn = () => {
                 </div>
             </div>
             {/* Progress */}
-            {/* {isEnd ? (
+            {!isEnd && !isFinish && (
                 <div
                     id="quizProgressContainer"
-                    className="progress-stacked quizEndProgressContainer"
+                    className="quizProgressContainer"
                 >
                     <div
-                        className="progress"
-                        role="progressbar"
-                        aria-label="Segment one"
-                        aria-valuenow={`${(correct / numQues) * 100}`}
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        style={{ width: `${(correct / numQues) * 100}%` }}
-                    >
-                        <div className="progress-bar bg-success">
-                            {(correct / numQues) * 100}%
+                        className="quizProgress"
+                        style={{
+                            width: `${(progress / totalProgress) * 100}%`,
+                        }}
+                    ></div>
+                </div>
+            )}
+            {/* Questions */}
+            {isFinish ? (
+                <div id="learnAnimation">
+                    <div className="learnFinish mx-auto p-5">
+                        <div>
+                            <h2>Congrats! You've studied everything.</h2>
+                            <p>
+                                Study again to practice the same questions or
+                                try another study mode.
+                            </p>
+                            <img src={illustration} alt="congratulation img" />
                         </div>
-                    </div>
-                    <div
-                        className="progress"
-                        role="progressbar"
-                        aria-label="Segment two"
-                        aria-valuenow={`${(incorrect / numQues) * 100}`}
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        style={{ width: `${(incorrect / numQues) * 100}%` }}
-                    >
-                        <div className="progress-bar bg-danger">
-                            {(incorrect / numQues) * 100}%
+                        <div className="d-flex justify-content-center mt-5">
+                            <button
+                                className="learnFinish_btn learnFinish_btn--light me-2"
+                                onClick={() => {
+                                    navigate(`/set/${id}`)
+                                }}
+                            >
+                                Finish Learn mode
+                            </button>
+                            <button
+                                className="learnFinish_btn learnFinish_btn--primary"
+                                onClick={handleCreateLearn}
+                            >
+                                Study again
+                            </button>
                         </div>
                     </div>
                 </div>
-            ) : ( */}
-            <div id="quizProgressContainer" className="quizProgressContainer">
-                <div
-                    className="quizProgress"
-                    style={{
-                        width: `${
-                            (progress /
-                                (isStar
-                                    ? numNotStar + numStillStar + numMasterStar
-                                    : numNot + numStill + numMaster)) *
-                            100
-                        }%`,
-                    }}
-                ></div>
-            </div>
-            {/* )} */}
-            {/* Questions */}
-            <section
-                id={`question${currentIndex}`}
-                className="quizQues_container my-5"
-            >
-                {type === 1 && (
-                    <VocabCard
-                        ques={currentQuestion}
-                        quesIndex={currentIndex}
-                        writtenPromptWith={writtenPromptWith}
-                        writtenAnswerWith={writtenAnswerWith}
-                        multiplePromptWith={multiplePromptWith}
-                        multipleAnswerWith={multipleAnswerWith}
-                        trueFalsePromptWith={trueFalsePromptWith}
-                        trueFalseAnswerWith={trueFalseAnswerWith}
-                        setProgress={setProgress}
-                        progress={progress}
-                        showPicture={showPicture}
-                        showAudio={showAudio}
-                        showNote={showNote}
-                        setCurrentAnswer={setCurrentAnswer}
-                        currentAnswer={currentAnswer}
-                        isCurrentCorrect={isCurrentCorrect}
-                        setIsCurrentCorrect={setIsCurrentCorrect}
-                    />
-                )}
-                {type === 2 && (
-                    <KanjiCard
-                        ques={currentQuestion}
-                        quesIndex={currentIndex}
-                        writtenPromptWith={writtenPromptWith}
-                        multiplePromptWith={multiplePromptWith}
-                        multipleAnswerWith={multipleAnswerWith}
-                        trueFalsePromptWith={trueFalsePromptWith}
-                        trueFalseAnswerWith={trueFalseAnswerWith}
-                        setProgress={setProgress}
-                        progress={progress}
-                        showPicture={showPicture}
-                        showAudio={showAudio}
-                        showNote={showNote}
-                        setCurrentAnswer={setCurrentAnswer}
-                        currentAnswer={currentAnswer}
-                        isCurrentCorrect={isCurrentCorrect}
-                        setIsCurrentCorrect={setIsCurrentCorrect}
-                    />
-                )}
-                {type === 3 && (
-                    <GrammarCard
-                        ques={currentQuestion}
-                        quesIndex={currentIndex}
-                        writtenPromptWith={writtenPromptWith}
-                        multiplePromptWith={multiplePromptWith}
-                        multipleAnswerWith={multipleAnswerWith}
-                        trueFalsePromptWith={trueFalsePromptWith}
-                        trueFalseAnswerWith={trueFalseAnswerWith}
-                        setProgress={setProgress}
-                        progress={progress}
-                        showPicture={showPicture}
-                        showAudio={showAudio}
-                        showNote={showNote}
-                        setCurrentAnswer={setCurrentAnswer}
-                        currentAnswer={currentAnswer}
-                        isCurrentCorrect={isCurrentCorrect}
-                        setIsCurrentCorrect={setIsCurrentCorrect}
-                    />
-                )}
-            </section>
+            ) : isEnd ? (
+                <div></div>
+            ) : (
+                <section
+                    id={`question${currentIndex}`}
+                    className="quizQues_container my-5"
+                >
+                    {type === 1 && (
+                        <VocabCard
+                            ques={currentQuestion}
+                            quesIndex={currentIndex}
+                            writtenPromptWith={writtenPromptWith}
+                            writtenAnswerWith={writtenAnswerWith}
+                            multiplePromptWith={multiplePromptWith}
+                            multipleAnswerWith={multipleAnswerWith}
+                            trueFalsePromptWith={trueFalsePromptWith}
+                            trueFalseAnswerWith={trueFalseAnswerWith}
+                            setProgress={setProgress}
+                            progress={progress}
+                            showPicture={showPicture}
+                            showAudio={showAudio}
+                            showNote={showNote}
+                            setCurrentAnswer={setCurrentAnswer}
+                            currentAnswer={currentAnswer}
+                            isCurrentCorrect={isCurrentCorrect}
+                            setIsCurrentCorrect={setIsCurrentCorrect}
+                        />
+                    )}
+                    {type === 2 && (
+                        <KanjiCard
+                            ques={currentQuestion}
+                            quesIndex={currentIndex}
+                            writtenPromptWith={writtenPromptWith}
+                            multiplePromptWith={multiplePromptWith}
+                            multipleAnswerWith={multipleAnswerWith}
+                            trueFalsePromptWith={trueFalsePromptWith}
+                            trueFalseAnswerWith={trueFalseAnswerWith}
+                            setProgress={setProgress}
+                            progress={progress}
+                            showPicture={showPicture}
+                            showAudio={showAudio}
+                            showNote={showNote}
+                            setCurrentAnswer={setCurrentAnswer}
+                            currentAnswer={currentAnswer}
+                            isCurrentCorrect={isCurrentCorrect}
+                            setIsCurrentCorrect={setIsCurrentCorrect}
+                        />
+                    )}
+                    {type === 3 && (
+                        <GrammarCard
+                            ques={currentQuestion}
+                            quesIndex={currentIndex}
+                            writtenPromptWith={writtenPromptWith}
+                            multiplePromptWith={multiplePromptWith}
+                            multipleAnswerWith={multipleAnswerWith}
+                            trueFalsePromptWith={trueFalsePromptWith}
+                            trueFalseAnswerWith={trueFalseAnswerWith}
+                            setProgress={setProgress}
+                            progress={progress}
+                            showPicture={showPicture}
+                            showAudio={showAudio}
+                            showNote={showNote}
+                            setCurrentAnswer={setCurrentAnswer}
+                            currentAnswer={currentAnswer}
+                            isCurrentCorrect={isCurrentCorrect}
+                            setIsCurrentCorrect={setIsCurrentCorrect}
+                        />
+                    )}
+                </section>
+            )}
             {/* Option modal */}
             <div
                 className="modal fade quizOptionModal"
@@ -1464,7 +1565,7 @@ const Learn = () => {
                 </div>
             </div>
             {/* continue box */}
-            {isCurrentCorrect === false && (
+            {isCurrentCorrect === false && !isFinish && (
                 <div className="learnIncorrectBox">
                     <div className="quizQues_container h-100 d-flex align-items-center justify-content-between">
                         <span className="quizQues_label">

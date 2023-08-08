@@ -97,6 +97,9 @@ const VocabCard = ({
                             ) {
                                 return (
                                     <div key={index} className="mb-2">
+                                        <div className="quizQues_label quizQues_label--sm mb-1">
+                                            {itemContent.field.name}
+                                        </div>
                                         <div
                                             className="quizQues_question"
                                             dangerouslySetInnerHTML={{
@@ -177,7 +180,7 @@ const VocabCard = ({
                             <div className="quizQues_label my-4">
                                 Correct answer
                             </div>
-                            <div className="quizQues_answer correct">
+                            <div className="quizQues_answer correct" disabled>
                                 <div className="row">
                                     <div className="col-12 col-md-6 mt-2 mt-md-0">
                                         <div
@@ -215,6 +218,9 @@ const VocabCard = ({
                         ) {
                             return (
                                 <div key={index} className="mb-2">
+                                    <div className="quizQues_label quizQues_label--sm mb-1">
+                                        {itemContent.field.name}
+                                    </div>
                                     <div
                                         className="quizQues_question"
                                         dangerouslySetInnerHTML={{
@@ -293,6 +299,9 @@ const VocabCard = ({
                                                     key={index}
                                                     className="mb-2"
                                                 >
+                                                    <div className="quizAns_label mb-1">
+                                                        {itemContent.field.name}
+                                                    </div>
                                                     <div
                                                         className="quizQues_question"
                                                         dangerouslySetInnerHTML={{
@@ -341,6 +350,12 @@ const VocabCard = ({
                                                         key={index}
                                                         className="mb-2"
                                                     >
+                                                        <div className="quizQues_label quizQues_label--sm mb-1">
+                                                            {
+                                                                itemContent
+                                                                    .field.name
+                                                            }
+                                                        </div>
                                                         <div
                                                             className="quizQues_question"
                                                             dangerouslySetInnerHTML={{
@@ -370,6 +385,12 @@ const VocabCard = ({
                                                         key={index}
                                                         className="mb-2"
                                                     >
+                                                        <div className="quizQues_label quizQues_label--sm mb-1">
+                                                            {
+                                                                itemContent
+                                                                    .field.name
+                                                            }
+                                                        </div>
                                                         <div
                                                             className="quizQues_question"
                                                             dangerouslySetInnerHTML={{
@@ -459,6 +480,56 @@ const VocabCard = ({
                             </div>
                         </div>
                     </div>
+                    {isCurrentCorrect === false && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct" disabled>
+                                <div className="row">
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        {ques.question.content.map(
+                                            (itemContent, index) => {
+                                                if (
+                                                    trueFalseAnswerWith?.includes(
+                                                        itemContent.field.id
+                                                    )
+                                                ) {
+                                                    return (
+                                                        <div
+                                                            key={index}
+                                                            className="mb-2"
+                                                        >
+                                                            <div
+                                                                className="learnCorrectAnswer"
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html:
+                                                                        itemContent.content ||
+                                                                        '...',
+                                                                }}
+                                                            ></div>
+                                                        </div>
+                                                    )
+                                                }
+                                            }
+                                        )}
+                                    </div>
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        <div className="learnExampleSection">
+                                            <div className="learnExample_label">
+                                                Example
+                                            </div>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: example || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
