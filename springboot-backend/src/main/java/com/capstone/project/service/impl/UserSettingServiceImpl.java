@@ -183,28 +183,44 @@ public class UserSettingServiceImpl implements UserSettingService {
                         + "NihongoLevelUp Team";
             }
 
-            if(userSetting.getSetting().getId() == 3) {
-                subject = "[NihongoLevelUp]: Assignment due date";
-                content = "Hi [[name]],<br><br>"
-                        + "You have an assignment in class [[classname]] will be due in 30 minutes. Complete it before the time is due!<br><br>"
-                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete assignment</a><br><br>"
-                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
-                        + "Best regards,<br>"
-                        + "NihongoLevelUp Team";
-            }
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", userSetting.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void sendTestDueDateMail(UserSetting userSetting, Test test, Class classroom) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = userSetting.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
 
             if(userSetting.getSetting().getId() == 4) {
                 subject = "[NihongoLevelUp]: Test due date";
                 content = "Hi [[name]],<br><br>"
-                        + "You have a test in class [[classname]] will be due in 30 minutes. Complete it before the time is due!<br><br>"
-                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete assignment</a><br><br>"
+                        + "Your test << " + test.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in 30 minutes. Complete it before the time is due!<br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Test</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
                         + "NihongoLevelUp Team";
             }
-
-            ClassLearner classLearner = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
-            Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -214,7 +230,45 @@ public class UserSettingServiceImpl implements UserSettingService {
             helper.setSubject(subject);
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
-            content = content.replace("[[classname]]", classroom.getClass_name());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendAssignmentDueDateMail(UserSetting userSetting, Assignment assignment, Class classroom) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = userSetting.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            if(userSetting.getSetting().getId() == 3) {
+                subject = "[NihongoLevelUp]: Assignment due date";
+                content = "Hi [[name]],<br><br>"
+                        + "Your assignment << " + assignment.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in 30 minutes. Complete it before the time is due!<br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Assignment</a><br><br>"
+                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                        + "Best regards,<br>"
+                        + "NihongoLevelUp Team";
+            }
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", userSetting.getUser().getUsername());
+
             String URL = "https://www.nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
@@ -253,28 +307,31 @@ public class UserSettingServiceImpl implements UserSettingService {
 
         for (UserSetting userSetting : userSettings) {
             int userSettingId = userSetting.getId();
-            ClassLearner classLearner = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
-            Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
-            List<Assignment> assignments = assignmentRepository.getAssignmentByClassroomId(classroom.getId());
+            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
 
-            List<Assignment> validAssignments = assignments.stream()
-                    .filter(assignment -> assignment.getDue_date() != null)
-                    .collect(Collectors.toList());
+            for (ClassLearner classLearner : classLearners) {
+                Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
+                List<Assignment> assignments = assignmentRepository.getAssignmentByClassroomId(classroom.getId());
 
-            for (Assignment assignment : validAssignments) {
-                String duedate = String.valueOf(assignment.getDue_date());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
+                List<Assignment> validAssignments = assignments.stream()
+                        .filter(assignment -> assignment.getDue_date() != null)
+                        .collect(Collectors.toList());
 
-                // Giảm thời gian due date đi 30 phút
-                LocalDateTime reminderTime = duedateTime.minusMinutes(30);
+                for (Assignment assignment : validAssignments) {
+                    String duedate = String.valueOf(assignment.getDue_date());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                    LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
 
-                // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
-                LocalDateTime currentTime = LocalDateTime.now();
-                if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime)) {
-                    sendMail(userSetting);
-                    sentDueDates.add(duedateTime);
+                    // Giảm thời gian due date đi 30 phút
+                    LocalDateTime reminderTime = duedateTime.minusMinutes(30);
 
+                    // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
+                    LocalDateTime currentTime = LocalDateTime.now();
+                    if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.is_accepted() == true) {
+                        sendAssignmentDueDateMail(userSetting,assignment,classroom);
+                        sentDueDates.add(duedateTime);
+
+                    }
                 }
             }
         }
@@ -287,28 +344,30 @@ public class UserSettingServiceImpl implements UserSettingService {
 
         for (UserSetting userSetting : userSettings) {
             int userSettingId = userSetting.getId();
-            ClassLearner classLearner = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
-            Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
-            List<Test> tests = testRepository.getTestByClassroomId(classroom.getId());
+            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
+            for (ClassLearner classLearner : classLearners) {
+                Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
+                List<Test> tests = testRepository.getTestByClassroomId(classroom.getId());
 
-            List<Test> validTests = tests.stream()
-                    .filter(test -> test.getDue_date() != null)
-                    .collect(Collectors.toList());
+                List<Test> validTests = tests.stream()
+                        .filter(test -> test.getDue_date() != null)
+                        .collect(Collectors.toList());
 
-            for (Test test: validTests) {
-                String duedate = String.valueOf(test.getDue_date());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
+                for (Test test : validTests) {
+                    String duedate = String.valueOf(test.getDue_date());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                    LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
 
-                // Giảm thời gian due date đi 30 phút
-                LocalDateTime reminderTime = duedateTime.minusMinutes(30);
+                    // Giảm thời gian due date đi 30 phút
+                    LocalDateTime reminderTime = duedateTime.minusMinutes(30);
 
-                // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
-                LocalDateTime currentTime = LocalDateTime.now();
-                if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime)) {
-                    sendMail(userSetting);
-                    sentTestDueDates.add(duedateTime);
+                    // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
+                    LocalDateTime currentTime = LocalDateTime.now();
+                    if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.is_accepted() == true) {
+                        sendTestDueDateMail(userSetting,test,classroom);
+                        sentTestDueDates.add(duedateTime);
 
+                    }
                 }
             }
         }

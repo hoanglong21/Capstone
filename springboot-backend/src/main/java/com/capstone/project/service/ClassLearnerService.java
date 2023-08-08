@@ -22,7 +22,7 @@ public interface ClassLearnerService {
 
     ClassLearner getClassLeanerById(int id) throws ResourceNotFroundException;
 
-    ClassLearner getClassLeanerByUserId(int id);
+    List<ClassLearner> getClassLeanerByUserId(int id);
 
     Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,Boolean isAccepted,
                                               String sortBy, String direction, int page, int size) throws ParseException;

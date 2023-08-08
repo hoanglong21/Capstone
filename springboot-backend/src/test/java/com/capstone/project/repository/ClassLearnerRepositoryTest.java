@@ -66,7 +66,7 @@ public class ClassLearnerRepositoryTest {
 
             classLearnerRepository.save(classLearner);
 
-            ClassLearner classLearners = classLearnerRepository.getClassLeanerByUserId(2);
+            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(2);
             assertThat(classLearners).isNotNull();
 
         } catch (ParseException e) {
