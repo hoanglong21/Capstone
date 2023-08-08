@@ -99,8 +99,8 @@ public class ClassLearnerServiceTest {
                     .build();
             classLearners.add(classLearner1);
             classLearners.add(classLearner2);
-            when(classLearnerRepository.getClassLeanerByUserId(any(Integer.class))).thenReturn((ClassLearner) classLearners);
-            ClassLearner retrievedClassLearner = classLeanerService.getClassLeanerByUserId(1);
+            when(classLearnerRepository.getClassLeanerByUserId(any(Integer.class))).thenReturn(classLearners);
+            List<ClassLearner> retrievedClassLearner = classLeanerService.getClassLeanerByUserId(1);
             assertThat(retrievedClassLearner).isEqualTo(classLearners);
         } catch (ParseException e) {
             throw new RuntimeException(e);
