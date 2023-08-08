@@ -332,6 +332,7 @@ const Learn = () => {
     }
 
     const handleCreateLearn = async () => {
+        document.getElementById('quizOptionModal').scrollTop = 0
         setProgress(0)
         setIsEnd(false)
         setIsFinish(false)
@@ -371,6 +372,7 @@ const Learn = () => {
                         setError(
                             'Your written prompt and written answer cannot have the same item.'
                         )
+                        window.scrollTo(0, 0)
                         return
                     }
                 }
@@ -579,7 +581,6 @@ const Learn = () => {
                 currentQuestion.question.card.id,
                 -1
             )
-
         }
     }, [isCurrentCorrect])
 

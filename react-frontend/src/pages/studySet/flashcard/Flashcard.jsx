@@ -614,6 +614,7 @@ const Flashcard = () => {
         if (optionProgressStatus?.length < 1) {
             setError('You must select at least one progress status.')
             setLoading(false)
+            document.body.scrollTop = document.documentElement.scrollTop = 0
             return
         }
         // create

@@ -223,6 +223,7 @@ const DoQuiz = () => {
     }
 
     const handleCreateQuiz = async () => {
+        document.getElementById('quizOptionModal').scrollTop = 0
         setProgress(0)
         setResults([])
         setIsEnd(false)
