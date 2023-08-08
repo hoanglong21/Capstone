@@ -428,6 +428,31 @@ function ViewDetailsUser() {
                                 </div>
                             </div>
                             <div className="row gx-3 mb-3">
+                                <div className="col-md-6">
+                                    <label className="small mb-1 fs-6">
+                                        Created Date
+                                    </label>
+                                    <input
+                                        className="form-control"
+                                        type="tel"
+                                        readOnly
+                                        value={users?.created_date}
+                                    />
+                                </div>
+
+                                <div className="col-md-6">
+                                    <label className="small mb-1 fs-6">
+                                        Banned Date
+                                    </label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        readOnly
+                                        value={users?.banned_date}
+                                    />
+                                </div>
+                            </div>
+                            <div className="row gx-3 mb-3">
                                 <div className="col-xl-12 col-lg-12">
                                     <div className="card shadow mb-4">
                                         <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
