@@ -34,7 +34,7 @@ function AdminDashboard() {
       }
     };
     fetchDataClass();
-
+    console.log("haha" + classnumber)
     const fetchDataStudySet = async () => {
       try {
         const temp = (await AdminService.getStudySetNumber()).data;
