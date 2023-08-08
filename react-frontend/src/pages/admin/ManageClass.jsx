@@ -21,8 +21,8 @@ function ManageClass() {
               '',
               '',
               `${searchKey ? '=' + searchKey : ''}`,
-              `=${userInfo.username}`,
-              `=${userInfo.username}`,
+              '',
+              '',
               '',
               '',
               '',
@@ -36,6 +36,7 @@ function ManageClass() {
         setClasses(temp)
     }
 
+    console.log(classes)
     useEffect(() => {
         fetchData(search ? search : '')
     }, [search])
