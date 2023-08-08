@@ -60,6 +60,14 @@ public class ClassServiceTest {
     private AttachmentRepository attachmentRepository;
 
     @Mock
+    private TestRepository testRepository;
+
+    @Mock
+    private QuestionRepository questionRepository;
+
+    @Mock
+    private AnswerRepository answerRepository;
+    @Mock
     private UserRepository userRepository;
 
     @InjectMocks
@@ -194,7 +202,23 @@ public class ClassServiceTest {
 
         Post post = Post.builder().id(1).classroom(classroom).content("Submit assignment tomorrow").build();
 
-        Comment comment = Comment.builder().commentType(CommentType.builder().id(1).build()).content("Hello").build();
+        Comment comment = Comment.builder().commentType(CommentType.builder().id(anyInt()).build()).build();
+
+        com.capstone.project.model.Test test = com.capstone.project.model.Test.builder().id(1).description("Test for all").classroom(classroom).duration(12)
+                .title("Progress test").user(User.builder().id(2).build()).build();
+        testRepository.save(test);
+
+        Question question = Question.builder()
+                .id(1)
+                .test(test)
+                .num_choice(3)
+                .question("Who kill Jack Robin")
+                .questionType(QuestionType.builder().id(1).build())
+                .build();
+        questionRepository.save(question);
+
+        Answer answer = Answer.builder().question(question).is_true(true).content("Knight").build();
+        answerRepository.save(answer);
 
         Assignment assignment = Assignment.builder()
                 .id(1)
@@ -225,10 +249,17 @@ public class ClassServiceTest {
         when(classRepository.findById(1)).thenReturn(Optional.of(classroom));
         when(postRepository.getPostByClassroomId(1)).thenReturn(List.of(post));
         when(commentRepository.getCommentByPostId(1)).thenReturn(List.of(comment));
+        when(attachmentRepository.getAttachmentByPostId(1)).thenReturn(List.of(attachment));
         when(assignmentRepository.getAssignmentByClassroomId(1)).thenReturn(List.of(assignment));
         when(submissionRepository.getSubmissionByAssignmentId(1)).thenReturn(List.of(submission));
+        when(commentRepository.getCommentBySubmissionId(1)).thenReturn(List.of(comment));
         when(attachmentRepository.getAttachmentBySubmissionId(1)).thenReturn(List.of(attachment));
-
+        when(attachmentRepository.getAttachmentByAssignmentId(1)).thenReturn(List.of(attachment));
+        when(commentRepository.getCommentByAssignmentId(1)).thenReturn(List.of(comment));
+        when(testRepository.getTestByClassroomId(1)).thenReturn(List.of(test));
+        when(questionRepository.getQuestionByTestId(1)).thenReturn(List.of(question));
+        when(answerRepository.getAnswerByQuestionId(1)).thenReturn(List.of(answer));
+        when(commentRepository.getCommentByTestId(1)).thenReturn(List.of(comment));
         try {
             classServiceImpl.deleteHardClass(1);
         } catch (ResourceNotFroundException e) {
@@ -237,10 +268,10 @@ public class ClassServiceTest {
 
         verify(classRepository, times(1)).delete(classroom);
         verify(postRepository, times(1)).delete(post);
-        verify(commentRepository, times(1)).delete(comment);
+        verify(commentRepository, times(4)).delete(comment);
         verify(assignmentRepository, times(1)).delete(assignment);
         verify(submissionRepository, times(1)).delete(submission);
-        verify(attachmentRepository, times(1)).delete(attachment);
+        verify(attachmentRepository, times(3)).delete(attachment);
     }
 
     @Order(7)
@@ -298,8 +329,8 @@ public class ClassServiceTest {
     @ParameterizedTest(name = "index => clasId={0},isDeleted{1},search{2}, author{3},learner{4},fromDeleted{5},toDeleted{6} ," +
                                        " fromCreated{7},toCreated{8}, sortBy{9},direction{10},page={11}, size{12} ")
     @CsvSource({
-            "1,true,JLPT, quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5",
-            "2,false,IELTS,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5"
+            "1,true,JLPT, quantruong,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5",
+            "2,false,IELTS,ngocnguyen,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,created_date,DESC,1,5"
     })
     public void testGetFilterClass(int classId,boolean isDeleted,String search, String author,String learner, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                                    String sortBy, String direction,int page, int size) throws ResourceNotFroundException {

@@ -106,17 +106,23 @@ public class ClassStatisticServiceTest {
         }
     }
 
+
     @Order(4)
     @Test
     public void getLearnerJoinedGrowth() {
         try {
+            int classId = 1;
+            List<String> dateRange = Arrays.asList("2023-01-01", "2023-02-01");
             Map<String, Object> response = new HashMap<>();
             response.put("totalItems", 2);
-            when(classRepository.findById(anyInt())).thenReturn(Optional.ofNullable(Class.builder().build()));
-            when(dateRangePicker.getShortDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-            when(classLearnerService.filterClassLearner(anyInt(), anyInt(), any(),any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
-            List<Integer> result = classStatisticService.getLeanerJoinedGrowth(1);
-            assertThat(result.size()).isGreaterThan(0);
+
+            when(classRepository.findById(classId)).thenReturn(Optional.ofNullable(Class.builder().build()));
+            when(dateRangePicker.getDateRange()).thenReturn(dateRange);
+            when(classLearnerService.filterClassLearner(anyInt(), anyInt(), any(), any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
+
+            List<Integer> result = classStatisticService.getLeanerJoinedGrowth(classId);
+
+            assertThat(result.size()).isEqualTo(1);
         } catch (ResourceNotFroundException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -126,11 +132,15 @@ public class ClassStatisticServiceTest {
     @Test
     public void getPostGrowth() {
         try {
+            int classId = 1;
+            List<String[]> dateRange = new ArrayList<>();
+            dateRange.add(new String[]{"2023-01-01", "2023-02-01"});
             Map<String, Object> response = new HashMap<>();
             response.put("totalItems", 2);
-            when(dateRangePicker.getDateActive()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
+            when(classRepository.findById(classId)).thenReturn(Optional.ofNullable(Class.builder().build()));
+            when(dateRangePicker.getRecent4Weeks()).thenReturn(dateRange);
             when(postService.getFilterPost(any(), any(), any(), any(), any(), any(), anyInt(), anyInt(), anyInt())).thenReturn(response);
-            List<Integer> result = classStatisticService.getPostGrowth(1);
+            List<Integer> result = classStatisticService.getPostGrowth(classId);
             assertThat(result.size()).isGreaterThan(0);
         } catch (ResourceNotFroundException e) {
             throw new RuntimeException(e);
