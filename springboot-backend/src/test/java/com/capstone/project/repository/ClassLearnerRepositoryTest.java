@@ -5,6 +5,7 @@ import com.capstone.project.model.ClassLearner;
 import com.capstone.project.model.User;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -25,52 +26,57 @@ public class ClassLearnerRepositoryTest {
     @Autowired
     private ClassLearnerRepository classLearnerRepository;
 
+
+    @Autowired
+    private ClassRepository classRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Order(1)
-    @ParameterizedTest(name = "{index} => userId={0}, classId{1}, createdDate{2}" )
-    @CsvSource({
-            "2, 9, 2023-07-15",
-            "2,8, 2023-08-09",
-    })
-    public void testFindByUserIdAndClassroomId(int userId,int classroomId,String createdDate)  {
+    @Test
+    public void testFindByUserIdAndClassroomId()  {
+        User user = User.builder().username("test_stub").email("teststub@gmail.com").build();
+        userRepository.save(user);
 
-        try {
-            ClassLearner classLearner = ClassLearner.builder()
-                    .user(User.builder().id(userId).build())
-                    .classroom(Class.builder().id(classroomId).build())
-                    .created_date(dateFormat.parse(createdDate))
-                    .build();
-            classLearnerRepository.save(classLearner);
+        Class classroom = Class.builder()
+                .user(user)
+                .build();
+        classRepository.save(classroom);
 
-            ClassLearner classLearners = classLearnerRepository.findByUserIdAndClassroomId(2,7);
-            assertThat(classLearners).isNotNull();
-        }catch (ParseException e){
-            throw  new RuntimeException(e);
-        }
+        ClassLearner classLearner = ClassLearner.builder()
+                .user(User.builder().id(user.getId()).build())
+                .classroom(Class.builder().id(classroom.getId()).build())
+                .build();
+        classLearnerRepository.save(classLearner);
+
+        ClassLearner classLearners = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
+        assertThat(classLearners).isNotNull();
     }
 
     @Order(2)
-    @ParameterizedTest(name = "index => userId={0}, classId={1}, createdDate={2}")
-    @CsvSource({
-            "2, 9, 2023-7-1",
-            "2, 8, 2023-7-2",
-    })
-    public void testGetClassLeanerByUserId(int userId, int classId, String createdDate) {
-        try {
+    @Test
+    public void testGetClassLeanerByUserId() {
+        User user = User.builder().username("test_stub").email("teststub@gmail.com").build();
+        userRepository.save(user);
+
+        Class classroom = Class.builder()
+                .user(user)
+                .build();
+        classRepository.save(classroom);
+
             ClassLearner classLearner = ClassLearner.builder()
-                    .user(User.builder().id(userId).build())
-                    .classroom(Class.builder().id(classId).build())
-                    .created_date(dateFormat.parse(createdDate))
+                    .user(User.builder().id(user.getId()).build())
+                    .classroom(Class.builder().id(classroom.getId()).build())
                     .build();
 
             classLearnerRepository.save(classLearner);
 
-            ClassLearner classLearners = classLearnerRepository.getClassLeanerByUserId(2);
+            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(user.getId());
             assertThat(classLearners).isNotNull();
 
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 }
