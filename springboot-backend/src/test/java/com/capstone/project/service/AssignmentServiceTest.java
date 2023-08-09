@@ -5,6 +5,7 @@ import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
 import com.capstone.project.repository.AssignmentRepository;
 import com.capstone.project.repository.AttachmentRepository;
+import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.repository.SubmissionRepository;
 import com.capstone.project.service.impl.AssignmentServiceImpl;
 import jakarta.persistence.EntityManager;
@@ -48,6 +49,9 @@ public class AssignmentServiceTest {
 
     @Mock
     private  AttachmentRepository attachmentRepository;
+
+    @Mock
+    private CommentRepository commentRepository;
 
     @InjectMocks
     private AssignmentServiceImpl assignmentServiceImpl;
@@ -167,6 +171,11 @@ public class AssignmentServiceTest {
                 .title("Assignment 1")
                 .build();
 
+        Comment comment = Comment.builder()
+                .id(1)
+                .content("Hello guys")
+                .build();
+
         Submission submission = Submission.builder()
                 .id(1)
                 .description("submit assignment")
@@ -181,13 +190,18 @@ public class AssignmentServiceTest {
         doNothing().when(assignmentRepository).delete(assignment);
         doNothing().when(submissionRepository).delete(submission);
         doNothing().when(attachmentRepository).delete(attachment);
+        doNothing().when(commentRepository).delete(comment);
 
         when(assignmentRepository.findById(any())).thenReturn(Optional.ofNullable(assignment));
         doNothing().when(assignmentRepository).delete(assignment);
 
         when(assignmentRepository.findById(1)).thenReturn(Optional.of(assignment));
-        when(submissionRepository.getSubmissionByAssignmentId(1)).thenReturn(List.of(submission));
-        when(attachmentRepository.getAttachmentBySubmissionId(1)).thenReturn(List.of(attachment));
+        when(submissionRepository.getSubmissionByAssignmentId(assignment.getId())).thenReturn(List.of(submission));
+        when(attachmentRepository.getAttachmentBySubmissionId(submission.getId())).thenReturn(List.of(attachment));
+        when(commentRepository.getCommentBySubmissionId(submission.getId())).thenReturn(List.of(comment));
+        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
+        when(commentRepository.getCommentByAssignmentId(assignment.getId())).thenReturn(List.of(comment));
+        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
 
         try {
             assignmentServiceImpl.deleteAssignment(1);
@@ -198,6 +212,7 @@ public class AssignmentServiceTest {
         verify(assignmentRepository, times(1)).delete(assignment);
         verify(submissionRepository, times(1)).delete(submission);
         verify(attachmentRepository, times(1)).delete(attachment);
+        verify(commentRepository, times(4)).delete(comment);
     }
 
 
