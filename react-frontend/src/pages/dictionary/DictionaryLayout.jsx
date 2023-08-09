@@ -23,7 +23,7 @@ function DictionaryLayout() {
                 <div className="justify-center mt-4">
                     <div className="text-center form-inline">
                         <form
-                            className="form-inline w-50"
+                            className="form-dictionary form-inline"
                             style={{ display: 'inline-flex' }}
                         >
                             <input
@@ -53,7 +53,7 @@ function DictionaryLayout() {
             </div>
             {/* Header */}
             <div className="border-bottom bg-white p-2 pb-0">
-                <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
+                <ul className="nav-dictionary nav flex-grow-1 fw-semibold">
                     <li>
                         <NavLink
                             to={{
