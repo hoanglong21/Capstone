@@ -60,11 +60,18 @@ const getFilterList = (
     )
 }
 
+const startTest = (userId, testId) => {
+    return axios.get(
+        API_BASE_URL + '/starttest?userid=' + userId + '&testid=' + testId
+    )
+}
+
 const TestService = {
     getFilterList,
     createTest,
     updateTest,
     getTestById,
     deleteTest,
+    startTest,
 }
 export default TestService
