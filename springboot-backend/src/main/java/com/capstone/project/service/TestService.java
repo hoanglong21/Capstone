@@ -31,6 +31,7 @@ public interface TestService {
 
     Map<String, Object> getNumAttemptTest(int testid, int classid) throws ResourceNotFroundException;
 
-    TestLearner startTest(int testId, int userId);
+    Map<String, Object> startTest(int testId, int userId);
+
     double endTest(List<TestResult> testResultList) throws ResourceNotFroundException;
 }

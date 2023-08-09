@@ -1,5 +1,6 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.dto.QuestionWrapper;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
@@ -252,15 +253,25 @@ public class TestServiceImpl  implements TestService {
         return response;
     }
 
-
-    @Override
-    public TestLearner startTest(int testId, int userId) {
+    public Map<String, Object> startTest(int testId, int userId) {
         TestLearner testLearner = TestLearner.builder()
                 .test(Test.builder().id(testId).build())
                 .user(User.builder().id(userId).build())
                 .start(new Date())
                 .build();
-        return testLearnerRepository.save(testLearner);
+        List<QuestionWrapper> questionWrappers = new ArrayList<>();
+        List<Question> testQuestions = questionRepository.getQuestionByTestId(testId);
+        for(Question question : testQuestions) {
+            QuestionWrapper questionWrapper = new QuestionWrapper();
+            questionWrapper.setQuestion(question);
+            questionWrapper.setAnswerList(answerRepository.getAnswerByQuestionId(question.getId()));
+            questionWrappers.add(questionWrapper);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("testLearner", testLearnerRepository.save(testLearner));
+        response.put("questionList", questionWrappers);
+        return response;
     }
 
     @Override
