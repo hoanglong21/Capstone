@@ -12,7 +12,8 @@ const AuthVerify = (props) => {
             const decodedJwt = jwtDecode(localStorage.getItem('userToken'))
             if (decodedJwt.exp * 1000 < Date.now()) {
                 props.logOut()
-                navigate('/login')
+                navigate('/')
+                window.location.reload()
             }
         }
     }, [location, props])
