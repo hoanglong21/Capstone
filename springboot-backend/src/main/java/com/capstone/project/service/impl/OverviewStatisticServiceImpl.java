@@ -41,7 +41,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
     }
 
     @Override
-    public List<Integer> getStudySetGrowth() {
+    public List<Integer> getStudySetGrowth() throws Exception {
         List<Integer> result = new ArrayList<>();
         List<String> listDate = dateRangePicker.getDateRange();
         for(int i=0; i<listDate.size()-1; i++) {
@@ -81,7 +81,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
     }
 
     @Override
-    public Integer getStudySetNumber() {
+    public Integer getStudySetNumber() throws Exception {
         List<String> listDate = dateRangePicker.getShortDateRange();
         Map<String, Object> response = studySetService.getFilterList(null, null, null, null, 0,
                 0, null, null, null,

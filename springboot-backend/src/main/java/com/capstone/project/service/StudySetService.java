@@ -30,7 +30,7 @@ public interface StudySetService {
 
     Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId, String authorName,
                                       String fromDeleted, String toDeleted, String fromCreated, String toCreated,
-                                      String sortBy, String direction, int page, int size);
+                                      String sortBy, String direction, int page, int size) throws Exception;
 
     List<Map<String, Object>> getQuizByStudySetId(int studySetId, int[] questionType, int numberOfQuestion, int userId, boolean star) throws Exception;
 
