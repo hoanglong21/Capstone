@@ -133,20 +133,28 @@ export const VocabCard = (props) => {
         name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
         if (file) {
-            const urlOld = String(card[name])
-            const url = await uploadFile(
-                file,
-                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
-            )
-            const tempCard = { ...card, [name]: url }
-            setCard(tempCard)
-            if (urlOld) {
-                await deleteFileByUrl(
-                    urlOld,
+            try {
+                const urlOld = String(card[name])
+                const url = await uploadFile(
+                    file,
                     `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
                 )
+                const tempCard = { ...card, [name]: url }
+                setCard(tempCard)
+                if (urlOld) {
+                    await deleteFileByUrl(
+                        urlOld,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
+                    )
+                }
+                doUpdateCard(tempCard)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
-            doUpdateCard(tempCard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         props.setSaving(false)
@@ -160,10 +168,18 @@ export const VocabCard = (props) => {
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
         if (urlOld) {
-            await deleteFileByUrl(
-                urlOld,
-                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
-            )
+            try {
+                await deleteFileByUrl(
+                    urlOld,
+                    `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
+                )
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)

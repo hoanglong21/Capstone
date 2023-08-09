@@ -208,7 +208,15 @@ export const KanjiCard = (props) => {
 
     const doUpdateCard = async (tempCard) => {
         props.setSaving(true)
-        await CardService.updateCard(tempCard.id, tempCard)
+        try {
+            await CardService.updateCard(tempCard.id, tempCard)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         props.setSaving(false)
     }
 
@@ -227,27 +235,35 @@ export const KanjiCard = (props) => {
         }
         const file = event.target.files[0]
         if (file) {
-            const urlOld = String(card[name])
-            const url = await uploadFile(
-                file,
-                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
-            )
-            if (name === 'strokeOrder') {
-                // update stroke order
-                const tempStrokeOrder = { ...strokeOrder, content: url }
-                setStrokeOrder(tempStrokeOrder)
-                doUpdateContent(tempStrokeOrder)
-            } else {
-                // update card
-                const tempCard = { ...card, [name]: url }
-                setCard(tempCard)
-                if (urlOld) {
-                    await deleteFileByUrl(
-                        urlOld,
-                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
-                    )
+            try {
+                const urlOld = String(card[name])
+                const url = await uploadFile(
+                    file,
+                    `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
+                )
+                if (name === 'strokeOrder') {
+                    // update stroke order
+                    const tempStrokeOrder = { ...strokeOrder, content: url }
+                    setStrokeOrder(tempStrokeOrder)
+                    doUpdateContent(tempStrokeOrder)
+                } else {
+                    // update card
+                    const tempCard = { ...card, [name]: url }
+                    setCard(tempCard)
+                    if (urlOld) {
+                        await deleteFileByUrl(
+                            urlOld,
+                            `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
+                        )
+                    }
+                    doUpdateCard(tempCard)
                 }
-                doUpdateCard(tempCard)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
         }
         // set loading
@@ -290,10 +306,18 @@ export const KanjiCard = (props) => {
         }
         // delete url
         if (urlOld) {
-            await deleteFileByUrl(
-                urlOld,
-                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
-            )
+            try {
+                await deleteFileByUrl(
+                    urlOld,
+                    `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
+                )
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         // set loading
         if (name === 'picture') {

@@ -449,47 +449,71 @@ const CreateTest = () => {
         setSaving(true)
         var file = event.target.files[0]
         if (file) {
-            const url = await uploadFile(
-                file,
-                `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/question`
-            )
-            var tempQuestions = [...questions]
-            tempQuestions[quesIndex] = {
-                ...tempQuestions[quesIndex],
-                [event.target.name]: url,
+            try {
+                const url = await uploadFile(
+                    file,
+                    `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/question`
+                )
+                var tempQuestions = [...questions]
+                tempQuestions[quesIndex] = {
+                    ...tempQuestions[quesIndex],
+                    [event.target.name]: url,
+                }
+                setQuestions(tempQuestions)
+                handleUpdateQuestion(tempQuestions[quesIndex])
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
-            setQuestions(tempQuestions)
-            handleUpdateQuestion(tempQuestions[quesIndex])
         }
         setSaving(false)
     }
 
     const handleDeleteQues = async (ques, quesIndex) => {
         setSaving(true)
-        var tempQuestions = [...questions]
-        tempQuestions.splice(quesIndex, 1)
-        setQuestions(tempQuestions)
-        await QuestionService.deleteQuestion(ques.id)
-        await deleteFolder(
-            `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
-        )
+        try {
+            var tempQuestions = [...questions]
+            tempQuestions.splice(quesIndex, 1)
+            setQuestions(tempQuestions)
+            await QuestionService.deleteQuestion(ques.id)
+            await deleteFolder(
+                `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         setSaving(false)
     }
 
     const handleDeleteFileQues = async (event, ques, quesIndex) => {
         setSaving(true)
-        var tempQuestions = [...questions]
-        const url = tempQuestions[quesIndex][event.target.name]
-        tempQuestions[quesIndex] = {
-            ...tempQuestions[quesIndex],
-            [event.target.name]: null,
+        try {
+            var tempQuestions = [...questions]
+            const url = tempQuestions[quesIndex][event.target.name]
+            tempQuestions[quesIndex] = {
+                ...tempQuestions[quesIndex],
+                [event.target.name]: null,
+            }
+            setQuestions(tempQuestions)
+            handleUpdateQuestion(tempQuestions[quesIndex])
+            await deleteFileByUrl(
+                url,
+                `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
-        setQuestions(tempQuestions)
-        handleUpdateQuestion(tempQuestions[quesIndex])
-        await deleteFileByUrl(
-            url,
-            `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}`
-        )
         setSaving(false)
     }
 
@@ -618,18 +642,26 @@ const CreateTest = () => {
 
     const handleDeleteAnswer = async (ques, quesIndex, ans, ansIndex) => {
         setSaving(true)
-        var tempQuestions = [...questions]
-        var tempAnswers = [...tempQuestions[quesIndex].answers]
-        tempAnswers.splice(ansIndex, 1)
-        tempQuestions[quesIndex] = {
-            ...tempQuestions[quesIndex],
-            answers: tempAnswers,
-        }
-        setQuestions(tempQuestions)
-        await AnswerService.deleteAnswer(ans.id)
-        await deleteFolder(
-            `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
-        )
+        try {
+            var tempQuestions = [...questions]
+            var tempAnswers = [...tempQuestions[quesIndex].answers]
+            tempAnswers.splice(ansIndex, 1)
+            tempQuestions[quesIndex] = {
+                ...tempQuestions[quesIndex],
+                answers: tempAnswers,
+            }
+            setQuestions(tempQuestions)
+            await AnswerService.deleteAnswer(ans.id)
+            await deleteFolder(
+                `files/${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }        
         setSaving(false)
     }
 
@@ -641,23 +673,31 @@ const CreateTest = () => {
         ansIndex
     ) => {
         setSaving(true)
-        var tempQuestions = [...questions]
-        var tempAnswers = [...tempQuestions[quesIndex].answers]
-        const url = tempAnswers[ansIndex][event.target.name]
-        tempAnswers[ansIndex] = {
-            ...tempAnswers[ansIndex],
-            [event.target.name]: null,
+        try {
+            var tempQuestions = [...questions]
+            var tempAnswers = [...tempQuestions[quesIndex].answers]
+            const url = tempAnswers[ansIndex][event.target.name]
+            tempAnswers[ansIndex] = {
+                ...tempAnswers[ansIndex],
+                [event.target.name]: null,
+            }
+            tempQuestions[quesIndex] = {
+                ...tempQuestions[quesIndex],
+                answers: tempAnswers,
+            }
+            setQuestions(tempQuestions)
+            await deleteFileByUrl(
+                url,
+                `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
+            )
+            handleUpdateAnswer(tempQuestions[quesIndex])
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
-        tempQuestions[quesIndex] = {
-            ...tempQuestions[quesIndex],
-            answers: tempAnswers,
-        }
-        setQuestions(tempQuestions)
-        await deleteFileByUrl(
-            url,
-            `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
-        )
-        handleUpdateAnswer(tempQuestions[quesIndex])
         setSaving(false)
     }
 

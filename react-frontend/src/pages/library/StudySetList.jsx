@@ -25,53 +25,70 @@ const StudySetList = () => {
 
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
-        const temp = (
-            await StudySetService.getFilterList(
-                '',
-                '',
-                '',
-                `${searchKey ? '=' + searchKey : ''}`,
-                `=${userInfo.id}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        setSets(temp)
+        try {
+            setIsEmpty(false)
+            const temp = (
+                await StudySetService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    `=${userInfo.id}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            setSets(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         setLoadingSearch(false)
     }
 
     const checkEmpty = async () => {
         setLoading(true)
-        setIsEmpty(false)
-        const temp = (
-            await StudySetService.getFilterList(
-                '',
-                '',
-                '',
-                '',
-                `=${userInfo.id}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        if (temp.length === 0) {
-            setIsEmpty(true)
+        try {
+            setIsEmpty(false)
+            const temp = (
+                await StudySetService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    '',
+                    `=${userInfo.id}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            if (temp.length === 0) {
+                setIsEmpty(true)
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
         setLoading(false)
     }

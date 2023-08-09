@@ -22,14 +22,24 @@ const Instructions = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempAssignment = (
-                await AssignmentService.getAssignmentById(assign_id)
-            ).data
-            setAssignment(tempAssignment)
-            const tempAttachments = (
-                await AttachmentService.getAttachmentsByAssignmentId(assign_id)
-            ).data
-            setAttachments(tempAttachments)
+            try {
+                const tempAssignment = (
+                    await AssignmentService.getAssignmentById(assign_id)
+                ).data
+                setAssignment(tempAssignment)
+                const tempAttachments = (
+                    await AttachmentService.getAttachmentsByAssignmentId(
+                        assign_id
+                    )
+                ).data
+                setAttachments(tempAttachments)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         fetchData()
     }, [])

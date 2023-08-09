@@ -138,14 +138,22 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     }
 
     const handleDeletePost = async () => {
-        await PostService.deletePost(post.id)
-        var tempPosts = [...posts]
-        tempPosts.splice(index, 1)
-        stateChanger(tempPosts)
-        document.getElementById(`closeDeletePostModal${index}`).click()
-        await deleteFolder(
-            `files/${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
-        )
+        try {
+            await PostService.deletePost(post.id)
+            var tempPosts = [...posts]
+            tempPosts.splice(index, 1)
+            stateChanger(tempPosts)
+            document.getElementById(`closeDeletePostModal${index}`).click()
+            await deleteFolder(
+                `files/${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const handleDeleteFile = async (file, index) => {

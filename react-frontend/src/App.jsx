@@ -66,11 +66,9 @@ import KanjiDict from './pages/dictionary/KanjiDict'
 import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
 import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
 import ViewStudySet from './pages/studySet/view/ViewStudySet'
-import DoTest from './pages/class/test/DoTest'
 import TestList from './pages/class/test/TestList'
 import Stream from './pages/class/Stream'
 import CreateTest from './pages/class/test/CreateTest'
-import ViewDetailTest from './pages/class/test/ViewDetailTest'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/studySet/quiz/DoQuiz'
@@ -92,6 +90,7 @@ import Submissions from './pages/class/assignment/Submissions'
 import VideoCall from './components/chat/VideoCall'
 import UseAccount from './pages/help/UseAccount'
 import UseStudySet from './pages/help/UseStudySet'
+import ViewTest from './pages/class/test/ViewTest'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -188,7 +187,7 @@ const App = () => {
                                 element={<ClassStatistics />}
                             />
                         </Route>
-                        {/* Tutor view assignment */}
+                        {/* Assignment */}
                         <Route
                             path="class/:id/assignment/:assign_id"
                             element={<ViewAssignment />}
@@ -200,11 +199,16 @@ const App = () => {
                             />
                         </Route>
                         {/* Test */}
-                        <Route path="/dotest" element={<DoTest />} />
                         <Route
-                            path="/viewdetailtest"
-                            element={<ViewDetailTest />}
-                        />
+                            path="class/:id/test/:test_id"
+                            element={<ViewTest />}
+                        >
+                            <Route path="details" element={<Instructions />} />
+                            {/* <Route
+                                path="submissions"
+                                element={<Submissions />}
+                            /> */}
+                        </Route>
                         {/* Feedback */}
                         <Route
                             path="help-center/send-feedback"

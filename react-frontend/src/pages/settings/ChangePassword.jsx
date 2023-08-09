@@ -32,33 +32,34 @@ const ChangePassword = () => {
         setError('')
 
         form.classList.add('was-validated')
-        if (!currentPass) {
-            currentPassEl.classList.add('is-invalid')
-            setError('Please complete all the fields.')
-        } else if (!newPass) {
-            newPassEl.classList.add('is-invalid')
-            setError('Please complete all the fields.')
-        } else if (!confirmPass) {
-            confirmPassEl.classList.add('is-invalid')
-            setError('Please complete all the fields.')
-        } else if (
-            !(
-                await UserService.checkMatchPassword(
-                    userInfo.username,
-                    currentPass
+        try {
+            if (!currentPass) {
+                currentPassEl.classList.add('is-invalid')
+                setError('Please complete all the fields.')
+            } else if (!newPass) {
+                newPassEl.classList.add('is-invalid')
+                setError('Please complete all the fields.')
+            } else if (!confirmPass) {
+                confirmPassEl.classList.add('is-invalid')
+                setError('Please complete all the fields.')
+            } else if (
+                !(
+                    await UserService.checkMatchPassword(
+                        userInfo.username,
+                        currentPass
+                    )
+                ).data
+            ) {
+                setError('Your current password is incorrect.')
+                currentPassEl.classList.add('is-invalid')
+            } else if (currentPass === newPass) {
+                setError(
+                    'Your new password cannot be the same as your old password. Please enter a different password.'
                 )
-            ).data
-        ) {
-            setError('Your current password is incorrect.')
-            currentPassEl.classList.add('is-invalid')
-        } else if (currentPass === newPass) {
-            setError(
-                'Your new password cannot be the same as your old password. Please enter a different password.'
-            )
-            currentPassEl.classList.add('is-invalid')
-            newPassEl.classList.add('is-invalid')
-        } else if (!newPass.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/)) {
-            setError(`<ul>
+                currentPassEl.classList.add('is-invalid')
+                newPassEl.classList.add('is-invalid')
+            } else if (!newPass.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/)) {
+                setError(`<ul>
                         Your new password must contain the following:
                         <li id="letter" className="invalid">
                             A <b>lowercase</b> letter
@@ -73,19 +74,26 @@ const ChangePassword = () => {
                             Minimum <b>8 characters</b>
                         </li>
                     </ul>`)
-            newPassEl.classList.add('is-invalid')
-        } else if (confirmPass !== newPass) {
-            setError('The password confirmation does not match.')
-            newPassEl.classList.add('is-invalid')
-            confirmPassEl.classList.add('is-invalid')
-        } else {
-            await UserService.changePassword(userInfo.username, newPass)
-            dispatch(getUser(userInfo.token))
-            setSuccess(true)
-            // auto hide after 5s
-            setTimeout(function () {
-                setSuccess(false)
-            }, 5000)
+                newPassEl.classList.add('is-invalid')
+            } else if (confirmPass !== newPass) {
+                setError('The password confirmation does not match.')
+                newPassEl.classList.add('is-invalid')
+                confirmPassEl.classList.add('is-invalid')
+            } else {
+                await UserService.changePassword(userInfo.username, newPass)
+                dispatch(getUser(userInfo.token))
+                setSuccess(true)
+                // auto hide after 5s
+                setTimeout(function () {
+                    setSuccess(false)
+                }, 5000)
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
         document.body.scrollTop = document.documentElement.scrollTop = 0
     }

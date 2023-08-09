@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { NavLink, Outlet, useParams } from 'react-router-dom'
 
 import ClassService from '../../../services/ClassService'
+import ClassLearnerService from '../../../services/ClassLearnerService'
 
 import UpdateClass from '../UpdateClass'
 import DeleteClass from '../DeleteClass'
@@ -17,8 +18,8 @@ import {
     StudySetIcon,
     UnenrollIcon,
 } from '../../../components/icons'
+import defaultAvatar from '../../../assets/images/default_avatar.png'
 import './classLayout.css'
-import ClassLearnerService from '../../../services/ClassLearnerService'
 
 const ClassLayout = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -351,7 +352,9 @@ const ClassLayout = () => {
                             </h6>
                             <div className="d-flex align-items-center mt-2">
                                 <img
-                                    src={classroom?.user?.avatar}
+                                    src={
+                                        classroom?.user?.avatar || defaultAvatar
+                                    }
                                     className="mainClass_authorAvatar"
                                 />
                                 <div className="ms-3">
