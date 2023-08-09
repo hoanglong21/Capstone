@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
 import { getUser } from '../../../features/user/userAction'
+import ProgressService from '../../../services/ProgressService'
 
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
@@ -21,7 +22,6 @@ import {
 import finishQuizImg from '../../../assets/images/finish_quiz.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './quiz.css'
-import ProgressService from '../../../services/ProgressService'
 
 const DoQuiz = () => {
     const navigate = useNavigate()
@@ -74,9 +74,9 @@ const DoQuiz = () => {
     const [progress, setProgress] = useState(0)
     const [questions, setQuestions] = useState([])
     const [answers, setAnswers] = useState([])
-    const [results, setResults] = useState([])
     const [skipAnswer, setSkipAnswer] = useState(null)
     const [isEnd, setIsEnd] = useState(false)
+    const [results, setResults] = useState([])
     const [correct, setCorrect] = useState(false)
     const [incorrect, setIncorrect] = useState(false)
 
@@ -114,11 +114,18 @@ const DoQuiz = () => {
                 // set type
                 setType(tempStudySet.studySetType.id)
                 // fields
-                const tempFields = (
+                var tempFields = (
                     await FieldService.getFieldsByStudySetTypeId(
                         tempStudySet.id
                     )
                 ).data
+                if (tempStudySet.studySetType.id === 1) {
+                    tempFields.splice(2, 1)
+                } else if (tempStudySet.studySetType.id === 2) {
+                    tempFields.splice(9, 1)
+                } else if (tempStudySet.studySetType.id === 2) {
+                    tempFields.splice(3, 1)
+                }
                 setFields(tempFields)
                 // count
                 const tempCounts = (
@@ -144,18 +151,31 @@ const DoQuiz = () => {
                     const field = tempFields[index]
                     tempWrittenAnsWith.push(field.id)
                 }
-                setWrittenPromptWith([...tempWrittenPromptWith])
+                if (tempStudySet.studySetType.id === 1) {
+                    setWrittenPromptWith(tempFields[0].id)
+                    setOptionWrittenPromptWith(tempFields[0].id)
+                    setMultiplePromptWith(tempFields[0].id)
+                    setOptionMultiplePromptWith(tempFields[0].id)
+                    setMultipleAnswerWith(tempFields[1].id)
+                    setOptionMultipleAnswerWith(tempFields[1].id)
+                    setTrueFalsePromptWith(tempFields[0].id)
+                    setOptionTrueFalsePromptWith(tempFields[0].id)
+                    setTrueFalseAnswerWith(tempFields[1].id)
+                    setOptionTrueFalseAnswerWith(tempFields[1].id)
+                } else {
+                    setWrittenPromptWith([...tempWrittenPromptWith])
+                    setOptionWrittenPromptWith([...tempWrittenPromptWith])
+                    setMultiplePromptWith([...tempWrittenPromptWith])
+                    setMultipleAnswerWith([...tempWrittenAnsWith])
+                    setOptionMultiplePromptWith([...tempWrittenPromptWith])
+                    setOptionMultipleAnswerWith([...tempWrittenAnsWith])
+                    setTrueFalsePromptWith([...tempWrittenPromptWith])
+                    setTrueFalseAnswerWith([...tempWrittenAnsWith])
+                    setOptionTrueFalsePromptWith([...tempWrittenPromptWith])
+                    setOptionTrueFalseAnswerWith([...tempWrittenAnsWith])
+                }
                 setWrittenAnswerWith(tempFields[1].id)
-                setOptionWrittenPromptWith([...tempWrittenPromptWith])
                 setOptionWrittenAnswerWith(tempFields[1].id)
-                setMultiplePromptWith([...tempWrittenPromptWith])
-                setMultipleAnswerWith([...tempWrittenAnsWith])
-                setOptionMultiplePromptWith([...tempWrittenPromptWith])
-                setOptionMultipleAnswerWith([...tempWrittenAnsWith])
-                setTrueFalsePromptWith([...tempWrittenPromptWith])
-                setTrueFalseAnswerWith([...tempWrittenAnsWith])
-                setOptionTrueFalsePromptWith([...tempWrittenPromptWith])
-                setOptionTrueFalseAnswerWith([...tempWrittenAnsWith])
                 // get quiz
                 if (tempNumQues > 0) {
                     const tempQuestions = (
@@ -203,6 +223,7 @@ const DoQuiz = () => {
     }
 
     const handleCreateQuiz = async () => {
+        document.getElementById('quizOptionModal').scrollTop = 0
         setProgress(0)
         setResults([])
         setIsEnd(false)
@@ -229,12 +250,21 @@ const DoQuiz = () => {
                 setError('You must select one side for your written answer.')
                 return
             }
-            for (const prompt of optionWrittenPromptWith) {
-                if (optionWrittenAnswerWith === prompt) {
+            if (type === 1) {
+                if (optionWrittenAnswerWith === optionWrittenPromptWith) {
                     setError(
                         'Your written prompt and written answer cannot have the same item.'
                     )
                     return
+                }
+            } else {
+                for (const prompt of optionWrittenPromptWith) {
+                    if (optionWrittenAnswerWith === prompt) {
+                        setError(
+                            'Your written prompt and written answer cannot have the same item.'
+                        )
+                        return
+                    }
                 }
             }
         }
@@ -251,12 +281,21 @@ const DoQuiz = () => {
                 )
                 return
             }
-            for (const prompt of optionMultiplePromptWith) {
-                if (optionMultipleAnswerWith?.includes(prompt)) {
+            if (type === 1) {
+                if (optionMultipleAnswerWith === optionMultiplePromptWith) {
                     setError(
                         'Your multiple choice prompt and multiple choice answer cannot have the same item.'
                     )
                     return
+                }
+            } else {
+                for (const prompt of optionMultiplePromptWith) {
+                    if (optionMultipleAnswerWith?.includes(prompt)) {
+                        setError(
+                            'Your multiple choice prompt and multiple choice answer cannot have the same item.'
+                        )
+                        return
+                    }
                 }
             }
         }
@@ -273,12 +312,21 @@ const DoQuiz = () => {
                 )
                 return
             }
-            for (const prompt of optionTrueFalsePromptWith) {
-                if (optionTrueFalseAnswerWith?.includes(prompt)) {
+            if (type === 1) {
+                if (optionTrueFalsePromptWith === optionTrueFalseAnswerWith) {
                     setError(
                         'Your true/false prompt and true/false answer cannot have the same item.'
                     )
                     return
+                }
+            } else {
+                for (const prompt of optionTrueFalsePromptWith) {
+                    if (optionTrueFalseAnswerWith?.includes(prompt)) {
+                        setError(
+                            'Your true/false prompt and true/false answer cannot have the same item.'
+                        )
+                        return
+                    }
                 }
             }
         }
@@ -1024,49 +1072,81 @@ const DoQuiz = () => {
                                                         className="mb-2"
                                                         key={index}
                                                     >
-                                                        <input
-                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
-                                                            id={`writtenPromptWith${field.id}`}
-                                                            checked={
-                                                                optionWrittenPromptWith?.includes(
-                                                                    field.id
-                                                                ) || ''
-                                                            }
-                                                            onChange={(
-                                                                event
-                                                            ) => {
-                                                                if (
-                                                                    event.target
-                                                                        .checked
-                                                                ) {
-                                                                    var tempWrittenPromptWith =
-                                                                        [
-                                                                            ...optionWrittenPromptWith,
-                                                                        ]
-                                                                    tempWrittenPromptWith.push(
-                                                                        field.id
-                                                                    )
-                                                                    setOptionWrittenPromptWith(
-                                                                        tempWrittenPromptWith
-                                                                    )
-                                                                } else {
-                                                                    const tempWrittenPromptWith =
-                                                                        [
-                                                                            ...optionWrittenPromptWith,
-                                                                        ].filter(
-                                                                            (
-                                                                                item
-                                                                            ) =>
-                                                                                item !==
-                                                                                field.id
-                                                                        )
-                                                                    setOptionWrittenPromptWith(
-                                                                        tempWrittenPromptWith
-                                                                    )
+                                                        {type === 1 ? (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                name="writtenPromptWith"
+                                                                type="radio"
+                                                                id={`writtenPromptWith${field.id}`}
+                                                                checked={
+                                                                    optionWrittenPromptWith ===
+                                                                        field.id ||
+                                                                    ''
                                                                 }
-                                                            }}
-                                                        />
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        setOptionWrittenPromptWith(
+                                                                            field.id
+                                                                        )
+                                                                    } else {
+                                                                        setOptionWrittenPromptWith(
+                                                                            0
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                type="checkbox"
+                                                                id={`writtenPromptWith${field.id}`}
+                                                                checked={
+                                                                    optionWrittenPromptWith?.includes(
+                                                                        field.id
+                                                                    ) || ''
+                                                                }
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        var tempWrittenPromptWith =
+                                                                            [
+                                                                                ...optionWrittenPromptWith,
+                                                                            ]
+                                                                        tempWrittenPromptWith.push(
+                                                                            field.id
+                                                                        )
+                                                                        setOptionWrittenPromptWith(
+                                                                            tempWrittenPromptWith
+                                                                        )
+                                                                    } else {
+                                                                        const tempWrittenPromptWith =
+                                                                            [
+                                                                                ...optionWrittenPromptWith,
+                                                                            ].filter(
+                                                                                (
+                                                                                    item
+                                                                                ) =>
+                                                                                    item !==
+                                                                                    field.id
+                                                                            )
+                                                                        setOptionWrittenPromptWith(
+                                                                            tempWrittenPromptWith
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
                                                         <label
                                                             className="form-check-label"
                                                             htmlFor={`writtenPromptWith${field.id}`}
@@ -1144,49 +1224,81 @@ const DoQuiz = () => {
                                                         className="mb-2"
                                                         key={index}
                                                     >
-                                                        <input
-                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
-                                                            id={`multiplePromptWith${field.id}`}
-                                                            checked={
-                                                                optionMultiplePromptWith?.includes(
-                                                                    field.id
-                                                                ) || ''
-                                                            }
-                                                            onChange={(
-                                                                event
-                                                            ) => {
-                                                                if (
-                                                                    event.target
-                                                                        .checked
-                                                                ) {
-                                                                    var tempMultiplePromptWith =
-                                                                        [
-                                                                            ...optionMultiplePromptWith,
-                                                                        ]
-                                                                    tempMultiplePromptWith.push(
-                                                                        field.id
-                                                                    )
-                                                                    setOptionMultiplePromptWith(
-                                                                        tempMultiplePromptWith
-                                                                    )
-                                                                } else {
-                                                                    const tempMultiplePromptWith =
-                                                                        [
-                                                                            ...optionMultiplePromptWith,
-                                                                        ].filter(
-                                                                            (
-                                                                                item
-                                                                            ) =>
-                                                                                item !==
-                                                                                field.id
-                                                                        )
-                                                                    setOptionMultiplePromptWith(
-                                                                        tempMultiplePromptWith
-                                                                    )
+                                                        {type === 1 ? (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                name="multiplePromptWith"
+                                                                type="radio"
+                                                                id={`multiplePromptWith${field.id}`}
+                                                                checked={
+                                                                    optionMultiplePromptWith ===
+                                                                        field.id ||
+                                                                    ''
                                                                 }
-                                                            }}
-                                                        />
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        setOptionMultiplePromptWith(
+                                                                            field.id
+                                                                        )
+                                                                    } else {
+                                                                        setOptionMultiplePromptWith(
+                                                                            0
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                type="checkbox"
+                                                                id={`multiplePromptWith${field.id}`}
+                                                                checked={
+                                                                    optionMultiplePromptWith?.includes(
+                                                                        field.id
+                                                                    ) || ''
+                                                                }
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        var tempMultiplePromptWith =
+                                                                            [
+                                                                                ...optionMultiplePromptWith,
+                                                                            ]
+                                                                        tempMultiplePromptWith.push(
+                                                                            field.id
+                                                                        )
+                                                                        setOptionMultiplePromptWith(
+                                                                            tempMultiplePromptWith
+                                                                        )
+                                                                    } else {
+                                                                        const tempMultiplePromptWith =
+                                                                            [
+                                                                                ...optionMultiplePromptWith,
+                                                                            ].filter(
+                                                                                (
+                                                                                    item
+                                                                                ) =>
+                                                                                    item !==
+                                                                                    field.id
+                                                                            )
+                                                                        setOptionMultiplePromptWith(
+                                                                            tempMultiplePromptWith
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
                                                         <label
                                                             className="form-check-label"
                                                             htmlFor={`multiplePromptWith${field.id}`}
@@ -1205,49 +1317,81 @@ const DoQuiz = () => {
                                                         className="mb-2"
                                                         key={index}
                                                     >
-                                                        <input
-                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
-                                                            checked={
-                                                                optionMultipleAnswerWith?.includes(
-                                                                    field.id
-                                                                ) || ''
-                                                            }
-                                                            id={`multipleAnswerWith${field.id}`}
-                                                            onChange={(
-                                                                event
-                                                            ) => {
-                                                                if (
-                                                                    event.target
-                                                                        .checked
-                                                                ) {
-                                                                    var tempMultipleAnswerWith =
-                                                                        [
-                                                                            ...optionMultipleAnswerWith,
-                                                                        ]
-                                                                    tempMultipleAnswerWith.push(
-                                                                        field.id
-                                                                    )
-                                                                    setOptionMultipleAnswerWith(
-                                                                        tempMultipleAnswerWith
-                                                                    )
-                                                                } else {
-                                                                    const tempMultipleAnswerWith =
-                                                                        [
-                                                                            ...optionMultipleAnswerWith,
-                                                                        ].filter(
-                                                                            (
-                                                                                item
-                                                                            ) =>
-                                                                                item !==
-                                                                                field.id
-                                                                        )
-                                                                    setOptionMultipleAnswerWith(
-                                                                        tempMultipleAnswerWith
-                                                                    )
+                                                        {type === 1 ? (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                name="multipleAnswerWith"
+                                                                type="radio"
+                                                                id={`multipleAnswerWith${field.id}`}
+                                                                checked={
+                                                                    optionMultipleAnswerWith ===
+                                                                        field.id ||
+                                                                    ''
                                                                 }
-                                                            }}
-                                                        />
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        setOptionMultipleAnswerWith(
+                                                                            field.id
+                                                                        )
+                                                                    } else {
+                                                                        setOptionMultipleAnswerWith(
+                                                                            0
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                type="checkbox"
+                                                                id={`multipleAnswerWith${field.id}`}
+                                                                checked={
+                                                                    optionMultipleAnswerWith?.includes(
+                                                                        field.id
+                                                                    ) || ''
+                                                                }
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        var tempMultipleAnswerWith =
+                                                                            [
+                                                                                ...optionMultipleAnswerWith,
+                                                                            ]
+                                                                        tempMultipleAnswerWith.push(
+                                                                            field.id
+                                                                        )
+                                                                        setOptionMultipleAnswerWith(
+                                                                            tempMultipleAnswerWith
+                                                                        )
+                                                                    } else {
+                                                                        const tempMultipleAnswerWith =
+                                                                            [
+                                                                                ...optionMultipleAnswerWith,
+                                                                            ].filter(
+                                                                                (
+                                                                                    item
+                                                                                ) =>
+                                                                                    item !==
+                                                                                    field.id
+                                                                            )
+                                                                        setOptionMultipleAnswerWith(
+                                                                            tempMultipleAnswerWith
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
                                                         <label
                                                             className="form-check-label"
                                                             htmlFor={`multipleAnswerWith${field.id}`}
@@ -1280,49 +1424,81 @@ const DoQuiz = () => {
                                                         className="mb-2"
                                                         key={index}
                                                     >
-                                                        <input
-                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
-                                                            id={`trueFalsePromptWith${field.id}`}
-                                                            checked={
-                                                                optionTrueFalsePromptWith?.includes(
-                                                                    field.id
-                                                                ) || ''
-                                                            }
-                                                            onChange={(
-                                                                event
-                                                            ) => {
-                                                                if (
-                                                                    event.target
-                                                                        .checked
-                                                                ) {
-                                                                    var tempTrueFalsePromptWith =
-                                                                        [
-                                                                            ...optionTrueFalsePromptWith,
-                                                                        ]
-                                                                    tempTrueFalsePromptWith.push(
-                                                                        field.id
-                                                                    )
-                                                                    setOptionTrueFalsePromptWith(
-                                                                        tempTrueFalsePromptWith
-                                                                    )
-                                                                } else {
-                                                                    const tempTrueFalsePromptWith =
-                                                                        [
-                                                                            ...optionTrueFalsePromptWith,
-                                                                        ].filter(
-                                                                            (
-                                                                                item
-                                                                            ) =>
-                                                                                item !==
-                                                                                field.id
-                                                                        )
-                                                                    setOptionTrueFalsePromptWith(
-                                                                        tempTrueFalsePromptWith
-                                                                    )
+                                                        {type === 1 ? (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                name="trueFalsePromptWith"
+                                                                type="radio"
+                                                                id={`trueFalsePromptWith${field.id}`}
+                                                                checked={
+                                                                    optionTrueFalsePromptWith ===
+                                                                        field.id ||
+                                                                    ''
                                                                 }
-                                                            }}
-                                                        />
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        setOptionTrueFalsePromptWith(
+                                                                            field.id
+                                                                        )
+                                                                    } else {
+                                                                        setOptionTrueFalsePromptWith(
+                                                                            0
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                type="checkbox"
+                                                                id={`trueFalsePromptWith${field.id}`}
+                                                                checked={
+                                                                    optionTrueFalsePromptWith?.includes(
+                                                                        field.id
+                                                                    ) || ''
+                                                                }
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        var tempTrueFalsePromptWith =
+                                                                            [
+                                                                                ...optionTrueFalsePromptWith,
+                                                                            ]
+                                                                        tempTrueFalsePromptWith.push(
+                                                                            field.id
+                                                                        )
+                                                                        setOptionTrueFalsePromptWith(
+                                                                            tempTrueFalsePromptWith
+                                                                        )
+                                                                    } else {
+                                                                        const tempTrueFalsePromptWith =
+                                                                            [
+                                                                                ...optionTrueFalsePromptWith,
+                                                                            ].filter(
+                                                                                (
+                                                                                    item
+                                                                                ) =>
+                                                                                    item !==
+                                                                                    field.id
+                                                                            )
+                                                                        setOptionTrueFalsePromptWith(
+                                                                            tempTrueFalsePromptWith
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
                                                         <label
                                                             className="form-check-label"
                                                             htmlFor={`trueFalsePromptWith${field.id}`}
@@ -1341,49 +1517,81 @@ const DoQuiz = () => {
                                                         className="mb-2"
                                                         key={index}
                                                     >
-                                                        <input
-                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                            type="checkbox"
-                                                            checked={
-                                                                optionTrueFalseAnswerWith?.includes(
-                                                                    field.id
-                                                                ) || ''
-                                                            }
-                                                            id={`trueFalseAnswerWith${field.id}`}
-                                                            onChange={(
-                                                                event
-                                                            ) => {
-                                                                if (
-                                                                    event.target
-                                                                        .checked
-                                                                ) {
-                                                                    var tempTrueFalseAnswerWith =
-                                                                        [
-                                                                            ...optionTrueFalseAnswerWith,
-                                                                        ]
-                                                                    tempTrueFalseAnswerWith.push(
-                                                                        field.id
-                                                                    )
-                                                                    setOptionTrueFalseAnswerWith(
-                                                                        tempTrueFalseAnswerWith
-                                                                    )
-                                                                } else {
-                                                                    const tempTrueFalseAnswerWith =
-                                                                        [
-                                                                            ...optionTrueFalseAnswerWith,
-                                                                        ].filter(
-                                                                            (
-                                                                                item
-                                                                            ) =>
-                                                                                item !==
-                                                                                field.id
-                                                                        )
-                                                                    setOptionTrueFalseAnswerWith(
-                                                                        tempTrueFalseAnswerWith
-                                                                    )
+                                                        {type === 1 ? (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                name="trueFalseAnswerWith"
+                                                                type="radio"
+                                                                id={`trueFalseAnswerWith${field.id}`}
+                                                                checked={
+                                                                    optionTrueFalseAnswerWith ===
+                                                                        field.id ||
+                                                                    ''
                                                                 }
-                                                            }}
-                                                        />
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        setOptionTrueFalseAnswerWith(
+                                                                            field.id
+                                                                        )
+                                                                    } else {
+                                                                        setOptionTrueFalseAnswerWith(
+                                                                            0
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <input
+                                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                                type="checkbox"
+                                                                id={`trueFalseAnswerWith${field.id}`}
+                                                                checked={
+                                                                    optionTrueFalseAnswerWith?.includes(
+                                                                        field.id
+                                                                    ) || ''
+                                                                }
+                                                                onChange={(
+                                                                    event
+                                                                ) => {
+                                                                    if (
+                                                                        event
+                                                                            .target
+                                                                            .checked
+                                                                    ) {
+                                                                        var tempTrueFalseAnswerWith =
+                                                                            [
+                                                                                ...optionTrueFalseAnswerWith,
+                                                                            ]
+                                                                        tempTrueFalseAnswerWith.push(
+                                                                            field.id
+                                                                        )
+                                                                        setOptionTrueFalseAnswerWith(
+                                                                            tempTrueFalseAnswerWith
+                                                                        )
+                                                                    } else {
+                                                                        const tempTrueFalseAnswerWith =
+                                                                            [
+                                                                                ...optionTrueFalseAnswerWith,
+                                                                            ].filter(
+                                                                                (
+                                                                                    item
+                                                                                ) =>
+                                                                                    item !==
+                                                                                    field.id
+                                                                            )
+                                                                        setOptionTrueFalseAnswerWith(
+                                                                            tempTrueFalseAnswerWith
+                                                                        )
+                                                                    }
+                                                                }}
+                                                            />
+                                                        )}
                                                         <label
                                                             className="form-check-label"
                                                             htmlFor={`trueFalseAnswerWith${field.id}`}

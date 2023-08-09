@@ -24,10 +24,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
     const [picture, setPicture] = useState('')
     const [audio, setAudio] = useState('')
     const [note, setNote] = useState('')
-
-    const [noteModal, setNoteModal] = useState('')
-    const [pictureModal, setPictureModal] = useState('')
-    const [audioModal, setAudioModal] = useState('')
+    
     const [showPicture, setShowPicture] = useState(false)
     const [showAudio, setShowAudio] = useState(false)
     const [showNote, setShowNote] = useState(false)
@@ -66,7 +63,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
     }, [fullCard?.card])
 
     useEffect(() => {
-        if (showNote) {
+        if (showNote || showPicture || showAudio) {
             document
                 .getElementsByTagName('body')[0]
                 .classList.add('setPage_modalOpen')
@@ -75,7 +72,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                 .getElementsByTagName('body')[0]
                 .classList.remove('setPage_modalOpen')
         }
-    }, [showNote])
+    }, [showNote, showPicture, showAudio])
 
     const handleChangeFile = async (event) => {
         const name = event.target.name
