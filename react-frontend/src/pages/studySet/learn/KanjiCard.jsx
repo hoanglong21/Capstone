@@ -125,6 +125,49 @@ const KanjiCard = ({
                                 )
                             }
                         })}
+                        {/* note */}
+                        {showNote && (
+                            <div
+                                className="accordion flashcard_accordion"
+                                id={`accordionNote${quesIndex}`}
+                            >
+                                <div className="accordion-item border-0">
+                                    <h2 className="accordion-header">
+                                        <button
+                                            id={`toggleAccordionNoteBtn${quesIndex}`}
+                                            name="flashcardContent_noteBtn"
+                                            className="accordion-button collapsed"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target={`#progressNote${quesIndex}`}
+                                            aria-expanded="false"
+                                            aria-controls="progressNote"
+                                        >
+                                            <span>Note</span>
+                                        </button>
+                                    </h2>
+                                    <div
+                                        id={`progressNote${quesIndex}`}
+                                        className="accordion-collapse collapse"
+                                        data-bs-parent={`#accordionNote${quesIndex}`}
+                                    >
+                                        <div className="row">
+                                            <div className="col-11">
+                                                <div
+                                                    className="accordion-body"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html:
+                                                            ques?.question
+                                                                ?.progress
+                                                                ?.note || '...',
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         {/* picture + audio */}
                         {(showPicture || showAudio) && (
                             <div className="row">
@@ -248,6 +291,48 @@ const KanjiCard = ({
                             )
                         }
                     })}
+                    {/* note */}
+                    {showNote && (
+                        <div
+                            className="accordion flashcard_accordion"
+                            id={`accordionNote${quesIndex}`}
+                        >
+                            <div className="accordion-item border-0">
+                                <h2 className="accordion-header">
+                                    <button
+                                        id={`toggleAccordionNoteBtn${quesIndex}`}
+                                        name="flashcardContent_noteBtn"
+                                        className="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target={`#progressNote${quesIndex}`}
+                                        aria-expanded="false"
+                                        aria-controls="progressNote"
+                                    >
+                                        <span>Note</span>
+                                    </button>
+                                </h2>
+                                <div
+                                    id={`progressNote${quesIndex}`}
+                                    className="accordion-collapse collapse"
+                                    data-bs-parent={`#accordionNote${quesIndex}`}
+                                >
+                                    <div className="row">
+                                        <div className="col-11">
+                                            <div
+                                                className="accordion-body"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        ques?.question?.progress
+                                                            ?.note || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
@@ -408,6 +493,51 @@ const KanjiCard = ({
                                             }
                                         }
                                     )}
+                                    {/* note */}
+                                    {showNote && (
+                                        <div
+                                            className="accordion flashcard_accordion"
+                                            id={`accordionNote${quesIndex}`}
+                                        >
+                                            <div className="accordion-item border-0">
+                                                <h2 className="accordion-header">
+                                                    <button
+                                                        id={`toggleAccordionNoteBtn${quesIndex}`}
+                                                        name="flashcardContent_noteBtn"
+                                                        className="accordion-button collapsed"
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target={`#progressNote${quesIndex}`}
+                                                        aria-expanded="false"
+                                                        aria-controls="progressNote"
+                                                    >
+                                                        <span>Note</span>
+                                                    </button>
+                                                </h2>
+                                                <div
+                                                    id={`progressNote${quesIndex}`}
+                                                    className="accordion-collapse collapse"
+                                                    data-bs-parent={`#accordionNote${quesIndex}`}
+                                                >
+                                                    <div className="row">
+                                                        <div className="col-11">
+                                                            <div
+                                                                className="accordion-body"
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html:
+                                                                        ques
+                                                                            ?.question
+                                                                            ?.progress
+                                                                            ?.note ||
+                                                                        '...',
+                                                                }}
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div className="col-6">
@@ -538,41 +668,47 @@ const KanjiCard = ({
                                 Correct answer
                             </div>
                             <div className="quizQues_answer correct" disabled>
-                                {ques.question.content.map((itemContent, index) => {
-                                    if (
-                                        trueFalseAnswerWith?.includes(
-                                            itemContent.field.id
-                                        )
-                                    ) {
-                                        return (
-                                            <div key={index} className="mb-2">
-                                                <div className="quizAns_label mb-1">
-                                                    {itemContent.field.name}
-                                                </div>
-                                                {itemContent.field.id === 12 ? (
-                                                    <div className="quizQues_question">
-                                                        <img
-                                                            src={
-                                                                itemContent.content ||
-                                                                ''
-                                                            }
-                                                            className="quizQues_img"
-                                                        />
+                                {ques.question.content.map(
+                                    (itemContent, index) => {
+                                        if (
+                                            trueFalseAnswerWith?.includes(
+                                                itemContent.field.id
+                                            )
+                                        ) {
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className="mb-2"
+                                                >
+                                                    <div className="quizAns_label mb-1">
+                                                        {itemContent.field.name}
                                                     </div>
-                                                ) : (
-                                                    <div
-                                                        className="quizQues_question"
-                                                        dangerouslySetInnerHTML={{
-                                                            __html:
-                                                                itemContent.content ||
-                                                                '...',
-                                                        }}
-                                                    ></div>
-                                                )}
-                                            </div>
-                                        )
+                                                    {itemContent.field.id ===
+                                                    12 ? (
+                                                        <div className="quizQues_question">
+                                                            <img
+                                                                src={
+                                                                    itemContent.content ||
+                                                                    ''
+                                                                }
+                                                                className="quizQues_img"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="quizQues_question"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                    itemContent.content ||
+                                                                    '...',
+                                                            }}
+                                                        ></div>
+                                                    )}
+                                                </div>
+                                            )
+                                        }
                                     }
-                                })}
+                                )}
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
                                         Example
