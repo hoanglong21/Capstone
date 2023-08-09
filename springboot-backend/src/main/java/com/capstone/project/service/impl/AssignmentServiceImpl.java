@@ -138,7 +138,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Map<String, Object> getFilterAssignment(String search, String author, String fromStart, String toStart,String fromCreated, String toCreated,
-                                                   Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws ResourceNotFroundException {
+                                                   Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
         int offset = (page - 1) * size;
 
         String query ="SELECT a.*, COUNT(CASE WHEN s.is_done = true THEN 1 ELSE NULL END) as numbersubmit,u.id as userid, u.username as author FROM assignment a \n" +
