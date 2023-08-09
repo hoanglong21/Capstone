@@ -25,7 +25,7 @@ public interface AssignmentService {
     Boolean deleteAssignment(int id) throws ResourceNotFroundException;
 
     Map<String, Object> getFilterAssignment(String search, String author, String fromStart, String toStart, String fromCreated, String toCreated,
-                                            Boolean isDraft, String direction, String sortBy, int classid, int page, int size) throws ResourceNotFroundException;
+                                            Boolean isDraft, String direction, String sortBy, int classid, int page, int size) throws Exception;
 
     Map<String, Object> getNumSubmitAssignment(int assignmentid, int classid) throws ResourceNotFroundException;
 }

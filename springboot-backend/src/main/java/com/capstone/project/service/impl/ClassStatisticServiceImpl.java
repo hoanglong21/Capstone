@@ -51,7 +51,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     }
 
     @Override
-    public Integer getAssignmentNumber(int id) throws ResourceNotFroundException {
+    public Integer getAssignmentNumber(int id) throws Exception {
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
 //        List<String> listDate = dateRangePicker.getShortDateRange();
