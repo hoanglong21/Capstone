@@ -13,11 +13,14 @@ const BanUser = ({ user }) => {
     }
   }, [user]);
 
-  const handleBan = async () => {
+  const handleBan = async (e) => {
+    e.preventDefault()
+    setError('')
     try {
-      await UserService.banUser(user.username);
-      document.getElementsById(`closeUserModal${user?.username}`).click()
-      navigate("/")
+      await UserService.banUser(banUser.username)
+      document.getElementById('closeUserModal').click()
+      navigate('/manageusers')
+      setError("")
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);
@@ -26,29 +29,34 @@ const BanUser = ({ user }) => {
       }
     }
   };
-  
+
   return (
-    <div
-      class="modal"
-      tabindex="-1"
-      role="dialog"
-      id={`banModal${user?.username}`}
-    >
+    <div className="modal fade" tabindex="-1" id={`banModal${user?.username}`}>
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">BAN USER</h5>
             <button
-              id={`closeUserModal${user?.username}`}
+              id="closeUserModal"
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={() => {
+                document.getElementById('username')
+                setBanUser({})
+                setError('')
+            }}
             ></button>
           </div>
           <div class="modal-body">
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
             <p>
-              Are you sure ban <strong>{user.username}</strong> ?
+              Are you sure ban <strong>{banUser.username}</strong> ?
             </p>
           </div>
           <div class="modal-footer">

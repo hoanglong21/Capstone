@@ -66,11 +66,9 @@ import KanjiDict from './pages/dictionary/KanjiDict'
 import ViewKanjiDetail from './pages/studySet/view/ViewKanjiDetail'
 import ViewVocabularyDetail from './pages/studySet/view/ViewVocabularyDetail'
 import ViewStudySet from './pages/studySet/view/ViewStudySet'
-import DoTest from './pages/class/test/DoTest'
 import TestList from './pages/class/test/TestList'
 import Stream from './pages/class/Stream'
 import CreateTest from './pages/class/test/CreateTest'
-import ViewDetailTest from './pages/class/test/ViewDetailTest'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/studySet/quiz/DoQuiz'
@@ -91,7 +89,9 @@ import Instructions from './pages/class/assignment/Instructions'
 import Submissions from './pages/class/assignment/Submissions'
 import VideoCall from './components/chat/VideoCall'
 import UseAccount from './pages/help/UseAccount'
-import UseStudySet from './pages/help/UseStudySet'
+import ViewTest from './pages/class/test/ViewTest'
+import TestDetails from './pages/class/test/TestDetails'
+import DoTest from './pages/class/test/DoTest'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -114,6 +114,7 @@ const App = () => {
     return (
         <BrowserRouter>
             <Routes>
+                {/* Header + footer */}
                 <Route path="/" element={<Layout />}>
                     {/* Home */}
                     <Route path="" element={userToken ? <Home /> : <Landing />}>
@@ -188,7 +189,7 @@ const App = () => {
                                 element={<ClassStatistics />}
                             />
                         </Route>
-                        {/* Tutor view assignment */}
+                        {/* Assignment */}
                         <Route
                             path="class/:id/assignment/:assign_id"
                             element={<ViewAssignment />}
@@ -200,11 +201,16 @@ const App = () => {
                             />
                         </Route>
                         {/* Test */}
-                        <Route path="/dotest" element={<DoTest />} />
                         <Route
-                            path="/viewdetailtest"
-                            element={<ViewDetailTest />}
-                        />
+                            path="class/:id/test/:test_id"
+                            element={<ViewTest />}
+                        >
+                            <Route path="details" element={<TestDetails />} />
+                            {/* <Route
+                                path="submissions"
+                                element={<Submissions />}
+                            /> */}
+                        </Route>
                         {/* Feedback */}
                         <Route
                             path="help-center/send-feedback"
@@ -247,7 +253,6 @@ const App = () => {
                         <Route path="users" element={<UsersForHome />} />
                     </Route>
                     <Route path="/useaccount" element={<UseAccount />} />
-                    <Route path="/usestudyset" element={<UseStudySet />} />
                 </Route>
                 {/* No header + footer */}
                 {/* Auth */}
@@ -263,70 +268,81 @@ const App = () => {
                     <Route path="learn/:id" element={<Learn />} />
                     <Route path="video-call" element={<VideoCall />} />
                     <Route path="video-call/:call" element={<VideoCall />} />
+                    {/* test */}
+                    <Route path="do-test/:id" element={<DoTest />} />
+                    {/* admin */}
+                    <Route path="/banuser" element={<BanUser />} />
+                    <Route path="/unbanuser" element={<UnBanUser />} />
+                    <Route path="/manageusers" element={<ManageUser />} />
+                    <Route path="/sidebar" element={<SidebarforAdmin />} />
+                    <Route path="/dashboard" element={<AdminDashboard />} />
+                    <Route
+                        path="/viewdetailuser/:username"
+                        element={<ViewDetailsUser />}
+                    />
+                    <Route path="/manageclass" element={<ManageClass />} />
+                    <Route
+                        path="/viewdetailclass/:id"
+                        element={<ViewDetailClass />}
+                    />
+                    <Route
+                        path="/managefeedback"
+                        element={<ManageFeedback />}
+                    />
+                    <Route
+                        path="/viewdetailfb/:id"
+                        element={<ViewDetailFeedback />}
+                    />
+                    <Route
+                        path="/managestudyset"
+                        element={<ManageStudyset />}
+                    />
+                    <Route
+                        path="/viewdetailset/:id"
+                        element={<ViewDetailStudyset />}
+                    />
+                    <Route
+                        path="/manageassignment"
+                        element={<ManageAssignment />}
+                    />
+                    <Route
+                        path="/viewdetailassign/:id"
+                        element={<ViewDetailAssignment />}
+                    />
+                    <Route path="/managetest" element={<ManageTest />} />
+                    <Route
+                        path="/viewdetailtest/:id"
+                        element={<ViewDetailTestForAdmin />}
+                    />
+                    <Route path="/managepost" element={<ManagePost />} />
+                    <Route
+                        path="/viewdetailpost/:id"
+                        element={<ViewDetailPost />}
+                    />
+                    <Route path="/managecomment" element={<ManageComment />} />
+                    <Route
+                        path="/viewdetailcomment/:id"
+                        element={<ViewDetailComment />}
+                    />
+                    <Route
+                        path="/managesubmission"
+                        element={<ManageSubmission />}
+                    />
+                    <Route
+                        path="/viewdetailsubmission/:id"
+                        element={<ViewDetailSubmission />}
+                    />
+                    <Route path="/chatbox" element={<Chat />} />
+                    <Route
+                        path="/viewdetailkanji"
+                        element={<ViewKanjiDetail />}
+                    />
+                    <Route
+                        path="/viewdetailvocab"
+                        element={<ViewVocabularyDetail />}
+                    />
+                    <Route path="/registeradmin" element={<RegisterAdmin />} />
                 </Route>
-
-                <Route path="/banuser" element={<BanUser />} />
-                <Route path="/unbanuser" element={<UnBanUser />} />
-                <Route path="/manageusers" element={<ManageUser />} />
-                <Route path="/sidebar" element={<SidebarforAdmin />} />
-                <Route path="/dashboard" element={<AdminDashboard />} />
-                <Route
-                    path="/viewdetailuser/:username"
-                    element={<ViewDetailsUser />}
-                />
-                <Route path="/manageclass" element={<ManageClass />} />
-                <Route
-                    path="/viewdetailclass/:id"
-                    element={<ViewDetailClass />}
-                />
-                <Route path="/managefeedback" element={<ManageFeedback />} />
-                <Route
-                    path="/viewdetailfb/:id"
-                    element={<ViewDetailFeedback />}
-                />
-                <Route path="/managestudyset" element={<ManageStudyset />} />
-                <Route
-                    path="/viewdetailset/:id"
-                    element={<ViewDetailStudyset />}
-                />
-                <Route
-                    path="/manageassignment"
-                    element={<ManageAssignment />}
-                />
-                <Route
-                    path="/viewdetailassign/:id"
-                    element={<ViewDetailAssignment />}
-                />
-                <Route path="/managetest" element={<ManageTest />} />
-                <Route
-                    path="/viewdetailtest/:id"
-                    element={<ViewDetailTestForAdmin />}
-                />
-                <Route path="/managepost" element={<ManagePost />} />
-                <Route
-                    path="/viewdetailpost/:id"
-                    element={<ViewDetailPost />}
-                />
-                <Route path="/managecomment" element={<ManageComment />} />
-                <Route
-                    path="/viewdetailcomment/:id"
-                    element={<ViewDetailComment />}
-                />
-                <Route
-                    path="/managesubmission"
-                    element={<ManageSubmission />}
-                />
-                <Route
-                    path="/viewdetailsubmission/:id"
-                    element={<ViewDetailSubmission />}
-                />
-                <Route path="/chatbox" element={<Chat />} />
-                <Route path="/viewdetailkanji" element={<ViewKanjiDetail />} />
-                <Route
-                    path="/viewdetailvocab"
-                    element={<ViewVocabularyDetail />}
-                />
-                <Route path="/registeradmin" element={<RegisterAdmin />} />
             </Routes>
             <AuthVerify logOut={logOut} />
         </BrowserRouter>

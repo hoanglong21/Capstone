@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
 import { deleteFolder } from '../../../features/fileManagement'
+import SubmissionService from '../../../services/SubmissionService'
 
 import { OptionHorIcon } from '../../../components/icons'
 
@@ -17,22 +18,47 @@ const Instructions = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [assignment, setAssignment] = useState({})
+    const [submission, setSubmission] = useState({})
     const [attachments, setAttachments] = useState([])
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempAssignment = (
-                await AssignmentService.getAssignmentById(assign_id)
-            ).data
-            setAssignment(tempAssignment)
-            const tempAttachments = (
-                await AttachmentService.getAttachmentsByAssignmentId(assign_id)
-            ).data
-            setAttachments(tempAttachments)
+            try {
+                // assignment
+                const tempAssignment = (
+                    await AssignmentService.getAssignmentById(assign_id)
+                ).data
+                setAssignment(tempAssignment)
+                // tutor attachments
+                const tempAttachments = (
+                    await AttachmentService.getAttachmentsByAssignmentId(
+                        assign_id
+                    )
+                ).data
+                setAttachments(tempAttachments)
+                // learner submission
+                if (userInfo.id !== tempAssignment.user.id) {
+                    const tempSubmission = (
+                        await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
+                            userInfo.id,
+                            tempAssignment.id
+                        )
+                    ).data
+                    setSubmission(tempSubmission)
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
-        fetchData()
-    }, [])
+        if (assign_id && userInfo?.id) {
+            fetchData()
+        }
+    }, [assign_id, userInfo])
 
     const handleDelete = async (e) => {
         e.preventDefault()
@@ -142,11 +168,20 @@ const Instructions = () => {
                     </div>
                 </div>
                 <div className="d-flex justify-content-between mb-3 instruction_date">
-                    <div>
-                        {assignment?.start_date
-                            ? `Start ${assignment?.start_date}`
-                            : 'No start date'}
-                    </div>
+                    {userInfo?.id !== assignment?.user?.id ? (
+                        <div>
+                            {submission?.mark
+                                ? `${submission?.mark}/100`
+                                : 'No grade'}
+                        </div>
+                    ) : (
+                        <div>
+                            {assignment?.start_date
+                                ? `Start ${assignment?.start_date}`
+                                : 'No start date'}
+                        </div>
+                    )}
+
                     <div>
                         {assignment?.due_date
                             ? `Due ${assignment?.due_date}`

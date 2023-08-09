@@ -296,13 +296,22 @@ function ViewDetailClass() {
                 </div>
               </div>
               <div className="row gx-3 mb-3">
-                <div className="col-md-12">
+                <div className="col-md-6">
                   <label className="small mb-1 fs-6">Description</label>
                   <input
                     className="form-control"
                     type="text"
                     readOnly
                     value={classes?.description}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="small mb-1 fs-6">Delete Date</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    readOnly
+                    value={classes?.deleted_date}
                   />
                 </div>
               </div>

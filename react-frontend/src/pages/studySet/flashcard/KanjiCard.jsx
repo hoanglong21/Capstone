@@ -246,7 +246,7 @@ const KanjiCard = ({
                             <MicIconSolid size="16px" />
                         </button>
                     </div>
-                    <div className="flashcardContent_wrapper">
+                    <div className="flashcardContent_wrapper h-100">
                         <div className="row">
                             {strokeOrder?.content && (
                                 <div className="col-3 mb-3">

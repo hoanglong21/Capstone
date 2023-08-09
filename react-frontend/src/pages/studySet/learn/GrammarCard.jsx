@@ -1,26 +1,90 @@
+import { useEffect, useState } from 'react'
+
 const GrammarCard = ({
     ques,
     quesIndex,
-    numQues,
     writtenPromptWith,
+    writtenAnswerWith,
     multiplePromptWith,
     multipleAnswerWith,
     trueFalsePromptWith,
     trueFalseAnswerWith,
-    setProgress,
-    progress,
     showPicture,
     showAudio,
     showNote,
     setCurrentAnswer,
     currentAnswer,
     isCurrentCorrect,
+    setIsCurrentCorrect,
 }) => {
+    const [correctAnswer, setCorrectAnswer] = useState(null)
+    const [example, setExample] = useState(null)
+
+    useEffect(() => {
+        if (ques?.question_type) {
+            setExample(ques.question.content[2].content)
+            if (ques?.question_type === 1) {
+                document.getElementById(`quizQuesInput${quesIndex}`).value = ''
+            }
+            if (ques?.question_type === 2) {
+                setCorrectAnswer(ques.question.card.id)
+            }
+            if (ques?.question_type === 3) {
+                setCorrectAnswer(
+                    ques.question.card.id === ques.answers[0].card.id
+                )
+            }
+        }
+    }, [ques])
+
+    const handleAnswerWritten = (event) => {
+        document.getElementById(`quizQuesInput${quesIndex}`).blur()
+        event.preventDefault()
+        // get correct answer
+        var correctAnswer = ''
+        for (const itemContent of ques.question.content) {
+            if (itemContent.field.id === writtenAnswerWith) {
+                const tempContent = itemContent.content
+                    .replaceAll(/(<([^>]+)>)/gi, ' ')
+                    .trim()
+                correctAnswer = tempContent
+                setCorrectAnswer(itemContent.content)
+                break
+            }
+        }
+        // check is correct
+        if (currentAnswer == correctAnswer) {
+            setIsCurrentCorrect(true)
+        } else {
+            setIsCurrentCorrect(false)
+        }
+    }
+
+    const handleAnswerMultiple = (ans) => {
+        // get correct answer
+        const tempCurrent = ans.card.id
+        setCurrentAnswer(tempCurrent)
+        // check is correct
+        if (tempCurrent === correctAnswer) {
+            setIsCurrentCorrect(true)
+        } else {
+            setIsCurrentCorrect(false)
+        }
+    }
+
+    const handleAnswerTrueFalse = (ans) => {
+        // get correct answer
+        setCurrentAnswer(ans)
+        // check is correct
+        if (ans === correctAnswer) {
+            setIsCurrentCorrect(true)
+        } else {
+            setIsCurrentCorrect(false)
+        }
+    }
+
     return (
         <div className="card learnQuestionCard">
-            <div className="quizQues_number">
-                {quesIndex + 1} of {numQues}
-            </div>
             {/* written */}
             {ques.question_type === 1 && (
                 <div className="card-body d-flex flex-column">
@@ -49,6 +113,49 @@ const GrammarCard = ({
                                 )
                             }
                         })}
+                        {/* note */}
+                        {showNote && (
+                            <div
+                                className="accordion flashcard_accordion"
+                                id={`accordionNote${quesIndex}`}
+                            >
+                                <div className="accordion-item border-0">
+                                    <h2 className="accordion-header">
+                                        <button
+                                            id={`toggleAccordionNoteBtn${quesIndex}`}
+                                            name="flashcardContent_noteBtn"
+                                            className="accordion-button collapsed"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target={`#progressNote${quesIndex}`}
+                                            aria-expanded="false"
+                                            aria-controls="progressNote"
+                                        >
+                                            <span>Note</span>
+                                        </button>
+                                    </h2>
+                                    <div
+                                        id={`progressNote${quesIndex}`}
+                                        className="accordion-collapse collapse"
+                                        data-bs-parent={`#accordionNote${quesIndex}`}
+                                    >
+                                        <div className="row">
+                                            <div className="col-11">
+                                                <div
+                                                    className="accordion-body"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html:
+                                                            ques?.question
+                                                                ?.progress
+                                                                ?.note || '...',
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         {/* picture + audio */}
                         {(showPicture || showAudio) && (
                             <div className="row">
@@ -86,27 +193,56 @@ const GrammarCard = ({
                     </div>
                     {/* answer */}
                     <div className="quizQues_label my-4">Your answer</div>
-                    <input
-                        className={`form-control quizAns_input ${
-                            isCurrentCorrect === 0
-                                ? 'incorrect'
-                                : isCurrentCorrect === 1
-                                ? 'correct'
-                                : ''
-                        }`}
-                        type="text"
-                        placeholder="Type your answer here"
-                        onChange={(event) =>
-                            setCurrentAnswer(event.target.value)
-                        }
-                        onBlur={(event) => {
-                            if (event.target.value) {
-                                setProgress(progress + 1)
-                            } else {
-                                setProgress(progress > 0 ? progress - 1 : 0)
+                    <form className="d-flex">
+                        <input
+                            id={`quizQuesInput${quesIndex}`}
+                            className={`form-control quizAns_input removeEvent ${
+                                isCurrentCorrect === false
+                                    ? 'incorrect'
+                                    : isCurrentCorrect === true
+                                    ? 'correct'
+                                    : ''
+                            }`}
+                            type="text"
+                            placeholder="Type your answer here"
+                            onChange={(event) =>
+                                setCurrentAnswer(event.target.value)
                             }
-                        }}
-                    />
+                        />
+                        <button
+                            type="submit"
+                            className="btn btn-primary ms-2"
+                            onClick={handleAnswerWritten}
+                            disabled={isCurrentCorrect !== null}
+                        >
+                            Answer
+                        </button>
+                    </form>
+                    {isCurrentCorrect === false && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct">
+                                <div
+                                    className="learnCorrectAnswer"
+                                    dangerouslySetInnerHTML={{
+                                        __html: correctAnswer,
+                                    }}
+                                ></div>
+                                <div className="learnExampleSection">
+                                    <div className="learnExample_label">
+                                        Example
+                                    </div>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: example || '...',
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* multiple */}
@@ -133,6 +269,48 @@ const GrammarCard = ({
                             )
                         }
                     })}
+                    {/* note */}
+                    {showNote && (
+                        <div
+                            className="accordion flashcard_accordion"
+                            id={`accordionNote${quesIndex}`}
+                        >
+                            <div className="accordion-item border-0">
+                                <h2 className="accordion-header">
+                                    <button
+                                        id={`toggleAccordionNoteBtn${quesIndex}`}
+                                        name="flashcardContent_noteBtn"
+                                        className="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target={`#progressNote${quesIndex}`}
+                                        aria-expanded="false"
+                                        aria-controls="progressNote"
+                                    >
+                                        <span>Note</span>
+                                    </button>
+                                </h2>
+                                <div
+                                    id={`progressNote${quesIndex}`}
+                                    className="accordion-collapse collapse"
+                                    data-bs-parent={`#accordionNote${quesIndex}`}
+                                >
+                                    <div className="row">
+                                        <div className="col-11">
+                                            <div
+                                                className="accordion-body"
+                                                dangerouslySetInnerHTML={{
+                                                    __html:
+                                                        ques?.question?.progress
+                                                            ?.note || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
@@ -174,26 +352,17 @@ const GrammarCard = ({
                                 <div
                                     className={`quizQues_answer ${
                                         currentAnswer === ans.card.id &&
-                                        isCurrentCorrect === 0
+                                        isCurrentCorrect === false
                                             ? 'incorrect'
-                                            : currentAnswer === ans.card.id &&
-                                              isCurrentCorrect === 1
+                                            : (currentAnswer === ans.card.id &&
+                                                  isCurrentCorrect === true) ||
+                                              (correctAnswer === ans.card.id &&
+                                                  isCurrentCorrect === false)
                                             ? 'correct'
-                                            : currentAnswer === ans.card.id
-                                            ? 'active'
                                             : ''
                                     }`}
-                                    onClick={() => {
-                                        if (currentAnswer === ans.card.id) {
-                                            setCurrentAnswer(null)
-                                            setProgress(
-                                                progress > 0 ? progress - 1 : 0
-                                            )
-                                        } else {
-                                            setCurrentAnswer(ans.card.id)
-                                            setProgress(progress + 1)
-                                        }
-                                    }}
+                                    disabled={isCurrentCorrect !== null}
+                                    onClick={() => handleAnswerMultiple(ans)}
                                 >
                                     {ans.content.map((itemContent, index) => {
                                         if (
@@ -225,6 +394,16 @@ const GrammarCard = ({
                             </div>
                         ))}
                     </div>
+                    {isCurrentCorrect === false && (
+                        <div className="learnExampleSection">
+                            <div className="learnExample_label">Example</div>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: example || '...',
+                                }}
+                            ></div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* true false */}
@@ -265,6 +444,51 @@ const GrammarCard = ({
                                                 )
                                             }
                                         }
+                                    )}
+                                    {/* note */}
+                                    {showNote && (
+                                        <div
+                                            className="accordion flashcard_accordion"
+                                            id={`accordionNote${quesIndex}`}
+                                        >
+                                            <div className="accordion-item border-0">
+                                                <h2 className="accordion-header">
+                                                    <button
+                                                        id={`toggleAccordionNoteBtn${quesIndex}`}
+                                                        name="flashcardContent_noteBtn"
+                                                        className="accordion-button collapsed"
+                                                        type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target={`#progressNote${quesIndex}`}
+                                                        aria-expanded="false"
+                                                        aria-controls="progressNote"
+                                                    >
+                                                        <span>Note</span>
+                                                    </button>
+                                                </h2>
+                                                <div
+                                                    id={`progressNote${quesIndex}`}
+                                                    className="accordion-collapse collapse"
+                                                    data-bs-parent={`#accordionNote${quesIndex}`}
+                                                >
+                                                    <div className="row">
+                                                        <div className="col-11">
+                                                            <div
+                                                                className="accordion-body"
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html:
+                                                                        ques
+                                                                            ?.question
+                                                                            ?.progress
+                                                                            ?.note ||
+                                                                        '...',
+                                                                }}
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -345,27 +569,16 @@ const GrammarCard = ({
                         <div className="col-6">
                             <div
                                 className={`quizQues_answer ${
-                                    currentAnswer === 1 &&
-                                    isCurrentCorrect === 0
+                                    currentAnswer === true &&
+                                    isCurrentCorrect === false
                                         ? 'incorrect'
-                                        : currentAnswer === 1 &&
-                                          isCurrentCorrect === 1
+                                        : currentAnswer === true &&
+                                          isCurrentCorrect === true
                                         ? 'correct'
-                                        : currentAnswer === 1
-                                        ? 'active'
                                         : ''
                                 }`}
-                                onClick={() => {
-                                    if (currentAnswer === 1) {
-                                        setCurrentAnswer(null)
-                                        setProgress(
-                                            progress > 0 ? progress - 1 : 0
-                                        )
-                                    } else {
-                                        setCurrentAnswer(1)
-                                        setProgress(progress + 1)
-                                    }
-                                }}
+                                disabled={isCurrentCorrect !== null}
+                                onClick={() => handleAnswerTrueFalse(true)}
                             >
                                 True
                             </div>
@@ -373,32 +586,68 @@ const GrammarCard = ({
                         <div className="col-6">
                             <div
                                 className={`quizQues_answer ${
-                                    currentAnswer === 0 &&
-                                    isCurrentCorrect === 0
+                                    currentAnswer === false &&
+                                    isCurrentCorrect === false
                                         ? 'incorrect'
-                                        : currentAnswer === 0 &&
-                                          isCurrentCorrect === 1
+                                        : currentAnswer === false &&
+                                          isCurrentCorrect === true
                                         ? 'correct'
-                                        : currentAnswer === 0
-                                        ? 'active'
                                         : ''
                                 }`}
-                                onClick={() => {
-                                    if (currentAnswer === 0) {
-                                        setCurrentAnswer(null)
-                                        setProgress(
-                                            progress > 0 ? progress - 1 : 0
-                                        )
-                                    } else {
-                                        setCurrentAnswer(0)
-                                        setProgress(progress + 1)
-                                    }
-                                }}
+                                disabled={isCurrentCorrect !== null}
+                                onClick={() => handleAnswerTrueFalse(false)}
                             >
                                 False
                             </div>
                         </div>
                     </div>
+                    {isCurrentCorrect === false && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct">
+                                {ques.question.content.map(
+                                    (itemContent, index) => {
+                                        if (
+                                            trueFalseAnswerWith?.includes(
+                                                itemContent.field.id
+                                            )
+                                        ) {
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className="mb-2"
+                                                >
+                                                    <div className="quizAns_label mb-1">
+                                                        {itemContent.field.name}
+                                                    </div>
+                                                    <div
+                                                        className="quizQues_question"
+                                                        dangerouslySetInnerHTML={{
+                                                            __html:
+                                                                itemContent.content ||
+                                                                '...',
+                                                        }}
+                                                    ></div>
+                                                </div>
+                                            )
+                                        }
+                                    }
+                                )}
+                                <div className="learnExampleSection">
+                                    <div className="learnExample_label">
+                                        Example
+                                    </div>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: example || '...',
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

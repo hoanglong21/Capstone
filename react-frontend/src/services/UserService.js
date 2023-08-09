@@ -48,11 +48,12 @@ export const checkMatchPassword = (username, checkPassword) => {
     )
 }
 
-export const changePassword = (username, newPassword) => {
+export const changePassword = (username, newPassword, oldPassword) => {
     return axios.post(
         API_BASE_URL + '/changepassword?username=' + username,
         {
             password: newPassword,
+            oldPassword: oldPassword,
         },
         {
             headers: {
@@ -72,6 +73,15 @@ export const deleteUser = (username) => {
 
 export const sendResetPasswordEmail = (username) => {
     return axios.get(API_BASE_URL + '/sendreset?username=' + username)
+}
+
+export const resetPassword = (username, pin, newPassword) => {
+    return axios.post(
+        API_BASE_URL + '/reset?username=' + username + '&pin=' + pin,
+        {
+            password: newPassword,
+        }
+    )
 }
 
 export const filterUser = (
@@ -190,6 +200,7 @@ const UserService = {
     getAccessStatistic,
     getLearningStatistic,
     findAllNameExcept,
+    resetPassword,
 }
 
 export default UserService

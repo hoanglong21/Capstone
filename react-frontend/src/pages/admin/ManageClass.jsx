@@ -18,19 +18,25 @@ function ManageClass() {
     const fetchData = async (searchKey) => {
         const temp = (
             await ClassService.getFilterList(
-                '=0',
-                `${searchKey ? '=' + searchKey : ''}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '=10'
+              '',
+              '',
+              `${searchKey ? '=' + searchKey : ''}`,
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '',
+              '=10'
             )
         ).data.list
         setClasses(temp)
     }
 
+    console.log(classes)
     useEffect(() => {
         fetchData(search ? search : '')
     }, [search])

@@ -6,7 +6,7 @@ import ClassService from '../../../services/ClassService'
 
 import { ClassIcon } from '../../../components/icons'
 
-const ViewAssignment = () => {
+const ViewTest = () => {
     const navigate = useNavigate()
 
     const { userInfo } = useSelector((state) => state.user)
@@ -61,19 +61,19 @@ const ViewAssignment = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <span className="align-middle">Instructions</span>
+                            <span className="align-middle">Details</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink
-                            to="../submissions"
+                            to="../results"
                             relative="path"
                             className={
                                 'mainClass_navlink px-3 ' +
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <span className="align-middle">Submissions</span>
+                            <span className="align-middle">Results</span>
                         </NavLink>
                     </li>
                 </ul>
@@ -83,4 +83,4 @@ const ViewAssignment = () => {
     )
 }
 
-export default ViewAssignment
+export default ViewTest

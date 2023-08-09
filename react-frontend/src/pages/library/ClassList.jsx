@@ -8,6 +8,7 @@ import ClassService from '../../services/ClassService'
 import { ClassIcon, SearchIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
+import '../../assets/styles/Home.css'
 
 const ClassList = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -24,50 +25,66 @@ const ClassList = () => {
 
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
-        setIsEmpty(false)
-        const temp = (
-            await ClassService.getFilterList(
-                '',
-                '',
-                `${searchKey ? '=' + searchKey : ''}`,
-                `=${userInfo.username}`,
-                `=${userInfo.username}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        setClasses(temp)
+        try {
+            setIsEmpty(false)
+            const temp = (
+                await ClassService.getFilterList(
+                    '',
+                    '',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    `=${userInfo.username}`,
+                    `=${userInfo.username}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            setClasses(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         setLoadingSearch(false)
     }
 
     const checkEmpty = async () => {
         setLoading(true)
-        setIsEmpty(false)
-        const temp = (
-            await ClassService.getFilterList(
-                '',
-                '',
-                '',
-                `=${userInfo.username}`,
-                `=${userInfo.username}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        if (temp.length === 0) {
-            setIsEmpty(true)
+        try {
+            setIsEmpty(false)
+            const temp = (
+                await ClassService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    `=${userInfo.username}`,
+                    `=${userInfo.username}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            if (temp.length === 0) {
+                setIsEmpty(true)
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
         setLoading(false)
     }
@@ -173,10 +190,10 @@ const ClassList = () => {
                                     >
                                         <Link to={`/class/${classroom.id}`}>
                                             <div className="set-body row mb-2">
-                                                <div className="term-count col-1">
+                                                <div className="class-home term-count">
                                                     {classroom?.member} member
                                                 </div>
-                                                <div className="term-count col-1">
+                                                <div className="class-home term-count">
                                                     {classroom?.studyset} sets
                                                 </div>
                                                 <div
@@ -200,7 +217,7 @@ const ClassList = () => {
                                                 </div>
                                             </div>
                                             <div className="row">
-                                                <div className="set-title col-2 d-flex align-items-center">
+                                                <div className="class-title set-title d-flex align-items-center">
                                                     <ClassIcon className="me-2" />
                                                     {classroom?.class_name}
                                                 </div>
