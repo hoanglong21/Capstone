@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import FeedbackTypeService from "../../../services/FeedbackTypeService";
+import FeedbackTypeService from "../../services/FeedbackTypeService";
 
 function ReplyFeedback() {
   const { userInfo } = useSelector((state) => state.user);

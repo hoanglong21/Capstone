@@ -89,7 +89,6 @@ import Instructions from './pages/class/assignment/Instructions'
 import Submissions from './pages/class/assignment/Submissions'
 import VideoCall from './components/chat/VideoCall'
 import UseAccount from './pages/help/UseAccount'
-import UseStudySet from './pages/help/UseStudySet'
 import ViewTest from './pages/class/test/ViewTest'
 
 const App = () => {
