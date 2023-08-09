@@ -121,7 +121,11 @@ public class StudySetController {
                     fromDeteted, toDeteted, fromCreated, toCreated, sortBy, direction, page, size));
         }
         catch (Exception e) {
-            return ResponseEntity.badRequest().body("Check the input again");
+            if(e.getMessage().equals("Please provide valid page and size")) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            } else {
+                return ResponseEntity.badRequest().body("Check the input again");
+            }
         }
     }
 

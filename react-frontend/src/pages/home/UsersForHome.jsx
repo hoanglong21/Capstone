@@ -1,10 +1,8 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
 
 import UserService from '../../services/UserService'
 
-import { ClassIcon, StudySetIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
 
@@ -13,33 +11,39 @@ function UsersForHome() {
 
     const search = searchParams.get('search')
 
-    const { userInfo } = useSelector((state) => state.user)
-
     const [users, setUsers] = useState([])
 
     const fetchData = async (searchKey) => {
-        const temp = (
-            await UserService.filterUser(
-                '',
-                `${searchKey ? '=' + searchKey : ''}`,
-                '',
-                '',
-                '',
-                '=tutor,learner',
-                '',
-                '',
-                '=active,pending',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        setUsers(temp)
+        try {
+            const temp = (
+                await UserService.filterUser(
+                    '',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
+                    '',
+                    '',
+                    '=tutor,learner',
+                    '',
+                    '',
+                    '=active,pending',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            setUsers(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     useEffect(() => {

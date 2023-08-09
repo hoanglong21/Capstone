@@ -64,7 +64,11 @@ function Translate() {
                     )
                 ).data
             } catch (error) {
-                console.log(error)
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
             if (!resTrans) {
                 try {

@@ -24,107 +24,116 @@ export const GrammarCard = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             props.setLoading(true)
-            const contents = (await ContentService.getAllByCardId(card.id)).data
-            if (contents.length === 0) {
-                setTitle(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 14,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setJlptLevel(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 15,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setMeaning(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 16,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setExample(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 17,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setExplanation(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 18,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setNote(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 19,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-                setStructure(
-                    (
-                        await ContentService.createContent({
-                            card: {
-                                id: card.id,
-                            },
-                            field: {
-                                id: 20,
-                            },
-                            content: '',
-                        })
-                    ).data
-                )
-            } else {
-                setTitle(contents[0])
-                setJlptLevel(contents[1])
-                setMeaning(contents[2])
-                setExample(contents[3])
-                setExplanation(contents[4])
-                setNote(contents[5])
-                setStructure(contents[6])
+            try {
+                const contents = (await ContentService.getAllByCardId(card.id))
+                    .data
+                if (contents.length === 0) {
+                    setTitle(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 14,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setJlptLevel(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 15,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setMeaning(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 16,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setExample(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 17,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setExplanation(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 18,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setNote(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 19,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                    setStructure(
+                        (
+                            await ContentService.createContent({
+                                card: {
+                                    id: card.id,
+                                },
+                                field: {
+                                    id: 20,
+                                },
+                                content: '',
+                            })
+                        ).data
+                    )
+                } else {
+                    setTitle(contents[0])
+                    setJlptLevel(contents[1])
+                    setMeaning(contents[2])
+                    setExample(contents[3])
+                    setExplanation(contents[4])
+                    setNote(contents[5])
+                    setStructure(contents[6])
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
             props.setLoading(false)
         }
@@ -152,7 +161,15 @@ export const GrammarCard = (props) => {
 
     const doUpdateCard = async (tempCard) => {
         props.setSaving(true)
-        await CardService.updateCard(tempCard.id, tempCard)
+        try {
+            await CardService.updateCard(tempCard.id, tempCard)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         props.setSaving(false)
     }
 
@@ -162,20 +179,28 @@ export const GrammarCard = (props) => {
         name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
         if (file) {
-            const urlOld = String(card[name])
-            const url = await uploadFile(
-                file,
-                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
-            )
-            const tempCard = { ...card, [name]: url }
-            setCard(tempCard)
-            if (urlOld) {
-                await deleteFileByUrl(
-                    urlOld,
+            try {
+                const urlOld = String(card[name])
+                const url = await uploadFile(
+                    file,
                     `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
                 )
+                const tempCard = { ...card, [name]: url }
+                setCard(tempCard)
+                if (urlOld) {
+                    await deleteFileByUrl(
+                        urlOld,
+                        `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
+                    )
+                }
+                doUpdateCard(tempCard)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
-            doUpdateCard(tempCard)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
         props.setSaving(false)
@@ -189,10 +214,18 @@ export const GrammarCard = (props) => {
         const tempCard = { ...card, [name]: '' }
         setCard(tempCard)
         if (urlOld) {
-            await deleteFileByUrl(
-                urlOld,
-                `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
-            )
+            try {
+                await deleteFileByUrl(
+                    urlOld,
+                    `${card.studySet.user.username}/studySet/${card.studySet.id}/card/${card.id}`
+                )
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         doUpdateCard(tempCard)
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)

@@ -35,7 +35,6 @@ const storage = getStorage(firebaseApp)
 
 export const uploadFile = async (file, folderName, file_type) => {
     return new Promise(function (resolve, reject) {
-        console.log(file.type)
         const metadata = {
             contentType: file_type ? file_type : file.type,
         }

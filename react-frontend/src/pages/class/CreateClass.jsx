@@ -77,7 +77,6 @@ export default function CreateClass() {
                 }
             }
         }
-
         setLoading(false)
     }
 

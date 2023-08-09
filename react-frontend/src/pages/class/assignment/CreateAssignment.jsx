@@ -44,23 +44,31 @@ function CreateAssignment() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempClass = (await ClassService.getClassroomById(id)).data
-            setClassroom(tempClass)
-            setAssignment({
-                title: '',
-                classroom: {
-                    id: tempClass.id,
-                },
-                user: {
-                    id: userInfo.id,
-                    username: userInfo.username,
-                },
-                due_date: '',
-                start_date: getToday(),
-                created_date: getToday(),
-                instruction: '',
-                _draft: true,
-            })
+            try {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                setAssignment({
+                    title: '',
+                    classroom: {
+                        id: tempClass.id,
+                    },
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    due_date: '',
+                    start_date: getToday(),
+                    created_date: getToday(),
+                    instruction: '',
+                    _draft: true,
+                })
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (userInfo?.id) {
             fetchData()
@@ -145,7 +153,8 @@ function CreateAssignment() {
                 id: userInfo.id,
             },
             due_date: '',
-            start_date: new Date().toISOString().substring(0, 16),
+            start_date: getToday(),
+            created_date: getToday(),
             instruction: '',
             _draft: true,
         })

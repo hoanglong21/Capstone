@@ -91,24 +91,32 @@ function AssignmentList() {
     }, [id])
 
     const handleCountSubmission = async (assign, index) => {
-        if (userInfo?.id === classroom?.user?.id && !assign?.numSubmitted) {
-            setLoadingCount(true)
-            const tempCountSubmit = (
-                await AssignmentService.getNumSubmitAssignment(
-                    assign.id,
-                    assign.classroom.id
-                )
-            ).data
-            const numSubmitted = tempCountSubmit.submitted
-            const numNotSubmitted = tempCountSubmit.notsubmitted
-            var tempAssignments = [...assignments]
-            tempAssignments[index] = {
-                ...assign,
-                numSubmitted,
-                numNotSubmitted,
+        try {
+            if (userInfo?.id === classroom?.user?.id && !assign?.numSubmitted) {
+                setLoadingCount(true)
+                const tempCountSubmit = (
+                    await AssignmentService.getNumSubmitAssignment(
+                        assign.id,
+                        assign.classroom.id
+                    )
+                ).data
+                const numSubmitted = tempCountSubmit.submitted
+                const numNotSubmitted = tempCountSubmit.notsubmitted
+                var tempAssignments = [...assignments]
+                tempAssignments[index] = {
+                    ...assign,
+                    numSubmitted,
+                    numNotSubmitted,
+                }
+                setAssignments(tempAssignments)
+                setLoadingCount(false)
             }
-            setAssignments(tempAssignments)
-            setLoadingCount(false)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
     }
 
@@ -212,7 +220,7 @@ function AssignmentList() {
                                             strokeWidth="1.75"
                                         />
                                     </div>
-                                    <div>{assign.title}</div>
+                                    <div>{assign.title || '...'}</div>
                                 </div>
                                 <div>
                                     {assign._draft

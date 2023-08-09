@@ -29,6 +29,9 @@ public interface TestService {
     Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid,
                                       String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException;
 
-    TestLearner startTest(int testId, int userId);
+    Map<String, Object> getNumAttemptTest(int testid, int classid) throws ResourceNotFroundException;
+
+    Map<String, Object> startTest(int testId, int userId);
+
     double endTest(List<TestResult> testResultList) throws ResourceNotFroundException;
 }

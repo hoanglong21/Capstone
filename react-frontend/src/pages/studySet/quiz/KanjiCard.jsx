@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useEffect } from 'react'
 
 const KanjiCard = ({
@@ -17,9 +18,23 @@ const KanjiCard = ({
     showPicture,
     showAudio,
 }) => {
+    const [correctAnswer, setCorrectAnswer] = useState(null)
+    const [example, setExample] = useState(null)
+
     useEffect(() => {
-        if (document.getElementById(`answerQues${quesIndex}`)) {
-            document.getElementById(`answerQues${quesIndex}`).value = ''
+        if (ques?.question_type) {
+            setExample(ques.question.content[2].content)
+            if (ques?.question_type === 1) {
+                document.getElementById(`answerQues${quesIndex}`).value = ''
+            }
+            if (ques?.question_type === 2) {
+                setCorrectAnswer(ques.question.card.id)
+            }
+            if (ques?.question_type === 3) {
+                setCorrectAnswer(
+                    ques.question.card.id === ques.answers[0].card.id
+                )
+            }
         }
     }, [ques])
 
@@ -31,6 +46,7 @@ const KanjiCard = ({
             {/* written */}
             {ques.question_type === 1 && (
                 <div className="card-body">
+                    {/* questions */}
                     {ques.question.content.map((itemContent, index) => {
                         if (writtenPromptWith?.includes(itemContent.field.id)) {
                             return (
@@ -59,6 +75,7 @@ const KanjiCard = ({
                             )
                         }
                     })}
+                    {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
@@ -91,6 +108,7 @@ const KanjiCard = ({
                                 )}
                         </div>
                     )}
+                    {/* answer */}
                     <div className="quizQues_label my-4">Your answer</div>
                     <input
                         className={`form-control quizAns_input ${
@@ -102,6 +120,7 @@ const KanjiCard = ({
                         }`}
                         type="text"
                         placeholder="Type your answer here"
+                        readOnly={results[quesIndex] !== null}
                         onChange={(event) =>
                             handleChangeAnswer(event.target.value, quesIndex)
                         }
@@ -113,11 +132,37 @@ const KanjiCard = ({
                             }
                         }}
                     />
+                    {results[quesIndex] === 0 && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct">
+                                <div
+                                    className="learnCorrectAnswer"
+                                    dangerouslySetInnerHTML={{
+                                        __html: correctAnswer,
+                                    }}
+                                ></div>
+                                <div className="learnExampleSection">
+                                    <div className="learnExample_label">
+                                        Example
+                                    </div>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: example || '...',
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* multiple */}
             {ques.question_type === 2 && (
                 <div className="card-body">
+                    {/* question */}
                     {ques.question.content.map((itemContent, index) => {
                         if (
                             multiplePromptWith?.includes(itemContent.field.id)
@@ -148,6 +193,7 @@ const KanjiCard = ({
                             )
                         }
                     })}
+                    {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
@@ -180,6 +226,7 @@ const KanjiCard = ({
                                 )}
                         </div>
                     )}
+                    {/* answer */}
                     <div className="quizQues_label my-4">Choose the answer</div>
                     <div className="row">
                         {ques.answers.map((ans, ansIndex) => (
@@ -197,6 +244,7 @@ const KanjiCard = ({
                                             ? 'active'
                                             : ''
                                     }`}
+                                    disabled={results[quesIndex] !== null}
                                     onClick={() => {
                                         if (
                                             answers[quesIndex] === ans.card.id
@@ -257,11 +305,22 @@ const KanjiCard = ({
                             </div>
                         ))}
                     </div>
+                    {results[quesIndex] === 0 && (
+                        <div className="learnExampleSection">
+                            <div className="learnExample_label">Example</div>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: example || '...',
+                                }}
+                            ></div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* true false */}
             {ques.question_type === 3 && (
                 <div className="card-body">
+                    {/* questions */}
                     <div className="row mb-4">
                         <div className="col-6">
                             <div className="quizQues_question--left h-100">
@@ -354,6 +413,7 @@ const KanjiCard = ({
                             </div>
                         </div>
                     </div>
+                    {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
@@ -386,6 +446,7 @@ const KanjiCard = ({
                                 )}
                         </div>
                     )}
+                    {/* answer */}
                     <div className="quizQues_label my-4">Choose the answer</div>
                     <div className="row">
                         <div className="col-6">
@@ -401,6 +462,7 @@ const KanjiCard = ({
                                         ? 'active'
                                         : ''
                                 }`}
+                                disabled={results[quesIndex] !== null}
                                 onClick={() => {
                                     if (answers[quesIndex] === 1) {
                                         handleChangeAnswer(null, quesIndex)
@@ -429,6 +491,7 @@ const KanjiCard = ({
                                         ? 'active'
                                         : ''
                                 }`}
+                                disabled={results[quesIndex] !== null}
                                 onClick={() => {
                                     if (answers[quesIndex] === 0) {
                                         handleChangeAnswer(null, quesIndex)
@@ -445,6 +508,66 @@ const KanjiCard = ({
                             </div>
                         </div>
                     </div>
+                    {results[quesIndex] === 0 && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct" disabled>
+                                {ques.question.content.map(
+                                    (itemContent, index) => {
+                                        if (
+                                            trueFalseAnswerWith?.includes(
+                                                itemContent.field.id
+                                            )
+                                        ) {
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className="mb-2"
+                                                >
+                                                    <div className="quizAns_label mb-1">
+                                                        {itemContent.field.name}
+                                                    </div>
+                                                    {itemContent.field.id ===
+                                                    12 ? (
+                                                        <div className="quizQues_question">
+                                                            <img
+                                                                src={
+                                                                    itemContent.content ||
+                                                                    ''
+                                                                }
+                                                                className="quizQues_img"
+                                                            />
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="quizQues_question"
+                                                            dangerouslySetInnerHTML={{
+                                                                __html:
+                                                                    itemContent.content ||
+                                                                    '...',
+                                                            }}
+                                                        ></div>
+                                                    )}
+                                                </div>
+                                            )
+                                        }
+                                    }
+                                )}
+                                <div className="learnExampleSection">
+                                    <div className="learnExample_label">
+                                        Example
+                                    </div>
+                                    <div
+                                        dangerouslySetInnerHTML={{
+                                            __html: example || '...',
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

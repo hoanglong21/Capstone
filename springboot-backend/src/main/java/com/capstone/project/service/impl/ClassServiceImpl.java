@@ -5,6 +5,7 @@ import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
+import com.capstone.project.service.StudySetService;
 import com.capstone.project.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -31,12 +32,13 @@ public class ClassServiceImpl implements ClassService {
     private final AttachmentRepository attachmentRepository;
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
+    private final StudySetService studySetService;
     private final ClassLearnerRepository classLearnerRepository;
 
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.testRepository = testRepository;
@@ -47,6 +49,7 @@ public class ClassServiceImpl implements ClassService {
         this.attachmentRepository = attachmentRepository;
         this.submissionRepository = submissionRepository;
         this.userRepository = userRepository;
+        this.studySetService = studySetService;
         this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
     }
@@ -110,8 +113,11 @@ public class ClassServiceImpl implements ClassService {
         Class classroom = classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
         for(Post post : postRepository.getPostByClassroomId(classroom.getId())){
-            for(Comment comment : commentRepository.getCommentByPostId(post.getId())){
-                commentRepository.delete(comment);
+            for(Comment commentroot : commentRepository.getCommentByPostId(post.getId())){
+                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                    commentRepository.delete(comment);
+                }
+                commentRepository.delete(commentroot);
             }
             for(Attachment attachment : attachmentRepository.getAttachmentByPostId(post.getId())){
                 attachmentRepository.delete(attachment);
@@ -125,8 +131,11 @@ public class ClassServiceImpl implements ClassService {
                 }
                 questionRepository.delete(question);
             }
-            for(Comment comment : commentRepository.getCommentByTestId(test.getId())){
-                commentRepository.delete(comment);
+            for(Comment commentroot : commentRepository.getCommentByTestId(test.getId())){
+                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                    commentRepository.delete(comment);
+                }
+                commentRepository.delete(commentroot);
             }
             testRepository.delete(test);
         }
@@ -135,16 +144,22 @@ public class ClassServiceImpl implements ClassService {
                 for(Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())){
                     attachmentRepository.delete(attachment);
                 }
-                for(Comment comment : commentRepository.getCommentBySubmissionId(submission.getId())){
-                    commentRepository.delete(comment);
+                for(Comment commentroot : commentRepository.getCommentBySubmissionId(submission.getId())){
+                    for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                        commentRepository.delete(comment);
+                    }
+                    commentRepository.delete(commentroot);
                 }
                 submissionRepository.delete(submission);
             }
             for(Attachment attachment : attachmentRepository.getAttachmentByAssignmentId(assignment.getId())){
                 attachmentRepository.delete(attachment);
             }
-            for(Comment comment : commentRepository.getCommentByAssignmentId(assignment.getId())){
-                commentRepository.delete(comment);
+            for(Comment commentroot : commentRepository.getCommentByAssignmentId(assignment.getId())){
+                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                    commentRepository.delete(comment);
+                }
+                commentRepository.delete(commentroot);
             }
             assignmentRepository.delete(assignment);
         }
@@ -286,6 +301,19 @@ public class ClassServiceImpl implements ClassService {
         // add user to classroom
         return classRepository.save(classroom);
     }
+
+    @Override
+    public Boolean AssignStudySet(int classid, StudySet studySet) throws ResourceNotFroundException {
+         Class classroom = classRepository.findById(classid)
+                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + classid));
+
+         StudySet studySet_class = studySetService.createStudySet(studySet);
+
+         classroom.getStudySets().add(studySet_class);
+         classRepository.save(classroom);
+         return true;
+    }
+
 
     @Override
     public Class ResetClassCode(int id) throws ResourceNotFroundException {

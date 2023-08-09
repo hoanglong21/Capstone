@@ -14,14 +14,22 @@ const GrammarDict = () => {
 
     const fetchData = async (searchKey) => {
         setLoading(true)
-        const temp = (
-            await DictionaryService.getGrammar(
-                '=1',
-                '=40',
-                `${searchKey ? '=' + searchKey : ''}`
-            )
-        ).data.list
-        setGrammars(temp)
+        try {
+            const temp = (
+                await DictionaryService.getGrammar(
+                    '=1',
+                    '=40',
+                    `${searchKey ? '=' + searchKey : ''}`
+                )
+            ).data.list
+            setGrammars(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         setLoading(false)
     }
 

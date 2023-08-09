@@ -21,10 +21,13 @@ const deleteTest = (id) => {
 const getFilterList = (
     search,
     author,
-    from,
-    to,
+    fromStart,
+    toStart,
+    fromCreated,
+    toCreated,
     draft,
     direction,
+    sortBy,
     duration,
     classid,
     page,
@@ -36,14 +39,18 @@ const getFilterList = (
             search +
             '&author' +
             author +
-            (from ? `&from${from}` : '') +
-            (to ? `&to${to}` : '') +
+            (fromStart ? `&fromstarted${fromStart}` : '') +
+            (toStart ? `&tostarted${toStart}` : '') +
+            (fromCreated ? `&fromcreated${fromCreated}` : '') +
+            (toCreated ? `&tocreated${toCreated}` : '') +
             '&draft' +
             draft +
             '&direction' +
             direction +
             '&duration' +
             duration +
+            '&sortby' +
+            sortBy +
             '&classid' +
             classid +
             '&page' +

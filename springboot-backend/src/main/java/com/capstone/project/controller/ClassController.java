@@ -3,6 +3,7 @@ package com.capstone.project.controller;
 import com.capstone.project.dto.ClassRequest;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Class;
+import com.capstone.project.model.StudySet;
 import com.capstone.project.service.ClassService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -146,6 +147,15 @@ public class ClassController {
         } catch(Exception e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/assignstudyset/{classId}")
+    public ResponseEntity<?> addStudySetToClass(@PathVariable int classId, @RequestBody StudySet studySet) {
+    try {
+        return ResponseEntity.ok(classService.AssignStudySet(classId, studySet));
+    } catch(ResourceNotFroundException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     @PostMapping("/resetclasscode/{id}")

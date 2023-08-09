@@ -7,7 +7,7 @@ import TestService from '../../../services/TestService'
 
 import DeleteTest from './DeleteTest'
 
-import { AccountIcon, AddIcon } from '../../../components/icons'
+import { AccountIcon, AddIcon, TestIcon } from '../../../components/icons'
 import empty from '../../../assets/images/tutor_assign_empty.jpg'
 import './test.css'
 
@@ -21,27 +21,67 @@ const TestList = () => {
     const [tests, setTests] = useState([])
     const [classroom, setClassroom] = useState({})
     const [loading, setLoading] = useState(true)
+    const [today, setToday] = useState(getToday())
+
+    function padWithLeadingZeros(num, totalLength) {
+        return String(num).padStart(totalLength, '0')
+    }
+
+    function getToday() {
+        const today = new Date()
+        const tempSecond = padWithLeadingZeros(today.getSeconds(), 2).slice(
+            0,
+            0
+        )
+        return (
+            today.getFullYear() +
+            '-' +
+            padWithLeadingZeros(today.getMonth() + 1, 2) +
+            '-' +
+            padWithLeadingZeros(today.getDate(), 2) +
+            'T' +
+            padWithLeadingZeros(today.getHours(), 2) +
+            ':' +
+            padWithLeadingZeros(today.getMinutes(), 2) +
+            tempSecond +
+            '.000' +
+            '+07:00'
+        )
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
-            const tempClass = (await ClassService.getClassroomById(id)).data
-            setClassroom(tempClass)
-            const tempTests = (
-                await TestService.getFilterList(
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    `=${tempClass.id}`,
-                    '',
-                    '=10'
-                )
-            ).data.list
-            setTests(tempTests)
+            try {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                const tempTests = (
+                    await TestService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        `${
+                            userInfo.id === tempClass.user.id ? '' : `=${today}`
+                        }`,
+                        '',
+                        '',
+                        `${userInfo.id === tempClass.user.id ? '' : `=0`}`,
+                        '',
+                        '',
+                        '',
+                        `=${tempClass.id}`,
+                        '',
+                        '=10'
+                    )
+                ).data.list
+                setTests(tempTests)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
             setLoading(false)
         }
         if (id) {
@@ -49,7 +89,19 @@ const TestList = () => {
         }
     }, [id])
 
-    if (!loading) {
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center">
+                <div
+                    className="spinner-border mt-5"
+                    style={{ width: '3rem', height: '3rem' }}
+                    role="status"
+                >
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        )
+    } else {
         return (
             <div>
                 <div>
@@ -106,10 +158,29 @@ const TestList = () => {
                                 aria-expanded="false"
                                 aria-controls={`test${test?.id}`}
                             >
-                                <div>{test.title || '...'}</div>
+                                <div className="d-flex align-items-center">
+                                    <div
+                                        className={`accordionAssign_icon ${
+                                            (test._draft ||
+                                                (!test._draft &&
+                                                    new Date(test.start_date) >=
+                                                        new Date())) &&
+                                            'disabled'
+                                        }`}
+                                    >
+                                        <TestIcon
+                                            size="24px"
+                                            strokeWidth="1.75"
+                                        />
+                                    </div>
+                                    <div>{test.title || '...'}</div>
+                                </div>
                                 <div>
                                     {test._draft
                                         ? 'Draft'
+                                        : test?.start_date &&
+                                          new Date(test?.start_date) < today
+                                        ? `Scheduled for ${test?.start_date}`
                                         : test?.due_date
                                         ? `Due ${test?.due_date}`
                                         : `Posted ${test?.created_date}`}
@@ -127,7 +198,14 @@ const TestList = () => {
                                             : 'No due date'}
                                     </p>
                                     <div className="mt-2 d-flex justify-content-between">
-                                        <button className="viewTest_btn">
+                                        <button
+                                            className="viewTest_btn"
+                                            onClick={() =>
+                                                navigate(
+                                                    `../test/${test?.id}/details`
+                                                )
+                                            }
+                                        >
                                             View details
                                         </button>
                                         {userInfo?.id ===

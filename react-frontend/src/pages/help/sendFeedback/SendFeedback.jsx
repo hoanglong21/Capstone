@@ -19,18 +19,26 @@ const SendFeedback = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            setTypes((await FeedbackTypeService.getAll()).data)
-            setFeedback({
-                user: {
-                    id: userInfo.id,
-                },
-                title: '',
-                feedbackType: {
-                    id: '1',
-                },
-                destination: 'system',
-                content: '',
-            })
+            try {
+                setTypes((await FeedbackTypeService.getAll()).data)
+                setFeedback({
+                    user: {
+                        id: userInfo.id,
+                    },
+                    title: '',
+                    feedbackType: {
+                        id: '1',
+                    },
+                    destination: 'system',
+                    content: '',
+                })
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (userInfo.username) {
             fetchData()
@@ -68,9 +76,9 @@ const SendFeedback = () => {
                 setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
-                    setError(error.response.data)
+                    console.log(error.response.data)
                 } else {
-                    setError(error.message)
+                    console.log(error.message)
                 }
             }
         }

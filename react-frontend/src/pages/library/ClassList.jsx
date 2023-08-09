@@ -25,50 +25,66 @@ const ClassList = () => {
 
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
-        setIsEmpty(false)
-        const temp = (
-            await ClassService.getFilterList(
-                '',
-                '',
-                `${searchKey ? '=' + searchKey : ''}`,
-                `=${userInfo.username}`,
-                `=${userInfo.username}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        setClasses(temp)
+        try {
+            setIsEmpty(false)
+            const temp = (
+                await ClassService.getFilterList(
+                    '',
+                    '',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    `=${userInfo.username}`,
+                    `=${userInfo.username}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            setClasses(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         setLoadingSearch(false)
     }
 
     const checkEmpty = async () => {
         setLoading(true)
-        setIsEmpty(false)
-        const temp = (
-            await ClassService.getFilterList(
-                '',
-                '',
-                '',
-                `=${userInfo.username}`,
-                `=${userInfo.username}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        if (temp.length === 0) {
-            setIsEmpty(true)
+        try {
+            setIsEmpty(false)
+            const temp = (
+                await ClassService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    `=${userInfo.username}`,
+                    `=${userInfo.username}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            if (temp.length === 0) {
+                setIsEmpty(true)
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
         setLoading(false)
     }
