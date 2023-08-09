@@ -17,10 +17,18 @@ const Submissions = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempAssignment = (
-                await AssignmentService.getAssignmentById(assign_id)
-            ).data
-            setAssignment(tempAssignment)
+            try {
+                const tempAssignment = (
+                    await AssignmentService.getAssignmentById(assign_id)
+                ).data
+                setAssignment(tempAssignment)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         fetchData()
     }, [id])

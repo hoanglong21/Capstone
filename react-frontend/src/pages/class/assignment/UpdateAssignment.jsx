@@ -2,10 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import {
-    deleteFileByUrl,
-    uploadFile,
-} from '../../../features/fileManagement'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
@@ -43,28 +40,36 @@ function UpdateAssignment() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempClass = (await ClassService.getClassroomById(id)).data
-            setClassroom(tempClass)
-            const tempAssignment = (
-                await AssignmentService.getAssignmentById(assign_id)
-            ).data
-            setCurrentAssignment({
-                ...tempAssignment,
-                start_date: toFEDate(tempAssignment.start_date),
-                due_date: toFEDate(tempAssignment.due_date),
-            })
-            setUpdateAssignment({
-                ...tempAssignment,
-                start_date: toFEDate(tempAssignment.start_date),
-                due_date: toFEDate(tempAssignment.due_date),
-            })
-            const tempAttachments = (
-                await AttachmentService.getAttachmentsByAssignmentId(
-                    tempAssignment.id
-                )
-            ).data
-            setCurrentFiles([...tempAttachments])
-            setUploadFiles([...tempAttachments])
+            try {
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                const tempAssignment = (
+                    await AssignmentService.getAssignmentById(assign_id)
+                ).data
+                setCurrentAssignment({
+                    ...tempAssignment,
+                    start_date: toFEDate(tempAssignment.start_date),
+                    due_date: toFEDate(tempAssignment.due_date),
+                })
+                setUpdateAssignment({
+                    ...tempAssignment,
+                    start_date: toFEDate(tempAssignment.start_date),
+                    due_date: toFEDate(tempAssignment.due_date),
+                })
+                const tempAttachments = (
+                    await AttachmentService.getAttachmentsByAssignmentId(
+                        tempAssignment.id
+                    )
+                ).data
+                setCurrentFiles([...tempAttachments])
+                setUploadFiles([...tempAttachments])
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (userInfo?.id) {
             fetchData()
@@ -75,24 +80,32 @@ function UpdateAssignment() {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
-            const url = await uploadFile(
-                file,
-                `${userInfo.username}/class/${classroom.id}/assignment/${updateAssignment.id}/tutor`
-            )
-            setUploadFiles([
-                ...uploadFiles,
-                {
-                    file_name: file.name,
-                    file_type: file.type,
-                    file_url: url,
-                    assignment: {
-                        id: updateAssignment.id,
+            try {
+                const url = await uploadFile(
+                    file,
+                    `${userInfo.username}/class/${classroom.id}/assignment/${updateAssignment.id}/tutor`
+                )
+                setUploadFiles([
+                    ...uploadFiles,
+                    {
+                        file_name: file.name,
+                        file_type: file.type,
+                        file_url: url,
+                        assignment: {
+                            id: updateAssignment.id,
+                        },
+                        attachmentType: {
+                            id: 1,
+                        },
                     },
-                    attachmentType: {
-                        id: 1,
-                    },
-                },
-            ])
+                ])
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         setLoadingUploadFile(false)
     }
@@ -101,10 +114,18 @@ function UpdateAssignment() {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
         setUploadFiles(temp)
-        await deleteFileByUrl(
-            file.file_url,
-            `${userInfo.username}/class/${classroom.id}/assignment/${updateAssignment.id}/tutor`
-        )
+        try {
+            await deleteFileByUrl(
+                file.file_url,
+                `${userInfo.username}/class/${classroom.id}/assignment/${updateAssignment.id}/tutor`
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const handleChange = (event) => {

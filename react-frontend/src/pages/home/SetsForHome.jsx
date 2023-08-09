@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 import StudySetService from '../../services/StudySetService'
 
@@ -13,31 +12,37 @@ function SetsForHome() {
 
     const search = searchParams.get('search')
 
-    const { userInfo } = useSelector((state) => state.user)
-
     const [sets, setSets] = useState([])
 
     const fetchData = async (searchKey) => {
-        const temp = (
-            await StudySetService.getFilterList(
-                '=0',
-                '=1',
-                '=0',
-                `${searchKey ? '=' + searchKey : ''}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        setSets(temp)
+        try {
+            const temp = (
+                await StudySetService.getFilterList(
+                    '=0',
+                    '=1',
+                    '=0',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            setSets(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     useEffect(() => {

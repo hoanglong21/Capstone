@@ -24,7 +24,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
     const [picture, setPicture] = useState('')
     const [audio, setAudio] = useState('')
     const [note, setNote] = useState('')
-    
+
     const [showPicture, setShowPicture] = useState(false)
     const [showAudio, setShowAudio] = useState(false)
     const [showNote, setShowNote] = useState(false)
@@ -233,10 +233,18 @@ const ViewCard = ({ fullCard, userInfo }) => {
             picture: picture,
             note: note,
         }
-        tempProgress = (
-            await ProgressService.customUpdateProgress(tempProgress)
-        ).data
-        setProgress(tempProgress)
+        try {
+            tempProgress = (
+                await ProgressService.customUpdateProgress(tempProgress)
+            ).data
+            setProgress(tempProgress)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     return (

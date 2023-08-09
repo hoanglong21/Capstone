@@ -165,10 +165,10 @@ const Flashcard = () => {
 
     // fetch user info
     useEffect(() => {
-        if (userToken) {
+        if (userToken && !userInfo?.id) {
             dispatch(getUser(userToken))
         }
-    }, [userToken])
+    }, [userToken, userInfo])
 
     // fetch data
     useEffect(() => {

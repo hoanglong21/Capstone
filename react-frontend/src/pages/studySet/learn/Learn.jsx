@@ -176,10 +176,10 @@ const Learn = () => {
 
     // fetch user info
     useEffect(() => {
-        if (userToken) {
+        if (userToken && !userInfo?.id) {
             dispatch(getUser(userToken))
         }
-    }, [userToken])
+    }, [userToken, userInfo])
 
     // fetch data
     useEffect(() => {
@@ -561,27 +561,36 @@ const Learn = () => {
     }
 
     useEffect(() => {
-        if (isCurrentCorrect === true) {
-            setCorrect(correct + 1)
-            if (currentIndex < currentRound.length) {
-                setTimeout(function nextQuesTimeOut() {
-                    nextQuestion()
-                }, 2000)
+        try {
+            if (isCurrentCorrect === true) {
+                setCorrect(correct + 1)
+                if (currentIndex < currentRound.length) {
+                    setTimeout(function nextQuesTimeOut() {
+                        nextQuestion()
+                    }, 2000)
+                }
+                ProgressService.updateScore(
+                    userInfo.id,
+                    currentQuestion.question.card.id,
+                    1
+                )
             }
-            ProgressService.updateScore(
-                userInfo.id,
-                currentQuestion.question.card.id,
-                1
-            )
+            if (isCurrentCorrect === false) {
+                setIncorrect(incorrect + 1)
+                ProgressService.updateScore(
+                    userInfo.id,
+                    currentQuestion.question.card.id,
+                    -1
+                )
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
-        if (isCurrentCorrect === false) {
-            setIncorrect(incorrect + 1)
-            ProgressService.updateScore(
-                userInfo.id,
-                currentQuestion.question.card.id,
-                -1
-            )
-        }
+        
     }, [isCurrentCorrect])
 
     // catch event to next card

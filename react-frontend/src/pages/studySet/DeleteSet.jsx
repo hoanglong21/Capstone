@@ -24,9 +24,9 @@ const DeleteSet = ({ studySet }) => {
             setError('')
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setLoading(false)
