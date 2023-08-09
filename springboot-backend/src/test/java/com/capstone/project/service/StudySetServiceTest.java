@@ -28,6 +28,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.AssertionErrors;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -244,40 +246,40 @@ public class StudySetServiceTest {
             throw new RuntimeException(e);
         }
     }
-
     @Order(8)
-    @ParameterizedTest(name = "{index} => isDeleted={0}, isPublic={1}, isDraft={2}, search={3}, type={4}, authorId={5}, authorName={6}, " +
-            "fromDeleted={7}, toDeleted={8}, fromCreated={9}, toCreated={10}, sortBy={11}, direction={12}, page={13}, size={14}")
+    @ParameterizedTest
     @CsvSource({
-            "true, false, null, , 1, 0, , , , , , id, ASC, 1, 5",
-            "false, true, false, test, 2, 0, , , , , , title, DESC, 1, 5"
+            "true, false, false, search text, 1, 123, authorName, 2023-01-01, 2023-12-31, 2023-01-01, 2023-12-31, sortByField, ASC, 1, 10",
+            "true, false, false, search text, 1, 123, authorName, 2023-01-01, 2023-12-31, 2023-01-01, 2023-12-31, sortByField, ASC, -1, 10",
+            "true, false, false, search text, 1, 123, authorName, 2023-01-01, 2023-12-31, 2023-01-01, 2023-12-31, sortByField, ASC, 0, 10",
+            "true, false, false, search text, 1, 123, authorName, 2023-01-01, 2023-12-31, 2023-01-01, 2023-12-31, sortByField, ASC, 1, 0",
+            "true, false, false, search text, 1, 123, authorName, 2023-01-01, 2023-12-31, 2023-01-01, 2023-12-31, sortByField, ASC, 1, -1",
+            // Add more test cases in the same format
     })
-    public void testGetFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId, String authorName,
-                           String fromDeleted, String toDeleted, String fromCreated, String toCreated,
+    void testGetFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId,
+                           String authorName, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                            String sortBy, String direction, int page, int size) {
-        MockitoAnnotations.openMocks(this);
-        StudySet studySet = StudySet.builder()
-                .id(1)
-                .title("Stub")
-                .studySetType(StudySetType.builder().id(1).build())
-                .build();
+        // Prepare mock responses
         Query mockedQuery = mock(Query.class);
-        when(entityManager.createNativeQuery(anyString(), eq("StudySetResponseCustomListMapping"))).thenReturn(mockedQuery);
-        when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
-        when(mockedQuery.getResultList()).thenReturn(List.of(studySet));
+        when(mockedQuery.getResultList()).thenReturn(new ArrayList<>());
+        when(mockedQuery.setMaxResults(anyInt())).thenReturn(mockedQuery);
 
-        List<StudySet> list = (List<StudySet>) studySetServiceImpl.getFilterList(isDeleted, isPublic, isDraft, search, type, authorId, authorName,
-                fromDeleted, toDeleted, fromCreated, toCreated, sortBy, direction, page, size).get("list");
+        when(entityManager.createNativeQuery(anyString(), anyString())).thenReturn(mockedQuery);
 
-        assertThat(list.size()).isGreaterThan(0);
+        // Call the method to test
+        try {
+            Map<String, Object> result = studySetServiceImpl.getFilterList(isDeleted, isPublic, isDraft, search, type, authorId,
+                    authorName, fromDeleted, toDeleted, fromCreated, toCreated, sortBy, direction, page, size);
+            assertThat(result.get("list")).isEqualTo(mockedQuery.getResultList());
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
     }
 
-    @Order(9)
+    @Order(10)
     @Test
     public void getQuizByStudySetId() {
-        when(cardService.getAllByStudySetId(anyInt())).thenReturn(new ArrayList<>());
-        when(contentRepository.getContentByCardId(anyInt())).thenReturn(new ArrayList<>());
-
+        when(cardRepository.getCardByStudySetId(anyInt())).thenReturn(new ArrayList<>());
 
         List<Map<String, Object>> response = null;
         try {
@@ -286,8 +288,27 @@ public class StudySetServiceTest {
             throw new RuntimeException(e);
         }
         assertThat(response.size()).isEqualTo(0);
-
     }
 
+    @Order(11)
+    @Test
+    public void getLearningStudySetId() {
+        when(cardRepository.findCardByProgress(anyInt(), any(String[].class), anyInt())).thenReturn(new ArrayList<>());
 
+        List<Map<String, Object>> response = null;
+        try {
+            response = studySetServiceImpl.getLearningStudySetId(1, 1, new int[]{1}, new String[]{"status1"}, true, false);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        assertThat(response.size()).isEqualTo(0);
+    }
+
+    @Order(12)
+    @Test
+    public void countCardInSet() {
+        when(studySetRepository.countCardInSetWithCondition(anyInt(), anyInt(), anyString(), anyBoolean())).thenReturn(1);
+        Map<String, Integer> response = studySetServiceImpl.countCardInSet(1, 1);
+        assertThat(response.get("Not studied")).isEqualTo(1);
+    }
 }

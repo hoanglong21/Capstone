@@ -32,7 +32,8 @@ public class StudySetServiceImpl implements StudySetService {
     private EntityManager em;
     private final UserRepository userRepository;
     @Autowired
-    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService, UserRepository userRepository, UserService userService, ProgressRepository progressRepository) {
+    public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService,
+                               UserRepository userRepository, UserService userService, ProgressRepository progressRepository, EntityManager em) {
         this.studySetRepository = studySetRepository;
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
@@ -40,6 +41,7 @@ public class StudySetServiceImpl implements StudySetService {
         this.userRepository = userRepository;
         this.userService = userService;
         this.progressRepository = progressRepository;
+        this.em = em;
     }
 
     @Override
@@ -129,7 +131,11 @@ public class StudySetServiceImpl implements StudySetService {
     @Override
     public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId, String authorName,
                                              String fromDeleted, String toDeleted, String fromCreated, String toCreated,
-                                             String sortBy, String direction, int page, int size) {
+                                             String sortBy, String direction, int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
+
         int offset = (page - 1) * size;
 
         String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, s.created_date," +
@@ -233,10 +239,10 @@ public class StudySetServiceImpl implements StudySetService {
     @Override
     public List<Map<String, Object>> getLearningStudySetId(int userId, int studySetId, int[] questionType, String[] progressType, boolean isRandom, boolean star) throws Exception {
         if(questionType.length==0) {
-            throw new Exception("Must have at least 1 type");
+            throw new Exception("Question must have at least 1 type");
         }
         if(progressType.length==0) {
-            throw new Exception("Must have at least 1 type");
+            throw new Exception("Progress must have at least 1 status");
         }
         List<Card> cardList = cardRepository.findCardByProgress(userId, progressType, studySetId);
         return getLearningMethod(cardList, questionType, cardList.size(), isRandom, userId, star);

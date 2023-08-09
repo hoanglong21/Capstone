@@ -62,7 +62,7 @@ public class OverviewStatisticServiceTest {
 
     @Order(2)
     @Test
-    public void getStudySetGrowth() {
+    public void getStudySetGrowth() throws Exception {
         Map<String, Object> response = new HashMap<>();
         response.put("totalItems", 2);
         when(dateRangePicker.getDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
@@ -116,7 +116,7 @@ public class OverviewStatisticServiceTest {
 
     @Order(6)
     @Test
-    public void getStudySetNumber() {
+    public void getStudySetNumber() throws Exception {
         Map<String, Object> response = new HashMap<>();
         response.put("totalItems", 2);
         when(dateRangePicker.getShortDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));

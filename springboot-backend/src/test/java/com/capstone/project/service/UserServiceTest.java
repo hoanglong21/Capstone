@@ -510,7 +510,7 @@ public class UserServiceTest {
             "fromDob={9}, toDob={10}, fromBanned={11}, toBanned={12}, fromDeleted={13}, toDeleted={14}, fromCreated={15}, toCreated={16}, " +
             "sortBy={17}, direction={18}, page={19}, size={20}")
     @CsvSource({
-            "Hoang, , long@gmail.com, , , , , , , , , , , , , , , , , 1, 5",
+            "Hoang, Long, long@gmail.com, Male, 0352269303, ROLE_LEARNER, HN, SWAG, pending, 2001-11-21, 2023-01-01, , , , , , , , , 1, 5",
             ", , long@gmail.com, , , , , , , , , , , , , , , , , 1, 5",
     })
     void testFilterUser(String name, String username, String email, String gender, String phone, String role, String address, String bio, String status,
