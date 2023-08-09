@@ -80,7 +80,7 @@ const ChangePassword = () => {
                 newPassEl.classList.add('is-invalid')
                 confirmPassEl.classList.add('is-invalid')
             } else {
-                await UserService.changePassword(userInfo.username, newPass)
+                await UserService.changePassword(userInfo.username, newPass, currentPass)
                 dispatch(getUser(userInfo.token))
                 setSuccess(true)
                 // auto hide after 5s

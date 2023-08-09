@@ -60,7 +60,12 @@ const TestList = () => {
                         '',
                         '',
                         '',
+                        `${
+                            userInfo.id === tempClass.user.id ? '' : `=${today}`
+                        }`,
                         '',
+                        '',
+                        `${userInfo.id === tempClass.user.id ? '' : `=0`}`,
                         '',
                         '',
                         '',

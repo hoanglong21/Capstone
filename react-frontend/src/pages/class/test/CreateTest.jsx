@@ -185,6 +185,7 @@ const CreateTest = () => {
     // test
     const handleCreate = async () => {
         // validation
+        document.body.scrollTop = document.documentElement.scrollTop = 0
         // check duration > 0
         if (test?.duration && test?.duration <= 0) {
             setError('Duration must be a positive number')
@@ -266,7 +267,6 @@ const CreateTest = () => {
                 console.log(error.message)
             }
         }
-        document.body.scrollTop = document.documentElement.scrollTop = 0
     }
 
     const handleChangeTest = (event) => {
@@ -396,13 +396,15 @@ const CreateTest = () => {
                     },
                 })
             ).data
-            const answer = await AnswerService.createAnswer({
-                question: {
-                    id: ques.id,
-                },
-                content: '',
-                _true: true,
-            })
+            const answer = (
+                await AnswerService.createAnswer({
+                    question: {
+                        id: ques.id,
+                    },
+                    content: '',
+                    _true: true,
+                })
+            ).data
             setQuestions([
                 ...questions,
                 {
@@ -661,7 +663,7 @@ const CreateTest = () => {
             } else {
                 console.log(error.message)
             }
-        }        
+        }
         setSaving(false)
     }
 
