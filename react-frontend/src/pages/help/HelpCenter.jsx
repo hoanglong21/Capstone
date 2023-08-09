@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import '../../assets/styles/Helpcenter.css'
 
@@ -30,7 +30,7 @@ function HelpCenter() {
                     <ul className="hkb-archive  hkb-archive--2cols">
                         <li>
                             <div className="hkb-category  hkb-category--withdesc hkb-category--style7 hkb-category--withicon hkb-category--4">
-                                <a className="hkb-category__link" href="/">
+                                <Link className="hkb-category__link" to="/useaccount">
                                     <div className="hkb-category__iconwrap">
                                         <img
                                             src="https://demo.herothemes.com/knowall/wp-content/uploads/sites/23/2016/03/17-1.png"
@@ -49,12 +49,12 @@ function HelpCenter() {
                                             features.
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             </div>
                         </li>
                         <li>
                             <div className="hkb-category  hkb-category--withdesc hkb-category--style7 hkb-category--withicon hkb-category--3">
-                                <a className="hkb-category__link" href="/">
+                                <Link className="hkb-category__link" to="/useaccount">
                                     <div className="hkb-category__iconwrap">
                                         <img
                                             src="https://demo.herothemes.com/knowall/wp-content/uploads/sites/23/2016/03/04-1.png"
@@ -73,12 +73,12 @@ function HelpCenter() {
                                             quick and easy.
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             </div>
                         </li>
                         <li>
                             <div className="hkb-category  hkb-category--withdesc hkb-category--style7 hkb-category--withicon hkb-category--9">
-                                <a className="hkb-category__link" href="/">
+                                <Link className="hkb-category__link" to="/privacy">
                                     <div className="hkb-category__iconwrap">
                                         <img
                                             src="https://demo.herothemes.com/knowall/wp-content/uploads/sites/23/2016/03/02-1.png"
@@ -97,12 +97,12 @@ function HelpCenter() {
                                             handle your privacy and data.
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             </div>
                         </li>
                         <li>
                             <div className="hkb-category  hkb-category--withdesc hkb-category--style7 hkb-category--withicon hkb-category--7">
-                                <a className="hkb-category__link" href="/">
+                                <Link className="hkb-category__link" to="/term">
                                     <div className="hkb-category__iconwrap">
                                         <img
                                             src="https://demo.herothemes.com/knowall/wp-content/uploads/sites/23/2016/03/13-1.png"
@@ -121,7 +121,7 @@ function HelpCenter() {
                                             integration features.
                                         </div>
                                     </div>
-                                </a>
+                                </Link>
                             </div>
                         </li>
                     </ul>
@@ -146,14 +146,14 @@ function HelpCenter() {
 
                             <li className="hkb-widget-article__format-standard">
                                 <a className="hkb-widget__entry-title" href="/">
-                                    How to Join className?
+                                    How to Join class?
                                 </a>
                             </li>
 
                             <li className="hkb-widget-article__format-standard">
                                 <a className="hkb-widget__entry-title" href="/">
                                     What can I learn from joining the
-                                    classNameroom?
+                                    classroom?
                                 </a>
                             </li>
 

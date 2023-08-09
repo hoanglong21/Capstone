@@ -13,11 +13,14 @@ const UnBanUser = ({ user }) => {
     }
   }, [user]);
 
-  const handleUnBan = async () => {
+  const handleUnBan = async (e) => {
+    e.preventDefault()
+    setError('')
     try {
-      await UserService.recoverUser(user.username);
-      document.getElementsById(`closeUnBanModal${user?.username}`).click();
-      navigate("/");
+      await UserService.recoverUser(unbanUser.username);
+      document.getElementById('closeUnBanModal').click()
+      navigate('/manageusers')
+      setError("")
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);
@@ -29,9 +32,8 @@ const UnBanUser = ({ user }) => {
 
   return (
     <div
-      className="modal"
+      className="modal fade"
       tabindex="-1"
-      role="dialog"
       id={`unbanModal${user?.username}`}
     >
       <div className="modal-dialog" role="document">
@@ -40,14 +42,24 @@ const UnBanUser = ({ user }) => {
             <h5 className="modal-title">UNBAN USERS</h5>
             <button
               type="button"
-              id={`closeUnBanModal${user?.username}`}
+              id="closeUnBanModal"
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
+              onClick={() => {
+                document.getElementById('username')
+                setUnBanUser({})
+                setError('')
+            }}
             ></button>
           </div>
           <div className="modal-body">
-            <p>Are you sure unban user {user.username} ?</p>
+          {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
+            <p>Are you sure unban <strong>{unbanUser.username}</strong> ?</p>
           </div>
           <div className="modal-footer">
             <button type="button" class="btn btn-success" onClick={handleUnBan}>

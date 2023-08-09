@@ -17,67 +17,91 @@ function AllForHome() {
     const [users, setUsers] = useState([])
 
     const fetchSetsData = async (searchKey) => {
-        const tempSets = (
-            await StudySetService.getFilterList(
-                '=0',
-                '=1',
-                '=0',
-                `${searchKey ? '=' + searchKey : ''}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '=1',
-                '=3'
-            )
-        ).data.list
-        setSets(tempSets)
+        try {
+            const tempSets = (
+                await StudySetService.getFilterList(
+                    '=0',
+                    '=1',
+                    '=0',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '=1',
+                    '=3'
+                )
+            ).data.list
+            setSets(tempSets)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const fetchClassesData = async (searchKey) => {
-        const temp = (
-            await ClassService.getFilterList(
-                '=0',
-                `${searchKey ? '=' + searchKey : ''}`,
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            )
-        ).data.list
-        setClasses(temp)
+        try {
+            const temp = (
+                await ClassService.getFilterList(
+                    '=0',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                )
+            ).data.list
+            setClasses(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const fetchUsersData = async (searchKey) => {
-        const temp = (
-            await UserService.filterUser(
-                '',
-                `${searchKey ? '=' + searchKey : ''}`,
-                '',
-                '',
-                '',
-                '=tutor,learner',
-                '',
-                '',
-                '=active,pending',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '=1',
-                '=3'
-            )
-        ).data.list
-        setUsers(temp)
+        try {
+            const temp = (
+                await UserService.filterUser(
+                    '',
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
+                    '',
+                    '',
+                    '=tutor,learner',
+                    '',
+                    '',
+                    '=active,pending',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '=1',
+                    '=3'
+                )
+            ).data.list
+            setUsers(temp)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     useEffect(() => {

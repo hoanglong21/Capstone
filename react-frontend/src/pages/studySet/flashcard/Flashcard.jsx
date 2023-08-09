@@ -165,10 +165,10 @@ const Flashcard = () => {
 
     // fetch user info
     useEffect(() => {
-        if (userToken) {
+        if (userToken && !userInfo?.id) {
             dispatch(getUser(userToken))
         }
-    }, [userToken])
+    }, [userToken, userInfo])
 
     // fetch data
     useEffect(() => {
@@ -217,8 +217,9 @@ const Flashcard = () => {
                     setPicture(tempCards[0].progress?.picture || '')
                     setAudio(tempCards[0].progress?.audio || '')
                     setNote(tempCards[0].progress?.note || '')
-                    setType(tempCards[0].card?.studySet?.studySetType?.id)
                 }
+                // type
+                setType(tempCards[0].card?.studySet?.studySetType?.id)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -326,23 +327,44 @@ const Flashcard = () => {
         }
     }
 
+    // ignore error
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            console.log(e)
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            )
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            )
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none')
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none')
+            }
+        })
+    }, [])
+
     // catch press arrow event event
     useEffect(() => {
-        const handleUserKeyPress = (event, editor) => {
-            switch (event.key) {
-                case 'ArrowLeft':
-                    prevCard()
-                    // Do something for "left arrow" key press.
-                    break
-                case 'ArrowRight':
-                    nextCard()
-                    // Do something for "right arrow" key press.
-                    break
-                default:
-                    return // Quit when this doesn't handle the key event.
+        const handleUserKeyPress = (event) => {
+            if (!event.target.classList.contains('ck-editor__editable')) {
+                switch (event.key) {
+                    case 'ArrowLeft':
+                        prevCard()
+                        // Do something for "left arrow" key press.
+                        break
+                    case 'ArrowRight':
+                        nextCard()
+                        // Do something for "right arrow" key press.
+                        break
+                    default:
+                        return // Quit when this doesn't handle the key event.
+                }
+                // Cancel the default action to avoid it being handled twice
+                event.preventDefault()
             }
-            // Cancel the default action to avoid it being handled twice
-            event.preventDefault()
         }
         window.addEventListener('keydown', handleUserKeyPress, true)
         return () => {
@@ -391,7 +413,7 @@ const Flashcard = () => {
         setNote(progress?.note || '')
         document
             .querySelector('#flashcardAnimation .confetti-container')
-            .remove()
+            ?.remove()
     }
 
     const handleAutoPlay = () => {
@@ -592,6 +614,7 @@ const Flashcard = () => {
         if (optionProgressStatus?.length < 1) {
             setError('You must select at least one progress status.')
             setLoading(false)
+            document.body.scrollTop = document.documentElement.scrollTop = 0
             return
         }
         // create

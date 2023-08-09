@@ -61,7 +61,6 @@ const UpdateClass = ({ classroom, stateChanger }) => {
                 }
             }
         }
-
         setLoading(false)
     }
 

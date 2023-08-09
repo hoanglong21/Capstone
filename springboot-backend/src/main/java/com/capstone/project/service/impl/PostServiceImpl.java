@@ -71,26 +71,6 @@ public class PostServiceImpl implements PostService {
 
         Post savedPost = postRepository.save(post);
 
-//        if (file_names != null && urls != null && file_types != null && type != 0) {
-//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-//            for (int i = 0; i < numOfAttachments; i++) {
-//                String file_name = file_names.get(i);
-//                String url = urls.get(i);
-//                String file_type = file_types.get(i);
-//
-//                Attachment attachment = new Attachment();
-//                attachment.setFile_name(file_name);
-//                attachment.setFile_url(url);
-//                attachment.setFile_type(file_type);
-//                AttachmentType attachmentType = new AttachmentType();
-//                attachmentType.setId(type);
-//                attachment.setAttachmentType(attachmentType);
-//                attachment.setPost(savedPost);
-//
-//                attachmentRepository.save(attachment);
-//            }
-//        }
-
         return savedPost;
     }
 
@@ -109,26 +89,6 @@ public class PostServiceImpl implements PostService {
             attachmentRepository.delete(attachment);
         }
 
-//        if (file_names != null && urls != null && file_types != null && type != 0) {
-//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-//            for (int i = 0; i < numOfAttachments; i++) {
-//                String file_name = file_names.get(i);
-//                String url = urls.get(i);
-//                String file_type = file_types.get(i);
-//
-//                Attachment attachment = new Attachment();
-//                attachment.setFile_name(file_name);
-//                attachment.setFile_url(url);
-//                attachment.setFile_type(file_type);
-//                AttachmentType attachmentType = new AttachmentType();
-//                attachmentType.setId(type);
-//                attachment.setAttachmentType(attachmentType);
-//                attachment.setPost(existingPost);
-//
-//                attachmentRepository.save(attachment);
-//            }
-//        }
-
         return postRepository.save(existingPost);
     }
 
@@ -136,8 +96,11 @@ public class PostServiceImpl implements PostService {
     public Boolean deletePost(int id) throws ResourceNotFroundException {
         Post post = postRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Post not exist with id: " + id));
-        for(Comment comment : commentRepository.getCommentByPostId(post.getId())){
-            commentRepository.delete(comment);
+        for(Comment commentroot : commentRepository.getCommentByPostId(post.getId())){
+            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                commentRepository.delete(comment);
+            }
+            commentRepository.delete(commentroot);
         }
         for(Attachment attachment : attachmentRepository.getAttachmentByPostId(post.getId())){
             attachmentRepository.delete(attachment);

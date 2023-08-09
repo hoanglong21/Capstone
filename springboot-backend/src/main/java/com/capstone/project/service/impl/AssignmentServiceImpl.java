@@ -2,9 +2,9 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
-import com.capstone.project.model.Class;
 import com.capstone.project.repository.AssignmentRepository;
 import com.capstone.project.repository.AttachmentRepository;
+import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.repository.SubmissionRepository;
 import com.capstone.project.service.AssignmentService;
 import com.capstone.project.service.ClassService;
@@ -31,15 +31,17 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final AssignmentRepository assignmentRepository;
     private final SubmissionRepository submissionRepository;
 
+    private final CommentRepository commentRepository;
     private final AttachmentRepository attachmentRepository;
 
     private final UserService userService;
     private final ClassService classService;
 
     @Autowired
-    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
+    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
         this.assignmentRepository = assignmentRepository;
         this.submissionRepository = submissionRepository;
+        this.commentRepository = commentRepository;
         this.attachmentRepository = attachmentRepository;
         this.userService = userService;
         this.classService = classService;
@@ -109,13 +111,26 @@ public class AssignmentServiceImpl implements AssignmentService {
         Assignment assignmentclass = assignmentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Assignment not exist with id:" + id));
         for (Submission submission : submissionRepository.getSubmissionByAssignmentId(assignmentclass.getId())) {
-            submissionRepository.delete(submission);
             for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())) {
                 attachmentRepository.delete(attachment);
             }
+            for(Comment commentroot : commentRepository.getCommentBySubmissionId(submission.getId())){
+                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                    commentRepository.delete(comment);
+                }
+                commentRepository.delete(commentroot);
+            }
+            submissionRepository.delete(submission);
         }
         for (Attachment attachment : attachmentRepository.getAttachmentByAssignmentId(assignmentclass.getId())) {
             attachmentRepository.delete(attachment);
+        }
+        for(Comment commentroot : commentRepository.getCommentByAssignmentId(assignmentclass.getId())){
+            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                commentRepository.delete(comment);
+            }
+            commentRepository.delete(commentroot);
+
         }
         assignmentRepository.delete(assignmentclass);
         return true;

@@ -109,9 +109,18 @@ const Stream = () => {
     }
 
     const handleResetCode = async () => {
-        const tempClass = (await ClassService.resetClassCode(classroom.id)).data
-        setClassroom(tempClass)
-        toggleShowResetMess()
+        try {
+            const tempClass = (await ClassService.resetClassCode(classroom.id))
+                .data
+            setClassroom(tempClass)
+            toggleShowResetMess()
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const handleCopyCode = (event) => {

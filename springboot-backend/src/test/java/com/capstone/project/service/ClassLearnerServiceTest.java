@@ -127,8 +127,8 @@ public class ClassLearnerServiceTest {
     @ParameterizedTest(name = "index => userId{0}, clasId={1}, fromCreated{2},toCreated{3} ," +
             " isAccepted{4}, sortBy{5},direction{6},page={7}, size{8}, greaterThanZero{9} ")
     @CsvSource({
-            "1,1,2023-8-9,2023-8-15,created_date,DESC,1,5, true",
-            "2,1,2023-8-9,2023-8-15,created_date,DESC,1,5, false"
+            "1,1,2023-8-9,2023-8-15,created_date,true,DESC,1,5, true",
+            "2,1,2023-8-9,2023-8-15,created_date,false,DESC,1,5, false"
     })
     public void testFilterClassLearner(int userId, int classId, String fromCreated, String toCreated, Boolean isAccepted,
                                        String sortBy, String direction, int page, int size, boolean greaterThanZero) throws ResourceNotFroundException {

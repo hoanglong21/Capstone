@@ -10,7 +10,7 @@ import setStudied from "../../assets/achievements/badge-SetsStudied.svg";
 import member from "../../assets/achievements/badge-Week.svg";
 import "../../assets/styles/achievement.css";
 
-function Achievements() {  
+function Achievements() { 
   return (
     <div>
       <div className="row gx-3 mb-3 mt-3">

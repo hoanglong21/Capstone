@@ -35,12 +35,22 @@ const Profile = () => {
     useEffect(() => {
         async function fetchAvatar() {
             setLoading(true)
-            // fetch default avatar
-            const tempDefault = await getAll('system/default_avatar')
-            setDefaultAvatars(tempDefault)
-            // fetch user avatar
-            const tempUser = await getAll(`files/${newUser.username}/avatar`)
-            setUserAvatars(tempUser)
+            try {
+                // fetch default avatar
+                const tempDefault = await getAll('system/default_avatar')
+                setDefaultAvatars(tempDefault)
+                // fetch user avatar
+                const tempUser = await getAll(
+                    `files/${newUser.username}/avatar`
+                )
+                setUserAvatars(tempUser)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
             setLoading(false)
         }
         fetchAvatar()
@@ -73,23 +83,39 @@ const Profile = () => {
     const handleUploadAvatar = async (event) => {
         const file = event.target.files[0]
         if (file) {
-            await uploadFile(file, `${newUser.username}/avatar`)
-            // reload userAvatars
             setLoading(true)
-            const tempUser = await getAll(
-                `files/image/avatar/${newUser.username}`
-            )
-            setUserAvatars(tempUser)
+            try {
+                await uploadFile(file, `${newUser.username}/avatar`)
+                // reload userAvatars
+                const tempUser = await getAll(
+                    `files/image/avatar/${newUser.username}`
+                )
+                setUserAvatars(tempUser)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
             setLoading(false)
         }
     }
 
     const handleDeleteAvatar = (avatarUrl) => async () => {
-        await deleteFileByUrl(avatarUrl, `${newUser.username}/avatar`)
-        // reload userAvatars
         setLoading(true)
-        const tempUser = await getAll(`files/${newUser.username}/avatar`)
-        setUserAvatars(tempUser)
+        try {
+            await deleteFileByUrl(avatarUrl, `${newUser.username}/avatar`)
+            // reload userAvatars
+            const tempUser = await getAll(`files/${newUser.username}/avatar`)
+            setUserAvatars(tempUser)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
         setLoading(false)
     }
 

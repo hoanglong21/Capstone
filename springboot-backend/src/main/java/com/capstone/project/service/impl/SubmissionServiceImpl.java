@@ -2,8 +2,8 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
-import com.capstone.project.model.Class;
 import com.capstone.project.repository.AttachmentRepository;
+import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.repository.SubmissionRepository;
 import com.capstone.project.service.SubmissionService;
 import jakarta.persistence.EntityManager;
@@ -24,6 +24,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final SubmissionRepository submissionRepository;
 
     private final AttachmentRepository attachmentRepository;
+    private final CommentRepository commentRepository;
 
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
@@ -31,9 +32,10 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 
     @Autowired
-    public SubmissionServiceImpl(SubmissionRepository submissionRepository, AttachmentRepository attachmentRepository) {
+    public SubmissionServiceImpl(SubmissionRepository submissionRepository, AttachmentRepository attachmentRepository, CommentRepository commentRepository) {
         this.submissionRepository = submissionRepository;
         this.attachmentRepository = attachmentRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -138,13 +140,18 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public Boolean deleteSubmission(int id) throws ResourceNotFroundException {
-        Submission submission_new  = submissionRepository.findById(id)
+        Submission submission  = submissionRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Submission not exist with id:" + id));
-            for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission_new.getId())) {
+            for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())) {
                 attachmentRepository.delete(attachment);
             }
-
-         submissionRepository.delete(submission_new);
+        for(Comment commentroot : commentRepository.getCommentBySubmissionId(submission.getId())){
+            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
+                commentRepository.delete(comment);
+            }
+            commentRepository.delete(commentroot);
+        }
+         submissionRepository.delete(submission);
         return true;
     }
 

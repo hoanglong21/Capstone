@@ -15,27 +15,39 @@ const KanjiDict = () => {
 
     const fetchData = async (searchKey) => {
         setLoading(true)
-        var tempKanjis = []
-        if (searchKey.length > 1) {
-            for (var i = 0; i < searchKey.length; i++) {
-                var char = searchKey.charAt(i)
-                const temp = (
-                    await DictionaryService.getKanji('=1', '=10', `=${char}`)
+        try {
+            var tempKanjis = []
+            if (searchKey.length > 1) {
+                for (var i = 0; i < searchKey.length; i++) {
+                    var char = searchKey.charAt(i)
+                    const temp = (
+                        await DictionaryService.getKanji(
+                            '=1',
+                            '=10',
+                            `=${char}`
+                        )
+                    ).data.list
+                    tempKanjis.push(...temp)
+                }
+            } else {
+                tempKanjis = (
+                    await DictionaryService.getKanji(
+                        '=1',
+                        '=10',
+                        `${searchKey ? '=' + searchKey : ''}`
+                    )
                 ).data.list
-                tempKanjis.push(...temp)
             }
-        } else {
-            tempKanjis = (
-                await DictionaryService.getKanji(
-                    '=1',
-                    '=10',
-                    `${searchKey ? '=' + searchKey : ''}`
-                )
-            ).data.list
+            setKanjis(tempKanjis)
+            setWord(tempKanjis[0])
+            setActiveIndex(0)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
-        setKanjis(tempKanjis)
-        setWord(tempKanjis[0])
-        setActiveIndex(0)
         setLoading(false)
     }
 
@@ -112,7 +124,7 @@ const KanjiDict = () => {
             <div className="mt-4 mb-5">
                 {word?.character ? (
                     <div className="row">
-                        <div className="col-2">
+                        <div className="kanji-dict col-2">
                             <div className="dictResultWordList">
                                 {kanjis.map((kanji, index) => (
                                     <div

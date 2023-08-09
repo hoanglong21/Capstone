@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import FormStyles from '../../assets/styles/Form.module.css'
@@ -29,12 +28,12 @@ const ForgotPassword = () => {
         event.preventDefault()
         setLoading(true)
         setSuccess(false)
-        if (userInfo) {
-            const res = await UserService.sendResetPasswordEmail(username)
-            setEmail(res.data)
-            setSuccess(true)
-        } else {
-            try {
+        try {
+            if (userInfo) {
+                const res = await UserService.sendResetPasswordEmail(username)
+                setEmail(res.data)
+                setSuccess(true)
+            } else {
                 var form = document.querySelector('.needs-validation')
                 const usernameEl = document.getElementById('username')
                 // clear validation
@@ -54,12 +53,12 @@ const ForgotPassword = () => {
                     setEmail(res.data)
                     setSuccess(true)
                 }
-            } catch (error) {
-                if (error.response && error.response.data) {
-                    setError(error.response.data)
-                } else {
-                    setError(error.message)
-                }
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
             }
         }
         setLoading(false)

@@ -205,14 +205,17 @@ public class CommentSerivceTest {
                 .content("Forcus")
                 .build();
 
-        when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
         doNothing().when(commentRepository).delete(comment);
+
+        when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
+        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
+
         try {
-            commentServiceImpl.deleteComment(1);
+            commentServiceImpl.deleteComment(comment.getId());
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
-        verify(commentRepository, times(1)).delete(comment);
+        verify(commentRepository, times(2)).delete(comment);
     }
 
     @Order(10)

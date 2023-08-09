@@ -185,16 +185,16 @@ const CreateSet = () => {
                         user: {
                             id: userInfo.id,
                             username: userInfo.username,
-                        },  
+                        },
                     },
                 })
             ).data
             setCards([...cards, card])
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setSaving(false)
@@ -240,9 +240,9 @@ const CreateSet = () => {
             }
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         document.body.scrollTop = document.documentElement.scrollTop = 0
@@ -265,9 +265,9 @@ const CreateSet = () => {
             setCards([...array])
         } catch (error) {
             if (error.response && error.response.data) {
-                setError(error.response.data)
+                console.log(error.response.data)
             } else {
-                setError(error.message)
+                console.log(error.message)
             }
         }
         setSaving(false)
