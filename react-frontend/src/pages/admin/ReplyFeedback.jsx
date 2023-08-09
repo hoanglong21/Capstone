@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import FeedbackTypeService from "../../../services/FeedbackTypeService";
+import FeedbackService from "../../services/FeedbackService";
 
 function ReplyFeedback() {
   const { userInfo } = useSelector((state) => state.user);
   const [error, setError] = useState("");
-  const [types, setTypes] = useState([]);
-  const [feedback, setFeedback] = useState({});
+  const [id, setId] = useState([]);
+  const [title, setTitle] = useState([]);
+  const [content, setContent] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      setFeedback({
+      setId({
         user: {
           id: userInfo.id,
         },
+      });
+      setTitle({
         title: "",
-        destination: "system",
+      });
+      setContent({
         content: "",
       });
     };
@@ -26,6 +30,37 @@ function ReplyFeedback() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    var form = document.querySelector(".needs-validation");
+    const titleEl = document.getElementById("title");
+    const contentEl = document.getElementById("content");
+    // clear validation
+    form.classList.remove("was-validated");
+    titleEl.classList.remove("is-invalid");
+    contentEl.classList.remove("is-invalid");
+    setError("");
+    form.classList.add("was-validated");
+    if (!title || !content) {
+      if (!title) {
+        titleEl.classList.add("is-invalid");
+      }
+      if (!content) {
+        contentEl.classList.add("is-invalid");
+      }
+    } else {
+      try {
+        await FeedbackService.replyfeedback(id, title, content);
+        form.classList.remove("was-validated");
+        titleEl.classList.remove("is-invalid");
+        contentEl.classList.remove("is-invalid");
+        setError("");
+      } catch (error) {
+        if (error.response && error.response.data) {
+          setError(error.response.data);
+        } else {
+          setError(error.message);
+        }
+      }
+    }
   };
 
   return (
@@ -43,12 +78,23 @@ function ReplyFeedback() {
             ></button>
           </div>
           <div className="modal-body">
+                {error && (
+                    <div className="alert alert-danger" role="alert">
+                        {error}
+                    </div>
+                )}
             <p className="mb-2 text-info fs-5">Title</p>
             <input
               type="text"
               className="form-control"
               id="title"
               placeholder="Title"
+              value={title || ""}
+              onChange={(event) => {
+                setTitle({
+                  title: event.target.value,
+                });
+              }}
               required
             />
             <p className="ms-2 mb-2 text-info fs-5">Content</p>
@@ -57,6 +103,12 @@ function ReplyFeedback() {
               className="form-control"
               placeholder="Message"
               style={{ height: "6rem" }}
+              value={content || ""}
+              onChange={(event) => {
+                setContent({
+                  content: event.target.value,
+                });
+              }}
             ></textarea>
           </div>
           <div className="modal-footer">
