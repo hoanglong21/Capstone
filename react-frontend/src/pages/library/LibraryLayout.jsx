@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
+import '../../assets/styles/Home.css'
 
 const LibraryLayout = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -8,7 +9,7 @@ const LibraryLayout = () => {
     return (
         <div className="flex-grow-1">
             <div className="border-bottom bg-white p-2 pb-0">
-                <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
+                <ul className="nav-home nav flex-grow-1 fw-semibold">
                     <li>
                         <NavLink
                             to="achievements"
@@ -61,7 +62,7 @@ const LibraryLayout = () => {
                     </li>
                 </ul>
             </div>
-            <div className="mx-5 p-2">
+            <div className="library-layout p-2">
                 <Outlet />
             </div>
         </div>

@@ -109,6 +109,9 @@ public class CommentServiceImpl implements CommentService {
     public Boolean deleteComment(int id) throws ResourceNotFroundException {
         Comment comment = commentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Comment not exist with id:" + id));
+        for(Comment commentchild : commentRepository.getCommentByRootId(comment.getId())){
+            commentRepository.delete(commentchild);
+        }
         commentRepository.delete(comment);
         return true;
     }

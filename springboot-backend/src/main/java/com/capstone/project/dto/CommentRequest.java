@@ -33,6 +33,10 @@ public class CommentRequest {
 
     private Test test;
 
+    private Assignment assignment;
+
+    private Submission submission;
+
     public String getContent() {
         if (content != null) {
             // Remove extra spaces between words

@@ -26,10 +26,10 @@ function Home() {
                         <div className="mobile justify-center mt-4">
                             <div className="form123 text-center form-inline">
                                 <form
-                                    className="form-search form-inline w-50"
+                                    className="form-home"
                                 >
                                     <input
-                                        className="form-control mr-sm-2"
+                                        className="form-home-input form-control mr-sm-2"
                                         type="search"
                                         placeholder="Study set, Class, User"
                                         aria-label="Search"
@@ -55,7 +55,7 @@ function Home() {
                     </div>
                     <div className="flex-grow-1">
                         <div className="border-bottom bg-white p-2 pb-0">
-                            <ul className="nav d-flex align-items-center flex-grow-1 mx-5 fw-semibold">
+                            <ul className="nav-home nav flex-grow-1 fw-semibold">
                                 <li>
                                     <NavLink
                                         to={{

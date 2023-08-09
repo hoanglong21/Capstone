@@ -203,13 +203,14 @@ function Statistics() {
                 var tempSeriesDataHeapChart = []
                 for (let index = 0; index < day.length; index++) {
                     const tempDay = day[index]
-                    const tempArr = access[index]
+                    const tempArr = temp[index]
                     tempSeriesDataHeapChart.push({
                         name: tempDay,
                         data: tempArr,
                     })
                 }
                 setSeriesDataHeapChart(tempSeriesDataHeapChart)
+                console.log(seriesDataHeapChart)
             } catch (error) {
                 console.error('Error fetching statistics:', error)
             }

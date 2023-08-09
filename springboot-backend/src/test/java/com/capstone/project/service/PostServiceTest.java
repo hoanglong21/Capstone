@@ -147,15 +147,17 @@ public class PostServiceTest {
         doNothing().when(attachmentRepository).delete(attachment);
 
         when(postRepository.findById(1)).thenReturn(Optional.of(post));
-        when(commentRepository.getCommentByPostId(1)).thenReturn(List.of(comment));
-        when(attachmentRepository.getAttachmentByPostId(1)).thenReturn(List.of(attachment));
+        when(commentRepository.getCommentByPostId(post.getId())).thenReturn(List.of(comment));
+        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
+        when(attachmentRepository.getAttachmentByPostId(post.getId())).thenReturn(List.of(attachment));
         try {
             postServiceImpl.deletePost(1);
         } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
         verify(postRepository, times(1)).delete(post);
-        verify(commentRepository, times(1)).delete(comment);
+        verify(attachmentRepository, times(1)).delete(attachment);
+        verify(commentRepository, times(2)).delete(comment);
     }
 
     @Order(7)

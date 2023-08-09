@@ -57,7 +57,7 @@ function SetsForHome() {
                     <div key={set?.id} className="set-item mb-3">
                         <Link to={`/set/${set.id}`}>
                             <div className="set-body row mb-2">
-                                <div className="term-count col-2">
+                                <div className="term-count col-3">
                                     {set?.count} terms
                                 </div>
                                 <div
@@ -81,7 +81,7 @@ function SetsForHome() {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="set-title col-2">
+                                <div className="set-title col-3">
                                     {set?._draft
                                         ? `(Draft) ${set?.title}`
                                         : set?.title}

@@ -232,7 +232,7 @@ const StudySetList = () => {
                                             style={{ cursor: 'pointer' }}
                                         >
                                             <div className="set-body row mb-2">
-                                                <div className="term-count col-2">
+                                                <div className="term-count col-3">
                                                     {set?.count} terms
                                                 </div>
                                                 <div
@@ -256,7 +256,7 @@ const StudySetList = () => {
                                                 </div>
                                             </div>
                                             <div className="row">
-                                                <div className="set-title col-2">
+                                                <div className="set-title col-3">
                                                     {set?._draft
                                                         ? `(Draft) ${set?.title}`
                                                         : set?.title}

@@ -251,7 +251,6 @@ const App = () => {
                         <Route path="users" element={<UsersForHome />} />
                     </Route>
                     <Route path="/useaccount" element={<UseAccount />} />
-                    <Route path="/usestudyset" element={<UseStudySet />} />
                 </Route>
                 {/* No header + footer */}
                 {/* Auth */}
