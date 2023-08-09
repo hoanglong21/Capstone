@@ -216,6 +216,44 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
+    public Map<String, Object> getNumAttemptTest(int testid, int classid) throws ResourceNotFroundException {
+        String query ="SELECT COUNT(CASE WHEN tl.num_attempt >= 1 THEN 1 END) AS attempted,\n" +
+                "                  COUNT(DISTINCT cl.id) - SUM(CASE WHEN tl.num_attempt >= 1 THEN 1 ELSE 0 END) AS notattempted\n" +
+                "           FROM class_learner cl \n" +
+                "           LEFT JOIN test t on t.class_id = cl.class_id ";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (testid != 0) {
+            testRepository.findById(testid);
+            query += " LEFT JOIN test_learner tl ON cl.user_id = tl.user_id and tl.test_id = t.id where t.id = :testId ";
+            parameters.put("testId", testid);
+        }
+
+        if (classid != 0) {
+            query += " AND cl.class_id = :classId";
+            parameters.put("classId", classid);
+        }
+
+        Query q = em.createNativeQuery(query);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        Object[] result = (Object[]) q.getSingleResult();
+
+        Long attemptedCount = ((Number) result[0]).longValue();
+        Long notAttemptedCount = ((Number) result[1]).longValue();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("attempted", attemptedCount);
+        response.put("notattempted", notAttemptedCount);
+
+        return response;
+    }
+
+
+    @Override
     public TestLearner startTest(int testId, int userId) {
         TestLearner testLearner = TestLearner.builder()
                 .test(Test.builder().id(testId).build())
