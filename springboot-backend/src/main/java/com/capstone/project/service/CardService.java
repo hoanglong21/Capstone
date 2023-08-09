@@ -23,6 +23,6 @@ public interface CardService {
     Boolean checkBlank(int id) throws ResourceNotFroundException;
 
     Map<String, Object> getFilterCard(int studySetId, int userId, String[] status, boolean star,
-                                      String sortBy, String direction, int page, int size);
+                                      String sortBy, String direction, int page, int size) throws Exception;
 
 }

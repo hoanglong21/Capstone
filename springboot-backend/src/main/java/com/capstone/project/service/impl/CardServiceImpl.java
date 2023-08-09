@@ -97,7 +97,11 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Map<String, Object> getFilterCard(int studySetId, int userId, String[] status, boolean star,
-                                             String sortBy, String direction, int page, int size) {
+                                             String sortBy, String direction, int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
+
         if(sortBy=="star") {
             sortBy = "p.is_star";
         } else {

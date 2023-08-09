@@ -7,7 +7,7 @@ import java.util.List;
 public interface OverviewStatisticService {
     List<Integer> getUserGrowth();
 
-    List<Integer> getStudySetGrowth();
+    List<Integer> getStudySetGrowth() throws Exception;
 
     Integer getAccessNumber();
 
@@ -15,5 +15,5 @@ public interface OverviewStatisticService {
 
     Integer getClassNumber() throws ResourceNotFroundException;
 
-    Integer getStudySetNumber();
+    Integer getStudySetNumber() throws Exception;
 }
