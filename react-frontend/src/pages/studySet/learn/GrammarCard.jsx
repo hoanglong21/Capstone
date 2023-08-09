@@ -9,8 +9,6 @@ const GrammarCard = ({
     multipleAnswerWith,
     trueFalsePromptWith,
     trueFalseAnswerWith,
-    setProgress,
-    progress,
     showPicture,
     showAudio,
     showNote,

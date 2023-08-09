@@ -9,8 +9,6 @@ const VocabCard = ({
     multipleAnswerWith,
     trueFalsePromptWith,
     trueFalseAnswerWith,
-    setProgress,
-    progress,
     showPicture,
     showAudio,
     showNote,

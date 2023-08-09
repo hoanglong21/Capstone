@@ -9,8 +9,6 @@ const KanjiCard = ({
     multipleAnswerWith,
     trueFalsePromptWith,
     trueFalseAnswerWith,
-    setProgress,
-    progress,
     showPicture,
     showAudio,
     showNote,

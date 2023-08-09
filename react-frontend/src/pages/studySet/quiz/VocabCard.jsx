@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const VocabCard = ({
     ques,
@@ -17,9 +17,23 @@ const VocabCard = ({
     showPicture,
     showAudio,
 }) => {
+    const [correctAnswer, setCorrectAnswer] = useState(null)
+    const [example, setExample] = useState(null)
+
     useEffect(() => {
-        if (document.getElementById(`answerQues${quesIndex}`)) {
-            document.getElementById(`answerQues${quesIndex}`).value = ''
+        if (ques?.question_type) {
+            setExample(ques.question.content[2].content)
+            if (ques?.question_type === 1) {
+                document.getElementById(`answerQues${quesIndex}`).value = ''
+            }
+            if (ques?.question_type === 2) {
+                setCorrectAnswer(ques.question.card.id)
+            }
+            if (ques?.question_type === 3) {
+                setCorrectAnswer(
+                    ques.question.card.id === ques.answers[0].card.id
+                )
+            }
         }
     }, [ques])
 
@@ -31,6 +45,7 @@ const VocabCard = ({
             {/* written */}
             {ques.question_type === 1 && (
                 <div className="card-body">
+                    {/* question */}
                     {ques.question.content.map((itemContent, index) => {
                         if (writtenPromptWith === itemContent.field.id) {
                             return (
@@ -49,6 +64,7 @@ const VocabCard = ({
                             )
                         }
                     })}
+                    {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
@@ -81,6 +97,7 @@ const VocabCard = ({
                                 )}
                         </div>
                     )}
+                    {/* answer */}
                     <div className="quizQues_label my-4">Your answer</div>
                     <input
                         id={`answerQues${quesIndex}`}
@@ -93,6 +110,7 @@ const VocabCard = ({
                         }`}
                         type="text"
                         placeholder="Type your answer here"
+                        readOnly={results[quesIndex] !== null}
                         onChange={(event) =>
                             handleChangeAnswer(event.target.value, quesIndex)
                         }
@@ -104,11 +122,43 @@ const VocabCard = ({
                             }
                         }}
                     />
+                    {results[quesIndex] === 0 && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct" disabled>
+                                <div className="row">
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        <div
+                                            className="learnCorrectAnswer"
+                                            dangerouslySetInnerHTML={{
+                                                __html: correctAnswer,
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        <div className="learnExampleSection">
+                                            <div className="learnExample_label">
+                                                Example
+                                            </div>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: example || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* multiple */}
             {ques.question_type === 2 && (
                 <div className="card-body">
+                    {/* question */}
                     {ques.question.content.map((itemContent, index) => {
                         if (multiplePromptWith === itemContent.field.id) {
                             return (
@@ -127,6 +177,7 @@ const VocabCard = ({
                             )
                         }
                     })}
+                    {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
@@ -159,6 +210,7 @@ const VocabCard = ({
                                 )}
                         </div>
                     )}
+                    {/* answer */}
                     <div className="quizQues_label my-4">Choose the answer</div>
                     <div className="row">
                         {ques.answers.map((ans, ansIndex) => (
@@ -168,14 +220,18 @@ const VocabCard = ({
                                         answers[quesIndex] === ans.card.id &&
                                         results[quesIndex] === 0
                                             ? 'incorrect'
-                                            : answers[quesIndex] ===
+                                            : (answers[quesIndex] ===
                                                   ans.card.id &&
-                                              results[quesIndex] === 1
+                                                  results[quesIndex] === 1) ||
+                                              (results[quesIndex] === 0 &&
+                                                  correctAnswer ===
+                                                      ans.card.id)
                                             ? 'correct'
                                             : answers[quesIndex] === ans.card.id
                                             ? 'active'
                                             : ''
                                     }`}
+                                    disabled={results[quesIndex] !== null}
                                     onClick={() => {
                                         if (
                                             answers[quesIndex] === ans.card.id
@@ -222,11 +278,22 @@ const VocabCard = ({
                             </div>
                         ))}
                     </div>
+                    {results[quesIndex] === 0 && (
+                        <div className="learnExampleSection">
+                            <div className="learnExample_label">Example</div>
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: example || '...',
+                                }}
+                            ></div>
+                        </div>
+                    )}
                 </div>
             )}
             {/* true false */}
             {ques.question_type === 3 && (
                 <div className="card-body">
+                    {/* question */}
                     <div className="row mb-4">
                         <div className="col-6">
                             <div className="quizQues_question--left h-100">
@@ -291,6 +358,7 @@ const VocabCard = ({
                             </div>
                         </div>
                     </div>
+                    {/* picture + audio */}
                     {(showPicture || showAudio) && (
                         <div className="row">
                             {showPicture &&
@@ -323,6 +391,7 @@ const VocabCard = ({
                                 )}
                         </div>
                     )}
+                    {/* answer */}
                     <div className="quizQues_label my-4">Choose the answer</div>
                     <div className="row">
                         <div className="col-6">
@@ -338,6 +407,7 @@ const VocabCard = ({
                                         ? 'active'
                                         : ''
                                 }`}
+                                disabled={results[quesIndex] !== null}
                                 onClick={() => {
                                     if (answers[quesIndex] === 1) {
                                         handleChangeAnswer(null, quesIndex)
@@ -366,6 +436,7 @@ const VocabCard = ({
                                         ? 'active'
                                         : ''
                                 }`}
+                                disabled={results[quesIndex] !== null}
                                 onClick={() => {
                                     if (answers[quesIndex] === 0) {
                                         handleChangeAnswer(null, quesIndex)
@@ -382,6 +453,55 @@ const VocabCard = ({
                             </div>
                         </div>
                     </div>
+                    {results[quesIndex] === 0 && (
+                        <div>
+                            <div className="quizQues_label my-4">
+                                Correct answer
+                            </div>
+                            <div className="quizQues_answer correct" disabled>
+                                <div className="row">
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        {ques.question.content.map(
+                                            (itemContent, index) => {
+                                                if (
+                                                    trueFalseAnswerWith ===
+                                                    itemContent.field.id
+                                                ) {
+                                                    return (
+                                                        <div
+                                                            key={index}
+                                                            className="mb-2"
+                                                        >
+                                                            <div
+                                                                className="learnCorrectAnswer"
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html:
+                                                                        itemContent.content ||
+                                                                        '...',
+                                                                }}
+                                                            ></div>
+                                                        </div>
+                                                    )
+                                                }
+                                            }
+                                        )}
+                                    </div>
+                                    <div className="col-12 col-md-6 mt-2 mt-md-0">
+                                        <div className="learnExampleSection">
+                                            <div className="learnExample_label">
+                                                Example
+                                            </div>
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: example || '...',
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

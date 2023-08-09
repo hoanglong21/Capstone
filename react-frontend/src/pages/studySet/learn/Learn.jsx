@@ -819,8 +819,6 @@ const Learn = () => {
                             multipleAnswerWith={multipleAnswerWith}
                             trueFalsePromptWith={trueFalsePromptWith}
                             trueFalseAnswerWith={trueFalseAnswerWith}
-                            setProgress={setProgress}
-                            progress={progress}
                             showPicture={showPicture}
                             showAudio={showAudio}
                             showNote={showNote}
