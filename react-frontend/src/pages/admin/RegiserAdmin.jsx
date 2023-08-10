@@ -116,8 +116,7 @@ const RegisterAdmin = () => {
         <SidebarforAdmin />
         <div className="col-sm">
           <HeaderAdmin />
-          <div className="container">
-            <div className="bg-white p-5">
+          <div className="container bg-white p-5">
               <div className="row px-4">
                 <div className="col-12">
                   <div className="pe-4" style={{ position: "relative" }}>
@@ -160,7 +159,7 @@ const RegisterAdmin = () => {
                       {success && (
                         <div className="alert alert-success" role="alert">
                           Registered successfully. Please {" "}
-                          <button className="text-primary font-weight-bold" onClick={handleLogout} type="button">
+                          <button className="text-decoration-underline font-weight-bold" onClick={handleLogout} type="button">
                             Logout
                           </button>{" "}
                           and Login another account to continue.
@@ -273,7 +272,6 @@ const RegisterAdmin = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 export default RegisterAdmin;
