@@ -219,7 +219,7 @@ const Flashcard = () => {
                     setNote(tempCards[0].progress?.note || '')
                 }
                 // type
-                setType(tempCards[0].card?.studySet?.studySetType?.id)
+                setType(tempCards[0]?.card?.studySet?.studySetType?.id)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -228,7 +228,7 @@ const Flashcard = () => {
                 }
             }
         }
-        if (id && userInfo.id) {
+        if (id && userInfo?.id) {
             fetchData()
         }
     }, [userInfo, id])
@@ -735,7 +735,7 @@ const Flashcard = () => {
                 </div>
                 <div className="flashcardInfo d-flex flex-column align-items-center">
                     <h3>
-                        {cardIndex + 1} / {cards.length}
+                        {cardIndex + 1} / {cards?.length}
                     </h3>
                     <h3>{cards[cardIndex]?.studySet?.title}</h3>
                 </div>

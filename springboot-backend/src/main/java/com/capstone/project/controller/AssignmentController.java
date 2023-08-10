@@ -122,7 +122,7 @@ public class AssignmentController {
 
         try{
             return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,fromStart,toStart,fromCreated,toCreated,isDraft,direction,sortBy,classid.orElse(0),page,size));
-        }catch (ResourceNotFroundException e){
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

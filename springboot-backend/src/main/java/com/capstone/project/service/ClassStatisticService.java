@@ -8,7 +8,7 @@ import java.util.List;
 public interface ClassStatisticService {
     Integer getTestNumber(int id) throws ResourceNotFroundException;
 
-    Integer getAssignmentNumber(int id) throws ResourceNotFroundException;
+    Integer getAssignmentNumber(int id) throws Exception;
 
     Integer getLeanerJoinedNumber(int id) throws ResourceNotFroundException, ParseException;
 

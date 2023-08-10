@@ -30,7 +30,7 @@ public class ClassStatisticController {
     public ResponseEntity<?> getAssignmentNumber(@PathVariable int id){
         try {
             return ResponseEntity.ok(classStatisticService.getAssignmentNumber(id));
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

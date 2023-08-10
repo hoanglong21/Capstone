@@ -1,64 +1,94 @@
-import React from "react";
-import "../../../assets/styles/test.css"
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
-function DoTest() {
-  return (
-    <div className="containerTest">
-      <h3 style={{textAlign: "center"}}>Vocabulary - Grammar Lesson 3 Test</h3>
-      <p style={{textAlign: "center"}}>Timing out: 20:00:00</p>
-      <p style={{borderBottom: '#E7D8C9 dashed 1px'}}></p>
-      <section>
-        <form className="testForm">
-          <h5>1. What is the correct translation for "telephone"?</h5>
-          <input type="radio" className="q1" value="a" id="q1a" />
-          a. 本
-          <br />
-          <input type="radio" className="q1" value="b" id="q1b" />
-          b. 電話
-          <br />
-          <input type="radio" className="q1" value="c" id="q1c" />
-          c. ペン
-          <br />
-          <input type="radio" className="q1" value="d" id="q1d" />
-          d. 電気
-          <br />
-          <h5>2. How do you say "Good morning"?</h5>
-          <input type="radio" className="q2" value="a" id="q2a" />
-          a. おはよう<br />
-          <input type="radio" className="q2" value="b" id="q2b" />
-          b. すみません<br />
-          <input type="radio" className="q2" value="c" id="q2c" />
-          c. こんばんは<br />
-          <input type="radio" className="q2" value="d" id="q2d" />
-          d. No correct answer
-          <br />
-          <h5>3. "Good evening" is "こんばんは"?</h5>
-          <input type="radio" className="q3" value="a" id="q3a" />
-          a. True
-          <br />
-          <input type="radio" className="q3" value="b" id="q3b" />
-          b. False
-          <br />
-          <h5>4. What is the correct translation for "Please"?</h5>
-          <input type="radio" className="q4" value="a" id="q4a" />
-          a. おねがいだから<br />
-          <input type="radio" className="q4" value="b" id="q4b" />
-          b. しつれい<br />
-          <input type="radio" className="q5" value="c" id="q5c" />
-          c. こんにちは<br />
-          <input type="radio" className="q5" value="d" id="q5d" />
-          d.  No correct answer
-          <br />
-          <br />
-          <br />
-          <div className="text-center" style={{marginTop: "-20px"}}>
-          <input type="submit" value="Submit Answers" className="submitTest"/>
-          </div>
-        </form>
-        <div className="results"></div>
-      </section>
-    </div>
-  );
+import TestService from '../../../services/TestService'
+import { getUser } from '../../../features/user/userAction'
+
+import '../../../assets/styles/test.css'
+
+const DoTest = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const { id } = useParams()
+
+    const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
+
+    const [test, setTest] = useState({})
+    const [questions, setQuestions] = useState([])
+
+    var minutesLabel = document.getElementById('minutesTest')
+    var secondsLabel = document.getElementById('secondsTest')
+    var totalSeconds = 0
+
+    function setTime() {
+        ++totalSeconds
+        secondsLabel.innerHTML = pad(totalSeconds % 60)
+        minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60))
+    }
+
+    function pad(val) {
+        var valString = val + ''
+        if (valString.length < 2) {
+            return '0' + valString
+        } else {
+            return valString
+        }
+    }
+
+    // fetch userInfo
+    useEffect(() => {
+        if (userToken && !userInfo?.id) {
+            dispatch(getUser(userToken))
+        }
+    }, [userToken, userInfo])
+
+    // fetch data
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // questions
+                const tempQuestions = (
+                    await TestService.startTest(userInfo.id, id)
+                ).data
+                setQuestions(tempQuestions)
+                // test
+                setTest(tempQuestions.questionList[0]?.question?.test)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+        }
+        if (id && userInfo?.id) {
+            fetchData()
+            setInterval(setTime, 1000)
+        }
+    }, [id, userInfo])
+
+    return (
+        <div>
+            {/* Header */}
+            <div className="doTest_header d-flex justify-content-between align-items-center">
+                <h3>{test?.title}</h3>
+                <div>
+                    <label id="minutesTest">00</label>:
+                    <label id="secondsTest">00</label>
+                </div>
+                <button
+                    className="btn btn-primary"
+                    onClick={() => {
+                        navigate(`/set/${id}`)
+                    }}
+                >
+                    Submit
+                </button>
+            </div>
+        </div>
+    )
 }
-
-export default DoTest;
+export default DoTest
