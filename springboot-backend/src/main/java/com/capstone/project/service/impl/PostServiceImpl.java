@@ -2,17 +2,17 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
-import com.capstone.project.model.Class;
-import com.capstone.project.repository.AttachmentRepository;
-import com.capstone.project.repository.CommentRepository;
-import com.capstone.project.repository.PostRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.PostService;
 import com.capstone.project.service.UserService;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,16 +27,23 @@ public class PostServiceImpl implements PostService {
 
     @PersistenceContext
     private EntityManager em;
+
+    private final JavaMailSender mailSender;
     private final PostRepository postRepository;
+    private final ClassLearnerRepository classLearnerRepository;
     private final CommentRepository commentRepository;
+    private final UserSettingRepository userSettingRepository;
     private final AttachmentRepository attachmentRepository;
     private final UserService userService;
     private final ClassService classService;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
+    public PostServiceImpl(JavaMailSender mailSender, PostRepository postRepository, ClassLearnerRepository classLearnerRepository, CommentRepository commentRepository, UserSettingRepository userSettingRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
+        this.mailSender = mailSender;
         this.postRepository = postRepository;
+        this.classLearnerRepository = classLearnerRepository;
         this.commentRepository = commentRepository;
+        this.userSettingRepository = userSettingRepository;
         this.attachmentRepository = attachmentRepository;
         this.userService = userService;
         this.classService = classService;
@@ -71,7 +78,51 @@ public class PostServiceImpl implements PostService {
 
         Post savedPost = postRepository.save(post);
 
+        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedPost.getClassroom().getId());
+        for (ClassLearner classLearner : classLearners) {
+            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
+            for (UserSetting userSetting : userSettings) {
+                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 6) {
+                    sendPostCreatedEmail(classLearner);
+                }
+            }
+        }
         return savedPost;
+    }
+
+    public void sendPostCreatedEmail(ClassLearner classLearner) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = classLearner.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            subject = "[NihongoLevelUp]: New Post added ";
+            content = "Hi [[name]],<br><br>"
+                    + "A new post was added in your class << " + classLearner.getClassroom().getClass_name() + " >>.<br><br>"
+                    + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                    + "Best regards,<br>"
+                    + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", classLearner.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
