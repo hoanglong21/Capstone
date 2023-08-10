@@ -108,7 +108,7 @@ function HeaderAdmin() {
               <Link
                 className="dropdown-item py-2 px-3"
                 type="button"
-                to="/account"
+                to="/settingsadmin"
               >
                 <SettingIcon className="me-3" strokeWidth="2" />
                 <span className="align-middle fw-semibold">Settings</span>

@@ -92,6 +92,7 @@ import UseAccount from './pages/help/UseAccount'
 import ViewTest from './pages/class/test/ViewTest'
 import TestDetails from './pages/class/test/TestDetails'
 import DoTest from './pages/class/test/DoTest'
+import SettingForAdmin from './pages/admin/SettingForAdmin'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -342,6 +343,7 @@ const App = () => {
                         element={<ViewVocabularyDetail />}
                     />
                     <Route path="/registeradmin" element={<RegisterAdmin />} />
+                    <Route path='/settingsadmin' element={<SettingForAdmin />} />
                 </Route>
             </Routes>
             <AuthVerify logOut={logOut} />
