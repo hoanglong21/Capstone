@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react";
 
 function DictionaryForAdmin() {
   return (
-    <div>DictionaryForAdmin</div>
-  )
+    <div>hi</div>
+  );
 }
 
-export default DictionaryForAdmin
+export default DictionaryForAdmin;

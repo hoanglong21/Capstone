@@ -169,7 +169,7 @@ const RegisterAdmin = () => {
                       <div className="form-group mb-4">
                         <label className={styles.formLabel}>Username</label>
                         <input
-                          placeholder="Type your username"
+                          placeholder="Enter your username"
                           id="username"
                           name="username"
                           className={`form-control ${styles.formControl}`}
@@ -181,7 +181,7 @@ const RegisterAdmin = () => {
                       <div className="form-group mb-4">
                         <label className={styles.formLabel}>Email</label>
                         <input
-                          placeholder="Type your email"
+                          placeholder="Enter your email"
                           id="email"
                           name="email"
                           type="email"
