@@ -3,6 +3,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
 import com.capstone.project.repository.AttachmentRepository;
+import com.capstone.project.repository.ClassLearnerRepository;
 import com.capstone.project.repository.CommentRepository;
 import com.capstone.project.repository.PostRepository;
 import com.capstone.project.service.impl.PostServiceImpl;
@@ -32,6 +33,9 @@ public class PostServiceTest {
     private EntityManager em;
     @Mock
     private PostRepository postRepository;
+
+    @Mock
+    private ClassLearnerRepository classLearnerRepository;
     @Mock
     private AttachmentRepository attachmentRepository;
 
