@@ -1927,7 +1927,7 @@ const Learn = () => {
                                                 </div>
                                             </div>
                                         ) : (
-                                            'Create new quiz'
+                                            'Create new learn'
                                         )}
                                     </button>
                                 </div>
