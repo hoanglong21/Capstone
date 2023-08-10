@@ -2,11 +2,20 @@ import axios from 'axios'
 
 const API_BASE_URL = process.env.REACT_APP_HOST
 
-const getCommentById = (id) =>{
+const getCommentById = (id) => {
     return axios.get(API_BASE_URL + '/comments/' + id)
 }
 
-const getFilterList = (search, author, direction, typeid, postid, rootId, page, size) => {
+const getFilterList = (
+    search,
+    author,
+    direction,
+    typeid,
+    postid,
+    rootId,
+    page,
+    size
+) => {
     return axios.get(
         API_BASE_URL +
             '/filtercomment?search' +
@@ -28,9 +37,29 @@ const getFilterList = (search, author, direction, typeid, postid, rootId, page, 
     )
 }
 
+const getAllCommentByPostId = (id) => {
+    return axios.get(API_BASE_URL + '/commentbypostid/' + id)
+}
+
+const createComment = (comment) => {
+    return axios.post(API_BASE_URL + '/comments', comment)
+}
+
+const updateComment = (id, comment) => {
+    return axios.put(API_BASE_URL + '/comments/' + id, comment)
+}
+
+const deleteComment = (id) => {
+    return axios.delete(API_BASE_URL + '/comments/' + id)
+}
+
 const CommentService = {
     getCommentById,
-    getFilterList
+    getFilterList,
+    getAllCommentByPostId,
+    createComment,
+    updateComment,
+    deleteComment,
 }
 
 export default CommentService

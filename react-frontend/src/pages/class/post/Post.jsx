@@ -14,11 +14,14 @@ import PostEditor from '../../../components/textEditor/PostEditor'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import {
     DeleteIcon,
+    MemberSolidIcon,
     OptionVerIcon,
     SendIcon,
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
+import CommentService from '../../../services/CommentService'
+import Comment from '../../../components/comment/Comment'
 
 const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [showUpdate, setShowUpdate] = useState(false)
@@ -30,14 +33,43 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [loadingUpdatePost, setLoadingUpdatePost] = useState(false)
 
+    const [comments, setComments] = useState([])
+    const [addComment, setAddComment] = useState('')
+    const [loadingComment, setLoadingComment] = useState(false)
+
+    // ignore error
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            console.log(e)
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            )
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            )
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none')
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none')
+            }
+        })
+    }, [])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // attachments
                 const tempFiles = (
                     await AttachmentService.getAttachmentsByPostId(post.id)
                 ).data
                 setCurrentFiles([...tempFiles])
                 setUploadFiles([...tempFiles])
+                // comments
+                const tempComments = (
+                    await CommentService.getAllCommentByPostId(post.id)
+                ).data
+                setComments(tempComments)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -46,8 +78,10 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                 }
             }
         }
-        fetchData()
-    }, [post.id])
+        if (post?.id) {
+            fetchData()
+        }
+    }, [post])
 
     const handleUpdatePost = async () => {
         setLoadingUpdatePost(true)
@@ -165,6 +199,39 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         var temp = [...uploadFiles]
         temp.splice(index, 1)
         setUploadFiles(temp)
+    }
+
+    const handleAddComment = async () => {
+        setLoadingComment(true)
+        try {
+            // create comment
+            var tempComment = {
+                user: {
+                    id: userInfo.id,
+                    username: userInfo.username,
+                    avatar: userInfo.avatar,
+                },
+                content: addComment,
+                commentType: {
+                    id: 1,
+                },
+                post: {
+                    id: post.id,
+                },
+            }
+            tempComment = (await CommentService.createComment(tempComment)).data
+            // add to list
+            setComments([...comments, tempComment])
+            // clear
+            setAddComment('')
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingComment(false)
     }
 
     return (
@@ -368,25 +435,70 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                         )}
                     </div>
                 </div>
-                <div className="card-footer bg-white">
-                    <div className="row g-5 d-flex align-items-center">
-                        <div className="col">
+                <div className="card-footer px-3 py-2 bg-white">
+                    {comments.length > 0 && (
+                        <div className="postComment_container">
+                            <div className="d-flex align-items-center postComment_label mb-3">
+                                <MemberSolidIcon size="24px" className="me-2" />
+                                <span>{comments.length} class comment</span>
+                            </div>
+                            {comments.map((comment, index) => (
+                                <Comment
+                                    key={comment.id}
+                                    index={index}
+                                    post={post}
+                                    comments={comments}
+                                    setComments={setComments}
+                                    comment={comment}
+                                    userInfo={userInfo}
+                                />
+                            ))}
+                        </div>
+                    )}
+                    {/* add comment */}
+                    <div className="row">
+                        <div className="col-1">
                             <div className="postAuthorImg">
                                 <img
-                                    src={defaultAvatar}
+                                    src={post?.user?.avatar || defaultAvatar}
                                     className="w-100 h-100"
                                     alt=""
                                 />
                             </div>
                         </div>
-                        <div className="col-9">
-                            <div className="postCommentEditor">
-                                <CardEditor />
+                        <div className="col-11">
+                            <div className="d-flex">
+                                <div className="postCommentEditor flex-fill">
+                                    <CardEditor
+                                        data={addComment}
+                                        onChange={(event, editor) => {
+                                            setAddComment(editor.getData())
+                                        }}
+                                    />
+                                </div>
+                                <button
+                                    className="postComment_btn ms-1"
+                                    onClick={handleAddComment}
+                                    disabled={!addComment}
+                                >
+                                    {loadingComment ? (
+                                        <div
+                                            className="spinner-border spinner-border-sm text-secondary"
+                                            role="status"
+                                        >
+                                            <span className="visually-hidden">
+                                                LoadingUpload...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <SendIcon
+                                            size="20px"
+                                            strokeWidth="1.8"
+                                        />
+                                    )}
+                                </button>
                             </div>
                         </div>
-                        <button className="col">
-                            <SendIcon />
-                        </button>
                     </div>
                 </div>
             </div>
