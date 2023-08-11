@@ -83,7 +83,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 7) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 7 && !assignment.is_draft()) {
                     sendAssignmentCreatedEmail(classLearner, savedAssignment);
                 }
             }
@@ -270,7 +270,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Map<String, Object> getNumSubmitAssignment(int assignmentid, int classid) throws ResourceNotFroundException {
         String query ="SELECT COUNT(CASE WHEN is_done = true THEN 1 END) AS submitted,\n" +
-                "                      COUNT(DISTINCT cl.user_id) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END) AS notsubmitted\n" +
+                "                      COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END) AS notsubmitted\n" +
                 "FROM class_learner cl \n" +
                 "LEFT JOIN assignment a ON cl.class_id = a.class_id ";
 

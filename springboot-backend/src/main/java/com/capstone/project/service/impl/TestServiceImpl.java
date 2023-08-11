@@ -80,7 +80,7 @@ public class TestServiceImpl  implements TestService {
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 8) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 8 && !test.is_draft()) {
                     sendTestCreatedEmail(classLearner, savedTest);
                 }
             }

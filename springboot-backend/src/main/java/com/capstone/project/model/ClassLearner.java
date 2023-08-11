@@ -16,7 +16,7 @@ import java.util.Date;
                 columns = {
                         @ColumnResult(name = "id", type = Integer.class),
                         @ColumnResult(name = "created_date", type = Date.class),
-                        @ColumnResult(name = "accepted", type =Boolean.class),
+                        @ColumnResult(name = "status", type =String.class),
                         @ColumnResult(name = "username", type =String.class),
                         @ColumnResult(name = "avatar", type =String.class),
 
@@ -34,7 +34,7 @@ public class ClassLearner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private boolean is_accepted;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

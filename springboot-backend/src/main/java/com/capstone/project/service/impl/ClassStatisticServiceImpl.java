@@ -65,7 +65,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
         List<String> listDate = dateRangePicker.getDateRange();
-            Map<String, Object> response = classLearnerService.filterClassLearner(0, id, null, null,true,
+            Map<String, Object> response = classLearnerService.filterClassLearner(0, id, null, null,"enrolled",
                     "created_date", "DESC", 1, 5);
             return Integer.parseInt(String.valueOf(response.get("totalItems")));
         }
@@ -78,7 +78,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
         List<String> listDate = dateRangePicker.getDateRange();
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < listDate.size() - 1; i++) {
-            Map<String, Object> response = classLearnerService.filterClassLearner(0, id, listDate.get(i), listDate.get(i + 1),true,
+            Map<String, Object> response = classLearnerService.filterClassLearner(0, id, listDate.get(i), listDate.get(i + 1),"enrolled",
                     "created_date", "DESC", 1, 5);
             result.add( Integer.parseInt(String.valueOf(response.get("totalItems"))));
         }
