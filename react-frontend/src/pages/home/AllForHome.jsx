@@ -51,7 +51,7 @@ function AllForHome() {
         try {
             const temp = (
                 await ClassService.getFilterList(
-                    '=0',
+                    '',
                     '=0',
                     `${searchKey ? '=' + searchKey : ''}`,
                     '',
