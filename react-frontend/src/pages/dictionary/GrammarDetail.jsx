@@ -68,7 +68,7 @@ const GrammarDetail = ({ grammar }) => {
                                     </h3>
                                     <div className="row">
                                         {grammar?.synonyms?.map((synonym) => (
-                                            <div className="col-4 mb-2">
+                                            <div className="grammar-detail-col-4 mb-2">
                                                 <div
                                                     className="synonymItem"
                                                     onClick={() => {
@@ -101,7 +101,7 @@ const GrammarDetail = ({ grammar }) => {
                                     </h3>
                                     <div className="row">
                                         {grammar?.antonyms?.map((antonym) => (
-                                            <div className="col-4 mb-2">
+                                            <div className="grammar-detail-col-4 mb-2">
                                                 <div
                                                     className="synonymItem"
                                                     onClick={() => {
@@ -135,7 +135,7 @@ const GrammarDetail = ({ grammar }) => {
                                     <div className="row">
                                         {grammar?.example?.map(
                                             (exampleItem) => (
-                                                <div className="col-4 mb-2">
+                                                <div className="grammar-detail-col-4 mb-2">
                                                     <div className="exampleItem h-100">
                                                         {exampleItem}
                                                     </div>

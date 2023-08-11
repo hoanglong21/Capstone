@@ -57,7 +57,7 @@ const GrammarDict = () => {
                         <p>No grammars matching {search} found</p>
                     )}
                     {grammars.map((grammarInfo) => (
-                        <div className="col-3 mb-2">
+                        <div className="grammar-dict-col-3 mb-2">
                             <div
                                 className="card h-100 grammar_item"
                                 onClick={() => {

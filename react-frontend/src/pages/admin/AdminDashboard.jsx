@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
 import AdminService from "../../services/AdminService";
