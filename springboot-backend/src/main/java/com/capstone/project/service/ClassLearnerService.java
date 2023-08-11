@@ -24,10 +24,10 @@ public interface ClassLearnerService {
 
     List<ClassLearner> getClassLeanerByUserId(int id);
 
-    Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,Boolean isAccepted,
+    Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,String status,
                                               String sortBy, String direction, int page, int size) throws ParseException;
 
-    Map<String, Object> filterGetLearner(int userId, int classId, Boolean isAccepted,
+    Map<String, Object> filterGetLearner(int userId, int classId, String status,
                                            String sortBy, String direction, int page, int size) throws ParseException;
 
 }

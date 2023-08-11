@@ -82,7 +82,7 @@ public class PostServiceImpl implements PostService {
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 6) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 6) {
                     sendPostCreatedEmail(classLearner);
                 }
             }
@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService {
             String fromAddress = "nihongolevelup.box@gmail.com";
             String senderName = "NihongoLevelUp";
 
-            subject = "[NihongoLevelUp]: New Post added ";
+            subject = "[NihongoLevelUp]: New Post ";
             content = "Hi [[name]],<br><br>"
                     + "A new post was added in your class << " + classLearner.getClassroom().getClass_name() + " >>.<br><br>"
                     + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"

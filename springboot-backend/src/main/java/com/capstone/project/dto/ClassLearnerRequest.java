@@ -23,7 +23,7 @@ public class ClassLearnerRequest {
 
     private String avatar;
 
-    private Boolean accepted;
+    private String status;
 
     private Date created_date;
 

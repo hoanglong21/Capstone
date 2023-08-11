@@ -327,7 +327,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
                     // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
                     LocalDateTime currentTime = LocalDateTime.now();
-                    if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.is_accepted() == true) {
+                    if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
                         sendAssignmentDueDateMail(userSetting,assignment,classroom);
                         sentDueDates.add(duedateTime);
 
@@ -363,7 +363,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
                     // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
                     LocalDateTime currentTime = LocalDateTime.now();
-                    if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.is_accepted() == true) {
+                    if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
                         sendTestDueDateMail(userSetting,test,classroom);
                         sentTestDueDates.add(duedateTime);
 
