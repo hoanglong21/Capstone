@@ -4,6 +4,7 @@ import com.capstone.project.dto.AuthenticationRequest;
 import com.capstone.project.dto.RegisterRequest;
 import com.capstone.project.dto.UserRequest;
 import com.capstone.project.exception.DuplicateValueException;
+import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 import com.capstone.project.service.JwtService;
 import com.capstone.project.service.UserService;
@@ -66,13 +67,20 @@ public class AuthController {
     public ResponseEntity<?> AuthenticateAndGetToken(@RequestBody AuthenticationRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+            User user = userService.getUserByUsername(authRequest.getUsername());
+
+            // Check if the user is banned
+            if ("banned".equalsIgnoreCase(user.getStatus())) {
+                return ResponseEntity.badRequest().body("Your account is banned. Please contact the administrator.");
+            }
+
             if (authentication.isAuthenticated()) {
                 String jwtToken = jwtService.generateToken(authRequest.getUsername());
                 return ResponseEntity.ok(jwtToken);
             } else {
                 return ResponseEntity.badRequest().body("The login details you provided are incorrect. Please try again.");
             }
-        } catch (BadCredentialsException e) {
+        } catch (BadCredentialsException | ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body("The login details you provided are incorrect. Please try again.");
         }
     }

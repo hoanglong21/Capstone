@@ -5,10 +5,10 @@ import CommentService from '../../services/CommentService'
 import CardEditor from '../textEditor/CardEditor'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
-import { OptionVerIcon, SendIcon } from '../icons'
+import { OptionVerIcon } from '../icons'
 import './comment.css'
 
-const Comment = ({ index, post, comments, setComments, comment, userInfo }) => {
+const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [isEdit, setIsEdit] = useState(false)
 
     const [updateComment, setUpdateComment] = useState('')
@@ -268,7 +268,7 @@ const Comment = ({ index, post, comments, setComments, comment, userInfo }) => {
                                 {comment.created_date}
                             </div>
                         </div>
-                        <div className="postCommentEditor mb-2">
+                        <div className="commentEditor mb-2">
                             <CardEditor
                                 data={updateComment?.content}
                                 onChange={(event, editor) => {
@@ -291,8 +291,20 @@ const Comment = ({ index, post, comments, setComments, comment, userInfo }) => {
                             <button
                                 className="btn btn-primary btn-sm"
                                 onClick={handleUpdateComment}
+                                disabled={loadingComment}
                             >
-                                Save
+                                {loadingComment ? (
+                                    <div
+                                        className="spinner-border spinner-border-sm text-secondary"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            LoadingUpload...
+                                        </span>
+                                    </div>
+                                ) : (
+                                    'Save'
+                                )}
                             </button>
                         </div>
                     </div>

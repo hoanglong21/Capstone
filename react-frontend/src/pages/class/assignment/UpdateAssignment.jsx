@@ -139,40 +139,44 @@ function UpdateAssignment() {
         setLoadingUpdateAssign(true)
         try {
             var tempAssignment = { ...updateAssignment }
-            tempAssignment.classroom.created_date = toBEDate(
-                updateAssignment.classroom.created_date
+            tempAssignment.created_date = toBEDate(tempAssignment.created_date)
+            tempAssignment.due_date = toBEDate(tempAssignment.due_date)
+            tempAssignment.modified_date = toBEDate(
+                tempAssignment.modified_date
             )
-            tempAssignment.classroom.user.created_date = toBEDate(
-                updateAssignment.classroom.user.created_date
-            )
-            tempAssignment.user.created_date = toBEDate(
-                updateAssignment.user.created_date
-            )
-            if (tempAssignment.created_date) {
-                tempAssignment.created_date = toBEDate(
-                    updateAssignment.created_date
+            tempAssignment.start_date = toBEDate(tempAssignment.start_date)
+            if (tempAssignment?.classroom) {
+                tempAssignment.classroom.created_date = toBEDate(
+                    updateAssignment.classroom.created_date
                 )
-            }
-            if (tempAssignment.modified_date) {
-                tempAssignment.modified_date = toBEDate(
-                    updateAssignment.modified_date
+                tempAssignment.classroom.deleted_date = toBEDate(
+                    updateAssignment.classroom.deleted_date
                 )
+                if (tempAssignment.classroom?.user) {
+                    tempAssignment.classroom.user.created_date = toBEDate(
+                        updateAssignment.classroom.user.created_date
+                    )
+                }
             }
-            if (tempAssignment.start_date) {
-                tempAssignment.start_date = toBEDate(
-                    updateAssignment.start_date
+            if (tempAssignment?.user) {
+                tempAssignment.user.created_date = toBEDate(
+                    tempAssignment.user.created_date
                 )
-            }
-            if (tempAssignment.due_date) {
-                tempAssignment.due_date = toBEDate(updateAssignment.due_date)
             }
             await AssignmentService.updateAssignment(updateAssignment.id, {
                 ...tempAssignment,
                 _draft: draft,
             })
+            var tempUploadFiles = []
+            for (const file of uploadFiles) {
+                var tempFile = { ...file }
+                if (tempFile?.assignment) {
+                    tempFile.assignment = tempAssignment
+                }
+                tempUploadFiles.push(tempFile)
+            }
             // add attachments
-            await AttachmentService.createAttachments(uploadFiles)
-            navigate('../assignments')
+            await AttachmentService.createAttachments(tempUploadFiles)
             // clear
             handleClear()
         } catch (error) {
@@ -189,7 +193,7 @@ function UpdateAssignment() {
     const handleClear = () => {
         setUpdateAssignment({ ...currentAssignment })
         setUploadFiles([...currentFiles])
-        navigate('../assignments')
+        navigate(`/class/${classroom.id}/assignment/${assign_id}/details`)
     }
 
     return (

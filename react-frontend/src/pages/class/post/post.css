@@ -45,30 +45,3 @@
 .post__content {
     margin: 10px 15px;
 }
-
-.postComment_label {
-    letter-spacing: 0.01785714em;
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-}
-
-.postComment_label svg {
-    color: #5f6368;
-}
-
-.postComment_btn {
-    padding: 0.5rem;
-    border-radius: 50%;
-    color: rgb(25, 103, 210);
-}
-
-.postComment_btn:hover:not(:disabled) {
-    background-color: #f6f9fd;
-    cursor: pointer;
-}
-
-.postComment_btn:disabled {
-    cursor: default;
-    color: rgba(60, 64, 67, 0.38);
-}

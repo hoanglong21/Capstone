@@ -22,7 +22,7 @@ public class TranslateServiceTest {
     @Test
     public void translateClients5() {
         try {
-            String translate = translateService.translateClients5("Wellcome back to my website", "ja");
+            String translate = (String) translateService.translateClients5("Wellcome back to my website", "ja").get("translation");
             assertThat(translate != null && !translate.equals("")).isTrue();
         } catch (ResourceNotFroundException e) {
             assertThat(e.getMessage()).isEqualTo("No translation found.");
@@ -35,7 +35,7 @@ public class TranslateServiceTest {
     @Test
     public void translateGoogleapis() {
         try {
-            String translate = translateService.translateGoogleapis("Wellcome back to my website", "ja");
+            String translate = (String) translateService.translateGoogleapis("Wellcome back to my website", "ja").get("translation");
             assertThat(translate != null && !translate.equals("")).isTrue();
         } catch (ResourceNotFroundException e) {
             assertThat(e.getMessage()).isEqualTo("No translation found.");
@@ -48,7 +48,7 @@ public class TranslateServiceTest {
     @Test
     public void translateMymemory() {
         try {
-            String translate = translateService.translateMymemory("Wellcome back to my website", "ja");
+            String translate = (String) translateService.translateMymemory("Wellcome back to my website", "ja").get("translation");
             assertThat(translate != null && !translate.equals("")).isTrue();
         } catch (ResourceNotFroundException e) {
             assertThat(e.getMessage()).isEqualTo("No translation found.");

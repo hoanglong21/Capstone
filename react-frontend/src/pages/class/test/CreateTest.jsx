@@ -90,6 +90,7 @@ const CreateTest = () => {
                     tempTest.user.created_date = testUserCreated
                     setTest({
                         ...tempTest,
+                        point: 1,
                         start_date: toFEDate(tempTest.start_date),
                         created_date: toFEDate(tempTest.created_date),
                         due_date: toFEDate(tempTest.due_date),
@@ -245,6 +246,20 @@ const CreateTest = () => {
                 )
                 return
             }
+            // check if point null
+            if (!ques?.point) {
+                setError(
+                    `The point of <a href="#question${indexQues}">this</a> question cannot be left blank.`
+                )
+                return
+            }
+            // check if point invalid
+            if (ques?.point < 0 || !Number.isInteger(ques?.point)) {
+                setError(
+                    `The point of <a href="#question${indexQues}">this</a> question must be a positive integer number.`
+                )
+                return
+            }
         }
         try {
             // update test
@@ -256,7 +271,7 @@ const CreateTest = () => {
                 start_date: toBEDate(test.start_date),
                 due_date: toBEDate(test.due_date),
             })
-            navigate('../tests')
+            navigate(`/class/${classroom.id}/test/${test.id}/details`)
             // clear
             setTest({})
             setError('')
@@ -309,6 +324,7 @@ const CreateTest = () => {
                     test: {
                         id: test.id,
                     },
+                    point: 1,
                 })
             ).data
             setQuestions([
@@ -342,31 +358,23 @@ const CreateTest = () => {
                     test: {
                         id: test.id,
                     },
+                    point: 1,
                 })
             ).data
             const answers = (
-                await AnswerService.createAnswers([
-                    {
-                        question: {
-                            id: ques.id,
-                        },
-                        content: 'True',
-                        _true: false,
+                await AnswerService.createAnswer({
+                    question: {
+                        id: ques.id,
                     },
-                    {
-                        question: {
-                            id: ques.id,
-                        },
-                        content: 'False',
-                        _true: false,
-                    },
-                ])
+                    content: '',
+                    _true: true,
+                })
             ).data
             setQuestions([
                 ...questions,
                 {
                     ...ques,
-                    answers: answers,
+                    answers: [answers],
                 },
             ])
         } catch (error) {
@@ -394,6 +402,7 @@ const CreateTest = () => {
                     test: {
                         id: test.id,
                     },
+                    point: 1,
                 })
             ).data
             const answer = (
@@ -598,6 +607,21 @@ const CreateTest = () => {
         setQuestions(tempQuestions)
     }
 
+    const handleChangeTrueFalseCorrect = (event, quesIndex, ans) => {
+        var tempQuestions = [...questions]
+        var tempAnswers = [...tempQuestions[quesIndex].answers]
+        tempAnswers[0] = {
+            ...tempAnswers[0],
+            content: ans,
+            _true: true,
+        }
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            answers: tempAnswers,
+        }
+        setQuestions(tempQuestions)
+    }
+
     const handleUpdateAnswer = async (ans) => {
         setSaving(true)
         try {
@@ -714,7 +738,9 @@ const CreateTest = () => {
                     <button
                         className="createTest_cancelBtn"
                         onClick={() => {
-                            navigate('../tests')
+                            navigate(
+                                `/class/${classroom.id}/test/${test.id}/details`
+                            )
                         }}
                     >
                         cancel
@@ -1067,35 +1093,62 @@ const CreateTest = () => {
                         {/* true false answer */}
                         {ques?.questionType?.id === 3 && (
                             <div>
-                                {ques?.answers?.map((ans, ansIndex) => (
-                                    <div key={ansIndex}>
-                                        <div className="createTest_formGroup-sm mb-2 form-check">
-                                            <input
-                                                id={`answer${ques?.id}_${ans?.id}`}
-                                                className="form-check-input"
-                                                type="radio"
-                                                checked={ans?._true || false}
-                                                name={`answerCorrect${ques.id}`}
-                                                onChange={(event) =>
-                                                    handleChangeAnswerCorrect(
-                                                        event,
-                                                        quesIndex,
-                                                        ansIndex
-                                                    )
-                                                }
-                                                onBlur={() =>
-                                                    handleUpdateAnswer(ans)
-                                                }
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor={`answer${ques.id}_${ans.id}`}
-                                            >
-                                                {ans?.content}
-                                            </label>
-                                        </div>
-                                    </div>
-                                ))}
+                                <div className="createTest_formGroup-sm mb-2 form-check">
+                                    <input
+                                        id={`answer${ques?.id}_0`}
+                                        className="form-check-input"
+                                        type="radio"
+                                        checked={
+                                            ques?.answers[0]?.content ===
+                                                'True' || false
+                                        }
+                                        name={`answerCorrect${ques.id}`}
+                                        onChange={(event) => {
+                                            handleChangeTrueFalseCorrect(
+                                                event,
+                                                quesIndex,
+                                                'True'
+                                            )
+                                        }}
+                                        onBlur={() =>
+                                            handleUpdateAnswer(ques?.answers[0])
+                                        }
+                                    />
+                                    <label
+                                        className="form-check-label"
+                                        htmlFor={`answer${ques.id}_0`}
+                                    >
+                                        True
+                                    </label>
+                                </div>
+                                <div className="createTest_formGroup-sm mb-2 form-check">
+                                    <input
+                                        id={`answer${ques?.id}_1`}
+                                        className="form-check-input"
+                                        type="radio"
+                                        checked={
+                                            ques?.answers[0]?.content ===
+                                                'False' || false
+                                        }
+                                        name={`answerCorrect${ques.id}`}
+                                        onChange={(event) => {
+                                            handleChangeTrueFalseCorrect(
+                                                event,
+                                                quesIndex,
+                                                'False'
+                                            )
+                                        }}
+                                        onBlur={() =>
+                                            handleUpdateAnswer(ques?.answers[0])
+                                        }
+                                    />
+                                    <label
+                                        className="form-check-label"
+                                        htmlFor={`answer${ques.id}_1`}
+                                    >
+                                        False
+                                    </label>
+                                </div>
                             </div>
                         )}
                         {/* Multiple choice answer */}
