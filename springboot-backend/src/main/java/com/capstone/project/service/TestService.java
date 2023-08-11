@@ -33,5 +33,5 @@ public interface TestService {
 
     Map<String, Object> startTest(int testId, int userId);
 
-    double endTest(List<TestResult> testResultList) throws ResourceNotFroundException;
+    Map<String, Object> endTest(List<TestResult> testResultList) throws Exception;
 }

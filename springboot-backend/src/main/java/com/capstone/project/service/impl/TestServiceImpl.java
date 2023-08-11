@@ -335,9 +335,9 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
-    public double endTest(List<TestResult> testResultList) throws ResourceNotFroundException {
+    public Map<String, Object> endTest(List<TestResult> testResultList) throws Exception {
         if(testResultList.size()==0) {
-            return 0;
+            throw new Exception("Test result must have at least one");
         } else {
             Date end = new Date();
             TestLearner testLearner = testLearnerRepository.findById(testResultList.get(0).getTestLearner().getId())
@@ -346,14 +346,16 @@ public class TestServiceImpl  implements TestService {
             List<TestLearner> attemptList = testLearnerRepository.findByTestIdAndUserId(testLearner.getId(), testLearner.getUser().getId());
             int attempt = attemptList.size();
 
-            int countTrue = 0;
+            int result = 0;
+            int total = 0;
             for(TestResult testResult : testResultList) {
+                total += testResult.getQuestion().getPoint();
                 if (testResult.is_true()) {
-                    countTrue++;
+                    result += testResult.getQuestion().getPoint();
                 }
             }
 
-            double mark = (countTrue/testResultList.size())*100;
+            double mark = (result/total)*100;
             double roundedMark = Math.round(mark * 100.0) / 100.0;
 
             testLearner.setEnd(end);
@@ -362,7 +364,13 @@ public class TestServiceImpl  implements TestService {
             testLearnerRepository.save(testLearner);
 
             testResultRepository.saveAll(testResultList);
-            return roundedMark;
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("result", result);
+            response.put("total", total);
+            response.put("mark", roundedMark);
+
+            return response;
         }
     }
 }
