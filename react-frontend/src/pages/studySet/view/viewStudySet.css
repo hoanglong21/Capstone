@@ -456,4 +456,14 @@
     .setPageTerm_definitionText{
         margin-top: 5px;
     }
+
+    .setPage_audioModal .modal-content {
+        width: 90vw;
+        height: 50vh;
+    }
+
+    .setPage_pictureModal .modal-content {
+        width: 90vw;
+        height: 60vh;
+    }
 }

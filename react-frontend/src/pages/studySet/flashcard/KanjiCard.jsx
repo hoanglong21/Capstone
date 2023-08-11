@@ -249,7 +249,7 @@ const KanjiCard = ({
                     <div className="flashcardContent_wrapper h-100">
                         <div className="row">
                             {strokeOrder?.content && (
-                                <div className="col-3 mb-3">
+                                <div className="kanji-card-col-3 mb-3">
                                     <div className="flashCardField_img">
                                         <img
                                             src={strokeOrder?.content}
@@ -265,7 +265,7 @@ const KanjiCard = ({
                             >
                                 <div className="row">
                                     {name && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 Name
                                             </div>
@@ -279,7 +279,7 @@ const KanjiCard = ({
                                         </div>
                                     )}
                                     {meanings && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 Meanings
                                             </div>
@@ -294,7 +294,7 @@ const KanjiCard = ({
                                         </div>
                                     )}
                                     {onyomi && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 Onyomi
                                             </div>
@@ -309,7 +309,7 @@ const KanjiCard = ({
                                         </div>
                                     )}
                                     {kunyomi && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 Kunyomi
                                             </div>
@@ -324,7 +324,7 @@ const KanjiCard = ({
                                         </div>
                                     )}
                                     {radical && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 Radical
                                             </div>
@@ -339,7 +339,7 @@ const KanjiCard = ({
                                         </div>
                                     )}
                                     {example && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 Example
                                             </div>
@@ -354,7 +354,7 @@ const KanjiCard = ({
                                         </div>
                                     )}
                                     {jlptLevel && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 JLPT Level
                                             </div>
@@ -369,7 +369,7 @@ const KanjiCard = ({
                                         </div>
                                     )}
                                     {strokes && (
-                                        <div className="col-6 mb-3">
+                                        <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
                                                 Strokes
                                             </div>
@@ -387,7 +387,7 @@ const KanjiCard = ({
                             </div>
                         </div>
                         <div className="row my-2">
-                            <div className="col-6">
+                            <div className="kanji-card-col-6">
                                 {(progress?.picture || card?.picture) && (
                                     <div className="flashCardField_img d-flex align-items-center">
                                         <img

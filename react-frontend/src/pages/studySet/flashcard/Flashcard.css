@@ -463,6 +463,16 @@
     margin-right: 4rem;
 }
 
+.kanji-card-col-6{
+    flex: 0 0 auto;
+    width: 50% !important;
+}
+
+.kanji-card-col-3{
+    flex: 0 0 auto;
+    width: 25% !important;
+}
+
 @media only screen and (max-width: 768px) {
     .flashcardHeader {
         padding: 0 0.5rem;
@@ -478,5 +488,13 @@
 
     .flashCardSwitch_btn{
         margin-right: 1.5rem;
+    }
+
+    .kanji-card-col-6, .kanji-card-col-3{
+        width: 100% !important;
+    }
+
+    .flashCardField_label {
+        font-size: 1rem;
     }
 }
