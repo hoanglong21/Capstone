@@ -1,24 +1,23 @@
 import React, {useState, useEffect} from 'react'
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
+import ReplyFeedback from '../ReplyFeedback';
 import { Link, useParams } from 'react-router-dom';
-import PostService from '../../services/PostService';
+import FeedbackService from '../../../services/FeedbackService';
 
-function ViewDetailPost() {
-  const [post, setPost] = useState([])
+function ViewDetailFeedback() {
+  const [feedback, setFeedback] = useState([])
   const {id} = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
-      const temp = (await PostService.getPostById(id)).data;
-      setPost(temp);
+      const temp = (await FeedbackService.getFeedbackById(id)).data;
+      setFeedback(temp);
     };
     if (id) {
       fetchData();
     }
   }, [id]);
-  
-  console.log(post)
   return (
     <div className="container-fluid">
       <div className="row">
@@ -27,27 +26,27 @@ function ViewDetailPost() {
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
-              Post Details
+              Feedback Details
             </div>
             <div className="card-body">
               <form>
                 <div className="mb-3">
-                  <label className="small mb-1 fs-6">Content</label>
+                  <label className="small mb-1 fs-6">Feedback Title </label>
                   <input
                     className="form-control"
                     type="text"
                     readOnly
-                    value={post.content}
+                    value={feedback.title}
                   />
                 </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Create Date</label>
+                    <label className="small mb-1 fs-6">Feedback ID</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={post.created_date}
+                      value={feedback.id}
                     />
                   </div>
                   <div className="col-md-4">
@@ -56,46 +55,51 @@ function ViewDetailPost() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={post.user?.username}
+                      value={feedback?.user?.username}
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Class Name</label>
+                    <label className="small mb-1 fs-6">Created Date</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={post.classroom?.class_name}
+                      value={feedback.created_date}
                     />
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
                 <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Modified Date</label>
+                    <label className="small mb-1 fs-6">Feedback Type</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={post.modified_date}
+                      value={feedback.feedbackType?.name}
                     />
                   </div>
                   <div className="col-md-8">
-                    <label className="small mb-1 fs-6">Post ID</label>
+                    <label className="small mb-1 fs-6">Content</label>
                     <input
                       className="form-control"
-                      type="text"
+                      type="tel"
                       readOnly
-                      value={post.id}
+                      value={feedback.content}
                     />
                   </div>
                 </div>
                 <div className="text-center">
-                  <Link className="btn btn-secondary me-4" to="/managepost">
+                  <Link className="btn btn-secondary me-4" to="/managefeedback">
                     Close
                   </Link>
+                  <button className="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#replyModal">
+                    Reply
+                  </button>
                 </div>
               </form>
             </div>
+            <ReplyFeedback/>
           </div>
         </div>
       </div>
@@ -103,4 +107,4 @@ function ViewDetailPost() {
   )
 }
 
-export default ViewDetailPost
+export default ViewDetailFeedback

@@ -101,7 +101,7 @@ const Learn = () => {
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
 
-    const [isAllow, setIsAllow] = useState(false)
+    const [isAllow, setIsAllow] = useState(true)
 
     const [studySet, setStudySet] = useState({})
     const [type, setType] = useState(1)
@@ -1927,7 +1927,7 @@ const Learn = () => {
                                                 </div>
                                             </div>
                                         ) : (
-                                            'Create new quiz'
+                                            'Create new learn'
                                         )}
                                     </button>
                                 </div>

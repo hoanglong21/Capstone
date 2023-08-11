@@ -135,7 +135,7 @@ public class TestController {
     public ResponseEntity<?> endTest(@RequestBody List<TestResult> testResultList) {
         try{
             return ResponseEntity.ok(testService.endTest(testResultList));
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

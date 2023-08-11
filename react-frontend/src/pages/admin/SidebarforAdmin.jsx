@@ -4,8 +4,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import logo from "../../assets/images/logo-1.png";
 import { Link } from "react-router-dom";
 import "../../assets/styles/sidebar.css";
+import { useSelector } from 'react-redux'
 
 function SidebarforAdmin() {
+  const { userInfo } = useSelector((state) => state.user)
   return (
     <div className="header__admin col-sm-2 col-lg-2 col-md-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
       <section id="navbar">
@@ -98,13 +100,23 @@ function SidebarforAdmin() {
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
-            <Link to="/vocab" className="nav-link fs-7">
+            <Link to="/vocabforadmin" className="nav-link fs-7">
             <i class="bi bi-book"></i>
               <span className="ms-3 d-none d-sm-inline">
                 Dictionary
               </span>
             </Link>
           </li>
+          {userInfo?.id === 1 && (
+          <li className="nav-item fs-6 my-1 py-2 py-sm-0">
+            <Link to="/registeradmin" className="nav-link fs-7">
+            <i class="bi bi-person-add"></i>
+              <span className="ms-3 d-none d-sm-inline">
+                (IAM) Register
+              </span>
+            </Link>
+          </li>
+          )}
         </ul>
       </section>
     </div>

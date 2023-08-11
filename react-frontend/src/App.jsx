@@ -41,24 +41,24 @@ import AuthLayout from './pages/auth/AuthLayout'
 import OtherLayout from './components/layouts/OtherLayout/OtherLayout'
 import UsersForHome from './pages/home/UsersForHome'
 import AllForHome from './pages/home/AllForHome'
-import ManageUser from './pages/admin/ManageUser'
+import ManageUser from './pages/admin/manage/ManageUser'
 import BanUser from './pages/admin/BanUser'
 import UnBanUser from './pages/admin/UnBanUser'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import SidebarforAdmin from './pages/admin/SidebarforAdmin'
-import ViewDetailsUser from './pages/admin/ViewDetailsUser'
-import ManageClass from './pages/admin/ManageClass'
-import ViewDetailClass from './pages/admin/ViewDetailClass'
-import ManageFeedback from './pages/admin/ManageFeedback'
-import ViewDetailFeedback from './pages/admin/ViewDetailFeedback'
-import ManageStudyset from './pages/admin/ManageStudyset'
-import ManageAssignment from './pages/admin/ManageAssignment'
-import ViewDetailAssignment from './pages/admin/ViewDetailAssignment'
-import ViewDetailTestForAdmin from './pages/admin/ViewDetailTestForAdmin'
-import ManagePost from './pages/admin/ManagePost'
-import ViewDetailPost from './pages/admin/ViewDetailPost'
-import ManageComment from './pages/admin/ManageComment'
-import ViewDetailComment from './pages/admin/ViewDetailComment'
+import ViewDetailsUser from './pages/admin/view/ViewDetailsUser'
+import ManageClass from './pages/admin/manage/ManageClass'
+import ViewDetailClass from './pages/admin/view/ViewDetailClass'
+import ManageFeedback from './pages/admin/manage/ManageFeedback'
+import ViewDetailFeedback from './pages/admin/view/ViewDetailFeedback'
+import ManageStudyset from './pages/admin/manage/ManageStudyset'
+import ManageAssignment from './pages/admin/manage/ManageAssignment'
+import ViewDetailAssignment from './pages/admin/view/ViewDetailAssignment'
+import ViewDetailTestForAdmin from './pages/admin/view/ViewDetailTestForAdmin'
+import ManagePost from './pages/admin/manage/ManagePost'
+import ViewDetailPost from './pages/admin/view/ViewDetailPost'
+import ManageComment from './pages/admin/manage/ManageComment'
+import ViewDetailComment from './pages/admin/view/ViewDetailComment'
 import CreateSet from './pages/studySet/create/CreateSet'
 import VocabDict from './pages/dictionary/VocabDict'
 import GrammarDict from './pages/dictionary/GrammarDict'
@@ -75,10 +75,10 @@ import DoQuiz from './pages/studySet/quiz/DoQuiz'
 import AssignmentList from './pages/class/assignment/AssignmentList'
 import People from './pages/class/People'
 import Grades from './pages/class/Grades'
-import ViewDetailStudyset from './pages/admin/ViewDetailStudyset'
-import ManageTest from './pages/admin/ManageTest'
-import ManageSubmission from './pages/admin/ManageSubmission'
-import ViewDetailSubmission from './pages/admin/ViewDetailSubmission'
+import ViewDetailStudyset from './pages/admin/view/ViewDetailStudyset'
+import ManageTest from './pages/admin/manage/ManageTest'
+import ManageSubmission from './pages/admin/manage/ManageSubmission'
+import ViewDetailSubmission from './pages/admin/view/ViewDetailSubmission'
 import RegisterAdmin from './pages/admin/RegiserAdmin'
 import Achievements from './pages/library/Achievements'
 import Statistics from './pages/library/Statistics'
@@ -92,6 +92,11 @@ import UseAccount from './pages/help/UseAccount'
 import ViewTest from './pages/class/test/ViewTest'
 import TestDetails from './pages/class/test/TestDetails'
 import DoTest from './pages/class/test/DoTest'
+import SettingForAdmin from './pages/admin/SettingForAdmin'
+import DictionaryForAdmin from './pages/admin/dictionaryforadmin/DictionaryLayoutForAdmin'
+import VocabDictForAdmin from './pages/admin/dictionaryforadmin/VocabDictForAdmin'
+import KanjiDictForAdmin from './pages/admin/dictionaryforadmin/KanjiDictForAdmin'
+import GrammarDictForAdmin from './pages/admin/dictionaryforadmin/GrammarDictForAdmin'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -342,6 +347,12 @@ const App = () => {
                         element={<ViewVocabularyDetail />}
                     />
                     <Route path="/registeradmin" element={<RegisterAdmin />} />
+                    <Route path='/settingsadmin' element={<SettingForAdmin />} />
+                    <Route element={<DictionaryForAdmin />}>
+                        <Route path='/vocabforadmin' element={<VocabDictForAdmin />} />
+                        <Route path='/kanjiforadmin' element={<KanjiDictForAdmin />} />
+                        <Route path='/grammarforadmin' element={<GrammarDictForAdmin />} />
+                    </Route>
                 </Route>
             </Routes>
             <AuthVerify logOut={logOut} />

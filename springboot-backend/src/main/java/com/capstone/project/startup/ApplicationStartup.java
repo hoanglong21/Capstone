@@ -105,7 +105,7 @@ public class ApplicationStartup implements ApplicationRunner {
         }
 
         if (commentTypeRepository.count() == 0) {
-            List<String> defaultNames = Arrays.asList("post", "studyset", "test");
+            List<String> defaultNames = Arrays.asList("post", "studySet", "test", "assignment", "submission");
             List<CommentType> commentTypes = new ArrayList<>();
             for (String name : defaultNames) {
                 CommentType commentType = new CommentType();

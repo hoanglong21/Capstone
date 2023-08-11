@@ -242,7 +242,6 @@
 
 .instruction_main {
     border-bottom: 1px solid rgb(66, 133, 244);
-    margin-bottom: 1rem;
 }
 
 .instruction_heading {
@@ -389,7 +388,8 @@
     white-space: nowrap;
 }
 
-.submission_detail {
+.submission_detail,
+.submission_comments {
     padding: 24px;
 }
 
@@ -424,4 +424,9 @@
     max-width: 50px;
     text-align: right;
     padding: 0;
+}
+
+/* instruction */
+.instructionAttachments {
+    border-bottom: 0.125rem solid #e8eaed;
 }

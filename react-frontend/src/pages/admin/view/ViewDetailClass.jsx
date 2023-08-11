@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link, useParams } from "react-router-dom";
-import ClassService from "../../services/ClassService";
+import ClassService from "../../../services/ClassService";
 import ReactApexChart from "react-apexcharts";
 
 function ViewDetailClass() {

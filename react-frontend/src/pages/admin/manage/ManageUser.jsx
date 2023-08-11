@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
 import { Link, useNavigate } from "react-router-dom";
-import BanUser from "./BanUser";
-import UnBanUser from "./UnBanUser";
-import HeaderAdmin from "./HeaderAdmin";
+import BanUser from "../BanUser";
+import UnBanUser from "../UnBanUser";
+import HeaderAdmin from "../HeaderAdmin";
 import { useSearchParams } from "react-router-dom";
-import UserService from '../../services/UserService'
+import UserService from '../../../services/UserService'
 
 function ManageUser() {
   const [searchParams, setSearchParams] = useSearchParams();
