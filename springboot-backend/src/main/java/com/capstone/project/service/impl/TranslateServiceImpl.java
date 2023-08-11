@@ -16,10 +16,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class TranslateServiceImpl implements TranslateService {
-    public String translateClients5(String text, String to) throws Exception {
+    public Map<String, Object> translateClients5(String text, String to) throws Exception {
         String preUrl = "https://clients5.google.com/translate_a/single?dj=1&dt=t&dt=sp&dt=ld&dt=bd&client=dict-chrome-ex&sl=auto&tl=" + to +"&q=" +
                 URLEncoder.encode(text, StandardCharsets.UTF_8.toString());
         URL url = new URL(preUrl);
@@ -44,9 +47,16 @@ public class TranslateServiceImpl implements TranslateService {
             // Extract the "trans" value
             JsonArray sentences = jsonResponse.getAsJsonArray("sentences");
             if (sentences.size() > 0) {
+                String source = jsonResponse.get("src").getAsString();
                 JsonObject firstSentence = sentences.get(0).getAsJsonObject();
                 String translation = firstSentence.get("trans").getAsString();
-                return translation;
+
+                Map<String, Object> responseWithLanguage = new HashMap<>();
+                responseWithLanguage.put("source", getFullLanguageNameFromCode(source));
+                responseWithLanguage.put("translation", translation);
+                responseWithLanguage.put("to", getFullLanguageNameFromCode(to));
+
+                return responseWithLanguage;
             } else {
                 throw new ResourceNotFroundException("No translation found.");
             }
@@ -55,7 +65,7 @@ public class TranslateServiceImpl implements TranslateService {
         }
     }
 
-    public String translateGoogleapis(String text, String to) throws Exception {
+    public Map<String, Object> translateGoogleapis(String text, String to) throws Exception {
         String preUrl = "https://translate.googleapis.com/translate_a/single?dj=1&dt=t&dt=sp&dt=ld&dt=bd&client=dict-chrome-ex&sl=auto&tl=" + to +"&q=" +
                 URLEncoder.encode(text, StandardCharsets.UTF_8.toString());
         URL url = new URL(preUrl);
@@ -80,9 +90,16 @@ public class TranslateServiceImpl implements TranslateService {
             // Extract the "trans" value
             JsonArray sentences = jsonResponse.getAsJsonArray("sentences");
             if (sentences.size() > 0) {
+                String source = jsonResponse.get("src").getAsString();
                 JsonObject firstSentence = sentences.get(0).getAsJsonObject();
                 String translation = firstSentence.get("trans").getAsString();
-                return translation;
+
+                Map<String, Object> responseWithLanguage = new HashMap<>();
+                responseWithLanguage.put("source", getFullLanguageNameFromCode(source));
+                responseWithLanguage.put("translation", translation);
+                responseWithLanguage.put("to", getFullLanguageNameFromCode(to));
+
+                return responseWithLanguage;
             } else {
                 throw new ResourceNotFroundException("No translation found.");
             }
@@ -91,8 +108,8 @@ public class TranslateServiceImpl implements TranslateService {
         }
     }
 
-    public String translateMymemory(String text, String to) throws Exception {
-        String source = languageDetection(text.substring(0, Math.min(text.length(), 10)));
+    public Map<String, Object> translateMymemory(String text, String to) throws Exception {
+        String source = languageDetection(text.substring(0, Math.min(text.length(), 50)));
         String preUrl = "https://api.mymemory.translated.net/get?langpair=" + source + "|" + to +"&q=" +
                 URLEncoder.encode(text, StandardCharsets.UTF_8.toString());
         URL url = new URL(preUrl);
@@ -132,7 +149,11 @@ public class TranslateServiceImpl implements TranslateService {
             }
 
             if(!longTranslate.toString().equals("")){
-                return longTranslate.toString();
+                Map<String, Object> responseWithLanguage = new HashMap<>();
+                responseWithLanguage.put("source", getFullLanguageNameFromCode(source));
+                responseWithLanguage.put("translation", longTranslate.toString());
+                responseWithLanguage.put("to", getFullLanguageNameFromCode(to));
+                return responseWithLanguage;
             } else {
                 throw new ResourceNotFroundException("No translation found.");
             }
@@ -144,12 +165,16 @@ public class TranslateServiceImpl implements TranslateService {
     private String languageDetection(String source) {
         LanguageDetector detector = LanguageDetectorBuilder.fromAllLanguages().build();
         Language detectedLanguage = detector.detectLanguageOf(source);
-        if(detectedLanguage.toString().equals("JAPANESE")) {
-            return "ja";
-        } else if(detectedLanguage.toString().equals("VIETNAMESE")) {
-            return "vi";
-        } else {
-            return "en";
-        }
+        return getLanguageCodeFromFullName(detectedLanguage.toString());
+    }
+
+    public static String getLanguageCodeFromFullName(String fullLanguageName) {
+        Locale locale = Locale.forLanguageTag(fullLanguageName);
+        return locale.getLanguage();
+    }
+
+    public static String getFullLanguageNameFromCode(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        return locale.getDisplayName();
     }
 }

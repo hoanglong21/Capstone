@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import com.github.pemistahl.lingua.api.Language;
 import com.github.pemistahl.lingua.api.LanguageDetector;
@@ -19,9 +20,9 @@ import com.github.pemistahl.lingua.api.LanguageDetectorBuilder;
 
 public interface TranslateService {
 
-    public String translateClients5(String text, String to) throws Exception;
+    public Map<String, Object> translateClients5(String text, String to) throws Exception;
 
-    public String translateGoogleapis(String text, String to) throws Exception;
+    public Map<String, Object> translateGoogleapis(String text, String to) throws Exception;
 
-    public String translateMymemory(String text, String to) throws Exception;
+    public Map<String, Object> translateMymemory(String text, String to) throws Exception;
 }
