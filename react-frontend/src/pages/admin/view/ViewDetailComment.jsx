@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link, useParams } from 'react-router-dom';
-import CommentService from "../../services/CommentService";
+import CommentService from "../../../services/CommentService";
 
 function ViewDetailComment() {
   const [comment, setComment] = useState([])

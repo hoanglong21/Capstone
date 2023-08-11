@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
-import SubmissionService from "../../services/SubmissionService";
+import TestService from "../../../services/TestService";
 import { useSearchParams } from 'react-router-dom'
 
-function ManageSubmission() {
-  const [submission, setSubmission] = useState([])
+function ManageTest() {
+  const [tests, setTests] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
 
@@ -15,13 +15,17 @@ function ManageSubmission() {
       let temp;
       try{
         temp = (
-            await SubmissionService.getFilterList(
+            await TestService.getFilterList(
                 '',
                 `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
                 '',
-                '=10',
+                '',
+                '',
+                '',
+                '',
+                '=10'
             )
         ).data.list
       }catch(error){
@@ -32,9 +36,8 @@ function ManageSubmission() {
       }
       return console.log(error)
       }
-      setSubmission(temp)
+      setTests(temp)
     }
-    console.log(submission)
 
     useEffect(() => {
         fetchData(search ? search : '')
@@ -48,32 +51,34 @@ function ManageSubmission() {
           <HeaderAdmin />
           <div className="container">
             <h3 className="mt-3 mb-4 text-bold text-black">
-              View Submission
+              View Test
             </h3>
             <div className="table-responsive">
               <table className="table table-hover">
                 <thead style={{ backgroundColor: "#000" }}>
                   <tr>
-                    <th scope="col">Submission ID</th>
-                    <th scope="col">Created Date</th>
-                    <th scope="col">Assignment Name</th>
-                    <th scope="col">Create By</th>
+                    <th scope="col">Test ID</th>
+                    <th scope="col">Class Name</th>
+                    <th scope="col">Creator By</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                {submission?.length === 0 && (
+                {tests?.length === 0 && (
                                         <p>No data matching {search} found</p>
                                     )}
-                {submission?.map((submissions) => (
+                {tests?.map((test) => (
                   <tr>
-                    <th scope="row" key={submissions.id}>{submissions?.id}</th>
-                    <td>{submissions?.created_date}</td>
-                    <td>{submissions?.assignment?.title}</td>
-                    <td>{submissions?.user?.username}</td>
+                    <th scope="row" key={test.id}>{test?.id}</th>
+                    <td>{test?.classname}</td>
+                    <td>{test?.authorname}</td>
+                    <td>{test?.title}</td>
+                    <td>{test?.description}</td>
                     <td>
                       <Link
-                        to={`/viewdetailsubmission/${submissions.id}`}
+                        to={`/viewdetailtest/${test.id}`}
                         className="btn btn-primary me-3"
                       >
                         <i class="bi bi-info-square me-2"></i>
@@ -92,4 +97,4 @@ function ManageSubmission() {
   );
 }
 
-export default ManageSubmission;
+export default ManageTest;

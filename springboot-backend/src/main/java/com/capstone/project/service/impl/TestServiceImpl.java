@@ -6,10 +6,13 @@ import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.TestService;
 import com.capstone.project.service.UserService;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +25,12 @@ public class TestServiceImpl  implements TestService {
 
     @PersistenceContext
     private EntityManager em;
+
+    private final JavaMailSender mailSender;
+
+    private final ClassLearnerRepository classLearnerRepository;
+
+    private final UserSettingRepository userSettingRepository;
     private final TestRepository testRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
@@ -37,7 +46,10 @@ public class TestServiceImpl  implements TestService {
     private TestResultRepository testResultRepository;
 
     @Autowired
-    public TestServiceImpl(TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
+    public TestServiceImpl(JavaMailSender mailSender, ClassLearnerRepository classLearnerRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
+        this.mailSender = mailSender;
+        this.classLearnerRepository = classLearnerRepository;
+        this.userSettingRepository = userSettingRepository;
         this.testRepository = testRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
@@ -61,7 +73,55 @@ public class TestServiceImpl  implements TestService {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
         test.setCreated_date(date);
-        return testRepository.save(test);
+
+        Test savedTest = testRepository.save(test);
+
+        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedTest.getClassroom().getId());
+        for (ClassLearner classLearner : classLearners) {
+            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
+            for (UserSetting userSetting : userSettings) {
+                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 8) {
+                    sendTestCreatedEmail(classLearner, savedTest);
+                }
+            }
+        }
+
+        return savedTest;
+    }
+
+    public void sendTestCreatedEmail(ClassLearner classLearner, Test test) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = classLearner.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            subject = "[NihongoLevelUp]: New Test assigned ";
+            content = "Hi [[name]],<br><br>"
+                    + "A new test << " + test.getTitle() + " >> was assigned in your class << " + classLearner.getClassroom().getClass_name() + " >>.<br><br>"
+                    + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                    + "Best regards,<br>"
+                    + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", classLearner.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -275,9 +335,9 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
-    public double endTest(List<TestResult> testResultList) throws ResourceNotFroundException {
+    public Map<String, Object> endTest(List<TestResult> testResultList) throws Exception {
         if(testResultList.size()==0) {
-            return 0;
+            throw new Exception("Test result must have at least one");
         } else {
             Date end = new Date();
             TestLearner testLearner = testLearnerRepository.findById(testResultList.get(0).getTestLearner().getId())
@@ -286,14 +346,16 @@ public class TestServiceImpl  implements TestService {
             List<TestLearner> attemptList = testLearnerRepository.findByTestIdAndUserId(testLearner.getId(), testLearner.getUser().getId());
             int attempt = attemptList.size();
 
-            int countTrue = 0;
+            int result = 0;
+            int total = 0;
             for(TestResult testResult : testResultList) {
+                total += testResult.getQuestion().getPoint();
                 if (testResult.is_true()) {
-                    countTrue++;
+                    result += testResult.getQuestion().getPoint();
                 }
             }
 
-            double mark = (countTrue/testResultList.size())*100;
+            double mark = (result/total)*100;
             double roundedMark = Math.round(mark * 100.0) / 100.0;
 
             testLearner.setEnd(end);
@@ -302,7 +364,13 @@ public class TestServiceImpl  implements TestService {
             testLearnerRepository.save(testLearner);
 
             testResultRepository.saveAll(testResultList);
-            return roundedMark;
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("result", result);
+            response.put("total", total);
+            response.put("mark", roundedMark);
+
+            return response;
         }
     }
 }

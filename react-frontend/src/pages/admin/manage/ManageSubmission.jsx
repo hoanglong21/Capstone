@@ -1,35 +1,29 @@
 import React, {useState, useEffect} from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
-import FeedbackService from "../../services/FeedbackService";
+import SubmissionService from "../../../services/SubmissionService";
 import { useSearchParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 
-function ManageFeedback() {
-  const [feedback, setFeedback] = useState([])
+function ManageSubmission() {
+  const [submission, setSubmission] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
 
   const search = searchParams.get('search')
-
-    const { userInfo } = useSelector((state) => state.user)
-
     const fetchData = async (searchKey) => {
       let temp;
       try{
         temp = (
-          await FeedbackService.filterFeedbackList(
-            `${searchKey ? '=' + searchKey : ''}`,
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            ''
-          )).data.list
+            await SubmissionService.getFilterList(
+                '',
+                `${searchKey ? '=' + searchKey : ''}`,
+                '',
+                '',
+                '',
+                '=10',
+            )
+        ).data.list
       }catch(error){
         if (error.response && error.response.data) {
           setError(error.response.data)
@@ -38,8 +32,9 @@ function ManageFeedback() {
       }
       return console.log(error)
       }
-      setFeedback(temp)
+      setSubmission(temp)
     }
+    console.log(submission)
 
     useEffect(() => {
         fetchData(search ? search : '')
@@ -53,32 +48,32 @@ function ManageFeedback() {
           <HeaderAdmin />
           <div className="container">
             <h3 className="mt-3 mb-4 text-bold text-black">
-              View Feedback
+              View Submission
             </h3>
             <div className="table-responsive">
               <table className="table table-hover">
                 <thead style={{ backgroundColor: "#000" }}>
                   <tr>
-                    <th scope="col">Feedback ID</th>
-                    <th scope="col">Create Date</th>
-                    <th scope="col">Feedback Title</th>
-                    <th scope="col">Creator By</th>
+                    <th scope="col">Submission ID</th>
+                    <th scope="col">Created Date</th>
+                    <th scope="col">Assignment Name</th>
+                    <th scope="col">Create By</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                {feedback?.length === 0 && (
+                {submission?.length === 0 && (
                                         <p>No data matching {search} found</p>
                                     )}
-                {feedback?.map((feedbacks) => (
+                {submission?.map((submissions) => (
                   <tr>
-                    <th scope="row" key={feedbacks.id}>{feedbacks?.id}</th>
-                    <td>{feedbacks?.created_date}</td>
-                    <td>{feedbacks?.title}</td>
-                    <td>{feedbacks?.user?.username}</td>
+                    <th scope="row" key={submissions.id}>{submissions?.id}</th>
+                    <td>{submissions?.created_date}</td>
+                    <td>{submissions?.assignment?.title}</td>
+                    <td>{submissions?.user?.username}</td>
                     <td>
                       <Link
-                        to={`/viewdetailfb/${feedbacks.id}`}
+                        to={`/viewdetailsubmission/${submissions.id}`}
                         className="btn btn-primary me-3"
                       >
                         <i class="bi bi-info-square me-2"></i>
@@ -97,4 +92,4 @@ function ManageFeedback() {
   );
 }
 
-export default ManageFeedback;
+export default ManageSubmission;

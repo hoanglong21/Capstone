@@ -85,7 +85,7 @@ public class ClassStatisticServiceTest {
                     any(), any(), anyInt(), anyInt(), anyInt())).thenReturn(response);
             Integer result = classStatisticService.getAssignmentNumber(1);
             assertThat(result).isEqualTo(2);
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

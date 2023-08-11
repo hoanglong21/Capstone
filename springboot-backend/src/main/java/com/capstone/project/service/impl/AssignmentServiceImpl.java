@@ -2,17 +2,17 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
-import com.capstone.project.repository.AssignmentRepository;
-import com.capstone.project.repository.AttachmentRepository;
-import com.capstone.project.repository.CommentRepository;
-import com.capstone.project.repository.SubmissionRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.AssignmentService;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.UserService;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,21 +28,27 @@ public class AssignmentServiceImpl implements AssignmentService {
     @PersistenceContext
     private EntityManager em;
 
+    private final JavaMailSender mailSender;
+
     private final AssignmentRepository assignmentRepository;
     private final SubmissionRepository submissionRepository;
-
+    private final UserSettingRepository userSettingRepository;
     private final CommentRepository commentRepository;
     private final AttachmentRepository attachmentRepository;
+    private final ClassLearnerRepository classLearnerRepository;
 
     private final UserService userService;
     private final ClassService classService;
 
     @Autowired
-    public AssignmentServiceImpl(AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
+    public AssignmentServiceImpl(JavaMailSender mailSender, AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, UserSettingRepository userSettingRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, ClassLearnerRepository classLearnerRepository, UserService userService, ClassService classService) {
+        this.mailSender = mailSender;
         this.assignmentRepository = assignmentRepository;
         this.submissionRepository = submissionRepository;
+        this.userSettingRepository = userSettingRepository;
         this.commentRepository = commentRepository;
         this.attachmentRepository = attachmentRepository;
+        this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
         this.classService = classService;
     }
@@ -73,7 +79,53 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
+        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedAssignment.getClassroom().getId());
+        for (ClassLearner classLearner : classLearners) {
+            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
+            for (UserSetting userSetting : userSettings) {
+                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 7) {
+                    sendAssignmentCreatedEmail(classLearner, savedAssignment);
+                }
+            }
+        }
         return savedAssignment;
+    }
+
+
+    public void sendAssignmentCreatedEmail(ClassLearner classLearner, Assignment assignment) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = classLearner.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+                subject = "[NihongoLevelUp]: New Assignment assigned ";
+                content = "Hi [[name]],<br><br>"
+                            + "New assignment << " + assignment.getTitle() + " >> has been assigned in your class << " + classLearner.getClassroom().getClass_name() + " >>. Don't forget to do !<br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Do Assignment</a><br><br>"
+                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                        + "Best regards,<br>"
+                        + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", classLearner.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -138,7 +190,10 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Map<String, Object> getFilterAssignment(String search, String author, String fromStart, String toStart,String fromCreated, String toCreated,
-                                                   Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws ResourceNotFroundException {
+                                                   Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
         int offset = (page - 1) * size;
 
         String query ="SELECT a.*, COUNT(CASE WHEN s.is_done = true THEN 1 ELSE NULL END) as numbersubmit,u.id as userid, u.username as author FROM assignment a \n" +

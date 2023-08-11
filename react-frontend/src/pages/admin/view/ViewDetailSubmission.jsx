@@ -1,23 +1,23 @@
 import React, {useState, useEffect} from 'react'
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
-import ReplyFeedback from './ReplyFeedback';
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link, useParams } from 'react-router-dom';
-import FeedbackService from '../../services/FeedbackService';
+import SubmissionService from "../../../services/SubmissionService";
 
-function ViewDetailFeedback() {
-  const [feedback, setFeedback] = useState([])
+function ViewDetailSubmission() {
+  const [submission, setSubmission] = useState([])
   const {id} = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
-      const temp = (await FeedbackService.getFeedbackById(id)).data;
-      setFeedback(temp);
+      const temp = (await SubmissionService.getSubmissionById(id)).data;
+      setSubmission(temp);
     };
     if (id) {
       fetchData();
     }
   }, [id]);
+  
   return (
     <div className="container-fluid">
       <div className="row">
@@ -26,27 +26,18 @@ function ViewDetailFeedback() {
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
-              Feedback Details
+              Submission Details
             </div>
             <div className="card-body">
               <form>
-                <div className="mb-3">
-                  <label className="small mb-1 fs-6">Feedback Title </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    readOnly
-                    value={feedback.title}
-                  />
-                </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Feedback ID</label>
+                    <label className="small mb-1 fs-6">Create Date</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={feedback.id}
+                      value={submission.created_date}
                     />
                   </div>
                   <div className="col-md-4">
@@ -55,51 +46,64 @@ function ViewDetailFeedback() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={feedback?.user?.username}
+                      value={submission.user?.username}
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Created Date</label>
+                    <label className="small mb-1 fs-6">Submission ID</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={feedback.created_date}
+                      value={submission.id}
                     />
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
                 <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Feedback Type</label>
+                    <label className="small mb-1 fs-6">Modified Date</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={feedback.feedbackType?.name}
+                      value={submission.modified_date}
                     />
                   </div>
-                  <div className="col-md-8">
-                    <label className="small mb-1 fs-6">Content</label>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Mark</label>
                     <input
                       className="form-control"
-                      type="tel"
+                      type="text"
                       readOnly
-                      value={feedback.content}
+                      value={submission.mark}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">Assignment</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      readOnly
+                      value={submission.assignment?.title}
                     />
                   </div>
                 </div>
+                <div className="mb-3">
+                  <label className="small mb-1 fs-6">Description</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    readOnly
+                    value={submission.description}
+                  />
+                </div>
                 <div className="text-center">
-                  <Link className="btn btn-secondary me-4" to="/managefeedback">
+                  <Link className="btn btn-secondary me-4" to="/managesubmission">
                     Close
                   </Link>
-                  <button className="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#replyModal">
-                    Reply
-                  </button>
                 </div>
               </form>
             </div>
-            <ReplyFeedback/>
           </div>
         </div>
       </div>
@@ -107,4 +111,4 @@ function ViewDetailFeedback() {
   )
 }
 
-export default ViewDetailFeedback
+export default ViewDetailSubmission
