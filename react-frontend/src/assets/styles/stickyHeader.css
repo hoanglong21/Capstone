@@ -5,3 +5,9 @@
 .scroll-shadows {
     box-shadow: 0 .25rem 1rem 0 #00000029;
 }
+
+@media only screen and (max-width: 768px) {
+    .create-set{
+        font-size: 18px;
+    }
+}

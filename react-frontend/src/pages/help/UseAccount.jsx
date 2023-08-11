@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../assets/styles/Helpcenter.css";
+import register from "../../assets/images/register.png"
 
 function UseAccount() {
   return (
     <div className="container">
-      <div className="useaccount">
+      <div className="row useaccount mt-4">
+        <div className="col-8">
         <h4>Create Account ?</h4>
         <ul className="useaccount-ul">
           <li>
@@ -22,6 +24,10 @@ function UseAccount() {
             to continue."
           </li>
         </ul>
+        </div>
+        <div className="col-4">
+          <img src={register} alt="" style={{width: "300px", height: "200px"}}/>
+        </div>
       </div>
       <div>
         <h4>Update profile?</h4>

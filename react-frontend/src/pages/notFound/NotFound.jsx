@@ -12,7 +12,7 @@ const NotFound = () => {
                 minHeight: '100vh',
             }}
         >
-            <h1 className="mb-5">OOps!</h1>
+            <h1 className="mb-5 not-found-h1">OOps!</h1>
             <h2 className="mt-5">404 - PAGE NOT FOUND</h2>
             <p>
                 This page doesn't exist or was removed! We suggest you back to

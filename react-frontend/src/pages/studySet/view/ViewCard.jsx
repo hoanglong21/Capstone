@@ -268,8 +268,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
         >
             <div className="row">
                 <div
-                    className="col-3 d-flex align-items-center"
-                    style={{ borderRight: '0.125rem solid #f6f7fb' }}
+                    className="view-card-col-3 d-flex align-items-center"
                 >
                     <div className="setPageTerm_termText">
                         <div
@@ -279,7 +278,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                         ></div>
                     </div>
                 </div>
-                <div className="col-8">
+                <div className="view-card-col-8">
                     <div className="d-flex align-items-center justify-content-between">
                         <div className="setPageTerm_definitionText">
                             <div

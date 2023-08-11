@@ -102,7 +102,7 @@ const ViewStudySet = () => {
             </div>
             {/* Modes */}
             <div className="row mb-4">
-                <div className="col-4">
+                <div className="studyset-col-4">
                     <Link
                         to={`/flashcards/${studySet.id}`}
                         className="studyModesItem d-flex align-items-center justify-content-center"
@@ -114,7 +114,7 @@ const ViewStudySet = () => {
                         <span className="studyModesItemName">Flashcards</span>
                     </Link>
                 </div>
-                <div className="col-4">
+                <div className="studyset-col-4">
                     <Link
                         to={`/learn/${studySet.id}`}
                         className="studyModesItem d-flex align-items-center justify-content-center"
@@ -128,7 +128,7 @@ const ViewStudySet = () => {
                         </span>
                     </Link>
                 </div>
-                <div className="col-4">
+                <div className="studyset-col-4">
                     <Link
                         to={`/quiz/${studySet.id}`}
                         className="studyModesItem d-flex align-items-center justify-content-center"

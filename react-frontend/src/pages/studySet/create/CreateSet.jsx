@@ -337,7 +337,7 @@ const CreateSet = () => {
                     {studySet._draft ? (
                         <div className="container d-flex justify-content-between">
                             <div className="d-flex">
-                                <h3 className="fw-bold">
+                                <h3 className="fw-bold create-set">
                                     Create a new study set
                                 </h3>
                                 {loading && (

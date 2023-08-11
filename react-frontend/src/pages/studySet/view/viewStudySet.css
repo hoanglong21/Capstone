@@ -413,3 +413,47 @@
     position: relative;
     padding-left: 15px;
 }
+
+.studyset-col-4{
+    flex: 0 0 auto;
+    width: 33.33333333% !important;
+}
+
+.view-card-col-3{
+    flex: 0 0 auto;
+    width: 25% !important;
+    border-right: 0.125rem solid #f6f7fb;
+}
+
+.view-card-col-8{
+    flex: 0 0 auto;
+    width: 66.66666667% !important;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .studyset-col-4{
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+
+    .setPageTermsHeading{
+        font-size: 18px;
+    }
+
+    .view-card-col-3{
+        border-bottom: 0.125rem solid #f6f7fb;
+    }
+
+    .setPageTerm_termText{
+        margin-bottom: 10px;
+    }
+
+    .view-card-col-3, .view-card-col-8{
+        width: 100% !important;
+    }
+
+    .setPageTerm_definitionText{
+        margin-top: 5px;
+    }
+}
