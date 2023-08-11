@@ -370,3 +370,18 @@ svg {
 .alert {
     word-break: break-word;
 }
+
+.page-link {
+    cursor: pointer;
+}
+
+.page-link.active,
+.page-link.disabled,
+.page-link.dots {
+    cursor: default;
+}
+
+.page-link.dots:hover {
+    background-color: #fff;
+    z-index: 0;
+}

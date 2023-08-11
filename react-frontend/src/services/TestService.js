@@ -66,6 +66,10 @@ const startTest = (userId, testId) => {
     )
 }
 
+const endTest = (testResultList) => {
+    return axios.get(API_BASE_URL + '/endtest', testResultList)
+}
+
 const TestService = {
     getFilterList,
     createTest,
@@ -73,5 +77,6 @@ const TestService = {
     getTestById,
     deleteTest,
     startTest,
+    endTest,
 }
 export default TestService

@@ -345,28 +345,19 @@ const CreateTest = () => {
                 })
             ).data
             const answers = (
-                await AnswerService.createAnswers([
-                    {
-                        question: {
-                            id: ques.id,
-                        },
-                        content: 'True',
-                        _true: false,
+                await AnswerService.createAnswer({
+                    question: {
+                        id: ques.id,
                     },
-                    {
-                        question: {
-                            id: ques.id,
-                        },
-                        content: 'False',
-                        _true: false,
-                    },
-                ])
+                    content: '',
+                    _true: true,
+                })
             ).data
             setQuestions([
                 ...questions,
                 {
                     ...ques,
-                    answers: answers,
+                    answers: [answers],
                 },
             ])
         } catch (error) {
@@ -590,6 +581,21 @@ const CreateTest = () => {
         tempAnswers[ansIndex] = {
             ...tempAnswers[ansIndex],
             _true: event.target.checked,
+        }
+        tempQuestions[quesIndex] = {
+            ...tempQuestions[quesIndex],
+            answers: tempAnswers,
+        }
+        setQuestions(tempQuestions)
+    }
+
+    const handleChangeTrueFalseCorrect = (event, quesIndex, ans) => {
+        var tempQuestions = [...questions]
+        var tempAnswers = [...tempQuestions[quesIndex].answers]
+        tempAnswers[0] = {
+            ...tempAnswers[0],
+            content: ans,
+            _true: true,
         }
         tempQuestions[quesIndex] = {
             ...tempQuestions[quesIndex],
@@ -1067,35 +1073,62 @@ const CreateTest = () => {
                         {/* true false answer */}
                         {ques?.questionType?.id === 3 && (
                             <div>
-                                {ques?.answers?.map((ans, ansIndex) => (
-                                    <div key={ansIndex}>
-                                        <div className="createTest_formGroup-sm mb-2 form-check">
-                                            <input
-                                                id={`answer${ques?.id}_${ans?.id}`}
-                                                className="form-check-input"
-                                                type="radio"
-                                                checked={ans?._true || false}
-                                                name={`answerCorrect${ques.id}`}
-                                                onChange={(event) =>
-                                                    handleChangeAnswerCorrect(
-                                                        event,
-                                                        quesIndex,
-                                                        ansIndex
-                                                    )
-                                                }
-                                                onBlur={() =>
-                                                    handleUpdateAnswer(ans)
-                                                }
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor={`answer${ques.id}_${ans.id}`}
-                                            >
-                                                {ans?.content}
-                                            </label>
-                                        </div>
-                                    </div>
-                                ))}
+                                <div className="createTest_formGroup-sm mb-2 form-check">
+                                    <input
+                                        id={`answer${ques?.id}_0`}
+                                        className="form-check-input"
+                                        type="radio"
+                                        checked={
+                                            ques?.answers[0]?.content ===
+                                                'True' || false
+                                        }
+                                        name={`answerCorrect${ques.id}`}
+                                        onChange={(event) => {
+                                            handleChangeTrueFalseCorrect(
+                                                event,
+                                                quesIndex,
+                                                'True'
+                                            )
+                                        }}
+                                        onBlur={() =>
+                                            handleUpdateAnswer(ques?.answers[0])
+                                        }
+                                    />
+                                    <label
+                                        className="form-check-label"
+                                        htmlFor={`answer${ques.id}_0`}
+                                    >
+                                        True
+                                    </label>
+                                </div>
+                                <div className="createTest_formGroup-sm mb-2 form-check">
+                                    <input
+                                        id={`answer${ques?.id}_1`}
+                                        className="form-check-input"
+                                        type="radio"
+                                        checked={
+                                            ques?.answers[0]?.content ===
+                                                'False' || false
+                                        }
+                                        name={`answerCorrect${ques.id}`}
+                                        onChange={(event) => {
+                                            handleChangeTrueFalseCorrect(
+                                                event,
+                                                quesIndex,
+                                                'False'
+                                            )
+                                        }}
+                                        onBlur={() =>
+                                            handleUpdateAnswer(ques?.answers[0])
+                                        }
+                                    />
+                                    <label
+                                        className="form-check-label"
+                                        htmlFor={`answer${ques.id}_1`}
+                                    >
+                                        False
+                                    </label>
+                                </div>
                             </div>
                         )}
                         {/* Multiple choice answer */}

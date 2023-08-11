@@ -278,6 +278,21 @@
 
 .doTest_header h3 {
     font-size: 24px;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     font-weight: 400;
+}
+
+.doTest_container {
+    width: 80vw;
+    margin: 0 auto;
+}
+
+.doTest_container .card {
+    min-height: 40vh;
+}
+
+.doTest_no {
+    font-size: 30px;
+    line-height: 44px;
+    font-weight: 300;
 }
