@@ -355,7 +355,11 @@ public class TestServiceImpl  implements TestService {
                 }
             }
 
-            double mark = (result/total)*100;
+            double mark = 0;
+            if(total!=0) {
+                mark = (result/total)*100;
+            }
+
             double roundedMark = Math.round(mark * 100.0) / 100.0;
 
             testLearner.setEnd(end);
