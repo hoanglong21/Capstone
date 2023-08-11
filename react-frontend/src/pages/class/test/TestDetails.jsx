@@ -87,9 +87,8 @@ const TestDetails = () => {
                     <div className="d-flex align-items-center">
                         <button
                             className="btn btn-primary me-2"
-                            onClick={() => {
-                                navigate(`/do-test/${test?.id}`)
-                            }}
+                            data-bs-toggle="modal"
+                            data-bs-target={`#startTestModal${test_id}`}
                         >
                             Do Test
                         </button>
@@ -216,6 +215,45 @@ const TestDetails = () => {
                                     ) : (
                                         'Delete'
                                     )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* start test modal */}
+            <div
+                className="modal fade startTestModal"
+                tabIndex="-1"
+                id={`startTestModal${test_id}`}
+            >
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <p>
+                                Are you sure you want to start taking the test?
+                            </p>
+                            <div className="text-end mt-4">
+                                <button
+                                    id="startTestModalClose"
+                                    type="button"
+                                    className="btn btn-secondary btn-sm me-3"
+                                    data-bs-dismiss="modal"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="btn btn-warning btn-sm"
+                                    onClick={() => {
+                                        document
+                                            .getElementById(
+                                                'startTestModalClose'
+                                            )
+                                            .click()
+                                        navigate(`/do-test/${test?.id}`)
+                                    }}
+                                >
+                                    Start
                                 </button>
                             </div>
                         </div>

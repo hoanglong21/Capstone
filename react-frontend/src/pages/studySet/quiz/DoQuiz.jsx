@@ -32,7 +32,7 @@ const DoQuiz = () => {
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
 
-    const [isAllow, setIsAllow] = useState(false)
+    const [isAllow, setIsAllow] = useState(true)
 
     const [studySet, setStudySet] = useState({})
     const [type, setType] = useState(1)
@@ -101,6 +101,7 @@ const DoQuiz = () => {
                 setSkipAnswer(null)
                 setProgress(0)
                 setError('')
+                setIsAllow(true)
                 // study set
                 const tempStudySet = (await StudySetService.getStudySetById(id))
                     .data
@@ -1741,7 +1742,7 @@ const DoQuiz = () => {
                                     </h2>
                                     <p className="modal-text">
                                         Would you like to review the skipped
-                                        questions or submit the test now?
+                                        questions or submit the quiz now?
                                     </p>
                                 </div>
                                 <div className="modal-footer border border-0">
