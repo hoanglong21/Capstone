@@ -90,6 +90,7 @@ const CreateTest = () => {
                     tempTest.user.created_date = testUserCreated
                     setTest({
                         ...tempTest,
+                        point: 1,
                         start_date: toFEDate(tempTest.start_date),
                         created_date: toFEDate(tempTest.created_date),
                         due_date: toFEDate(tempTest.due_date),
@@ -245,6 +246,20 @@ const CreateTest = () => {
                 )
                 return
             }
+            // check if point null
+            if (!ques?.point) {
+                setError(
+                    `The point of <a href="#question${indexQues}">this</a> question cannot be left blank.`
+                )
+                return
+            }
+            // check if point invalid
+            if (ques?.point < 0 || !Number.isInteger(ques?.point)) {
+                setError(
+                    `The point of <a href="#question${indexQues}">this</a> question must be a positive integer number.`
+                )
+                return
+            }
         }
         try {
             // update test
@@ -256,7 +271,7 @@ const CreateTest = () => {
                 start_date: toBEDate(test.start_date),
                 due_date: toBEDate(test.due_date),
             })
-            navigate('../tests')
+            navigate(`/class/${classroom.id}/test/${test.id}/details`)
             // clear
             setTest({})
             setError('')
@@ -309,6 +324,7 @@ const CreateTest = () => {
                     test: {
                         id: test.id,
                     },
+                    point: 1,
                 })
             ).data
             setQuestions([
@@ -342,6 +358,7 @@ const CreateTest = () => {
                     test: {
                         id: test.id,
                     },
+                    point: 1,
                 })
             ).data
             const answers = (
@@ -385,6 +402,7 @@ const CreateTest = () => {
                     test: {
                         id: test.id,
                     },
+                    point: 1,
                 })
             ).data
             const answer = (
@@ -720,7 +738,9 @@ const CreateTest = () => {
                     <button
                         className="createTest_cancelBtn"
                         onClick={() => {
-                            navigate('../tests')
+                            navigate(
+                                `/class/${classroom.id}/test/${test.id}/details`
+                            )
                         }}
                     >
                         cancel
