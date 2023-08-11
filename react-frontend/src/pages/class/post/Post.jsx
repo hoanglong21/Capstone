@@ -437,8 +437,8 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                 </div>
                 <div className="card-footer px-3 py-2 bg-white">
                     {comments.length > 0 && (
-                        <div className="postComment_container">
-                            <div className="d-flex align-items-center postComment_label mb-3">
+                        <div>
+                            <div className="d-flex align-items-center comment_label mb-3">
                                 <MemberSolidIcon size="24px" className="me-2" />
                                 <span>{comments.length} class comment</span>
                             </div>
@@ -455,49 +455,37 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                         </div>
                     )}
                     {/* add comment */}
-                    <div className="row">
-                        <div className="col-1">
-                            <div className="postAuthorImg">
-                                <img
-                                    src={post?.user?.avatar || defaultAvatar}
-                                    className="w-100 h-100"
-                                    alt=""
-                                />
-                            </div>
+                    <div className="d-flex">
+                        <img
+                            src={userInfo?.avatar || defaultAvatar}
+                            className="comment_img me-3"
+                        />
+                        <div className="commentEditor flex-fill">
+                            <CardEditor
+                                data={addComment}
+                                onChange={(event, editor) => {
+                                    setAddComment(editor.getData())
+                                }}
+                            />
                         </div>
-                        <div className="col-11">
-                            <div className="d-flex">
-                                <div className="postCommentEditor flex-fill">
-                                    <CardEditor
-                                        data={addComment}
-                                        onChange={(event, editor) => {
-                                            setAddComment(editor.getData())
-                                        }}
-                                    />
-                                </div>
-                                <button
-                                    className="postComment_btn ms-1"
-                                    onClick={handleAddComment}
-                                    disabled={!addComment}
+                        <button
+                            className="comment_btn ms-1"
+                            onClick={handleAddComment}
+                            disabled={!addComment}
+                        >
+                            {loadingComment ? (
+                                <div
+                                    className="spinner-border spinner-border-sm text-secondary"
+                                    role="status"
                                 >
-                                    {loadingComment ? (
-                                        <div
-                                            className="spinner-border spinner-border-sm text-secondary"
-                                            role="status"
-                                        >
-                                            <span className="visually-hidden">
-                                                LoadingUpload...
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <SendIcon
-                                            size="20px"
-                                            strokeWidth="1.8"
-                                        />
-                                    )}
-                                </button>
-                            </div>
-                        </div>
+                                    <span className="visually-hidden">
+                                        LoadingUpload...
+                                    </span>
+                                </div>
+                            ) : (
+                                <SendIcon size="20px" strokeWidth="1.8" />
+                            )}
+                        </button>
                     </div>
                 </div>
             </div>

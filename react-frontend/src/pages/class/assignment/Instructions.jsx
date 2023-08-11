@@ -268,36 +268,31 @@ const Instructions = () => {
                     </div>
                 </div>
             )}
-            <div className="postComment_container">
-                <div className="d-flex align-items-center postComment_label mb-3">
-                    <MemberSolidIcon size="24px" className="me-2" />
-                    <span>
-                        {comments.length === 0
-                            ? 'Class comments'
-                            : `${comments.length} class comment`}
-                    </span>
-                </div>
-                {comments?.map((comment, index) => (
-                    <Comment
-                        key={comment.id}
-                        index={index}
-                        comments={comments}
-                        setComments={setComments}
-                        comment={comment}
-                        userInfo={userInfo}
-                    />
-                ))}
+            <div className="d-flex align-items-center comment_label mb-3">
+                <MemberSolidIcon size="24px" className="me-2" />
+                <span>
+                    {comments.length === 0
+                        ? 'Class comments'
+                        : `${comments.length} class comment`}
+                </span>
             </div>
+            {comments?.map((comment, index) => (
+                <Comment
+                    key={comment.id}
+                    index={index}
+                    comments={comments}
+                    setComments={setComments}
+                    comment={comment}
+                    userInfo={userInfo}
+                />
+            ))}
             {/* add comment */}
             <div className="d-flex">
-                <div className="postAuthorImg me-3">
-                    <img
-                        src={assignment?.user?.avatar || defaultAvatar}
-                        className="w-100 h-100"
-                        alt=""
-                    />
-                </div>
-                <div className="postCommentEditor flex-fill">
+                <img
+                    src={userInfo?.avatar || defaultAvatar}
+                    className="comment_img me-3"
+                />
+                <div className="commentEditor flex-fill">
                     <CardEditor
                         data={addComment}
                         onChange={(event, editor) => {
@@ -306,7 +301,7 @@ const Instructions = () => {
                     />
                 </div>
                 <button
-                    className="postComment_btn ms-1"
+                    className="comment_btn ms-1"
                     onClick={handleAddComment}
                     disabled={!addComment}
                 >

@@ -4,8 +4,18 @@ import { useSelector } from 'react-redux'
 import SubmissionService from '../../../services/SubmissionService'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 import AttachmentService from '../../../services/AttachmentService'
+import CommentService from '../../../services/CommentService'
 
-import { AddIcon, CloseIcon, ProfileIcon } from '../../../components/icons'
+import Comment from '../../../components/comment/Comment'
+
+import {
+    AddIcon,
+    CloseIcon,
+    ProfileSolidIcon,
+    SendIcon,
+} from '../../../components/icons'
+import defaultAvatar from '../../../assets/images/default_avatar.png'
+import CardEditor from '../../../components/textEditor/CardEditor'
 
 const LearnerSubmission = ({ assignment }) => {
     const { userInfo } = useSelector((state) => state.user)
@@ -14,6 +24,10 @@ const LearnerSubmission = ({ assignment }) => {
     const [attachments, setAttachments] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [loadingSubmit, setLoadingSubmit] = useState(false)
+
+    const [comments, setComments] = useState([])
+    const [addComment, setAddComment] = useState('')
+    const [loadingComment, setLoadingComment] = useState(false)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -44,12 +58,20 @@ const LearnerSubmission = ({ assignment }) => {
                         })
                     ).data
                 } else {
+                    // attachments
                     const tempAttachments = (
                         await AttachmentService.getAttachmentsBySubmissionId(
                             tempSubmission.id
                         )
                     ).data
                     setAttachments(tempAttachments)
+                    // comments
+                    const tempComments = (
+                        await CommentService.getAllCommentBySubmisionId(
+                            tempSubmission.id
+                        )
+                    ).data
+                    setComments(tempComments)
                 }
                 setSubmission(tempSubmission)
             } catch (error) {
@@ -169,6 +191,39 @@ const LearnerSubmission = ({ assignment }) => {
         setLoadingSubmit(false)
     }
 
+    const handleAddComment = async () => {
+        setLoadingComment(true)
+        try {
+            // create comment
+            var tempComment = {
+                user: {
+                    id: userInfo.id,
+                    username: userInfo.username,
+                    avatar: userInfo.avatar,
+                },
+                content: addComment,
+                commentType: {
+                    id: 1,
+                },
+                submission: {
+                    id: submission.id,
+                },
+            }
+            tempComment = (await CommentService.createComment(tempComment)).data
+            // add to list
+            setComments([...comments, tempComment])
+            // clear
+            setAddComment('')
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingComment(false)
+    }
+
     return (
         <div className="row">
             <div className="col-4">
@@ -284,13 +339,58 @@ const LearnerSubmission = ({ assignment }) => {
             <div className="col-8">
                 <div className="card submission_card mt-4">
                     <div className="card-body py-3 px-4">
-                        <div className="submission_subHeading d-flex align-items-center">
-                            <ProfileIcon size="24px" className="me-2" />
-                            <span>Private comment</span>
+                        <div className="d-flex align-items-center comment_label mb-3">
+                            <ProfileSolidIcon size="24px" className="me-2" />
+                            <span>
+                                {comments.length === 0
+                                    ? 'Private comments'
+                                    : `${comments.length} private comment`}
+                            </span>
                         </div>
-                        <button className="submission_CommentBtn d-flex align-items-center justify-content-center mt-3">
-                            Add comment to {assignment?.user?.username}
-                        </button>
+                        {comments?.map((comment, index) => (
+                            <Comment
+                                key={comment.id}
+                                index={index}
+                                comments={comments}
+                                setComments={setComments}
+                                comment={comment}
+                                userInfo={userInfo}
+                            />
+                        ))}
+                        {/* add comment */}
+                        <div className="d-flex">
+                            <img
+                                src={userInfo?.avatar || defaultAvatar}
+                                className="comment_img me-3"
+                                alt=""
+                            />
+                            <div className="commentEditor flex-fill">
+                                <CardEditor
+                                    data={addComment}
+                                    onChange={(event, editor) => {
+                                        setAddComment(editor.getData())
+                                    }}
+                                />
+                            </div>
+                            <button
+                                className="comment_btn ms-1"
+                                onClick={handleAddComment}
+                                disabled={!addComment}
+                            >
+                                {loadingComment ? (
+                                    <div
+                                        className="spinner-border spinner-border-sm text-secondary"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            LoadingUpload...
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <SendIcon size="20px" strokeWidth="1.8" />
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -268,7 +268,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                 {comment.created_date}
                             </div>
                         </div>
-                        <div className="postCommentEditor mb-2">
+                        <div className="commentEditor mb-2">
                             <CardEditor
                                 data={updateComment?.content}
                                 onChange={(event, editor) => {

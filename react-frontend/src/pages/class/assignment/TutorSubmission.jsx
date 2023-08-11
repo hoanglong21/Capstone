@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import ClassLearnerService from '../../../services/ClassLearnerService'
-
-import defaultAvatar from '../../../assets/images/default_avatar.png'
 import AssignmentService from '../../../services/AssignmentService'
 import SubmissionService from '../../../services/SubmissionService'
 import AttachmentService from '../../../services/AttachmentService'
+import CommentService from '../../../services/CommentService'
+
+import Comment from '../../../components/comment/Comment'
+
+import defaultAvatar from '../../../assets/images/default_avatar.png'
+import { ProfileSolidIcon, SendIcon } from '../../../components/icons'
+import CardEditor from '../../../components/textEditor/CardEditor'
 
 const TutorSubmission = ({ assignment }) => {
+    const { userInfo } = useSelector((state) => state.user)
+
     const [learners, setLearners] = useState([])
     const [numSubmit, setNumSubmit] = useState(0)
     const [numNotSubmit, setNumNotSubmit] = useState(0)
@@ -16,6 +24,10 @@ const TutorSubmission = ({ assignment }) => {
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState(false)
     const [loadingSelect, setLoadingSelect] = useState(false)
+
+    const [comments, setComments] = useState([])
+    const [addComment, setAddComment] = useState('')
+    const [loadingComment, setLoadingComment] = useState(false)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -59,9 +71,7 @@ const TutorSubmission = ({ assignment }) => {
                             assignment.id
                         )
                     ).data
-                    if (!tempSubmission?.id) {
-                        tempSubmission = { user: tempLearners[0] }
-                    } else {
+                    if (tempSubmission?.id) {
                         // attachments
                         const tempAttachments = (
                             await AttachmentService.getAttachmentsBySubmissionId(
@@ -69,6 +79,15 @@ const TutorSubmission = ({ assignment }) => {
                             )
                         ).data
                         setAttachments(tempAttachments)
+                        // comments
+                        const tempComments = (
+                            await CommentService.getAllCommentBySubmisionId(
+                                tempSubmission.id
+                            )
+                        ).data
+                        setComments(tempComments)
+                    } else {
+                        tempSubmission = { user: tempLearners[0] }
                     }
                     setSubmission(tempSubmission)
                 }
@@ -174,6 +193,39 @@ const TutorSubmission = ({ assignment }) => {
         setLoadingSelect(false)
     }
 
+    const handleAddComment = async () => {
+        setLoadingComment(true)
+        try {
+            // create comment
+            var tempComment = {
+                user: {
+                    id: userInfo.id,
+                    username: userInfo.username,
+                    avatar: userInfo.avatar,
+                },
+                content: addComment,
+                commentType: {
+                    id: 1,
+                },
+                submission: {
+                    id: submission.id,
+                },
+            }
+            tempComment = (await CommentService.createComment(tempComment)).data
+            // add to list
+            setComments([...comments, tempComment])
+            // clear
+            setAddComment('')
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingComment(false)
+    }
+
     return (
         <div className="submission_container">
             {/* header */}
@@ -231,83 +283,153 @@ const TutorSubmission = ({ assignment }) => {
                             </div>
                         </div>
                     ) : (
-                        <div className="submission_detail">
-                            <div className="d-flex justify-content-between">
-                                <div>
-                                    <div className="submission_title mb-1">
-                                        {submission?.user?.username}
-                                    </div>
-                                    <div className="submission_status">
-                                        {submission?._done
-                                            ? 'Turned in'
-                                            : 'Assigned'}
-                                    </div>
-                                </div>
-                                <div className="submission_grade d-flex flex-column align-items-end">
-                                    <div
-                                        id="submission_inputGradeWrapper"
-                                        className="submission_inputGradeWrapper"
-                                    >
-                                        <input
-                                            type="number"
-                                            className="submission_inputGrade"
-                                            value={submission?.mark || ''}
-                                            onChange={(event) => {
-                                                setSubmission({
-                                                    ...submission,
-                                                    mark: event.target.value,
-                                                })
-                                            }}
-                                            onFocus={() => {
-                                                document.getElementById(
-                                                    'submission_inputGradeWrapper'
-                                                ).style.borderBottom =
-                                                    '2px solid rgb(66,133,244)'
-                                            }}
-                                            onBlur={() => {
-                                                document.getElementById(
-                                                    'submission_inputGradeWrapper'
-                                                ).style.borderBottom =
-                                                    '1px solid rgba(0, 0, 0, 0.12)'
-                                                handleUpdateGrade()
-                                            }}
-                                        />
-                                        /100
-                                    </div>
-                                    {saving && (
-                                        <div className="submission_status text-end">
-                                            Saving...
+                        <div>
+                            <div className="submission_detail">
+                                <div className="d-flex justify-content-between">
+                                    <div>
+                                        <div className="submission_title mb-1">
+                                            {submission?.user?.username}
                                         </div>
-                                    )}
-                                    {error && (
-                                        <div className="submission_status submission_status--error text-end">
-                                            Mark must be between 0 and 100
+                                        <div className="submission_status">
+                                            {submission?._done
+                                                ? 'Turned in'
+                                                : 'Assigned'}
                                         </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div className="row mt-4">
-                                {/* attchment */}
-                                {attachments.map((file, index) => (
-                                    <div className="col-6" key={index}>
-                                        <a
-                                            className="card mb-2 text-decoration-none"
-                                            href={file.file_url}
-                                            target="_blank"
+                                    </div>
+                                    <div className="submission_grade d-flex flex-column align-items-end">
+                                        <div
+                                            id="submission_inputGradeWrapper"
+                                            className="submission_inputGradeWrapper"
                                         >
-                                            <div className="card-body d-flex justify-content-between">
-                                                <div className="fileUploadContainer">
-                                                    <div className="fileUploadName">
-                                                        {file.file_name}
-                                                    </div>
-                                                    <div className="fileUploadType">
-                                                        {file.file_type}
+                                            <input
+                                                type="number"
+                                                className="submission_inputGrade"
+                                                value={submission?.mark || ''}
+                                                onChange={(event) => {
+                                                    setSubmission({
+                                                        ...submission,
+                                                        mark: event.target
+                                                            .value,
+                                                    })
+                                                }}
+                                                onFocus={() => {
+                                                    document.getElementById(
+                                                        'submission_inputGradeWrapper'
+                                                    ).style.borderBottom =
+                                                        '2px solid rgb(66,133,244)'
+                                                }}
+                                                onBlur={() => {
+                                                    document.getElementById(
+                                                        'submission_inputGradeWrapper'
+                                                    ).style.borderBottom =
+                                                        '1px solid rgba(0, 0, 0, 0.12)'
+                                                    handleUpdateGrade()
+                                                }}
+                                            />
+                                            /100
+                                        </div>
+                                        {saving && (
+                                            <div className="submission_status text-end">
+                                                Saving...
+                                            </div>
+                                        )}
+                                        {error && (
+                                            <div className="submission_status submission_status--error text-end">
+                                                Mark must be between 0 and 100
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="row mt-4">
+                                    {/* attchment */}
+                                    {attachments.map((file, index) => (
+                                        <div className="col-6" key={index}>
+                                            <a
+                                                className="card mb-2 text-decoration-none"
+                                                href={file.file_url}
+                                                target="_blank"
+                                            >
+                                                <div className="card-body d-flex justify-content-between">
+                                                    <div className="fileUploadContainer">
+                                                        <div className="fileUploadName">
+                                                            {file.file_name}
+                                                        </div>
+                                                        <div className="fileUploadType">
+                                                            {file.file_type}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </a>
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="border-top">
+                                <div className="submission_comments">
+                                    <div className="d-flex align-items-center comment_label mb-3">
+                                        <ProfileSolidIcon
+                                            size="24px"
+                                            className="me-2"
+                                        />
+                                        <span>
+                                            {comments.length === 0
+                                                ? 'Private comments'
+                                                : `${comments.length} private comment`}
+                                        </span>
                                     </div>
-                                ))}
+                                    {comments?.map((comment, index) => (
+                                        <Comment
+                                            key={comment.id}
+                                            index={index}
+                                            comments={comments}
+                                            setComments={setComments}
+                                            comment={comment}
+                                            userInfo={userInfo}
+                                        />
+                                    ))}
+                                    {/* add comment */}
+                                    <div className="d-flex">
+                                        <img
+                                            src={
+                                                userInfo?.avatar ||
+                                                defaultAvatar
+                                            }
+                                            className="comment_img me-3"
+                                            alt=""
+                                        />
+                                        <div className="commentEditor flex-fill">
+                                            <CardEditor
+                                                data={addComment}
+                                                onChange={(event, editor) => {
+                                                    setAddComment(
+                                                        editor.getData()
+                                                    )
+                                                }}
+                                            />
+                                        </div>
+                                        <button
+                                            className="comment_btn ms-1"
+                                            onClick={handleAddComment}
+                                            disabled={!addComment}
+                                        >
+                                            {loadingComment ? (
+                                                <div
+                                                    className="spinner-border spinner-border-sm text-secondary"
+                                                    role="status"
+                                                >
+                                                    <span className="visually-hidden">
+                                                        LoadingUpload...
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <SendIcon
+                                                    size="20px"
+                                                    strokeWidth="1.8"
+                                                />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}

@@ -1,3 +1,30 @@
+.comment_label {
+    letter-spacing: 0.01785714em;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+}
+
+.comment_label svg {
+    color: #5f6368;
+}
+
+.comment_btn {
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: rgb(25, 103, 210);
+}
+
+.comment_btn:hover:not(:disabled) {
+    background-color: #f6f9fd;
+    cursor: pointer;
+}
+
+.comment_btn:disabled {
+    cursor: default;
+    color: rgba(60, 64, 67, 0.38);
+}
+
 .comment_img {
     width: 2.5rem;
     height: 2.5rem;
@@ -27,7 +54,7 @@
     margin: 0;
 }
 
-.postCommentEditor
+.commentEditor
     .ck.ck-editor__editable.ck-rounded-corners:not(
         .ck-editor__nested-editable
     ) {
@@ -39,12 +66,12 @@
     z-index: 9999 !important;
 }
 
-.postCommentEditor
+.commentEditor
     .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
     border: 0.125rem solid rgb(66, 133, 244);
     background-color: #fff;
 }
 
-.postCommentEditor .ck.ck-editor__editable_inline > :first-child {
+.commentEditor .ck.ck-editor__editable_inline > :first-child {
     margin: 0;
 }
