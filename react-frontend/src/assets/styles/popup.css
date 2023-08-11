@@ -74,3 +74,8 @@
     margin-top: 8rem;
     --bs-modal-width: 30vw;
 }
+
+.startTestModal.modal {
+    margin-top: 8rem;
+    --bs-modal-width: 30vw;
+}

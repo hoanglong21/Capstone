@@ -67,7 +67,7 @@ const startTest = (userId, testId) => {
 }
 
 const endTest = (testResultList) => {
-    return axios.get(API_BASE_URL + '/endtest', testResultList)
+    return axios.post(API_BASE_URL + '/endtest', testResultList)
 }
 
 const TestService = {

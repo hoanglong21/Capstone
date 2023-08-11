@@ -27,7 +27,6 @@ const DoTest = () => {
     const [answers, setAnswers] = useState([])
     const [results, setResults] = useState([])
     const [progress, setProgress] = useState(0)
-    const [skipAnswer, setSkipAnswer] = useState(null)
     const [loading, setLoading] = useState(false)
     const [isEnd, setIsEnd] = useState(false)
 
@@ -52,6 +51,13 @@ const DoTest = () => {
         }
     }
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     // fetch userInfo
     useEffect(() => {
         if (userToken && !userInfo?.id) {
@@ -66,26 +72,35 @@ const DoTest = () => {
                 // questions
                 const tempQuestions = (
                     await TestService.startTest(userInfo.id, id)
-                ).data.questionList
-                setQuestions(tempQuestions)
+                ).data
+                setQuestions(tempQuestions.questionList)
                 // test
-                setTest(tempQuestions[0]?.question?.test)
+                setTest(tempQuestions.questionList[0]?.question?.test)
                 // set test learner
                 setTestLearner(tempQuestions.testLearner)
                 // current question
-                setCurrentQuestion(tempQuestions[0])
+                setCurrentQuestion(tempQuestions.questionList[0])
                 // set answers
                 var tempAnswers = []
                 var tempResults = []
-                for (let index = 0; index < tempQuestions.length; index++) {
-                    if (tempQuestions[index].question.questionType.id === 2) {
+                for (
+                    let index = 0;
+                    index < tempQuestions.questionList.length;
+                    index++
+                ) {
+                    if (
+                        tempQuestions.questionList[index].question.questionType
+                            .id === 2
+                    ) {
                         tempAnswers.push([])
                     } else {
                         tempAnswers.push(null)
                     }
                     tempResults.push({
-                        question: tempQuestions[index].question,
-                        testLearner: testLearner,
+                        question: {
+                            id: tempQuestions.questionList[index].question.id,
+                        },
+                        testLearner: { id: tempQuestions.testLearner.id },
                         _true: null,
                     })
                 }
@@ -114,9 +129,10 @@ const DoTest = () => {
         if (!isEnd) {
             var tempAnswers = [...answers]
             tempAnswers[index] = ans
-            if (ans) {
-                setProgress(progress - 1)
-            } else {
+            if (ans && answers[index] === null) {
+                setProgress(progress + 1)
+            }
+            if (!ans && answers[index] !== null) {
                 setProgress(progress + 1)
             }
             setAnswers(tempAnswers)
@@ -151,7 +167,6 @@ const DoTest = () => {
                 const ans = answers[index]
                 if (questions[index].question.questionType.id === 2) {
                     if (ans.length === 0) {
-                        setSkipAnswer(index)
                         document
                             .getElementById('testSubmitModalToggleBtn')
                             .click()
@@ -159,7 +174,6 @@ const DoTest = () => {
                     }
                 } else {
                     if (!ans) {
-                        setSkipAnswer(index)
                         document
                             .getElementById('testSubmitModalToggleBtn')
                             .click()
@@ -196,7 +210,6 @@ const DoTest = () => {
                 } else if (ques.question.questionType.id === 3) {
                     var isCorrect = 0
                     for (const ans of ques.answerList) {
-                        console.log(ans)
                         if (ans._true && answers[index] === ans.content) {
                             isCorrect = 1
                             break
@@ -204,12 +217,9 @@ const DoTest = () => {
                     }
                     tempResults[index]._true = isCorrect
                 }
-                // await ProgressService.updateScore(
-                //     userInfo.id,
-                //     ques.question.card.id,
-                //     tempIsCorrect ? 1 : -1
-                // )
             }
+            const tempEnd = (await TestService.endTest(results)).data
+            console.log(tempEnd)
             setResults(tempResults)
             document.getElementById('testSubmitModalCloseBtn')?.click()
             setIsEnd(true)
@@ -291,16 +301,16 @@ const DoTest = () => {
                                 </div>
                                 <input
                                     className={`form-control quizAns_input ${
-                                        results[currentIndex]._true === 0
+                                        results[currentIndex]?._true === 0
                                             ? 'incorrect'
-                                            : results[currentIndex]._true === 1
+                                            : results[currentIndex]?._true === 1
                                             ? 'correct'
                                             : ''
                                     }`}
                                     type="text"
                                     placeholder="Type your answer here"
                                     readOnly={
-                                        results[currentIndex]._true !== null
+                                        results[currentIndex]?._true !== null
                                     }
                                     onChange={(event) =>
                                         handleChangeAnswer(
@@ -309,7 +319,7 @@ const DoTest = () => {
                                         )
                                     }
                                 />
-                                {results[currentIndex]._true === 0 && (
+                                {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
                                             Correct answer
@@ -354,7 +364,7 @@ const DoTest = () => {
                                                               ) &&
                                                               results[
                                                                   currentIndex
-                                                              ]._true === 0
+                                                              ]?._true === 0
                                                                 ? 'incorrect'
                                                                 : answers[
                                                                       currentIndex
@@ -363,7 +373,7 @@ const DoTest = () => {
                                                                   ) &&
                                                                   results[
                                                                       currentIndex
-                                                                  ]._true === 1
+                                                                  ]?._true === 1
                                                                 ? 'correct'
                                                                 : answers[
                                                                       currentIndex
@@ -376,7 +386,7 @@ const DoTest = () => {
                                                     }`}
                                                     disabled={
                                                         results[currentIndex]
-                                                            ._true !== null
+                                                            ?._true !== null
                                                     }
                                                     onClick={() => {
                                                         handleChangeMultipleAnswer(
@@ -423,7 +433,7 @@ const DoTest = () => {
                                         )
                                     )}
                                 </div>
-                                {results[currentIndex]._true === 0 && (
+                                {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
                                             Correct answer
@@ -431,11 +441,17 @@ const DoTest = () => {
                                         <div className="quizQues_answer correct">
                                             {currentQuestion?.answerList.map(
                                                 (answer) => {
-                                                    answer?._true && (
-                                                        <div>
-                                                            {answer?.content}
-                                                        </div>
-                                                    )
+                                                    if (answer?._true) {
+                                                        return (
+                                                            <div
+                                                                key={answer?.id}
+                                                            >
+                                                                {
+                                                                    answer?.content
+                                                                }
+                                                            </div>
+                                                        )
+                                                    }
                                                 }
                                             )}
                                         </div>
@@ -456,13 +472,13 @@ const DoTest = () => {
                                             className={`quizQues_answer ${
                                                 answers[currentIndex] ===
                                                     'True' &&
-                                                results[currentIndex]._true ===
+                                                results[currentIndex]?._true ===
                                                     0
                                                     ? 'incorrect'
                                                     : answers[currentIndex] ===
                                                           'True' &&
                                                       results[currentIndex]
-                                                          ._true === 1
+                                                          ?._true === 1
                                                     ? 'correct'
                                                     : answers[currentIndex] ===
                                                       'True'
@@ -470,7 +486,7 @@ const DoTest = () => {
                                                     : ''
                                             }`}
                                             disabled={
-                                                results[currentIndex]._true !==
+                                                results[currentIndex]?._true !==
                                                 null
                                             }
                                             onClick={() => {
@@ -498,13 +514,13 @@ const DoTest = () => {
                                             className={`quizQues_answer ${
                                                 answers[currentIndex] ===
                                                     'False' &&
-                                                results[currentIndex]._true ===
+                                                results[currentIndex]?._true ===
                                                     0
                                                     ? 'incorrect'
                                                     : answers[currentIndex] ===
                                                           'False' &&
                                                       results[currentIndex]
-                                                          ._true === 1
+                                                          ?._true === 1
                                                     ? 'correct'
                                                     : answers[currentIndex] ===
                                                       'False'
@@ -512,7 +528,7 @@ const DoTest = () => {
                                                     : ''
                                             }`}
                                             disabled={
-                                                results[currentIndex]._true !==
+                                                results[currentIndex]?._true !==
                                                 null
                                             }
                                             onClick={() => {
