@@ -93,6 +93,10 @@ import ViewTest from './pages/class/test/ViewTest'
 import TestDetails from './pages/class/test/TestDetails'
 import DoTest from './pages/class/test/DoTest'
 import SettingForAdmin from './pages/admin/SettingForAdmin'
+import DictionaryForAdmin from './pages/admin/dictionaryforadmin/DictionaryLayoutForAdmin'
+import VocabDictForAdmin from './pages/admin/dictionaryforadmin/VocabDictForAdmin'
+import KanjiDictForAdmin from './pages/admin/dictionaryforadmin/KanjiDictForAdmin'
+import GrammarDictForAdmin from './pages/admin/dictionaryforadmin/GrammarDictForAdmin'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -344,6 +348,11 @@ const App = () => {
                     />
                     <Route path="/registeradmin" element={<RegisterAdmin />} />
                     <Route path='/settingsadmin' element={<SettingForAdmin />} />
+                    <Route element={<DictionaryForAdmin />}>
+                        <Route path='/vocabforadmin' element={<VocabDictForAdmin />} />
+                        <Route path='/kanjiforadmin' element={<KanjiDictForAdmin />} />
+                        <Route path='/grammarforadmin' element={<GrammarDictForAdmin />} />
+                    </Route>
                 </Route>
             </Routes>
             <AuthVerify logOut={logOut} />
