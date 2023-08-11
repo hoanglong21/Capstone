@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
-import PostService from "../../services/PostService";
+import PostService from "../../../services/PostService";
 import { useSearchParams } from 'react-router-dom'
 
 function ManagePost() {

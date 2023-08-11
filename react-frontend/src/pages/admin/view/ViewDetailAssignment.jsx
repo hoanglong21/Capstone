@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link, useParams } from "react-router-dom";
-import StudySetService from "../../services/StudySetService";
+import AssignmentService from "../../../services/AssignmentService";
 
-function ViewDetailStudyset() {
-  const [studySet, setStudySet] = useState({});
+function ViewDetailAssignment() {
+  const [assignments, setAssignments] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
-      const tempStudySet = (await StudySetService.getStudySetById(id)).data;
-      setStudySet(tempStudySet);
+      const tempStudySet = (await AssignmentService.getAssignmentById(id)).data;
+      setAssignments(tempStudySet);
     };
     if (id) {
       fetchData();
     }
   }, [id]);
+
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -25,27 +27,27 @@ function ViewDetailStudyset() {
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
-              StudySet Details
+              Assignment Details
             </div>
             <div className="card-body">
               <form>
                 <div className="mb-3">
-                  <label className="small mb-1 fs-6">StudySet Title </label>
+                  <label className="small mb-1 fs-6">Assignment Title </label>
                   <input
                     className="form-control"
                     type="text"
                     readOnly
-                    value={studySet?.title}
+                    value={assignments?.title}
                   />
                 </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">StudySet ID</label>
+                    <label className="small mb-1 fs-6">Assignment ID</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={studySet?.id}
+                      value={assignments?.id}
                     />
                   </div>
                   <div className="col-md-4">
@@ -54,61 +56,61 @@ function ViewDetailStudyset() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={studySet?.user?.username}
+                      value={assignments?.user?.username}
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Created Date</label>
+                    <label className="small mb-1 fs-6">Class Name</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
-                      value={studySet?.created_date}
+                      value={assignments?.classroom?.class_name}
                     />
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Type</label>
+                    <label className="small mb-1 fs-6">Create Date</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={studySet?.studySetType?.name}
+                      value={assignments?.created_date}
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Status</label>
+                    <label className="small mb-1 fs-6">Start Date</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={studySet?.is_public == 1 ? "Public" : "Private"}
+                      value={assignments?.start_date}
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Deleted Date</label>
+                    <label className="small mb-1 fs-6">Due Date</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={studySet?.deleted_date}
+                      value={assignments?.due_date}
                     />
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
                   <div className="col-md-12">
-                    <label className="small mb-1 fs-6">Description</label>
+                    <label className="small mb-1 fs-6">Instruction</label>
                     <input
                       className="form-control"
                       type="tel"
                       readOnly
-                      value={studySet?.description}
+                      value={assignments?.instruction}
                     />
                   </div>
                 </div>
                 <div className="text-center">
-                  <Link className="btn btn-secondary me-4" to="/managestudyset">
+                  <Link className="btn btn-secondary me-4" to="/manageassignment">
                     Close
                   </Link>
                 </div>
@@ -121,4 +123,4 @@ function ViewDetailStudyset() {
   );
 }
 
-export default ViewDetailStudyset;
+export default ViewDetailAssignment;

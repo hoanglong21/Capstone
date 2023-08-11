@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import SidebarforAdmin from './SidebarforAdmin'
-import HeaderAdmin from './HeaderAdmin'
-import UserService from '../../services/UserService'
-import defaultAvatar from '../../assets/images/avatar-default.jpg'
+import SidebarforAdmin from '../SidebarforAdmin'
+import HeaderAdmin from '../HeaderAdmin'
+import UserService from '../../../services/UserService'
+import defaultAvatar from '../../../assets/images/avatar-default.jpg'
 import ReactApexChart from 'react-apexcharts'
 
 function ViewDetailsUser() {

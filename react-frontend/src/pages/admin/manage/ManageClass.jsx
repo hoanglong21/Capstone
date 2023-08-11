@@ -1,9 +1,9 @@
 import React,  { useState, useEffect } from "react";
-import SidebarforAdmin from "./SidebarforAdmin";
-import HeaderAdmin from "./HeaderAdmin";
+import SidebarforAdmin from "../SidebarforAdmin";
+import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux'
-import ClassService from '../../services/ClassService';
+import ClassService from '../../../services/ClassService';
 import { useSearchParams } from 'react-router-dom'
 
 function ManageClass() {
