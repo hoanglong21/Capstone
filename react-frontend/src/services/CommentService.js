@@ -41,6 +41,10 @@ const getAllCommentByPostId = (id) => {
     return axios.get(API_BASE_URL + '/commentbypostid/' + id)
 }
 
+const getAllCommentByAssignmentId = (id) => {
+    return axios.get(API_BASE_URL + '/commentbasignmentid/' + id)
+}
+
 const createComment = (comment) => {
     return axios.post(API_BASE_URL + '/comments', comment)
 }
@@ -60,6 +64,7 @@ const CommentService = {
     createComment,
     updateComment,
     deleteComment,
+    getAllCommentByAssignmentId,
 }
 
 export default CommentService

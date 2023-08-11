@@ -177,7 +177,6 @@ function UpdateAssignment() {
             }
             // add attachments
             await AttachmentService.createAttachments(tempUploadFiles)
-            navigate(`/class/${classroom.id}/assignment/${assign_id}/details`)
             // clear
             handleClear()
         } catch (error) {
@@ -194,7 +193,7 @@ function UpdateAssignment() {
     const handleClear = () => {
         setUpdateAssignment({ ...currentAssignment })
         setUploadFiles([...currentFiles])
-        navigate('../assignments')
+        navigate(`/class/${classroom.id}/assignment/${assign_id}/details`)
     }
 
     return (

@@ -446,7 +446,6 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                 <Comment
                                     key={comment.id}
                                     index={index}
-                                    post={post}
                                     comments={comments}
                                     setComments={setComments}
                                     comment={comment}

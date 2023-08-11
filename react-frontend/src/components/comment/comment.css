@@ -42,6 +42,7 @@
 .postCommentEditor
     .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
     border: 0.125rem solid rgb(66, 133, 244);
+    background-color: #fff;
 }
 
 .postCommentEditor .ck.ck-editor__editable_inline > :first-child {
