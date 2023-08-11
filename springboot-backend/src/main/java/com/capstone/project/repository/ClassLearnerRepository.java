@@ -12,4 +12,6 @@ public interface ClassLearnerRepository extends JpaRepository<ClassLearner,Integ
     ClassLearner findByUserIdAndClassroomId(int user,int classroom);
 
    List<ClassLearner> getClassLeanerByUserId(int id);
+
+    List<ClassLearner> getClassLeanerByClassroomId(int id);
 }

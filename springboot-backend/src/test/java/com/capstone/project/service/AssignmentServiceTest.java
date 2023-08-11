@@ -3,10 +3,7 @@ package com.capstone.project.service;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
-import com.capstone.project.repository.AssignmentRepository;
-import com.capstone.project.repository.AttachmentRepository;
-import com.capstone.project.repository.CommentRepository;
-import com.capstone.project.repository.SubmissionRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.AssignmentServiceImpl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -44,6 +41,9 @@ public class AssignmentServiceTest {
     private ClassService classService;
     @Mock
     private AssignmentRepository assignmentRepository;
+
+    @Mock
+    private ClassLearnerRepository classLearnerRepository;
 
     @Mock
     private SubmissionRepository submissionRepository;
@@ -91,8 +91,8 @@ public class AssignmentServiceTest {
     @Order(3)
     @ParameterizedTest(name = "index => userId={0}, classId={1},instruction{2},due_date{3},modified_date{4},start_date{5} ,title{6}")
     @CsvSource({
-            "1,3, Luyen thi JLPT N5,2023-7-1,2023-08-07,2023-08-09, On thi N3 ",
-            "2,4, Luyen thi JLPT N4,2023-9-9,2023-08-07,2023-08-09, On thi N3 "
+            "1,3, Luyen thi JLPT N5,2023-7-1,2023-08-07,2023-08-30, On thi N3 ",
+            "2,4, Luyen thi JLPT N4,2023-9-9,2023-08-07,2023-08-30, On thi N3 "
     })
     public void testCreateAssignment(int userId,int classId,String instruction,String due_date,String modified_date,String start_date,String title){
         try {

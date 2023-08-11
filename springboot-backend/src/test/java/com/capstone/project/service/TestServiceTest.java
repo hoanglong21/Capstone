@@ -36,6 +36,9 @@ public class TestServiceTest {
     private TestRepository testRepository;
 
     @Mock
+    private ClassLearnerRepository classLearnerRepository;
+
+    @Mock
     private UserRepository userRepository;
     @Mock
     private QuestionRepository questionRepository;
@@ -114,15 +117,16 @@ public class TestServiceTest {
     }
 
     @Order(4)
-    @ParameterizedTest(name = "index => userId={0}, created_date{1}, description{2},duration{3},modified_date{4},title{5}")
+    @ParameterizedTest(name = "index => userId={0},classid{1}, created_date{2}, description{3},duration{4},modified_date{5},title{6}")
     @CsvSource({
-            "1,2023-4-5,Test knowledge,12,2023-5-4, Test daily ",
-            "2,2023-4-5, Test all learner,14, 2023-5-4, Midterm "
+            "1,1,2023-4-5,Test knowledge,12,2023-5-4, Test daily ",
+            "2,1,2023-4-5, Test all learner,14, 2023-5-4, Midterm "
     })
-    public void testCreateTest(int userId, String created_date, String description, int duration, String modified_date,
+    public void testCreateTest(int userId,int classid, String created_date, String description, int duration, String modified_date,
                                String title) {
         try {
             com.capstone.project.model.Test test = com.capstone.project.model.Test.builder()
+                    .classroom(Class.builder().id(classid).build())
                     .user(User.builder().id(userId).build())
                     .created_date(dateFormat.parse(created_date))
                     .description(description)
