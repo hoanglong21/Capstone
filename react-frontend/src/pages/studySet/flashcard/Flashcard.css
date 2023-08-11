@@ -454,3 +454,29 @@
 .flashcard_accordion .accordion-button:focus {
     box-shadow: none;
 }
+
+.flashcard-p-5{
+    padding: 3rem !important;
+}
+
+.flashCardSwitch_btn{
+    margin-right: 4rem;
+}
+
+@media only screen and (max-width: 768px) {
+    .flashcardHeader {
+        padding: 0 0.5rem;
+    }
+
+    .flashcardFront {
+        font-size: 24px;
+    }
+
+    .flashcard-p-5{
+        padding: 0rem !important;
+    }
+
+    .flashCardSwitch_btn{
+        margin-right: 1.5rem;
+    }
+}
