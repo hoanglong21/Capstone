@@ -25,6 +25,7 @@ function AssignmentList() {
     const [loadingCount, setLoadingCount] = useState(false)
     const [loading, setLoading] = useState(true)
     const [today, setToday] = useState(new Date())
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     function getToday() {
         const today = new Date()
@@ -329,8 +330,9 @@ function AssignmentList() {
                                             <button
                                                 className="deleteAssign_btn"
                                                 type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target={`#deleteAssignmentModal${assign?.id}`}
+                                                onClick={() => {
+                                                    setShowDeleteModal(true)
+                                                }}
                                             >
                                                 Delete assignment
                                             </button>
@@ -342,6 +344,8 @@ function AssignmentList() {
                                     assign={assign}
                                     assignments={assignments}
                                     stateChanger={setAssignments}
+                                    showDeleteModal={showDeleteModal}
+                                    setShowDeleteModal={setShowDeleteModal}
                                 />
                             </div>
                         </div>

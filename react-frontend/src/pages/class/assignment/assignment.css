@@ -135,6 +135,11 @@
     color: #d50000;
 }
 
+.assignDeleteModal {
+    margin-top: 5rem;
+    --bs-modal-width: 25vw;
+}
+
 /* create assignment */
 .createAssign_cancelBtn {
     border: none;
