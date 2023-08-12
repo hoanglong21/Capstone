@@ -296,3 +296,24 @@
     line-height: 44px;
     font-weight: 300;
 }
+
+.testSubmitModal {
+    margin-top: 2rem;
+    --bs-modal-width: 70vw;
+}
+
+.testSubmitModal .modal-body {
+    padding: 2rem;
+}
+
+.testSubmitModal .modal-title {
+    font-weight: 700;
+    line-height: 1.267;
+}
+
+.testSubmitModal .modal-text {
+    font-size: 1.025rem;
+    letter-spacing: normal;
+    line-height: 1.4;
+    font-weight: 400;
+}
