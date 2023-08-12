@@ -72,7 +72,7 @@ const ClassLayout = () => {
                 classroom: {
                     id: classroom.id,
                 },
-                _accepted: false,
+                status: 'pending',
             })
             setIsWaiting(true)
         } catch (error) {
@@ -103,7 +103,7 @@ const ClassLayout = () => {
     const handleUnenroll = async () => {
         setLoadingUnenroll(true)
         try {
-            // await ClassService.deleteClass(deleteClass.id)
+            // await ClassLearnerService.deleteClassLearner(deleteClass.id)
             document.getElementById('closeUnenrollClassModal').click()
             navigate('/')
         } catch (error) {

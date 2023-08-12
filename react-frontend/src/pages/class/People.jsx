@@ -34,7 +34,7 @@ const People = () => {
                         `=${id}`,
                         '',
                         '',
-                        `=${1}`,
+                        `=enrolled`,
                         '',
                         '',
                         '',
@@ -49,7 +49,7 @@ const People = () => {
                         `=${id}`,
                         '',
                         '',
-                        `=${0}`,
+                        `=pending`,
                         '',
                         '',
                         '',
@@ -79,7 +79,7 @@ const People = () => {
 
     const handleAccept = async (request, index) => {
         try {
-            var tempRequest = { ...request, _accepted: true }
+            var tempRequest = { ...request, status: 'enrolled' }
             tempRequest.classroom.created_date = toBEDate(
                 tempRequest.classroom.created_date
             )

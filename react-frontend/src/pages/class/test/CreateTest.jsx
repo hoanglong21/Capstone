@@ -30,6 +30,7 @@ const CreateTest = () => {
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
+    const [loadingCreate, setLoadingCreate] = useState(true)
     const [saving, setSaving] = useState(false)
     const [test, setTest] = useState({})
     const [isScroll, setIsScroll] = useState(false)
@@ -261,6 +262,7 @@ const CreateTest = () => {
                 return
             }
         }
+        setLoadingCreate(true)
         try {
             // update test
             await TestService.updateTest(test.id, {
@@ -282,6 +284,7 @@ const CreateTest = () => {
                 console.log(error.message)
             }
         }
+        setLoadingCreate(false)
     }
 
     const handleChangeTest = (event) => {
@@ -796,9 +799,19 @@ const CreateTest = () => {
                     <button
                         className="createTest_submitBtn"
                         onClick={handleCreate}
-                        disabled={!test?.title}
+                        disabled={!test?.title || loadingCreate}
                     >
-                        Save
+                        {loadingCreate ? (
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            'Save'
+                        )}
                     </button>
                 )}
             </div>

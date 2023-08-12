@@ -123,6 +123,18 @@
     line-height: 1rem;
 }
 
+.assignSubmitted {
+    color: #3b78dc;
+}
+
+.assignGraded {
+    color: #f70;
+}
+
+.assignMissing {
+    color: #d50000;
+}
+
 /* create assignment */
 .createAssign_cancelBtn {
     border: none;

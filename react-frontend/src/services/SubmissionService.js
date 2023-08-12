@@ -14,13 +14,13 @@ const getSubmissionById = (id) => {
     return axios.get(API_BASE_URL + '/submissions/' + id)
 }
 
-const getSubmissionByAuthorIdandAssignmentId = (authorid, assignmentid) => {
+const getSubmissionByAuthorIdandAssignmentId = (authorId, assignmentId) => {
     return axios.get(
         API_BASE_URL +
             '/submissionbyauthorandassignment?authorid=' +
-            authorid +
+            authorId +
             '&assignmentid=' +
-            assignmentid
+            assignmentId
     )
 }
 
