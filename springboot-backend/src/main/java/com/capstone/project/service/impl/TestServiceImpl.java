@@ -278,8 +278,8 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Map<String, Object> getNumAttemptTest(int testid, int classid) throws ResourceNotFroundException {
-        String query ="SELECT COUNT(CASE WHEN tl.num_attempt >= 1 THEN 1 END) AS attempted,\n" +
-                "                  COUNT(DISTINCT cl.id) - SUM(CASE WHEN tl.num_attempt >= 1 THEN 1 ELSE 0 END) AS notattempted\n" +
+        String query ="SELECT COALESCE(COUNT(CASE WHEN tl.num_attempt >= 1 THEN 1 END),0) AS attempted,\n" +
+                "                 COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) - SUM(CASE WHEN tl.num_attempt >= 1 THEN 1 ELSE 0 END),0) AS notattempted\n" +
                 "           FROM class_learner cl \n" +
                 "           LEFT JOIN test t on t.class_id = cl.class_id ";
 

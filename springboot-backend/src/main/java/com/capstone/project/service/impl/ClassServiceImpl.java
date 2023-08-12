@@ -288,6 +288,7 @@ public class ClassServiceImpl implements ClassService {
             if ("unenrolled".equals(classLearner.getStatus())) {
                 classLearner.setStatus("enrolled");
                 classLearnerRepository.save(classLearner);
+                return classRepository.save(classroom);
             } else {
                 throw new ResourceNotFroundException("You are already in the class !");
             }
@@ -303,7 +304,7 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setCreated_date(new Date());
         classLearner.setStatus("enrolled");
         classLearnerRepository.save(classLearner);
-        // add user to classroom
+
         return classRepository.save(classroom);
     }
 
