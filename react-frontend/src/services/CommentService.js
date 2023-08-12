@@ -49,6 +49,10 @@ const getAllCommentBySubmisionId = (id) => {
     return axios.get(API_BASE_URL + '/commentbysubmisionid/' + id)
 }
 
+const getAllCommentByTestId = (id) => {
+    return axios.get(API_BASE_URL + '/commentbytestid/' + id)
+}
+
 const createComment = (comment) => {
     return axios.post(API_BASE_URL + '/comments', comment)
 }
@@ -70,6 +74,7 @@ const CommentService = {
     deleteComment,
     getAllCommentByAssignmentId,
     getAllCommentBySubmisionId,
+    getAllCommentByTestId,
 }
 
 export default CommentService

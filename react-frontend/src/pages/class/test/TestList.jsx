@@ -210,7 +210,7 @@ const TestList = () => {
                                         ? `Scheduled for ${test?.start_date}`
                                         : test?.due_date
                                         ? `Due ${test?.due_date}`
-                                        : `Posted ${test?.created_date}`}
+                                        : 'No due date'}
                                 </div>
                             </button>
                             <div
@@ -220,15 +220,11 @@ const TestList = () => {
                             >
                                 <div className="accordion-body">
                                     <div className="d-flex align-items-center justify-content-between">
-                                        <p>
-                                            {test?.due_date
-                                                ? `Posted ${test?.created_date}`
-                                                : 'No due date'}
-                                        </p>
+                                        <div>Posted {test?.created_date}</div>
                                         {userInfo?.id !==
                                             classroom?.user?.id && <div></div>}
                                     </div>
-                                    <div className="mt-1 d-flex justify-content-between">
+                                    <div className="mt-3 d-flex justify-content-between">
                                         <button
                                             className="viewTest_btn"
                                             onClick={() =>

@@ -9,6 +9,7 @@ import SubmissionService from '../../../services/SubmissionService'
 import CommentService from '../../../services/CommentService'
 
 import Comment from '../../../components/comment/Comment'
+import CardEditor from '../../../components/textEditor/CardEditor'
 
 import {
     MemberSolidIcon,
@@ -16,7 +17,6 @@ import {
     SendIcon,
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
-import CardEditor from '../../../components/textEditor/CardEditor'
 
 const Instructions = () => {
     const navigate = useNavigate()
@@ -117,7 +117,7 @@ const Instructions = () => {
                 },
                 content: addComment,
                 commentType: {
-                    id: 1,
+                    id: 4,
                 },
                 assignment: {
                     id: assignment.id,

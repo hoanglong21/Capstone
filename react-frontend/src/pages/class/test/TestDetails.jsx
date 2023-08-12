@@ -2,10 +2,14 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { deleteFolder } from '../../../features/fileManagement'
+import CommentService from '../../../services/CommentService'
 import TestService from '../../../services/TestService'
 
-import { OptionHorIcon } from '../../../components/icons'
+import Comment from '../../../components/comment/Comment'
+import CardEditor from '../../../components/textEditor/CardEditor'
+
+import { MemberSolidIcon, OptionHorIcon, SendIcon } from '../../../components/icons'
+import defaultAvatar from '../../../assets/images/default_avatar.png'
 
 const TestDetails = () => {
     const navigate = useNavigate()
@@ -18,12 +22,21 @@ const TestDetails = () => {
     const [test, setTest] = useState({})
     const [loading, setLoading] = useState(false)
 
+    const [comments, setComments] = useState([])
+    const [addComment, setAddComment] = useState('')
+    const [loadingComment, setLoadingComment] = useState(false)
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // test
                 const tempTest = (await TestService.getTestById(test_id)).data
                 setTest(tempTest)
+                // comments
+                const tempComments = (
+                    await CommentService.getAllCommentByTestId(test_id)
+                ).data
+                setComments(tempComments)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -59,6 +72,39 @@ const TestDetails = () => {
 
     const handleCopyLink = (event) => {
         navigator.clipboard.writeText(window.location.href)
+    }
+
+    const handleAddComment = async () => {
+        setLoadingComment(true)
+        try {
+            // create comment
+            var tempComment = {
+                user: {
+                    id: userInfo.id,
+                    username: userInfo.username,
+                    avatar: userInfo.avatar,
+                },
+                content: addComment,
+                commentType: {
+                    id: 3,
+                },
+                test: {
+                    id: test.id,
+                },
+            }
+            tempComment = (await CommentService.createComment(tempComment)).data
+            // add to list
+            setComments([...comments, tempComment])
+            // clear
+            setAddComment('')
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingComment(false)
     }
 
     return (
@@ -167,6 +213,57 @@ const TestDetails = () => {
                             : 'No due date'}
                     </div>
                 </div>
+            </div>
+            <div className="d-flex align-items-center comment_label mt-4 mb-3">
+                <MemberSolidIcon size="24px" className="me-2" />
+                <span>
+                    {comments.length === 0
+                        ? 'Class comments'
+                        : `${comments.length} class comment`}
+                </span>
+            </div>
+            {comments?.map((comment, index) => (
+                <Comment
+                    key={comment.id}
+                    index={index}
+                    comments={comments}
+                    setComments={setComments}
+                    comment={comment}
+                    userInfo={userInfo}
+                />
+            ))}
+            {/* add comment */}
+            <div className="d-flex">
+                <img
+                    src={userInfo?.avatar || defaultAvatar}
+                    className="comment_img me-3"
+                />
+                <div className="commentEditor flex-fill">
+                    <CardEditor
+                        data={addComment}
+                        onChange={(event, editor) => {
+                            setAddComment(editor.getData())
+                        }}
+                    />
+                </div>
+                <button
+                    className="comment_btn ms-1"
+                    onClick={handleAddComment}
+                    disabled={!addComment}
+                >
+                    {loadingComment ? (
+                        <div
+                            className="spinner-border spinner-border-sm text-secondary"
+                            role="status"
+                        >
+                            <span className="visually-hidden">
+                                LoadingUpload...
+                            </span>
+                        </div>
+                    ) : (
+                        <SendIcon size="20px" strokeWidth="1.8" />
+                    )}
+                </button>
             </div>
             {/* delete modal */}
             <div

@@ -205,7 +205,7 @@ const TutorSubmission = ({ assignment }) => {
                 },
                 content: addComment,
                 commentType: {
-                    id: 1,
+                    id: 5,
                 },
                 submission: {
                     id: submission.id,
