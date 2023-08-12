@@ -192,7 +192,7 @@ function CreateAssignment() {
         })
     }
 
-    const handleUpdate = async () => {
+    const handleUpdate = async (draft) => {
         setError('')
         if (
             new Date(assignment.created_date) > new Date(assignment.start_date)
@@ -220,7 +220,7 @@ function CreateAssignment() {
         }
         setSaving(true)
         try {
-            var tempAssignment = { ...assignment }
+            var tempAssignment = { ...assignment, _draft: draft }
             tempAssignment.created_date = toBEDate(tempAssignment.created_date)
             tempAssignment.start_date = toBEDate(tempAssignment.start_date)
             tempAssignment.modified_date = toBEDate(
@@ -231,6 +231,7 @@ function CreateAssignment() {
                 assignment.id,
                 tempAssignment
             )
+            setAssignment({ ...assignment, _draft: draft })
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -243,6 +244,7 @@ function CreateAssignment() {
 
     const handleSubmit = async (draft) => {
         setLoadingCreateAssign(true)
+        handleUpdate(draft)
         navigate(`/class/${classroom.id}/assignment/${assignment.id}/details`)
         setLoadingCreateAssign(false)
     }
