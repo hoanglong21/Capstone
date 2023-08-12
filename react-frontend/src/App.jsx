@@ -70,7 +70,6 @@ import TestList from './pages/class/test/TestList'
 import Stream from './pages/class/Stream'
 import CreateTest from './pages/class/test/CreateTest'
 import CreateAssignment from './pages/class/assignment/CreateAssignment'
-import UpdateAssignment from './pages/class/assignment/UpdateAssignment'
 import DoQuiz from './pages/studySet/quiz/DoQuiz'
 import AssignmentList from './pages/class/assignment/AssignmentList'
 import People from './pages/class/People'
@@ -176,7 +175,7 @@ const App = () => {
                             />
                             <Route
                                 path="edit-assignment/:assign_id"
-                                element={<UpdateAssignment />}
+                                element={<CreateAssignment />}
                             />
                             <Route path="tests" element={<TestList />} />
                             <Route
@@ -347,11 +346,23 @@ const App = () => {
                         element={<ViewVocabularyDetail />}
                     />
                     <Route path="/registeradmin" element={<RegisterAdmin />} />
-                    <Route path='/settingsadmin' element={<SettingForAdmin />} />
+                    <Route
+                        path="/settingsadmin"
+                        element={<SettingForAdmin />}
+                    />
                     <Route element={<DictionaryForAdmin />}>
-                        <Route path='/vocabforadmin' element={<VocabDictForAdmin />} />
-                        <Route path='/kanjiforadmin' element={<KanjiDictForAdmin />} />
-                        <Route path='/grammarforadmin' element={<GrammarDictForAdmin />} />
+                        <Route
+                            path="/vocabforadmin"
+                            element={<VocabDictForAdmin />}
+                        />
+                        <Route
+                            path="/kanjiforadmin"
+                            element={<KanjiDictForAdmin />}
+                        />
+                        <Route
+                            path="/grammarforadmin"
+                            element={<GrammarDictForAdmin />}
+                        />
                     </Route>
                 </Route>
             </Routes>

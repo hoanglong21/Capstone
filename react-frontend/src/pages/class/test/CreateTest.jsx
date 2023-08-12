@@ -764,7 +764,9 @@ const CreateTest = () => {
                         <button
                             className="createTest_draftBtn"
                             onClick={() => {
-                                navigate('../tests')
+                                navigate(
+                                    `/class/${classroom.id}/test/${test.id}/details`
+                                )
                             }}
                         >
                             Save draft

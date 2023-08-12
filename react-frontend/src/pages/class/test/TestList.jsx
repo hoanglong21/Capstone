@@ -8,7 +8,7 @@ import TestService from '../../../services/TestService'
 import DeleteTest from './DeleteTest'
 
 import { AccountIcon, AddIcon, TestIcon } from '../../../components/icons'
-import empty from '../../../assets/images/tutor_assign_empty.jpg'
+import empty from '../../../assets/images/tutor_assign_empty.png'
 import './test.css'
 
 const TestList = () => {

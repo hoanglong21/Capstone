@@ -343,21 +343,23 @@ public class TestServiceImpl  implements TestService {
             TestLearner testLearner = testLearnerRepository.findById(testResultList.get(0).getTestLearner().getId())
                     .orElseThrow(() -> new ResourceNotFroundException("Test leaner not exist with id: " + testResultList.get(0).getTestLearner().getId()));
 
-            List<TestLearner> attemptList = testLearnerRepository.findByTestIdAndUserId(testLearner.getId(), testLearner.getUser().getId());
+            List<TestLearner> attemptList = testLearnerRepository.findByTestIdAndUserId(testLearner.getUser().getId(), testLearner.getTest().getId());
             int attempt = attemptList.size();
 
             int result = 0;
             int total = 0;
             for(TestResult testResult : testResultList) {
-                total += testResult.getQuestion().getPoint();
+                Question tempQuestion = questionRepository.findById(testResult.getQuestion().getId())
+                    .orElseThrow(() -> new ResourceNotFroundException("Question not exist with id: " + testResult.getQuestion().getId()));
+                total += tempQuestion.getPoint();
                 if (testResult.is_true()) {
-                    result += testResult.getQuestion().getPoint();
+                    result += tempQuestion.getPoint();
                 }
             }
 
             double mark = 0;
             if(total!=0) {
-                mark = (result/total)*100;
+                mark = ((double)result/total)*100;
             }
 
             double roundedMark = Math.round(mark * 100.0) / 100.0;

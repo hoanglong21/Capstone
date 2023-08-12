@@ -51,13 +51,6 @@ const DoTest = () => {
         }
     }
 
-    function toBEDate(date) {
-        if (date && !date.includes('+07:00')) {
-            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
-        }
-        return ''
-    }
-
     // fetch userInfo
     useEffect(() => {
         if (userToken && !userInfo?.id) {
@@ -193,7 +186,8 @@ const DoTest = () => {
             for (let index = 0; index < questions.length; index++) {
                 const ques = questions[index]
                 if (ques.question.questionType.id === 1) {
-                    if (answers[index] == ques.answerList[0].content) {
+                    console.log(answers[index], ques.answerList[0].content)
+                    if (answers[index] === ques.answerList[0].content) {
                         tempResults[index]._true = 1
                     } else {
                         tempResults[index]._true = 0
@@ -201,7 +195,7 @@ const DoTest = () => {
                 } else if (ques.question.questionType.id === 2) {
                     var isCorrect = 1
                     for (const ans of ques.answerList) {
-                        if (!answers[index].includes(ans.id)) {
+                        if (!answers[index].includes(ans.id) && ans._true) {
                             isCorrect = 0
                             break
                         }
@@ -218,7 +212,8 @@ const DoTest = () => {
                     tempResults[index]._true = isCorrect
                 }
             }
-            const tempEnd = (await TestService.endTest(results)).data
+            console.log(tempResults)
+            const tempEnd = (await TestService.endTest(tempResults)).data
             console.log(tempEnd)
             setResults(tempResults)
             document.getElementById('testSubmitModalCloseBtn')?.click()
@@ -312,6 +307,7 @@ const DoTest = () => {
                                     readOnly={
                                         results[currentIndex]?._true !== null
                                     }
+                                    value={answers[currentIndex] || ''}
                                     onChange={(event) =>
                                         handleChangeAnswer(
                                             event.target.value,
