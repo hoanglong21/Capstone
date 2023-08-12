@@ -299,23 +299,3 @@ p.kanji-search-bold {
         scrollbar-width: none; /* Firefox */
     }
 }
-
-.grammarDetail_Modal {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 1000;
-}
-
-.grammarDetail_Modal .modal-content {
-    overflow: auto;
-    border-radius: 0.325rem;
-    background-color: #fefefe;
-    border: 1px solid #888;
-    width: 100%;
-    height: 100%;
-}

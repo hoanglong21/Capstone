@@ -1,14 +1,33 @@
 import { useState, useEffect } from 'react'
+import Modal from 'react-bootstrap/Modal'
 
 import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
-import '../../assets/styles/popup.css'
+import './classLayout/classLayout.css'
 
-const UpdateClass = ({ classroom, stateChanger }) => {
+const UpdateClass = ({
+    classroom,
+    stateChanger,
+    showEditModal,
+    setShowEditModal,
+}) => {
     const [updateClass, setUpdateClass] = useState({})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (showEditModal === false) {
+            setUpdateClass({ ...classroom })
+            setError('')
+            document
+                .getElementById(`updateClassForm${classroom?.id}`)
+                ?.classList?.remove('was-validated')
+            document
+                .getElementById('class_name')
+                ?.classList.remove('is-invalid')
+        }
+    }, [showEditModal])
 
     useEffect(() => {
         if (classroom.class_name) {
@@ -26,13 +45,13 @@ const UpdateClass = ({ classroom, stateChanger }) => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
-        var form = document.querySelector('.needs-validation')
+        var form = document.getElementById(`updateClassForm${classroom?.id}`)
         const classNameEl = document.getElementById('class_name')
         // clear validation
         form.classList.remove('was-validated')
         classNameEl.classList.remove('is-invalid')
         setError('')
-
+        // validation
         form.classList.add('was-validated')
         if (!updateClass.class_name) {
             setError('Class name cannot be empty.')
@@ -46,13 +65,8 @@ const UpdateClass = ({ classroom, stateChanger }) => {
                     )
                 ).data
                 setUpdateClass(temp)
-                document.getElementById('closeUpdateClassModal').click()
                 stateChanger(temp)
-                // clear validation
-                form.classList.remove('was-validated')
-                classNameEl.classList.remove('is-invalid')
-                setUpdateClass({})
-                setError('')
+                setShowEditModal(false)
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)
@@ -65,102 +79,81 @@ const UpdateClass = ({ classroom, stateChanger }) => {
     }
 
     return (
-        <div
-            className="modal fade classModal"
-            tabIndex="-1"
-            id="updateClassModal"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            aria-hidden="true"
+        <Modal
+            className="editClassModal"
+            show={showEditModal}
+            onHide={() => {
+                setShowEditModal(false)
+            }}
         >
-            <div className="modal-dialog">
-                <div className="modal-content p-2">
-                    <div className="modal-header border-0">
-                        <h5 className="modal-title classModalTitle">
-                            Edit class
-                        </h5>
-                        <button
-                            id="closeUpdateClassModal"
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            onClick={() => {
-                                document
-                                    .querySelector('.needs-validation')
-                                    .classList.remove('was-validated')
-                                document
-                                    .getElementById('class_name')
-                                    .classList.remove('is-invalid')
-                                setUpdateClass({})
-                                setError('')
-                            }}
-                        ></button>
+            <Modal.Header closeButton>
+                <Modal.Title>
+                    <h5 className="modal-title editClassModalTitle">
+                        Edit class
+                    </h5>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="pb-0">
+                <form
+                    id={`updateClassForm${classroom?.id}`}
+                    className="needs-validation"
+                    noValidate
+                >
+                    {/* error message */}
+                    {error && (
+                        <div className="alert alert-danger" role="alert">
+                            {error}
+                        </div>
+                    )}
+                    {/* Class name */}
+                    <div className="form-floating mb-3">
+                        <input
+                            id="class_name"
+                            name="class_name"
+                            type="text"
+                            value={updateClass.class_name || ''}
+                            className={`form-control ${FormStyles.formControl}`}
+                            placeholder="Enter a class name"
+                            onChange={handleChange}
+                            required
+                        />
+                        <label htmlFor="class_name">Class name</label>
                     </div>
-                    <div className="modal-body">
-                        <form className="needs-validation" noValidate>
-                            {/* error message */}
-                            {error && (
-                                <div
-                                    className="alert alert-danger"
-                                    role="alert"
-                                >
-                                    {error}
-                                </div>
-                            )}
-                            {/* Class name */}
-                            <div className="form-floating mb-3">
-                                <input
-                                    id="class_name"
-                                    name="class_name"
-                                    type="text"
-                                    value={updateClass.class_name || ''}
-                                    className={`form-control ${FormStyles.formControl}`}
-                                    placeholder="Enter a class name"
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <label htmlFor="class_name">Class name</label>
-                            </div>
-                            {/* Description */}
-                            <div className="form-floating mb-3">
-                                <textarea
-                                    name="description"
-                                    type="text"
-                                    value={updateClass.description || ''}
-                                    className={`form-control ${FormStyles.formControl}`}
-                                    style={{ height: '6rem' }}
-                                    placeholder="Enter a description"
-                                    onChange={handleChange}
-                                />
-                                <label htmlFor="description">Description</label>
-                            </div>
-                            <div className="text-end">
-                                <button
-                                    className="btn btn-primary classModalBtn mt-3"
-                                    onClick={handleSubmit}
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <div
-                                            className="spinner-border text-secondary mx-auto mb-1"
-                                            role="status"
-                                            id="loading"
-                                        >
-                                            <span className="visually-hidden">
-                                                Loading...
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        'Save'
-                                    )}
-                                </button>
-                            </div>
-                        </form>
+                    {/* Description */}
+                    <div className="form-floating">
+                        <textarea
+                            name="description"
+                            type="text"
+                            value={updateClass.description || ''}
+                            className={`form-control ${FormStyles.formControl}`}
+                            style={{ height: '6rem' }}
+                            placeholder="Enter a description"
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="description">Description</label>
                     </div>
-                </div>
-            </div>
-        </div>
+                </form>
+            </Modal.Body>
+            <Modal.Footer>
+                <button
+                    className="btn btn-primary editClassModalBtn mt-3"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <div
+                            className="spinner-border text-secondary mx-auto mb-1"
+                            role="status"
+                            id="loading"
+                        >
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    ) : (
+                        'Save'
+                    )}
+                </button>
+            </Modal.Footer>
+        </Modal>
     )
 }
 

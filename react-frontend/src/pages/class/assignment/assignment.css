@@ -135,9 +135,9 @@
     color: #d50000;
 }
 
-.assignDeleteModal {
+.assignDeleteModal.modal {
     margin-top: 5rem;
-    --bs-modal-width: 25vw;
+    --bs-modal-width: 35vw;
 }
 
 /* create assignment */

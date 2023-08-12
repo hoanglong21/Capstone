@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Modal from 'react-bootstrap/Modal'
 
 import UserService from '../../services/UserService'
 import { logout } from '../../features/auth/authSlice'
@@ -16,11 +17,12 @@ const DeleteAccount = () => {
     const [currentPass, setCurrentPass] = useState('')
     const [error, setError] = useState('')
 
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+
     const handleSubmit = async (event) => {
         event.preventDefault()
         var form = document.querySelector('.needs-validation')
         const currentPassEl = document.getElementById('currentPass')
-        const confirmModalBtnEl = document.getElementById('confirmModalBtn')
         // clear validation
         form.classList.remove('was-validated')
         currentPassEl.classList.remove('is-invalid')
@@ -40,7 +42,7 @@ const DeleteAccount = () => {
                 setError('The password you entered was incorrect.')
                 currentPassEl.classList.add('is-invalid')
             } else {
-                confirmModalBtnEl.click()
+                setShowConfirmModal(true)
             }
         } catch (error) {
             if (error.response && error.response.data) {
@@ -55,7 +57,7 @@ const DeleteAccount = () => {
     const handleDelete = async () => {
         try {
             await UserService.deleteUser(userInfo.username)
-            document.getElementById('closeModal').click()
+            setShowConfirmModal(false)
             dispatch(logout())
             sessionStorage.setItem('isAccountDeleted', 'true')
             navigate('/account-deleted')
@@ -109,57 +111,41 @@ const DeleteAccount = () => {
                     Delete account
                 </button>
             </form>
-            {/* Button trigger modal */}
-            <button
-                id="confirmModalBtn"
-                type="button"
-                className="btn btn-primary d-none"
-                data-bs-toggle="modal"
-                data-bs-target="#confirmModal"
-            >
-                Launch demo modal
-            </button>
-
             {/* Confirm Modal */}
-            <div id="confirmModal" className="modal" tabIndex="-1">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Delete Account</h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            <p>
-                                You are about to delete all of the data in your
-                                Nihongo Level Up account. Are you absolutely
-                                positive? There is no option to 'undo'.
-                            </p>
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                id="closeModal"
-                                type="button"
-                                className="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={handleDelete}
-                            >
-                                Delete {userInfo.username}'s account
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Modal
+                show={showConfirmModal}
+                onHide={() => {
+                    setShowConfirmModal(false)
+                }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete Account</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    You are about to delete all of the data in your Nihongo
+                    Level Up account. Are you absolutely positive? There is no
+                    option to 'undo'.
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        id="closeModal"
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => {
+                            setShowConfirmModal(false)
+                        }}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={handleDelete}
+                    >
+                        Delete {userInfo.username}'s account
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

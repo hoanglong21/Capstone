@@ -24,6 +24,8 @@ const TestList = () => {
     const [today, setToday] = useState(new Date())
     const [loadingCount, setLoadingCount] = useState(false)
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
     function getToday() {
         const today = new Date()
         return (
@@ -274,8 +276,9 @@ const TestList = () => {
                                             <button
                                                 className="deleteTest_btn"
                                                 type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target={`#deleteTestModal${test?.id}`}
+                                                onClick={() =>
+                                                    setShowDeleteModal(true)
+                                                }
                                             >
                                                 Delete test
                                             </button>
@@ -288,6 +291,8 @@ const TestList = () => {
                                     tests={tests}
                                     stateChanger={setTests}
                                     classroom={classroom}
+                                    showDeleteModal={showDeleteModal}
+                                    setShowDeleteModal={setShowDeleteModal}
                                 />
                             </div>
                         </div>

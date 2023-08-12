@@ -274,3 +274,82 @@
     border-right: 0.125rem solid #dbdfff;
     margin: 0 0.625rem;
 }
+
+/* update class */
+.editClassModal.modal {
+    margin-top: 3rem;
+    --bs-modal-width: 60vw;
+}
+
+.editClassModalTitle {
+    font-size: 2rem;
+    letter-spacing: normal;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.editClassModalHeading {
+    font-size: 2.375rem;
+    font-weight: 700;
+    line-height: 1.26;
+}
+
+.editClassModalBtn.btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+/* delete class */
+.classDeleteModal.modal {
+    margin-top: 3rem;
+    --bs-modal-width: 50vw;
+}
+
+.classDeleteModal .modal-body {
+    padding: 2rem;
+}
+
+.classDeleteModalHeading {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.26;
+}
+
+.classDeleteModalBtn.btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 1.025rem;
+}
+
+/* unenroll class */
+.classUnenrollModal.modal {
+    margin-top: 3rem;
+    --bs-modal-width: 45vw;
+}
+
+.classUnenrollModal .modal-body {
+    padding: 2rem;
+}
+
+.classUnenrollModalHeading {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.26;
+}
+
+.classUnenrollModalBtn.btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 1.025rem;
+}
+
+/* join class */
+.joinClassModal.modal {
+    margin-top: 5rem;
+    --bs-modal-width: 40vw;
+}
+
+.joinClassModalTitle {
+    font-size: 1.75rem;
+    letter-spacing: normal;
+    line-height: 1.25;
+    font-weight: 700;
+}

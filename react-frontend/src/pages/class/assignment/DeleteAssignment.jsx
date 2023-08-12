@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal'
 import AssignmentService from '../../../services/AssignmentService'
 import { deleteFolder } from '../../../features/fileManagement'
 
-import '../../../assets/styles/popup.css'
+import './assignment.css'
 
 const DeleteAssignment = ({
     assignments,

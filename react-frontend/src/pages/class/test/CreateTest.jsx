@@ -30,8 +30,8 @@ const CreateTest = () => {
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
-    const [loadingCreate, setLoadingCreate] = useState(true)
-    const [saving, setSaving] = useState(false)
+    const [loadingCreate, setLoadingCreate] = useState(false)
+    const [saving, setSaving] = useState(null)
     const [test, setTest] = useState({})
     const [isScroll, setIsScroll] = useState(false)
     const [questions, setQuestions] = useState([])
@@ -772,7 +772,7 @@ const CreateTest = () => {
                         <div className="createTest_status">Loading</div>
                     )}
                     <div className="createTest_status">
-                        {saving ? 'Saving...' : 'Saved'}
+                        {saving === null ? '' : saving ? 'Saving...' : 'Saved'}
                     </div>
                 </div>
                 {test?._draft ? (
