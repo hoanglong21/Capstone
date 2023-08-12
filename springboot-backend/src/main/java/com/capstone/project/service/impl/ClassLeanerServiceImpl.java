@@ -55,6 +55,14 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     }
 
     @Override
+    public ClassLearner updateClassLearnerById(ClassLearner classroomLearner, int classid, int userid)  {
+        ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(userid,classid);
+        classLearner.setStatus(classroomLearner.getStatus());
+        return classLearnerRepository.save(classLearner);
+    }
+
+
+    @Override
     public Boolean deleteClassLearner(int userid, int classid) throws ResourceNotFroundException {
         ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(userid,classid);
         classLearnerRepository.delete(classLearner);
