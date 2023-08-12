@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import Modal from 'react-bootstrap/Modal'
 
 import TestService from '../../../services/TestService'
 import { getUser } from '../../../features/user/userAction'
 
+import Pagination from '../../../components/Pagination'
+
 import { CloseIcon } from '../../../components/icons'
 import '../../../assets/styles/test.css'
-import Pagination from '../../../components/Pagination'
 
 const DoTest = () => {
     const dispatch = useDispatch()
@@ -28,9 +30,14 @@ const DoTest = () => {
     const [results, setResults] = useState([])
     const [progress, setProgress] = useState(0)
     const [loading, setLoading] = useState(false)
+
     const [isEnd, setIsEnd] = useState(false)
+    const [showSubmitModal, setShowSubmitModal] = useState(false)
+    const [showResultModal, setShowResultModal] = useState(false)
+    const [testEnd, setTestEnd] = useState({})
 
     var totalSeconds = 0
+    var handleCount = 0
 
     function setTime() {
         ++totalSeconds
@@ -49,13 +56,6 @@ const DoTest = () => {
         } else {
             return valString
         }
-    }
-
-    function toBEDate(date) {
-        if (date && !date.includes('+07:00')) {
-            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
-        }
-        return ''
     }
 
     // fetch userInfo
@@ -115,7 +115,6 @@ const DoTest = () => {
                 }
             }
         }
-        var handleCount = 0
         if (id && userInfo?.id) {
             fetchData()
             handleCount = setInterval(setTime, 1000)
@@ -167,16 +166,12 @@ const DoTest = () => {
                 const ans = answers[index]
                 if (questions[index].question.questionType.id === 2) {
                     if (ans.length === 0) {
-                        document
-                            .getElementById('testSubmitModalToggleBtn')
-                            .click()
+                        setShowSubmitModal(true)
                         return
                     }
                 } else {
                     if (!ans) {
-                        document
-                            .getElementById('testSubmitModalToggleBtn')
-                            .click()
+                        setShowSubmitModal(true)
                         return
                     }
                 }
@@ -187,13 +182,14 @@ const DoTest = () => {
     }
 
     const handleSubmit = async () => {
+        setShowSubmitModal(false)
         try {
             setLoading(true)
             var tempResults = [...results]
             for (let index = 0; index < questions.length; index++) {
                 const ques = questions[index]
                 if (ques.question.questionType.id === 1) {
-                    if (answers[index] == ques.answerList[0].content) {
+                    if (answers[index] === ques.answerList[0].content) {
                         tempResults[index]._true = 1
                     } else {
                         tempResults[index]._true = 0
@@ -201,7 +197,7 @@ const DoTest = () => {
                 } else if (ques.question.questionType.id === 2) {
                     var isCorrect = 1
                     for (const ans of ques.answerList) {
-                        if (!answers[index].includes(ans.id)) {
+                        if (!answers[index].includes(ans.id) && ans._true) {
                             isCorrect = 0
                             break
                         }
@@ -218,11 +214,17 @@ const DoTest = () => {
                     tempResults[index]._true = isCorrect
                 }
             }
-            const tempEnd = (await TestService.endTest(results)).data
-            console.log(tempEnd)
             setResults(tempResults)
-            document.getElementById('testSubmitModalCloseBtn')?.click()
+            const tempEnd = (await TestService.endTest(tempResults)).data
+            setTestEnd(tempEnd)
+            // Clear any timeout/interval up to that id
+            const interval_id = window.setInterval(function () {},
+            Number.MAX_SAFE_INTEGER)
+            for (let i = 1; i < interval_id; i++) {
+                window.clearInterval(i)
+            }
             setIsEnd(true)
+            setShowResultModal(true)
             setLoading(false)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -252,7 +254,9 @@ const DoTest = () => {
                     <button
                         className="quizClose_btn ms-3 d-flex align-items-center"
                         onClick={() => {
-                            navigate(`/test/${id}`)
+                            navigate(
+                                `/class/${test?.classroom?.id}/test/${id}/details`
+                            )
                         }}
                     >
                         <CloseIcon strokeWidth="2" />
@@ -312,6 +316,7 @@ const DoTest = () => {
                                     readOnly={
                                         results[currentIndex]?._true !== null
                                     }
+                                    value={answers[currentIndex] || ''}
                                     onChange={(event) =>
                                         handleChangeAnswer(
                                             event.target.value,
@@ -568,54 +573,70 @@ const DoTest = () => {
                     setCurrentQuestion(questions[page - 1])
                 }}
             />
-            {/* Submit modal */}
-            <button
-                id="testSubmitModalToggleBtn"
-                type="button"
-                className="d-none"
-                data-bs-toggle="modal"
-                data-bs-target="#testSubmitModal"
+            {/* submit modal */}
+            <Modal
+                className="testSubmitModal"
+                show={showSubmitModal}
+                onHide={() => {
+                    setShowSubmitModal(false)
+                }}
             >
-                Submit Quiz
-            </button>
-            <div className="modal fade quizOptionModal" id="testSubmitModal">
-                <div className="modal-dialog modal-lg">
+                <Modal.Body>
+                    <h2 className="modal-title mb-2">
+                        You haven't answered all the questions.
+                    </h2>
+                    <p className="modal-text">
+                        Would you like to review the skipped questions or submit
+                        the test now?
+                    </p>
+                </Modal.Body>
+                <Modal.Footer className="border-0">
                     <button
-                        id="testSubmitModalCloseBtn"
                         type="button"
-                        className="d-none"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                    ></button>
-                    <div className="modal-content">
-                        <div className="modal-body text-center">
-                            <h2 className="modal-title mb-2">
-                                You haven't answered all the questions.
-                            </h2>
-                            <p className="modal-text">
-                                Would you like to review the skipped questions
-                                or submit the test now?
-                            </p>
-                        </div>
-                        <div className="modal-footer border border-0">
-                            <button
-                                type="button"
-                                className="btn btn-outline-secondary me-2"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="btn btn-primary"
-                                onClick={handleSubmit}
-                            >
-                                Submit test
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        className="btn btn-outline-secondary me-2"
+                        onClick={() => setShowSubmitModal(false)}
+                    >
+                        Cancel
+                    </button>
+                    <button className="btn btn-warning" onClick={handleSubmit}>
+                        Submit test
+                    </button>
+                </Modal.Footer>
+            </Modal>
+            {/* Results */}
+            <Modal
+                show={showResultModal}
+                onHide={() => {
+                    setShowResultModal(false)
+                }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Finished!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Mark: {testEnd?.mark}/100</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        className="btn btn-light"
+                        onClick={() => {
+                            navigate(
+                                `/class/${test?.classroom?.id}/test/${id}/details`
+                            )
+                        }}
+                    >
+                        Exit
+                    </button>
+                    <button
+                        className="btn btn-info"
+                        onClick={() => {
+                            setShowResultModal(false)
+                        }}
+                    >
+                        Review
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

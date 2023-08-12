@@ -204,7 +204,7 @@ const VocabCard = ({
                         </button>
                     </div>
                     <div className="flashcardContent_wrapper h-100">
-                        <div className="row p-5 d-flex align-items-center">
+                        <div className="row flashcard-p-5 d-flex align-items-center">
                             <div className="col-12 col-lg-8">
                                 {contents.map((contentItem, index) => {
                                     if (index > 0) {

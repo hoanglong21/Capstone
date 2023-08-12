@@ -11,6 +11,19 @@ const GrammarDict = () => {
     const [grammars, setGrammars] = useState([])
     const [grammar, setGrammar] = useState({})
     const [loading, setLoading] = useState(true)
+    const [showGrammarDetail, setShowGrammarDetail] = useState(false)
+
+    useEffect(() => {
+        if (showGrammarDetail) {
+            document
+                .getElementsByTagName('body')[0]
+                .classList.add('setPage_modalOpen')
+        } else {
+            document
+                .getElementsByTagName('body')[0]
+                .classList.remove('setPage_modalOpen')
+        }
+    }, [showGrammarDetail])
 
     const fetchData = async (searchKey) => {
         setLoading(true)
@@ -56,15 +69,13 @@ const GrammarDict = () => {
                     {grammars.length == 0 && (
                         <p>No grammars matching {search} found</p>
                     )}
-                    {grammars.map((grammarInfo) => (
-                        <div className="col-3 mb-2">
+                    {grammars.map((grammarInfo, index) => (
+                        <div className="grammar-dict-col-3 mb-2" key={index}>
                             <div
                                 className="card h-100 grammar_item"
                                 onClick={() => {
-                                    document
-                                        .getElementById('grammarDetailOpenBtn')
-                                        .click()
                                     setGrammar(grammarInfo)
+                                    setShowGrammarDetail(true)
                                 }}
                             >
                                 <div className="card-body">
@@ -80,16 +91,12 @@ const GrammarDict = () => {
                     ))}
                 </div>
                 {/* Grammar modal */}
-                <button
-                    type="button"
-                    className="btn btn-primary d-none"
-                    id="grammarDetailOpenBtn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#grammarDetailModal"
-                >
-                    Launch demo modal
-                </button>
-                <GrammarDetail grammar={grammar} />
+                {showGrammarDetail && (
+                    <GrammarDetail
+                        grammar={grammar}
+                        setShowGrammarDetail={setShowGrammarDetail}
+                    />
+                )}
             </div>
         )
     }

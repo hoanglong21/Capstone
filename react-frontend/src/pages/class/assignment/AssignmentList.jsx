@@ -23,32 +23,10 @@ function AssignmentList() {
     const [classroom, setClassroom] = useState({})
     const [loadingCount, setLoadingCount] = useState(false)
     const [loading, setLoading] = useState(true)
-    const [today, setToday] = useState(getToday())
+    const [today, setToday] = useState(new Date())
 
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
-    }
-
-    function getToday() {
-        const today = new Date()
-        const tempSecond = padWithLeadingZeros(today.getSeconds(), 2).slice(
-            0,
-            0
-        )
-        return (
-            today.getFullYear() +
-            '-' +
-            padWithLeadingZeros(today.getMonth() + 1, 2) +
-            '-' +
-            padWithLeadingZeros(today.getDate(), 2) +
-            'T' +
-            padWithLeadingZeros(today.getHours(), 2) +
-            ':' +
-            padWithLeadingZeros(today.getMinutes(), 2) +
-            tempSecond +
-            '.000' +
-            '+07:00'
-        )
     }
 
     useEffect(() => {
@@ -226,7 +204,7 @@ function AssignmentList() {
                                     {assign._draft
                                         ? 'Draft'
                                         : assign?.start_date &&
-                                          new Date(assign?.start_date) < today
+                                          new Date(assign?.start_date) > today
                                         ? `Scheduled for ${assign?.start_date}`
                                         : assign?.due_date
                                         ? `Due ${assign?.due_date}`

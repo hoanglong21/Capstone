@@ -124,7 +124,7 @@ const KanjiDict = () => {
             <div className="mt-4 mb-5">
                 {word?.character ? (
                     <div className="row">
-                        <div className="kanji-dict col-2">
+                        <div className="vocab-dict">
                             <div className="dictResultWordList">
                                 {kanjis.map((kanji, index) => (
                                     <div
@@ -155,7 +155,7 @@ const KanjiDict = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="col-10">
+                        <div className="kanji-dict">
                             {loadingSelect ? (
                                 <div className="d-flex justify-content-center">
                                     <div className="spinner-border" role="status">
@@ -172,7 +172,7 @@ const KanjiDict = () => {
                                     </div>
                                     <div className="kanji-search-main">
                                         <div className="row">
-                                            <div className="col-3">
+                                            <div className="kanji-dict-3">
                                                 <div className="kanji_svg">
                                                     <div
                                                         dangerouslySetInnerHTML={{
@@ -181,7 +181,7 @@ const KanjiDict = () => {
                                                     ></div>
                                                 </div>
                                             </div>
-                                            <div className="col-9">
+                                            <div className="kanji-dict-col-9 col-9">
                                                 <div>
                                                     <div className="kanji-search-block ed">
                                                         <label>Meaning:</label>
