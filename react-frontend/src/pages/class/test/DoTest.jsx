@@ -31,6 +31,7 @@ const DoTest = () => {
     const [isEnd, setIsEnd] = useState(false)
 
     var totalSeconds = 0
+    var handleCount = 0
 
     function setTime() {
         ++totalSeconds
@@ -108,7 +109,6 @@ const DoTest = () => {
                 }
             }
         }
-        var handleCount = 0
         if (id && userInfo?.id) {
             fetchData()
             handleCount = setInterval(setTime, 1000)
@@ -212,9 +212,8 @@ const DoTest = () => {
                     tempResults[index]._true = isCorrect
                 }
             }
-            console.log(tempResults)
             const tempEnd = (await TestService.endTest(tempResults)).data
-            console.log(tempEnd)
+            clearInterval(handleCount)
             setResults(tempResults)
             document.getElementById('testSubmitModalCloseBtn')?.click()
             setIsEnd(true)
