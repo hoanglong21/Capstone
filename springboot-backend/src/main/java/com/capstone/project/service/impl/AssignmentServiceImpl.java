@@ -71,8 +71,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Assignment createAssignment(Assignment assignment) throws ResourceNotFroundException {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        Date date = localDateTimeToDate(localDateTime);
-        assignment.setCreated_date(date);
+//        Date date = localDateTimeToDate(localDateTime);
+//        assignment.setCreated_date(date);
 //        if (assignment.getStart_date() != null && assignment.getCreated_date() != null &&
 //                assignment.getStart_date().before(assignment.getCreated_date())) {
 //            throw new ResourceNotFroundException("Start date must be >= created date");

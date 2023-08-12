@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { uploadFile } from '../../../features/fileManagement'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 import ClassService from '../../../services/ClassService'
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
@@ -15,13 +15,17 @@ function CreateAssignment() {
     const navigate = useNavigate()
 
     const { id } = useParams()
+    const { assign_id } = useParams()
+
     const { userInfo } = useSelector((state) => state.user)
 
     const [classroom, setClassroom] = useState({})
     const [assignment, setAssignment] = useState({})
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
-    const [uploadFiles, setUploadFiles] = useState([])
+    const [attachments, setAttachments] = useState([])
     const [loadingCreateAssign, setLoadingCreateAssign] = useState(false)
+    const [saving, setSaving] = useState(null)
+    const [error, setError] = useState('')
 
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
@@ -42,26 +46,79 @@ function CreateAssignment() {
         )
     }
 
+    function toFEDate(date) {
+        return date?.replace(' ', 'T')
+    }
+
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // class
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
-                setAssignment({
-                    title: '',
-                    classroom: {
-                        id: tempClass.id,
-                    },
-                    user: {
-                        id: userInfo.id,
-                        username: userInfo.username,
-                    },
-                    due_date: '',
-                    start_date: getToday(),
-                    created_date: getToday(),
-                    instruction: '',
-                    _draft: true,
-                })
+                // assignment
+                var tempAssignment = {}
+                if (assign_id) {
+                    tempAssignment = (
+                        await AssignmentService.getAssignmentById(assign_id)
+                    ).data
+                    // attachments
+                    const tempAttachments = (
+                        await AttachmentService.getAttachmentsByAssignmentId(
+                            tempAssignment.id
+                        )
+                    ).data
+                    setAttachments(tempAttachments)
+                } else {
+                    tempAssignment = (
+                        await AssignmentService.createAssignment({
+                            title: '',
+                            classroom: {
+                                id: tempClass.id,
+                            },
+                            user: {
+                                id: userInfo.id,
+                                username: userInfo.username,
+                            },
+                            due_date: '',
+                            start_date: getToday(),
+                            created_date: getToday(),
+                            instruction: '',
+                            _draft: true,
+                        })
+                    ).data
+                }
+                tempAssignment.created_date = toFEDate(
+                    tempAssignment.created_date
+                )
+                tempAssignment.start_date = toFEDate(tempAssignment.start_date)
+                tempAssignment.due_date = toFEDate(tempAssignment.due_date)
+                if (tempAssignment?.user) {
+                    tempAssignment.user.created_date = toBEDate(
+                        tempAssignment.user.created_date
+                    )
+                }
+                if (tempAssignment?.classroom) {
+                    tempAssignment.classroom.created_date = toBEDate(
+                        tempAssignment.classroom.created_date
+                    )
+                    tempAssignment.classroom.deleted_date = toBEDate(
+                        tempAssignment.classroom.deleted_date
+                    )
+                    if (tempAssignment.classroom?.user) {
+                        tempAssignment.classroom.user.created_date = toBEDate(
+                            tempAssignment.classroom.user.created_date
+                        )
+                    }
+                }
+                setAssignment(tempAssignment)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -73,24 +130,59 @@ function CreateAssignment() {
         if (userInfo?.id) {
             fetchData()
         }
-    }, [userInfo])
+    }, [userInfo, assign_id])
 
     const handleUploadFile = async (event) => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
-            setUploadFiles([
-                ...uploadFiles,
-                { file_name: file.name, file_type: file.type, file: file },
-            ])
+            try {
+                const url = await uploadFile(
+                    file,
+                    `${userInfo.username}/class/${classroom.id}/assignment/${assignment.id}/tutor`
+                )
+                const tempAttachment = (
+                    await AttachmentService.createAttachment({
+                        file_name: file.name,
+                        file_type: file.type,
+                        file_url: url,
+                        assignment: {
+                            id: assignment.id,
+                        },
+                        attachmentType: {
+                            id: 1,
+                        },
+                    })
+                ).data
+                setAttachments([...attachments, tempAttachment])
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         setLoadingUploadFile(false)
     }
 
-    const handleDeleteFile = (index) => {
-        var temp = [...uploadFiles]
-        temp.splice(index, 1)
-        setUploadFiles(temp)
+    const handleDeleteFile = (file, index) => {
+        try {
+            var temp = [...attachments]
+            temp.splice(index, 1)
+            setAttachments(file, temp)
+            AttachmentService.deleteAttachment(file.id)
+            deleteFileByUrl(
+                file.file_url,
+                `${userInfo.username}/class/${classroom.id}/assignment/${assignment.id}/tutor`
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const handleChange = (event) => {
@@ -100,38 +192,46 @@ function CreateAssignment() {
         })
     }
 
-    const handleSubmit = async (draft) => {
-        setLoadingCreateAssign(true)
+    const handleUpdate = async (draft) => {
+        setError('')
+        if (
+            new Date(assignment.created_date) > new Date(assignment.start_date)
+        ) {
+            setError(
+                `Start date must be after ${assignment.created_date.replace(
+                    'T',
+                    ' '
+                )}`
+            )
+            return
+        }
+        if (new Date(assignment.created_date) > new Date(assignment.due_date)) {
+            setError(
+                `Due date must be after ${assignment.created_date.replace(
+                    'T',
+                    ' '
+                )}`
+            )
+            return
+        }
+        if (new Date(assignment.start_date) > new Date(assignment.due_date)) {
+            setError('Due date must be after start date')
+            return
+        }
+        setSaving(true)
         try {
-            const tempAssignment = (
-                await AssignmentService.createAssignment({
-                    ...assignment,
-                    _draft: draft,
-                })
-            ).data
-            // add attachments
-            let tempAttachments = []
-            for (const uploadFileItem of uploadFiles) {
-                const url = await uploadFile(
-                    uploadFileItem.file,
-                    `${userInfo.username}/class/${classroom.id}/assignment/${tempAssignment.id}/tutor`
-                )
-                tempAttachments.push({
-                    file_name: uploadFileItem.file_name,
-                    file_type: uploadFileItem.file_type,
-                    file_url: url,
-                    assignment: {
-                        id: tempAssignment.id,
-                    },
-                    attachmentType: {
-                        id: 1,
-                    },
-                })
-            }
-            await AttachmentService.createAttachments(tempAttachments)
-            navigate('../assignments')
-            // clear
-            handleClear()
+            var tempAssignment = { ...assignment, _draft: draft }
+            tempAssignment.created_date = toBEDate(tempAssignment.created_date)
+            tempAssignment.start_date = toBEDate(tempAssignment.start_date)
+            tempAssignment.modified_date = toBEDate(
+                tempAssignment.modified_date
+            )
+            tempAssignment.due_date = toBEDate(tempAssignment.due_date)
+            await AssignmentService.updateAssignment(
+                assignment.id,
+                tempAssignment
+            )
+            setAssignment({ ...assignment, _draft: draft })
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -139,57 +239,69 @@ function CreateAssignment() {
                 console.log(error.message)
             }
         }
-        document.body.scrollTop = document.documentElement.scrollTop = 0
-        setLoadingCreateAssign(false)
+        setSaving(false)
     }
 
-    const handleClear = () => {
-        setAssignment({
-            title: {},
-            classroom: {
-                id: classroom.id,
-            },
-            user: {
-                id: userInfo.id,
-            },
-            due_date: '',
-            start_date: getToday(),
-            created_date: getToday(),
-            instruction: '',
-            _draft: true,
-        })
-        setUploadFiles([])
-        navigate('../assignments')
+    const handleSubmit = async (draft) => {
+        setLoadingCreateAssign(true)
+        handleUpdate(draft)
+        navigate(`/class/${classroom.id}/assignment/${assignment.id}/details`)
+        setLoadingCreateAssign(false)
     }
 
     return (
         <div className="mb-5">
+            {/* button */}
             <div className="d-flex justify-content-between align-items-center">
-                <button
-                    className="createAssign_cancelBtn"
-                    onClick={handleClear}
-                >
-                    cancel
-                </button>
                 <div className="d-flex">
                     <button
+                        className="createAssign_cancelBtn"
+                        onClick={() => {
+                            navigate(
+                                `/class/${classroom.id}/assignment/${assignment.id}/details`
+                            )
+                        }}
+                    >
+                        cancel
+                    </button>
+                    <div className="createTest_status">
+                        {saving ? 'Saving...' : 'Saved'}
+                    </div>
+                </div>
+                {assignment?._draft ? (
+                    <div className="d-flex">
+                        <button
+                            className="createAssign_submitBtn"
+                            disabled={!assignment?.title || loadingCreateAssign}
+                            onClick={() => handleSubmit(false)}
+                        >
+                            {loadingCreateAssign ? 'Assigning...' : 'Assign'}
+                        </button>
+                        <button
+                            className="createAssign_draftBtn"
+                            disabled={!assignment?.title}
+                            onClick={() => handleSubmit(true)}
+                        >
+                            Save draft
+                        </button>
+                    </div>
+                ) : (
+                    <button
                         className="createAssign_submitBtn"
-                        disabled={!assignment?.title || loadingCreateAssign}
+                        disabled={!assignment?.title}
                         onClick={() => handleSubmit(false)}
                     >
-                        {loadingCreateAssign ? 'Assigning...' : 'Assign'}
+                        {loadingCreateAssign ? 'Saving...' : 'Save'}
                     </button>
-                    <button
-                        className="createAssign_draftBtn"
-                        disabled={!assignment?.title}
-                        onClick={() => handleSubmit(true)}
-                    >
-                        Save draft
-                    </button>
-                </div>
+                )}
             </div>
             <div className="card mt-4">
                 <div className="card-body p-4">
+                    {error && (
+                        <div className="alert alert-danger mb-4" role="alert">
+                            {error}
+                        </div>
+                    )}
                     <div className="createAssign_formGroup form-floating mb-4">
                         <input
                             type="text"
@@ -197,7 +309,9 @@ function CreateAssignment() {
                             id="title"
                             name="title"
                             placeholder="title"
+                            value={assignment?.title || ''}
                             onChange={handleChange}
+                            onBlur={handleUpdate}
                         />
                         <label
                             htmlFor="title"
@@ -208,12 +322,16 @@ function CreateAssignment() {
                     </div>
                     <div className="createAssign_formGroup form-floating mb-4">
                         <InstructionEditor
+                            data={assignment?.instruction || ''}
                             onChange={(event, editor) => {
-                                setAssignment({
-                                    ...assignment,
-                                    instruction: editor.getData(),
-                                })
+                                if (assignment?.id) {
+                                    setAssignment({
+                                        ...assignment,
+                                        instruction: editor.getData(),
+                                    })
+                                }
                             }}
+                            onBlur={handleUpdate}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
                             Instruction (Optional)
@@ -231,6 +349,7 @@ function CreateAssignment() {
                                     min={assignment?.created_date || ''}
                                     value={assignment?.start_date || ''}
                                     onChange={handleChange}
+                                    onBlur={handleUpdate}
                                 />
                                 <label
                                     htmlFor="start_date"
@@ -250,6 +369,7 @@ function CreateAssignment() {
                                     min={assignment?.start_date || ''}
                                     placeholder="due date"
                                     onChange={handleChange}
+                                    onBlur={handleUpdate}
                                 />
                                 <label
                                     htmlFor="due_date"
@@ -261,7 +381,7 @@ function CreateAssignment() {
                         </div>
                     </div>
                     <div className="row">
-                        {uploadFiles.map((file, index) => (
+                        {attachments.map((file, index) => (
                             <div className="col-6" key={index}>
                                 <div className="card mb-2">
                                     <div className="card-body d-flex justify-content-between">
@@ -280,7 +400,7 @@ function CreateAssignment() {
                                         <button
                                             className="btn fileUploadDelButton"
                                             onClick={() =>
-                                                handleDeleteFile(index)
+                                                handleDeleteFile(file, index)
                                             }
                                         >
                                             <DeleteIcon />

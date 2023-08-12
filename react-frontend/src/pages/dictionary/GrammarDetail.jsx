@@ -2,17 +2,11 @@ import { useSearchParams } from 'react-router-dom'
 
 import { CautionSolidIcon } from '../../components/icons'
 
-const GrammarDetail = ({ grammar }) => {
+const GrammarDetail = ({ grammar, setShowGrammarDetail }) => {
     const [searchParams, setSearchParams] = useSearchParams()
 
     return (
-        <div
-            className="modal fade"
-            id="grammarDetailModal"
-            tabindex="-1"
-            aria-labelledby="grammarDetailLabel"
-            aria-hidden="true"
-        >
+        <div className="grammarDetail_Modal">
             <div className="modal-dialog modal-fullscreen">
                 <div className="modal-content">
                     <div className="grammarDetail_header p-3 d-flex align-items-center justify-content-center w-100">
@@ -34,9 +28,9 @@ const GrammarDetail = ({ grammar }) => {
                         <button
                             type="button"
                             className="btn-close grammarDetailClose_button"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            id="grammarDetailCloseBtn"
+                            onClick={() => {
+                                setShowGrammarDetail(false)
+                            }}
                         ></button>
                     </div>
                     <div className="modal-body">
@@ -67,30 +61,35 @@ const GrammarDetail = ({ grammar }) => {
                                         Synonyms
                                     </h3>
                                     <div className="row">
-                                        {grammar?.synonyms?.map((synonym) => (
-                                            <div className="col-4 mb-2">
+                                        {grammar?.synonyms?.map(
+                                            (synonym, index) => (
                                                 <div
-                                                    className="synonymItem"
-                                                    onClick={() => {
-                                                        setSearchParams({
-                                                            search: synonym.text,
-                                                        })
-                                                        document
-                                                            .getElementById(
-                                                                'grammarDetailCloseBtn'
-                                                            )
-                                                            .click()
-                                                    }}
+                                                    className="col-4 mb-2"
+                                                    key={index}
                                                 >
-                                                    <div className="synonym_text">
-                                                        {synonym.text}
-                                                    </div>
-                                                    <div className="synonym_explanation">
-                                                        {synonym.explanation}
+                                                    <div
+                                                        className="synonymItem"
+                                                        onClick={() => {
+                                                            setSearchParams({
+                                                                search: synonym.text,
+                                                            })
+                                                            setShowGrammarDetail(
+                                                                false
+                                                            )
+                                                        }}
+                                                    >
+                                                        <div className="synonym_text">
+                                                            {synonym.text}
+                                                        </div>
+                                                        <div className="synonym_explanation">
+                                                            {
+                                                                synonym.explanation
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            )
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -100,30 +99,35 @@ const GrammarDetail = ({ grammar }) => {
                                         Antonyms
                                     </h3>
                                     <div className="row">
-                                        {grammar?.antonyms?.map((antonym) => (
-                                            <div className="col-4 mb-2">
+                                        {grammar?.antonyms?.map(
+                                            (antonym, index) => (
                                                 <div
-                                                    className="synonymItem"
-                                                    onClick={() => {
-                                                        setSearchParams({
-                                                            search: antonym.text,
-                                                        })
-                                                        document
-                                                            .getElementById(
-                                                                'grammarDetailCloseBtn'
-                                                            )
-                                                            .click()
-                                                    }}
+                                                    className="col-4 mb-2"
+                                                    key={index}
                                                 >
-                                                    <div className="synonym_text">
-                                                        {antonym.text}
-                                                    </div>
-                                                    <div className="synonym_explanation">
-                                                        {antonym.explanation}
+                                                    <div
+                                                        className="synonymItem"
+                                                        onClick={() => {
+                                                            setSearchParams({
+                                                                search: antonym.text,
+                                                            })
+                                                            setShowGrammarDetail(
+                                                                false
+                                                            )
+                                                        }}
+                                                    >
+                                                        <div className="synonym_text">
+                                                            {antonym.text}
+                                                        </div>
+                                                        <div className="synonym_explanation">
+                                                            {
+                                                                antonym.explanation
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            )
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -134,8 +138,11 @@ const GrammarDetail = ({ grammar }) => {
                                     </h3>
                                     <div className="row">
                                         {grammar?.example?.map(
-                                            (exampleItem) => (
-                                                <div className="col-4 mb-2">
+                                            (exampleItem, index) => (
+                                                <div
+                                                    className="col-4 mb-2"
+                                                    key={index}
+                                                >
                                                     <div className="exampleItem h-100">
                                                         {exampleItem}
                                                     </div>

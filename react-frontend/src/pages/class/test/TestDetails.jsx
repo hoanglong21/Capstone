@@ -89,6 +89,7 @@ const TestDetails = () => {
                             className="btn btn-primary me-2"
                             data-bs-toggle="modal"
                             data-bs-target={`#startTestModal${test_id}`}
+                            disabled={test?._draft}
                         >
                             Do Test
                         </button>

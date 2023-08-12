@@ -62,7 +62,7 @@ function Translate() {
                         origText,
                         transLang
                     )
-                ).data
+                ).data.translation
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -77,7 +77,25 @@ function Translate() {
                             origText,
                             transLang
                         )
-                    ).data
+                    ).data.translation
+                } catch (error) {
+                    setLoadingTrans(false)
+                    if (error.response && error.response.data) {
+                        setError(error.response.data)
+                    } else {
+                        setError(error.message)
+                    }
+                    return
+                }
+            }
+            if (!resTrans) {
+                try {
+                    resTrans = (
+                        await TranslateService.translateMymemory(
+                            origText,
+                            transLang
+                        )
+                    ).data.translation
                 } catch (error) {
                     setLoadingTrans(false)
                     if (error.response && error.response.data) {
@@ -98,7 +116,7 @@ function Translate() {
                     ).data
                     setGrammarCheck(resGrammarCheck)
                 } catch (error) {
-                    setLoadingAnalysis(false)
+                    setLoadingCheck(false)
                     if (error.response && error.response.data) {
                         setGrammarCheck(error.response.data)
                     } else {

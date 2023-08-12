@@ -143,7 +143,8 @@ const Instructions = () => {
             <div className="instruction_main mb-3">
                 <div className="d-flex align-items-center justify-content-between mb-1">
                     <div className="instruction_heading">
-                        {assignment?.title}
+                        {assignment?.title}{' '}
+                        {assignment?._draft ? '(Draft)' : ''}
                     </div>
                     <div className="dropdown align-self-start">
                         <button
