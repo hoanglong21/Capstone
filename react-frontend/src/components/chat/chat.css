@@ -277,3 +277,15 @@
 .chat_callModalBtn--accept {
     background-color: #30cc45;
 }
+
+@media only screen and (max-width: 768px) {
+.chat_container {
+    right: 60px;
+    height: 60vh;
+    width: 260px;
+}
+
+.chatNew_btn {
+    right: 8px;
+}
+}
