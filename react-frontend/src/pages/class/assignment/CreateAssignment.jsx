@@ -25,6 +25,7 @@ function CreateAssignment() {
     const [attachments, setAttachments] = useState([])
     const [loadingCreateAssign, setLoadingCreateAssign] = useState(false)
     const [saving, setSaving] = useState(null)
+    const [error, setError] = useState('')
 
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
@@ -68,10 +69,6 @@ function CreateAssignment() {
                     tempAssignment = (
                         await AssignmentService.getAssignmentById(assign_id)
                     ).data
-                    tempAssignment.start_date = toFEDate(
-                        tempAssignment.start_date
-                    )
-                    tempAssignment.due_date = toFEDate(tempAssignment.due_date)
                     // attachments
                     const tempAttachments = (
                         await AttachmentService.getAttachmentsByAssignmentId(
@@ -91,13 +88,18 @@ function CreateAssignment() {
                                 username: userInfo.username,
                             },
                             due_date: '',
-                            start_date: toBEDate(getToday()),
-                            created_date: toBEDate(getToday()),
+                            start_date: getToday(),
+                            created_date: getToday(),
                             instruction: '',
                             _draft: true,
                         })
                     ).data
                 }
+                tempAssignment.created_date = toFEDate(
+                    tempAssignment.created_date
+                )
+                tempAssignment.start_date = toFEDate(tempAssignment.start_date)
+                tempAssignment.due_date = toFEDate(tempAssignment.due_date)
                 if (tempAssignment?.user) {
                     tempAssignment.user.created_date = toBEDate(
                         tempAssignment.user.created_date
@@ -191,6 +193,31 @@ function CreateAssignment() {
     }
 
     const handleUpdate = async () => {
+        setError('')
+        if (
+            new Date(assignment.created_date) > new Date(assignment.start_date)
+        ) {
+            setError(
+                `Start date must be after ${assignment.created_date.replace(
+                    'T',
+                    ' '
+                )}`
+            )
+            return
+        }
+        if (new Date(assignment.created_date) > new Date(assignment.due_date)) {
+            setError(
+                `Due date must be after ${assignment.created_date.replace(
+                    'T',
+                    ' '
+                )}`
+            )
+            return
+        }
+        if (new Date(assignment.start_date) > new Date(assignment.due_date)) {
+            setError('Due date must be after start date')
+            return
+        }
         setSaving(true)
         try {
             var tempAssignment = { ...assignment }
@@ -216,23 +243,13 @@ function CreateAssignment() {
 
     const handleSubmit = async (draft) => {
         setLoadingCreateAssign(true)
-        try {
-            navigate(
-                `/class/${classroom.id}/assignment/${assignment.id}/details`
-            )
-        } catch (error) {
-            if (error.response && error.response.data) {
-                console.log(error.response.data)
-            } else {
-                console.log(error.message)
-            }
-        }
-        document.body.scrollTop = document.documentElement.scrollTop = 0
+        navigate(`/class/${classroom.id}/assignment/${assignment.id}/details`)
         setLoadingCreateAssign(false)
     }
 
     return (
         <div className="mb-5">
+            {/* button */}
             <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex">
                     <button
@@ -269,6 +286,7 @@ function CreateAssignment() {
                 ) : (
                     <button
                         className="createAssign_submitBtn"
+                        disabled={!assignment?.title}
                         onClick={() => handleSubmit(false)}
                     >
                         {loadingCreateAssign ? 'Saving...' : 'Save'}
@@ -277,6 +295,11 @@ function CreateAssignment() {
             </div>
             <div className="card mt-4">
                 <div className="card-body p-4">
+                    {error && (
+                        <div className="alert alert-danger mb-4" role="alert">
+                            {error}
+                        </div>
+                    )}
                     <div className="createAssign_formGroup form-floating mb-4">
                         <input
                             type="text"
