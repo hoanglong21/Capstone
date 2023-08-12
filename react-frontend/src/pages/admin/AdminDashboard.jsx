@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
-import { Link } from "react-router-dom";
 import img from "../../assets/images/screen.png";
 import { useEffect } from "react";
 import AdminService from "../../services/AdminService";
@@ -200,7 +199,7 @@ function AdminDashboard() {
     <div className="container-fluid bg-white">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm-10 col-lg-10 col-md-10">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="container">
             <div className="d-sm-flex align-items-center justify-content-between mb-4">

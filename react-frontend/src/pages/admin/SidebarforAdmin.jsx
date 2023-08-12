@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 function SidebarforAdmin() {
   const { userInfo } = useSelector((state) => state.user)
   return (
-    <div className="header__admin col-sm-2 col-lg-2 col-md-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
+    <div className="header__admin col-2 min-vh-100 d-flex justify-content-between flex-column wrapper align-items-stretch">
       <section id="navbar">
         <Link
           href=""
@@ -21,88 +21,88 @@ function SidebarforAdmin() {
         <ul className="nav nav-pills flex-column mt-3 mt-sm-0">
           <li className="nav-item active fs-6 my-1 py-2 py-sm-0">
             <Link to="/dashboard" className="nav-link fs-7">
-              <i className="bi bi-speedometer2"></i>
-              <span className="ms-3 d-none d-sm-inline">
+              <i className="bi bi-speedometer2 icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Dashboard
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/manageusers" className="nav-link fs-7">
-              <i class="bi bi-person-square"></i>
-              <span className="ms-3 d-none d-sm-inline">
+              <i class="bi bi-person-square icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Manage User
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/manageclass" className="nav-link fs-7">
-              <i class="bi bi-people"></i>
-              <span className="ms-3 d-none d-sm-inline">
+              <i class="bi bi-people icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Class
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/managefeedback" className="nav-link fs-7">
-              <i class="bi bi-chat-text"></i>
-              <span className="ms-3 d-none d-sm-inline">
+              <i class="bi bi-chat-text icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Feedback
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/managestudyset" className="nav-link fs-7">
-            <i class="bi bi-back"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-back icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Studyset
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/manageassignment" className="nav-link fs-7">
-            <i class="bi bi-file-zip-fill"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-file-zip-fill icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Assignment
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/managetest" className="nav-link fs-7">
-            <i class="bi bi-file-earmark-text"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-file-earmark-text icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Test
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/managesubmission" className="nav-link fs-7">
-            <i class="bi bi-archive"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-archive icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Submission
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/managepost" className="nav-link fs-7">
-            <i class="bi bi-send-fill"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-send-fill icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Post
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/managecomment" className="nav-link fs-7">
-            <i class="bi bi-question-circle"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-question-circle icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Comment
               </span>
             </Link>
           </li>
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/vocabforadmin" className="nav-link fs-7">
-            <i class="bi bi-book"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-book icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 Dictionary
               </span>
             </Link>
@@ -110,8 +110,8 @@ function SidebarforAdmin() {
           {userInfo?.id === 1 && (
           <li className="nav-item fs-6 my-1 py-2 py-sm-0">
             <Link to="/registeradmin" className="nav-link fs-7">
-            <i class="bi bi-person-add"></i>
-              <span className="ms-3 d-none d-sm-inline">
+            <i class="bi bi-person-add icon-db"></i>
+              <span className="ms-3 d-none d-md-inline">
                 (IAM) Register
               </span>
             </Link>

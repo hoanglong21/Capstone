@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 import DictionaryService from '../../services/DictionaryService'
 import TextToSpeech from '../../components/InputModel/TextToSpeech'
+import './dictionary.css'
 
 const VocabDict = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -139,7 +140,7 @@ const VocabDict = () => {
             <div className="mt-4 mb-5">
                 {word?.kanji ? (
                     <div className="row">
-                        <div className="col-2 ">
+                        <div className="vocab-dict">
                             <div className="dictResultWordList">
                                 {vocabs.map((vocab, index) => (
                                     <div
@@ -174,7 +175,7 @@ const VocabDict = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="col-7">
+                        <div className="vocab-dict-col-7">
                             {loadingSelect ? (
                                 <div className="d-flex justify-content-center">
                                     <div
@@ -246,7 +247,7 @@ const VocabDict = () => {
                             )}
                         </div>
                         {!loadingSelect && (
-                            <div className="col-3">
+                            <div className="vocab-dict-3">
                                 <div
                                     className="accordion accordion-flush"
                                     id="accordionKanjiSvg"

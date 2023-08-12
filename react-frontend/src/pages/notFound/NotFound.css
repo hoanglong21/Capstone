@@ -36,3 +36,9 @@
 .notFound a:hover {
     background-color: var(--notFound-hover);
 }
+
+@media only screen and (max-width: 768px) {
+    .notFound h1 {
+        font-size: 5rem;
+    }
+}
