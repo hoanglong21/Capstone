@@ -7,7 +7,7 @@ const AccountLayout = () => {
             <h3>Account Settings</h3>
             <div className="card-account__container">
                 <div className="row">
-                    <div className="card-account__sidebar d-flex flex-column border-end pe-4 col-4 col-lg-3 col-xxl-2">
+                    <div className="card-account__sidebar flex-column border-end pe-4 setting-account-col-4 col-lg-3 col-xxl-2">
                         <NavLink
                             className={
                                 'card-account__sidebar-link mb-2 ' +
