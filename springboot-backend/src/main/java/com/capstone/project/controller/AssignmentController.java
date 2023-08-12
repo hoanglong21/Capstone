@@ -56,15 +56,7 @@ public class AssignmentController {
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/assignments")
-    public ResponseEntity<?> createAssignment(@Valid @RequestBody AssignmentRequest assignmentRequest, BindingResult result){
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-               Assignment assignment = modelMapper.map(assignmentRequest,Assignment.class);
+    public ResponseEntity<?> createAssignment( @RequestBody Assignment assignment){
             try {
                 return ResponseEntity.ok(assignmentService.createAssignment(assignment));
             } catch (Exception e){
@@ -72,29 +64,16 @@ public class AssignmentController {
             }
         }
 
-    }
-
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PutMapping ("/assignments/{id}")
-    public ResponseEntity<?> updateAssignment(@PathVariable int id, @Valid @RequestBody AssignmentRequest assignmentRequest,
-                                              BindingResult result){
-        if (result.hasErrors()) {
-            // create a list of error messages from the binding result
-            List<String> errors = result.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(errors);
-        } else {
-            Assignment assignment = modelMapper.map(assignmentRequest,Assignment.class);
+    public ResponseEntity<?> updateAssignment(@PathVariable int id, @RequestBody Assignment assignment){
             try {
                 return ResponseEntity.ok(assignmentService.updateAssignment(id, assignment));
             } catch (ResourceNotFroundException e){
                 return ResponseEntity.badRequest().body(e.getMessage());
             }
         }
-
-    }
 
     //    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @DeleteMapping("/assignments/{id}")
