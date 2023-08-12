@@ -71,19 +71,19 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Assignment createAssignment(Assignment assignment) throws ResourceNotFroundException {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        Date date = localDateTimeToDate(localDateTime);
-        assignment.setCreated_date(date);
-        if (assignment.getStart_date() != null && assignment.getCreated_date() != null &&
-                assignment.getStart_date().before(assignment.getCreated_date())) {
-            throw new ResourceNotFroundException("Start date must be >= created date");
-        }
+//        Date date = localDateTimeToDate(localDateTime);
+//        assignment.setCreated_date(date);
+//        if (assignment.getStart_date() != null && assignment.getCreated_date() != null &&
+//                assignment.getStart_date().before(assignment.getCreated_date())) {
+//            throw new ResourceNotFroundException("Start date must be >= created date");
+//        }
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
         List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedAssignment.getClassroom().getId());
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 7) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 7 && !assignment.is_draft()) {
                     sendAssignmentCreatedEmail(classLearner, savedAssignment);
                 }
             }
@@ -149,11 +149,6 @@ public class AssignmentServiceImpl implements AssignmentService {
         existingAssignment.setTitle(assignment.getTitle());
         existingAssignment.set_draft(assignment.is_draft());
 
-        List<Attachment> attachments = attachmentRepository.getAttachmentByAssignmentId(existingAssignment.getId());
-
-        for (Attachment attachment : attachments) {
-            attachmentRepository.delete(attachment);
-        }
 
         return assignmentRepository.save(existingAssignment);
     }
@@ -269,9 +264,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Map<String, Object> getNumSubmitAssignment(int assignmentid, int classid) throws ResourceNotFroundException {
-        String query ="SELECT COUNT(CASE WHEN is_done = true THEN 1 END) AS submitted,\n" +
-                "                      COUNT(DISTINCT cl.user_id) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END) AS notsubmitted\n" +
-                "FROM class_learner cl \n" +
+        String query ="SELECT COALESCE(COUNT(CASE WHEN is_done = true THEN 1 END), 0) AS submitted,\n" +
+                "    COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END), 0) AS notsubmitted\n" +
+                "FROM class_learner cl\n" +
                 "LEFT JOIN assignment a ON cl.class_id = a.class_id ";
 
         Map<String, Object> parameters = new HashMap<>();

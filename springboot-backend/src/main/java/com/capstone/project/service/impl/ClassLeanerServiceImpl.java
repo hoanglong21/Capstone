@@ -39,6 +39,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     public ClassLearner createClassLearner(ClassLearner classLearner) {
         try {
             classLearner.setCreated_date(new Date());
+            classLearner.setStatus("pending");
             return classLearnerRepository.save(classLearner);
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException("Duplicate entry, make sure id of user and class are not duplicated");
@@ -49,7 +50,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     public ClassLearner updateClassLearner(ClassLearner classroomLearner, int id) throws ResourceNotFroundException {
         ClassLearner classLearner = classLearnerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("ClassLearner not exist with id:" + id));
-        classLearner.set_accepted(classroomLearner.is_accepted());
+        classLearner.setStatus(classroomLearner.getStatus());
         return classLearnerRepository.save(classLearner);
     }
 
@@ -84,7 +85,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     @Autowired
     private EntityManager entityManager;
     @Override
-    public Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,Boolean isAccepted, String sortBy, String direction, int page, int size) throws ParseException {
+    public Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,String status, String sortBy, String direction, int page, int size) throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "FROM ClassLearner f LEFT JOIN FETCH f.classroom WHERE 1=1 ";
         Map<String, Object> params = new HashMap<>();
@@ -108,9 +109,9 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
             params.put("toCreated", formatter.parse(toCreated));
         }
 
-        if (isAccepted != null) {
-            jpql += " AND is_accepted = :isAccepted";
-            params.put("isAccepted", isAccepted);
+        if (status != null) {
+            jpql += " AND status = :status";
+            params.put("status", status);
 
         }
 
@@ -170,11 +171,11 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
 
 
     @Override
-    public Map<String, Object> filterGetLearner(int userId, int classId, Boolean isAccepted, String sortBy, String direction, int page, int size) {
+    public Map<String, Object> filterGetLearner(int userId, int classId, String status, String sortBy, String direction, int page, int size) {
 
         int offset = (page - 1) * size;
 
-        String query = "SELECT cl.id, u.username as username,u.avatar as avatar, cl.is_accepted as accepted, cl.created_date as created_date\n" +
+        String query = "SELECT cl.id, u.username as username,u.avatar as avatar, cl.status as status, cl.created_date as created_date\n" +
                 "FROM class_learner cl \n" +
                 "INNER JOIN user u  ON u.id = cl.user_id\n" +
                 "INNER JOIN class c on c.id = cl.class_id\n" +
@@ -192,9 +193,9 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
             parameters.put("userId", userId);
         }
 
-        if (isAccepted != null) {
-            query += " AND is_accepted = :isAccepted";
-            parameters.put("isAccepted", isAccepted);
+        if (status != null) {
+            query += " AND cl.status = :status";
+            parameters.put("status", status);
 
         }
 

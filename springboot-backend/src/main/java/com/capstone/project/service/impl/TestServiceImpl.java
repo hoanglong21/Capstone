@@ -80,7 +80,7 @@ public class TestServiceImpl  implements TestService {
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.is_accepted() == true && userSetting.getSetting().getId() == 8) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 8 && !test.is_draft()) {
                     sendTestCreatedEmail(classLearner, savedTest);
                 }
             }
@@ -278,8 +278,8 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Map<String, Object> getNumAttemptTest(int testid, int classid) throws ResourceNotFroundException {
-        String query ="SELECT COUNT(CASE WHEN tl.num_attempt >= 1 THEN 1 END) AS attempted,\n" +
-                "                  COUNT(DISTINCT cl.id) - SUM(CASE WHEN tl.num_attempt >= 1 THEN 1 ELSE 0 END) AS notattempted\n" +
+        String query ="SELECT COALESCE(COUNT(CASE WHEN tl.num_attempt >= 1 THEN 1 END),0) AS attempted,\n" +
+                "                 COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) - SUM(CASE WHEN tl.num_attempt >= 1 THEN 1 ELSE 0 END),0) AS notattempted\n" +
                 "           FROM class_learner cl \n" +
                 "           LEFT JOIN test t on t.class_id = cl.class_id ";
 
@@ -343,21 +343,23 @@ public class TestServiceImpl  implements TestService {
             TestLearner testLearner = testLearnerRepository.findById(testResultList.get(0).getTestLearner().getId())
                     .orElseThrow(() -> new ResourceNotFroundException("Test leaner not exist with id: " + testResultList.get(0).getTestLearner().getId()));
 
-            List<TestLearner> attemptList = testLearnerRepository.findByTestIdAndUserId(testLearner.getId(), testLearner.getUser().getId());
+            List<TestLearner> attemptList = testLearnerRepository.findByTestIdAndUserId(testLearner.getUser().getId(), testLearner.getTest().getId());
             int attempt = attemptList.size();
 
             int result = 0;
             int total = 0;
             for(TestResult testResult : testResultList) {
-                total += testResult.getQuestion().getPoint();
+                Question tempQuestion = questionRepository.findById(testResult.getQuestion().getId())
+                    .orElseThrow(() -> new ResourceNotFroundException("Question not exist with id: " + testResult.getQuestion().getId()));
+                total += tempQuestion.getPoint();
                 if (testResult.is_true()) {
-                    result += testResult.getQuestion().getPoint();
+                    result += tempQuestion.getPoint();
                 }
             }
 
             double mark = 0;
             if(total!=0) {
-                mark = (result/total)*100;
+                mark = ((double)result/total)*100;
             }
 
             double roundedMark = Math.round(mark * 100.0) / 100.0;

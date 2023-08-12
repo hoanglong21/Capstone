@@ -125,12 +125,12 @@ public class ClassLearnerServiceTest {
 
     @Order(5)
     @ParameterizedTest(name = "index => userId{0}, clasId={1}, fromCreated{2},toCreated{3} ," +
-            " isAccepted{4}, sortBy{5},direction{6},page={7}, size{8}, greaterThanZero{9} ")
+            " status{4}, sortBy{5},direction{6},page={7}, size{8}, greaterThanZero{9} ")
     @CsvSource({
-            "1,1,2023-8-9,2023-8-15,created_date,true,DESC,1,5, true",
-            "2,1,2023-8-9,2023-8-15,created_date,false,DESC,1,5, false"
+            "1,1,2023-8-9,2023-8-15,created_date,enrolled,DESC,1,5, true",
+            "2,1,2023-8-9,2023-8-15,created_date,pending,DESC,1,5, false"
     })
-    public void testFilterClassLearner(int userId, int classId, String fromCreated, String toCreated, Boolean isAccepted,
+    public void testFilterClassLearner(int userId, int classId, String fromCreated, String toCreated, String status,
                                        String sortBy, String direction, int page, int size, boolean greaterThanZero) throws ResourceNotFroundException {
 
         try {
@@ -156,7 +156,7 @@ public class ClassLearnerServiceTest {
                 TypedQuery<Long> countQueryMock = mock(TypedQuery.class);
                 when(entityManager.createQuery(anyString(), eq(Long.class))).thenReturn(countQueryMock);
             }
-            List<ClassLearner> list = (List<ClassLearner>) classLeanerService.filterClassLearner(userId,classId,fromCreated,toCreated,isAccepted,sortBy,direction,page,size).get("list");
+            List<ClassLearner> list = (List<ClassLearner>) classLeanerService.filterClassLearner(userId,classId,fromCreated,toCreated,status,sortBy,direction,page,size).get("list");
             assertThat(list.size() > 0).isEqualTo(greaterThanZero);
         } catch (Exception e) {
             throw new RuntimeException(e);

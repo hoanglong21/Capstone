@@ -285,7 +285,13 @@ public class ClassServiceImpl implements ClassService {
 
         ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
         if (classLearner != null) {
-            throw new ResourceNotFroundException("You are already in the class !");
+            if ("unenrolled".equals(classLearner.getStatus())) {
+                classLearner.setStatus("enrolled");
+                classLearnerRepository.save(classLearner);
+                return classRepository.save(classroom);
+            } else {
+                throw new ResourceNotFroundException("You are already in the class !");
+            }
         }
 
         if(classroom.is_deleted() == true) {
@@ -296,9 +302,9 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setUser(user);
         classLearner.setClassroom(classroom);
         classLearner.setCreated_date(new Date());
-        classLearner.set_accepted(false);
+        classLearner.setStatus("enrolled");
         classLearnerRepository.save(classLearner);
-        // add user to classroom
+
         return classRepository.save(classroom);
     }
 
@@ -337,7 +343,7 @@ public class ClassServiceImpl implements ClassService {
 
         ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
         if (classLearner!= null) {
-            if(classLearner.getUser().getId() == userId && classLearner.is_accepted()){
+            if(classLearner.getUser().getId() == userId && classLearner.getStatus().equals("enrolled")){
                 return true;}
         }
 
@@ -362,7 +368,7 @@ public class ClassServiceImpl implements ClassService {
 
         ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(user.getId(),classroom.getId());
         if (classLearner!= null) {
-            if(classLearner.getUser().getId() == userId && !classLearner.is_accepted()){
+            if(classLearner.getUser().getId() == userId && classLearner.getStatus().equals("pending")){
                 return true;}
         }
         return false;
