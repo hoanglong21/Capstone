@@ -212,8 +212,8 @@ const Notifications = () => {
     }
 
     return (
-        <div className="mx-5 ps-5">
-            <h4>Email Notification</h4>
+        <div className="noti-settings">
+            <h4 className='noti-h4'>Email Notification</h4>
             <div className="mt-4">
                 {/* successMess message */}
                 {successMess && (
@@ -280,7 +280,7 @@ const Notifications = () => {
                         </label>
                         <div className="mt-2">
                             <div className="row d-flex align-items-center">
-                                <div className="col-2">
+                                <div className="remind-noti">
                                     <label
                                         htmlFor="assignDueDateReminderTime"
                                         className="form-label"
@@ -288,7 +288,7 @@ const Notifications = () => {
                                         Before (hours):
                                     </label>
                                 </div>
-                                <div className="col-10 notification_formTime">
+                                <div className="remind-noti-col-10 notification_formTime">
                                     <input
                                         type="number"
                                         className={`form-control ${FormStyles.formControl} ms-0`}
@@ -324,7 +324,7 @@ const Notifications = () => {
                         </label>
                         <div className="mt-2">
                             <div className="row d-flex align-items-center">
-                                <div className="col-2">
+                                <div className="remind-noti">
                                     <label
                                         htmlFor="testDueDateReminderTime"
                                         className="form-label"
@@ -332,7 +332,7 @@ const Notifications = () => {
                                         Before (hours):
                                     </label>
                                 </div>
-                                <div className="col-10 notification_formTime">
+                                <div className="remind-noti-col-10 notification_formTime">
                                     <input
                                         type="number"
                                         className={`form-control ${FormStyles.formControl} ms-0`}
@@ -353,7 +353,7 @@ const Notifications = () => {
                 </fieldset>
                 <fieldset className="form-check notification_formContainer mb-3 ps-0">
                     <legend>IN YOUR CLASS, RECEIVE EMAIL WHEN:</legend>
-                    <div>
+                    <div className='noti-input'>
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
