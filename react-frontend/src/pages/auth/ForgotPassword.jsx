@@ -77,7 +77,7 @@ const ForgotPassword = () => {
             return (
                 <div className="container">
                     <h2>Forgot Password</h2>
-                    <p className="m-0">
+                    <p className="m-0 forgot-p">
                         Enter your username or the email address you signed up
                         with. We'll email you a link to log in and reset your
                         password.
