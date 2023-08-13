@@ -182,13 +182,13 @@ public class SubmissionServiceTest {
     }
 
     @Order(7)
-    @ParameterizedTest(name = "index => search={0},authorId{1}, assignmentId{2},mark{3}, fromCreated{4},toCreated{5}, " +
-                                        "direction{6}, page{7}, size{8}")
+    @ParameterizedTest(name = "index => search={0},authorId{1}, assignmentId{2}, isDone{3},mark{4},fromCreated{5},toCreated{6}, " +
+                                        "direction{7}, page{8}, size{9}")
     @CsvSource({
-            "Homework1,1,1,8.2,2023-8-9,2023-8-15,DESC,1,5",
-            "Homwork2,2,1,5.5,2023-8-9,2023-8-15,DESC,1,5"
+            "Homework1,1,1,true,8.2,2023-8-9,2023-8-15,DESC,1,5",
+            "Homwork2,2,1,false,5.5,2023-8-9,2023-8-15,DESC,1,5"
     })
-    public void testGetFilterSubmission(String search, int authorId, int assignmentId, double mark, String fromCreated,
+    public void testGetFilterSubmission(String search, int authorId, int assignmentId,Boolean isDone, double mark, String fromCreated,
                                         String toCreated, String direction, int page, int size) throws ResourceNotFroundException {
 
         MockitoAnnotations.openMocks(this);
@@ -203,7 +203,7 @@ public class SubmissionServiceTest {
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(submission));
 
-        List<Submission> list = (List<Submission>) submissionServiceImpl.getFilterSubmission(search, authorId, assignmentId,
+        List<Submission> list = (List<Submission>) submissionServiceImpl.getFilterSubmission(search, authorId, assignmentId,isDone,
                                                      mark, fromCreated, toCreated, direction, page, size).get("list");
         assertThat(list.size()).isGreaterThan(0);
     }

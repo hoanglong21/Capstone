@@ -24,5 +24,5 @@ public interface SubmissionService {
 
     Boolean deleteSubmission(int id) throws ResourceNotFroundException;
 
-    Map<String, Object> getFilterSubmission(String search, int authorId,int assignmentId,double mark, String from, String to, String direction, int page, int size) throws ResourceNotFroundException;
+    Map<String, Object> getFilterSubmission(String search, int authorId,int assignmentId,Boolean isDone,double mark, String from, String to, String direction, int page, int size) throws ResourceNotFroundException;
 }

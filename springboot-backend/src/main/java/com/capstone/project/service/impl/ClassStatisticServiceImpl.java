@@ -109,7 +109,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
                 .orElseThrow(() -> new ResourceNotFroundException("Assignment not exist with id: " + id));
 //        List<String> listDate = dateRangePicker.getDateRange();
         List<Integer> result = new ArrayList<>();
-            Map<String, Object> response = submissionService.getFilterSubmission(null,0,id,0,null,null,"DESC",1,5);
+            Map<String, Object> response = submissionService.getFilterSubmission(null,0,id,true,0,null,null,"DESC",1,5);
         result.add(parseIntSafe(response.get("markLessThan5Count")));
         result.add(parseIntSafe(response.get("markBetween5And8Count")));
         result.add(parseIntSafe(response.get("markGreaterThan8Count")));
