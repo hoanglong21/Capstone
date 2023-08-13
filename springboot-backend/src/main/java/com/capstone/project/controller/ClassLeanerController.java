@@ -69,6 +69,16 @@ public class ClassLeanerController {
         return ResponseEntity.ok(classLearnerService.getClassLeanerByUserId(id));
     }
 
+    @GetMapping("/requestojoin")
+
+    public ResponseEntity<?> requestToJoin(@RequestBody ClassLearner classLearner) {
+        try {
+            return ResponseEntity.ok(classLearnerService.requestToJoin(classLearner));
+        } catch (ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/delclasslearner")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> deleteClassLearner(@RequestParam(value = "userid", required = false, defaultValue = "0") int userid,

@@ -26,6 +26,8 @@ public interface ClassLearnerService {
 
     List<ClassLearner> getClassLeanerByUserId(int id);
 
+    ClassLearner requestToJoin(ClassLearner classLearner) throws ResourceNotFroundException;
+
     Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,String status,
                                               String sortBy, String direction, int page, int size) throws ParseException;
 

@@ -1,8 +1,10 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.dto.QuestionWrapper;
+import com.capstone.project.dto.TestandClassLearnerDTO;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.TestService;
 import com.capstone.project.service.UserService;
@@ -29,6 +31,7 @@ public class TestServiceImpl  implements TestService {
     private final JavaMailSender mailSender;
 
     private final ClassLearnerRepository classLearnerRepository;
+    private final ClassRepository classRepository;
 
     private final UserSettingRepository userSettingRepository;
     private final TestRepository testRepository;
@@ -46,9 +49,10 @@ public class TestServiceImpl  implements TestService {
     private TestResultRepository testResultRepository;
 
     @Autowired
-    public TestServiceImpl(JavaMailSender mailSender, ClassLearnerRepository classLearnerRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
+    public TestServiceImpl(JavaMailSender mailSender, ClassLearnerRepository classLearnerRepository, ClassRepository classRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
         this.mailSender = mailSender;
         this.classLearnerRepository = classLearnerRepository;
+        this.classRepository = classRepository;
         this.userSettingRepository = userSettingRepository;
         this.testRepository = testRepository;
         this.questionRepository = questionRepository;
@@ -348,34 +352,49 @@ public class TestServiceImpl  implements TestService {
     }
 
     @Override
-    public Map<String, Object> getFilterTestLearner(String username, Double mark, int authorid, String direction, String sortBy, int page, int size) {
+    public List<TestandClassLearnerDTO> getFilterTestLearner(String username, Double mark,int classid, int authorid,int testid, String direction, String sortBy, int page, int size) {
         int offset = (page - 1) * size;
-
-        String query ="SELECT * FROM test_learner\n" +
+        String query = "SELECT cl.*,tl.mark,tl.num_attempt\n" +
+                "FROM class_learner cl\n" +
+                "LEFT JOIN test_learner tl ON cl.user_id = tl.user_id \n" +
+                " AND tl.test_id = :testId \n" +
+                " LEFT JOIN test t ON tl.test_id = t.id\n" +
                 "WHERE 1=1";
+
 
         Map<String, Object> parameters = new HashMap<>();
 
-        if (authorid != 0) {
-            query += " AND user_id != :authorId";
+
+        if (authorid != 0 ) {
+            query += " AND (cl.user_id != :authorId OR cl.user_id IS NULL)";
             parameters.put("authorId", authorid);
+        }
+
+        if (classid != 0 ) {
+            query += " AND cl.class_id = :classId";
+            parameters.put("classId", classid);
+        }
+
+        if (testid != 0 ) {
+            parameters.put("testId", testid);
         }
 
         if (username != null && !username.isEmpty()) {
             User user = userRepository.findUserByUsername(username);
-            query += " AND user_id = :userId";
+            query += " AND cl.user_id = :userId";
             parameters.put("userId", user.getId());
         }
 
         if (mark != 0) {
-            query += " AND mark = :mark";
+            query += " AND tl.mark = :mark";
             parameters.put("mark", mark);
         }
 
+        query += " AND cl.status = 'enrolled'";
 
         query += " ORDER BY " + sortBy + " " + direction;
 
-        Query q = em.createNativeQuery(query, TestLearner.class);
+        Query q = em.createNativeQuery(query);
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             q.setParameter(entry.getKey(), entry.getValue());
         }
@@ -386,15 +405,50 @@ public class TestServiceImpl  implements TestService {
         q.setFirstResult(offset);
         q.setMaxResults(size);
 
-        List<TestLearner> resultList = q.getResultList();
+        List<Object[]> results = q.getResultList();
+        List<TestandClassLearnerDTO> resultList = new ArrayList<>();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("list", resultList);
-        response.put("currentPage", page);
-        response.put("totalPages", totalPages);
-        response.put("totalItems", totalItems);
+        Map<ClassLearner, List<TestLearner>> classLearnerMap = new HashMap<>();
 
-        return response;
+        for (Object[] row : results) {
+            int classLearnerId = (int) row[0]; // assuming cl_id is at index 0
+            Date created_date = (Date) row[1];
+            int classidcl = (int) row[2];
+            int useridcl = (int) row[3];
+            String status = (String) row[4];
+            Double marktest = (row[5] != null) ? (Double) row[5] : 0.0;
+            Integer numAttempt = (row[6] != null) ? (Integer) row[6] : 0;
+
+            // ... and so on for other columns
+
+            ClassLearner classLearner = new ClassLearner();
+            classLearner.setId(classLearnerId);
+            classLearner.setCreated_date(created_date);
+            Class classroom = classRepository.findClassById(classidcl);
+            classLearner.setClassroom(classroom);
+            User user = userRepository.findUserById(useridcl);
+            classLearner.setUser(user);
+            classLearner.setStatus(status);
+
+            TestLearner testLearner = new TestLearner();
+            testLearner.setNum_attempt(numAttempt);
+            testLearner.setMark(marktest);
+
+            // ... create other objects as needed
+
+            if (!classLearnerMap.containsKey(classLearner)) {
+                classLearnerMap.put(classLearner, new ArrayList<>());
+            }
+
+            classLearnerMap.get(classLearner).add(testLearner);
+        }
+
+        for (Map.Entry<ClassLearner, List<TestLearner>> entry : classLearnerMap.entrySet()) {
+            TestandClassLearnerDTO dto = new TestandClassLearnerDTO(entry.getKey(), entry.getValue());
+            resultList.add(dto);
+        }
+
+        return resultList;
     }
 
 

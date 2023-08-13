@@ -1,5 +1,6 @@
 package com.capstone.project.repository;
 
+import com.capstone.project.model.Class;
 import com.capstone.project.model.Question;
 import com.capstone.project.model.Test;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface TestRepository extends JpaRepository<Test,Integer> {
     List<Test> getTestByAuthorId(int id);
 
     List<Test> getTestByClassroomId(int id);
+
+    Test findTestById(int id);
 }

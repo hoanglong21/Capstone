@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.dto.TestandClassLearnerDTO;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Post;
 import com.capstone.project.model.Test;
@@ -33,7 +34,7 @@ public interface TestService {
 
     Map<String, Object> getNumAttempt(int testid, int userid);
 
-    Map<String, Object> getFilterTestLearner(String username, Double mark,int authorid, String direction, String sortBy, int page, int size) ;
+    List<TestandClassLearnerDTO> getFilterTestLearner(String username, Double mark, int classid, int authorid,int testid, String direction, String sortBy, int page, int size) ;
 
     Map<String, Object> startTest(int testId, int userId);
 
