@@ -313,6 +313,41 @@ public class TestServiceImpl  implements TestService {
         return response;
     }
 
+    @Override
+    public Map<String, Object> getNumAttempt(int testid, int userid)  {
+        String query =" SELECT tl.num_attempt as num_attempt  from test_learner tl WHERE 1=1 ";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (testid != 0) {
+            testRepository.findById(testid);
+            query += " AND test_id = :testId ";
+            parameters.put("testId", testid);
+        }
+
+        if (userid != 0) {
+            query += " AND user_id = :userId";
+            parameters.put("userId", userid);
+        }
+
+        Query q = em.createNativeQuery(query);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        List<Object> results = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        if (!results.isEmpty()) {
+            response.put("num_attempt", results.get(0));
+        } else {
+            response.put("num_attempt", 0); // hoặc giá trị mặc định khác bạn muốn
+        }
+
+        return response;
+    }
+
+
     public Map<String, Object> startTest(int testId, int userId) {
         TestLearner testLearner = TestLearner.builder()
                 .test(Test.builder().id(testId).build())

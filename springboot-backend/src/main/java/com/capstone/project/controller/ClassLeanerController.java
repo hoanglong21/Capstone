@@ -45,6 +45,14 @@ public class ClassLeanerController {
         }
     }
 
+    @PutMapping ("/classleanerbyid/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> updateClassLeanerById(@RequestBody ClassLearner classLearner, @RequestParam(value = "userid", required = false, defaultValue = "0") int userid,
+                                                   @RequestParam(value = "classid", required = false, defaultValue = "0") int classid) {
+            return ResponseEntity.ok(classLearnerService.updateClassLearnerById(classLearner,userid,classid));
+
+    }
+
     @GetMapping("/classleaner/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getClassLeanerById(@PathVariable("id") int id) {

@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 
 import UserService from '../../services/UserService'
 import { logout } from '../../features/auth/authSlice'
-
+import './settings.css'
 import FormStyles from '../../assets/styles/Form.module.css'
 
 const DeleteAccount = () => {
@@ -71,9 +71,9 @@ const DeleteAccount = () => {
     }
 
     return (
-        <div className="mx-5 ps-3">
-            <h4>Permanently delete {userInfo.username}</h4>
-            <p>
+        <div className="settings-lang">
+            <h4 className='settings-h4'>Permanently delete {userInfo.username}</h4>
+            <p className='settings-p'>
                 Careful! This will delete all of your data and cannot be undone.
             </p>
             <form className="mt-4 needs-validation" noValidate>
@@ -99,7 +99,7 @@ const DeleteAccount = () => {
                         onChange={(event) => setCurrentPass(event.target.value)}
                         required
                     />
-                    <p className="mt-2" style={{ color: 'var(--text-light)' }}>
+                    <p className="mt-2 settings-p" style={{ color: 'var(--text-light)' }}>
                         Enter your current password to confirm cancellation of
                         your account
                     </p>

@@ -125,6 +125,14 @@ public class TestController {
         }
     }
 
+    @GetMapping("/getattempt")
+    public ResponseEntity<?> getNumAttempt(@RequestParam(value = "testid", required = false) int testid,
+                                               @RequestParam(value = "userid", required = false) int userid) {
+
+            return ResponseEntity.ok(testService.getNumAttempt(testid,userid));
+
+    }
+
     @GetMapping("/starttest")
     public ResponseEntity<?> startTest(@RequestParam("userid") int userId,
                                        @RequestParam("testid") int testId){

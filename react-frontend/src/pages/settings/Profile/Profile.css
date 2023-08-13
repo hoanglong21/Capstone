@@ -1,61 +1,95 @@
 .userAvatar {
-    height: 5rem;
-    width: 5rem;
-    position: relative;
+  height: 5rem;
+  width: 5rem;
+  position: relative;
 }
 
 .userAvatar img {
-    border-radius: 50%;
-    width: 5rem;
-    height: 5rem;
+  border-radius: 50%;
+  width: 5rem;
+  height: 5rem;
 }
 
 .userAvatar button {
-    position: absolute;
-    bottom: -5;
-    right: 0;
-    border-radius: 100%;
-    width: 1.5rem;
-    height: 1.5rem;
+  position: absolute;
+  bottom: -5;
+  right: 0;
+  border-radius: 100%;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 .avatarModal .modal-dialog {
-    max-width: 70vw;
+  max-width: 70vw;
 }
 
 .modal-heading p {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
 }
 
 .avatarItem {
-    cursor: pointer;
-    position: relative;
+  cursor: pointer;
+  position: relative;
 }
 
 .avatarItem .btn {
-    padding: 0.3rem;
+  padding: 0.3rem;
 }
 
 .avatarItem img {
-    border-radius: 50%;
-    width: 4.5rem;
-    height: 4.5rem;
+  border-radius: 50%;
+  width: 4.5rem;
+  height: 4.5rem;
 }
 
 .avatarItem .btn-del {
-    position: absolute;
-    bottom: -30;
-    right: 2;
+  position: absolute;
+  bottom: -30;
+  right: 2;
 }
 
 .avatarUpload {
-    opacity: 0;
-    display: none;
+  opacity: 0;
+  display: none;
 }
 
 .avatarModal label {
-    padding: 0.4rem 0.75rem;
+  padding: 0.4rem 0.75rem;
+}
+
+.profile-col-6 {
+  flex: 0 0 auto;
+  width: 50% !important;
+}
+
+.setting-profile {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+  margin-right: 3rem !important;
+  margin-left: 3rem !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .profile-col-6 {
+    width: 100% !important;
+  }
+
+  .setting-profile {
+    padding-right: 0.5rem !important;
+    padding-left: 0.5rem !important;
+    margin-right: 0rem !important;
+    margin-left: 0rem !important;
+  }
+
+  .my-profile{
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  .avatarModal .modal-dialog {
+    max-width: 100%;
+}
 }

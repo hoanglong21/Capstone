@@ -16,6 +16,8 @@ public interface ClassLearnerService {
 
     ClassLearner updateClassLearner(ClassLearner classLearner, int id) throws ResourceNotFroundException;
 
+    ClassLearner updateClassLearnerById(ClassLearner classLearner, int classid, int userid);
+
     Boolean deleteClassLearner(int userid ,int classid) throws ResourceNotFroundException;
 
     Boolean deleteClassLearnerById(int id) throws ResourceNotFroundException;

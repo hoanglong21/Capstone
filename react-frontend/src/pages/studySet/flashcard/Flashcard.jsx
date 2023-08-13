@@ -1091,7 +1091,6 @@ const Flashcard = () => {
                         <div className="flashCardSwitch">
                             <button
                                 className="flashCardSwitch_btn"
-                                style={{ marginRight: '4rem' }}
                                 disabled={cardIndex === 0}
                                 onClick={() => {
                                     prevCard()
@@ -1104,7 +1103,6 @@ const Flashcard = () => {
                             </button>
                             <button
                                 className="flashCardSwitch_btn"
-                                style={{ marginRight: '4rem' }}
                                 onClick={() => {
                                     nextCard()
                                 }}

@@ -156,7 +156,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Map<String, Object> getFilterSubmission(String search, int authorId,int assignmentId, double mark, String from, String to, String direction, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterSubmission(String search, int authorId,int assignmentId,Boolean isDone, double mark, String from, String to, String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM submission WHERE 1=1";
@@ -177,6 +177,11 @@ public class SubmissionServiceImpl implements SubmissionService {
         if (assignmentId != 0) {
             query += " AND assignment_id = :assignmentId";
             parameters.put("assignmentId", assignmentId);
+        }
+
+        if (isDone != null) {
+            query += " AND is_done = :isDone";
+            parameters.put("isDone", isDone);
         }
 
         if (mark != 0) {

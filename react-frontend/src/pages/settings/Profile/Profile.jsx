@@ -163,8 +163,8 @@ const Profile = () => {
     }
 
     return (
-        <div className="mx-5 px-3">
-            <h4>My Profile</h4>
+        <div className="setting-profile">
+            <h4 className='my-profile'>My Profile</h4>
             <form className="row g-4 needs-validation" noValidate>
                 {/* error message */}
                 {(errorMess || error) && (
@@ -203,7 +203,7 @@ const Profile = () => {
                     </div>
                 </div>
                 {/* Username */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Username</label>
                     <input
                         id="username"
@@ -215,7 +215,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Email */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Email</label>
                     <input
                         id="email"
@@ -227,7 +227,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* First name */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>First Name</label>
                     <input
                         id="first_name"
@@ -240,7 +240,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Last name */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Last Name</label>
                     <input
                         id="last_name"
@@ -253,7 +253,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* DOB  */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>
                         Date of Birth
                     </label>
@@ -269,7 +269,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Phone */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Phone</label>
                     <input
                         id="phone"
@@ -281,7 +281,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Gender */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={`d-block ${FormStyles.formLabel}`}>
                         Gender
                     </label>
@@ -332,7 +332,7 @@ const Profile = () => {
                     </div>
                 </div>
                 {/* Role */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Role</label>
                     <input
                         name="role"

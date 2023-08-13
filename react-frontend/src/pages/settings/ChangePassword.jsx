@@ -6,7 +6,7 @@ import UserService from '../../services/UserService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import { getUser } from '../../features/user/userAction'
-
+import './settings.css'
 const ChangePassword = () => {
     const dispatch = useDispatch()
 
@@ -99,8 +99,8 @@ const ChangePassword = () => {
     }
 
     return (
-        <div className="mx-5 ps-3 pe-5">
-            <h4>Change your password</h4>
+        <div className="settings-css">
+            <h4 className='settings-h4'>Change your password</h4>
             <form className="mt-5 needs-validation" noValidate>
                 {/* error message */}
                 {error && (

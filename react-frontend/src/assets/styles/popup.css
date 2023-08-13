@@ -29,3 +29,25 @@
     margin-top: 8rem;
     --bs-modal-width: 30vw;
 }
+
+.startTestModal.modal {
+    margin-top: 8rem;
+    --bs-modal-width: 30vw;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .setModalTitle {
+        font-size: 1.5rem;
+    }
+
+    .setModalHeading {
+        font-size: 1.1rem;
+    }
+
+    .classModalBtn.btn {
+        padding: 0.5rem 1rem;
+        font-size: 1.1rem;
+    }
+}
+

@@ -155,7 +155,7 @@ public class ClassStatisticServiceTest {
             response.put("totalItems", 1); // Đặt totalItems là 1 để giả lập danh sách có một phần tử
             when(assignmentRepository.findById(anyInt())).thenReturn(Optional.ofNullable(Assignment.builder().build()));
             when(dateRangePicker.getDateActive()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-            when(submissionService.getFilterSubmission(any(), anyInt(), anyInt(), anyInt(), any(), any(), any(), anyInt(), anyInt()))
+            when(submissionService.getFilterSubmission(any(), anyInt(), anyInt(),any(), anyInt(), any(), any(), any(), anyInt(), anyInt()))
                     .thenReturn(response);
             List<Integer> result = classStatisticService.getPointDistribution(2);
             assertThat(result.size()).isGreaterThan(0);

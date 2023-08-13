@@ -353,3 +353,23 @@ h3.quizInfo_title {
 .questionsSidebar a.correct {
     color: #59e8b5;
 }
+
+
+@media only screen and (max-width: 768px) {
+    .quizQues_answer {
+        font-size: 1rem;
+        padding: 0.5rem;
+    }
+
+    .quizSubmit_container button {
+        padding: 0.5rem 1rem;
+    }
+
+    .quizSubmit_container h3 {
+        font-size: 1.2rem;
+    }
+
+    .quizHeader {
+        padding: 0 0.5rem;
+    }
+}

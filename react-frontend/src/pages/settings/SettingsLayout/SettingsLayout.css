@@ -44,3 +44,29 @@
     color: var(--sidebar-link-hover--warning);
     background-color: var(--sidebar-link-bg-hover--warning);
 }
+
+.setting-account-col-4{
+    flex: 0 0 auto;
+    width: 33.33333333%;
+    display: flex !important;
+}
+
+@media only screen and (max-width: 768px) {
+    .setting-account-col-4{
+        display: inline-block !important;
+        overflow-x: scroll;
+    }
+
+    .card-account__sidebar-link{
+        display: table-cell;
+    }
+
+    .setting-account-col-4::-webkit-scrollbar{
+        display: none;
+    }
+
+    .setting-account-col-4 {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+}
