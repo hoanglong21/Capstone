@@ -33,6 +33,8 @@ public interface TestService {
 
     Map<String, Object> getNumAttempt(int testid, int userid);
 
+    Map<String, Object> getFilterTestLearner(String username, Double mark,int authorid, String direction, String sortBy, int page, int size) ;
+
     Map<String, Object> startTest(int testId, int userId);
 
     Map<String, Object> endTest(List<TestResult> testResultList) throws Exception;
