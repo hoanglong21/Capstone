@@ -6,7 +6,7 @@ const UnBanUser = ({ user }) => {
   let navigate = useNavigate();
   const [error, setError] = useState("");
   const [unbanUser, setUnBanUser] = useState({});
-
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     if (user.username) {
       setUnBanUser({ ...user });
@@ -14,13 +14,14 @@ const UnBanUser = ({ user }) => {
   }, [user]);
 
   const handleUnBan = async (e) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
     try {
       await UserService.recoverUser(unbanUser.username);
-      document.getElementById('closeUnBanModal').click()
-      navigate('/manageusers')
-      setError("")
+      setSuccess(true);
+      // document.getElementById("closeUnBanModal").click();
+      navigate("/manageusers");
+      setError("");
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);
@@ -47,19 +48,27 @@ const UnBanUser = ({ user }) => {
               data-bs-dismiss="modal"
               aria-label="Close"
               onClick={() => {
-                document.getElementById('username')
-                setUnBanUser({})
-                setError('')
-            }}
+                document.getElementById("username");
+                setUnBanUser({});
+                setError("");
+              }}
             ></button>
           </div>
           <div className="modal-body">
-          {error && (
+            {error && (
               <div className="alert alert-danger" role="alert">
                 {error}
               </div>
             )}
-            <p>Are you sure unban <strong>{unbanUser.username}</strong> ?</p>
+
+            {success && (
+              <div className="alert alert-success" role="alert">
+                You unbaned {unbanUser.username} successfully!
+              </div>
+            )}
+            <p>
+              Are you sure unban <strong>{unbanUser.username}</strong> ?
+            </p>
           </div>
           <div className="modal-footer">
             <button type="button" class="btn btn-success" onClick={handleUnBan}>
