@@ -66,6 +66,14 @@ const TestDetails = () => {
     const handleAddComment = async () => {
         setLoadingComment(true)
         try {
+            var text = new String(addComment)
+            while (true) {
+                const lastIndex = text.lastIndexOf('<p>&nbsp;</p>')
+                if (text.length - 13 !== lastIndex) {
+                    break
+                }
+                text = new String(text.slice(0, lastIndex))
+            }
             // create comment
             var tempComment = {
                 user: {
@@ -73,7 +81,7 @@ const TestDetails = () => {
                     username: userInfo.username,
                     avatar: userInfo.avatar,
                 },
-                content: addComment,
+                content: text,
                 commentType: {
                     id: 3,
                 },
