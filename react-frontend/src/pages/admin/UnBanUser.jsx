@@ -7,6 +7,7 @@ const UnBanUser = ({ user }) => {
   const [error, setError] = useState("");
   const [unbanUser, setUnBanUser] = useState({});
   const [success, setSuccess] = useState(false);
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
   useEffect(() => {
     if (user.username) {
       setUnBanUser({ ...user });
@@ -20,6 +21,7 @@ const UnBanUser = ({ user }) => {
       await UserService.recoverUser(unbanUser.username);
       setSuccess(true);
       // document.getElementById("closeUnBanModal").click();
+      setButtonDisabled(true);
       navigate("/manageusers");
       setError("");
     } catch (error) {
@@ -56,7 +58,7 @@ const UnBanUser = ({ user }) => {
           </div>
           <div className="modal-body">
             {error && (
-              <div className="alert alert-danger" role="alert">
+              <div className="alert alert-warning" role="alert">
                 {error}
               </div>
             )}
@@ -71,9 +73,6 @@ const UnBanUser = ({ user }) => {
             </p>
           </div>
           <div className="modal-footer">
-            <button type="button" class="btn btn-success" onClick={handleUnBan}>
-              Sure!
-            </button>
             <button
               type="button"
               className="btn btn-secondary"
@@ -81,6 +80,9 @@ const UnBanUser = ({ user }) => {
               aria-label="Close"
             >
               Cancel
+            </button>
+            <button type="button" disabled={isButtonDisabled} class="btn btn-success" onClick={handleUnBan}>
+            {isButtonDisabled ? 'Sure!' : 'Sure'}
             </button>
           </div>
         </div>
