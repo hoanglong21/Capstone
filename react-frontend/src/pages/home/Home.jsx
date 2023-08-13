@@ -21,13 +21,11 @@ function Home() {
         <div>
             <img className="img_left" src={banner} alt="" />
             <div className="container mt-4 mb-5">
-                <div className="dictionary_header bg-light">
+                <div className="dictionary_header">
                     <div className="container mx-auto py-8">
                         <div className="mobile justify-center mt-4">
                             <div className="form123 text-center form-inline">
-                                <form
-                                    className="form-home"
-                                >
+                                <form className="form-home">
                                     <input
                                         className="form-home-input form-control mr-sm-2"
                                         type="search"
