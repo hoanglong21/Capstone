@@ -88,6 +88,17 @@ const VocabDict = () => {
         return script
     }
 
+    useEffect(() => {
+        if (loading === true && document.getElementById('searchDictBtn')) {
+            document.getElementById('searchDictBtn').disabled = true
+            document.getElementById('searchDictInput').readOnly = true
+        }
+        if (loading === false && document.getElementById('searchDictBtn')) {
+            document.getElementById('searchDictBtn').disabled = false
+            document.getElementById('searchDictInput').readOnly = false
+        }
+    }, [loading])
+
     // fetch data
     useEffect(() => {
         fetchData(search ? search : '')

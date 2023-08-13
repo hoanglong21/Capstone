@@ -156,12 +156,14 @@ const ClassList = () => {
                                 placeholder="Search your classes"
                                 type="text"
                                 value={searchInput || ''}
+                                readOnly={loading}
                                 onChange={(event) =>
                                     setSearchInput(event.target.value)
                                 }
                             ></input>
                             <button
                                 type="submit"
+                                disabled={loading}
                                 onClick={(event) => {
                                     event.preventDefault()
                                     setSearchParams({
