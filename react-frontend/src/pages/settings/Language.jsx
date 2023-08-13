@@ -1,14 +1,14 @@
 import FormStyles from '../../assets/styles/Form.module.css'
-
+import './settings.css'
 const Language = () => {
     const handleSubmit = (event) => {
         event.preventDefault()
     }
 
     return (
-        <div className="mx-5 ps-3">
-            <h4>Choose your language</h4>
-            <p>Adjust the language you see in menus</p>
+        <div className="settings-lang">
+            <h4 className='settings-h4'>Choose your language</h4>
+            <p className='settings-p'>Adjust the language you see in menu</p>
             <form className="mt-4 needs-validation" noValidate>
                 <select
                     className={`form-select ${FormStyles.formSelect} mb-1`}

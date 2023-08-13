@@ -1,0 +1,36 @@
+.settings-css{
+    padding-left: 1rem !important;
+    margin-right: 3rem !important;
+    margin-left: 3rem !important;
+    padding-right: 3rem !important;
+}
+
+.settings-lang{
+    padding-left: 1rem !important;
+    margin-right: 3rem !important;
+    margin-left: 3rem !important;
+}
+
+@media only screen and (max-width: 768px) {
+    .settings-css{
+        padding-left: 0.5rem !important;
+        margin-right: 0rem !important;
+        margin-left: 0rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    .settings-h4{
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .settings-lang{
+        padding-left: 0rem !important;
+        margin-right: 0rem !important;
+        margin-left: 0rem !important;
+    }
+
+    .settings-p{
+        font-size: 15px;
+    }
+}
