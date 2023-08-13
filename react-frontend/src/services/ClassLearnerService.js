@@ -41,6 +41,22 @@ const updateClassLeaner = (classLearner, id) => {
     })
 }
 
+const updateClassLeanerById = (classLearner, userId, classId) => {
+    return axios.put(
+        API_BASE_URL +
+            '/classleanerbyid?userid=' +
+            userId +
+            '&classid=' +
+            classId,
+        classLearner,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+        }
+    )
+}
+
 const filterGetLeaner = (
     userId,
     classId,
@@ -110,6 +126,7 @@ const ClassLearnerService = {
     updateClassLeaner,
     deleteClassLearner,
     filterClassLeaner,
+    updateClassLeanerById,
 }
 
 export default ClassLearnerService

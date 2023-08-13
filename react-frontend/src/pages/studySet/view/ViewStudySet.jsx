@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import StudySetService from '../../../services/StudySetService'
@@ -40,6 +40,13 @@ const ViewStudySet = () => {
     const [numStillStar, setNumStillStar] = useState(0)
     const [numMasterStar, setNumMasterStar] = useState(0)
 
+    const [numNotProgressLeft, setNumNotProgressLeft] = useState(0)
+    const [numNotProgressRight, setNumNotProgressRight] = useState(0)
+    const [numStillProgressLeft, setNumStillProgressLeft] = useState(0)
+    const [numStillProgressRight, setNumStillProgressRight] = useState(0)
+    const [numMasterProgressLeft, setNumMasterProgressLeft] = useState(0)
+    const [numMasterProgressRight, setNumMasterProgressRight] = useState(0)
+
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     useEffect(() => {
@@ -59,10 +66,39 @@ const ViewStudySet = () => {
                 setNumNotStar(tempCounts['Not studied star'])
                 setNumStillStar(tempCounts['Still learning star'])
                 setNumMasterStar(tempCounts['Mastered star'])
-                setNumCards(
+                const tempNumCards =
                     tempCounts['Not studied'] +
-                        tempCounts['Still learning'] +
-                        tempCounts['Mastered']
+                    tempCounts['Still learning'] +
+                    tempCounts['Mastered']
+                setNumCards(tempNumCards)
+                // num progress
+                const tempNumNotProgress =
+                    (tempCounts['Not studied'] / tempNumCards) * 360
+                setNumNotProgressLeft(
+                    tempNumNotProgress > 180 ? 180 : tempNumNotProgress
+                )
+                setNumNotProgressRight(
+                    tempNumNotProgress > 180 ? tempNumNotProgress - 180 : 0
+                )
+                const tempNumStillProgress =
+                    (tempCounts['Still learning'] / tempNumCards) * 360
+                setNumStillProgressLeft(
+                    tempNumStillProgress > 180 ? 180 : tempNumStillProgress
+                )
+                setNumStillProgressRight(
+                    tempNumStillProgress > 180 ? tempNumStillProgress - 180 : 0
+                )
+                const tempNumMasteredProgress =
+                    (tempCounts['Mastered'] / tempNumCards) * 360
+                setNumMasterProgressLeft(
+                    tempNumMasteredProgress > 180
+                        ? 180
+                        : tempNumMasteredProgress
+                )
+                setNumMasterProgressRight(
+                    tempNumMasteredProgress > 180
+                        ? tempNumMasteredProgress - 180
+                        : 0
                 )
                 // cards
                 const tempCards = (
@@ -225,6 +261,150 @@ const ViewStudySet = () => {
                             </button>
                         </li>
                     </ul>
+                </div>
+            </div>
+            {/* Progress */}
+            <div className="setPageTermsHeader">
+                <div className="setPageTermsHeading">Your Progress</div>
+                <div className="row">
+                    {/* not studied */}
+                    <div className="col-4">
+                        <div
+                            className="card setPageProgressLink"
+                            disabled={numNot === 0}
+                            onClick={() => {
+                                if (numNot !== 0) {
+                                    navigate(`/learn/${id}?statusType=not`)
+                                }
+                            }}
+                        >
+                            <div className="card-body">
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <div className="d-flex align-items-center">
+                                        <div className="progress blue">
+                                            <span className="progress-left">
+                                                <span
+                                                    className="progress-bar"
+                                                    style={{
+                                                        transform: `rotate(${numNotProgressLeft}deg)`,
+                                                    }}
+                                                ></span>
+                                            </span>
+                                            <span className="progress-right">
+                                                <span
+                                                    className="progress-bar"
+                                                    style={{
+                                                        transform: `rotate(${numNotProgressRight}deg)`,
+                                                    }}
+                                                ></span>
+                                            </span>
+                                            <div className="progress-value">
+                                                {numNot}
+                                            </div>
+                                        </div>
+                                        <h5 className="setPageProgressLabel m-0 ms-3">
+                                            Not studied
+                                        </h5>
+                                    </div>
+                                    <span className="setPageProgressLink">
+                                        Study
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* still learning */}
+                    <div className="col-4">
+                        <div
+                            className="card setPageProgressLink"
+                            disabled={numStill === 0}
+                            onClick={() => {
+                                if (numStill !== 0) {
+                                    navigate(`/learn/${id}?statusType=still`)
+                                }
+                            }}
+                        >
+                            <div className="card-body">
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <div className="d-flex align-items-center">
+                                        <div className="progress yellow">
+                                            <span className="progress-left">
+                                                <span
+                                                    className="progress-bar"
+                                                    style={{
+                                                        transform: `rotate(${numStillProgressLeft}deg)`,
+                                                    }}
+                                                ></span>
+                                            </span>
+                                            <span className="progress-right">
+                                                <span
+                                                    className="progress-bar"
+                                                    style={{
+                                                        transform: `rotate(${numStillProgressRight}deg)`,
+                                                    }}
+                                                ></span>
+                                            </span>
+                                            <div className="progress-value">
+                                                {numStill}
+                                            </div>
+                                        </div>
+                                        <h5 className="setPageProgressLabel m-0 ms-3">
+                                            Still learning
+                                        </h5>
+                                    </div>
+                                    <span className="setPageProgressLink">
+                                        Study
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* mastered */}
+                    <div className="col-4">
+                        <div
+                            className="card setPageProgressLink"
+                            disabled={numMaster === 0}
+                            onClick={() => {
+                                if (numMaster !== 0) {
+                                    navigate(`/learn/${id}?statusType=mastered`)
+                                }
+                            }}
+                        >
+                            <div className="card-body">
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <div className="d-flex align-items-center">
+                                        <div className="progress green">
+                                            <span className="progress-left">
+                                                <span
+                                                    className="progress-bar"
+                                                    style={{
+                                                        transform: `rotate(${numMasterProgressLeft}deg)`,
+                                                    }}
+                                                ></span>
+                                            </span>
+                                            <span className="progress-right">
+                                                <span
+                                                    className="progress-bar"
+                                                    style={{
+                                                        transform: `rotate(${numMasterProgressRight}deg)`,
+                                                    }}
+                                                ></span>
+                                            </span>
+                                            <div className="progress-value">
+                                                {numMaster}
+                                            </div>
+                                        </div>
+                                        <h5 className="setPageProgressLabel m-0 ms-3">
+                                            Mastered
+                                        </h5>
+                                    </div>
+                                    <span className="setPageProgressLink">
+                                        Study
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             {/* Details */}

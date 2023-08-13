@@ -36,7 +36,7 @@ public class ClassLeanerController {
     }
 
     @PutMapping ("/classleaner/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR') || hasRole('ROLE_LEARNER')")
     public ResponseEntity<?> updateClassLeaner(@RequestBody ClassLearner classLearner, @PathVariable int id) {
         try {
             return ResponseEntity.ok(classLearnerService.updateClassLearner(classLearner,id));
@@ -46,7 +46,7 @@ public class ClassLeanerController {
     }
 
     @PutMapping ("/classleanerbyid/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR') || hasRole('ROLE_LEARNER')")
     public ResponseEntity<?> updateClassLeanerById(@RequestBody ClassLearner classLearner, @RequestParam(value = "userid", required = false, defaultValue = "0") int userid,
                                                    @RequestParam(value = "classid", required = false, defaultValue = "0") int classid) {
             return ResponseEntity.ok(classLearnerService.updateClassLearnerById(classLearner,userid,classid));
