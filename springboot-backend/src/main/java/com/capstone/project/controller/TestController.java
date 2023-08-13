@@ -133,6 +133,19 @@ public class TestController {
 
     }
 
+    @GetMapping("/gettestlearner")
+    public ResponseEntity<?> getTestLearner(@RequestParam(value = "username", required = false) String username,
+                                            @RequestParam(value = "authorid", required = false) Optional<Integer>  authorid,
+                                            @RequestParam(value = "mark", required = false) Optional<Double>  mark,
+                                            @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                            @RequestParam(value = "sortby", required = false, defaultValue = "mark") String sortBy,
+                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+
+        return ResponseEntity.ok(testService.getFilterTestLearner(username,mark.orElse(0.0),authorid.orElse(0),direction,sortBy,page,size));
+
+    }
+
     @GetMapping("/starttest")
     public ResponseEntity<?> startTest(@RequestParam("userid") int userId,
                                        @RequestParam("testid") int testId){

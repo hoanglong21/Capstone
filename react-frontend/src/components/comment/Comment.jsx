@@ -49,8 +49,17 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const handleUpdateComment = async () => {
         setLoadingComment(true)
         try {
+            // remove line break
+            var text = new String(updateComment.content)
+            while (true) {
+                const lastIndex = text.lastIndexOf('<p>&nbsp;</p>')
+                if (text.length - 13 !== lastIndex) {
+                    break
+                }
+                text = new String(text.slice(0, lastIndex))
+            }
             // create comment
-            var tempComment = { ...updateComment }
+            var tempComment = { ...updateComment, content: text }
             comment.created_date = toBEDate(comment.created_date)
             if (tempComment?.user) {
                 comment.user.created_date = toBEDate(comment.user.created_date)
@@ -334,7 +343,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         }
                     }}
                 >
-                    <div className="d-flex align-items-center mb-3">
+                    <div className="d-flex mb-3">
                         <img
                             className="comment_img"
                             src={comment?.user?.avatar || defaultAvatar}

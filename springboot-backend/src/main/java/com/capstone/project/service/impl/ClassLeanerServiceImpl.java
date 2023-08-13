@@ -55,7 +55,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     }
 
     @Override
-    public ClassLearner updateClassLearnerById(ClassLearner classroomLearner, int classid, int userid)  {
+    public ClassLearner updateClassLearnerById(ClassLearner classroomLearner, int userid, int classid)  {
         ClassLearner classLearner = classLearnerRepository.findByUserIdAndClassroomId(userid,classid);
         classLearner.setStatus(classroomLearner.getStatus());
         return classLearnerRepository.save(classLearner);

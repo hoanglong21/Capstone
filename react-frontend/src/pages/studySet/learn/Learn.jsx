@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Modal from 'react-bootstrap/Modal'
@@ -96,8 +96,10 @@ Confettiful.prototype._renderConfetti = function () {
 const Learn = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [searchParams] = useSearchParams()
 
     const { id } = useParams()
+    const statusType = searchParams.get('statusType')
 
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
@@ -212,14 +214,26 @@ const Learn = () => {
                 setType(tempStudySet.studySetType.id)
                 // set progress
                 var tempProgressStatus = []
-                if (tempCounts['Not studied'] != 0) {
-                    tempProgressStatus.push('not studied')
-                }
-                if (tempCounts['Still learning'] != 0) {
-                    tempProgressStatus.push('still learning')
-                }
-                if (tempCounts['Mastered'] != 0) {
-                    tempProgressStatus.push('mastered')
+                if (statusType) {
+                    if (statusType === 'not') {
+                        tempProgressStatus.push('not studied')
+                    }
+                    if (statusType === 'still') {
+                        tempProgressStatus.push('still learning')
+                    }
+                    if (statusType === 'mastered') {
+                        tempProgressStatus.push('mastered')
+                    }
+                } else {
+                    if (tempCounts['Not studied'] != 0) {
+                        tempProgressStatus.push('not studied')
+                    }
+                    if (tempCounts['Still learning'] != 0) {
+                        tempProgressStatus.push('still learning')
+                    }
+                    if (tempCounts['Mastered'] != 0) {
+                        tempProgressStatus.push('mastered')
+                    }
                 }
                 setProgressStatus([...tempProgressStatus])
                 setOptionProgressStatus([...tempProgressStatus])
