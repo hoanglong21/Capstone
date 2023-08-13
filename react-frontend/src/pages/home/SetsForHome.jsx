@@ -52,7 +52,9 @@ function SetsForHome() {
     return (
         <div className="mt-4 mb-5">
             <div className="sets-list">
-                {sets?.length === 0 && <p>No sets matching {search} found</p>}
+                {sets?.length === 0 && (
+                    <p className="noFound">No sets matching {search} found</p>
+                )}
                 {sets?.map((set) => (
                     <div key={set?.id} className="set-item mb-3">
                         <Link to={`/set/${set.id}`}>

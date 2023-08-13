@@ -67,7 +67,9 @@ const GrammarDict = () => {
             <div>
                 <div className="row mt-4 mb-5">
                     {grammars.length == 0 && (
-                        <p>No grammars matching {search} found</p>
+                        <p className="noFound">
+                            No grammars matching {search} found
+                        </p>
                     )}
                     {grammars.map((grammarInfo, index) => (
                         <div className="grammar-dict-col-3 mb-2" key={index}>

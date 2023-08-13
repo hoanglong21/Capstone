@@ -389,3 +389,7 @@ svg {
 .table-transparent {
     --bs-table-bg: transparent;
 }
+
+.noFound {
+    word-break: break-all;
+}

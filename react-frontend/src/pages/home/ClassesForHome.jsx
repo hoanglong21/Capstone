@@ -53,7 +53,9 @@ const ClassesForHome = () => {
         <div className="mt-4 mb-5">
             <div className="sets-list">
                 {classes?.length === 0 && (
-                    <p>No classes matching {search} found</p>
+                    <p className="noFound">
+                        No classes matching {search} found
+                    </p>
                 )}
                 {classes?.map((classroom) => (
                     <div key={classroom.id} className="set-item mb-3">

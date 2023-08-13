@@ -158,7 +158,10 @@ const KanjiDict = () => {
                         <div className="kanji-dict">
                             {loadingSelect ? (
                                 <div className="d-flex justify-content-center">
-                                    <div className="spinner-border" role="status">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
                                         <span className="visually-hidden">
                                             Loading...
                                         </span>
@@ -261,7 +264,7 @@ const KanjiDict = () => {
                         </div>
                     </div>
                 ) : (
-                    <p>No kanji matching {search} found</p>
+                    <p className="noFound">No kanji matching {search} found</p>
                 )}
             </div>
         )

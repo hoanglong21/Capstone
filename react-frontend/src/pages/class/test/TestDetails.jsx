@@ -146,7 +146,7 @@ const TestDetails = () => {
                             onClick={() => {
                                 setShowStartModal(true)
                             }}
-                            disabled={test?._draft || !canTest}
+                            disabled={test?._draft || canTest}
                         >
                             Do Test
                         </button>

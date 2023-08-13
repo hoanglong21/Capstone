@@ -287,7 +287,7 @@ const VocabDict = () => {
                         )}
                     </div>
                 ) : (
-                    <p>No words matching {search} found</p>
+                    <p className="noFound">No words matching {search} found</p>
                 )}
             </div>
         )

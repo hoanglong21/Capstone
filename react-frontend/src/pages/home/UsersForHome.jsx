@@ -53,7 +53,9 @@ function UsersForHome() {
     return (
         <div className="mt-4 mb-5">
             <div className="sets-list row g-3">
-                {users?.length === 0 && <p>No users matching {search} found</p>}
+                {users?.length === 0 && (
+                    <p className="noFound">No users matching {search} found</p>
+                )}
                 {users?.map((user) => (
                     <div className="col-12 col-md-6 col-xl-4" key={user?.id}>
                         <div className="set-item h-100">

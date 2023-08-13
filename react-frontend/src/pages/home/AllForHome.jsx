@@ -133,7 +133,9 @@ function AllForHome() {
                 </div>
                 <div className="sets-list row g-3">
                     {sets.length === 0 && (
-                        <p>No sets matching {search} found</p>
+                        <p className="noFound">
+                            No sets matching {search} found
+                        </p>
                     )}
                     {sets.map((set) => (
                         <div className="col-12 col-md-6 col-xl-4" key={set?.id}>
@@ -196,7 +198,9 @@ function AllForHome() {
                 </div>
                 <div className="sets-list row g-3">
                     {classes?.length === 0 && (
-                        <p>No classes matching {search} found</p>
+                        <p className="noFound">
+                            No classes matching {search} found
+                        </p>
                     )}
                     {classes?.map((classroom) => (
                         <div className="col-12 col-lg-6" key={classroom?.id}>
@@ -260,7 +264,9 @@ function AllForHome() {
                 </div>
                 <div className="sets-list row g-3">
                     {users.length === 0 && (
-                        <p>No users matching {search} found</p>
+                        <p className="noFound">
+                            No users matching {search} found
+                        </p>
                     )}
                     {users.map((user) => (
                         <div

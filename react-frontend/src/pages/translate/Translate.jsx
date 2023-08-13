@@ -21,6 +21,7 @@ function Translate() {
     const [transText, setTransText] = useState('')
     const [transLang, setTransLang] = useState('vi')
     const [loadingTrans, setLoadingTrans] = useState(false)
+    const [autoSource, setAutoSource] = useState(null)
 
     const [isTriggerTrans, setIsTriggerTrans] = useState(false)
 
@@ -55,14 +56,14 @@ function Translate() {
             setLoadingTrans(true)
             setLoadingCheck(true)
             setLoadingAnalysis(true)
-            let resTrans = ''
+            var tempTranslate = {}
             try {
-                resTrans = (
+                tempTranslate = (
                     await TranslateService.translateClients5(
                         origText,
                         transLang
                     )
-                ).data.translation
+                ).data
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -70,14 +71,14 @@ function Translate() {
                     console.log(error.message)
                 }
             }
-            if (!resTrans) {
+            if (!tempTranslate?.translation) {
                 try {
-                    resTrans = (
+                    tempTranslate = (
                         await TranslateService.translateGoogleapis(
                             origText,
                             transLang
                         )
-                    ).data.translation
+                    ).data
                 } catch (error) {
                     setLoadingTrans(false)
                     if (error.response && error.response.data) {
@@ -88,14 +89,14 @@ function Translate() {
                     return
                 }
             }
-            if (!resTrans) {
+            if (!tempTranslate?.translation) {
                 try {
-                    resTrans = (
+                    tempTranslate = (
                         await TranslateService.translateMymemory(
                             origText,
                             transLang
                         )
-                    ).data.translation
+                    ).data
                 } catch (error) {
                     setLoadingTrans(false)
                     if (error.response && error.response.data) {
@@ -106,7 +107,14 @@ function Translate() {
                     return
                 }
             }
-            setTransText(resTrans)
+            setTransText(tempTranslate?.translation)
+            if (
+                !['Japanese', 'Vietnamese', 'English'].includes(
+                    tempTranslate?.source
+                )
+            ) {
+                setAutoSource(tempTranslate?.source)
+            }
             setLoadingTrans(false)
             // grammar check
             if (origLang === 'ja') {
@@ -136,7 +144,9 @@ function Translate() {
                 }
                 if (transLang === 'ja') {
                     const resTransAnalysis = (
-                        await DetectionService.detectVocabulary(resTrans)
+                        await DetectionService.detectVocabulary(
+                            tempTranslate?.translation
+                        )
                     ).data
                     setAnalysis(resTransAnalysis)
                 }
@@ -180,6 +190,7 @@ function Translate() {
         setAnalysis([])
         setOpenAI('')
         setIsClearVoice(true)
+        setAutoSource(null)
     }
 
     const handleVoice = (text) => {
@@ -238,8 +249,9 @@ function Translate() {
                             id="targetLang"
                             name="targetLang"
                             className="form-select selectLang"
-                            value={origLang}
+                            value={autoSource ? 'auto' : origLang}
                             onChange={(event) => {
+                                setAutoSource(null)
                                 const temp = event.target.value
                                 setOrigLang(temp)
                                 if (temp === transLang) {
@@ -247,6 +259,11 @@ function Translate() {
                                 }
                             }}
                         >
+                            {autoSource && (
+                                <option value="auto">
+                                    {autoSource} - Detected
+                                </option>
+                            )}
                             <option value="ja">Japan</option>
                             <option value="vi">Vietnamese</option>
                             <option value="en">English</option>
