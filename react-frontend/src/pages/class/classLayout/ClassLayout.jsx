@@ -123,6 +123,7 @@ const ClassLayout = () => {
             )
             setShowUnenrollModal(false)
             setShowUnenrollToast(true)
+            setHasAccess(false)
             navigate('/')
         } catch (error) {
             if (error.response && error.response.data) {

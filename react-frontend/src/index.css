@@ -385,3 +385,7 @@ svg {
     background-color: #fff;
     z-index: 0;
 }
+
+.table-transparent {
+    --bs-table-bg: transparent;
+}
