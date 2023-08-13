@@ -75,7 +75,7 @@ public class CardController {
                                            @RequestParam(value = "studysetid") int studySetId,
                                            @RequestParam(value = "status") String[] status,
                                            @RequestParam(value = "star") boolean star,
-                                           @RequestParam(value = "sortby", required = false, defaultValue = "status") String sortBy,
+                                           @RequestParam(value = "sortby", required = false, defaultValue = "cardId") String sortBy,
                                            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction,
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
