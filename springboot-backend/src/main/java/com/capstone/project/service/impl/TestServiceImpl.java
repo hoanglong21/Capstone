@@ -315,7 +315,7 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Map<String, Object> getNumAttempt(int testid, int userid)  {
-        String query =" SELECT tl.num_attempt as num_attempt  from test_learner tl WHERE 1=1 ";
+        String query =" SELECT MAX(tl.num_attempt) as num_attempt  from test_learner tl WHERE 1=1 ";
 
         Map<String, Object> parameters = new HashMap<>();
 
@@ -343,6 +343,56 @@ public class TestServiceImpl  implements TestService {
         } else {
             response.put("num_attempt", 0); // hoặc giá trị mặc định khác bạn muốn
         }
+
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getFilterTestLearner(String username, Double mark, int authorid, String direction, String sortBy, int page, int size) {
+        int offset = (page - 1) * size;
+
+        String query ="SELECT * FROM test_learner\n" +
+                "WHERE 1=1";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (authorid != 0) {
+            query += " AND user_id != :authorId";
+            parameters.put("authorId", authorid);
+        }
+
+        if (username != null && !username.isEmpty()) {
+            User user = userRepository.findUserByUsername(username);
+            query += " AND user_id = :userId";
+            parameters.put("userId", user.getId());
+        }
+
+        if (mark != 0) {
+            query += " AND mark = :mark";
+            parameters.put("mark", mark);
+        }
+
+
+        query += " ORDER BY " + sortBy + " " + direction;
+
+        Query q = em.createNativeQuery(query, TestLearner.class);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<TestLearner> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
 
         return response;
     }

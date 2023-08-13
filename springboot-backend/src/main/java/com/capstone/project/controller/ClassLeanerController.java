@@ -45,7 +45,7 @@ public class ClassLeanerController {
         }
     }
 
-    @PutMapping ("/classleanerbyid/{id}")
+    @PutMapping ("/classleanerbyid")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> updateClassLeanerById(@RequestBody ClassLearner classLearner, @RequestParam(value = "userid", required = false, defaultValue = "0") int userid,
                                                    @RequestParam(value = "classid", required = false, defaultValue = "0") int classid) {
