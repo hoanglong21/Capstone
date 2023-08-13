@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import Modal from 'react-bootstrap/Modal'
+import { useNavigate } from 'react-router-dom'
 
 import { deleteFolder } from '../../../features/fileManagement'
 import TestService from '../../../services/TestService'
 
-import '../../../assets/styles/popup.css'
-import { useNavigate } from 'react-router-dom'
 
 const DeleteTest = ({
     tests,
