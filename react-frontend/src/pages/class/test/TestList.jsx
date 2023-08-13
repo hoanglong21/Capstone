@@ -22,6 +22,24 @@ const TestList = () => {
     const [classroom, setClassroom] = useState({})
     const [loading, setLoading] = useState(true)
     const [today, setToday] = useState(new Date())
+    const [loadingCount, setLoadingCount] = useState(false)
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+    function getToday() {
+        const today = new Date()
+        return (
+            today.getFullYear() +
+            '-' +
+            padWithLeadingZeros(today.getMonth() + 1, 2) +
+            '-' +
+            padWithLeadingZeros(today.getDate(), 2) +
+            'T' +
+            padWithLeadingZeros(today.getHours(), 2) +
+            ':' +
+            padWithLeadingZeros(today.getMinutes(), 2)
+        )
+    }
 
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
@@ -39,7 +57,9 @@ const TestList = () => {
                         '',
                         '',
                         `${
-                            userInfo.id === tempClass.user.id ? '' : `=${today}`
+                            userInfo.id === tempClass.user.id
+                                ? ''
+                                : `=${getToday()}`
                         }`,
                         '',
                         '',
@@ -66,6 +86,33 @@ const TestList = () => {
             fetchData()
         }
     }, [id])
+
+    const handleCountSubmission = async (test, index) => {
+        if (userInfo?.id === classroom?.user?.id && !test?.attempted) {
+            setLoadingCount(true)
+            try {
+                const tempCountSubmit = (
+                    await TestService.getNumAttemptTest(test.id, classroom.id)
+                ).data
+                const attempted = tempCountSubmit.attempted
+                const notattempted = tempCountSubmit.notattempted
+                var tempTests = [...tests]
+                tempTests[index] = {
+                    ...test,
+                    attempted,
+                    notattempted,
+                }
+                setTests(tempTests)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+            setLoadingCount(false)
+        }
+    }
 
     if (loading) {
         return (
@@ -127,7 +174,11 @@ const TestList = () => {
                     id="accordionTests"
                 >
                     {tests?.map((test, index) => (
-                        <div className="accordion-item" key={test.id}>
+                        <div
+                            className="accordion-item"
+                            key={test.id}
+                            onClick={() => handleCountSubmission(test, index)}
+                        >
                             <button
                                 className="accordion-button collapsed d-flex justify-content-between align-items-center"
                                 type="button"
@@ -154,14 +205,14 @@ const TestList = () => {
                                     <div>{test.title || '...'}</div>
                                 </div>
                                 <div>
-                                    {test._draft
+                                    {test?._draft
                                         ? 'Draft'
                                         : test?.start_date &&
-                                          new Date(test?.start_date) < today
+                                          new Date(test?.start_date) > today
                                         ? `Scheduled for ${test?.start_date}`
                                         : test?.due_date
                                         ? `Due ${test?.due_date}`
-                                        : `Posted ${test?.created_date}`}
+                                        : 'No due date'}
                                 </div>
                             </button>
                             <div
@@ -170,12 +221,12 @@ const TestList = () => {
                                 data-bs-parent="#accordionTests"
                             >
                                 <div className="accordion-body">
-                                    <p>
-                                        {test?.due_date
-                                            ? `Posted ${test?.created_date}`
-                                            : 'No due date'}
-                                    </p>
-                                    <div className="mt-2 d-flex justify-content-between">
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <div>Posted {test?.created_date}</div>
+                                        {userInfo?.id !==
+                                            classroom?.user?.id && <div></div>}
+                                    </div>
+                                    <div className="mt-3 d-flex justify-content-between">
                                         <button
                                             className="viewTest_btn"
                                             onClick={() =>
@@ -191,7 +242,8 @@ const TestList = () => {
                                             <div className="d-flex">
                                                 <div className="asignInfo_block">
                                                     <div className="assignInfo_number">
-                                                        0
+                                                        {loadingCount && '...'}
+                                                        {test?.attempted}
                                                     </div>
                                                     <div className="assignInfo_title">
                                                         Turned in
@@ -199,7 +251,8 @@ const TestList = () => {
                                                 </div>
                                                 <div className="asignInfo_block">
                                                     <div className="assignInfo_number">
-                                                        1
+                                                        {loadingCount && '...'}
+                                                        {test?.notattempted}
                                                     </div>
                                                     <div className="assignInfo_title">
                                                         Assigned
@@ -223,8 +276,9 @@ const TestList = () => {
                                             <button
                                                 className="deleteTest_btn"
                                                 type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target={`#deleteTestModal${test?.id}`}
+                                                onClick={() =>
+                                                    setShowDeleteModal(true)
+                                                }
                                             >
                                                 Delete test
                                             </button>
@@ -237,6 +291,8 @@ const TestList = () => {
                                     tests={tests}
                                     stateChanger={setTests}
                                     classroom={classroom}
+                                    showDeleteModal={showDeleteModal}
+                                    setShowDeleteModal={setShowDeleteModal}
                                 />
                             </div>
                         </div>

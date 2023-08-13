@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 import { useDispatch, useSelector } from 'react-redux'
+import Modal from 'react-bootstrap/Modal'
 
 import CardService from '../../../services/CardService'
 import VocabCard from './VocabCard'
@@ -144,6 +145,8 @@ const Flashcard = () => {
     const [numStillStar, setNumStillStar] = useState(0)
     const [numMasterStar, setNumMasterStar] = useState(0)
 
+    const [showOptionModal, setShowOptionModal] = useState(true)
+
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -158,10 +161,6 @@ const Flashcard = () => {
             return file
         }
     }
-
-    useEffect(() => {
-        document.getElementById('toggleFlashcardsOptionsModalBtn').click()
-    }, [])
 
     // fetch user info
     useEffect(() => {
@@ -635,7 +634,7 @@ const Flashcard = () => {
             setNote(tempCards[0].progress?.note || '')
             setProgressStatus(optionProgressStatus)
             setIsStar(optionIsStar)
-            document.getElementById('flashcardsOptionModalCloseBtn').click()
+            setShowOptionModal(false)
             setError('')
             setLoading(false)
         } catch (error) {
@@ -648,6 +647,7 @@ const Flashcard = () => {
     }
 
     const handleCancelCreateFlashcards = () => {
+        setShowOptionModal(false)
         setError('')
         setOptionProgressStatus(progressStatus)
         setOptionIsStar(isStar)
@@ -749,10 +749,10 @@ const Flashcard = () => {
                         </button>
                     ) : (
                         <button
-                            id="toggleFlashcardsOptionsModalBtn"
                             className="quizOptions_btn"
-                            data-bs-toggle="modal"
-                            data-bs-target="#flashcardOptionModal"
+                            onClick={() => {
+                                setShowOptionModal(true)
+                            }}
                         >
                             Options
                         </button>
@@ -1125,198 +1125,180 @@ const Flashcard = () => {
                 </div>
             )}
             {/* Option modal */}
-            <div
-                className="modal fade quizOptionModal"
-                id="flashcardOptionModal"
-                data-bs-backdrop="static"
-                data-bs-keyboard="false"
-                tabIndex="-1"
-                aria-labelledby="staticBackdropLabel"
-                aria-hidden="true"
+            <Modal
+                className="quizOptionModal"
+                size="lg"
+                show={showOptionModal}
+                onHide={() => {
+                    setShowOptionModal(false)
+                }}
             >
-                <div className="modal-dialog modal-lg">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h3 className="modal-title">Options</h3>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                                onClick={handleCancelCreateFlashcards}
-                            ></button>
-                            <button
-                                id="flashcardsOptionModalCloseBtn"
-                                type="button"
-                                className="d-none"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            {/* error message */}
-                            {error && (
-                                <div
-                                    className="alert alert-danger"
-                                    role="alert"
-                                >
-                                    {error}
-                                </div>
-                            )}
-                            <div className="row mb-3">
-                                <div className="col-6">
-                                    {/* status */}
-                                    <div className="quizOptionBlock">
-                                        <legend>PROGRESS STATUS</legend>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                value="not studied"
-                                                checked={
-                                                    optionProgressStatus?.includes(
-                                                        'not studied'
-                                                    ) || ''
-                                                }
-                                                id="notStudied"
-                                                onChange={
-                                                    handleChangeProgressStatus
-                                                }
-                                                disabled={
-                                                    optionIsStar
-                                                        ? numNotStar == 0
-                                                        : numNot == 0
-                                                }
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="notStudied"
-                                            >
-                                                Not studied
-                                            </label>
-                                        </div>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                value="still learning"
-                                                checked={
-                                                    optionProgressStatus?.includes(
-                                                        'still learning'
-                                                    ) || ''
-                                                }
-                                                id="stillLearning"
-                                                onChange={
-                                                    handleChangeProgressStatus
-                                                }
-                                                disabled={
-                                                    optionIsStar
-                                                        ? numStillStar == 0
-                                                        : numStill == 0
-                                                }
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="stillLearning"
-                                            >
-                                                Still learning
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                value="mastered"
-                                                checked={
-                                                    optionProgressStatus?.includes(
-                                                        'mastered'
-                                                    ) || ''
-                                                }
-                                                id="mastered"
-                                                onChange={
-                                                    handleChangeProgressStatus
-                                                }
-                                                disabled={
-                                                    optionIsStar
-                                                        ? numMasterStar == 0
-                                                        : numMaster == 0
-                                                }
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="mastered"
-                                            >
-                                                Mastered
-                                            </label>
-                                        </div>
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h3 className="modal-title">Options</h3>
+                        <button
+                            type="button"
+                            className="btn-close"
+                            onClick={handleCancelCreateFlashcards}
+                        ></button>
+                    </div>
+                    <div className="modal-body">
+                        {/* error message */}
+                        {error && (
+                            <div className="alert alert-danger" role="alert">
+                                {error}
+                            </div>
+                        )}
+                        <div className="row mb-3">
+                            <div className="col-6">
+                                {/* status */}
+                                <div className="quizOptionBlock">
+                                    <legend>PROGRESS STATUS</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value="not studied"
+                                            checked={
+                                                optionProgressStatus?.includes(
+                                                    'not studied'
+                                                ) || ''
+                                            }
+                                            id="notStudied"
+                                            onChange={
+                                                handleChangeProgressStatus
+                                            }
+                                            disabled={
+                                                optionIsStar
+                                                    ? numNotStar == 0
+                                                    : numNot == 0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="notStudied"
+                                        >
+                                            Not studied
+                                        </label>
+                                    </div>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value="still learning"
+                                            checked={
+                                                optionProgressStatus?.includes(
+                                                    'still learning'
+                                                ) || ''
+                                            }
+                                            id="stillLearning"
+                                            onChange={
+                                                handleChangeProgressStatus
+                                            }
+                                            disabled={
+                                                optionIsStar
+                                                    ? numStillStar == 0
+                                                    : numStill == 0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="stillLearning"
+                                        >
+                                            Still learning
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value="mastered"
+                                            checked={
+                                                optionProgressStatus?.includes(
+                                                    'mastered'
+                                                ) || ''
+                                            }
+                                            id="mastered"
+                                            onChange={
+                                                handleChangeProgressStatus
+                                            }
+                                            disabled={
+                                                optionIsStar
+                                                    ? numMasterStar == 0
+                                                    : numMaster == 0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="mastered"
+                                        >
+                                            Mastered
+                                        </label>
                                     </div>
                                 </div>
-                                <div className="col-6">
-                                    {/* star */}
-                                    <div className="quizOptionBlock">
-                                        <legend>STAR</legend>
-                                        <div className="mb-2">
-                                            <input
-                                                className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                type="checkbox"
-                                                checked={optionIsStar}
-                                                id="isStar"
-                                                onChange={() => {
-                                                    setOptionIsStar(
-                                                        !optionIsStar
-                                                    )
-                                                }}
-                                                disabled={
-                                                    numNotStar +
-                                                        numStillStar +
-                                                        numMasterStar ==
-                                                    0
-                                                }
-                                            />
-                                            <label
-                                                className="form-check-label"
-                                                htmlFor="isStar"
-                                            >
-                                                Study starred terms only
-                                            </label>
-                                        </div>
+                            </div>
+                            <div className="col-6">
+                                {/* star */}
+                                <div className="quizOptionBlock">
+                                    <legend>STAR</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            checked={optionIsStar}
+                                            id="isStar"
+                                            onChange={() => {
+                                                setOptionIsStar(!optionIsStar)
+                                            }}
+                                            disabled={
+                                                numNotStar +
+                                                    numStillStar +
+                                                    numMasterStar ==
+                                                0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="isStar"
+                                        >
+                                            Study starred terms only
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary classModalBtn me-3"
-                                data-bs-dismiss="modal"
-                                onClick={handleCancelCreateFlashcards}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="btn btn-primary classModalBtn"
-                                onClick={handleCreateFlashCards}
-                                disabled={loading}
-                            >
-                                {loading ? (
-                                    <div className="d-flex justify-content-center">
-                                        <div
-                                            className="spinner-border"
-                                            role="status"
-                                        >
-                                            <span className="visually-hidden">
-                                                Loading...
-                                            </span>
-                                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary classModalBtn me-3"
+                            onClick={handleCancelCreateFlashcards}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-primary classModalBtn"
+                            onClick={handleCreateFlashCards}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <div className="d-flex justify-content-center">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            Loading...
+                                        </span>
                                     </div>
-                                ) : (
-                                    'Create new flashcards'
-                                )}
-                            </button>
-                        </div>
+                                </div>
+                            ) : (
+                                'Create new flashcards'
+                            )}
+                        </button>
                     </div>
                 </div>
-            </div>
+            </Modal>
             {/* auto play message */}
             <ToastContainer
                 className="p-3"

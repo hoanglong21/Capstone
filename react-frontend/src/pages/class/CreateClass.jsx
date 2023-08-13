@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Modal from 'react-bootstrap/Modal'
 
 import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
-import '../../assets/styles/popup.css'
 
-export default function CreateClass() {
+export default function CreateClass({ showCreateModal, setShowCreateModal }) {
     let navigate = useNavigate()
 
     const { userInfo } = useSelector((state) => state.user)
@@ -15,6 +15,26 @@ export default function CreateClass() {
     const [newClass, setNewClass] = useState({})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (showCreateModal === false) {
+            setNewClass({
+                class_name: '',
+                description: '',
+                user: {
+                    id: userInfo?.id,
+                    username: userInfo?.username,
+                },
+            })
+            setError('')
+            document
+                .getElementById('createClassForm')
+                ?.classList?.remove('was-validated')
+            document
+                .getElementById('class_name')
+                ?.classList.remove('is-invalid')
+        }
+    }, [showCreateModal])
 
     useEffect(() => {
         const fetchData = () => {
@@ -40,13 +60,13 @@ export default function CreateClass() {
         e.preventDefault()
         setLoading(true)
         console.log(newClass)
-        var form = document.querySelector('.needs-validation')
+        var form = document.getElementById('createClassForm')
         const classNameEl = document.getElementById('class_name')
         // clear validation
         form.classList.remove('was-validated')
         classNameEl.classList.remove('is-invalid')
         setError('')
-
+        // validation
         form.classList.add('was-validated')
         if (!form.checkValidity()) {
             setError('Class name cannot be empty.')
@@ -55,20 +75,8 @@ export default function CreateClass() {
             try {
                 const temp = (await ClassService.createClassroom(newClass)).data
                 setNewClass(temp)
-                document.getElementById('closeCreateClassModal').click()
+                setShowCreateModal(false)
                 navigate(`/class/${temp.id}`)
-                // clear validation
-                form.classList.remove('was-validated')
-                classNameEl.classList.remove('is-invalid')
-                setNewClass({
-                    class_name: '',
-                    description: '',
-                    user: {
-                        id: userInfo.id,
-                        username: userInfo.username,
-                    },
-                })
-                setError('')
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)
@@ -81,101 +89,80 @@ export default function CreateClass() {
     }
 
     return (
-        <div
-            className="modal fade classModal"
-            tabIndex="-1"
-            id="createClassModal"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            aria-hidden="true"
+        <Modal
+            className="editClassModal"
+            show={showCreateModal}
+            onHide={() => {
+                setShowCreateModal(false)
+            }}
         >
-            <div className="modal-dialog">
-                <div className="modal-content p-2">
-                    <div className="modal-header border-0">
-                        <h5 className="modal-title classModalTitle">
-                            Create a new class
-                        </h5>
-                        <button
-                            id="closeCreateClassModal"
-                            type="button"
-                            className="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            onClick={() => {
-                                document
-                                    .querySelector('.needs-validation')
-                                    .classList.remove('was-validated')
-                                document
-                                    .getElementById('class_name')
-                                    .classList.remove('is-invalid')
-                                setError('')
-                                setNewClass({})
-                            }}
-                        ></button>
+            <Modal.Header closeButton>
+                <Modal.Title>
+                    <h5 className="modal-title joinClassModalTitle">
+                        Create a new class
+                    </h5>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="pb-0">
+                <form
+                    id="createClassForm"
+                    className="needs-validation"
+                    noValidate
+                >
+                    {/* error message */}
+                    {error && (
+                        <div className="alert alert-danger" role="alert">
+                            {error}
+                        </div>
+                    )}
+                    {/* Class name */}
+                    <div className="form-floating mb-3">
+                        <input
+                            id="class_name"
+                            name="class_name"
+                            type="text"
+                            value={newClass.class_name || ''}
+                            className={`form-control ${FormStyles.formControl}`}
+                            placeholder="Enter a class name"
+                            onChange={handleChange}
+                            required
+                        />
+                        <label htmlFor="class_name">Class name</label>
                     </div>
-                    <div className="modal-body">
-                        <form className="needs-validation" noValidate>
-                            {/* error message */}
-                            {error && (
-                                <div
-                                    className="alert alert-danger"
-                                    role="alert"
-                                >
-                                    {error}
-                                </div>
-                            )}
-                            {/* Class name */}
-                            <div className="form-floating mb-3">
-                                <input
-                                    id="class_name"
-                                    name="class_name"
-                                    type="text"
-                                    value={newClass.class_name || ''}
-                                    className={`form-control ${FormStyles.formControl}`}
-                                    placeholder="Enter a class name"
-                                    onChange={handleChange}
-                                    required
-                                />
-                                <label htmlFor="class_name">Class name</label>
-                            </div>
-                            {/* Description */}
-                            <div className="form-floating mb-3">
-                                <textarea
-                                    name="description"
-                                    type="text"
-                                    value={newClass.description || ''}
-                                    className={`form-control ${FormStyles.formControl}`}
-                                    style={{ height: '6rem' }}
-                                    placeholder="Enter a description"
-                                    onChange={handleChange}
-                                />
-                                <label htmlFor="description">Description</label>
-                            </div>
-                            <div className="text-end">
-                                <button
-                                    className="btn btn-primary classModalBtn mt-3"
-                                    onClick={handleSubmit}
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <div
-                                            className="spinner-border text-secondary mx-auto mb-1"
-                                            role="status"
-                                            id="loading"
-                                        >
-                                            <span className="visually-hidden">
-                                                Loading...
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        'Create class'
-                                    )}
-                                </button>
-                            </div>
-                        </form>
+                    {/* Description */}
+                    <div className="form-floating">
+                        <textarea
+                            name="description"
+                            type="text"
+                            value={newClass.description || ''}
+                            className={`form-control ${FormStyles.formControl}`}
+                            style={{ height: '6rem' }}
+                            placeholder="Enter a description"
+                            onChange={handleChange}
+                        />
+                        <label htmlFor="description">Description</label>
                     </div>
-                </div>
-            </div>
-        </div>
+                </form>
+            </Modal.Body>
+            <Modal.Footer>
+                <button
+                    className="btn btn-primary editClassModalBtn mt-3"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <div
+                            className="spinner-border text-secondary mx-auto mb-1"
+                            role="status"
+                            id="loading"
+                        >
+                            <span className="visually-hidden">Loading...</span>
+                        </div>
+                    ) : (
+                        'Create class'
+                    )}
+                </button>
+            </Modal.Footer>
+        </Modal>
     )
 }

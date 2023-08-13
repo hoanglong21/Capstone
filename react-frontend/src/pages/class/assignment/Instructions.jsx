@@ -9,6 +9,7 @@ import SubmissionService from '../../../services/SubmissionService'
 import CommentService from '../../../services/CommentService'
 
 import Comment from '../../../components/comment/Comment'
+import CardEditor from '../../../components/textEditor/CardEditor'
 
 import {
     MemberSolidIcon,
@@ -16,7 +17,7 @@ import {
     SendIcon,
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
-import CardEditor from '../../../components/textEditor/CardEditor'
+import DeleteAssignment from './DeleteAssignment'
 
 const Instructions = () => {
     const navigate = useNavigate()
@@ -34,6 +35,8 @@ const Instructions = () => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -78,29 +81,6 @@ const Instructions = () => {
         }
     }, [assign_id, userInfo])
 
-    const handleDelete = async (e) => {
-        e.preventDefault()
-        // clear validation
-        setLoading(true)
-        try {
-            await AssignmentService.deleteAssignment(assign_id)
-            await deleteFolder(
-                `files/${assignment.classroom.user.username}/class/${id}/assignment/${assign_id}`
-            )
-            document
-                .getElementById(`closeDeleteAssignmentDetailModal${assign_id}`)
-                .click()
-            navigate(`/class/${id}/assignments`)
-        } catch (error) {
-            if (error.response && error.response.data) {
-                console.log(error.response.data)
-            } else {
-                console.log(error.message)
-            }
-        }
-        setLoading(false)
-    }
-
     const handleCopyLink = (event) => {
         navigator.clipboard.writeText(window.location.href)
     }
@@ -117,7 +97,7 @@ const Instructions = () => {
                 },
                 content: addComment,
                 commentType: {
-                    id: 1,
+                    id: 4,
                 },
                 assignment: {
                     id: assignment.id,
@@ -173,8 +153,9 @@ const Instructions = () => {
                                         <button
                                             className="dropdown-item py-1 px-3 d-flex align-items-center"
                                             type="button"
-                                            data-bs-toggle="modal"
-                                            data-bs-target={`#deleteAssignmentDetailModal${assign_id}`}
+                                            onClick={() => {
+                                                setShowDeleteModal(true)
+                                            }}
                                         >
                                             Delete
                                         </button>
@@ -321,57 +302,11 @@ const Instructions = () => {
                 </button>
             </div>
             {/* delete modal */}
-            <div
-                className="modal fade assignDeleteModal"
-                tabIndex="-1"
-                id={`deleteAssignmentDetailModal${assign_id}`}
-            >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Delete assignment?</h5>
-                            <button
-                                id={`closeDeleteAssignmentDetailModal${assign_id}`}
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            <p>Grades and comments will also be deleted</p>
-                            <div className="text-end mt-4">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary me-3"
-                                    data-bs-dismiss="modal"
-                                >
-                                    Close
-                                </button>
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={handleDelete}
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <div
-                                            className="spinner-border text-secondary mx-auto mb-1"
-                                            role="status"
-                                            id="loading"
-                                        >
-                                            <span className="visually-hidden">
-                                                Loading...
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        'Delete'
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <DeleteAssignment
+                assign={assignment}
+                showDeleteModal={showDeleteModal}
+                setShowDeleteModal={setShowDeleteModal}
+            />
         </div>
     )
 }

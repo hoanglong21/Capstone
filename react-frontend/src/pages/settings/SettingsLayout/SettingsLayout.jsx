@@ -4,10 +4,10 @@ import './SettingsLayout.css'
 const AccountLayout = () => {
     return (
         <div className="container mt-4 mb-5">
-            <h3>Account Settings</h3>
+            <h3 className='setting-h3'>Account Settings</h3>
             <div className="card-account__container">
                 <div className="row">
-                    <div className="card-account__sidebar d-flex flex-column border-end pe-4 col-4 col-lg-3 col-xxl-2">
+                    <div className="card-account__sidebar flex-column border-end pe-4 setting-account-col-4 col-lg-3 col-xxl-2">
                         <NavLink
                             className={
                                 'card-account__sidebar-link mb-2 ' +

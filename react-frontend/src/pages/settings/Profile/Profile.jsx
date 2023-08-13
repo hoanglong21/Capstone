@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
+import Modal from 'react-bootstrap/Modal'
+
 import {
     deleteFileByUrl,
     getAll,
     uploadFile,
 } from '../../../features/fileManagement'
-
 import { updateUser } from '../../../features/user/userAction'
 import { reset } from '../../../features/user/userSlice'
 
@@ -25,6 +26,8 @@ const Profile = () => {
     const [defaultAvatars, setDefaultAvatars] = useState([])
     const [userAvatars, setUserAvatars] = useState([])
     const [loading, setLoading] = useState(false)
+
+    const [showAvatarModal, setShowAvatarModal] = useState(false)
 
     // fetch user state
     useEffect(() => {
@@ -77,7 +80,7 @@ const Profile = () => {
 
     const handleSelectAvatar = (avatarURL) => () => {
         setNewUser({ ...newUser, avatar: avatarURL })
-        document.getElementById('toggleModal').click()
+        setShowAvatarModal(false)
     }
 
     const handleUploadAvatar = async (event) => {
@@ -160,8 +163,8 @@ const Profile = () => {
     }
 
     return (
-        <div className="mx-5 px-3">
-            <h4>My Profile</h4>
+        <div className="setting-profile">
+            <h4 className='my-profile'>My Profile</h4>
             <form className="row g-4 needs-validation" noValidate>
                 {/* error message */}
                 {(errorMess || error) && (
@@ -193,15 +196,14 @@ const Profile = () => {
                         <button
                             type="button"
                             className="btn btn-primary p-0"
-                            data-bs-toggle="modal"
-                            data-bs-target="#avatarModal"
+                            onClick={() => setShowAvatarModal(true)}
                         >
                             <EditIcon size="0.75rem" />
                         </button>
                     </div>
                 </div>
                 {/* Username */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Username</label>
                     <input
                         id="username"
@@ -213,7 +215,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Email */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Email</label>
                     <input
                         id="email"
@@ -225,7 +227,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* First name */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>First Name</label>
                     <input
                         id="first_name"
@@ -238,7 +240,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Last name */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Last Name</label>
                     <input
                         id="last_name"
@@ -251,7 +253,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* DOB  */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>
                         Date of Birth
                     </label>
@@ -267,7 +269,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Phone */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Phone</label>
                     <input
                         id="phone"
@@ -279,7 +281,7 @@ const Profile = () => {
                     />
                 </div>
                 {/* Gender */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={`d-block ${FormStyles.formLabel}`}>
                         Gender
                     </label>
@@ -330,7 +332,7 @@ const Profile = () => {
                     </div>
                 </div>
                 {/* Role */}
-                <div className="form-group col-6">
+                <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>Role</label>
                     <input
                         name="role"
@@ -388,102 +390,99 @@ const Profile = () => {
                 aria-labelledby="avatarModalLabel"
                 aria-hidden="true"
             >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-body">
-                            <div className="d-flex modal-heading justify-content-between align-items-center">
-                                <p className="">Choose your profile picture</p>
-                                <button
-                                    id="toggleModal"
-                                    type="button"
-                                    className="btn-close me-1 mt-1"
-                                    data-bs-dismiss="modal"
-                                    aria-label="Close"
-                                ></button>
-                            </div>
-                            <div className="defaultAvatar mt-3 row m-0">
-                                {loading ? (
-                                    <div
-                                        className="spinner-border text-secondary mx-auto"
-                                        role="status"
-                                    >
-                                        <span className="visually-hidden">
-                                            LoadingUpload...
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <div>
-                                        {defaultAvatars.map(
-                                            (avatarURL, index) => (
-                                                <div
-                                                    key={`defaultAvatars${index}`}
-                                                    className="avatarItem col-1 d-inline"
-                                                >
-                                                    <button
-                                                        key={avatarURL}
-                                                        className="btn "
-                                                        onClick={handleSelectAvatar(
-                                                            avatarURL
-                                                        )}
-                                                    >
-                                                        <img
-                                                            src={avatarURL}
-                                                            alt=""
-                                                        />
-                                                    </button>
-                                                </div>
-                                            )
-                                        )}
-                                        {userAvatars.map((avatarURL, index) => (
-                                            <div
-                                                key={`userAvatars${index}`}
-                                                className="col-1 avatarItem d-inline"
-                                            >
-                                                <button
-                                                    key={avatarURL}
-                                                    className="btn"
-                                                    onClick={handleSelectAvatar(
-                                                        avatarURL
-                                                    )}
-                                                >
-                                                    <img
-                                                        src={avatarURL}
-                                                        alt=""
-                                                    />
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-danger btn-del p-1 rounded-circle"
-                                                    onClick={handleDeleteAvatar(
-                                                        avatarURL
-                                                    )}
-                                                >
-                                                    <DeleteIcon size="0.85rem" />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                                <div className="col-12 mt-4 p-0 text-center mb-2">
-                                    <input
-                                        type="file"
-                                        id="uploadAvatar"
-                                        accept="image/*"
-                                        name="picture"
-                                        className="avatarUpload"
-                                        onChange={handleUploadAvatar}
-                                    />
-                                    <button className="btn btn-info p-0">
-                                        <label htmlFor="uploadAvatar">
-                                            Upload your own avatar
-                                        </label>
-                                    </button>
+                <div className="modal-dialog"></div>
+            </div>
+            <Modal
+                className="avatarModal"
+                show={showAvatarModal}
+                onHide={() => setShowAvatarModal(false)}
+            >
+                <div className="modal-content">
+                    <div className="modal-body">
+                        <div className="d-flex modal-heading justify-content-between align-items-center">
+                            <p className="">Choose your profile picture</p>
+                            <button
+                                id="toggleModal"
+                                type="button"
+                                className="btn-close me-1 mt-1"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <div className="defaultAvatar mt-3 row m-0">
+                            {loading ? (
+                                <div
+                                    className="spinner-border text-secondary mx-auto"
+                                    role="status"
+                                >
+                                    <span className="visually-hidden">
+                                        LoadingUpload...
+                                    </span>
                                 </div>
+                            ) : (
+                                <div>
+                                    {defaultAvatars.map((avatarURL, index) => (
+                                        <div
+                                            key={`defaultAvatars${index}`}
+                                            className="avatarItem col-1 d-inline"
+                                        >
+                                            <button
+                                                key={avatarURL}
+                                                className="btn "
+                                                onClick={handleSelectAvatar(
+                                                    avatarURL
+                                                )}
+                                            >
+                                                <img src={avatarURL} alt="" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    {userAvatars.map((avatarURL, index) => (
+                                        <div
+                                            key={`userAvatars${index}`}
+                                            className="col-1 avatarItem d-inline"
+                                        >
+                                            <button
+                                                key={avatarURL}
+                                                className="btn"
+                                                onClick={handleSelectAvatar(
+                                                    avatarURL
+                                                )}
+                                            >
+                                                <img src={avatarURL} alt="" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger btn-del p-1 rounded-circle"
+                                                onClick={handleDeleteAvatar(
+                                                    avatarURL
+                                                )}
+                                            >
+                                                <DeleteIcon size="0.85rem" />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            <div className="col-12 mt-4 p-0 text-center mb-2">
+                                <input
+                                    type="file"
+                                    id="uploadAvatar"
+                                    accept="image/*"
+                                    name="picture"
+                                    className="avatarUpload"
+                                    onChange={handleUploadAvatar}
+                                />
+                                <button className="btn btn-info p-0">
+                                    <label htmlFor="uploadAvatar">
+                                        Upload your own avatar
+                                    </label>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </Modal>
         </div>
     )
 }

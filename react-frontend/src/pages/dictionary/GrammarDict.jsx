@@ -94,6 +94,7 @@ const GrammarDict = () => {
                 {showGrammarDetail && (
                     <GrammarDetail
                         grammar={grammar}
+                        showGrammarDetail={showGrammarDetail}
                         setShowGrammarDetail={setShowGrammarDetail}
                     />
                 )}
