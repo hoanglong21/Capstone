@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
+import Modal from 'react-bootstrap/Modal'
 
 import ClassService from '../../../services/ClassService'
 import ClassLearnerService from '../../../services/ClassLearnerService'
@@ -32,6 +33,10 @@ const ClassLayout = () => {
     const [hasAccess, setHasAccess] = useState(false)
     const [isWaiting, setIsWaiting] = useState(false)
     const [loadingUnenroll, setLoadingUnenroll] = useState(false)
+
+    const [showUnenrollModal, setShowUnenrollModal] = useState(false)
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     // fetch data
     useEffect(() => {
@@ -72,7 +77,7 @@ const ClassLayout = () => {
                 classroom: {
                     id: classroom.id,
                 },
-                _accepted: false,
+                status: 'pending',
             })
             setIsWaiting(true)
         } catch (error) {
@@ -103,8 +108,8 @@ const ClassLayout = () => {
     const handleUnenroll = async () => {
         setLoadingUnenroll(true)
         try {
-            // await ClassService.deleteClass(deleteClass.id)
-            document.getElementById('closeUnenrollClassModal').click()
+            // await ClassLearnerService.deleteClassLearner(deleteClass.id)
+            setShowUnenrollModal(false)
             navigate('/')
         } catch (error) {
             if (error.response && error.response.data) {
@@ -151,8 +156,9 @@ const ClassLayout = () => {
                                     <button
                                         className="dropdown-item py-2 px-3 d-flex align-items-center"
                                         type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#updateClassModal"
+                                        onClick={() => {
+                                            setShowEditModal(true)
+                                        }}
                                     >
                                         <EditIcon
                                             className="me-3"
@@ -186,8 +192,9 @@ const ClassLayout = () => {
                                         <button
                                             className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
                                             type="button"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#deleteClassModal"
+                                            onClick={() => {
+                                                setShowDeleteModal(true)
+                                            }}
                                         >
                                             <DeleteIcon
                                                 className="me-3"
@@ -204,8 +211,9 @@ const ClassLayout = () => {
                                         <button
                                             className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
                                             type="button"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#unenrollClassModal"
+                                            onClick={() => {
+                                                setShowUnenrollModal(true)
+                                            }}
                                         >
                                             <UnenrollIcon
                                                 className="me-3"
@@ -391,69 +399,73 @@ const ClassLayout = () => {
                 )}
             </div>
             {/* Update class Modal */}
-            <UpdateClass classroom={classroom} stateChanger={setClassroom} />
+            <UpdateClass
+                classroom={classroom}
+                stateChanger={setClassroom}
+                showEditModal={showEditModal}
+                setShowEditModal={setShowEditModal}
+            />
             {/* Delete class modal */}
-            <DeleteClass classroom={classroom} />
+            <DeleteClass
+                classroom={classroom}
+                showDeleteModal={showDeleteModal}
+                setShowDeleteModal={setShowDeleteModal}
+            />
             {/* Unenroll class modal */}
-            <div
-                className="modal fade classDeleteModal"
-                tabIndex="-1"
-                id="unenrollClassModal"
+            <Modal
+                className="classUnenrollModal"
+                show={showUnenrollModal}
+                onHide={() => {
+                    setShowUnenrollModal(false)
+                }}
             >
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header bg-primary">
-                            <h5 className="modal-title classModalTitle">
-                                Delete this class?
-                            </h5>
-                            <button
-                                id="closeUnenrollClassModal"
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="classModalHeading mb-4">
-                                {classroom.class_name}
-                            </div>
-                            <p>You are about to unenroll this class.</p>
-                            <p className="fw-semibold">
-                                Are you sure? This cannot be undone.
-                            </p>
-                            <div className="text-end mt-4">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary classModalBtn me-3"
-                                    data-bs-dismiss="modal"
-                                >
-                                    Close
-                                </button>
-                                <button
-                                    className="btn btn-danger classModalBtn"
-                                    onClick={handleUnenroll}
-                                    disabled={loadingUnenroll}
-                                >
-                                    {loadingUnenroll ? (
-                                        <div
-                                            className="spinner-border text-secondary mx-auto mb-1"
-                                            role="status"
-                                            id="loadingUnenroll"
-                                        >
-                                            <span className="visually-hidden">
-                                                LoadingUnenroll...
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        'Yes, unenroll from this class.'
-                                    )}
-                                </button>
-                            </div>
-                        </div>
+                <Modal.Header closeButton>
+                    <Modal.Title className="px-3">
+                        <h4 className="modal-title">
+                            Unenroll from this class?
+                        </h4>
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="p-4">
+                    <div className="classUnenrollModalHeading mb-3">
+                        {classroom?.class_name}
                     </div>
-                </div>
-            </div>
+                    <p>You are about to unenroll from this class.</p>
+                    <p className="fw-semibold">
+                        Are you sure? This cannot be undone.
+                    </p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        type="button"
+                        className="btn btn-secondary classUnenrollModalBtn me-3"
+                        onClick={() => {
+                            setShowUnenrollModal(false)
+                        }}
+                    >
+                        Close
+                    </button>
+                    <button
+                        className="btn btn-danger classUnenrollModalBtn"
+                        onClick={handleUnenroll}
+                        disabled={loadingUnenroll}
+                    >
+                        {loadingUnenroll ? (
+                            <div
+                                className="spinner-border text-secondary mx-auto mb-1"
+                                role="status"
+                                id="loading"
+                            >
+                                <span className="visually-hidden">
+                                    Loading...
+                                </span>
+                            </div>
+                        ) : (
+                            "Yes, I'm sure"
+                        )}
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

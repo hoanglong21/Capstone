@@ -40,6 +40,8 @@ const ViewStudySet = () => {
     const [numStillStar, setNumStillStar] = useState(0)
     const [numMasterStar, setNumMasterStar] = useState(0)
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -204,9 +206,13 @@ const ViewStudySet = () => {
                             <button
                                 className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
                                 type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteSetModal"
-                                onClick={() => checkAuth()}
+                                onClick={() => {
+                                    if (!userToken) {
+                                        navigate('/login')
+                                    } else {
+                                        setShowDeleteModal(true)
+                                    }
+                                }}
                             >
                                 <DeleteIcon
                                     className="me-3"
@@ -285,7 +291,11 @@ const ViewStudySet = () => {
                 ))}
             </div>
             {/* delete set modal */}
-            <DeleteSet studySet={studySet} />
+            <DeleteSet
+                studySet={studySet}
+                showDeleteModal={showDeleteModal}
+                setShowDeleteModal={setShowDeleteModal}
+            />
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Modal from 'react-bootstrap/Modal'
 
 import PostService from '../../../services/PostService'
 import AttachmentService from '../../../services/AttachmentService'
@@ -36,6 +37,8 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     // ignore error
     useEffect(() => {
@@ -177,7 +180,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
             var tempPosts = [...posts]
             tempPosts.splice(index, 1)
             stateChanger(tempPosts)
-            document.getElementById(`closeDeletePostModal${index}`).click()
+            setShowDeleteModal(false)
             await deleteFolder(
                 `files/${userInfo.username}/class/${post.classroom.id}/post/${post.id}`
             )
@@ -286,8 +289,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                 <button
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
                                     type="button"
-                                    data-bs-toggle="modal"
-                                    data-bs-target={`#deletePostModal${index}`}
+                                    onClick={() => setShowDeleteModal(true)}
                                 >
                                     <span className="align-middle fw-medium">
                                         Delete
@@ -490,44 +492,38 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                 </div>
             </div>
             {/* Delete post modal */}
-            <div className="modal fade" id={`deletePostModal${index}`}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                                Delete Announcement?
-                            </h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                id={`closeDeletePostModal${index}`}
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            Comments will also be deleted
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={handleDeletePost}
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Modal
+                className="classUnenrollModal"
+                show={showDeleteModal}
+                onHide={() => {
+                    setShowDeleteModal(false)
+                }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete Announcement?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="p-4">
+                    Comments will also be deleted
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => {
+                            setShowDeleteModal(false)
+                        }}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={handleDeletePost}
+                    >
+                        Delete
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

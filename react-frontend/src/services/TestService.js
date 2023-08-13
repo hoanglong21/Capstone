@@ -70,6 +70,16 @@ const endTest = (testResultList) => {
     return axios.post(API_BASE_URL + '/endtest', testResultList)
 }
 
+const getNumAttemptTest = (testId, classId) => {
+    return axios.get(
+        API_BASE_URL +
+            '/getattempttest?testid=' +
+            testId +
+            '&classid=' +
+            classId
+    )
+}
+
 const TestService = {
     getFilterList,
     createTest,
@@ -78,5 +88,6 @@ const TestService = {
     deleteTest,
     startTest,
     endTest,
+    getNumAttemptTest,
 }
 export default TestService

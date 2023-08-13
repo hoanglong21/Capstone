@@ -11,6 +11,7 @@ import { AccountIcon, AddIcon, AssignmentIcon } from '../../../components/icons'
 import tutorEmpty from '../../../assets/images/tutor_assign_empty.png'
 import learnerEmpty from '../../../assets/images/learner_assign_empty.png'
 import './assignment.css'
+import SubmissionService from '../../../services/SubmissionService'
 
 function AssignmentList() {
     const navigate = useNavigate()
@@ -24,6 +25,22 @@ function AssignmentList() {
     const [loadingCount, setLoadingCount] = useState(false)
     const [loading, setLoading] = useState(true)
     const [today, setToday] = useState(new Date())
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+    function getToday() {
+        const today = new Date()
+        return (
+            today.getFullYear() +
+            '-' +
+            padWithLeadingZeros(today.getMonth() + 1, 2) +
+            '-' +
+            padWithLeadingZeros(today.getDate(), 2) +
+            'T' +
+            padWithLeadingZeros(today.getHours(), 2) +
+            ':' +
+            padWithLeadingZeros(today.getMinutes(), 2)
+        )
+    }
 
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
@@ -41,7 +58,9 @@ function AssignmentList() {
                         '',
                         '',
                         `${
-                            userInfo.id === tempClass.user.id ? '' : `=${today}`
+                            userInfo.id === tempClass.user.id
+                                ? ''
+                                : `=${getToday()}`
                         }`,
                         '',
                         '',
@@ -68,8 +87,9 @@ function AssignmentList() {
         }
     }, [id])
 
-    const handleCountSubmission = async (assign, index) => {
+    const handleInfo = async (assign, index) => {
         try {
+            // tutor
             if (userInfo?.id === classroom?.user?.id && !assign?.numSubmitted) {
                 setLoadingCount(true)
                 const tempCountSubmit = (
@@ -85,6 +105,23 @@ function AssignmentList() {
                     ...assign,
                     numSubmitted,
                     numNotSubmitted,
+                }
+                setAssignments(tempAssignments)
+                setLoadingCount(false)
+            }
+            // learner
+            if (userInfo?.id !== classroom?.user?.id && !assign?.submission) {
+                setLoadingCount(true)
+                const tempSubmission = (
+                    await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
+                        userInfo.id,
+                        assign.id
+                    )
+                ).data
+                var tempAssignments = [...assignments]
+                tempAssignments[index] = {
+                    ...assign,
+                    submission: { ...tempSubmission },
                 }
                 setAssignments(tempAssignments)
                 setLoadingCount(false)
@@ -172,7 +209,7 @@ function AssignmentList() {
                         <div
                             className="accordion-item"
                             key={index}
-                            onClick={() => handleCountSubmission(assign, index)}
+                            onClick={() => handleInfo(assign, index)}
                         >
                             <button
                                 className="accordion-button collapsed d-flex justify-content-between align-items-center"
@@ -208,7 +245,7 @@ function AssignmentList() {
                                         ? `Scheduled for ${assign?.start_date}`
                                         : assign?.due_date
                                         ? `Due ${assign?.due_date}`
-                                        : `Posted ${assign?.created_date}`}
+                                        : 'No due date'}
                                 </div>
                             </button>
                             <div
@@ -218,13 +255,31 @@ function AssignmentList() {
                             >
                                 <div className="accordion-body">
                                     <div className="d-flex align-items-center justify-content-between">
-                                        <p>
-                                            {assign?.due_date
-                                                ? `Posted ${assign?.created_date}`
-                                                : 'No due date'}
-                                        </p>
+                                        <div>Posted {assign?.created_date}</div>
+                                        {userInfo?.id !==
+                                            classroom?.user?.id && (
+                                            <div>
+                                                {assign?.submission?.mark ? (
+                                                    <div className="assignGraded">
+                                                        Graded
+                                                    </div>
+                                                ) : assign?.submission
+                                                      ?._done ? (
+                                                    <div className="assignSubmitted">
+                                                        Submitted
+                                                    </div>
+                                                ) : new Date(assign?.due_date) >
+                                                  today ? (
+                                                    <div className="assignMissing">
+                                                        Missing
+                                                    </div>
+                                                ) : (
+                                                    'Not submitted'
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="mt-2 d-flex justify-content-between">
+                                    <div className="mt-3 d-flex justify-content-between">
                                         <button
                                             className="viewAssign_btn"
                                             onClick={() =>
@@ -243,7 +298,7 @@ function AssignmentList() {
                                                         {assign?.numSubmitted}
                                                     </div>
                                                     <div className="assignInfo_title">
-                                                        Turned in
+                                                        Submitted
                                                     </div>
                                                 </div>
                                                 <div className="asignInfo_block">
@@ -254,7 +309,7 @@ function AssignmentList() {
                                                         }
                                                     </div>
                                                     <div className="assignInfo_title">
-                                                        Assigned
+                                                        Not Submitted
                                                     </div>
                                                 </div>
                                             </div>
@@ -275,8 +330,9 @@ function AssignmentList() {
                                             <button
                                                 className="deleteAssign_btn"
                                                 type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target={`#deleteAssignmentModal${assign?.id}`}
+                                                onClick={() => {
+                                                    setShowDeleteModal(true)
+                                                }}
                                             >
                                                 Delete assignment
                                             </button>
@@ -288,6 +344,8 @@ function AssignmentList() {
                                     assign={assign}
                                     assignments={assignments}
                                     stateChanger={setAssignments}
+                                    showDeleteModal={showDeleteModal}
+                                    setShowDeleteModal={setShowDeleteModal}
                                 />
                             </div>
                         </div>

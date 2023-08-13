@@ -36,6 +36,9 @@ const Header = () => {
 
     const [showLogoutMess, setShowLogoutMess] = useState(false)
 
+    const [showCreateModal, setShowCreateModal] = useState(false)
+    const [showJoinModal, setShowJoinModal] = useState(false)
+
     useEffect(() => {
         if (userToken) {
             dispatch(getUser(userToken))
@@ -61,7 +64,7 @@ const Header = () => {
 
     const handleAddClass = () => {
         if (userToken) {
-            document.getElementById('toggleCreateModal').click()
+            setShowCreateModal(true)
         } else {
             navigate('/login')
         }
@@ -69,7 +72,7 @@ const Header = () => {
 
     const handleJoinClass = () => {
         if (userToken) {
-            document.getElementById('toggleJoinModal').click()
+            setShowJoinModal(true)
         } else {
             navigate('/login')
         }
@@ -245,12 +248,6 @@ const Header = () => {
                                             Class
                                         </span>
                                     </button>
-                                    <button
-                                        id="toggleCreateModal"
-                                        className="d-none"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#createClassModal"
-                                    ></button>
                                 </li>
                             )}
                             <li>
@@ -263,12 +260,6 @@ const Header = () => {
                                         Join Class
                                     </span>
                                 </button>
-                                <button
-                                    id="toggleJoinModal"
-                                    className="d-none"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#joinClassModal"
-                                ></button>
                             </li>
                         </ul>
                     </div>
@@ -483,9 +474,15 @@ const Header = () => {
                 </Toast>
             </ToastContainer>
             {/* Create class modal */}
-            <CreateClass />
+            <CreateClass
+                showCreateModal={showCreateModal}
+                setShowCreateModal={setShowCreateModal}
+            />
             {/* Join class modal */}
-            <JoinClass />
+            <JoinClass
+                showJoinModal={showJoinModal}
+                setShowJoinModal={setShowJoinModal}
+            />
         </header>
     )
 }

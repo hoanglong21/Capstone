@@ -23,6 +23,9 @@ const ClassList = () => {
     const [loadingSearch, setLoadingSearch] = useState(true)
     const [searchInput, setSearchInput] = useState(search)
 
+    const [showCreateModal, setShowCreateModal] = useState(false)
+    const [showJoinModal, setShowJoinModal] = useState(false)
+
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
         try {
@@ -128,16 +131,18 @@ const ClassList = () => {
                             <button
                                 className="btn btn-outline-primary me-3"
                                 type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#createClassModal"
+                                onClick={() => {
+                                    setShowCreateModal(true)
+                                }}
                             >
                                 Create Class
                             </button>
                             <button
                                 className="btn btn-primary"
                                 type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#joinClassModal"
+                                onClick={() => {
+                                    setShowJoinModal(true)
+                                }}
                             >
                                 Join Class
                             </button>

@@ -297,9 +297,9 @@
     font-weight: 300;
 }
 
-.testSubmitModal {
+.testSubmitModal.modal {
     margin-top: 2rem;
-    --bs-modal-width: 70vw;
+    --bs-modal-width: 50vw;
 }
 
 .testSubmitModal .modal-body {
@@ -316,4 +316,14 @@
     letter-spacing: normal;
     line-height: 1.4;
     font-weight: 400;
+}
+
+.testDeleteModal.modal {
+    margin-top: 8rem;
+    --bs-modal-width: 30vw;
+}
+
+.startTestModal.modal {
+    margin-top: 8rem;
+    --bs-modal-width: 30vw;
 }

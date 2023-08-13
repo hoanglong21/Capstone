@@ -30,7 +30,8 @@ const CreateTest = () => {
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
-    const [saving, setSaving] = useState(false)
+    const [loadingCreate, setLoadingCreate] = useState(false)
+    const [saving, setSaving] = useState(null)
     const [test, setTest] = useState({})
     const [isScroll, setIsScroll] = useState(false)
     const [questions, setQuestions] = useState([])
@@ -261,6 +262,7 @@ const CreateTest = () => {
                 return
             }
         }
+        setLoadingCreate(true)
         try {
             // update test
             await TestService.updateTest(test.id, {
@@ -282,6 +284,7 @@ const CreateTest = () => {
                 console.log(error.message)
             }
         }
+        setLoadingCreate(false)
     }
 
     const handleChangeTest = (event) => {
@@ -769,7 +772,7 @@ const CreateTest = () => {
                         <div className="createTest_status">Loading</div>
                     )}
                     <div className="createTest_status">
-                        {saving ? 'Saving...' : 'Saved'}
+                        {saving === null ? '' : saving ? 'Saving...' : 'Saved'}
                     </div>
                 </div>
                 {test?._draft ? (
@@ -796,9 +799,19 @@ const CreateTest = () => {
                     <button
                         className="createTest_submitBtn"
                         onClick={handleCreate}
-                        disabled={!test?.title}
+                        disabled={!test?.title || loadingCreate}
                     >
-                        Save
+                        {loadingCreate ? (
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            'Save'
+                        )}
                     </button>
                 )}
             </div>

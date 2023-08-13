@@ -35,18 +35,26 @@ const DoTest = () => {
     const [showSubmitModal, setShowSubmitModal] = useState(false)
     const [showResultModal, setShowResultModal] = useState(false)
     const [testEnd, setTestEnd] = useState({})
+    const [endSecond, setEndSecond] = useState(null)
+    const [endMinute, setEndMinute] = useState(null)
 
     var totalSeconds = 0
     var handleCount = 0
 
     function setTime() {
         ++totalSeconds
-        document.getElementById('secondsTest').innerHTML = pad(
-            totalSeconds % 60
-        )
-        document.getElementById('minutesTest').innerHTML = pad(
-            parseInt(totalSeconds / 60)
-        )
+        const second = pad(totalSeconds % 60)
+        const minutes = pad(parseInt(totalSeconds / 60))
+        document.getElementById('secondsTest').innerHTML = second
+        document.getElementById('minutesTest').innerHTML = minutes
+        if (
+            endMinute !== null &&
+            endSecond !== null &&
+            Number(minutes) === endMinute &&
+            Number(second) === endSecond
+        ) {
+            handleSubmit()
+        }
     }
 
     function pad(val) {
@@ -75,7 +83,8 @@ const DoTest = () => {
                 ).data
                 setQuestions(tempQuestions.questionList)
                 // test
-                setTest(tempQuestions.questionList[0]?.question?.test)
+                const tempTest = tempQuestions.questionList[0]?.question?.test
+                setTest(tempTest)
                 // set test learner
                 setTestLearner(tempQuestions.testLearner)
                 // current question
@@ -107,6 +116,13 @@ const DoTest = () => {
                 setAnswers(tempAnswers)
                 // results
                 setResults(tempResults)
+                // time end test
+                if (tempTest?.duration) {
+                    const tempDuration = Number(tempTest.duration)
+                    const tempEndMinute = Math.floor(tempDuration)
+                    setEndSecond((tempDuration - tempEndMinute) * 60)
+                    setEndMinute(tempEndMinute)
+                }
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -181,10 +197,20 @@ const DoTest = () => {
         }
     }
 
+    const handleClearInterval = () => {
+        // Clear any timeout/interval up to that id
+        const interval_id = window.setInterval(function () {},
+        Number.MAX_SAFE_INTEGER)
+        for (let i = 1; i < interval_id; i++) {
+            window.clearInterval(i)
+        }
+    }
+
     const handleSubmit = async () => {
+        handleClearInterval()
         setShowSubmitModal(false)
+        setLoading(true)
         try {
-            setLoading(true)
             var tempResults = [...results]
             for (let index = 0; index < questions.length; index++) {
                 const ques = questions[index]
@@ -217,15 +243,8 @@ const DoTest = () => {
             setResults(tempResults)
             const tempEnd = (await TestService.endTest(tempResults)).data
             setTestEnd(tempEnd)
-            // Clear any timeout/interval up to that id
-            const interval_id = window.setInterval(function () {},
-            Number.MAX_SAFE_INTEGER)
-            for (let i = 1; i < interval_id; i++) {
-                window.clearInterval(i)
-            }
             setIsEnd(true)
             setShowResultModal(true)
-            setLoading(false)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -233,6 +252,7 @@ const DoTest = () => {
                 console.log(error.message)
             }
         }
+        setLoading(false)
     }
 
     return (
@@ -248,6 +268,7 @@ const DoTest = () => {
                     <button
                         className="btn btn-primary"
                         onClick={handleCheckSubmit}
+                        disabled={loading}
                     >
                         Submit
                     </button>
@@ -598,7 +619,11 @@ const DoTest = () => {
                     >
                         Cancel
                     </button>
-                    <button className="btn btn-warning" onClick={handleSubmit}>
+                    <button
+                        className="btn btn-warning"
+                        onClick={handleSubmit}
+                        disabled={loading}
+                    >
                         Submit test
                     </button>
                 </Modal.Footer>
