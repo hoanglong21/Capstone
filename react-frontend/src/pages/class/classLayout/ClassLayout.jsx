@@ -37,7 +37,6 @@ const ClassLayout = () => {
     const [showUnenrollModal, setShowUnenrollModal] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const [showUnenrollToast, setShowUnenrollToast] = useState(false)
 
     // fetch data
     useEffect(() => {
