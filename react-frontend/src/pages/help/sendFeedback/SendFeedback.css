@@ -56,10 +56,18 @@
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.09);
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
     .send-submit-btn {
         width: 100%;
         float: none;
         text-align: center;
+    }
+
+    .feedback_heading {
+        font-size: 26px;
+    }
+
+    .feedback_message{
+        font-size: 16px;
     }
 }

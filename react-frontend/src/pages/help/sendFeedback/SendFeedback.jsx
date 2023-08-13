@@ -105,7 +105,7 @@ const SendFeedback = () => {
                         Thank you for your feedback, we appreciate it!
                     </div>
                 )}
-                <div className="formFeedbackBody row">
+                <div className="formFeedbackBody row mx-3">
                     {/* feedback type */}
                     <div className="col-xs-12 mb-3">
                         <div className="form-floating">
