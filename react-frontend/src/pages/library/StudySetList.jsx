@@ -220,7 +220,9 @@ const StudySetList = () => {
                         ) : (
                             <div className="sets-list">
                                 {sets?.length === 0 && (
-                                    <p>No sets matching {search} found</p>
+                                    <p className="noFound">
+                                        No sets matching {search} found
+                                    </p>
                                 )}
                                 {sets?.map((set) => (
                                     <div

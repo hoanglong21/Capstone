@@ -186,7 +186,9 @@ const ClassList = () => {
                         ) : (
                             <div className="sets-list">
                                 {classes?.length === 0 && (
-                                    <p>No classes matching {search} found</p>
+                                    <p className="noFound">
+                                        No classes matching {search} found
+                                    </p>
                                 )}
                                 {classes?.map((classroom) => (
                                     <div
