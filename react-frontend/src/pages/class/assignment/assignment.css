@@ -283,6 +283,10 @@
     line-height: 1.25rem;
 }
 
+.instruction_details > * {
+    margin: 0;
+}
+
 /* learner submission */
 .submission_card {
     box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3),
