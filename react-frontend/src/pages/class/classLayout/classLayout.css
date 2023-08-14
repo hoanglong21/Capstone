@@ -392,6 +392,10 @@
       .people_heading h2 {
         font-size: 1.5rem;
     }
+
+    .editClassModalTitle {
+        font-size: 1.5rem;
+    }
 }
 
 /* join class */

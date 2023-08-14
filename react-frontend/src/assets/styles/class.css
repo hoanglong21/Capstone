@@ -1,0 +1,23 @@
+.stream-col-3{
+    flex: 0 0 auto;
+    width: 25% !important;
+}
+
+.stream-col-9{
+    flex: 0 0 auto;
+    width: 75% !important;
+}
+@media only screen and (max-width: 768px) {
+
+    .stream-col-3{
+        width: 100% !important;
+    }
+
+    .stream-col-9{
+        width: 100% !important;
+    }
+
+    .stream-card{
+        display: none;
+    }
+}
