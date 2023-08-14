@@ -127,7 +127,7 @@ public class UserController {
     }
 
     @GetMapping("/verify")
-    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> verifyAccount(@RequestParam("token") String token) {
         try {
             return ResponseEntity.ok(userService.verifyAccount(token));
