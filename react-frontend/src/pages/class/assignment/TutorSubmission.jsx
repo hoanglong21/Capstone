@@ -8,7 +8,7 @@ import AttachmentService from '../../../services/AttachmentService'
 import CommentService from '../../../services/CommentService'
 
 import Comment from '../../../components/comment/Comment'
-
+import './assignment.css'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import { ProfileSolidIcon, SendIcon } from '../../../components/icons'
 import CardEditor from '../../../components/textEditor/CardEditor'
@@ -256,7 +256,7 @@ const TutorSubmission = ({ assignment }) => {
             </div>
             <div className="row">
                 {/* list */}
-                <div className="col-4 pe-0 border-end">
+                <div className="submission-col-4 pe-0 border-end">
                     <table className="table table-hover submission_table mb-0">
                         <tbody>
                             {learners?.map((learner, index) => (
@@ -283,7 +283,7 @@ const TutorSubmission = ({ assignment }) => {
                     </table>
                 </div>
                 {/* detail */}
-                <div className="col-8 ps-0">
+                <div className="submission-col-8 ps-0">
                     {loadingSelect ? (
                         <div class="d-flex justify-content-center mt-5">
                             <div class="spinner-border" role="status">

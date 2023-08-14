@@ -447,3 +447,45 @@
 .instructionAttachments {
     border-bottom: 0.125rem solid #e8eaed;
 }
+
+.submission-col-4{
+    flex: 0 0 auto;
+    width: 33.33333333% !important;
+}
+
+.submission-col-8{
+    flex: 0 0 auto;
+    width: 66.66666667% !important;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .assignInfo_number {
+        font-size: 1.875rem;
+    }
+
+    .assignInfo_title{
+        font-size: 0.65rem;
+    }
+
+    .submission-col-4{
+        width: 100% !important;
+    }
+
+    .submission-col-8{
+        width: 100% !important;
+        margin-top: 20px;
+    }
+
+    .submission_table td {
+        width: 90%;
+    }
+
+    .submission_title {
+        font-size: 1.1rem;
+    }
+
+    .instruction-date{
+        display: inline;
+    }
+}

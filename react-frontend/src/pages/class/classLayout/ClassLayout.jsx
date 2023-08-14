@@ -134,7 +134,7 @@ const ClassLayout = () => {
 
     return (
         <div>
-            <div className="mainClass_container mx-auto">
+            <div className="mainClass_container">
                 {/* Header */}
                 <div className="d-flex justify-content-between align-items-center">
                     <div>
@@ -264,7 +264,7 @@ const ClassLayout = () => {
                 {hasAccess ? (
                     <div>
                         <div className="mainClass_navbar mt-4">
-                            <ul className="nav">
+                            <ul className="nav mainClass-navLink">
                                 <li>
                                     <NavLink
                                         to=""

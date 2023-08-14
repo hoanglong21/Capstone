@@ -6,6 +6,8 @@
 .mainClass_container {
     max-width: 80rem;
     padding: 2.5rem 5rem;
+    margin-right: auto!important;
+    margin-left: auto!important;
 }
 
 .mainClassHeader_icon {
@@ -346,8 +348,48 @@
     .classDeleteModalBtn.btn,
     .editClassModalBtn.btn {
         padding: 0.5rem 1rem;
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
+
+    .mainClass_container {
+        width: 100%;
+        padding: 1rem 1rem;
+    }
+
+    .classDeleteModalHeading {
+        font-size: 1.5rem;
+    }
+
+    .mainClass_title{
+        font-size: 1.875rem;
+    }
+
+    .mainClassHeader_icon {
+        width: 2.5rem !important;
+    }
+
+    .mainClass-navLink{
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            margin-right: 0.5rem !important;
+            margin-left: 0.5rem !important;
+            overflow-x: scroll;
+    }
+
+    .mainClass-navLink > li {
+        width: fix-content;
+    }
+
+    .mainClass-navLink::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mainClass-navLink {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+
+      
 }
 
 /* join class */
