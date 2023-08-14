@@ -345,9 +345,9 @@ const ClassLayout = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="row mt-5">
+                    <div className="row request-mt-5">
                         {isWaiting ? (
-                            <div className="col-8 text-center">
+                            <div className="request-col-8 text-center">
                                 <h3 className="mainClass_infoTitle">
                                     Your request to join this class has been
                                     sent
@@ -358,13 +358,13 @@ const ClassLayout = () => {
                                 </p>
                             </div>
                         ) : (
-                            <div className="col-8 text-center">
+                            <div className="request-col-8 text-center">
                                 <h3 className="mainClass_infoTitle">
                                     Join this class to get access to its content
                                 </h3>
                             </div>
                         )}
-                        <div className="col-4">
+                        <div className="request-col-4">
                             <h6 className="mainClass_infoLabel">
                                 CLASS DETAILS
                             </h6>

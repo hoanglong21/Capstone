@@ -343,6 +343,19 @@
     font-size: 1.025rem;
 }
 
+.request-col-8{
+    flex: 0 0 auto;
+    width: 66.66666667% !important;
+}
+
+.request-col-4{
+    flex: 0 0 auto;
+    width: 33.33333333% !important;
+}
+
+.request-mt-5{
+    margin-top: 3rem !important;
+}
 @media only screen and (max-width: 768px) {
     .classUnenrollModalBtn.btn,
     .classDeleteModalBtn.btn,
@@ -361,7 +374,7 @@
     }
 
     .mainClass_title{
-        font-size: 1.875rem;
+        font-size: 1.65rem;
     }
 
     .mainClassHeader_icon {
@@ -395,6 +408,24 @@
 
     .editClassModalTitle {
         font-size: 1.5rem;
+    }
+
+    .mainClass_infoTitle {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .request-col-8{
+        width: 100% !important;
+    }
+
+    .request-col-4{
+        width: 100% !important;
+        margin-top: 20px;
+    }
+
+    .request-mt-5{
+        margin-top: 0.5rem !important;
     }
 }
 
