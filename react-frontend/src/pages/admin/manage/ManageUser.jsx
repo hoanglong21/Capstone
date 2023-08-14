@@ -6,10 +6,12 @@ import UnBanUser from "../UnBanUser";
 import HeaderAdmin from "../HeaderAdmin";
 import { useSearchParams } from "react-router-dom";
 import UserService from '../../../services/UserService'
-
+import { useSelector } from 'react-redux'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function ManageUser() {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const { userInfo } = useSelector((state) => state.user)
   const search = searchParams.get("search");
   const [users, setUsers] = useState([]);
   const fetchData = async (searchKey) => {
@@ -49,6 +51,7 @@ useEffect(() => {
         <div className="col-sm">
           <HeaderAdmin />
           <div className="container">
+          <ToastContainer />
             <h3 className="mt-3 mb-4 text-bold text-black">Management Users</h3>
             <div className="table-responsive">
               <table className="table table-hover">
@@ -83,6 +86,7 @@ useEffect(() => {
                           <i class="bi bi-info-square me-2"></i>
                           View Details
                         </Link>
+                        {user?.status === 'banned' && (
                         <button
                           type="button"
                           className="btn btn-success me-3"
@@ -92,7 +96,9 @@ useEffect(() => {
                           <i class="bi bi-person-fill-check me-2"></i>
                           Unban
                         </button>
+                        )}
                         <UnBanUser user={user}/>
+                        {user?.status !== 'banned' && (
                         <button
                           type="button"
                           className="btn btn-danger "
@@ -102,6 +108,7 @@ useEffect(() => {
                           <i class="bi bi-person-fill-slash me-2"></i>
                           Ban
                         </button>
+                        )}
                         <BanUser user={user}/>
                       </td>
                     </tr>

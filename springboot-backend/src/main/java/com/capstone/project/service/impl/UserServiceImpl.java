@@ -5,6 +5,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
 import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.UserService;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -173,21 +174,12 @@ public class UserServiceImpl implements UserService {
             throw new Exception("Only pending account can verify");
         }
         try {
-            // for current version only
-            String siteURL = "http://localhost:8080/api/v1/";
+            Dotenv dotenv = Dotenv.load();
+            String siteURL = dotenv.get("BACKEND_HOST_URL");
 
-            // end of current version
             String toAddress = user.getEmail();
             String fromAddress = "nihongolevelup.box@gmail.com";
             String senderName = "NihongoLevelUp";
-//            String subject = "Please verify your registration";
-//            String content = "Dear [[name]],<br>"
-//                    + "We hope this message finds you well.<br>"
-//                    + "We would like to kindly request that you please follow the link provided below to verify your registration: "
-//                    + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-//                    + "Thank you for taking the time to complete this important step. If you have any questions or concerns, please do not hesitate to contact us.:<br>"
-//                    + "Thank you,<br>"
-//                    + "The NihongoLevelUp Team";
 
             String subject = "Confirm Your Registration with NihongoLevelUp";
             String content = "Dear [[name]],<br><br>"
@@ -206,7 +198,7 @@ public class UserServiceImpl implements UserService {
 
             content = content.replace("[[name]]", user.getFirst_name() + " " + user.getLast_name());
 
-            String verifyURL = siteURL + "verify?token=" + user.getToken();
+            String verifyURL = siteURL + "/verify?token=" + user.getToken();
             content = content.replace("[[URL]]", verifyURL);
 
             helper.setText(content, true);
@@ -244,10 +236,9 @@ public class UserServiceImpl implements UserService {
             }
         }
         try {
-            // for current version only
-            String siteURL = "http://localhost:3000/";
+            Dotenv dotenv = Dotenv.load();
+            String siteURL = dotenv.get("FRONTEND_HOST_URL");
 
-            // end of current version
             String toAddress = user.getEmail();
             String fromAddress = "nihongolevelup.box@gmail.com";
             String senderName = "NihongoLevelUp";
@@ -276,7 +267,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
             // end of pin update
 
-            String resetURL = siteURL + "reset-password?username=" + username +  "&pin=" + user.getPin();
+            String resetURL = siteURL + "/reset-password?username=" + username +  "&pin=" + user.getPin();
             content = content.replace("[[URL]]", resetURL);
 
             helper.setText(content, true);

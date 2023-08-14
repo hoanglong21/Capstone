@@ -282,8 +282,8 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Map<String, Object> getNumAttemptTest(int testid, int classid) throws ResourceNotFroundException {
-        String query ="SELECT COALESCE(COUNT(CASE WHEN tl.num_attempt >= 1 THEN 1 END),0) AS attempted,\n" +
-                "                 COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) - SUM(CASE WHEN tl.num_attempt >= 1 THEN 1 ELSE 0 END),0) AS notattempted\n" +
+        String query ="SELECT COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' AND tl.num_attempt = 1 THEN cl.user_id END),0) AS attempted,\n" +
+                "                 COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' AND (tl.num_attempt IS NULL OR tl.num_attempt = 0) THEN cl.user_id END),0) AS notattempted\n" +
                 "           FROM class_learner cl \n" +
                 "           LEFT JOIN test t on t.class_id = cl.class_id ";
 
@@ -354,7 +354,7 @@ public class TestServiceImpl  implements TestService {
     @Override
     public List<TestandClassLearnerDTO> getFilterTestLearner(String username, Double mark,int classid, int authorid,int testid, String direction, String sortBy, int page, int size) {
         int offset = (page - 1) * size;
-        String query = "SELECT cl.*,tl.mark,tl.num_attempt\n" +
+        String query = "SELECT cl.*,tl.mark,tl.num_attempt,tl.start,tl.end\n" +
                 "FROM class_learner cl\n" +
                 "LEFT JOIN test_learner tl ON cl.user_id = tl.user_id \n" +
                 " AND tl.test_id = :testId \n" +
@@ -413,12 +413,13 @@ public class TestServiceImpl  implements TestService {
         for (Object[] row : results) {
             int classLearnerId = (int) row[0]; // assuming cl_id is at index 0
             Date created_date = (Date) row[1];
+            String status = (String) row[2];
             int classidcl = (int) row[3];
             int useridcl = (int) row[4];
-            String status = (String) row[2];
             Double marktest = (row[5] != null) ? (Double) row[5] : 0.0;
             Integer numAttempt = (row[6] != null) ? (Integer) row[6] : 0;
-
+            Date start = (Date) row[7];
+            Date end = (Date) row[8];
             // ... and so on for other columns
 
             ClassLearner classLearner = new ClassLearner();
@@ -433,6 +434,8 @@ public class TestServiceImpl  implements TestService {
             TestLearner testLearner = new TestLearner();
             testLearner.setNum_attempt(numAttempt);
             testLearner.setMark(marktest);
+            testLearner.setStart(start);
+            testLearner.setEnd(end);
 
             // ... create other objects as needed
 
