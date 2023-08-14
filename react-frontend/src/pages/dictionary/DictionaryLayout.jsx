@@ -27,6 +27,7 @@ function DictionaryLayout() {
                             style={{ display: 'inline-flex' }}
                         >
                             <input
+                                id="searchDictInput"
                                 className="form-control mr-sm-2"
                                 type="search"
                                 placeholder="日本, Japanese, Nhật Bản"
@@ -36,6 +37,7 @@ function DictionaryLayout() {
                                 }
                             />
                             <button
+                                id="searchDictBtn"
                                 className="btn btn-primary my-2 my-sm-0"
                                 style={{ marginLeft: '1rem' }}
                                 onClick={(event) => {

@@ -11,6 +11,8 @@ function Home() {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
 
+    const [searchKey, setSearchKey] = useState(search)
+
     const [path, setPath] = useState('')
 
     useEffect(() => {
@@ -21,30 +23,36 @@ function Home() {
         <div>
             <img className="img_left" src={banner} alt="" />
             <div className="container mt-4 mb-5">
-                <div className="dictionary_header bg-light">
+                <div className="dictionary_header">
                     <div className="container mx-auto py-8">
                         <div className="mobile justify-center mt-4">
                             <div className="form123 text-center form-inline">
-                                <form
-                                    className="form-home"
-                                >
+                                <form className="form-home">
                                     <input
+                                        id="searchHomeInput"
                                         className="form-home-input form-control mr-sm-2"
                                         type="search"
                                         placeholder="Study set, Class, User"
                                         aria-label="Search"
-                                        value={search || ''}
+                                        value={searchKey || ''}
                                         onChange={(event) =>
-                                            setSearchParams({
-                                                search: event.target.value,
-                                            })
+                                            setSearchKey(event.target.value)
                                         }
                                     />
                                     <button
+                                        id="searchHomeBtn"
                                         className="btn btn-primary my-2 my-sm-0"
-                                        style={{ marginLeft: '1rem' }}
+                                        style={{
+                                            marginLeft: '1rem',
+                                            minWidth: '5rem',
+                                            minHeight: '40px',
+                                        }}
+                                        type="submit"
                                         onClick={(event) => {
                                             event.preventDefault()
+                                            setSearchParams({
+                                                search: searchKey,
+                                            })
                                         }}
                                     >
                                         Search

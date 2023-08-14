@@ -79,6 +79,25 @@ const KanjiDict = () => {
         }
     }
 
+    useEffect(() => {
+        if (loading === true && document.getElementById('searchDictBtn')) {
+            document.getElementById('searchDictBtn').disabled = true
+            document.getElementById(
+                'searchDictBtn'
+            ).innerHTML = `<div class="d-flex justify-content-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>`
+            document.getElementById('searchDictInput').readOnly = true
+        }
+        if (loading === false && document.getElementById('searchDictBtn')) {
+            document.getElementById('searchDictBtn').disabled = false
+            document.getElementById('searchDictBtn').innerHTML = 'Search'
+            document.getElementById('searchDictInput').readOnly = false
+        }
+    }, [loading])
+
     // fetch data
     useEffect(() => {
         clearSetTimeout()
@@ -158,7 +177,10 @@ const KanjiDict = () => {
                         <div className="kanji-dict">
                             {loadingSelect ? (
                                 <div className="d-flex justify-content-center">
-                                    <div className="spinner-border" role="status">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
                                         <span className="visually-hidden">
                                             Loading...
                                         </span>
@@ -261,7 +283,7 @@ const KanjiDict = () => {
                         </div>
                     </div>
                 ) : (
-                    <p>No kanji matching {search} found</p>
+                    <p className="noFound">No kanji matching {search} found</p>
                 )}
             </div>
         )
