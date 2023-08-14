@@ -7,7 +7,7 @@ const UnBanUser = ({ user }) => {
   const [error, setError] = useState("");
   const [unbanUser, setUnBanUser] = useState({});
   const [success, setSuccess] = useState(false);
-  const [isButtonDisabled, setButtonDisabled] = useState(false);
+  // const [isButtonDisabled, setButtonDisabled] = useState(false);
   useEffect(() => {
     if (user.username) {
       setUnBanUser({ ...user });
@@ -20,8 +20,8 @@ const UnBanUser = ({ user }) => {
     try {
       await UserService.recoverUser(unbanUser.username);
       setSuccess(true);
-      // document.getElementById("closeUnBanModal").click();
-      setButtonDisabled(true);
+      document.getElementById("closeUnBanModal").click()
+      window.location.reload();
       navigate("/manageusers");
       setError("");
     } catch (error) {
@@ -81,8 +81,8 @@ const UnBanUser = ({ user }) => {
             >
               Cancel
             </button>
-            <button type="button" disabled={isButtonDisabled} class="btn btn-success" onClick={handleUnBan}>
-            {isButtonDisabled ? 'Sure!' : 'Sure'}
+            <button type="button" class="btn btn-success" onClick={handleUnBan}>
+            Sure!
             </button>
           </div>
         </div>
