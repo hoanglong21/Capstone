@@ -193,8 +193,8 @@ public class ClassServiceImpl implements ClassService {
             parameters.put("isDeleted", isDeleted);
         }
 
-        if (search == null || search.isEmpty()) {
-            query += " AND (:search OR description LIKE :search)";
+        if (search != null || search.isEmpty()) {
+            query += " AND (class_name LIKE :search OR description LIKE :search)";
             parameters.put("search", "%" + search + "%");
         }
 

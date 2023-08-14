@@ -90,6 +90,28 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         return classLearnerRepository.getClassLeanerByUserId(id);
     }
 
+    @Override
+    public ClassLearner requestToJoin(ClassLearner classLearner) throws ResourceNotFroundException {
+        ClassLearner existingEnrollment = classLearnerRepository.findByUserIdAndClassroomId(classLearner.getUser().getId(), classLearner.getClassroom().getId());
+
+        if (existingEnrollment != null) {
+            if (existingEnrollment.getStatus().equals("enrolled")) {
+                throw new ResourceNotFroundException("You are already enrolled in this class.");
+            } else if (existingEnrollment.getStatus().equals("pending")) {
+                throw new ResourceNotFroundException("You have a pending request for this class.");
+            } else if (existingEnrollment.getStatus().equals("unenroll")) {
+                // Allow user to request to join again
+                existingEnrollment.setStatus("pending");
+                return classLearnerRepository.save(existingEnrollment);
+            }
+        } else {
+            classLearner.setCreated_date(new Date());
+            classLearner.setStatus("pending");
+        }
+        return classLearnerRepository.save(classLearner);
+    }
+
+
     @Autowired
     private EntityManager entityManager;
     @Override
