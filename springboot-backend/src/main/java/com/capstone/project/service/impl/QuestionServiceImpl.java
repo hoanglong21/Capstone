@@ -90,7 +90,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Map<String, Object> getFilterQuestion(String search, int typeid, int testid, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterQuestion(String search, int typeid, int testid, int page, int size) throws Exception {
+
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
         int offset = (page - 1) * size;
 
         String query ="SELECT * FROM question WHERE 1=1";

@@ -109,7 +109,7 @@ public class TestController {
 
         try{
             return ResponseEntity.ok(testService.getFilterTest(search,author,direction,duration.orElse(0),classid.orElse(0),fromStart,toStart,fromCreated,toCreated,isDraft, sortBy,page,size));
-        }catch (ResourceNotFroundException e){
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

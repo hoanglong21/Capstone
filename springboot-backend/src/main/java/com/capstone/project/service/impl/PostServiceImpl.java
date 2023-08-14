@@ -161,7 +161,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Map<String, Object> getFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy,String direction, int classid, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy,String direction, int classid, int page, int size) throws Exception {
+
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
         int offset = (page - 1) * size;
 
         String query ="SELECT p.* FROM post p inner join user u on u.id = p.author_id where 1=1";
