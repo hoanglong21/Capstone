@@ -4,6 +4,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.repository.AnswerRepository;
 import com.capstone.project.repository.QuestionRepository;
+import com.capstone.project.repository.TestResultRepository;
 import com.capstone.project.service.QuestionService;
 import com.capstone.project.service.QuestionTypeService;
 import com.capstone.project.service.TestService;
@@ -23,14 +24,16 @@ public class QuestionServiceImpl implements QuestionService {
     @PersistenceContext
     private EntityManager em;
     private final QuestionRepository questionRepository;
+    private final TestResultRepository testResultRepository;
 
     private final AnswerRepository answerRepository;
     private final QuestionTypeService questionTypeService;
     private final TestService testService;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, AnswerRepository answerRepository, QuestionTypeService questionTypeService, TestService testService) {
+    public QuestionServiceImpl(QuestionRepository questionRepository, TestResultRepository testResultRepository, AnswerRepository answerRepository, QuestionTypeService questionTypeService, TestService testService) {
         this.questionRepository = questionRepository;
+        this.testResultRepository = testResultRepository;
         this.answerRepository = answerRepository;
         this.questionTypeService = questionTypeService;
         this.testService = testService;
@@ -84,6 +87,9 @@ public class QuestionServiceImpl implements QuestionService {
                     .orElseThrow(() -> new ResourceNotFroundException("Question not exist with id:" + id));
         for (Answer answer : answerRepository.getAnswerByQuestionId(question.getId())) {
              answerRepository.delete(answer);
+        }
+        for(TestResult testResult : testResultRepository.getTestResultByQuestionId(question.getId())){
+            testResultRepository.delete(testResult);
         }
         questionRepository.delete(question);
         return true;
