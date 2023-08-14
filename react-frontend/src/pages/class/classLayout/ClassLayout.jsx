@@ -323,40 +323,20 @@ const ClassLayout = () => {
                                     </NavLink>
                                 </li>
                                 {userInfo?.id === classroom?.user?.id && (
-                                    <div className="d-flex">
-                                        <li>
-                                            <NavLink
-                                                to="grades"
-                                                className={
-                                                    'mainClass_navlink ' +
-                                                    (({ isActive }) =>
-                                                        isActive
-                                                            ? 'active'
-                                                            : '')
-                                                }
-                                            >
-                                                <span className="align-middle">
-                                                    Grades
-                                                </span>
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink
-                                                to="statistics"
-                                                className={
-                                                    'mainClass_navlink ' +
-                                                    (({ isActive }) =>
-                                                        isActive
-                                                            ? 'active'
-                                                            : '')
-                                                }
-                                            >
-                                                <span className="align-middle">
-                                                    Statistics
-                                                </span>
-                                            </NavLink>
-                                        </li>
-                                    </div>
+                                    <li>
+                                        <NavLink
+                                            to="statistics"
+                                            className={
+                                                'mainClass_navlink ' +
+                                                (({ isActive }) =>
+                                                    isActive ? 'active' : '')
+                                            }
+                                        >
+                                            <span className="align-middle">
+                                                Statistics
+                                            </span>
+                                        </NavLink>
+                                    </li>
                                 )}
                             </ul>
                         </div>

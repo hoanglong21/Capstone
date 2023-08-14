@@ -355,7 +355,9 @@ const Learn = () => {
     }
 
     const handleCreateLearn = async () => {
-        document.getElementById('learnOptionModal').scrollTop = 0
+        if (document.getElementById('learnOptionModal')) {            
+            document.getElementById('learnOptionModal').scrollTop = 0
+        }
         setProgress(0)
         setIsEnd(false)
         setIsFinish(false)

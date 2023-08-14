@@ -381,3 +381,7 @@
         font-size: 0.75rem;
     }
 }
+.testResult_container td,
+.testResult_container tr th {
+    text-align: center;
+}

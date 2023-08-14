@@ -125,9 +125,7 @@ function AllForHome() {
         fetchSetsData(search ? search : '')
         fetchClassesData(search ? search : '')
         fetchUsersData(search ? search : '')
-        setTimeout(() => {
-            setLoading(false)
-        }, 5000)
+        setLoading(false)
     }, [search])
 
     useEffect(() => {
