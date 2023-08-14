@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import UserService from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BanUser = ({ user }) => {
   let navigate = useNavigate();
   const [error, setError] = useState("");
   const [banUser, setBanUser] = useState({});
-  const [success, setSuccess] = useState(false)
-  const [isButtonDisabled, setButtonDisabled] = useState(false);
+  // const [success, setSuccess] = useState(false)
+  // const [isButtonDisabled, setButtonDisabled] = useState(false);
   useEffect(() => {
     if (user.username) {
       setBanUser({ ...user });
@@ -19,9 +21,11 @@ const BanUser = ({ user }) => {
     setError('')
     try {
       await UserService.banUser(banUser.username)
-      setSuccess(true)
-      setButtonDisabled(true)
-        // document.getElementById('closeUserModal').click()
+      document.getElementById('closeUserModal').click()
+      toast.success('Banned successfully !', {
+        position: toast.POSITION.TOP_RIGHT
+      });
+      window.location.reload();
       navigate('/manageusers')
       setError("")
     } catch (error) {
@@ -58,11 +62,11 @@ const BanUser = ({ user }) => {
                 {error}
               </div>
             )}
-            {success && (
+            {/* {success && (
                     <div className="alert alert-success" role="alert">
                        You banned {banUser.username} successfully!
                     </div>
-                )}
+                )} */}
             <p>
               Are you sure ban <strong>{banUser.username}</strong> ?
             </p>
@@ -76,8 +80,8 @@ const BanUser = ({ user }) => {
             >
               Cancel
             </button>
-            <button type="button" disabled={isButtonDisabled} class="btn btn-danger" onClick={handleBan}>
-            {isButtonDisabled ? 'Banned' : 'Ban'}
+            <button type="button" class="btn btn-danger" onClick={handleBan}>
+            Ban
             </button>
           </div>
         </div>
