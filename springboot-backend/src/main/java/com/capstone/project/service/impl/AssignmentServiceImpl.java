@@ -264,8 +264,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Map<String, Object> getNumSubmitAssignment(int assignmentid, int classid) throws ResourceNotFroundException {
-        String query ="SELECT COALESCE(COUNT(CASE WHEN is_done = true THEN 1 END), 0) AS submitted,\n" +
-                "    COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) - SUM(CASE WHEN s.is_done = true THEN 1 ELSE 0 END), 0) AS notsubmitted\n" +
+        String query ="SELECT  COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' AND s.is_done = true THEN cl.user_id END), 0) AS submitted,\n" +
+                "    COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' AND (s.is_done = false OR s.is_done IS NULL) THEN cl.user_id END), 0) AS notsubmitted\n" +
                 "FROM class_learner cl\n" +
                 "LEFT JOIN assignment a ON cl.class_id = a.class_id ";
 
