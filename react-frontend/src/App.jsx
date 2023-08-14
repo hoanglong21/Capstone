@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 
 import { logout as authLogout } from './features/auth/authSlice'
 import { logout as userLogout } from './features/user/userSlice'
@@ -73,7 +73,6 @@ import CreateAssignment from './pages/class/assignment/CreateAssignment'
 import DoQuiz from './pages/studySet/quiz/DoQuiz'
 import AssignmentList from './pages/class/assignment/AssignmentList'
 import People from './pages/class/People'
-import Grades from './pages/class/Grades'
 import ViewDetailStudyset from './pages/admin/view/ViewDetailStudyset'
 import ManageTest from './pages/admin/manage/ManageTest'
 import ManageSubmission from './pages/admin/manage/ManageSubmission'
@@ -101,6 +100,25 @@ import Results from './pages/class/test/Results'
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
+
+    // ignore error
+    useEffect(() => {
+        window.addEventListener('error', (e) => {
+            console.log(e)
+            const resizeObserverErrDiv = document.getElementById(
+                'webpack-dev-server-client-overlay-div'
+            )
+            const resizeObserverErr = document.getElementById(
+                'webpack-dev-server-client-overlay'
+            )
+            if (resizeObserverErr) {
+                resizeObserverErr.setAttribute('style', 'display: none')
+            }
+            if (resizeObserverErrDiv) {
+                resizeObserverErrDiv.setAttribute('style', 'display: none')
+            }
+        })
+    }, [])
 
     const logOut = useCallback(async () => {
         try {
@@ -188,7 +206,6 @@ const App = () => {
                                 element={<CreateTest />}
                             />
                             <Route path="people" element={<People />} />
-                            <Route path="Grades" element={<Grades />} />
                             <Route
                                 path="statistics"
                                 element={<ClassStatistics />}

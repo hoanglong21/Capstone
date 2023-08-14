@@ -88,7 +88,9 @@ const getNumAttempt = (testId, userId) => {
 
 const getTestLearner = (
     username,
+    classId,
     authorId,
+    testId,
     mark,
     direction,
     sortBy,
@@ -97,10 +99,14 @@ const getTestLearner = (
 ) => {
     return axios.get(
         API_BASE_URL +
-            '/gettestlearner?username' +
+            '/gettestlearner?classid' +
+            classId +
+            '&username' +
             username +
             '&authorid' +
             authorId +
+            '&testid' +
+            testId +
             '&mark' +
             mark +
             '&direction' +

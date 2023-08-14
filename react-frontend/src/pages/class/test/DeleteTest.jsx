@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { deleteFolder } from '../../../features/fileManagement'
 import TestService from '../../../services/TestService'
 
-
 const DeleteTest = ({
     tests,
     test,
@@ -56,7 +55,7 @@ const DeleteTest = ({
                 <Modal.Title>Delete test</Modal.Title>
             </Modal.Header>
             <Modal.Body className="p-4">
-                Are you sure you want to delete this quiz?
+                Are you sure you want to delete this test?
             </Modal.Body>
             <Modal.Footer>
                 <button
