@@ -104,9 +104,13 @@ public class CardServiceImpl implements CardService {
 
         if(sortBy=="star") {
             sortBy = "p.is_star";
-        } else {
+        } else if(sortBy=="status") {
             sortBy = "p.status";
+        } else {
+            sortBy = "c.id";
         }
+
+
         if(direction!="ASC") {
             direction="DESC";
         }
