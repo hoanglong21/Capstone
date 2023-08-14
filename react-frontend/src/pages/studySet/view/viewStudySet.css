@@ -615,6 +615,10 @@
         width: 90vw;
         height: 60vh;
     }
+
+    .setPage_noteModal .modal-content {
+        width: 90vw;
+    }
 }
 
 /* delete set */

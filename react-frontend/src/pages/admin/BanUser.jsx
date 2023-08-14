@@ -6,7 +6,8 @@ const BanUser = ({ user }) => {
   let navigate = useNavigate();
   const [error, setError] = useState("");
   const [banUser, setBanUser] = useState({});
-
+  const [success, setSuccess] = useState(false)
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
   useEffect(() => {
     if (user.username) {
       setBanUser({ ...user });
@@ -18,7 +19,9 @@ const BanUser = ({ user }) => {
     setError('')
     try {
       await UserService.banUser(banUser.username)
-      document.getElementById('closeUserModal').click()
+      setSuccess(true)
+      setButtonDisabled(true)
+        // document.getElementById('closeUserModal').click()
       navigate('/manageusers')
       setError("")
     } catch (error) {
@@ -55,6 +58,11 @@ const BanUser = ({ user }) => {
                 {error}
               </div>
             )}
+            {success && (
+                    <div className="alert alert-success" role="alert">
+                       You banned {banUser.username} successfully!
+                    </div>
+                )}
             <p>
               Are you sure ban <strong>{banUser.username}</strong> ?
             </p>
@@ -68,8 +76,8 @@ const BanUser = ({ user }) => {
             >
               Cancel
             </button>
-            <button type="button" class="btn btn-danger" onClick={handleBan}>
-              Ban
+            <button type="button" disabled={isButtonDisabled} class="btn btn-danger" onClick={handleBan}>
+            {isButtonDisabled ? 'Banned' : 'Ban'}
             </button>
           </div>
         </div>
