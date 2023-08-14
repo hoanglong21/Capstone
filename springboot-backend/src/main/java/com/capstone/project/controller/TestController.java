@@ -117,7 +117,6 @@ public class TestController {
     @GetMapping("/getattempttest")
     public ResponseEntity<?> getNumAttemptTest(@RequestParam(value = "testid", required = false) int testid,
                                                     @RequestParam(value = "classid", required = false) int classid) {
-
         try{
             return ResponseEntity.ok(testService.getNumAttemptTest(testid,classid));
         }catch (ResourceNotFroundException e){

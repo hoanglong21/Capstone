@@ -14,6 +14,25 @@ const GrammarDict = () => {
     const [showGrammarDetail, setShowGrammarDetail] = useState(false)
 
     useEffect(() => {
+        if (loading === true && document.getElementById('searchDictBtn')) {
+            document.getElementById('searchDictBtn').disabled = true
+            document.getElementById(
+                'searchDictBtn'
+            ).innerHTML = `<div class="d-flex justify-content-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>`
+            document.getElementById('searchDictInput').readOnly = true
+        }
+        if (loading === false && document.getElementById('searchDictBtn')) {
+            document.getElementById('searchDictBtn').disabled = false
+            document.getElementById('searchDictBtn').innerHTML = 'Search'
+            document.getElementById('searchDictInput').readOnly = false
+        }
+    }, [loading])
+
+    useEffect(() => {
         if (showGrammarDetail) {
             document
                 .getElementsByTagName('body')[0]
@@ -67,7 +86,9 @@ const GrammarDict = () => {
             <div>
                 <div className="row mt-4 mb-5">
                     {grammars.length == 0 && (
-                        <p>No grammars matching {search} found</p>
+                        <p className="noFound">
+                            No grammars matching {search} found
+                        </p>
                     )}
                     {grammars.map((grammarInfo, index) => (
                         <div className="grammar-dict-col-3 mb-2" key={index}>

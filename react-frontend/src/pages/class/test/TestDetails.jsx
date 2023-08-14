@@ -35,6 +35,9 @@ const TestDetails = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showStartModal, setShowStartModal] = useState(false)
 
+    const [numAttempt, setNumAttempt] = useState(0)
+    const [canTest, setCanTest] = useState(true)
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -46,6 +49,16 @@ const TestDetails = () => {
                     await CommentService.getAllCommentByTestId(test_id)
                 ).data
                 setComments(tempComments)
+                // can test
+                if (userInfo.id !== tempTest?.classroom?.user?.id) {
+                    const tempNumAttempt = (
+                        await TestService.getNumAttempt(test_id, userInfo.id)
+                    ).data.num_attempt
+                    setNumAttempt(tempNumAttempt)
+                    if (numAttempt > tempTest?.num_attemps) {
+                        setCanTest(false)
+                    }
+                }
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -133,7 +146,7 @@ const TestDetails = () => {
                             onClick={() => {
                                 setShowStartModal(true)
                             }}
-                            disabled={test?._draft}
+                            disabled={test?._draft || canTest}
                         >
                             Do Test
                         </button>
@@ -199,6 +212,12 @@ const TestDetails = () => {
                             </ul>
                         </div>
                     </div>
+                </div>
+                <div className="d-flex justify-content-between mb-2 instruction_date">
+                    <div>Maximum number of attempts: {test?.num_attemps}</div>
+                    {userInfo?.id !== test?.classroom?.user?.id && (
+                        <div>Number of attempts: {numAttempt}</div>
+                    )}
                 </div>
                 <div className="d-flex justify-content-between mb-3 instruction_date">
                     <div>

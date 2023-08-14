@@ -156,12 +156,14 @@ const ClassList = () => {
                                 placeholder="Search your classes"
                                 type="text"
                                 value={searchInput || ''}
+                                readOnly={loading}
                                 onChange={(event) =>
                                     setSearchInput(event.target.value)
                                 }
                             ></input>
                             <button
                                 type="submit"
+                                disabled={loading}
                                 onClick={(event) => {
                                     event.preventDefault()
                                     setSearchParams({
@@ -186,7 +188,9 @@ const ClassList = () => {
                         ) : (
                             <div className="sets-list">
                                 {classes?.length === 0 && (
-                                    <p>No classes matching {search} found</p>
+                                    <p className="noFound">
+                                        No classes matching {search} found
+                                    </p>
                                 )}
                                 {classes?.map((classroom) => (
                                     <div

@@ -80,6 +80,40 @@ const getNumAttemptTest = (testId, classId) => {
     )
 }
 
+const getNumAttempt = (testId, userId) => {
+    return axios.get(
+        API_BASE_URL + '/getattempt?testid=' + testId + '&userid=' + userId
+    )
+}
+
+const getTestLearner = (
+    username,
+    authorId,
+    mark,
+    direction,
+    sortBy,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/gettestlearner?username' +
+            username +
+            '&authorid' +
+            authorId +
+            '&mark' +
+            mark +
+            '&direction' +
+            direction +
+            '&sortby' +
+            sortBy +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
+
 const TestService = {
     getFilterList,
     createTest,
@@ -89,5 +123,7 @@ const TestService = {
     startTest,
     endTest,
     getNumAttemptTest,
+    getTestLearner,
+    getNumAttempt,
 }
 export default TestService

@@ -12,6 +12,7 @@ function UsersForHome() {
     const search = searchParams.get('search')
 
     const [users, setUsers] = useState([])
+    const [loading, setLoading] = useState(true)
 
     const fetchData = async (searchKey) => {
         try {
@@ -47,69 +48,105 @@ function UsersForHome() {
     }
 
     useEffect(() => {
+        if (loading === true && document.getElementById('searchHomeBtn')) {
+            document.getElementById('searchHomeBtn').disabled = true
+            document.getElementById(
+                'searchHomeBtn'
+            ).innerHTML = `<div class="d-flex justify-content-center">
+                            <div class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>`
+            document.getElementById('searchHomeInput').readOnly = true
+        }
+        if (loading === false && document.getElementById('searchHomeBtn')) {
+            document.getElementById('searchHomeBtn').disabled = false
+            document.getElementById('searchHomeBtn').innerHTML = 'Search'
+            document.getElementById('searchHomeInput').readOnly = false
+        }
+    }, [loading])
+
+    useEffect(() => {
+        setLoading(true)
         fetchData(search ? search : '')
+        setLoading(false)
     }, [search])
 
     return (
         <div className="mt-4 mb-5">
-            <div className="sets-list row g-3">
-                {users?.length === 0 && <p>No users matching {search} found</p>}
-                {users?.map((user) => (
-                    <div className="col-12 col-md-6 col-xl-4" key={user?.id}>
-                        <div className="set-item h-100">
-                            <Link to={``}>
-                                <div className="set-body">
-                                    <div className="d-flex align-items-center">
-                                        <div
-                                            className="author-avatar"
-                                            style={{
-                                                height: '4rem',
-                                                width: '4rem',
-                                            }}
-                                        >
-                                            <img
-                                                src={
-                                                    user?.avatar
-                                                        ? user?.avatar
-                                                        : defaultAvatar
-                                                }
-                                                alt="author avatar"
-                                                className="w-100 h-100"
-                                            />
-                                        </div>
-                                        <div className="d-flex flex-column justify-content-center ms-3">
-                                            <span className="set-title">
-                                                {user?.username}
-                                            </span>
-                                            <p
-                                                className="set-description m-0 mt-2"
+            {loading ? (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            ) : (
+                <div className="sets-list row g-3">
+                    {users?.length === 0 && (
+                        <p className="noFound">
+                            No users matching {search} found
+                        </p>
+                    )}
+                    {users?.map((user) => (
+                        <div
+                            className="col-12 col-md-6 col-xl-4"
+                            key={user?.id}
+                        >
+                            <div className="set-item h-100">
+                                <Link to={``}>
+                                    <div className="set-body">
+                                        <div className="d-flex align-items-center">
+                                            <div
+                                                className="author-avatar"
                                                 style={{
-                                                    whiteSpace: 'pre-wrap',
+                                                    height: '4rem',
+                                                    width: '4rem',
                                                 }}
                                             >
-                                                {user?.role === 'ROLE_ADMIN'
-                                                    ? 'Admin'
-                                                    : user?.role ===
-                                                      'ROLE_TUTOR'
-                                                    ? 'Tutor'
-                                                    : 'Learner'}
-                                            </p>
+                                                <img
+                                                    src={
+                                                        user?.avatar
+                                                            ? user?.avatar
+                                                            : defaultAvatar
+                                                    }
+                                                    alt="author avatar"
+                                                    className="w-100 h-100"
+                                                />
+                                            </div>
+                                            <div className="d-flex flex-column justify-content-center ms-3">
+                                                <span className="set-title">
+                                                    {user?.username}
+                                                </span>
+                                                <p
+                                                    className="set-description m-0 mt-2"
+                                                    style={{
+                                                        whiteSpace: 'pre-wrap',
+                                                    }}
+                                                >
+                                                    {user?.role === 'ROLE_ADMIN'
+                                                        ? 'Admin'
+                                                        : user?.role ===
+                                                          'ROLE_TUTOR'
+                                                        ? 'Tutor'
+                                                        : 'Learner'}
+                                                </p>
+                                            </div>
                                         </div>
+                                        <p
+                                            className="set-description m-0 mt-2"
+                                            style={{
+                                                whiteSpace: 'pre-wrap',
+                                            }}
+                                        >
+                                            {user?.bio}
+                                        </p>
                                     </div>
-                                    <p
-                                        className="set-description m-0 mt-2"
-                                        style={{
-                                            whiteSpace: 'pre-wrap',
-                                        }}
-                                    >
-                                        {user?.bio}
-                                    </p>
-                                </div>
-                            </Link>
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }

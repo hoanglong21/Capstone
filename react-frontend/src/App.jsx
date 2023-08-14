@@ -96,6 +96,7 @@ import DictionaryForAdmin from './pages/admin/dictionaryforadmin/DictionaryLayou
 import VocabDictForAdmin from './pages/admin/dictionaryforadmin/VocabDictForAdmin'
 import KanjiDictForAdmin from './pages/admin/dictionaryforadmin/KanjiDictForAdmin'
 import GrammarDictForAdmin from './pages/admin/dictionaryforadmin/GrammarDictForAdmin'
+import Results from './pages/class/test/Results'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -210,10 +211,7 @@ const App = () => {
                             element={<ViewTest />}
                         >
                             <Route path="details" element={<TestDetails />} />
-                            {/* <Route
-                                path="submissions"
-                                element={<Submissions />}
-                            /> */}
+                            <Route path="results" element={<Results />} />
                         </Route>
                         {/* Feedback */}
                         <Route

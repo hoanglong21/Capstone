@@ -327,3 +327,7 @@
     margin-top: 8rem;
     --bs-modal-width: 30vw;
 }
+
+.testResult_container .table-hover {
+    --bs-table-hover-bg: #fff;
+}

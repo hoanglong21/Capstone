@@ -46,8 +46,11 @@ const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
                 const temp = (
                     await ClassService.joinClass(classCode, userInfo.username)
                 ).data
-                navigate(`/class/${temp.id}`)
                 setShowJoinModal(false)
+                navigate(`/class/${temp.id}`)
+                if (window.location.href.includes(`/class/${temp.id}`)) {
+                    window.location.reload()
+                }
             } catch (error) {
                 if (error.response && error.response.data) {
                     setError(error.response.data)

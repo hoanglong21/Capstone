@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
-import Toast from 'react-bootstrap/Toast'
 
 import ClassService from '../../../services/ClassService'
 import ClassLearnerService from '../../../services/ClassLearnerService'
@@ -38,7 +37,6 @@ const ClassLayout = () => {
     const [showUnenrollModal, setShowUnenrollModal] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const [showUnenrollToast, setShowUnenrollToast] = useState(false)
 
     // fetch data
     useEffect(() => {
@@ -122,7 +120,7 @@ const ClassLayout = () => {
                 classroom.id
             )
             setShowUnenrollModal(false)
-            setShowUnenrollToast(true)
+            setHasAccess(false)
             navigate('/')
         } catch (error) {
             if (error.response && error.response.data) {
@@ -479,17 +477,6 @@ const ClassLayout = () => {
                     </button>
                 </Modal.Footer>
             </Modal>
-            {/* unenroll toast */}
-            <Toast
-                onClose={() => setShowUnenrollToast(false)}
-                show={showUnenrollToast}
-                delay={3000}
-                autohide
-            >
-                <Toast.Body>
-                    You have successfully unenroll from {classroom?.Title}.
-                </Toast.Body>
-            </Toast>
         </div>
     )
 }
