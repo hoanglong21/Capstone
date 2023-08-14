@@ -11,7 +11,9 @@ const TutorResults = ({ test }) => {
                 const tempResults = (
                     await TestService.getTestLearner(
                         '',
+                        `=${test?.classroom?.id}`,
                         `=${test?.user?.id}`,
+                        `=${test?.id}`,
                         '',
                         '',
                         '',
@@ -28,7 +30,7 @@ const TutorResults = ({ test }) => {
                 }
             }
         }
-        if (results?.user?.id) {
+        if (test?.user?.id) {
             fetchData()
         }
     }, [test])
@@ -51,12 +53,51 @@ const TutorResults = ({ test }) => {
                     </thead>
                     <tbody>
                         {results?.map((result, index) => (
-                            <tr key={index}>
-                                <th scope="row"></th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
+                            <>
+                                <tr key={index}>
+                                    <th
+                                        scope="row"
+                                        rowSpan={
+                                            result?.testLearner?.length > 1
+                                                ? result?.testLearner?.length
+                                                : 1
+                                        }
+                                    >
+                                        {result?.classLearner?.user?.username}
+                                    </th>
+                                    <td>{result?.testLearner[0]?.mark}</td>
+                                    <td>
+                                        {result?.testLearner[0]?.num_attempt}
+                                    </td>
+                                    <td>{result?.testLearner[0]?.start}</td>
+                                    <td>{result?.testLearner[0]?.end}</td>
+                                </tr>
+                                {result?.testLearner?.length > 1 &&
+                                    result?.testLearner?.map(
+                                        (resultItem, index) => {
+                                            if (index > 0) {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            {resultItem?.mark}
+                                                        </td>
+                                                        <td>
+                                                            {
+                                                                resultItem?.num_attempt
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            {resultItem?.start}
+                                                        </td>
+                                                        <td>
+                                                            {resultItem?.end}
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }
+                                        }
+                                    )}
+                            </>
                         ))}
                     </tbody>
                 </table>

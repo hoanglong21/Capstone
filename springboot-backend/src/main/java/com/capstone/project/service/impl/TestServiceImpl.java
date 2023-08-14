@@ -413,9 +413,9 @@ public class TestServiceImpl  implements TestService {
         for (Object[] row : results) {
             int classLearnerId = (int) row[0]; // assuming cl_id is at index 0
             Date created_date = (Date) row[1];
-            int classidcl = (int) row[2];
-            int useridcl = (int) row[3];
-            String status = (String) row[4];
+            int classidcl = (int) row[3];
+            int useridcl = (int) row[4];
+            String status = (String) row[2];
             Double marktest = (row[5] != null) ? (Double) row[5] : 0.0;
             Integer numAttempt = (row[6] != null) ? (Integer) row[6] : 0;
 
