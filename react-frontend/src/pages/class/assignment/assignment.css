@@ -488,4 +488,8 @@
     .instruction-date{
         display: inline;
     }
+
+    .createAssign_cancelBtn {
+        font-size: 0.75rem;
+    }
 }
