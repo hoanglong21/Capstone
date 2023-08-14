@@ -331,3 +331,8 @@
 .testResult_container .table-hover {
     --bs-table-hover-bg: #fff;
 }
+
+.testResult_container td,
+.testResult_container tr th {
+    text-align: center;
+}

@@ -52,9 +52,38 @@ function CreateAssignment() {
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
-            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+            return new String(date?.replace(/\s/g, 'T') + '.000' + '+07:00')
         }
         return ''
+    }
+
+    function cleanStringify(object) {
+        if (object && typeof object === 'object') {
+            object = copyWithoutCircularReferences([object], object)
+        }
+        return JSON.stringify(object)
+
+        function copyWithoutCircularReferences(references, object) {
+            var cleanObject = {}
+            Object.keys(object).forEach(function (key) {
+                var value = object[key]
+                if (value && typeof value === 'object') {
+                    if (references.indexOf(value) < 0) {
+                        references.push(value)
+                        cleanObject[key] = copyWithoutCircularReferences(
+                            references,
+                            value
+                        )
+                        references.pop()
+                    } else {
+                        cleanObject[key] = '###_Circular_###'
+                    }
+                } else if (typeof value !== 'function') {
+                    cleanObject[key] = value
+                }
+            })
+            return cleanObject
+        }
     }
 
     useEffect(() => {
@@ -227,11 +256,11 @@ function CreateAssignment() {
                 tempAssignment.modified_date
             )
             tempAssignment.due_date = toBEDate(tempAssignment.due_date)
+            setAssignment({ ...assignment, _draft: draft })
             await AssignmentService.updateAssignment(
                 assignment.id,
                 tempAssignment
             )
-            setAssignment({ ...assignment, _draft: draft })
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -311,7 +340,7 @@ function CreateAssignment() {
                             placeholder="title"
                             value={assignment?.title || ''}
                             onChange={handleChange}
-                            onBlur={handleUpdate}
+                            onBlur={() => handleUpdate(assignment?.draft)}
                         />
                         <label
                             htmlFor="title"
@@ -331,7 +360,7 @@ function CreateAssignment() {
                                     })
                                 }
                             }}
-                            onBlur={handleUpdate}
+                            onBlur={() => handleUpdate(assignment?.draft)}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
                             Instruction (Optional)
@@ -349,7 +378,9 @@ function CreateAssignment() {
                                     min={assignment?.created_date || ''}
                                     value={assignment?.start_date || ''}
                                     onChange={handleChange}
-                                    onBlur={handleUpdate}
+                                    onBlur={() =>
+                                        handleUpdate(assignment?.draft)
+                                    }
                                 />
                                 <label
                                     htmlFor="start_date"
@@ -367,9 +398,12 @@ function CreateAssignment() {
                                     id="due_date"
                                     name="due_date"
                                     min={assignment?.start_date || ''}
+                                    value={assignment?.due_date || ''}
                                     placeholder="due date"
                                     onChange={handleChange}
-                                    onBlur={handleUpdate}
+                                    onBlur={() =>
+                                        handleUpdate(assignment?.draft)
+                                    }
                                 />
                                 <label
                                     htmlFor="due_date"

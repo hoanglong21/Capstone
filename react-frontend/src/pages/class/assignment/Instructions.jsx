@@ -204,6 +204,12 @@ const Instructions = () => {
                             : ''}
                     </div>
                 </div>
+                <div
+                    className="instruction_details mb-2"
+                    dangerouslySetInnerHTML={{
+                        __html: assignment?.instruction,
+                    }}
+                ></div>
                 <div className="d-flex justify-content-between mb-3 instruction_date">
                     {userInfo?.id !== assignment?.user?.id ? (
                         <div>

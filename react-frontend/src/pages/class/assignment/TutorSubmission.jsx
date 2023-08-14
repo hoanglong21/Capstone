@@ -205,6 +205,20 @@ const TutorSubmission = ({ assignment }) => {
                 text = new String(text.slice(0, lastIndex))
             }
             // create comment
+            var tempSubmission = {}
+            if (!submission?.id) {
+                tempSubmission = (
+                    await SubmissionService.createSubmission({
+                        user: {
+                            id: userInfo.id,
+                            username: userInfo.username,
+                        },
+                        assignment: {
+                            id: assignment.id,
+                        },
+                    })
+                ).data
+            }
             var tempComment = {
                 user: {
                     id: userInfo.id,
@@ -216,7 +230,7 @@ const TutorSubmission = ({ assignment }) => {
                     id: 5,
                 },
                 submission: {
-                    id: submission.id,
+                    id: submission?.id || tempSubmission.id,
                 },
             }
             tempComment = (await CommentService.createComment(tempComment)).data
