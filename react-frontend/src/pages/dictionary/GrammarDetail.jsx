@@ -72,7 +72,7 @@ const GrammarDetail = ({
                                     {grammar?.synonyms?.map(
                                         (synonym, index) => (
                                             <div
-                                                className="col-4 mb-2"
+                                                className="grammar-detail-col-4 mb-2"
                                                 key={index}
                                             >
                                                 <div
@@ -108,7 +108,7 @@ const GrammarDetail = ({
                                     {grammar?.antonyms?.map(
                                         (antonym, index) => (
                                             <div
-                                                className="col-4 mb-2"
+                                                className="grammar-detail-col-4 mb-2"
                                                 key={index}
                                             >
                                                 <div
@@ -144,7 +144,7 @@ const GrammarDetail = ({
                                     {grammar?.example?.map(
                                         (exampleItem, index) => (
                                             <div
-                                                className="col-4 mb-2"
+                                                className="grammar-detail-col-4 mb-2"
                                                 key={index}
                                             >
                                                 <div className="exampleItem h-100">
