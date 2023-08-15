@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 
 import ClassService from '../../services/ClassService'
 
+import Pagination from '../../components/Pagination'
+
 import { ClassIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
@@ -12,10 +14,13 @@ import '../../assets/styles/Home.css'
 const ClassesForHome = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
+    const author = searchParams.get('author')
     const search = searchParams.get('search')
 
     const [classes, setClasses] = useState([])
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(1)
 
     const fetchData = async (searchKey) => {
         try {
@@ -23,7 +28,8 @@ const ClassesForHome = () => {
                 await ClassService.getFilterList(
                     '',
                     '=0',
-                    `${searchKey ? '=' + searchKey : ''}`,
+                    `${!author && searchKey ? '=' + searchKey : ''}`,
+                    `${author ? `=${author}` : ''}`,
                     '',
                     '',
                     '',
@@ -31,12 +37,12 @@ const ClassesForHome = () => {
                     '',
                     '',
                     '',
-                    '',
-                    '',
-                    ''
+                    `=${page}`,
+                    '=10'
                 )
-            ).data.list
-            setClasses(temp)
+            ).data
+            setTotalItems(temp.totalItems)
+            setClasses(temp.list)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -69,7 +75,7 @@ const ClassesForHome = () => {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search])
+    }, [search, author, page])
 
     return (
         <div className="mt-4 mb-5">
@@ -121,7 +127,9 @@ const ClassesForHome = () => {
                                     <div className="col d-flex align-items-center">
                                         <p
                                             className="set-description m-0"
-                                            style={{ whiteSpace: 'pre-wrap' }}
+                                            style={{
+                                                whiteSpace: 'pre-wrap',
+                                            }}
                                         >
                                             {classroom?.description}
                                         </p>
@@ -130,6 +138,16 @@ const ClassesForHome = () => {
                             </Link>
                         </div>
                     ))}
+                    {/* Pagination */}
+                    <Pagination
+                        className="mb-5"
+                        currentPage={page}
+                        totalCount={totalItems}
+                        pageSize={10}
+                        onPageChange={(page) => {
+                            setPage(page)
+                        }}
+                    />
                 </div>
             )}
         </div>

@@ -349,7 +349,6 @@ function Translate() {
                                         className="ms-1"
                                         text={origText}
                                         language={origLang}
-                                        disabled={origLang === 'vi'}
                                     />
                                 )}
                             </div>
@@ -397,7 +396,6 @@ function Translate() {
                                         className="ms-1"
                                         text={transText}
                                         language={transLang}
-                                        disabled={transLang === 'vi'}
                                     />
                                     <button
                                         className="btn btn-customLight p-2 rounded-circle"

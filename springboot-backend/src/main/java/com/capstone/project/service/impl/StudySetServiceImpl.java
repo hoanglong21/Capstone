@@ -129,7 +129,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId, String authorName,
+    public Map<String, Object> getFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String authorUsername, String authorName,
                                              String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                                              String sortBy, String direction, int page, int size) throws Exception {
         if(page<=0 || size<=0) {
@@ -175,12 +175,12 @@ public class StudySetServiceImpl implements StudySetService {
             }
         }
 
-        if (authorId != 0) {
-            query += " AND s.author_id = :authorId";
-            parameters.put("authorId", authorId);
+        if (authorUsername != null && !authorUsername.isEmpty()) {
+            query += " AND u.username LIKE :authorUsername";
+            parameters.put("authorUsername", "%" +authorUsername + "%");
         }
 
-        if (authorId == 0 && authorName != null && !authorName.isEmpty()) {
+        if (authorName != null && !authorName.isEmpty()) {
             query += " AND (u.username LIKE :name OR u.first_name LIKE :name OR u.last_name LIKE :name OR CONCAT(u.first_name, ' ', u.last_name))";
             parameters.put("name", "%" + authorName + "%");
         }

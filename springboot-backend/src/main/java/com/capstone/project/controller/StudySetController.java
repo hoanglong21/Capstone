@@ -105,7 +105,7 @@ public class StudySetController {
                                            @RequestParam(value = "public", required = false) Boolean isPublic,
                                            @RequestParam(value = "draft", required = false) Boolean isDraft,
                                            @RequestParam(value = "search", required = false) String search,
-                                           @RequestParam(value = "author_id", required = false, defaultValue = "0") int authorId,
+                                           @RequestParam(value = "author_username", required = false) String authorUsername,
                                            @RequestParam(value = "author_name", required = false) String authorName,
                                            @RequestParam(value = "type", required = false, defaultValue = "0") int type,
                                            @RequestParam(value = "fromdeteted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDeteted,
@@ -117,7 +117,7 @@ public class StudySetController {
                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         try {
-            return ResponseEntity.ok(studySetService.getFilterList(isDeleted, isPublic, isDraft, search, type, authorId, authorName,
+            return ResponseEntity.ok(studySetService.getFilterList(isDeleted, isPublic, isDraft, search, type, authorUsername, authorName,
                     fromDeteted, toDeteted, fromCreated, toCreated, sortBy, direction, page, size));
         }
         catch (Exception e) {

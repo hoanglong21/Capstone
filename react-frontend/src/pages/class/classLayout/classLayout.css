@@ -6,6 +6,8 @@
 .mainClass_container {
     max-width: 80rem;
     padding: 2.5rem 5rem;
+    margin-right: auto!important;
+    margin-left: auto!important;
 }
 
 .mainClassHeader_icon {
@@ -341,12 +343,89 @@
     font-size: 1.025rem;
 }
 
+.request-col-8{
+    flex: 0 0 auto;
+    width: 66.66666667% !important;
+}
+
+.request-col-4{
+    flex: 0 0 auto;
+    width: 33.33333333% !important;
+}
+
+.request-mt-5{
+    margin-top: 3rem !important;
+}
 @media only screen and (max-width: 768px) {
     .classUnenrollModalBtn.btn,
     .classDeleteModalBtn.btn,
     .editClassModalBtn.btn {
         padding: 0.5rem 1rem;
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+
+    .mainClass_container {
+        width: 100%;
+        padding: 1rem 1rem;
+    }
+
+    .classDeleteModalHeading {
+        font-size: 1.5rem;
+    }
+
+    .mainClass_title{
+        font-size: 1.65rem;
+    }
+
+    .mainClassHeader_icon {
+        width: 2.5rem !important;
+    }
+
+    .mainClass-navLink{
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            margin-right: 0.5rem !important;
+            margin-left: 0.5rem !important;
+            overflow-x: scroll;
+    }
+
+    .mainClass-navLink > li {
+        width: fix-content;
+    }
+
+    .mainClass-navLink::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mainClass-navLink {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+
+      .people_heading h2 {
+        font-size: 1.5rem;
+    }
+
+    .editClassModalTitle {
+        font-size: 1.5rem;
+    }
+
+    .mainClass_infoTitle {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .request-col-8{
+        width: 100% !important;
+    }
+
+    .request-col-4{
+        width: 100% !important;
+        margin-top: 20px;
+    }
+
+    .request-mt-5{
+        margin-top: 0.5rem !important;
     }
 }
 

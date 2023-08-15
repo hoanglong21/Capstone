@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom'
 import AssignmentService from '../../../services/AssignmentService'
 import TutorSubmission from './TutorSubmission'
 import LearnerSubmission from './LearnerSubmission'
+import './assignment.css'
 
 const Submissions = () => {
     const { id } = useParams()

@@ -124,7 +124,7 @@ const KanjiDictForAdmin = () => {
             <div className="mt-4 mb-5">
                 {word?.character ? (
                     <div className="row">
-                        <div className="kanji-dict col-2">
+                        <div className="vocab-dict">
                             <div className="dictResultWordList">
                                 {kanjis.map((kanji, index) => (
                                     <div

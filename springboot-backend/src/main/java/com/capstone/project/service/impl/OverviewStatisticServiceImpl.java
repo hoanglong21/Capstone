@@ -46,7 +46,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
         List<String> listDate = dateRangePicker.getDateRange();
         for(int i=0; i<listDate.size()-1; i++) {
             Map<String, Object> response = studySetService.getFilterList(null, null, null, null,
-                    0, 0, null, null, null, listDate.get(i), listDate.get(i+1),
+                    0, null, null, null, null, listDate.get(i), listDate.get(i+1),
                     "created_date", "DESC", 1, 5);
             result.add(Integer.parseInt(String.valueOf(response.get("totalItems"))));
         }
@@ -84,7 +84,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
     public Integer getStudySetNumber() throws Exception {
         List<String> listDate = dateRangePicker.getShortDateRange();
         Map<String, Object> response = studySetService.getFilterList(null, null, null, null, 0,
-                0, null, null, null,
+                null, null, null, null,
                 listDate.get(0), listDate.get(1), "created_date", "DESC", 1, 5);
         return Integer.parseInt(String.valueOf(response.get("totalItems")));
     }

@@ -22,6 +22,7 @@ import {
     ResetIcon,
     UploadIcon,
 } from '../../components/icons'
+import "../../assets/styles/class.css"
 
 const Stream = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -203,7 +204,7 @@ const Stream = () => {
     return (
         <div className="row">
             {/* Side */}
-            <div className="col-3">
+            <div className="stream-col-3 ">
                 {/* Class code */}
                 {userInfo?.id === classroom?.user?.id && (
                     <div className="card classCode_container mb-4">
@@ -260,7 +261,7 @@ const Stream = () => {
                     </div>
                 )}
                 {/* Upcoming */}
-                <div className="card">
+                <div className="stream-card card">
                     <div className="card-body">
                         <div className="card-title mainClass_sectionTitle">
                             Upcoming
@@ -270,7 +271,7 @@ const Stream = () => {
                 </div>
             </div>
             {/* Main */}
-            <div className="col-9">
+            <div className="stream-col-9">
                 {/* Add post */}
                 <div className="card mainClass_postAddContainer mb-4">
                     {showInput ? (

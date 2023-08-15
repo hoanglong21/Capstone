@@ -7,7 +7,7 @@ import AttachmentService from '../../../services/AttachmentService'
 import CommentService from '../../../services/CommentService'
 
 import Comment from '../../../components/comment/Comment'
-
+import './assignment.css'
 import {
     AddIcon,
     CloseIcon,
@@ -234,7 +234,7 @@ const LearnerSubmission = ({ assignment }) => {
 
     return (
         <div className="row">
-            <div className="col-4">
+            <div className="submission-col-4">
                 <div className="card submission_card mt-4">
                     <div className="card-body py-3 px-4">
                         <div className="submission_heading">Your work</div>
@@ -344,7 +344,7 @@ const LearnerSubmission = ({ assignment }) => {
                     </div>
                 </div>
             </div>
-            <div className="col-8">
+            <div className="submission-col-8">
                 <div className="card submission_card mt-4">
                     <div className="card-body py-3 px-4">
                         <div className="d-flex align-items-center comment_label mb-3">
