@@ -10,6 +10,7 @@ function Home() {
 
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
+    const author = searchParams.get('author')
 
     const [searchKey, setSearchKey] = useState(search)
 
@@ -57,6 +58,27 @@ function Home() {
                                     >
                                         Search
                                     </button>
+                                    {(search || author) && (
+                                        <button
+                                            className="btn btn-light my-2 my-sm-0 ms-2"
+                                            onClick={(event) => {
+                                                event.preventDefault()
+                                                if (search) {
+                                                    searchParams.delete(
+                                                        'search'
+                                                    )
+                                                }
+                                                if (author) {
+                                                    searchParams.delete(
+                                                        'author'
+                                                    )
+                                                }
+                                                setSearchParams(searchParams)
+                                            }}
+                                        >
+                                            Clear
+                                        </button>
+                                    )}
                                 </form>
                             </div>
                         </div>

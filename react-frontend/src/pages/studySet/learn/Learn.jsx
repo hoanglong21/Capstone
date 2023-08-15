@@ -168,6 +168,17 @@ const Learn = () => {
     const [loading, setLoading] = useState(false)
     const [showOptionModal, setShowOptionModal] = useState(false)
 
+    useEffect(() => {
+        if (!loading && isAllow) {
+            const headerHeight =
+                document.getElementById('quizHeader')?.clientHeight
+            if (document.getElementById('quizProgressContainer')) {
+                document.getElementById('quizProgressContainer').style.top =
+                    headerHeight
+            }
+        }
+    }, [loading, isAllow])
+
     // fetch user info
     useEffect(() => {
         if (userToken && !userInfo?.id) {
@@ -309,12 +320,6 @@ const Learn = () => {
                     setCurrentQuestion(tempQuestions[0])
                 }
                 setShowOptionModal(true)
-                const headerHeight =
-                    document.getElementById('quizHeader').clientHeight
-                if (document.getElementById('quizProgressContainer')) {
-                    document.getElementById('quizProgressContainer').style.top =
-                        headerHeight
-                }
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -355,7 +360,7 @@ const Learn = () => {
     }
 
     const handleCreateLearn = async () => {
-        if (document.getElementById('learnOptionModal')) {            
+        if (document.getElementById('learnOptionModal')) {
             document.getElementById('learnOptionModal').scrollTop = 0
         }
         setProgress(0)
@@ -466,8 +471,8 @@ const Learn = () => {
             }
         }
         // create
+        setLoading(true)
         try {
-            setLoading(true)
             if (numQues > 0) {
                 const tempQuestions = (
                     await StudySetService.getLearningStudySetId(
@@ -505,7 +510,6 @@ const Learn = () => {
             setTrueFalseAnswerWith(optionTrueFalseAnswerWith)
             setShowOptionModal(false)
             setError('')
-            setLoading(false)
             document
                 .querySelector('#learnAnimation .confetti-container')
                 ?.remove()
@@ -516,6 +520,7 @@ const Learn = () => {
                 console.log(error.message)
             }
         }
+        setLoading(false)
     }
 
     const handleCancelCreateLearn = () => {
@@ -639,14 +644,6 @@ const Learn = () => {
 
     return (
         <div>
-            {/* loading */}
-            {loading && (
-                <div className="d-flex justify-content-center">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            )}
             {/* Header */}
             <div
                 id="quizHeader"
@@ -737,7 +734,13 @@ const Learn = () => {
                     </button>
                 </div>
             </div>
-            {isAllow ? (
+            {loading ? (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            ) : isAllow ? (
                 <div>
                     {/* Progress */}
                     {!isEnd && !isFinish && (
@@ -921,982 +924,6 @@ const Learn = () => {
                             )}
                         </section>
                     )}
-                    {/* Option modal */}
-                    <Modal
-                        className="quizOptionModal"
-                        id="learnOptionModal"
-                        size="lg"
-                        show={showOptionModal}
-                        onHide={() => {
-                            setShowOptionModal(false)
-                        }}
-                    >
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h3
-                                    className="modal-title"
-                                    id="quizOptionModalLabel"
-                                >
-                                    Options
-                                </h3>
-                                <button
-                                    type="button"
-                                    className="btn-close"
-                                    onClick={handleCancelCreateLearn}
-                                ></button>
-                            </div>
-                            <div className="modal-body">
-                                {/* error message */}
-                                {error && (
-                                    <div
-                                        className="alert alert-danger"
-                                        role="alert"
-                                    >
-                                        {error}
-                                    </div>
-                                )}
-                                <div className="row mb-3">
-                                    <div className="col-6">
-                                        {/* types */}
-                                        <div className="quizOptionBlock">
-                                            <legend>QUESTION TYPES</legend>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    value={1}
-                                                    checked={
-                                                        optionQuestionTypes?.includes(
-                                                            1
-                                                        ) || ''
-                                                    }
-                                                    id="written"
-                                                    onChange={
-                                                        handleChangeQuestionType
-                                                    }
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="written"
-                                                >
-                                                    Written
-                                                </label>
-                                            </div>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    value={2}
-                                                    checked={
-                                                        optionQuestionTypes?.includes(
-                                                            2
-                                                        ) || ''
-                                                    }
-                                                    id="mupltipleChoice"
-                                                    onChange={
-                                                        handleChangeQuestionType
-                                                    }
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="mupltipleChoice"
-                                                >
-                                                    Multiple choice
-                                                </label>
-                                            </div>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    value={3}
-                                                    checked={
-                                                        optionQuestionTypes?.includes(
-                                                            3
-                                                        ) || ''
-                                                    }
-                                                    id="trueFalse"
-                                                    onChange={
-                                                        handleChangeQuestionType
-                                                    }
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="trueFalse"
-                                                >
-                                                    True/False
-                                                </label>
-                                            </div>
-                                        </div>
-                                        {/* picture */}
-                                        <div className="quizOptionBlock">
-                                            <legend>PICTURE</legend>
-                                            <div className="mb-2">
-                                                <input
-                                                    id="picture"
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    checked={optionShowPicture}
-                                                    onChange={() => {
-                                                        setOptionShowPicture(
-                                                            !optionShowPicture
-                                                        )
-                                                    }}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="picture"
-                                                >
-                                                    Show picture
-                                                </label>
-                                            </div>
-                                        </div>
-                                        {/* audio */}
-                                        <div className="quizOptionBlock">
-                                            <legend>AUDIO</legend>
-                                            <div className="mb-2">
-                                                <input
-                                                    id="audio"
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    checked={optionShowAudio}
-                                                    onChange={() => {
-                                                        setOptionShowAudio(
-                                                            !optionShowAudio
-                                                        )
-                                                    }}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="audio"
-                                                >
-                                                    Show audio
-                                                </label>
-                                            </div>
-                                        </div>
-                                        {/* note */}
-                                        <div className="quizOptionBlock">
-                                            <legend>NOTE</legend>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    checked={optionShowNote}
-                                                    id="note"
-                                                    onChange={() => {
-                                                        setOptionShowNote(
-                                                            !optionShowNote
-                                                        )
-                                                    }}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="note"
-                                                >
-                                                    Show note
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        {/* status */}
-                                        <div className="quizOptionBlock">
-                                            <legend>PROGRESS STATUS</legend>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    value="not studied"
-                                                    checked={
-                                                        optionProgressStatus?.includes(
-                                                            'not studied'
-                                                        ) || ''
-                                                    }
-                                                    id="notStudied"
-                                                    onChange={
-                                                        handleChangeProgressStatus
-                                                    }
-                                                    disabled={
-                                                        optionIsStar
-                                                            ? numNotStar == 0
-                                                            : numNot == 0
-                                                    }
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="notStudied"
-                                                >
-                                                    Not studied
-                                                </label>
-                                            </div>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    value="still learning"
-                                                    checked={
-                                                        optionProgressStatus?.includes(
-                                                            'still learning'
-                                                        ) || ''
-                                                    }
-                                                    id="stillLearning"
-                                                    onChange={
-                                                        handleChangeProgressStatus
-                                                    }
-                                                    disabled={
-                                                        optionIsStar
-                                                            ? numStillStar == 0
-                                                            : numStill == 0
-                                                    }
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="stillLearning"
-                                                >
-                                                    Still learning
-                                                </label>
-                                            </div>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    value="mastered"
-                                                    checked={
-                                                        optionProgressStatus?.includes(
-                                                            'mastered'
-                                                        ) || ''
-                                                    }
-                                                    id="mastered"
-                                                    onChange={
-                                                        handleChangeProgressStatus
-                                                    }
-                                                    disabled={
-                                                        optionIsStar
-                                                            ? numMasterStar == 0
-                                                            : numMaster == 0
-                                                    }
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="mastered"
-                                                >
-                                                    Mastered
-                                                </label>
-                                            </div>
-                                        </div>
-                                        {/* star */}
-                                        <div className="quizOptionBlock">
-                                            <legend>STAR</legend>
-                                            <div className="mb-2">
-                                                <input
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    checked={optionIsStar}
-                                                    id="isStar"
-                                                    onChange={() => {
-                                                        setOptionIsStar(
-                                                            !optionIsStar
-                                                        )
-                                                    }}
-                                                    disabled={
-                                                        numNotStar +
-                                                            numStillStar +
-                                                            numMasterStar ==
-                                                        0
-                                                    }
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="isStar"
-                                                >
-                                                    Study starred terms only
-                                                </label>
-                                            </div>
-                                        </div>
-                                        {/* shuffle  */}
-                                        <div className="quizOptionBlock">
-                                            <legend>SHUFFLE</legend>
-                                            <div className="mb-2">
-                                                <input
-                                                    id="shuffle"
-                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                    type="checkbox"
-                                                    checked={optionIsShuffle}
-                                                    onChange={() => {
-                                                        setOptionIsShuffle(
-                                                            !optionIsShuffle
-                                                        )
-                                                    }}
-                                                />
-                                                <label
-                                                    className="form-check-label"
-                                                    htmlFor="shuffle"
-                                                >
-                                                    Shuffle cards
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* selection */}
-                                <ul
-                                    className="nav nav-tabs mb-3"
-                                    role="tablist"
-                                >
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link quizOptionBlock_label ${
-                                                optionQuestionTypes?.includes(1)
-                                                    ? ''
-                                                    : 'disabled'
-                                            }`}
-                                            aria-current="page"
-                                            id="listWrittenList"
-                                            data-bs-toggle="list"
-                                            href="#listWritten"
-                                            role="tab"
-                                            aria-controls="listWritten"
-                                        >
-                                            Written
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link quizOptionBlock_label ${
-                                                optionQuestionTypes?.includes(2)
-                                                    ? ''
-                                                    : 'disabled'
-                                            }`}
-                                            id="listMultipleList"
-                                            data-bs-toggle="list"
-                                            href="#listMultiple"
-                                            role="tab"
-                                            aria-controls="listMultiple"
-                                        >
-                                            Multiple choice
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a
-                                            className={`nav-link quizOptionBlock_label ${
-                                                optionQuestionTypes?.includes(3)
-                                                    ? ''
-                                                    : 'disabled'
-                                            }`}
-                                            id="listTrueFalseList"
-                                            data-bs-toggle="list"
-                                            href="#listTrueFalse"
-                                            role="tab"
-                                            aria-controls="listTrueFalse"
-                                        >
-                                            True/False
-                                        </a>
-                                    </li>
-                                </ul>
-                                <div className="tab-content">
-                                    {/* written */}
-                                    <div
-                                        className={`tab-pane fade ${
-                                            optionQuestionTypes?.includes(1)
-                                                ? ''
-                                                : 'hide'
-                                        }`}
-                                        id="listWritten"
-                                        role="tabpanel"
-                                        aria-labelledby="listWrittenList"
-                                    >
-                                        <div className="row">
-                                            <div className="col-6">
-                                                <div className="quizOptionBlock mb-4">
-                                                    <legend>PROMPT WITH</legend>
-                                                    {fields?.map(
-                                                        (field, index) => (
-                                                            <div
-                                                                className="mb-2"
-                                                                key={index}
-                                                            >
-                                                                {type === 1 ? (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        name="writtenPromptWith"
-                                                                        type="radio"
-                                                                        id={`writtenPromptWith${field.id}`}
-                                                                        checked={
-                                                                            optionWrittenPromptWith ===
-                                                                                field.id ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                setOptionWrittenPromptWith(
-                                                                                    field.id
-                                                                                )
-                                                                            } else {
-                                                                                setOptionWrittenPromptWith(
-                                                                                    0
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                ) : (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        type="checkbox"
-                                                                        id={`writtenPromptWith${field.id}`}
-                                                                        checked={
-                                                                            optionWrittenPromptWith?.includes(
-                                                                                field.id
-                                                                            ) ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                var tempWrittenPromptWith =
-                                                                                    [
-                                                                                        ...optionWrittenPromptWith,
-                                                                                    ]
-                                                                                tempWrittenPromptWith.push(
-                                                                                    field.id
-                                                                                )
-                                                                                setOptionWrittenPromptWith(
-                                                                                    tempWrittenPromptWith
-                                                                                )
-                                                                            } else {
-                                                                                const tempWrittenPromptWith =
-                                                                                    [
-                                                                                        ...optionWrittenPromptWith,
-                                                                                    ].filter(
-                                                                                        (
-                                                                                            item
-                                                                                        ) =>
-                                                                                            item !==
-                                                                                            field.id
-                                                                                    )
-                                                                                setOptionWrittenPromptWith(
-                                                                                    tempWrittenPromptWith
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                <label
-                                                                    className="form-check-label"
-                                                                    htmlFor={`writtenPromptWith${field.id}`}
-                                                                >
-                                                                    {field.name}
-                                                                </label>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="col-6">
-                                                <div className="quizOptionBlock">
-                                                    <legend>ANSWER WITH</legend>
-                                                    {fields?.map(
-                                                        (field, index) => (
-                                                            <div
-                                                                className="mb-2"
-                                                                key={index}
-                                                            >
-                                                                <input
-                                                                    className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                    type="radio"
-                                                                    name="writtenAnswerWith"
-                                                                    checked={
-                                                                        optionWrittenAnswerWith ===
-                                                                            field.id ||
-                                                                        ''
-                                                                    }
-                                                                    id={`writtenAnswerWith${field.id}`}
-                                                                    onChange={(
-                                                                        event
-                                                                    ) => {
-                                                                        if (
-                                                                            event
-                                                                                .target
-                                                                                .checked
-                                                                        ) {
-                                                                            setOptionWrittenAnswerWith(
-                                                                                field.id
-                                                                            )
-                                                                        } else {
-                                                                            setOptionWrittenAnswerWith(
-                                                                                0
-                                                                            )
-                                                                        }
-                                                                    }}
-                                                                />
-                                                                <label
-                                                                    className="form-check-label"
-                                                                    htmlFor={`writtenAnswerWith${field.id}`}
-                                                                >
-                                                                    {field.name}
-                                                                </label>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* multiple */}
-                                    <div
-                                        className={`tab-pane fade  ${
-                                            optionQuestionTypes?.includes(2)
-                                                ? ''
-                                                : 'hide'
-                                        }`}
-                                        id="listMultiple"
-                                        role="tabpanel"
-                                        aria-labelledby="listMultipleList"
-                                    >
-                                        <div className="row">
-                                            <div className="col-6">
-                                                <div className="quizOptionBlock mb-4">
-                                                    <legend>PROMPT WITH</legend>
-                                                    {fields?.map(
-                                                        (field, index) => (
-                                                            <div
-                                                                className="mb-2"
-                                                                key={index}
-                                                            >
-                                                                {type === 1 ? (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        name="multiplePromptWith"
-                                                                        type="radio"
-                                                                        id={`multiplePromptWith${field.id}`}
-                                                                        checked={
-                                                                            optionMultiplePromptWith ===
-                                                                                field.id ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                setOptionMultiplePromptWith(
-                                                                                    field.id
-                                                                                )
-                                                                            } else {
-                                                                                setOptionMultiplePromptWith(
-                                                                                    0
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                ) : (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        type="checkbox"
-                                                                        id={`multiplePromptWith${field.id}`}
-                                                                        checked={
-                                                                            optionMultiplePromptWith?.includes(
-                                                                                field.id
-                                                                            ) ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                var tempMultiplePromptWith =
-                                                                                    [
-                                                                                        ...optionMultiplePromptWith,
-                                                                                    ]
-                                                                                tempMultiplePromptWith.push(
-                                                                                    field.id
-                                                                                )
-                                                                                setOptionMultiplePromptWith(
-                                                                                    tempMultiplePromptWith
-                                                                                )
-                                                                            } else {
-                                                                                const tempMultiplePromptWith =
-                                                                                    [
-                                                                                        ...optionMultiplePromptWith,
-                                                                                    ].filter(
-                                                                                        (
-                                                                                            item
-                                                                                        ) =>
-                                                                                            item !==
-                                                                                            field.id
-                                                                                    )
-                                                                                setOptionMultiplePromptWith(
-                                                                                    tempMultiplePromptWith
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                <label
-                                                                    className="form-check-label"
-                                                                    htmlFor={`multiplePromptWith${field.id}`}
-                                                                >
-                                                                    {field.name}
-                                                                </label>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="col-6">
-                                                <div className="quizOptionBlock">
-                                                    <legend>ANSWER WITH</legend>
-                                                    {fields?.map(
-                                                        (field, index) => (
-                                                            <div
-                                                                className="mb-2"
-                                                                key={index}
-                                                            >
-                                                                {type === 1 ? (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        name="multipleAnswerWith"
-                                                                        type="radio"
-                                                                        id={`multipleAnswerWith${field.id}`}
-                                                                        checked={
-                                                                            optionMultipleAnswerWith ===
-                                                                                field.id ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                setOptionMultipleAnswerWith(
-                                                                                    field.id
-                                                                                )
-                                                                            } else {
-                                                                                setOptionMultipleAnswerWith(
-                                                                                    0
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                ) : (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        type="checkbox"
-                                                                        id={`multipleAnswerWith${field.id}`}
-                                                                        checked={
-                                                                            optionMultipleAnswerWith?.includes(
-                                                                                field.id
-                                                                            ) ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                var tempMultipleAnswerWith =
-                                                                                    [
-                                                                                        ...optionMultipleAnswerWith,
-                                                                                    ]
-                                                                                tempMultipleAnswerWith.push(
-                                                                                    field.id
-                                                                                )
-                                                                                setOptionMultipleAnswerWith(
-                                                                                    tempMultipleAnswerWith
-                                                                                )
-                                                                            } else {
-                                                                                const tempMultipleAnswerWith =
-                                                                                    [
-                                                                                        ...optionMultipleAnswerWith,
-                                                                                    ].filter(
-                                                                                        (
-                                                                                            item
-                                                                                        ) =>
-                                                                                            item !==
-                                                                                            field.id
-                                                                                    )
-                                                                                setOptionMultipleAnswerWith(
-                                                                                    tempMultipleAnswerWith
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                <label
-                                                                    className="form-check-label"
-                                                                    htmlFor={`multipleAnswerWith${field.id}`}
-                                                                >
-                                                                    {field.name}
-                                                                </label>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* true false */}
-                                    <div
-                                        className={`tab-pane fade ${
-                                            optionQuestionTypes?.includes(3)
-                                                ? ''
-                                                : 'hide'
-                                        }`}
-                                        id="listTrueFalse"
-                                        role="tabpanel"
-                                        aria-labelledby="listTrueFalseList"
-                                    >
-                                        <div className="row">
-                                            <div className="col-6">
-                                                <div className="quizOptionBlock mb-4">
-                                                    <legend>PROMPT WITH</legend>
-                                                    {fields?.map(
-                                                        (field, index) => (
-                                                            <div
-                                                                className="mb-2"
-                                                                key={index}
-                                                            >
-                                                                {type === 1 ? (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        name="trueFalsePromptWith"
-                                                                        type="radio"
-                                                                        id={`trueFalsePromptWith${field.id}`}
-                                                                        checked={
-                                                                            optionTrueFalsePromptWith ===
-                                                                                field.id ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                setOptionTrueFalsePromptWith(
-                                                                                    field.id
-                                                                                )
-                                                                            } else {
-                                                                                setOptionTrueFalsePromptWith(
-                                                                                    0
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                ) : (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        type="checkbox"
-                                                                        id={`trueFalsePromptWith${field.id}`}
-                                                                        checked={
-                                                                            optionTrueFalsePromptWith?.includes(
-                                                                                field.id
-                                                                            ) ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                var tempTrueFalsePromptWith =
-                                                                                    [
-                                                                                        ...optionTrueFalsePromptWith,
-                                                                                    ]
-                                                                                tempTrueFalsePromptWith.push(
-                                                                                    field.id
-                                                                                )
-                                                                                setOptionTrueFalsePromptWith(
-                                                                                    tempTrueFalsePromptWith
-                                                                                )
-                                                                            } else {
-                                                                                const tempTrueFalsePromptWith =
-                                                                                    [
-                                                                                        ...optionTrueFalsePromptWith,
-                                                                                    ].filter(
-                                                                                        (
-                                                                                            item
-                                                                                        ) =>
-                                                                                            item !==
-                                                                                            field.id
-                                                                                    )
-                                                                                setOptionTrueFalsePromptWith(
-                                                                                    tempTrueFalsePromptWith
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                <label
-                                                                    className="form-check-label"
-                                                                    htmlFor={`trueFalsePromptWith${field.id}`}
-                                                                >
-                                                                    {field.name}
-                                                                </label>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="col-6">
-                                                <div className="quizOptionBlock">
-                                                    <legend>ANSWER WITH</legend>
-                                                    {fields?.map(
-                                                        (field, index) => (
-                                                            <div
-                                                                className="mb-2"
-                                                                key={index}
-                                                            >
-                                                                {type === 1 ? (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        name="trueFalseAnswerWith"
-                                                                        type="radio"
-                                                                        id={`trueFalseAnswerWith${field.id}`}
-                                                                        checked={
-                                                                            optionTrueFalseAnswerWith ===
-                                                                                field.id ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                setOptionTrueFalseAnswerWith(
-                                                                                    field.id
-                                                                                )
-                                                                            } else {
-                                                                                setOptionTrueFalseAnswerWith(
-                                                                                    0
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                ) : (
-                                                                    <input
-                                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
-                                                                        type="checkbox"
-                                                                        id={`trueFalseAnswerWith${field.id}`}
-                                                                        checked={
-                                                                            optionTrueFalseAnswerWith?.includes(
-                                                                                field.id
-                                                                            ) ||
-                                                                            ''
-                                                                        }
-                                                                        onChange={(
-                                                                            event
-                                                                        ) => {
-                                                                            if (
-                                                                                event
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                var tempTrueFalseAnswerWith =
-                                                                                    [
-                                                                                        ...optionTrueFalseAnswerWith,
-                                                                                    ]
-                                                                                tempTrueFalseAnswerWith.push(
-                                                                                    field.id
-                                                                                )
-                                                                                setOptionTrueFalseAnswerWith(
-                                                                                    tempTrueFalseAnswerWith
-                                                                                )
-                                                                            } else {
-                                                                                const tempTrueFalseAnswerWith =
-                                                                                    [
-                                                                                        ...optionTrueFalseAnswerWith,
-                                                                                    ].filter(
-                                                                                        (
-                                                                                            item
-                                                                                        ) =>
-                                                                                            item !==
-                                                                                            field.id
-                                                                                    )
-                                                                                setOptionTrueFalseAnswerWith(
-                                                                                    tempTrueFalseAnswerWith
-                                                                                )
-                                                                            }
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                <label
-                                                                    className="form-check-label"
-                                                                    htmlFor={`trueFalseAnswerWith${field.id}`}
-                                                                >
-                                                                    {field.name}
-                                                                </label>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary classModalBtn me-3"
-                                    data-bs-dismiss="modal"
-                                    onClick={handleCancelCreateLearn}
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    className="btn btn-primary classModalBtn"
-                                    onClick={handleCreateLearn}
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <div className="d-flex justify-content-center">
-                                            <div
-                                                className="spinner-border"
-                                                role="status"
-                                            >
-                                                <span className="visually-hidden">
-                                                    Loading...
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        'Create new learn'
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                    </Modal>
                     {/* continue box */}
                     {((isCurrentCorrect === false && !isFinish) || isEnd) && (
                         <div className="learnIncorrectBox">
@@ -1919,6 +946,934 @@ const Learn = () => {
                     <h4>You must have at least 2 cards to learn study set</h4>
                 </div>
             )}
+            {/* Option modal */}
+            <Modal
+                className="quizOptionModal"
+                id="learnOptionModal"
+                size="lg"
+                show={showOptionModal}
+                onHide={() => {
+                    setShowOptionModal(false)
+                }}
+            >
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h3 className="modal-title" id="quizOptionModalLabel">
+                            Options
+                        </h3>
+                        <button
+                            type="button"
+                            className="btn-close"
+                            onClick={handleCancelCreateLearn}
+                        ></button>
+                    </div>
+                    <div className="modal-body">
+                        {/* error message */}
+                        {error && (
+                            <div className="alert alert-danger" role="alert">
+                                {error}
+                            </div>
+                        )}
+                        <div className="row mb-3">
+                            <div className="col-6">
+                                {/* types */}
+                                <div className="quizOptionBlock">
+                                    <legend>QUESTION TYPES</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value={1}
+                                            checked={
+                                                optionQuestionTypes?.includes(
+                                                    1
+                                                ) || ''
+                                            }
+                                            id="written"
+                                            onChange={handleChangeQuestionType}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="written"
+                                        >
+                                            Written
+                                        </label>
+                                    </div>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value={2}
+                                            checked={
+                                                optionQuestionTypes?.includes(
+                                                    2
+                                                ) || ''
+                                            }
+                                            id="mupltipleChoice"
+                                            onChange={handleChangeQuestionType}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="mupltipleChoice"
+                                        >
+                                            Multiple choice
+                                        </label>
+                                    </div>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value={3}
+                                            checked={
+                                                optionQuestionTypes?.includes(
+                                                    3
+                                                ) || ''
+                                            }
+                                            id="trueFalse"
+                                            onChange={handleChangeQuestionType}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="trueFalse"
+                                        >
+                                            True/False
+                                        </label>
+                                    </div>
+                                </div>
+                                {/* picture */}
+                                <div className="quizOptionBlock">
+                                    <legend>PICTURE</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            id="picture"
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            checked={optionShowPicture}
+                                            onChange={() => {
+                                                setOptionShowPicture(
+                                                    !optionShowPicture
+                                                )
+                                            }}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="picture"
+                                        >
+                                            Show picture
+                                        </label>
+                                    </div>
+                                </div>
+                                {/* audio */}
+                                <div className="quizOptionBlock">
+                                    <legend>AUDIO</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            id="audio"
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            checked={optionShowAudio}
+                                            onChange={() => {
+                                                setOptionShowAudio(
+                                                    !optionShowAudio
+                                                )
+                                            }}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="audio"
+                                        >
+                                            Show audio
+                                        </label>
+                                    </div>
+                                </div>
+                                {/* note */}
+                                <div className="quizOptionBlock">
+                                    <legend>NOTE</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            checked={optionShowNote}
+                                            id="note"
+                                            onChange={() => {
+                                                setOptionShowNote(
+                                                    !optionShowNote
+                                                )
+                                            }}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="note"
+                                        >
+                                            Show note
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                {/* status */}
+                                <div className="quizOptionBlock">
+                                    <legend>PROGRESS STATUS</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value="not studied"
+                                            checked={
+                                                optionProgressStatus?.includes(
+                                                    'not studied'
+                                                ) || ''
+                                            }
+                                            id="notStudied"
+                                            onChange={
+                                                handleChangeProgressStatus
+                                            }
+                                            disabled={
+                                                optionIsStar
+                                                    ? numNotStar == 0
+                                                    : numNot == 0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="notStudied"
+                                        >
+                                            Not studied
+                                        </label>
+                                    </div>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value="still learning"
+                                            checked={
+                                                optionProgressStatus?.includes(
+                                                    'still learning'
+                                                ) || ''
+                                            }
+                                            id="stillLearning"
+                                            onChange={
+                                                handleChangeProgressStatus
+                                            }
+                                            disabled={
+                                                optionIsStar
+                                                    ? numStillStar == 0
+                                                    : numStill == 0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="stillLearning"
+                                        >
+                                            Still learning
+                                        </label>
+                                    </div>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            value="mastered"
+                                            checked={
+                                                optionProgressStatus?.includes(
+                                                    'mastered'
+                                                ) || ''
+                                            }
+                                            id="mastered"
+                                            onChange={
+                                                handleChangeProgressStatus
+                                            }
+                                            disabled={
+                                                optionIsStar
+                                                    ? numMasterStar == 0
+                                                    : numMaster == 0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="mastered"
+                                        >
+                                            Mastered
+                                        </label>
+                                    </div>
+                                </div>
+                                {/* star */}
+                                <div className="quizOptionBlock">
+                                    <legend>STAR</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            checked={optionIsStar}
+                                            id="isStar"
+                                            onChange={() => {
+                                                setOptionIsStar(!optionIsStar)
+                                            }}
+                                            disabled={
+                                                numNotStar +
+                                                    numStillStar +
+                                                    numMasterStar ==
+                                                0
+                                            }
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="isStar"
+                                        >
+                                            Study starred terms only
+                                        </label>
+                                    </div>
+                                </div>
+                                {/* shuffle  */}
+                                <div className="quizOptionBlock">
+                                    <legend>SHUFFLE</legend>
+                                    <div className="mb-2">
+                                        <input
+                                            id="shuffle"
+                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                            type="checkbox"
+                                            checked={optionIsShuffle}
+                                            onChange={() => {
+                                                setOptionIsShuffle(
+                                                    !optionIsShuffle
+                                                )
+                                            }}
+                                        />
+                                        <label
+                                            className="form-check-label"
+                                            htmlFor="shuffle"
+                                        >
+                                            Shuffle cards
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* selection */}
+                        <ul className="nav nav-tabs mb-3" role="tablist">
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link quizOptionBlock_label ${
+                                        optionQuestionTypes?.includes(1)
+                                            ? ''
+                                            : 'disabled'
+                                    }`}
+                                    aria-current="page"
+                                    id="listWrittenList"
+                                    data-bs-toggle="list"
+                                    href="#listWritten"
+                                    role="tab"
+                                    aria-controls="listWritten"
+                                >
+                                    Written
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link quizOptionBlock_label ${
+                                        optionQuestionTypes?.includes(2)
+                                            ? ''
+                                            : 'disabled'
+                                    }`}
+                                    id="listMultipleList"
+                                    data-bs-toggle="list"
+                                    href="#listMultiple"
+                                    role="tab"
+                                    aria-controls="listMultiple"
+                                >
+                                    Multiple choice
+                                </a>
+                            </li>
+                            <li className="nav-item">
+                                <a
+                                    className={`nav-link quizOptionBlock_label ${
+                                        optionQuestionTypes?.includes(3)
+                                            ? ''
+                                            : 'disabled'
+                                    }`}
+                                    id="listTrueFalseList"
+                                    data-bs-toggle="list"
+                                    href="#listTrueFalse"
+                                    role="tab"
+                                    aria-controls="listTrueFalse"
+                                >
+                                    True/False
+                                </a>
+                            </li>
+                        </ul>
+                        <div className="tab-content">
+                            {/* written */}
+                            <div
+                                className={`tab-pane fade ${
+                                    optionQuestionTypes?.includes(1)
+                                        ? ''
+                                        : 'hide'
+                                }`}
+                                id="listWritten"
+                                role="tabpanel"
+                                aria-labelledby="listWrittenList"
+                            >
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="quizOptionBlock mb-4">
+                                            <legend>PROMPT WITH</legend>
+                                            {fields?.map((field, index) => (
+                                                <div
+                                                    className="mb-2"
+                                                    key={index}
+                                                >
+                                                    {type === 1 ? (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            name="writtenPromptWith"
+                                                            type="radio"
+                                                            id={`writtenPromptWith${field.id}`}
+                                                            checked={
+                                                                optionWrittenPromptWith ===
+                                                                    field.id ||
+                                                                ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    setOptionWrittenPromptWith(
+                                                                        field.id
+                                                                    )
+                                                                } else {
+                                                                    setOptionWrittenPromptWith(
+                                                                        0
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            type="checkbox"
+                                                            id={`writtenPromptWith${field.id}`}
+                                                            checked={
+                                                                optionWrittenPromptWith?.includes(
+                                                                    field.id
+                                                                ) || ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    var tempWrittenPromptWith =
+                                                                        [
+                                                                            ...optionWrittenPromptWith,
+                                                                        ]
+                                                                    tempWrittenPromptWith.push(
+                                                                        field.id
+                                                                    )
+                                                                    setOptionWrittenPromptWith(
+                                                                        tempWrittenPromptWith
+                                                                    )
+                                                                } else {
+                                                                    const tempWrittenPromptWith =
+                                                                        [
+                                                                            ...optionWrittenPromptWith,
+                                                                        ].filter(
+                                                                            (
+                                                                                item
+                                                                            ) =>
+                                                                                item !==
+                                                                                field.id
+                                                                        )
+                                                                    setOptionWrittenPromptWith(
+                                                                        tempWrittenPromptWith
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={`writtenPromptWith${field.id}`}
+                                                    >
+                                                        {field.name}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="quizOptionBlock">
+                                            <legend>ANSWER WITH</legend>
+                                            {fields?.map((field, index) => (
+                                                <div
+                                                    className="mb-2"
+                                                    key={index}
+                                                >
+                                                    <input
+                                                        className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                        type="radio"
+                                                        name="writtenAnswerWith"
+                                                        checked={
+                                                            optionWrittenAnswerWith ===
+                                                                field.id || ''
+                                                        }
+                                                        id={`writtenAnswerWith${field.id}`}
+                                                        onChange={(event) => {
+                                                            if (
+                                                                event.target
+                                                                    .checked
+                                                            ) {
+                                                                setOptionWrittenAnswerWith(
+                                                                    field.id
+                                                                )
+                                                            } else {
+                                                                setOptionWrittenAnswerWith(
+                                                                    0
+                                                                )
+                                                            }
+                                                        }}
+                                                    />
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={`writtenAnswerWith${field.id}`}
+                                                    >
+                                                        {field.name}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* multiple */}
+                            <div
+                                className={`tab-pane fade  ${
+                                    optionQuestionTypes?.includes(2)
+                                        ? ''
+                                        : 'hide'
+                                }`}
+                                id="listMultiple"
+                                role="tabpanel"
+                                aria-labelledby="listMultipleList"
+                            >
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="quizOptionBlock mb-4">
+                                            <legend>PROMPT WITH</legend>
+                                            {fields?.map((field, index) => (
+                                                <div
+                                                    className="mb-2"
+                                                    key={index}
+                                                >
+                                                    {type === 1 ? (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            name="multiplePromptWith"
+                                                            type="radio"
+                                                            id={`multiplePromptWith${field.id}`}
+                                                            checked={
+                                                                optionMultiplePromptWith ===
+                                                                    field.id ||
+                                                                ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    setOptionMultiplePromptWith(
+                                                                        field.id
+                                                                    )
+                                                                } else {
+                                                                    setOptionMultiplePromptWith(
+                                                                        0
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            type="checkbox"
+                                                            id={`multiplePromptWith${field.id}`}
+                                                            checked={
+                                                                optionMultiplePromptWith?.includes(
+                                                                    field.id
+                                                                ) || ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    var tempMultiplePromptWith =
+                                                                        [
+                                                                            ...optionMultiplePromptWith,
+                                                                        ]
+                                                                    tempMultiplePromptWith.push(
+                                                                        field.id
+                                                                    )
+                                                                    setOptionMultiplePromptWith(
+                                                                        tempMultiplePromptWith
+                                                                    )
+                                                                } else {
+                                                                    const tempMultiplePromptWith =
+                                                                        [
+                                                                            ...optionMultiplePromptWith,
+                                                                        ].filter(
+                                                                            (
+                                                                                item
+                                                                            ) =>
+                                                                                item !==
+                                                                                field.id
+                                                                        )
+                                                                    setOptionMultiplePromptWith(
+                                                                        tempMultiplePromptWith
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={`multiplePromptWith${field.id}`}
+                                                    >
+                                                        {field.name}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="quizOptionBlock">
+                                            <legend>ANSWER WITH</legend>
+                                            {fields?.map((field, index) => (
+                                                <div
+                                                    className="mb-2"
+                                                    key={index}
+                                                >
+                                                    {type === 1 ? (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            name="multipleAnswerWith"
+                                                            type="radio"
+                                                            id={`multipleAnswerWith${field.id}`}
+                                                            checked={
+                                                                optionMultipleAnswerWith ===
+                                                                    field.id ||
+                                                                ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    setOptionMultipleAnswerWith(
+                                                                        field.id
+                                                                    )
+                                                                } else {
+                                                                    setOptionMultipleAnswerWith(
+                                                                        0
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            type="checkbox"
+                                                            id={`multipleAnswerWith${field.id}`}
+                                                            checked={
+                                                                optionMultipleAnswerWith?.includes(
+                                                                    field.id
+                                                                ) || ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    var tempMultipleAnswerWith =
+                                                                        [
+                                                                            ...optionMultipleAnswerWith,
+                                                                        ]
+                                                                    tempMultipleAnswerWith.push(
+                                                                        field.id
+                                                                    )
+                                                                    setOptionMultipleAnswerWith(
+                                                                        tempMultipleAnswerWith
+                                                                    )
+                                                                } else {
+                                                                    const tempMultipleAnswerWith =
+                                                                        [
+                                                                            ...optionMultipleAnswerWith,
+                                                                        ].filter(
+                                                                            (
+                                                                                item
+                                                                            ) =>
+                                                                                item !==
+                                                                                field.id
+                                                                        )
+                                                                    setOptionMultipleAnswerWith(
+                                                                        tempMultipleAnswerWith
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={`multipleAnswerWith${field.id}`}
+                                                    >
+                                                        {field.name}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* true false */}
+                            <div
+                                className={`tab-pane fade ${
+                                    optionQuestionTypes?.includes(3)
+                                        ? ''
+                                        : 'hide'
+                                }`}
+                                id="listTrueFalse"
+                                role="tabpanel"
+                                aria-labelledby="listTrueFalseList"
+                            >
+                                <div className="row">
+                                    <div className="col-6">
+                                        <div className="quizOptionBlock mb-4">
+                                            <legend>PROMPT WITH</legend>
+                                            {fields?.map((field, index) => (
+                                                <div
+                                                    className="mb-2"
+                                                    key={index}
+                                                >
+                                                    {type === 1 ? (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            name="trueFalsePromptWith"
+                                                            type="radio"
+                                                            id={`trueFalsePromptWith${field.id}`}
+                                                            checked={
+                                                                optionTrueFalsePromptWith ===
+                                                                    field.id ||
+                                                                ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    setOptionTrueFalsePromptWith(
+                                                                        field.id
+                                                                    )
+                                                                } else {
+                                                                    setOptionTrueFalsePromptWith(
+                                                                        0
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            type="checkbox"
+                                                            id={`trueFalsePromptWith${field.id}`}
+                                                            checked={
+                                                                optionTrueFalsePromptWith?.includes(
+                                                                    field.id
+                                                                ) || ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    var tempTrueFalsePromptWith =
+                                                                        [
+                                                                            ...optionTrueFalsePromptWith,
+                                                                        ]
+                                                                    tempTrueFalsePromptWith.push(
+                                                                        field.id
+                                                                    )
+                                                                    setOptionTrueFalsePromptWith(
+                                                                        tempTrueFalsePromptWith
+                                                                    )
+                                                                } else {
+                                                                    const tempTrueFalsePromptWith =
+                                                                        [
+                                                                            ...optionTrueFalsePromptWith,
+                                                                        ].filter(
+                                                                            (
+                                                                                item
+                                                                            ) =>
+                                                                                item !==
+                                                                                field.id
+                                                                        )
+                                                                    setOptionTrueFalsePromptWith(
+                                                                        tempTrueFalsePromptWith
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={`trueFalsePromptWith${field.id}`}
+                                                    >
+                                                        {field.name}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="quizOptionBlock">
+                                            <legend>ANSWER WITH</legend>
+                                            {fields?.map((field, index) => (
+                                                <div
+                                                    className="mb-2"
+                                                    key={index}
+                                                >
+                                                    {type === 1 ? (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            name="trueFalseAnswerWith"
+                                                            type="radio"
+                                                            id={`trueFalseAnswerWith${field.id}`}
+                                                            checked={
+                                                                optionTrueFalseAnswerWith ===
+                                                                    field.id ||
+                                                                ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    setOptionTrueFalseAnswerWith(
+                                                                        field.id
+                                                                    )
+                                                                } else {
+                                                                    setOptionTrueFalseAnswerWith(
+                                                                        0
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <input
+                                                            className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
+                                                            type="checkbox"
+                                                            id={`trueFalseAnswerWith${field.id}`}
+                                                            checked={
+                                                                optionTrueFalseAnswerWith?.includes(
+                                                                    field.id
+                                                                ) || ''
+                                                            }
+                                                            onChange={(
+                                                                event
+                                                            ) => {
+                                                                if (
+                                                                    event.target
+                                                                        .checked
+                                                                ) {
+                                                                    var tempTrueFalseAnswerWith =
+                                                                        [
+                                                                            ...optionTrueFalseAnswerWith,
+                                                                        ]
+                                                                    tempTrueFalseAnswerWith.push(
+                                                                        field.id
+                                                                    )
+                                                                    setOptionTrueFalseAnswerWith(
+                                                                        tempTrueFalseAnswerWith
+                                                                    )
+                                                                } else {
+                                                                    const tempTrueFalseAnswerWith =
+                                                                        [
+                                                                            ...optionTrueFalseAnswerWith,
+                                                                        ].filter(
+                                                                            (
+                                                                                item
+                                                                            ) =>
+                                                                                item !==
+                                                                                field.id
+                                                                        )
+                                                                    setOptionTrueFalseAnswerWith(
+                                                                        tempTrueFalseAnswerWith
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <label
+                                                        className="form-check-label"
+                                                        htmlFor={`trueFalseAnswerWith${field.id}`}
+                                                    >
+                                                        {field.name}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button
+                            type="button"
+                            className="btn btn-secondary classModalBtn me-3"
+                            data-bs-dismiss="modal"
+                            onClick={handleCancelCreateLearn}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            className="btn btn-primary classModalBtn"
+                            onClick={handleCreateLearn}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <div className="d-flex justify-content-center">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            Loading...
+                                        </span>
+                                    </div>
+                                </div>
+                            ) : (
+                                'Create new learn'
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }
