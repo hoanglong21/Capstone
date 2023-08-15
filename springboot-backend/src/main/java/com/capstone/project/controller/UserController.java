@@ -213,32 +213,49 @@ public class UserController {
         }
     }
 
-    @GetMapping("/filterusers")
-//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    @GetMapping("/filterusersadmin")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> filterUser(@RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                            @RequestParam(value = "username", required = false, defaultValue = "") String username,
+                                            @RequestParam(value = "email", required = false, defaultValue = "") String email,
+                                            @RequestParam(value = "gender", required = false, defaultValue = "") String gender,
+                                            @RequestParam(value = "phone", required = false, defaultValue = "") String phone,
+                                            @RequestParam(value = "role", required = false, defaultValue = "") String[] role,
+                                            @RequestParam(value = "address", required = false, defaultValue = "") String address,
+                                            @RequestParam(value = "bio", required = false, defaultValue = "") String bio,
+                                            @RequestParam(value = "status", required = false, defaultValue = "") String[] status,
+                                            @RequestParam(value = "fromdob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDob,
+                                            @RequestParam(value = "todob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDob,
+                                            @RequestParam(value = "frombanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromBanned,
+                                            @RequestParam(value = "tobanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toBanned,
+                                            @RequestParam(value = "fromdeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDeleted,
+                                            @RequestParam(value = "todeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDeleted,
+                                            @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
+                                            @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
+                                            @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                            @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+        try {
+            return ResponseEntity.ok(userService.filterUser(name, username, email, gender, phone, role, address, bio, status,
+                    fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted, fromCreated, toCreated, sortBy, direction, page, size));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Check the input again");
+        }
+    }
+
+    @GetMapping("/filterusers")
+    public ResponseEntity<?> filterUserCommon(@RequestParam(value = "name", required = false, defaultValue = "") String name,
                                         @RequestParam(value = "username", required = false, defaultValue = "") String username,
                                         @RequestParam(value = "email", required = false, defaultValue = "") String email,
                                         @RequestParam(value = "gender", required = false, defaultValue = "") String gender,
-                                        @RequestParam(value = "phone", required = false, defaultValue = "") String phone,
                                         @RequestParam(value = "role", required = false, defaultValue = "") String[] role,
-                                        @RequestParam(value = "address", required = false, defaultValue = "") String address,
-                                        @RequestParam(value = "bio", required = false, defaultValue = "") String bio,
-                                        @RequestParam(value = "status", required = false, defaultValue = "") String[] status,
-                                        @RequestParam(value = "fromdob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDob,
-                                        @RequestParam(value = "todob", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDob,
-                                        @RequestParam(value = "frombanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromBanned,
-                                        @RequestParam(value = "tobanned", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toBanned,
-                                        @RequestParam(value = "fromdeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDeleted,
-                                        @RequestParam(value = "todeleted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDeleted,
-                                        @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
-                                        @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
                                         @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
                                         @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         try {
-            return ResponseEntity.ok(userService.filterUser(name, username, email, gender, phone, role, address, bio, status,
-                    fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted, fromCreated, toCreated, sortBy, direction, page, size));
+            return ResponseEntity.ok(userService.filterUserCommon(name, username, email, gender, role, sortBy, direction, page, size));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Check the input again");
         }
