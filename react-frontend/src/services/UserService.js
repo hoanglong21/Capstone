@@ -142,6 +142,40 @@ export const filterUser = (
     )
 }
 
+export const filterUserCommon = (
+    name,
+    username,
+    email,
+    gender,
+    role,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterusers?name' +
+            name +
+            '&username' +
+            username +
+            '&email' +
+            email +
+            '&gender' +
+            gender +
+            '&role' +
+            role +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
+
 const getStudySetLearnedStatistic = (id) => {
     return axios.get(API_BASE_URL + '/statistic/user/studysetlearned/' + id, {
         headers: {
@@ -201,6 +235,7 @@ const UserService = {
     getLearningStatistic,
     findAllNameExcept,
     resetPassword,
+    filterUserCommon,
 }
 
 export default UserService

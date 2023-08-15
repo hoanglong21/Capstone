@@ -7,6 +7,7 @@ import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
 import { getUser } from '../../../features/user/userAction'
 import ProgressService from '../../../services/ProgressService'
+import HistoryService from '../../../services/HistoryService'
 
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
@@ -167,7 +168,33 @@ const Learn = () => {
 
     const [loading, setLoading] = useState(false)
     const [showOptionModal, setShowOptionModal] = useState(false)
+    const [isAddHistory, setIsAddHistory] = useState(false)
 
+    // add history
+    useEffect(() => {
+        if (
+            isAddHistory === false &&
+            userInfo?.id &&
+            (isEnd === true || isFinish === true)
+        ) {
+            try {
+                HistoryService.createHistory({
+                    historyType: { id: 2 },
+                    user: { id: userInfo.id, username: userInfo.username },
+                    studySet: { id: id },
+                })
+                setIsAddHistory(true)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+        }
+    }, [userInfo, isEnd, isFinish, isAddHistory])
+    
+    // header progress
     useEffect(() => {
         if (!loading && isAllow) {
             const headerHeight =
@@ -366,6 +393,7 @@ const Learn = () => {
         setProgress(0)
         setIsEnd(false)
         setIsFinish(false)
+        setIsAddHistory(false)
         setError('')
         // validation
         if (optionProgressStatus?.length < 1) {

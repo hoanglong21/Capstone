@@ -378,6 +378,13 @@
     overflow: hidden;
 }
 
+.assignToClassModal .modal-title {
+    font-size: 2rem;
+    letter-spacing: normal;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
 .setPage_noteEditor
     .ck.ck-editor__editable.ck-focused:not(.ck-editor__nested-editable) {
     border: 1px solid hsl(218, 81.8%, 56.9%);
@@ -649,4 +656,25 @@
     .setModalHeading {
         font-size: 1.1rem;
     }
+}
+
+/* assign study set to class */
+.assignClass_btn {
+    font-size: 1rem;
+    letter-spacing: normal;
+    line-height: 1.5;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    padding: 1rem 1.5rem;
+}
+
+.assignClass_btn:hover {
+    background-color: #f6f7fb;
+}
+
+.assignClass_btn svg {
+    color: #939bb4;
 }
