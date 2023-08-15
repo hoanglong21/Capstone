@@ -65,8 +65,9 @@ const ViewStudySet = () => {
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
 
-    const [showDeleteSetModal, setShowDeleteSetModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showCommentModal, setShowCommentModal] = useState(false)
+    const [showAssignModal, setShowAssignModal] = useState(false)
 
     // ignore error
     useEffect(() => {
@@ -224,12 +225,6 @@ const ViewStudySet = () => {
         }
     }, [showCommentModal])
 
-    function checkAuth() {
-        if (!userToken) {
-            navigate('/login')
-        }
-    }
-
     const handleAddComment = async () => {
         setLoadingComment(true)
         try {
@@ -365,7 +360,13 @@ const ViewStudySet = () => {
                                 <button
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
                                     type="button"
-                                    onClick={() => checkAuth()}
+                                    onClick={() => {
+                                        if (!userToken) {
+                                            navigate('/login')
+                                        } else {
+                                            setShowAssignModal(true)
+                                        }
+                                    }}
                                 >
                                     <AddCircleIcon
                                         className="me-3"
@@ -382,7 +383,11 @@ const ViewStudySet = () => {
                                     className="dropdown-item py-2 px-3 d-flex align-items-center"
                                     type="button"
                                     onClick={() => {
-                                        navigate(`/edit-set/${id}`)
+                                        if (!userToken) {
+                                            navigate('/login')
+                                        } else {
+                                            navigate(`/edit-set/${id}`)
+                                        }
                                     }}
                                 >
                                     <EditIcon className="me-3" size="1.3rem" />
@@ -399,7 +404,7 @@ const ViewStudySet = () => {
                                         if (!userToken) {
                                             navigate('/login')
                                         } else {
-                                            setShowDeleteSetModal(true)
+                                            setShowDeleteModal(true)
                                         }
                                     }}
                                 >
@@ -733,8 +738,8 @@ const ViewStudySet = () => {
             {/* delete set modal */}
             <DeleteSet
                 studySet={studySet}
-                showDeleteModal={showDeleteSetModal}
-                setShowDeleteModal={setShowDeleteSetModal}
+                showDeleteModal={showDeleteModal}
+                setShowDeleteModal={setShowDeleteModal}
             />
             {showCommentModal && (
                 <div className="setPage_editCardModal setPage_noteModal">
@@ -798,6 +803,7 @@ const ViewStudySet = () => {
                     </div>
                 </div>
             )}
+            {/* assign modal */}
         </div>
     )
 }

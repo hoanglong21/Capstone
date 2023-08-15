@@ -120,7 +120,7 @@
     color: #4255ff;
 }
 
-.progress {
+.setPageProgress .progress {
     width: 50px;
     height: 50px !important;
     float: left;
@@ -130,7 +130,7 @@
     position: relative;
 }
 
-.progress:after {
+.setPageProgress .progress:after {
     content: '';
     width: 100%;
     height: 100%;
@@ -140,19 +140,19 @@
     left: 0;
 }
 
-.progress.blue:after {
+.setPageProgress .progress.blue:after {
     border: 5px solid #dce0ff;
 }
 
-.progress.yellow:after {
+.setPageProgress .progress.yellow:after {
     border: 5px solid #ffe5cd;
 }
 
-.progress.green:after {
+.setPageProgress .progress.green:after {
     border: 5px solid #d5f9ec;
 }
 
-.progress > span {
+.setPageProgress .progress > span {
     width: 51%;
     height: 100%;
     overflow: hidden;
@@ -161,11 +161,11 @@
     z-index: 1;
 }
 
-.progress .progress-left {
+.setPageProgress .progress .progress-left {
     left: 0;
 }
 
-.progress .progress-bar {
+.setPageProgress .progress .progress-bar {
     width: 100%;
     height: 100%;
     background: none;
@@ -175,7 +175,7 @@
     top: 0;
 }
 
-.progress .progress-left .progress-bar {
+.setPageProgress .progress .progress-left .progress-bar {
     left: 100%;
     border-top-right-radius: 80px;
     border-bottom-right-radius: 80px;
@@ -184,11 +184,11 @@
     transform-origin: center left;
 }
 
-.progress .progress-right {
+.setPageProgress .progress .progress-right {
     right: 0;
 }
 
-.progress .progress-right .progress-bar {
+.setPageProgress .progress .progress-right .progress-bar {
     left: -100%;
     border-top-left-radius: 80px;
     border-bottom-left-radius: 80px;
@@ -197,7 +197,7 @@
     transform-origin: center right;
 }
 
-.progress .progress-value {
+.setPageProgress .progress .progress-value {
     width: 90%;
     height: 90%;
     border-radius: 50%;
@@ -212,15 +212,15 @@
     left: 5%;
 }
 
-.progress.blue .progress-bar {
+.setPageProgress .progress.blue .progress-bar {
     border-color: #4255ff;
 }
 
-.progress.yellow .progress-bar {
+.setPageProgress .progress.yellow .progress-bar {
     border-color: #ff983a;
 }
 
-.progress.green .progress-bar {
+.setPageProgress .progress.green .progress-bar {
     border-color: #59e8b5;
 }
 
