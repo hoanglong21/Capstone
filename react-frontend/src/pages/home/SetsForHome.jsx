@@ -6,14 +6,18 @@ import StudySetService from '../../services/StudySetService'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
+import Pagination from '../../components/Pagination'
 
 function SetsForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
+    const author = searchParams.get('author')
 
     const [sets, setSets] = useState([])
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(1)
 
     const fetchData = async (searchKey) => {
         try {
@@ -22,7 +26,8 @@ function SetsForHome() {
                     '=0',
                     '=1',
                     '=0',
-                    `${searchKey ? '=' + searchKey : ''}`,
+                    `${!author && searchKey ? '=' + searchKey : ''}`,
+                    `${author ? `=${author}` : ''}`,
                     '',
                     '',
                     '',
@@ -31,12 +36,12 @@ function SetsForHome() {
                     '',
                     '',
                     '',
-                    '',
-                    '',
-                    ''
+                    `=${page}`,
+                    '=10'
                 )
-            ).data.list
-            setSets(temp)
+            ).data
+            setTotalItems(temp.totalItems)
+            setSets(temp.list)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -69,7 +74,7 @@ function SetsForHome() {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search])
+    }, [search, author, page])
 
     return (
         <div className="mt-4 mb-5">
@@ -131,6 +136,16 @@ function SetsForHome() {
                             </Link>
                         </div>
                     ))}
+                    {/* Pagination */}
+                    <Pagination
+                        className="mb-5"
+                        currentPage={page}
+                        totalCount={totalItems}
+                        pageSize={10}
+                        onPageChange={(page) => {
+                            setPage(page)
+                        }}
+                    />
                 </div>
             )}
         </div>

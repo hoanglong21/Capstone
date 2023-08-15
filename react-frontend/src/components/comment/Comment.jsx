@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Modal from 'react-bootstrap/Modal'
 
 import CommentService from '../../services/CommentService'
 
@@ -13,6 +14,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
 
     const [updateComment, setUpdateComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -248,9 +250,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
             var tempComments = [...comments]
             tempComments.splice(index, 1)
             setComments([...tempComments])
-            document
-                .getElementById(`closeDeleteCommentModal${comment.id}`)
-                .click()
+            setShowDeleteModal(false)
             await CommentService.deleteComment(comment.id)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -393,8 +393,9 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     <button
                                         className="dropdown-item d-flex align-items-center"
                                         type="button"
-                                        data-bs-toggle="modal"
-                                        data-bs-target={`#deleteCommentModal${comment?.id}`}
+                                        onClick={() => {
+                                            setShowDeleteModal(true)
+                                        }}
                                     >
                                         <span className="align-middle">
                                             Delete
@@ -406,43 +407,38 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                     )}
                 </div>
             )}
-            {/* Delete post modal */}
-            <div className="modal fade" id={`deleteCommentModal${comment.id}`}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Delete comment?</h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                data-bs-dismiss="modal"
-                                id={`closeDeleteCommentModal${comment.id}`}
-                                aria-label="Close"
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            Are you sure you want to delete this comment?
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={handleDeleteComment}
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {/* Delete comment modal */}
+            <Modal
+                id={`deleteCommentModal${comment.id}`}
+                show={showDeleteModal}
+                onHide={() => {
+                    setShowDeleteModal(false)
+                }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete comment?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete this comment?
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={handleDeleteComment}
+                    >
+                        Delete
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }
