@@ -65,7 +65,7 @@ const ViewStudySet = () => {
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
 
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showDeleteSetModal, setShowDeleteSetModal] = useState(false)
     const [showCommentModal, setShowCommentModal] = useState(false)
 
     // ignore error
@@ -399,7 +399,7 @@ const ViewStudySet = () => {
                                         if (!userToken) {
                                             navigate('/login')
                                         } else {
-                                            setShowDeleteModal(true)
+                                            setShowDeleteSetModal(true)
                                         }
                                     }}
                                 >
@@ -733,8 +733,8 @@ const ViewStudySet = () => {
             {/* delete set modal */}
             <DeleteSet
                 studySet={studySet}
-                showDeleteModal={showDeleteModal}
-                setShowDeleteModal={setShowDeleteModal}
+                showDeleteModal={showDeleteSetModal}
+                setShowDeleteModal={setShowDeleteSetModal}
             />
             {showCommentModal && (
                 <div className="setPage_editCardModal setPage_noteModal">

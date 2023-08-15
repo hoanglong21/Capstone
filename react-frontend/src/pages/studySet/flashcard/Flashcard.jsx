@@ -626,12 +626,12 @@ const Flashcard = () => {
                     `=${optionProgressStatus}`,
                     `=${optionIsStar}`
                 )
-            ).data
+            ).data.list
             setCards(tempCards)
             setCardIndex(0)
-            setPicture(tempCards[0].progress?.picture || '')
-            setAudio(tempCards[0].progress?.audio || '')
-            setNote(tempCards[0].progress?.note || '')
+            setPicture(tempCards[0]?.progress?.picture || '')
+            setAudio(tempCards[0]?.progress?.audio || '')
+            setNote(tempCards[0]?.progress?.note || '')
             setProgressStatus(optionProgressStatus)
             setIsStar(optionIsStar)
             setShowOptionModal(false)
@@ -780,7 +780,13 @@ const Flashcard = () => {
                     }}
                 ></div>
             </div>
-            {isEnd ? (
+            {loading ? (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            ) : isEnd ? (
                 <div id="flashcardAnimation">
                     <div className="flashcardEnd mx-auto p-5">
                         <div>
