@@ -47,7 +47,7 @@ const getFilterList = (
     is_public,
     is_draft,
     search,
-    authorId,
+    authorUsername,
     authorName,
     type,
     fromDeteted,
@@ -69,8 +69,8 @@ const getFilterList = (
             is_draft +
             '&search' +
             search +
-            '&author_id' +
-            authorId +
+            '&author_username' +
+            authorUsername +
             '&author_name' +
             authorName +
             '&type' +
