@@ -111,12 +111,19 @@ const Chat = () => {
         document.getElementById('message').value = ''
         // console.log(message);
 
+        let current = new Date();
+        let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+        let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+        let dateTime = cDate + ' ' + cTime;
+
         // save in database
         // A post entry.
         const postData = {
             sender: userInfo.username,
             receiver: receiverUser.username,
             message: message,
+            seenByReceiver: false,
+            datetime: dateTime
         }
 
         // Get a key for a new Post.
@@ -160,6 +167,15 @@ const Chat = () => {
         setShowChat(true)
         setReceiverUser(user)
     }
+
+    const markMessageAsSeen = (message) => {
+        if (message.receiver === userInfo.username && !message.seenByReceiver) {
+          // Mark the message as seen by the receiver in the database
+          const updates = {};
+          updates['/messages/' + message.key + '/seenByReceiver'] = true;
+          update(ref(database), updates);
+        }
+      };
 
     return (
         <div className="d-flex">
@@ -280,6 +296,7 @@ const Chat = () => {
                                     message.video_call !== true
                             )
                             .map((message) => (
+                                markMessageAsSeen(message),
                                 <div key={message.key}>
                                     {message.video_call ? (
                                         <a

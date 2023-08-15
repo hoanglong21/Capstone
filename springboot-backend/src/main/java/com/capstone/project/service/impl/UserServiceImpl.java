@@ -1,5 +1,6 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.dto.UserFilterResponse;
 import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.User;
@@ -437,6 +438,70 @@ public class UserServiceImpl implements UserService {
         params.add(offset);
 
         List<User> userList = jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(User.class));
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", userList);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> filterUserCommon(String name, String username, String email, String gender, String[] role, String sortBy, String direction, int page, int size) {
+        String sql = "SELECT * FROM user WHERE role != 'ROLE_ADMIN'";
+        List<Object> params = new ArrayList<>();
+
+        if(name!=null && !name.equals("")) {
+            sql += " AND (first_name LIKE ? OR last_name LIKE ? OR concat(first_name, ' ', last_name) LIKE ?)";
+            String nameParam = "%" + name + "%";
+            params.add(nameParam);
+            params.add(nameParam);
+            params.add(nameParam);
+        }
+        if (username != null && !username.equals("")) {
+            sql += " AND username LIKE ?";
+            params.add("%" + username + "%");
+        }
+        if (email != null && !email.equals("")) {
+            sql += " AND email LIKE ?";
+            params.add("%" + email + "%");
+        }
+        if (gender != null && !gender.equals("")) {
+            sql += " AND gender LIKE ?";
+            params.add("%" + gender + "%");
+        }
+        if (role != null && role.length > 0) {
+            sql += " AND (";
+            for (int i = 0; i < role.length; i++) {
+                sql += "role LIKE ?";
+                params.add("%" + role[i] + "%");
+                if (i != role.length - 1) {
+                    sql += " OR ";
+                }
+            }
+            sql += ")";
+        }
+
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            sql += " ORDER BY " + sortBy + " " + direction;
+        }
+
+        // Count total items
+        String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS countQuery";
+        long totalItems = jdbcTemplate.queryForObject(countSql, Long.class, params.toArray());
+
+        // Apply pagination
+        int offset = (page - 1) * size;
+        sql += " LIMIT ? OFFSET ?";
+        params.add(size);
+        params.add(offset);
+
+        List<UserFilterResponse> userList =
+                jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(UserFilterResponse.class));
+
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
         Map<String, Object> response = new HashMap<>();
