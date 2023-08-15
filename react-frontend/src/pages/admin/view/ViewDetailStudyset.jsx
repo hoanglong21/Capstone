@@ -72,7 +72,7 @@ function ViewDetailStudyset() {
                     <label className="small mb-1 fs-6">Type</label>
                     <input
                       className="form-control"
-                      type="tel"
+                      type="text"
                       readOnly
                       value={studySet?.studySetType?.name}
                     />
@@ -81,9 +81,9 @@ function ViewDetailStudyset() {
                     <label className="small mb-1 fs-6">Status</label>
                     <input
                       className="form-control"
-                      type="tel"
+                      type="text"
                       readOnly
-                      value={studySet?.is_public == 1 ? "Public" : "Private"}
+                      value={studySet?.is_public}
                     />
                   </div>
                   <div className="col-md-4">

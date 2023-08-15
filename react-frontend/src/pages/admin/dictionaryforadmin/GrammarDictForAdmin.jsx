@@ -3,11 +3,11 @@ import { useSearchParams } from 'react-router-dom'
 
 import DictionaryService from '../../../services/DictionaryService'
 import GrammarDetail from './GrammarDetailForAdmin'
-
+import './dictionary.css'
 const GrammarDictForAdmin = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
-
+    const [showGrammarDetail, setShowGrammarDetail] = useState(false)
     const [grammars, setGrammars] = useState([])
     const [grammar, setGrammar] = useState({})
     const [loading, setLoading] = useState(true)
@@ -54,17 +54,17 @@ const GrammarDictForAdmin = () => {
             <div>
                 <div className="row mt-4 mb-5">
                     {grammars.length == 0 && (
-                        <p>No grammars matching {search} found</p>
+                        <p className="noFound">
+                            No grammars matching {search} found
+                        </p>
                     )}
-                    {grammars.map((grammarInfo) => (
-                        <div className="col-3 mb-2">
+                    {grammars.map((grammarInfo, index) => (
+                        <div className="grammar-dict-col-3 mb-2" key={index}>
                             <div
                                 className="card h-100 grammar_item"
                                 onClick={() => {
-                                    document
-                                        .getElementById('grammarDetailOpenBtn')
-                                        .click()
                                     setGrammar(grammarInfo)
+                                    setShowGrammarDetail(true)
                                 }}
                             >
                                 <div className="card-body">
@@ -80,16 +80,13 @@ const GrammarDictForAdmin = () => {
                     ))}
                 </div>
                 {/* Grammar modal */}
-                <button
-                    type="button"
-                    className="btn btn-primary d-none"
-                    id="grammarDetailOpenBtn"
-                    data-bs-toggle="modal"
-                    data-bs-target="#grammarDetailModal"
-                >
-                    Launch demo modal
-                </button>
-                <GrammarDetail grammar={grammar} />
+                {showGrammarDetail && (
+                    <GrammarDetail
+                        grammar={grammar}
+                        showGrammarDetail={showGrammarDetail}
+                        setShowGrammarDetail={setShowGrammarDetail}
+                    />
+                )}
             </div>
         )
     }
