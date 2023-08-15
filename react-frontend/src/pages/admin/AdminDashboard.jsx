@@ -238,7 +238,7 @@ function AdminDashboard() {
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
                         <div className="text-xs fw-bold text-white text-uppercase mb-1">
-                          Register (Monthly)
+                          Register Number (Monthly)
                         </div>
                         <div className="h5 mb-0 fw-bold text-white">
                           {registernumber}
