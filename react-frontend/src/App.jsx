@@ -96,6 +96,7 @@ import VocabDictForAdmin from './pages/admin/dictionaryforadmin/VocabDictForAdmi
 import KanjiDictForAdmin from './pages/admin/dictionaryforadmin/KanjiDictForAdmin'
 import GrammarDictForAdmin from './pages/admin/dictionaryforadmin/GrammarDictForAdmin'
 import Results from './pages/class/test/Results'
+import ReplyFeedback from './pages/admin/ReplyFeedback'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -361,6 +362,7 @@ const App = () => {
                         element={<ViewVocabularyDetail />}
                     />
                     <Route path="/registeradmin" element={<RegisterAdmin />} />
+                    <Route path="/reply" element={<ReplyFeedback/>} />
                     <Route
                         path="/settingsadmin"
                         element={<SettingForAdmin />}

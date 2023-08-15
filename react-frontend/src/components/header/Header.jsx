@@ -79,7 +79,7 @@ const Header = () => {
     }
 
     return (
-        <header className="px-4 border-bottom">
+        <header className="px-4 header-css border-bottom">
             <nav className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start navbar navbar-expand-sm">
                 <a
                     href="/"

@@ -197,7 +197,7 @@ const Instructions = () => {
                 <div className="d-flex mb-2 instruction_info">
                     <div>{assignment?.user?.username}</div>
                     <div className="mx-1">·</div>
-                    <div>
+                    <div className='instruction-date'>
                         {assignment?.created_date}{' '}
                         {assignment?.modified_date
                             ? `(Edited ${assignment?.modified_date})`

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import SidebarforAdmin from "../SidebarforAdmin";
 import HeaderAdmin from "../HeaderAdmin";
-import ReplyFeedback from '../ReplyFeedback';
 import { Link, useParams } from 'react-router-dom';
 import FeedbackService from '../../../services/FeedbackService';
 
@@ -92,14 +91,12 @@ function ViewDetailFeedback() {
                   <Link className="btn btn-secondary me-4" to="/managefeedback">
                     Close
                   </Link>
-                  <button className="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#replyModal">
+                  <Link className="btn btn-primary" type="button" to="/reply">
                     Reply
-                  </button>
+                  </Link>
                 </div>
               </form>
             </div>
-            <ReplyFeedback/>
           </div>
         </div>
       </div>

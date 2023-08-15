@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import FeedbackService from "../../services/FeedbackService";
-
+import SidebarforAdmin from "./SidebarforAdmin";
+import HeaderAdmin from "./HeaderAdmin";
 function ReplyFeedback() {
   const { userInfo } = useSelector((state) => state.user);
   const [error, setError] = useState("");
@@ -64,69 +65,59 @@ function ReplyFeedback() {
   };
 
   return (
-    <div className="modal" tabindex="-1" role="dialog" id="replyModal">
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Reply Feedback</h5>
-            <button
-              type="button"
-              id="closeModal"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+    <div className="container-fluid">
+      <div className="row">
+        <SidebarforAdmin />
+        <div className="col-sm">
+          <HeaderAdmin />
+          <div className="container">
+          <h3 className="text-center">Reply Feedback</h3>
+          <div className="mx-5">
+          <p className="mb-2 text-info fs-5">Title</p>
+          <input
+            type="text"
+            className="form-control"
+            id="title"
+            placeholder="Title"
+            value={title || ""}
+            onChange={(event) => {
+              setTitle({
+                title: event.target.value,
+              });
+            }}
+            required
+          />
+          <p className="ms-2 mb-2 text-info fs-5">Content</p>
+          <textarea
+            id="content"
+            className="form-control"
+            placeholder="Message"
+            style={{ height: "6rem" }}
+            value={content || ""}
+            onChange={(event) => {
+              setContent({
+                content: event.target.value,
+              });
+            }}
+          ></textarea>
           </div>
-          <div className="modal-body">
-                {error && (
-                    <div className="alert alert-danger" role="alert">
-                        {error}
-                    </div>
-                )}
-            <p className="mb-2 text-info fs-5">Title</p>
-            <input
-              type="text"
-              className="form-control"
-              id="title"
-              placeholder="Title"
-              value={title || ""}
-              onChange={(event) => {
-                setTitle({
-                  title: event.target.value,
-                });
-              }}
-              required
-            />
-            <p className="ms-2 mb-2 text-info fs-5">Content</p>
-            <textarea
-              id="content"
-              className="form-control"
-              placeholder="Message"
-              style={{ height: "6rem" }}
-              value={content || ""}
-              onChange={(event) => {
-                setContent({
-                  content: event.target.value,
-                });
-              }}
-            ></textarea>
+          <div className="text-center mt-4">
+          <button
+            type="button"
+            className="btn btn-secondary me-4"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="btn btn-success"
+            onClick={handleSubmit}
+          >
+            Send
+          </button>
           </div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              className="btn btn-success"
-              onClick={handleSubmit}
-            >
-              Send
-            </button>
           </div>
         </div>
       </div>

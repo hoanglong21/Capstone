@@ -332,6 +332,55 @@
     --bs-table-hover-bg: #fff;
 }
 
+
+.create-test_card{
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+    padding-right: 3rem !important;
+    padding-left: 3rem !important;
+    margin-bottom: 1rem !important;
+    margin-top: 1.5rem !important;
+}
+
+.create-test_card-body{
+    padding-right: 3rem !important;
+    padding-left: 3rem !important;
+}
+
+@media only screen and (max-width: 768px) {
+    .createTest_formLabel{
+        font-size: 14px;
+    }
+
+    .create-test_card{
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        padding-left: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    .create-test_card-body{
+        padding-right: 0.5rem !important;
+        padding-left: 0.5rem !important;
+    }
+    
+    .createTest_addQuesBtn {
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-bottom: 5px solid var(--card-button-border);
+        letter-spacing: 0rem;
+    }
+
+    .createTest_draftBtn{
+        font-size: 0.75rem;
+    }
+
+    .createTest_cancelBtn {
+        font-size: 0.75rem;
+    }
+}
 .testResult_container td,
 .testResult_container tr th {
     text-align: center;

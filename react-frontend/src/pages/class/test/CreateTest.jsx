@@ -1509,8 +1509,8 @@ const CreateTest = () => {
                     </div>
                 </div>
             ))}
-            <div className="card mt-4 mb-3 py-4 px-5">
-                <div className="card-body d-flex justify-content-between px-5">
+            <div className="card create-test_card">
+                <div className="card-body create-test_card-body d-flex justify-content-between">
                     <button
                         type="button"
                         className="createTest_addQuesBtn"
