@@ -349,7 +349,7 @@ function Translate() {
                                         className="ms-1"
                                         text={origText}
                                         language={origLang}
-                                        disabled={origLang === 'vi'}
+                                        // disabled={origLang === 'vi'}
                                     />
                                 )}
                             </div>
