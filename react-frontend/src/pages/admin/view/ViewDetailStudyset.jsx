@@ -83,7 +83,7 @@ function ViewDetailStudyset() {
                       className="form-control"
                       type="text"
                       readOnly
-                      value={studySet?.is_public }
+                      value={studySet?.is_public === 'true' ? 'Public' : 'Private'}
                     />
                   </div>
                   <div className="col-md-4">
