@@ -23,5 +23,5 @@ public interface QuestionService {
 
     Boolean deleteQuestion ( int id) throws ResourceNotFroundException;
 
-    Map<String, Object> getFilterQuestion(String search, int typeid,int testid, int page, int size) throws ResourceNotFroundException;
+    Map<String, Object> getFilterQuestion(String search, int typeid,int testid, int page, int size) throws Exception;
 }

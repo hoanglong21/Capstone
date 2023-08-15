@@ -102,7 +102,7 @@ public class QuestionController {
 
         try{
             return ResponseEntity.ok(questionService.getFilterQuestion(search,typeid.orElse(0),testid.orElse(0),page,size));
-        }catch (ResourceNotFroundException e){
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

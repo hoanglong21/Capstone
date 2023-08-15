@@ -68,7 +68,7 @@ public class ClassStatisticServiceTest {
                     any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
             Integer result = classStatisticService.getTestNumber(1);
             assertThat(result).isEqualTo(2);
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -142,7 +142,7 @@ public class ClassStatisticServiceTest {
             when(postService.getFilterPost(any(), any(), any(), any(), any(), any(), anyInt(), anyInt(), anyInt())).thenReturn(response);
             List<Integer> result = classStatisticService.getPostGrowth(classId);
             assertThat(result.size()).isGreaterThan(0);
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -25,6 +25,8 @@ public class ClassServiceImpl implements ClassService {
     private final ClassRepository classRepository;
     private final PostRepository postRepository;
     private final TestRepository testRepository;
+    private final TestLearnerRepository testLearnerRepository;
+    private final TestResultRepository testResultRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
@@ -38,10 +40,12 @@ public class ClassServiceImpl implements ClassService {
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.testRepository = testRepository;
+        this.testLearnerRepository = testLearnerRepository;
+        this.testResultRepository = testResultRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.commentRepository = commentRepository;
@@ -129,8 +133,18 @@ public class ClassServiceImpl implements ClassService {
                 for(Answer answer : answerRepository.getAnswerByQuestionId(question.getId())){
                     answerRepository.delete(answer);
                 }
+                for(TestResult testResult : testResultRepository.getTestResultByQuestionId(question.getId())){
+                    testResultRepository.delete(testResult);
+                }
                 questionRepository.delete(question);
             }
+            for(TestLearner testLearner : testLearnerRepository.getTestLearnerByTestId(test.getId())){
+                for(TestResult testResult : testResultRepository.getTestResultBytestLearnerId(testLearner.getId())){
+                    testResultRepository.delete(testResult);
+                }
+                testLearnerRepository.delete(testLearner);
+            }
+
             for(Comment commentroot : commentRepository.getCommentByTestId(test.getId())){
                 for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
                     commentRepository.delete(comment);

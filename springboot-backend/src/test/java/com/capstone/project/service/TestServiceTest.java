@@ -219,8 +219,10 @@ public class TestServiceTest {
     @ParameterizedTest(name = "index => search={0},author{1},direction{2}, duration{3},classId={4}, fromStart{5}, " +
                                       "toStart{6},fromCreated{7},toCreated{8} ,isDraft{9}, sortBy{10}, page{11}, size{12}")
     @CsvSource({
-            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,1,5",
-            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,1,1,5"
+            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,5",
+            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,0,5",
+            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,-5",
+            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,1,0",
     })
     public void testGetFilterTest(String search, String author, String direction, int duration, int classid,
                                   String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft,
@@ -240,10 +242,14 @@ public class TestServiceTest {
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(test));
 
-        List<com.capstone.project.model.Test> list = (List<com.capstone.project.model.Test>) testServiceImpl.getFilterTest(search, author, direction, duration,
-                classid, fromStarted, toStarted, fromCreated, toCreated,
-                isDraft, sortBy, page, size).get("list");
-        assertThat(list.size()).isGreaterThan(0);
+        try {
+            List<com.capstone.project.model.Test> list = (List<com.capstone.project.model.Test>) testServiceImpl.getFilterTest(search, author, direction, duration,
+                    classid, fromStarted, toStarted, fromCreated, toCreated,
+                    isDraft, sortBy, page, size).get("list");
+            assertThat(list.size()).isGreaterThan(0);
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
     }
 
 }
