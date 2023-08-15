@@ -139,8 +139,80 @@ export const filterUser = (
             page +
             '&size' +
             size
-    )
+    , )
 }
+
+export const filterUserAdmin = (
+    name,
+    username,
+    email,
+    gender,
+    phone,
+    role,
+    address,
+    bio,
+    status,
+    fromdob,
+    todob,
+    frombanned,
+    tobanned,
+    fromdeleted,
+    todeleted,
+    fromcreated, 
+    tocreated,
+    sortby,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterusersadmin?name' +
+            name +
+            '&username' +
+            username +
+            '&email' +
+            email +
+            '&gender' +
+            gender +
+            '&phone' +
+            phone +
+            '&role' +
+            role +
+            '&address' +
+            address +
+            '&bio' +
+            bio +
+            '&status' +
+            status +
+            '&fromdob' +
+            fromdob +
+            '&todob' +
+            todob +
+            '&frombanned' +
+            frombanned +
+            '&tobanned' +
+            tobanned +
+            '&fromdeleted' +
+            fromdeleted +
+            '&todeleted' +
+            todeleted +
+            '&fromcreated' +
+            fromcreated +
+            '&tocreated' +
+            tocreated +
+            '&sortby' +
+            sortby +
+            '&page' +
+            page +
+            '&size' +
+            size
+    , {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },})
+}
+
+
 
 const getStudySetLearnedStatistic = (id) => {
     return axios.get(API_BASE_URL + '/statistic/user/studysetlearned/' + id, {
@@ -201,6 +273,7 @@ const UserService = {
     getLearningStatistic,
     findAllNameExcept,
     resetPassword,
+    filterUserAdmin
 }
 
 export default UserService
