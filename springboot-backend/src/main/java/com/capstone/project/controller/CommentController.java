@@ -142,7 +142,7 @@ public class CommentController {
 
         try{
             return ResponseEntity.ok(commentService.getFilterComment(search,author,direction,typeid.orElse(0),postid.orElse(0),testid.orElse(0),studysetid.orElse(0),assignmentid.orElse(0),submissionid.orElse(0),roottid.orElse(0),page,size));
-        }catch (ResourceNotFroundException e){
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

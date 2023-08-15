@@ -35,6 +35,8 @@ public class TestServiceImpl  implements TestService {
 
     private final UserSettingRepository userSettingRepository;
     private final TestRepository testRepository;
+    private final TestLearnerRepository testLearnerRepository;
+    private final TestResultRepository testResultRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final CommentRepository commentRepository;
@@ -42,19 +44,17 @@ public class TestServiceImpl  implements TestService {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    private TestLearnerRepository testLearnerRepository;
+
 
     @Autowired
-    private TestResultRepository testResultRepository;
-
-    @Autowired
-    public TestServiceImpl(JavaMailSender mailSender, ClassLearnerRepository classLearnerRepository, ClassRepository classRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
+    public TestServiceImpl(JavaMailSender mailSender, ClassLearnerRepository classLearnerRepository, ClassRepository classRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
         this.mailSender = mailSender;
         this.classLearnerRepository = classLearnerRepository;
         this.classRepository = classRepository;
         this.userSettingRepository = userSettingRepository;
         this.testRepository = testRepository;
+        this.testLearnerRepository = testLearnerRepository;
+        this.testResultRepository = testResultRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
         this.commentRepository = commentRepository;
@@ -181,9 +181,19 @@ public class TestServiceImpl  implements TestService {
     public Boolean deleteTest(int id) throws ResourceNotFroundException {
         Test testclass = testRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + id));
+        for(TestLearner testLearner : testLearnerRepository.getTestLearnerByTestId(testclass.getId())){
+            for(TestResult testResult : testResultRepository.getTestResultBytestLearnerId(testLearner.getId())){
+                testResultRepository.delete(testResult);
+            }
+            testLearnerRepository.delete(testLearner);
+        }
+
         for (Question question : questionRepository.getQuestionByTestId(testclass.getId())) {
             for (Answer answer : answerRepository.getAnswerByQuestionId(question.getId())) {
                   answerRepository.delete(answer);
+            }
+            for(TestResult testResult : testResultRepository.getTestResultByQuestionId(question.getId())){
+                testResultRepository.delete(testResult);
             }
               questionRepository.delete(question);
         }
@@ -199,7 +209,11 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid,
-                                             String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws ResourceNotFroundException {
+                                             String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws Exception {
+
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
         int offset = (page - 1) * size;
 
         String query ="select t.*,u.username as authorname, c.class_name as classname,\n" +

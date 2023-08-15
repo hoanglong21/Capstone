@@ -41,7 +41,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     private DateRangePicker dateRangePicker;
 
     @Override
-    public Integer getTestNumber(int id) throws ResourceNotFroundException {
+    public Integer getTestNumber(int id) throws Exception {
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
 //        List<String> listDate = dateRangePicker.getShortDateRange();
@@ -86,7 +86,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
     }
 
     @Override
-    public List<Integer> getPostGrowth(int id) throws ResourceNotFroundException {
+    public List<Integer> getPostGrowth(int id) throws Exception {
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
         List<Integer> result = new ArrayList<>();

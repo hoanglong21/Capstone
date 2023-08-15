@@ -21,7 +21,7 @@ public class ClassStatisticController {
     public ResponseEntity<?> getTestNumber(@PathVariable int id){
         try {
             return ResponseEntity.ok(classStatisticService.getTestNumber(id));
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -57,7 +57,7 @@ public class ClassStatisticController {
     public ResponseEntity<?> getPostGrowth(@PathVariable int id) {
         try {
             return ResponseEntity.ok(classStatisticService.getPostGrowth(id));
-        } catch (ResourceNotFroundException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

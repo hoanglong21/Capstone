@@ -20,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -195,7 +196,9 @@ public class QuestionServiceTest {
     @ParameterizedTest(name = "index => search={0},typeid{1},testid{2}, page{3}, size{4}")
     @CsvSource({
             "who,1,1,1,5",
-            "who,1,2,1,5"
+            "who,1,2,0,5",
+            "who,1,1,1,-5",
+            "who,1,2,1,0",
     })
     public void testGetFilterQuestion(String search, int typeid, int testid, int page, int size) throws ResourceNotFroundException {
 
@@ -213,8 +216,12 @@ public class QuestionServiceTest {
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(question));
 
-        List<Question> list = (List<Question>) questionServiceImpl.getFilterQuestion(search, typeid, testid, page, size).get("list");
-        assertThat(list.size()).isGreaterThan(0);
+        try {
+            Map<String, Object> result = questionServiceImpl.getFilterQuestion(search, typeid, testid, page, size);
+            assertThat(result.get("list")).isEqualTo(mockedQuery.getResultList());
+        }  catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
     }
 
 }

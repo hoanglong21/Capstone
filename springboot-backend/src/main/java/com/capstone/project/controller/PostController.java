@@ -115,7 +115,7 @@ public class PostController {
 
         try{
             return ResponseEntity.ok(postService.getFilterPost(search,author,fromCreated,toCreated,sortBy,direction,classid.orElse(0),page,size));
-        }catch (ResourceNotFroundException e){
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

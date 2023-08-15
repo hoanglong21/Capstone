@@ -20,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -222,7 +223,9 @@ public class CommentSerivceTest {
     @ParameterizedTest(name = "index => search={0},author{1},direction{2}, typeId{3},postId{4},testId{5} ,studysetId{6},int assignmentid{7},int submissionid{8},rootId{9}, page{10}, size{11}")
     @CsvSource({
             "Hello,quantruong,DESC,1,2,1,2,1,1,1,1,5",
-            "hello,ngocnguyen,DESC,1,2,1,2,1,1,1,1,5"
+            "hello,ngocnguyen,DESC,1,2,1,2,1,1,1,0,5",
+            "Hello,quantruong,DESC,1,2,1,2,1,1,1,1,0",
+            "hello,ngocnguyen,DESC,1,2,1,2,1,1,1,0,-2"
     })
     public void testGetFilterAssignment(String search, String author, String direction, int typeid,int postid,int testid, int studysetid,int assignmentid,int submissionid,int rootid, int page, int size) throws ResourceNotFroundException {
 
@@ -238,8 +241,12 @@ public class CommentSerivceTest {
         when(em.createNativeQuery(anyString(),eq(Comment.class))).thenReturn(mockedQuery);
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(comment));
-        List<Comment> list = (List<Comment>) commentServiceImpl.getFilterComment(search, author, direction, typeid, postid,testid,studysetid,assignmentid,submissionid, rootid, page, size).get("list");
-        assertThat(list.size()).isGreaterThan(0);
+        try{
+            Map<String, Object> result = commentServiceImpl.getFilterComment(search,author,direction,typeid,postid,testid,studysetid,assignmentid,submissionid,rootid,page,size);
+            assertThat(result.get("list")).isEqualTo(mockedQuery.getResultList());
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
 
     }
 }

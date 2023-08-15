@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -168,7 +169,9 @@ public class PostServiceTest {
     @ParameterizedTest(name = "index => search={0},author{1},fromCreated{2}, toCreated{3}, sortBy{4},direction{5}, classId{6}, page{7}, size{8}")
     @CsvSource({
             "Review test,quantruong,2023-8-9,2023-8-15,created_date,DESC,1,1,5",
-            "Guide slide,ngocnguyen,2023-8-9,2023-8-15,created_date,DESC,1,1,5"
+            "Guide slide,ngocnguyen,2023-8-9,2023-8-15,created_date,DESC,1,0,5",
+            "Review test,quantruong,2023-8-9,2023-8-15,created_date,DESC,1,1,-5",
+            "Guide slide,ngocnguyen,2023-8-9,2023-8-15,created_date,DESC,1,1,0",
     })
     public void testGetFilterPost(String search, String author,String fromCreated,String toCreated,String sortBy, String direction, int classid,
                                   int page, int size) throws ResourceNotFroundException {
@@ -184,8 +187,12 @@ public class PostServiceTest {
         when(em.createNativeQuery(anyString(),eq(Post.class))).thenReturn(mockedQuery);
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(post));
-        List<Post> list = (List<Post>) postServiceImpl.getFilterPost(search, author,fromCreated,toCreated,sortBy, direction, classid, page, size).get("list");
-        assertThat(list.size()).isGreaterThan(0);
+        try {
+            Map<String, Object> result = postServiceImpl.getFilterPost(search, author, fromCreated, toCreated, sortBy, direction, classid, page, size);
+            assertThat(result.get("list")).isEqualTo(mockedQuery.getResultList());
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
 
     }
 
