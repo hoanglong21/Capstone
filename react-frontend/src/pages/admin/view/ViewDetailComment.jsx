@@ -119,11 +119,9 @@ function ViewDetailComment() {
                 </div>
                 <div className="mb-3">
                   <label className="small mb-1 fs-6">Content</label>
-                  <input
+                  <div
                     className="form-control"
-                    type="text"
-                    readOnly
-                    value={comment.content}
+                    dangerouslySetInnerHTML={{__html: comment.content}}
                   />
                 </div>
                 <div className="text-center">

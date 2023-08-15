@@ -17,6 +17,7 @@ function ViewDetailStudyset() {
       fetchData();
     }
   }, [id]);
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -79,12 +80,18 @@ function ViewDetailStudyset() {
                   </div>
                   <div className="col-md-4">
                     <label className="small mb-1 fs-6">Status</label>
-                    <input
+                    <select
                       className="form-control"
-                      type="text"
                       readOnly
-                      value={studySet?.is_public}
-                    />
+                      value={studySet?._public}
+                    >
+                      <option value={true} hidden>
+                        Public
+                      </option>
+                      <option value={false} hidden>
+                        Private
+                      </option>
+                    </select>
                   </div>
                   <div className="col-md-4">
                     <label className="small mb-1 fs-6">Deleted Date</label>
