@@ -7,6 +7,7 @@ import StudySetService from '../../../services/StudySetService'
 import FieldService from '../../../services/FieldService'
 import { getUser } from '../../../features/user/userAction'
 import ProgressService from '../../../services/ProgressService'
+import HistoryService from '../../../services/HistoryService'
 
 import VocabCard from './VocabCard'
 import KanjiCard from './KanjiCard'
@@ -87,6 +88,28 @@ const DoQuiz = () => {
     const [showOptionModal, setShowOptionModal] = useState(false)
     const [showSubmitModal, setShowSubmitModal] = useState(false)
 
+    const [isAddHistory, setIsAddHistory] = useState(false)
+
+    // add history
+    useEffect(() => {
+        if (isAddHistory === false && userInfo?.id && isEnd === true) {
+            try {
+                HistoryService.createHistory({
+                    historyType: { id: 2 },
+                    user: { id: userInfo.id, username: userInfo.username },
+                    studySet: { id: id },
+                })
+                setIsAddHistory(true)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+        }
+    }, [userInfo, isEnd, isAddHistory])
+
     // fetch user info
     useEffect(() => {
         if (userToken && !userInfo?.id) {
@@ -94,6 +117,7 @@ const DoQuiz = () => {
         }
     }, [userToken, userInfo])
 
+    // progress header
     useEffect(() => {
         if (!loading && isAllow) {
             const headerHeight =
@@ -244,6 +268,7 @@ const DoQuiz = () => {
         setIsEnd(false)
         setError('')
         setSkipAnswer(null)
+        setIsAddHistory(false)
         // validation
         if (optionQuestionTypes?.length < 1) {
             setError('You must select at least one question type.')

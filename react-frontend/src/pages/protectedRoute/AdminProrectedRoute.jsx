@@ -5,11 +5,12 @@ import { useEffect } from 'react'
 import { logout as authLogout } from '../../features/auth/authSlice'
 import { logout as userLogout } from '../../features/user/userSlice'
 
-const ProtectedRoute = () => {
+const AdminProtectedRoute = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
 
     useEffect(() => {
         if (!userToken) {
@@ -19,7 +20,13 @@ const ProtectedRoute = () => {
         }
     }, [userToken])
 
+    useEffect(() => {
+        if (userInfo?.role !== 'ROLE_ADMIN') {
+            navigate('/')
+        }
+    }, [userInfo])
+
     // returns child route elements
     return <Outlet />
 }
-export default ProtectedRoute
+export default AdminProtectedRoute

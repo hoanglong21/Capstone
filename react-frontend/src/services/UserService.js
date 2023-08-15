@@ -84,64 +84,6 @@ export const resetPassword = (username, pin, newPassword) => {
     )
 }
 
-export const filterUser = (
-    name,
-    username,
-    email,
-    gender,
-    phone,
-    role,
-    address,
-    bio,
-    status,
-    fromdob,
-    todob,
-    frombanned,
-    tobanned,
-    fromdeleted,
-    todeleted,
-    page,
-    size
-) => {
-    return axios.get(
-        API_BASE_URL +
-            '/filterusers?name' +
-            name +
-            '&username' +
-            username +
-            '&email' +
-            email +
-            '&gender' +
-            gender +
-            '&phone' +
-            phone +
-            '&role' +
-            role +
-            '&address' +
-            address +
-            '&bio' +
-            bio +
-            '&status' +
-            status +
-            '&fromdob' +
-            fromdob +
-            '&todob' +
-            todob +
-            '&frombanned' +
-            frombanned +
-            '&tobanned' +
-            tobanned +
-            '&fromdeleted' +
-            fromdeleted +
-            '&todeleted' +
-            todeleted +
-            '&page' +
-            page +
-            '&size' +
-            size
-    , )
-}
-
 export const filterUserAdmin = (
     name,
     username,
@@ -158,7 +100,7 @@ export const filterUserAdmin = (
     tobanned,
     fromdeleted,
     todeleted,
-    fromcreated, 
+    fromcreated,
     tocreated,
     sortby,
     page,
@@ -205,14 +147,48 @@ export const filterUserAdmin = (
             '&page' +
             page +
             '&size' +
-            size
-    , {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
-        },})
+            size,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+        }
+    )
 }
 
-
+export const filterUserCommon = (
+    name,
+    username,
+    email,
+    gender,
+    role,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterusers?name' +
+            name +
+            '&username' +
+            username +
+            '&email' +
+            email +
+            '&gender' +
+            gender +
+            '&role' +
+            role +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
 
 const getStudySetLearnedStatistic = (id) => {
     return axios.get(API_BASE_URL + '/statistic/user/studysetlearned/' + id, {
@@ -264,7 +240,6 @@ const UserService = {
     changePassword,
     deleteUser,
     sendResetPasswordEmail,
-    filterUser,
     banUser,
     recoverUser,
     getClassJoinedStatistic,
@@ -273,7 +248,8 @@ const UserService = {
     getLearningStatistic,
     findAllNameExcept,
     resetPassword,
-    filterUserAdmin
+    filterUserCommon,
+    filterUserAdmin,
 }
 
 export default UserService

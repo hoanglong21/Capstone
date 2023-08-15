@@ -10,7 +10,7 @@ import { ClassIcon } from '../../components/icons'
 
 function AllForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
-    
+
     const search = searchParams.get('search')
     const author = searchParams.get('author')
 
@@ -91,20 +91,12 @@ function AllForHome() {
         setLoadingUsers(true)
         try {
             const temp = (
-                await UserService.filterUser(
+                await UserService.filterUserCommon(
                     '',
                     `${searchKey || author ? `=${searchKey || author}` : ''}`,
                     '',
                     '',
-                    '',
                     '=tutor,learner',
-                    '',
-                    '',
-                    '=active,pending',
-                    '',
-                    '',
-                    '',
-                    '',
                     '',
                     '',
                     '=1',

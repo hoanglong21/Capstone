@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
@@ -8,9 +8,14 @@ import Modal from 'react-bootstrap/Modal'
 import CardService from '../../../services/CardService'
 import VocabCard from './VocabCard'
 import { getUser } from '../../../features/user/userAction'
+import StudySetService from '../../../services/StudySetService'
+import HistoryService from '../../../services/HistoryService'
+import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import ProgressService from '../../../services/ProgressService'
 
 import KanjiCard from './KanjiCard'
 import GrammarCard from './GrammarCard'
+import NoteEditor from '../../../components/textEditor/NoteEditor'
 
 import {
     ArrowDownIcon,
@@ -30,10 +35,6 @@ import {
 import illustration from '../../../assets/images/permafetti.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Flashcard.css'
-import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
-import ProgressService from '../../../services/ProgressService'
-import NoteEditor from '../../../components/textEditor/NoteEditor'
-import StudySetService from '../../../services/StudySetService'
 
 const Confettiful = function (el) {
     this.el = el
@@ -147,6 +148,8 @@ const Flashcard = () => {
 
     const [showOptionModal, setShowOptionModal] = useState(true)
 
+    const [isAddHistory, setIsAddHistory] = useState(false)
+
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -161,6 +164,30 @@ const Flashcard = () => {
             return file
         }
     }
+
+    // add history
+    useEffect(() => {
+        if (
+            isAddHistory === false &&
+            userInfo?.id &&
+            (cards.length === 1 || cardIndex === 1)
+        ) {
+            try {
+                HistoryService.createHistory({
+                    historyType: { id: 2 },
+                    user: { id: userInfo.id, username: userInfo.username },
+                    studySet: { id: id },
+                })
+                setIsAddHistory(true)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+        }
+    }, [userInfo, cards, cardIndex, isAddHistory])
 
     // fetch user info
     useEffect(() => {
