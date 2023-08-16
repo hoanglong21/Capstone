@@ -167,5 +167,24 @@ public class StudySetController {
         }
     }
 
-
+    @GetMapping("/filterstudysetsclass")
+    public ResponseEntity<?> getFilterListByClass(
+                                           @RequestParam(value = "search", required = false) String search,
+                                           @RequestParam(value = "class_id", required = false) int classId,
+                                           @RequestParam(value = "assigned", required = false, defaultValue = "true") boolean assigned,
+                                           @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                           @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+        try {
+            return ResponseEntity.ok(studySetService.getFilterListByClass(classId, search,assigned, sortBy, direction, page, size));
+        }
+        catch (Exception e) {
+            if(e.getMessage().equals("Please provide valid page and size")) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            } else {
+                return ResponseEntity.badRequest().body("Check the input again");
+            }
+        }
+    }
 }
