@@ -170,8 +170,36 @@ function ViewDetailsUser() {
         dataLabels: {
             enabled: false,
         },
-        colors: ['#008FFB'],
+        tooltip: {
+            enabled: true
+        },
+        plotOptions: {
+            heatmap: {
+              colorScale: {
+                ranges: [{
+                    from: 0,
+                    to: 0,
+                    color: '#FFFFFF',
+                    name: 'low',
+                  },
+                  {
+                    from: 1,
+                    to: 10,
+                    color: '#2772C2',
+                    name: 'medium',
+                  },
+                  {
+                    from: 11,
+                    to: 24,
+                    color: '#103F91',
+                    name: 'high',
+                  }
+                ]
+              }
+            }
+          }
     }
+
 
     useEffect(() => {
         const fetchDataStudySetLearned = async () => {
