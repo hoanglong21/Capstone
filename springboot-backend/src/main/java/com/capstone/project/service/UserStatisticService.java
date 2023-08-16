@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface UserStatisticService {
 
-    List<List<Map<String, Integer>>> getAccessStatistic(int id) throws ResourceNotFroundException;
+    List<List<Map<String, Object>>> getAccessStatistic(int id) throws ResourceNotFroundException;
 
     List<Integer> getStudySetLearnedStatistic(int id) throws ResourceNotFroundException;
 
