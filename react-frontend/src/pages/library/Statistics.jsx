@@ -29,13 +29,12 @@ function Statistics() {
     ]
 
     const day = [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
     ]
 
     const optionsDataLabel = {
@@ -203,7 +202,7 @@ function Statistics() {
                 var tempSeriesDataHeapChart = []
                 for (let index = 0; index < day.length; index++) {
                     const tempDay = day[index]
-                    const tempArr = temp[index]
+                    const tempArr = temp[day.length - 1 - index]
                     tempSeriesDataHeapChart.push({
                         name: tempDay,
                         data: tempArr,
