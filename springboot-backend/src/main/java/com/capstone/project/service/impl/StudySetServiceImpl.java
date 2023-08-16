@@ -261,8 +261,50 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) {
-        return null;
+    public Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
+
+        int offset = (page - 1) * size;
+
+        String query = "";
+        if(isAssigned==true) {
+            query = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") ";
+        } else {
+            query = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") ";
+        }
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (search != null && !search.isEmpty()) {
+            query += " AND (title LIKE :search OR description LIKE :search) ";
+            parameters.put("search", "%" + search + "%");
+        }
+
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            query += " ORDER BY " + sortBy + " " + direction;
+        }
+
+        Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<StudySetResponse> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+
+        return response;
     }
 
     private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom, int userId, boolean star) {
