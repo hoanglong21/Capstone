@@ -34,13 +34,14 @@ public class ClassServiceImpl implements ClassService {
     private final AttachmentRepository attachmentRepository;
     private final SubmissionRepository submissionRepository;
     private final UserRepository userRepository;
+    private final StudySetRepository studySetRepository;
     private final StudySetService studySetService;
     private final ClassLearnerRepository classLearnerRepository;
 
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.testRepository = testRepository;
@@ -53,6 +54,7 @@ public class ClassServiceImpl implements ClassService {
         this.attachmentRepository = attachmentRepository;
         this.submissionRepository = submissionRepository;
         this.userRepository = userRepository;
+        this.studySetRepository = studySetRepository;
         this.studySetService = studySetService;
         this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
@@ -323,15 +325,67 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Boolean AssignStudySet(int classid, StudySet studySet) throws ResourceNotFroundException {
-         Class classroom = classRepository.findById(classid)
-                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + classid));
+    public Map<String, Object> getFilterClassStudySet(String search, int studysetassigned, int studysetnotassigned, int page, int size) throws ResourceNotFroundException {
 
-         StudySet studySet_class = studySetService.createStudySet(studySet);
+        int offset = (page - 1) * size;
 
-         classroom.getStudySets().add(studySet_class);
-         classRepository.save(classroom);
-         return true;
+        String query = "SELECT c.*\n" +
+                "FROM class c\n" +
+                "WHERE 1=1";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (studysetassigned != 0) {
+            query += " AND EXISTS (SELECT 1 FROM class_studyset cs WHERE cs.class_id = c.id AND cs.sudyset_id = :studysetassigned)";
+            parameters.put("studysetassigned", studysetassigned);
+        }
+
+        if (studysetnotassigned != 0) {
+            query += " AND NOT EXISTS (SELECT 1 FROM class_studyset cs WHERE cs.class_id = c.id AND cs.sudyset_id = :studysetnotassigned)";
+            parameters.put("studysetnotassigned", studysetnotassigned);
+        }
+
+        if (search != null && !search.isEmpty()) {
+            query += "  AND class_name LIKE :search";
+            parameters.put("search", "%" + search + "%");
+        }
+
+
+        Query q = em.createNativeQuery(query, Class.class);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<Class> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+
+        return response;
+    }
+
+    @Override
+    public Boolean AssignStudyset(int classid, int studysetid) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(classid)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + classid));
+
+        StudySet studySet = studySetRepository.findById(studysetid)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + studysetid));
+
+        StudySet studySet_class = studySetService.createStudySet(studySet);
+
+        classroom.getStudySets().add(studySet_class);
+        classRepository.save(classroom);
+        return true;
     }
 
 
