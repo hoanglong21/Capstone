@@ -146,6 +146,16 @@ const addStudySetToClass = (classid, studysetid) => {
     )
 }
 
+const unAssignStudySet = (classid, studysetid) => {
+    return axios.post(
+        API_BASE_URL +
+            '/unassignstudyset?classid=' +
+            classid +
+            '&studysetid=' +
+            studysetid
+    )
+}
+
 const ClassService = {
     createClassroom,
     getFilterList,
@@ -163,6 +173,7 @@ const ClassService = {
     getPostGrowth,
     getFilterClassStudySet,
     addStudySetToClass,
+    unAssignStudySet,
 }
 
 export default ClassService

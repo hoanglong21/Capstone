@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Toast from 'react-bootstrap/Toast'
 
 import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
@@ -69,6 +70,9 @@ const ViewStudySet = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showCommentModal, setShowCommentModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
+
+    const [showToast, setShowToast] = useState(false)
+    const [toastMess, setToastMess] = useState('')
 
     // ignore error
     useEffect(() => {
@@ -817,7 +821,18 @@ const ViewStudySet = () => {
                 setShowAssignModal={setShowAssignModal}
                 studySet={studySet}
                 userInfo={userInfo}
+                setShowToast={setShowToast}
+                setToastMess={setToastMess}
             />
+            {/* assign toast */}
+            <Toast
+                onClose={() => setShowToast(false)}
+                show={showToast}
+                delay={3000}
+                autohide
+            >
+                <Toast.Body>{toastMess}</Toast.Body>
+            </Toast>
         </div>
     )
 }

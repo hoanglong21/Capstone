@@ -1,22 +1,30 @@
 import { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
-
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 
 import ClassService from '../../services/ClassService'
 
-import { AddIcon, MinusIcon } from '../../components/icons'
+import {
+    AddIcon,
+    CloseIcon,
+    MinusIcon,
+    SearchIcon,
+} from '../../components/icons'
+import Pagination from '../../components/Pagination'
 
 const AssignToClass = ({
     showAssignModal,
     setShowAssignModal,
     studySet,
     userInfo,
+    setShowToast,
+    setToastMess,
 }) => {
     const [assignClass, setAssignClass] = useState([])
     const [notAssignClass, setNotAssignClass] = useState([])
     const [search, setSearch] = useState('')
+    const [searchInput, setSearchInput] = useState('')
 
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState([])
@@ -33,7 +41,7 @@ const AssignToClass = ({
                 await ClassService.getFilterClassStudySet(
                     `=${studySet.id}`,
                     '',
-                    '',
+                    `${search ? `=${search}` : ''}`,
                     `=${page}`,
                     '=5'
                 )
@@ -58,7 +66,7 @@ const AssignToClass = ({
                 await ClassService.getFilterClassStudySet(
                     '',
                     `=${studySet.id}`,
-                    '',
+                    `${search ? `=${search}` : ''}`,
                     `=${pageNot}`,
                     '=5'
                 )
@@ -80,13 +88,53 @@ const AssignToClass = ({
         if (userInfo?.id && studySet?.id) {
             fetchAssign()
         }
-    }, [userInfo, studySet, page])
+    }, [userInfo, studySet, page, search])
 
     useEffect(() => {
         if (userInfo?.id && studySet?.id) {
             fetchNot()
         }
-    }, [userInfo, studySet, pageNot])
+    }, [userInfo, studySet, pageNot, search])
+
+    const handleAssign = (classroom, index) => {
+        try {
+            ClassService.addStudySetToClass(classroom.id, studySet.id)
+            setAssignClass([...assignClass, classroom])
+            var tempNot = [...notAssignClass]
+            tempNot.splice(index, 1)
+            setNotAssignClass([...tempNot])
+            setToastMess(
+                `Successfully assign ${studySet.title} to ${classroom.class_name}`
+            )
+            setShowToast(true)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
+
+    const handleUnassign = (classroom, index) => {
+        try {
+            ClassService.unAssignStudySet(classroom.id, studySet.id)
+            setNotAssignClass([...notAssignClass, classroom])
+            var temp = [...assignClass]
+            temp.splice(index, 1)
+            setAssignClass([...temp])
+            setToastMess(
+                `Successfully unassign ${studySet.title} from ${classroom.class_name}`
+            )
+            setShowToast(true)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
 
     return (
         <Modal
@@ -102,6 +150,39 @@ const AssignToClass = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-5">
+                <form className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search..."
+                        value={searchInput || ''}
+                        onChange={(event) => {
+                            setSearchInput(event.target.value)
+                        }}
+                    />
+                    {searchInput && (
+                        <button
+                            className="btn btn-outline-secondary px-2"
+                            type="button"
+                            onClick={() => {
+                                setSearch('')
+                                setSearchInput('')
+                            }}
+                        >
+                            <CloseIcon />
+                        </button>
+                    )}
+                    <button
+                        className="btn btn-outline-secondary px-2"
+                        type="submit"
+                        onClick={(event) => {
+                            event.preventDefault()
+                            setSearch(searchInput)
+                        }}
+                    >
+                        <SearchIcon />
+                    </button>
+                </form>
                 <Tabs
                     defaultActiveKey="assigned"
                     id="uncontrolled-tab-example"
@@ -122,6 +203,9 @@ const AssignToClass = ({
                                     <button
                                         key={index}
                                         className="assignClass_btn d-flex align-items-center justify-content-between"
+                                        onClick={() =>
+                                            handleUnassign(classroom, index)
+                                        }
                                     >
                                         <span>{classroom?.class_name}</span>
                                         <MinusIcon
@@ -130,7 +214,19 @@ const AssignToClass = ({
                                         />
                                     </button>
                                 ))}
+                                {/* Pagination */}
+                                <Pagination
+                                    className="mb-5"
+                                    currentPage={page}
+                                    totalCount={totalItems}
+                                    pageSize={10}
+                                    onPageChange={(page) => {
+                                        setPage(page)
+                                    }}
+                                />
                             </div>
+                        ) : search ? (
+                            <div>No matching found.</div>
                         ) : (
                             <div>
                                 This set has not been assigned to any class.
@@ -152,6 +248,9 @@ const AssignToClass = ({
                                     <button
                                         key={index}
                                         className="assignClass_btn d-flex align-items-center justify-content-between"
+                                        onClick={() => {
+                                            handleAssign(classroom, index)
+                                        }}
                                     >
                                         <span>{classroom?.class_name}</span>
                                         <AddIcon
@@ -160,7 +259,19 @@ const AssignToClass = ({
                                         />
                                     </button>
                                 ))}
+                                {/* Pagination */}
+                                <Pagination
+                                    className="mb-5"
+                                    currentPage={pageNot}
+                                    totalCount={totalItemsNot}
+                                    pageSize={10}
+                                    onPageChange={(page) => {
+                                        setPageNot(page)
+                                    }}
+                                />
                             </div>
+                        ) : search ? (
+                            <div>No matching found.</div>
                         ) : (
                             <div>
                                 This set has been assigned to all your classes.
