@@ -2,7 +2,6 @@ package com.capstone.project.service;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Class;
-import com.capstone.project.model.StudySet;
 
 import java.text.ParseException;
 import java.util.List;
@@ -25,7 +24,9 @@ public interface ClassService {
 
     Class joinClass(String classCode, String username) throws ResourceNotFroundException;
 
-    Boolean AssignStudySet(int classid, StudySet studySet) throws ResourceNotFroundException;
+    Map<String, Object> getFilterClassStudySet(String search, int studysetassigned, int studysetnotassigned, int page, int size) throws ResourceNotFroundException;
+
+    Boolean AssignStudyset(int classid, int studysetid) throws ResourceNotFroundException;
 
     Class ResetClassCode(int id) throws ResourceNotFroundException;
 

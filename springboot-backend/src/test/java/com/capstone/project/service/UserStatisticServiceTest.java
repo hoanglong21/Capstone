@@ -54,7 +54,7 @@ public class UserStatisticServiceTest {
             when(dateRangePicker.getDateActive()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
             when(historyService.filterHistory(anyInt(), anyInt(), anyInt(), anyInt(), any(), any(),
                     any(), any(), anyInt(), anyInt())).thenReturn(response);
-            List<List<Map<String, Integer>>> list = userStatisticService.getAccessStatistic(1);
+            List<List<Map<String, Object>>> list = userStatisticService.getAccessStatistic(1);
             assertThat(list.size()).isEqualTo(1);
         } catch (ResourceNotFroundException e) {
             throw new RuntimeException(e);
