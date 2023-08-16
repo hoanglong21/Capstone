@@ -1,44 +1,140 @@
 import { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
+import Tab from 'react-bootstrap/Tab'
+import Tabs from 'react-bootstrap/Tabs'
 
 import ClassService from '../../services/ClassService'
-import { AddIcon } from '../../components/icons'
+
+import {
+    AddIcon,
+    CloseIcon,
+    MinusIcon,
+    SearchIcon,
+} from '../../components/icons'
+import Pagination from '../../components/Pagination'
 
 const AssignToClass = ({
     showAssignModal,
     setShowAssignModal,
+    studySet,
     userInfo,
+    setShowToast,
+    setToastMess,
 }) => {
-    const [classes, setClasses] = useState([])
-    const [page, setPage] = useState([])
-    const [totalItems, setTotalItems] = useState([])
+    const [assignClass, setAssignClass] = useState([])
+    const [notAssignClass, setNotAssignClass] = useState([])
+    const [search, setSearch] = useState('')
+    const [searchInput, setSearchInput] = useState('')
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const temp = (
-                await ClassService.getFilterList(
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState([])
+    const [loading, setLoading] = useState(false)
+
+    const [pageNot, setPageNot] = useState(1)
+    const [totalItemsNot, setTotalItemsNot] = useState([])
+    const [loadingNot, setLoadingNot] = useState(false)
+
+    const fetchAssign = async () => {
+        setLoading(true)
+        try {
+            const tempAssignClass = (
+                await ClassService.getFilterClassStudySet(
+                    `=${studySet.id}`,
                     '',
-                    '=0',
-                    '',
-                    `=${userInfo?.username}`,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
+                    `${search ? `=${search}` : ''}`,
                     `=${page}`,
-                    '=10'
+                    '=5'
                 )
             ).data
-            setTotalItems(temp.totalItems)
-            setClasses(temp.list)
+            setPage(1)
+            setTotalItems(tempAssignClass.totalItems)
+            setAssignClass(tempAssignClass.list)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
-        if (userInfo?.id) {
-            fetchData()
+        setLoading(false)
+    }
+
+    const fetchNot = async () => {
+        setLoadingNot(true)
+        try {
+            const tempNotAssignClass = (
+                await ClassService.getFilterClassStudySet(
+                    '',
+                    `=${studySet.id}`,
+                    `${search ? `=${search}` : ''}`,
+                    `=${pageNot}`,
+                    '=5'
+                )
+            ).data
+            setPageNot(1)
+            setTotalItemsNot(tempNotAssignClass.totalItems)
+            setNotAssignClass(tempNotAssignClass.list)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
         }
-    }, [userInfo])
+        setLoadingNot(false)
+    }
+
+    useEffect(() => {
+        if (userInfo?.id && studySet?.id) {
+            fetchAssign()
+        }
+    }, [userInfo, studySet, page, search])
+
+    useEffect(() => {
+        if (userInfo?.id && studySet?.id) {
+            fetchNot()
+        }
+    }, [userInfo, studySet, pageNot, search])
+
+    const handleAssign = (classroom, index) => {
+        try {
+            ClassService.addStudySetToClass(classroom.id, studySet.id)
+            setAssignClass([...assignClass, classroom])
+            var tempNot = [...notAssignClass]
+            tempNot.splice(index, 1)
+            setNotAssignClass([...tempNot])
+            setToastMess(
+                `Successfully assign ${studySet.title} to ${classroom.class_name}`
+            )
+            setShowToast(true)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
+
+    const handleUnassign = (classroom, index) => {
+        try {
+            ClassService.unAssignStudySet(classroom.id, studySet.id)
+            setNotAssignClass([...notAssignClass, classroom])
+            var temp = [...assignClass]
+            temp.splice(index, 1)
+            setAssignClass([...temp])
+            setToastMess(
+                `Successfully unassign ${studySet.title} from ${classroom.class_name}`
+            )
+            setShowToast(true)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
 
     return (
         <Modal
@@ -53,22 +149,136 @@ const AssignToClass = ({
                     Add to a class
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body className="px-4">
-                {classes?.length > 0 ? (
-                    <div>
-                        {classes?.map((classroom, index) => (
-                            <button
-                                key={index}
-                                className="assignClass_btn d-flex align-items-center justify-content-between"
-                            >
-                                <span>{classroom?.class_name}</span>
-                                <AddIcon size="1.5rem" strokeWidth="2" />
-                            </button>
-                        ))}
-                    </div>
-                ) : (
-                    <div></div>
-                )}
+            <Modal.Body className="px-5">
+                <form className="input-group mb-3">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search..."
+                        value={searchInput || ''}
+                        onChange={(event) => {
+                            setSearchInput(event.target.value)
+                        }}
+                    />
+                    {searchInput && (
+                        <button
+                            className="btn btn-outline-secondary px-2"
+                            type="button"
+                            onClick={() => {
+                                setSearch('')
+                                setSearchInput('')
+                            }}
+                        >
+                            <CloseIcon />
+                        </button>
+                    )}
+                    <button
+                        className="btn btn-outline-secondary px-2"
+                        type="submit"
+                        onClick={(event) => {
+                            event.preventDefault()
+                            setSearch(searchInput)
+                        }}
+                    >
+                        <SearchIcon />
+                    </button>
+                </form>
+                <Tabs
+                    defaultActiveKey="assigned"
+                    id="uncontrolled-tab-example"
+                    className="mb-3"
+                >
+                    <Tab eventKey="assigned" title="Assigned">
+                        {loading ? (
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        ) : assignClass?.length > 0 ? (
+                            <div>
+                                {assignClass?.map((classroom, index) => (
+                                    <button
+                                        key={index}
+                                        className="assignClass_btn d-flex align-items-center justify-content-between"
+                                        onClick={() =>
+                                            handleUnassign(classroom, index)
+                                        }
+                                    >
+                                        <span>{classroom?.class_name}</span>
+                                        <MinusIcon
+                                            size="1.5rem"
+                                            strokeWidth="2"
+                                        />
+                                    </button>
+                                ))}
+                                {/* Pagination */}
+                                <Pagination
+                                    className="mb-5"
+                                    currentPage={page}
+                                    totalCount={totalItems}
+                                    pageSize={10}
+                                    onPageChange={(page) => {
+                                        setPage(page)
+                                    }}
+                                />
+                            </div>
+                        ) : search ? (
+                            <div>No matching found.</div>
+                        ) : (
+                            <div>
+                                This set has not been assigned to any class.
+                            </div>
+                        )}
+                    </Tab>
+                    <Tab eventKey="notAssigned" title="Not assigned">
+                        {loadingNot ? (
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        ) : notAssignClass?.length > 0 ? (
+                            <div>
+                                {notAssignClass?.map((classroom, index) => (
+                                    <button
+                                        key={index}
+                                        className="assignClass_btn d-flex align-items-center justify-content-between"
+                                        onClick={() => {
+                                            handleAssign(classroom, index)
+                                        }}
+                                    >
+                                        <span>{classroom?.class_name}</span>
+                                        <AddIcon
+                                            size="1.5rem"
+                                            strokeWidth="2"
+                                        />
+                                    </button>
+                                ))}
+                                {/* Pagination */}
+                                <Pagination
+                                    className="mb-5"
+                                    currentPage={pageNot}
+                                    totalCount={totalItemsNot}
+                                    pageSize={10}
+                                    onPageChange={(page) => {
+                                        setPageNot(page)
+                                    }}
+                                />
+                            </div>
+                        ) : search ? (
+                            <div>No matching found.</div>
+                        ) : (
+                            <div>
+                                This set has been assigned to all your classes.
+                            </div>
+                        )}
+                    </Tab>
+                </Tabs>
             </Modal.Body>
         </Modal>
     )
