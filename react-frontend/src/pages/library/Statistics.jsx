@@ -29,13 +29,12 @@ function Statistics() {
     ]
 
     const day = [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
+        'W1',
+        'W2',
+        'W3',
+        'W4',
+        'W5',
+        'W6',
     ]
 
     const optionsDataLabel = {
@@ -60,20 +59,7 @@ function Statistics() {
         },
 
         xaxis: {
-            categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
-            ],
+            categories: week,
             position: 'top',
             axisBorder: {
                 show: false,
@@ -154,7 +140,7 @@ function Statistics() {
 
     const optionRadar = {
         xaxis: {
-            categories: ['Kanji', 'Vocabulary', 'Grammar'],
+            categories: ['Vocabulary', 'Kanji', 'Grammar'],
         },
     }
 
@@ -169,8 +155,36 @@ function Statistics() {
         dataLabels: {
             enabled: false,
         },
-        colors: ['#008FFB'],
+        tooltip: {
+            enabled: true
+        },
+        plotOptions: {
+            heatmap: {
+              colorScale: {
+                ranges: [{
+                    from: 0,
+                    to: 0,
+                    color: '#FFFFFF',
+                    name: 'low',
+                  },
+                  {
+                    from: 1,
+                    to: 10,
+                    color: '#2772C2',
+                    name: 'medium',
+                  },
+                  {
+                    from: 11,
+                    to: 24,
+                    color: '#103F91',
+                    name: 'high',
+                  }
+                ]
+              }
+            }
+          }
     }
+
 
     useEffect(() => {
         const fetchDataStudySetLearned = async () => {
@@ -203,13 +217,14 @@ function Statistics() {
                 var tempSeriesDataHeapChart = []
                 for (let index = 0; index < day.length; index++) {
                     const tempDay = day[index]
-                    const tempArr = temp[index]
+                    const tempArr = temp[day.length - 1 - index]
                     tempSeriesDataHeapChart.push({
-                        name: tempDay,
+                        name: day,
                         data: tempArr,
                     })
                 }
                 setSeriesDataHeapChart(tempSeriesDataHeapChart)
+        
             } catch (error) {
                 console.error('Error fetching statistics:', error)
             }

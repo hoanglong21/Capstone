@@ -163,10 +163,20 @@ public class ClassController {
     }
 
     @PostMapping("/assignstudyset")
-    public ResponseEntity<?> addStudySetToClass(@RequestParam(value = "classid", required = false) int classid,
+    public ResponseEntity<?> AssignStudySet(@RequestParam(value = "classid", required = false) int classid,
                                                 @RequestParam(value = "studysetid", required = false) int  studysetid) {
         try {
             return ResponseEntity.ok(classService.AssignStudyset(classid,studysetid));
+        } catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/unassignstudyset")
+    public ResponseEntity<?> unAssignStudySet(@RequestParam(value = "classid", required = false) int classid,
+                                                @RequestParam(value = "studysetid", required = false) int  studysetid) {
+        try {
+            return ResponseEntity.ok(classService.UnassignStudyset(classid,studysetid));
         } catch(ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
