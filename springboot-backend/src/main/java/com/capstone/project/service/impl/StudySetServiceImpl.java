@@ -260,6 +260,11 @@ public class StudySetServiceImpl implements StudySetService {
         return result;
     }
 
+    @Override
+    public Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) {
+        return null;
+    }
+
     private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom, int userId, boolean star) {
         // Shuffle the cardList to randomize the order of cards
         if(isRandom) {

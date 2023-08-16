@@ -37,7 +37,7 @@ public class UserStatisticServiceImpl implements UserStatisticService {
         List<String> listDate = dateRangePicker.getDateActive();
         int countDate = 1;
         for(int i=0; i<listDate.size(); i++) {
-            Map<String, Object> response = historyService.filterHistory(id, 0, 2, 0, listDate.get(i), listDate.get(i),
+            Map<String, Object> response = historyService.filterHistory(id, 0, 1, 0, listDate.get(i), listDate.get(i),
                     "datetime", "DESC", 1, 5);
             String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
             result.add(Map.of("x", days[countDate-1], "y", Integer.parseInt(String.valueOf(response.get("totalItems")))));
