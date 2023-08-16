@@ -16,13 +16,16 @@ function ManageUser() {
   const [users, setUsers] = useState([]);
   const fetchData = async (searchKey) => {
     const temp = (
-        await UserService.filterUser(
+        await UserService.filterUserAdmin(
             '',
             `${searchKey ? '=' + searchKey : ''}`,
             '',
             '',
             '',
             '=tutor,learner',
+            '',
+            '',
+            '',
             '',
             '',
             '',

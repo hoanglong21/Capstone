@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, Outlet, useSearchParams } from "react-router-dom";
 import SidebarforAdmin from "../SidebarforAdmin";
 import HeaderAdmin from "../HeaderAdmin";
-
+import './dictionary.css'
 function DictionaryForAdmin() {
   const [searchParams, setSearchParams] = useSearchParams();
   const search = searchParams.get("search");

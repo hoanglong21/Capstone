@@ -5,39 +5,36 @@ import UserService from '../../services/UserService'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
+import Pagination from '../../components/Pagination'
 
 function UsersForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
+    const author = searchParams.get('author')
 
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(1)
 
     const fetchData = async (searchKey) => {
         try {
             const temp = (
                 await UserService.filterUser(
                     '',
-                    `${searchKey ? '=' + searchKey : ''}`,
-                    '',
+                    `${searchKey || author ? `=${searchKey || author}` : ''}`,
                     '',
                     '',
                     '=tutor,learner',
                     '',
                     '',
-                    '=active,pending',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
+                    `=${page}`,
+                    '=10'
                 )
-            ).data.list
-            setUsers(temp)
+            ).data
+            setTotalItems(temp.totalItems)
+            setUsers(temp.list)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -70,7 +67,7 @@ function UsersForHome() {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search])
+    }, [search, author, page])
 
     return (
         <div className="mt-4 mb-5">
@@ -93,7 +90,12 @@ function UsersForHome() {
                             key={user?.id}
                         >
                             <div className="set-item h-100">
-                                <Link to={``}>
+                                <Link
+                                    to={{
+                                        pathname: '/',
+                                        search: `?author=${user?.username}`,
+                                    }}
+                                >
                                     <div className="set-body">
                                         <div className="d-flex align-items-center">
                                             <div
@@ -145,6 +147,18 @@ function UsersForHome() {
                             </div>
                         </div>
                     ))}
+                    {/* Pagination */}
+                    {users?.length > 0 && (
+                        <Pagination
+                            className="mb-5"
+                            currentPage={page}
+                            totalCount={totalItems}
+                            pageSize={10}
+                            onPageChange={(page) => {
+                                setPage(page)
+                            }}
+                        />
+                    )}
                 </div>
             )}
         </div>

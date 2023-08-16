@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -281,22 +282,27 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     private Map<Integer, Boolean> studyRemindMailSent = new HashMap<>();
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(cron = "10 * * * * * ")
     public void sendStudyReminderMails() {
         List<UserSetting> userSettings = userSettingRepository.findAll();
 
         for (UserSetting userSetting : userSettings) {
             int userSettingId = userSetting.getId();
             String studytime = userSetting.getValue();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime dateTime = LocalDateTime.parse(studytime, formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalTime dateTime = LocalTime.parse(studytime, formatter);
             if (userSetting.getSetting().getId() == 1 && !studyRemindMailSent.getOrDefault(userSettingId, false)) {
-                if (isDateTimeReached(dateTime)) {
+                if (isTimeReached(dateTime)) {
                     sendMail(userSetting);
                     studyRemindMailSent.put(userSettingId, true);
                 }
             }
         }
+    }
+
+    private boolean isTimeReached(LocalTime dateTime) {
+        LocalTime now = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return now.equals(dateTime) || now.isAfter(dateTime);
     }
 
 
@@ -373,8 +379,5 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
-    private boolean isDateTimeReached(LocalDateTime dateTime) {
-        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        return now.isEqual(dateTime) || now.isAfter(dateTime);
-    }
+
 }

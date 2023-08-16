@@ -175,21 +175,28 @@ const CreateSet = () => {
 
     const handleAddCard = async () => {
         setSaving(true)
+        setError('')
         try {
-            const card = (
-                await CardService.createCard({
-                    picture: '',
-                    audio: '',
-                    studySet: {
-                        id: studySet.id,
-                        user: {
-                            id: userInfo.id,
-                            username: userInfo.username,
+            if (cards.length < 500) {
+                const card = (
+                    await CardService.createCard({
+                        picture: '',
+                        audio: '',
+                        studySet: {
+                            id: studySet.id,
+                            user: {
+                                id: userInfo.id,
+                                username: userInfo.username,
+                            },
                         },
-                    },
-                })
-            ).data
-            setCards([...cards, card])
+                    })
+                ).data
+                setCards([...cards, card])
+            } else {
+                setError(
+                    'The number of cards of a study set must not exceed 500'
+                )
+            }
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

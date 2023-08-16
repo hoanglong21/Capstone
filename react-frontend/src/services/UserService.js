@@ -84,7 +84,7 @@ export const resetPassword = (username, pin, newPassword) => {
     )
 }
 
-export const filterUser = (
+export const filterUserAdmin = (
     name,
     username,
     email,
@@ -100,12 +100,15 @@ export const filterUser = (
     tobanned,
     fromdeleted,
     todeleted,
+    fromcreated,
+    tocreated,
+    sortby,
     page,
     size
 ) => {
     return axios.get(
         API_BASE_URL +
-            '/filterusers?name' +
+            '/filterusersadmin?name' +
             name +
             '&username' +
             username +
@@ -135,6 +138,51 @@ export const filterUser = (
             fromdeleted +
             '&todeleted' +
             todeleted +
+            '&fromcreated' +
+            fromcreated +
+            '&tocreated' +
+            tocreated +
+            '&sortby' +
+            sortby +
+            '&page' +
+            page +
+            '&size' +
+            size,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+        }
+    )
+}
+
+export const filterUserCommon = (
+    name,
+    username,
+    email,
+    gender,
+    role,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterusers?name' +
+            name +
+            '&username' +
+            username +
+            '&email' +
+            email +
+            '&gender' +
+            gender +
+            '&role' +
+            role +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
             '&page' +
             page +
             '&size' +
@@ -192,7 +240,6 @@ const UserService = {
     changePassword,
     deleteUser,
     sendResetPasswordEmail,
-    filterUser,
     banUser,
     recoverUser,
     getClassJoinedStatistic,
@@ -201,6 +248,8 @@ const UserService = {
     getLearningStatistic,
     findAllNameExcept,
     resetPassword,
+    filterUserCommon,
+    filterUserAdmin,
 }
 
 export default UserService

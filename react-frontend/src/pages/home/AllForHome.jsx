@@ -10,7 +10,9 @@ import { ClassIcon } from '../../components/icons'
 
 function AllForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
+
     const search = searchParams.get('search')
+    const author = searchParams.get('author')
 
     const [sets, setSets] = useState([])
     const [classes, setClasses] = useState([])
@@ -29,8 +31,8 @@ function AllForHome() {
                     '=0',
                     '=1',
                     '=0',
-                    `${searchKey ? '=' + searchKey : ''}`,
-                    '',
+                    `${!author && searchKey ? '=' + searchKey : ''}`,
+                    `${author ? `=${author}` : ''}`,
                     '',
                     '',
                     '',
@@ -61,7 +63,8 @@ function AllForHome() {
                 await ClassService.getFilterList(
                     '',
                     '=0',
-                    `${searchKey ? '=' + searchKey : ''}`,
+                    `${!author && searchKey ? '=' + searchKey : ''}`,
+                    `${author ? `=${author}` : ''}`,
                     '',
                     '',
                     '',
@@ -69,9 +72,8 @@ function AllForHome() {
                     '',
                     '',
                     '',
-                    '',
-                    '',
-                    ''
+                    '=1',
+                    '=2'
                 )
             ).data.list
             setClasses(temp)
@@ -89,20 +91,12 @@ function AllForHome() {
         setLoadingUsers(true)
         try {
             const temp = (
-                await UserService.filterUser(
+                await UserService.filterUserCommon(
                     '',
-                    `${searchKey ? '=' + searchKey : ''}`,
-                    '',
+                    `${searchKey || author ? `=${searchKey || author}` : ''}`,
                     '',
                     '',
                     '=tutor,learner',
-                    '',
-                    '',
-                    '=active,pending',
-                    '',
-                    '',
-                    '',
-                    '',
                     '',
                     '',
                     '=1',
@@ -126,7 +120,7 @@ function AllForHome() {
         fetchClassesData(search ? search : '')
         fetchUsersData(search ? search : '')
         setLoading(false)
-    }, [search])
+    }, [search, author])
 
     useEffect(() => {
         if (loading === true && document.getElementById('searchHomeBtn')) {
@@ -340,7 +334,12 @@ function AllForHome() {
                                 key={user?.id}
                             >
                                 <div className="set-item h-100">
-                                    <Link to={``}>
+                                    <Link
+                                        to={{
+                                            pathname: '',
+                                            search: `?author=${user?.username}`,
+                                        }}
+                                    >
                                         <div className="set-body">
                                             <div className="d-flex align-items-center">
                                                 <div
