@@ -149,13 +149,27 @@ public class ClassController {
         }
     }
 
-    @PostMapping("/assignstudyset/{classId}")
-    public ResponseEntity<?> addStudySetToClass(@PathVariable int classId, @RequestBody StudySet studySet) {
+    @GetMapping("/listclassstudyset")
+    public ResponseEntity<?> getFilterClassStudySet(@RequestParam(value = "studysetassignid", required = false) Optional<Integer> studysetassignid,
+                                                    @RequestParam(value = "studysetnotassignid", required = false) Optional<Integer> studysetnotassignid,
+                                                    @RequestParam(value = "search", required = false) String search,
+                                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                    @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
     try {
-        return ResponseEntity.ok(classService.AssignStudySet(classId, studySet));
+        return ResponseEntity.ok(classService.getFilterClassStudySet(search,studysetassignid.orElse(0),studysetnotassignid.orElse(0),page,size));
     } catch(ResourceNotFroundException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+    }
+
+    @PostMapping("/assignstudyset")
+    public ResponseEntity<?> addStudySetToClass(@RequestParam(value = "classid", required = false) int classid,
+                                                @RequestParam(value = "studysetid", required = false) int  studysetid) {
+        try {
+            return ResponseEntity.ok(classService.AssignStudyset(classid,studysetid));
+        } catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/resetclasscode/{id}")
