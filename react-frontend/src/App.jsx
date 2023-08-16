@@ -104,25 +104,6 @@ const App = () => {
     const { userToken } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
 
-    // ignore error
-    useEffect(() => {
-        window.addEventListener('error', (e) => {
-            console.log(e)
-            const resizeObserverErrDiv = document.getElementById(
-                'webpack-dev-server-client-overlay-div'
-            )
-            const resizeObserverErr = document.getElementById(
-                'webpack-dev-server-client-overlay'
-            )
-            if (resizeObserverErr) {
-                resizeObserverErr.setAttribute('style', 'display: none')
-            }
-            if (resizeObserverErrDiv) {
-                resizeObserverErrDiv.setAttribute('style', 'display: none')
-            }
-        })
-    }, [])
-
     const logOut = useCallback(async () => {
         try {
             dispatch(authLogout())

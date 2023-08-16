@@ -4,10 +4,14 @@ import { useSelector } from 'react-redux'
 
 import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
+import CommentService from '../../../services/CommentService'
 
 import ViewCard from './ViewCard'
 import DeleteSet from '../DeleteSet'
 import Pagination from '../../../components/Pagination'
+import AssignToClass from '../AssignToClass'
+import Comment from '../../../components/comment/Comment'
+import CardEditor from '../../../components/textEditor/CardEditor'
 
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import {
@@ -25,10 +29,6 @@ import {
     CloseIcon,
 } from '../../../components/icons'
 import './viewStudySet.css'
-import CommentService from '../../../services/CommentService'
-import Comment from '../../../components/comment/Comment'
-import CardEditor from '../../../components/textEditor/CardEditor'
-import AssignToClass from '../AssignToClass'
 
 const ViewStudySet = () => {
     const navigate = useNavigate()
@@ -815,6 +815,7 @@ const ViewStudySet = () => {
             <AssignToClass
                 showAssignModal={showAssignModal}
                 setShowAssignModal={setShowAssignModal}
+                studySet={studySet}
                 userInfo={userInfo}
             />
         </div>

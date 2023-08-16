@@ -451,7 +451,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> filterUserCommon(String name, String username, String email, String gender, String[] role, String sortBy, String direction, int page, int size) {
-        String sql = "SELECT * FROM user WHERE role != 'ROLE_ADMIN' status != 'banned' AND status != 'deleted'";
+        String sql = "SELECT * FROM user WHERE role != 'ROLE_ADMIN' AND status != 'banned' AND status != 'deleted'";
         List<Object> params = new ArrayList<>();
 
         if(name!=null && !name.equals("")) {
