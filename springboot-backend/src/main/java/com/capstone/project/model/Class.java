@@ -62,7 +62,7 @@ public class Class {
     @JoinTable(
             name = "class_studyset",
             joinColumns = @JoinColumn(name = "class_id"),
-            inverseJoinColumns = @JoinColumn(name = "sudyset_id"))
+            inverseJoinColumns = @JoinColumn(name = "studyset_id"))
     Set<StudySet> studySets;
 
     private boolean is_deleted;

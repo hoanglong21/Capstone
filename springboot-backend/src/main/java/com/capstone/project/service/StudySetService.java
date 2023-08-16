@@ -38,5 +38,5 @@ public interface StudySetService {
 
     Map<String, Integer> countCardInSet(int studySetId, int userId);
 
-    Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size);
+    Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception;
 }
