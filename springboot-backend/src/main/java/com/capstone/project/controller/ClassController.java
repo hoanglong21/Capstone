@@ -172,6 +172,16 @@ public class ClassController {
         }
     }
 
+    @PostMapping("/unassignstudyset")
+    public ResponseEntity<?> unAssignStudySet(@RequestParam(value = "classid", required = false) int classid,
+                                                @RequestParam(value = "studysetid", required = false) int  studysetid) {
+        try {
+            return ResponseEntity.ok(classService.UnassignStudyset(classid,studysetid));
+        } catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PostMapping("/resetclasscode/{id}")
     public ResponseEntity<?> ResetClassCode(@PathVariable int id){
         try {

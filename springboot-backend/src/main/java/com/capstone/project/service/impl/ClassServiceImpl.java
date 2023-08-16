@@ -9,6 +9,7 @@ import com.capstone.project.service.StudySetService;
 import com.capstone.project.service.UserService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import net.loomchild.segment.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -190,7 +191,7 @@ public class ClassServiceImpl implements ClassService {
 
 //        String query ="SELECT * FROM class WHERE 1=1";
 
-        String query = "SELECT c.*, COUNT(cl.user_id) AS member, COUNT(cs.sudyset_id) AS studyset,u.avatar,u.username as author " +
+        String query = "SELECT c.*, COUNT(CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) AS member,  (SELECT COUNT(sudyset_id) FROM class_studyset cs WHERE cs.class_id = c.id) AS studyset,u.avatar,u.username as author " +
                 "FROM class c " +
                 "LEFT JOIN class_learner cl ON c.id = cl.class_id " +
                 "LEFT JOIN class_studyset cs ON c.id = cs.class_id " +
@@ -381,11 +382,42 @@ public class ClassServiceImpl implements ClassService {
         StudySet studySet = studySetRepository.findById(studysetid)
                 .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + studysetid));
 
-        StudySet studySet_class = studySetService.createStudySet(studySet);
+//        StudySet studySet_class = studySetService.createStudySet(studySet);
 
-        classroom.getStudySets().add(studySet_class);
+        classroom.getStudySets().add(studySet);
         classRepository.save(classroom);
         return true;
+    }
+
+    @Transactional
+    @Override
+    public Boolean UnassignStudyset(int classid, int studysetid) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(classid)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + classid));
+
+        StudySet studySet = studySetRepository.findById(studysetid)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + studysetid));
+
+        classroom.getStudySets().remove(studySet);
+        deleteClassStudyset(studySet.getId());
+
+        classRepository.save(classroom);
+
+        return true;
+    }
+
+    @Transactional
+    public void deleteClassStudyset(int studysetid){
+
+        String query = "DELETE FROM class_studyset where sudyset_id = :studysetId";
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("studysetId", studysetid);
+
+        em.createNativeQuery(query)
+                .setParameter("studysetId", studysetid)
+                .executeUpdate();
+
     }
 
 
@@ -397,6 +429,7 @@ public class ClassServiceImpl implements ClassService {
         classroom.setClasscode(newCode);
         return classRepository.save(classroom);
     }
+
 
     @Override
     public Boolean CheckUserClass(int userId, int classId) throws ResourceNotFroundException {
