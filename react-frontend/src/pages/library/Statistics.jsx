@@ -29,12 +29,12 @@ function Statistics() {
     ]
 
     const day = [
-        'W1',
-        'W2',
-        'W3',
-        'W4',
-        'W5',
         'W6',
+        'W5',
+        'W4',
+        'W3',
+        'W2',
+        'W1',
     ]
 
     const optionsDataLabel = {
@@ -219,7 +219,7 @@ function Statistics() {
                     const tempDay = day[index]
                     const tempArr = temp[day.length - 1 - index]
                     tempSeriesDataHeapChart.push({
-                        name: day,
+                        name: tempDay,
                         data: tempArr,
                     })
                 }
