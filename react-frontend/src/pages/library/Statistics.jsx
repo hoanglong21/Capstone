@@ -29,13 +29,8 @@ function Statistics() {
     ]
 
     const day = [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
+        '',
+        '','','','','','',
     ]
 
     const optionsDataLabel = {
@@ -154,7 +149,7 @@ function Statistics() {
 
     const optionRadar = {
         xaxis: {
-            categories: ['Kanji', 'Vocabulary', 'Grammar'],
+            categories: ['Vocabulary', 'Kanji', 'Grammar'],
         },
     }
 
@@ -171,6 +166,7 @@ function Statistics() {
         },
         colors: ['#008FFB'],
     }
+    
 
     useEffect(() => {
         const fetchDataStudySetLearned = async () => {
@@ -201,16 +197,15 @@ function Statistics() {
                     .data
                 setAccess(temp)
                 var tempSeriesDataHeapChart = []
-                for (let index = 0; index < day.length; index++) {
-                    const tempDay = day[index]
+                for (let index = 0; index < temp.length; index++) {
                     const tempArr = temp[index]
                     tempSeriesDataHeapChart.push({
-                        name: tempDay,
+                        name: day,
                         data: tempArr,
                     })
                 }
                 setSeriesDataHeapChart(tempSeriesDataHeapChart)
-                console.log(seriesDataHeapChart)
+        
             } catch (error) {
                 console.error('Error fetching statistics:', error)
             }
