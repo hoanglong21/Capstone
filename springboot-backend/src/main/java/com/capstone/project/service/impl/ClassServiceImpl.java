@@ -409,7 +409,7 @@ public class ClassServiceImpl implements ClassService {
     @Transactional
     public void deleteClassStudyset(int studysetid){
 
-        String query = "DELETE FROM class_studyset where sudyset_id = :studysetId";
+        String query = "DELETE FROM class_studyset where studyset_id = :studysetId";
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("studysetId", studysetid);
