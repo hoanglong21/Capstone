@@ -192,7 +192,7 @@ public class ClassServiceImpl implements ClassService {
 
 //        String query ="SELECT * FROM class WHERE 1=1";
 
-        String query = "SELECT c.*, COUNT(CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) AS member,  (SELECT COUNT(sudyset_id) FROM class_studyset cs WHERE cs.class_id = c.id) AS studyset,u.avatar,u.username as author " +
+        String query = "SELECT c.*, COUNT(CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) AS member,  (SELECT COUNT(studyset_id) FROM class_studyset cs WHERE cs.class_id = c.id) AS studyset,u.avatar,u.username as author " +
                 "FROM class c " +
                 "LEFT JOIN class_learner cl ON c.id = cl.class_id " +
                 "LEFT JOIN class_studyset cs ON c.id = cs.class_id " +
@@ -327,7 +327,7 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Map<String, Object> getFilterClassStudySet(String search, int studysetassigned, int studysetnotassigned, int page, int size) throws ResourceNotFroundException {
+    public Map<String, Object> getFilterClassStudySet(String search, int studysetassigned, int studysetnotassigned,int authorid, int page, int size) throws ResourceNotFroundException {
 
         int offset = (page - 1) * size;
 
@@ -338,18 +338,23 @@ public class ClassServiceImpl implements ClassService {
         Map<String, Object> parameters = new HashMap<>();
 
         if (studysetassigned != 0) {
-            query += " AND EXISTS (SELECT 1 FROM class_studyset cs WHERE cs.class_id = c.id AND cs.sudyset_id = :studysetassigned)";
+            query += " AND EXISTS (SELECT 1 FROM class_studyset cs WHERE cs.class_id = c.id AND cs.studyset_id = :studysetassigned)";
             parameters.put("studysetassigned", studysetassigned);
         }
 
         if (studysetnotassigned != 0) {
-            query += " AND NOT EXISTS (SELECT 1 FROM class_studyset cs WHERE cs.class_id = c.id AND cs.sudyset_id = :studysetnotassigned)";
+            query += " AND NOT EXISTS (SELECT 1 FROM class_studyset cs WHERE cs.class_id = c.id AND cs.studyset_id = :studysetnotassigned)";
             parameters.put("studysetnotassigned", studysetnotassigned);
         }
 
         if (search != null && !search.isEmpty()) {
             query += "  AND class_name LIKE :search";
             parameters.put("search", "%" + search + "%");
+        }
+
+        if (authorid != 0) {
+            query += " AND author_id = :authorId";
+            parameters.put("authorId", authorid);
         }
 
 

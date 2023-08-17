@@ -418,13 +418,13 @@ public class ClassServiceTest {
 
 
     @Order(12)
-    @ParameterizedTest(name = "index => search{0}, studysetassignedId={1},studysetnotassignedId{2}, page{3},size{4}")
+    @ParameterizedTest(name = "index => search{0}, studysetassignedId={1},studysetnotassignedId{2},authoriId{3}, page{4},size{5}")
     @CsvSource({
-            "quantruong,1,2,1,5 ",
-            "quantruong,1,1,1,5 ",
+            "quantruong,1,2,1,1,5 ",
+            "quantruong,1,1,2,1,5 ",
 
     })
-    public void testGetFilterClassStudySet(String search, int studysetassignedId, int studysetnotassignedId, int page, int size  ) throws ResourceNotFroundException {
+    public void testGetFilterClassStudySet(String search, int studysetassignedId, int studysetnotassignedId,int authorId, int page, int size  ) throws ResourceNotFroundException {
 
 
         Class classroom = Class.builder()
@@ -441,7 +441,7 @@ public class ClassServiceTest {
         when(mockedQuery.getResultList()).thenReturn(List.of(classroom));
 
         // Gọi hàm kiểm thử
-        Map<String, Object> result = classServiceImpl.getFilterClassStudySet(search, studysetassignedId, studysetnotassignedId, page, size);
+        Map<String, Object> result = classServiceImpl.getFilterClassStudySet(search, studysetassignedId, studysetnotassignedId,authorId, page, size);
         assertThat(result.get("list")).isEqualTo(mockedQuery.getResultList());
     }
 
