@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.dto.TestandClassLearnerDTO;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
@@ -17,11 +18,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -34,12 +35,15 @@ public class TestServiceTest {
 
     @Mock
     private TestRepository testRepository;
+    private TestLearnerRepository testLearnerRepository;
+    private TestResultRepository testResultRepository;
 
     @Mock
     private ClassLearnerRepository classLearnerRepository;
 
     @Mock
     private UserRepository userRepository;
+    private ClassRepository classRepository;
     @Mock
     private QuestionRepository questionRepository;
     @Mock
@@ -250,6 +254,198 @@ public class TestServiceTest {
         } catch (Exception e) {
             assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
         }
+    }
+
+    @Order(8)
+    @Test
+    public void testGetAllTestByClassId() {
+        int classId = 1;
+        List<com.capstone.project.model.Test> expectedTests = new ArrayList<>();
+
+        when(testRepository.getTestByClassroomId(classId)).thenReturn(expectedTests);
+
+        List<com.capstone.project.model.Test> result = testServiceImpl.getAllTestByClassId(classId);
+
+        assertEquals(expectedTests, result);
+        verify(testRepository, times(1)).getTestByClassroomId(classId);
+    }
+
+
+    @Order(9)
+    @Test
+    public void testGetNumAttemptTest() throws ResourceNotFroundException {
+        int testId = 1;
+        int classId = 2;
+        Object[] expectedResult = new Object[]{10L, 5L};
+
+        String query = "SELECT COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' AND tl.num_attempt = 1 THEN cl.user_id END),0) AS attempted,\n" +
+                "                 COALESCE(COUNT(DISTINCT CASE WHEN cl.status = 'enrolled' AND (tl.num_attempt IS NULL OR tl.num_attempt = 0) THEN cl.user_id END),0) AS notattempted\n" +
+                "           FROM class_learner cl \n" +
+                "           LEFT JOIN test t on t.class_id = cl.class_id " +
+                " LEFT JOIN test_learner tl ON cl.user_id = tl.user_id and tl.test_id = t.id where t.id = :testId " +
+                " AND cl.class_id = :classId";
+
+
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(anyString())).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter("testId", testId)).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter("classId", classId)).thenReturn(mockedQuery);
+        when(mockedQuery.getSingleResult()).thenReturn(expectedResult);
+
+        Map<String, Object> result = testServiceImpl.getNumAttemptTest(testId, classId);
+
+        assertEquals(expectedResult[0], result.get("attempted"));
+        assertEquals(expectedResult[1], result.get("notattempted"));
+        verify(em, times(1)).createNativeQuery(query);
+        verify(mockedQuery, times(1)).setParameter("testId", testId);
+        verify(mockedQuery, times(1)).setParameter("classId", classId);
+
+    }
+
+    @Order(10)
+    @Test
+    public void testGetNumAttempt() {
+        int testId = 1;
+        int userId = 2;
+        int expectedNumAttempt = 3;
+
+        String query = " SELECT MAX(tl.num_attempt) as num_attempt  from test_learner tl WHERE 1=1 " +
+                " AND test_id = :testId " +
+                " AND user_id = :userId";
+
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(query)).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(eq("testId"), any())).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(eq("userId"), any())).thenReturn(mockedQuery);
+        when(mockedQuery.getResultList()).thenReturn(Collections.singletonList(expectedNumAttempt));
+
+        Map<String, Object> result = testServiceImpl.getNumAttempt(testId, userId);
+
+        assertEquals(expectedNumAttempt, result.get("num_attempt"));
+        verify(em, times(1)).createNativeQuery(query);
+        verify(mockedQuery, times(1)).setParameter("testId", testId);
+        verify(mockedQuery, times(1)).setParameter("userId", userId);
+    }
+
+    @Order(11)
+    @ParameterizedTest(name = "index => username={0},mark{1},classid{2},authorid{3},testid={4}, direction{5}, " +
+            "sortBy{6}, page{7}, size{8}")
+    @CsvSource({
+            "quantruong,45,1,9,5,DESC,mark,1,5",
+            "ngocnguyen,15,2,8,5,DESC,mark,1,5",
+
+    })
+    public void testGetFilterTestLearner(String username,Double mark, int classId, int authorId,int testId, String direction,String sortby,int page, int size) {
+
+        int classLearnerId = 1;
+        Date createdDate = new Date();
+        String status = "enrolled";
+        Double markTest = 8.5;
+        Integer numAttempt = 1;
+        Date start = new Date();
+        Date end = new Date();
+
+
+        User user = new User();
+        Class classroom = new Class();
+        when(userRepository.findUserByUsername(username)).thenReturn(user);
+        when(classRepository.findClassById(classId)).thenReturn(classroom);
+        when(userRepository.findUserById(authorId)).thenReturn(user);
+
+
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(anyString())).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+        when(mockedQuery.setMaxResults(anyInt())).thenReturn(mockedQuery);
+
+        Object[] row = new Object[9];
+        row[0] = classLearnerId;
+        row[1] = createdDate;
+        row[2] = status;
+        row[3] = classId;
+        row[4] = authorId;
+        row[5] = markTest;
+        row[6] = numAttempt;
+        row[7] = start;
+        row[8] = end;
+
+        List<Object[]> results = Collections.singletonList(row);
+        when(mockedQuery.getResultList()).thenReturn(results);
+
+
+        List<TestandClassLearnerDTO> result = testServiceImpl.getFilterTestLearner(username, mark, classId, authorId, testId, direction, sortby, page, size);
+
+        assertEquals(1, result.size());
+        TestandClassLearnerDTO dto = result.get(0);
+        assertEquals(classroom, dto.getClassLearner().getClassroom());
+        assertEquals(user, dto.getClassLearner().getUser());
+
+        verify(userRepository, times(1)).findUserByUsername(username);
+        verify(classRepository, times(1)).findClassById(classId);
+        verify(em, times(1)).createNativeQuery(anyString());
+        verify(mockedQuery, times(1)).setParameter("testId", testId);
+        verify(mockedQuery, times(1)).setMaxResults(size);
+        // Đảm bảo getResultList được gọi một lần
+        verify(mockedQuery, times(2)).getResultList();
+    }
+
+    @Order(12)
+    @Test
+    public void testStartTest() {
+        int testId = 1;
+        int userId = 2;
+
+        TestLearner testLearner = new TestLearner();
+        when(testLearnerRepository.save(any(TestLearner.class))).thenReturn(testLearner);
+
+        Question question = new Question();
+        when(questionRepository.getQuestionByTestId(anyInt())).thenReturn(Collections.singletonList(question));
+
+        Answer answer = new Answer();
+        when(answerRepository.getAnswerByQuestionId(anyInt())).thenReturn(Collections.singletonList(answer));
+
+        Map<String, Object> result = testServiceImpl.startTest(testId, userId);
+
+        assertNotNull(result);
+        assertNotNull(result.get("testLearner"));
+        assertNotNull(result.get("questionList"));
+        verify(testLearnerRepository, times(1)).save(any(TestLearner.class));
+        verify(questionRepository, times(1)).getQuestionByTestId(testId);
+        verify(answerRepository, times(1)).getAnswerByQuestionId(question.getId());
+    }
+
+
+    @Order(13)
+    @Test
+    public void testEndTest() throws Exception {
+
+        TestLearner testLearner = new TestLearner();
+        testLearner.setId(1);
+        testLearner.setUser(User.builder().build());
+        testLearner.setTest(com.capstone.project.model.Test.builder().build());
+
+        TestResult testResult = new TestResult();
+        testResult.setTestLearner(testLearner);
+        testResult.setQuestion(new Question());
+        testResult.set_true(true);
+
+        List<TestResult> testResultList = Collections.singletonList(testResult);
+
+        when(testLearnerRepository.findById(anyInt())).thenReturn(Optional.of(testLearner));
+        when(testLearnerRepository.findByTestIdAndUserId(anyInt(), anyInt())).thenReturn(Collections.singletonList(testLearner));
+        when(questionRepository.findById(anyInt())).thenReturn(Optional.of(new Question()));
+
+
+        Map<String, Object> result = testServiceImpl.endTest(testResultList);
+
+        assertNotNull(result);
+        assertEquals(testResultList.get(0).getQuestion().getPoint(), result.get("result"));
+        assertEquals(testResultList.get(0).getQuestion().getPoint(), result.get("total"));
+        verify(testLearnerRepository, times(1)).findById(testResultList.get(0).getTestLearner().getId());
+        verify(testLearnerRepository, times(1)).findByTestIdAndUserId(testLearner.getUser().getId(), testLearner.getTest().getId());
+        verify(questionRepository, times(1)).findById(testResultList.get(0).getQuestion().getId());
+        verify(testLearnerRepository, times(1)).save(testLearner);
+        verify(testResultRepository, times(1)).saveAll(testResultList);
     }
 
 }
