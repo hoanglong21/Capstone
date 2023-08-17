@@ -275,7 +275,10 @@ const ViewStudySet = () => {
     return (
         <div className="container setPageContainer">
             <div className="setTitle">
-                <h2>{studySet?.title}</h2>
+                <h2>
+                    {studySet?.title}
+                    {studySet?._draft && ' (Draft)'}
+                </h2>
             </div>
             {/* Modes */}
             <div className="row mb-4">

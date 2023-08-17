@@ -63,7 +63,7 @@ const CreateSet = () => {
                             '',
                             '=1',
                             '',
-                            `=${userInfo?.id}`,
+                            `=${userInfo?.username}`,
                             '',
                             `=${tempType}`,
                             '',
@@ -78,6 +78,7 @@ const CreateSet = () => {
                     ).data
                     if (listSets.totalItems > 0) {
                         temp = listSets.list[0]
+                        toggleShowDiscardMess()
                     } else {
                         temp = (
                             await StudySetService.createStudySet({
@@ -317,7 +318,7 @@ const CreateSet = () => {
                     deleted_date: '',
                 })
             ).data
-            await StudySetService.deleteStudySet(studySet.id)
+            await StudySetService.deleteHardStudySet(studySet.id)
             await deleteFile('', `${userInfo.username}/studySet/${studySet.id}`)
             setStudySet(newStudySet)
             setCards([])
