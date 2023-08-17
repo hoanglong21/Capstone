@@ -180,12 +180,11 @@ public class StudySetController {
             return ResponseEntity.ok(studySetService.getFilterListByClass(authorId, classId, search,assigned, sortBy, direction, page, size));
         }
         catch (Exception e) {
-            throw new Exception(e);
-//            if(e.getMessage().equals("Please provide valid page and size")) {
-//                return ResponseEntity.badRequest().body(e.getMessage());
-//            } else {
-//                return ResponseEntity.badRequest().body("Check the input again");
-//            }
+            if(e.getMessage().equals("Please provide valid page and size")) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            } else {
+                return ResponseEntity.badRequest().body("Check the input again");
+            }
         }
     }
 }
