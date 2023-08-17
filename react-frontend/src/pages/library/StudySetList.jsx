@@ -7,6 +7,9 @@ import StudySetService from '../../services/StudySetService'
 import Pagination from '../../components/Pagination'
 
 import {
+    ArrowSmallDownIcon,
+    ArrowSmallUpIcon,
+    CheckIcon,
     CloseIcon,
     DeleteIcon,
     DeleteSolidIcon,
@@ -33,6 +36,9 @@ const StudySetList = () => {
     const [loadingSearch, setLoadingSearch] = useState(true)
     const [searchInput, setSearchInput] = useState(search)
 
+    const [isDesc, setIsDesc] = useState(true)
+    const [isPublic, setIsPublic] = useState(-1)
+    const [isDraft, setIsDraft] = useState(true)
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState([])
 
@@ -47,8 +53,8 @@ const StudySetList = () => {
             const temp = (
                 await StudySetService.getFilterList(
                     '=0',
-                    '',
-                    '',
+                    `${isPublic == -1 ? '' : isPublic == 1 ? '=1' : '=0'}`,
+                    `${isDraft ? '=1' : ''}`,
                     `${searchKey ? '=' + searchKey : ''}`,
                     `=${userInfo.username}`,
                     '',
@@ -58,7 +64,7 @@ const StudySetList = () => {
                     '',
                     '',
                     '',
-                    '',
+                    `=${isDesc ? 'desc' : 'asc'}`,
                     `=${page}`,
                     `=10`
                 )
@@ -121,7 +127,7 @@ const StudySetList = () => {
         if (userInfo.username) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search, page])
+    }, [userInfo, search, page, isDesc, isPublic, isDraft])
 
     useEffect(() => {
         if (isDelete === true) {
@@ -201,46 +207,90 @@ const StudySetList = () => {
                     </div>
                 ) : (
                     <div>
-                        <form className="sets-search mb-4 d-flex align-items-center">
-                            <input
-                                className="search-control flex-grow-1"
-                                placeholder="Search your sets"
-                                type="text"
-                                value={searchInput || ''}
-                                readOnly={loading}
-                                onChange={(event) =>
-                                    setSearchInput(event.target.value)
-                                }
-                            ></input>
-                            {searchInput && (
-                                <button
-                                    className="btn btn-outline-secondary px-2"
-                                    type="button"
-                                    onClick={() => {
-                                        setSearchInput('')
-                                        if (search != '') {
-                                            setSearchParams({
-                                                search: '',
-                                            })
-                                        }
+                        <div className="row d-flex align-items-center mb-4">
+                            <div className="col-5 d-flex align-items-center">
+                                <select
+                                    className="form-select sets-select py-2 me-2"
+                                    aria-label="Default select example"
+                                    value={isPublic || 0}
+                                    onChange={(event) => {
+                                        setIsPublic(event.target.value)
                                     }}
                                 >
-                                    <CloseIcon />
+                                    <option value={-1}>All access</option>
+                                    <option value={1}>Public</option>
+                                    <option value={0}>Private</option>
+                                </select>
+                                <button
+                                    className="btn btn-light p-2 me-2"
+                                    onClick={() => {
+                                        setIsDesc(!isDesc)
+                                    }}
+                                >
+                                    {isDesc ? (
+                                        <ArrowSmallDownIcon />
+                                    ) : (
+                                        <ArrowSmallUpIcon />
+                                    )}
                                 </button>
-                            )}
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                onClick={(event) => {
-                                    event.preventDefault()
-                                    setSearchParams({
-                                        search: searchInput,
-                                    })
-                                }}
-                            >
-                                <SearchIcon />
-                            </button>
-                        </form>
+                                <button
+                                    className="btn btn-light p-2 d-flex align-items-center"
+                                    onClick={() => {
+                                        setIsDraft(!isDraft)
+                                    }}
+                                >
+                                    <span className="me-1">Only draft</span>
+                                    {isDraft ? (
+                                        <CheckIcon size="1.1rem" />
+                                    ) : (
+                                        <CloseIcon size="1.1rem" />
+                                    )}
+                                </button>
+                            </div>
+                            <div className="col-7">
+                                <form className="sets-search d-flex align-items-center mb-0">
+                                    <input
+                                        className="search-control flex-grow-1"
+                                        placeholder="Search your sets"
+                                        type="text"
+                                        value={searchInput || ''}
+                                        readOnly={loading}
+                                        onChange={(event) =>
+                                            setSearchInput(event.target.value)
+                                        }
+                                    ></input>
+                                    {searchInput && (
+                                        <button
+                                            className="btn btn-outline-secondary px-2"
+                                            type="button"
+                                            onClick={() => {
+                                                setSearchInput('')
+                                                if (search != '') {
+                                                    setSearchParams({
+                                                        search: '',
+                                                    })
+                                                }
+                                            }}
+                                        >
+                                            <CloseIcon />
+                                        </button>
+                                    )}
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        onClick={(event) => {
+                                            event.preventDefault()
+                                            setSearchParams({
+                                                search: searchInput,
+                                            })
+                                        }}
+                                    >
+                                        <SearchIcon />
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
                         {loadingSearch ? (
                             <div className="d-flex justify-content-center">
                                 <div
