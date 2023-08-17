@@ -318,7 +318,7 @@ const CreateSet = () => {
                     deleted_date: '',
                 })
             ).data
-            await StudySetService.deleteStudySet(studySet.id)
+            await StudySetService.deleteHardStudySet(studySet.id)
             await deleteFile('', `${userInfo.username}/studySet/${studySet.id}`)
             setStudySet(newStudySet)
             setCards([])

@@ -26,6 +26,14 @@ const deleteStudySet = (id) => {
     })
 }
 
+const deleteHardStudySet = (id) => {
+    return axios.delete(API_BASE_URL + '/deletestudysets/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 const getStudySetById = (id) => {
     return axios.get(API_BASE_URL + '/studysets/' + id)
 }
@@ -184,6 +192,7 @@ const StudySetService = {
     countCardInSet,
     getLearningStudySetId,
     getFilterListByClass,
+    deleteHardStudySet,
 }
 
 export default StudySetService
