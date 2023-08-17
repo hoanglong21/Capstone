@@ -81,6 +81,17 @@ public class StudySetController {
         }
     }
 
+    @GetMapping("/recoverstudysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> recoverStudySet(@PathVariable int id) {
+        try {
+            studySetService.recoverStudySet(id);
+            return ResponseEntity.ok("Recover successfully");
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/checkstudyset/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> checkStudySet(@PathVariable int id) {

@@ -109,6 +109,16 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
+    public Boolean recoverStudySet(int id) throws ResourceNotFroundException {
+        StudySet studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
+        studySet.set_deleted(false);
+        studySet.setDeleted_date(null);
+        studySetRepository.save(studySet);
+        return true;
+    }
+
+    @Override
     public List<Integer> checkBlankCard(int id) throws ResourceNotFroundException {
         StudySet studySet = studySetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));

@@ -22,6 +22,8 @@ public interface StudySetService {
 
     Boolean deleteHardStudySet(int id) throws ResourceNotFroundException;
 
+    Boolean recoverStudySet( int id) throws ResourceNotFroundException;
+
 //    ResponseEntity<Map<String, Object>> getAllEmployeesFilterAndPagination(String id, int page, int size);
 
     List<Integer> checkBlankCard(int id) throws ResourceNotFroundException;
