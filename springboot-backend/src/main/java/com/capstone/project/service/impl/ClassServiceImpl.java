@@ -127,20 +127,22 @@ public class ClassServiceImpl implements ClassService {
 
     public void notificationRestoredClass(Class classroom) {
 
-        Notification notification = new Notification();
-        notification.setContent("Class '" + classroom.getClass_name() + "' has been restored.");
+
 
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
 
         List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
         for (ClassLearner classLearner : classLearnerList) {
+            if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setContent("Class '" + classroom.getClass_name() + "' has been restored.");
+                notification.setDatetime(date);
 
-            notification.setDatetime(date);
+                notification.setUser(classLearner.getUser());
 
-            notification.setUser(classLearner.getUser());
-            
-            notificationRepository.save(notification);
+                notificationRepository.save(notification);
+            }
         }
     }
 
@@ -158,15 +160,13 @@ public class ClassServiceImpl implements ClassService {
     }
 
     private void notificationForDeletedClass(Class classroom) {
-        // Create a notification with appropriate content
-        Notification notification = new Notification();
-        notification.setContent("Your Class " + classroom.getClass_name() + "' has been deleted.");
-
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
         List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
         for(ClassLearner classLearner : classLearnerList){
             if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setContent("Your Class " + classroom.getClass_name() + "' has been deleted.");
                 notification.setUser(classLearner.getUser());
                 notification.setDatetime(date);
 
