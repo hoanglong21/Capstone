@@ -261,7 +261,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Override
-    public Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
+    public Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
         if(page<=0 || size<=0) {
             throw new Exception("Please provide valid page and size");
         }
@@ -270,9 +270,11 @@ public class StudySetServiceImpl implements StudySetService {
 
         String query = "";
         if(isAssigned==true) {
-            query = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") ";
+            query = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") " +
+                    " AND author_id = " + authorId + " ";
         } else {
-            query = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") ";
+            query = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") " +
+                    " AND author_id = " + authorId + " ";
         }
 
         Map<String, Object> parameters = new HashMap<>();
