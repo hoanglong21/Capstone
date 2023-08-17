@@ -99,6 +99,7 @@ import Results from './pages/class/test/Results'
 import ReplyFeedback from './pages/admin/ReplyFeedback'
 import UserProtectedRoute from './pages/protectedRoute/UserProrectedRoute'
 import AdminProtectedRoute from './pages/protectedRoute/AdminProrectedRoute'
+import Sets from './pages/class/Sets'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -222,6 +223,10 @@ const App = () => {
                             {/* Class */}
                             <Route path="class/:id" element={<ClassLayout />}>
                                 <Route index element={<Stream />} />
+                                <Route
+                                    path="sets"
+                                    element={<Sets />}
+                                />
                                 <Route
                                     path="assignments"
                                     element={<AssignmentList />}

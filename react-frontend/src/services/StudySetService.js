@@ -42,6 +42,34 @@ const getAllStudySetByUser = (username) => {
     return axios.get(API_BASE_URL + '/studysetAuthor/' + username)
 }
 
+const getFilterListByClass = (
+    search,
+    classId,
+    assigned,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterstudysetsclass/?search' +
+            search +
+            '&class_id' +
+            classId +
+            '&assigned' +
+            assigned +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
+
 const getFilterList = (
     is_deleted,
     is_public,
@@ -152,6 +180,7 @@ const StudySetService = {
     getQuizByStudySetId,
     countCardInSet,
     getLearningStudySetId,
+    getFilterListByClass,
 }
 
 export default StudySetService

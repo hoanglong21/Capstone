@@ -4,6 +4,7 @@ import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 
 import ClassService from '../../services/ClassService'
+import StudySetService from '../../services/StudySetService'
 
 import {
     AddIcon,
@@ -13,16 +14,16 @@ import {
 } from '../../components/icons'
 import Pagination from '../../components/Pagination'
 
-const AssignToClass = ({
+const AssignSets = ({
     showAssignModal,
     setShowAssignModal,
-    studySet,
+    classroom,
     userInfo,
     setShowToast,
     setToastMess,
 }) => {
-    const [assignClass, setAssignClass] = useState([])
-    const [notAssignClass, setNotAssignClass] = useState([])
+    const [assignSets, setAssignSets] = useState([])
+    const [notAssignSets, setNotAssignSets] = useState([])
     const [search, setSearch] = useState('')
     const [searchInput, setSearchInput] = useState('')
 
@@ -37,18 +38,20 @@ const AssignToClass = ({
     const fetchAssign = async () => {
         setLoading(true)
         try {
-            const tempAssignClass = (
-                await ClassService.getFilterClassStudySet(
-                    `=${studySet.id}`,
-                    '',
+            const tempAssignSets = (
+                await StudySetService.getFilterListByClass(
                     `${search ? `=${search}` : ''}`,
+                    `=${classroom.id}`,
+                    '=1',
+                    '',
+                    '',
                     `=${page}`,
                     '=5'
                 )
             ).data
             setPage(1)
-            setTotalItems(tempAssignClass.totalItems)
-            setAssignClass(tempAssignClass.list)
+            setTotalItems(tempAssignSets.totalItems)
+            setAssignSets(tempAssignSets.list)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -62,18 +65,20 @@ const AssignToClass = ({
     const fetchNot = async () => {
         setLoadingNot(true)
         try {
-            const tempNotAssignClass = (
-                await ClassService.getFilterClassStudySet(
-                    '',
-                    `=${studySet.id}`,
+            const tempNotAssignSets = (
+                await StudySetService.getFilterListByClass(
                     `${search ? `=${search}` : ''}`,
-                    `=${pageNot}`,
+                    `=${classroom.id}`,
+                    '=0',
+                    '',
+                    '',
+                    `=${page}`,
                     '=5'
                 )
             ).data
             setPageNot(1)
-            setTotalItemsNot(tempNotAssignClass.totalItems)
-            setNotAssignClass(tempNotAssignClass.list)
+            setTotalItemsNot(tempNotAssignSets.totalItems)
+            setNotAssignSets(tempNotAssignSets.list)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -85,24 +90,24 @@ const AssignToClass = ({
     }
 
     useEffect(() => {
-        if (userInfo?.id && studySet?.id) {
+        if (userInfo?.id && classroom?.id) {
             fetchAssign()
         }
-    }, [userInfo, studySet, page, search])
+    }, [userInfo, classroom, page, search])
 
     useEffect(() => {
-        if (userInfo?.id && studySet?.id) {
+        if (userInfo?.id && classroom?.id) {
             fetchNot()
         }
-    }, [userInfo, studySet, pageNot, search])
+    }, [userInfo, classroom, pageNot, search])
 
-    const handleAssign = (classroom, index) => {
+    const handleAssign = (studySet, index) => {
         try {
             ClassService.addStudySetToClass(classroom.id, studySet.id)
-            setAssignClass([...assignClass, classroom])
-            var tempNot = [...notAssignClass]
+            setAssignSets([...assignSets, studySet])
+            var tempNot = [...notAssignSets]
             tempNot.splice(index, 1)
-            setNotAssignClass([...tempNot])
+            setNotAssignSets([...tempNot])
             setToastMess(
                 `Successfully assign ${studySet.title} to ${classroom.class_name}`
             )
@@ -116,13 +121,13 @@ const AssignToClass = ({
         }
     }
 
-    const handleUnassign = (classroom, index) => {
+    const handleUnassign = (studySet, index) => {
         try {
             ClassService.unAssignStudySet(classroom.id, studySet.id)
-            setNotAssignClass([...notAssignClass, classroom])
-            var temp = [...assignClass]
+            setNotAssignSets([...notAssignSets, studySet])
+            var temp = [...assignSets]
             temp.splice(index, 1)
-            setAssignClass([...temp])
+            setAssignSets([...temp])
             setToastMess(
                 `Successfully unassign ${studySet.title} from ${classroom.class_name}`
             )
@@ -138,7 +143,7 @@ const AssignToClass = ({
 
     return (
         <Modal
-            className="assignToClassModal mt-5"
+            className="AssignSetsModal mt-5"
             size="lg"
             show={showAssignModal}
             onHide={() => setShowAssignModal(false)}
@@ -197,17 +202,17 @@ const AssignToClass = ({
                                     </span>
                                 </div>
                             </div>
-                        ) : assignClass?.length > 0 ? (
+                        ) : assignSets?.length > 0 ? (
                             <div>
-                                {assignClass?.map((classroom, index) => (
+                                {assignSets?.map((studySet, index) => (
                                     <button
                                         key={index}
                                         className="assignClass_btn d-flex align-items-center justify-content-between"
                                         onClick={() =>
-                                            handleUnassign(classroom, index)
+                                            handleUnassign(studySet, index)
                                         }
                                     >
-                                        <span>{classroom?.class_name}</span>
+                                        <span>{studySet?.title}</span>
                                         <MinusIcon
                                             size="1.5rem"
                                             strokeWidth="2"
@@ -227,13 +232,14 @@ const AssignToClass = ({
                             </div>
                         ) : search ? (
                             <div>No matching found.</div>
-                        ) : assignClass.length > 0 ||
-                          notAssignClass.length > 0 ? (
-                            <div>
-                                This set has not been assigned to any class.
-                            </div>
+                        ) : assignSets.length > 0 ||
+                          notAssignSets.length > 0 ? (
+                            <div>This class doesn't have any sets yet</div>
                         ) : (
-                            <div>You don't have any class to unassign.</div>
+                            <div>
+                                You don't have any study sets to assign to this
+                                class.
+                            </div>
                         )}
                     </Tab>
                     <Tab eventKey="notAssigned" title="Not assigned">
@@ -245,17 +251,17 @@ const AssignToClass = ({
                                     </span>
                                 </div>
                             </div>
-                        ) : notAssignClass?.length > 0 ? (
+                        ) : notAssignSets?.length > 0 ? (
                             <div>
-                                {notAssignClass?.map((classroom, index) => (
+                                {notAssignSets?.map((studySet, index) => (
                                     <button
                                         key={index}
                                         className="assignClass_btn d-flex align-items-center justify-content-between"
                                         onClick={() => {
-                                            handleAssign(classroom, index)
+                                            handleAssign(studySet, index)
                                         }}
                                     >
-                                        <span>{classroom?.class_name}</span>
+                                        <span>{studySet?.title}</span>
                                         <AddIcon
                                             size="1.5rem"
                                             strokeWidth="2"
@@ -275,13 +281,17 @@ const AssignToClass = ({
                             </div>
                         ) : search ? (
                             <div>No matching found.</div>
-                        ) : assignClass.length > 0 ||
-                          notAssignClass.length > 0 ? (
+                        ) : assignSets.length > 0 ||
+                          notAssignSets.length > 0 ? (
                             <div>
-                                This set has been assigned to all your classes.
+                                All of your study sets have been assigned to
+                                this class.
                             </div>
                         ) : (
-                            <div>You don't have any class to assign.</div>
+                            <div>
+                                You don't have any study sets to assign to this
+                                class.
+                            </div>
                         )}
                     </Tab>
                 </Tabs>
@@ -289,4 +299,4 @@ const AssignToClass = ({
         </Modal>
     )
 }
-export default AssignToClass
+export default AssignSets
