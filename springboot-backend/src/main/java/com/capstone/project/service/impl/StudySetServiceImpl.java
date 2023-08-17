@@ -16,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -409,6 +411,19 @@ public class StudySetServiceImpl implements StudySetService {
         }
 
         return response;
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Run daily at midnight
+    private void performSetCleanup() {
+        List<Integer> listToDelete = studySetRepository.findListIdToDelete();
+
+        for (Integer id : listToDelete) {
+            try {
+                deleteHardStudySet(id);
+            } catch (ResourceNotFroundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
 }
