@@ -1474,3 +1474,78 @@ export const MinusIcon = ({
         </svg>
     )
 }
+
+export const ArrowSmallUpIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75"
+            />
+        </svg>
+    )
+}
+
+export const ArrowSmallDownIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m0 0l6.75-6.75M12 19.5l-6.75-6.75"
+            />
+        </svg>
+    )
+}
+
+export const CheckIcon = ({
+    className,
+    size = '1.5rem',
+    strokeWidth = '1.5',
+}) => {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth}
+            className={className}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 12.75l6 6 9-13.5"
+            />
+        </svg>
+    )
+}

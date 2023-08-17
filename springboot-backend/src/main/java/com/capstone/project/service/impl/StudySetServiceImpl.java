@@ -2,6 +2,7 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.dto.CardWrapper;
 import com.capstone.project.dto.StudySetResponse;
+import com.capstone.project.dto.UserFilterResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
@@ -13,8 +14,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -102,6 +107,16 @@ public class StudySetServiceImpl implements StudySetService {
             cardRepository.delete(card);
         }
         studySetRepository.delete(studySet);
+        return true;
+    }
+
+    @Override
+    public Boolean recoverStudySet(int id) throws ResourceNotFroundException {
+        StudySet studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
+        studySet.set_deleted(false);
+        studySet.setDeleted_date(null);
+        studySetRepository.save(studySet);
         return true;
     }
 
@@ -260,51 +275,56 @@ public class StudySetServiceImpl implements StudySetService {
         return result;
     }
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Override
     public Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
         if(page<=0 || size<=0) {
             throw new Exception("Please provide valid page and size");
         }
 
-        int offset = (page - 1) * size;
-
-        String query = "";
+        String sql = "";
         if(isAssigned==true) {
-            query = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") " +
+            sql = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
                     " AND author_id = " + authorId + " ";
         } else {
-            query = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM capstone.class_studyset WHERE class_id = " + classId +") " +
+            sql = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
                     " AND author_id = " + authorId + " ";
         }
-
-        Map<String, Object> parameters = new HashMap<>();
+        sql += " AND is_deleted = false AND is_draft = false AND is_public = true ";
+        List<Object> params = new ArrayList<>();
 
         if (search != null && !search.isEmpty()) {
-            query += " AND (title LIKE :search OR description LIKE :search) ";
-            parameters.put("search", "%" + search + "%");
+            sql += " AND (title LIKE ? OR description LIKE ?) ";
+            params.add("%" + search + "%");
+            params.add("%" + search + "%");
         }
 
         if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
-            query += " ORDER BY " + sortBy + " " + direction;
+            sql += " ORDER BY " + sortBy + " " + direction;
         }
 
-        Query q = em.createNativeQuery(query, "StudySetResponseCustomListMapping");
-        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            q.setParameter(entry.getKey(), entry.getValue());
-        }
+        // Count total items
+        String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS countQuery";
+        long totalItems = jdbcTemplate.queryForObject(countSql, Long.class, params.toArray());
 
-        int totalItems = q.getResultList().size();
+        // Apply pagination
+        int offset = (page - 1) * size;
+        sql += " LIMIT ? OFFSET ?";
+        params.add(size);
+        params.add(offset);
+
+        List<StudySet> userList =
+                jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(StudySet.class));
+
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
-        q.setFirstResult(offset);
-        q.setMaxResults(size);
-
-        List<StudySetResponse> resultList = q.getResultList();
-
         Map<String, Object> response = new HashMap<>();
-        response.put("list", resultList);
-        response.put("totalPages", totalPages);
+        response.put("list", userList);
+        response.put("currentPage", page);
         response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
 
         return response;
     }
@@ -391,6 +411,19 @@ public class StudySetServiceImpl implements StudySetService {
         }
 
         return response;
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Run daily at midnight
+    private void performSetCleanup() {
+        List<Integer> listToDelete = studySetRepository.findListIdToDelete();
+
+        for (Integer id : listToDelete) {
+            try {
+                deleteHardStudySet(id);
+            } catch (ResourceNotFroundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
 }

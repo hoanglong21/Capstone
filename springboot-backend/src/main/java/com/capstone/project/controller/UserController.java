@@ -103,13 +103,13 @@ public class UserController {
     }
 
     @GetMapping("/users/{username}/recover")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> recoverUser(@PathVariable("username") String username) {
         try {
             if(userService.recoverUser(username)) {
                 return ResponseEntity.ok("Recover successfully");
             } else {
-                return ResponseEntity.badRequest().body("Wait at least 7 days to recover");
+                return ResponseEntity.badRequest().body("Check again");
             }
         } catch (ResourceNotFroundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

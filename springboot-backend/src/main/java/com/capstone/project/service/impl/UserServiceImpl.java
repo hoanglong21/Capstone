@@ -133,25 +133,10 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
         }
-        Date today = new Date();
-        Date banned_date = user.getBanned_date();
-        if(banned_date != null) {
-            long diffInMillis = today.getTime() - banned_date.getTime();
-            long diffInDays = diffInMillis / (24 * 60 * 60 * 1000);
-            if(diffInDays<=7) {
-                user.setStatus("banned");
-                userRepository.save(user);
-                return false;
-            } else {
-                user.setStatus("active");
-                userRepository.save(user);
-                return true;
-            }
-        } else {
-            user.setStatus("active");
-            userRepository.save(user);
-            return true;
-        }
+        user.setDeleted_date(null);
+        user.setBanned_date(null);
+        user.setStatus("active");
+        return true;
     }
 
     @Override

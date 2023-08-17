@@ -94,9 +94,6 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     @Override
     public Map<String, String> CustomGetUserSettingByUserId(int id) throws ResourceNotFroundException {
-//        User user = userRepository.findById(id)
-//                .orElseThrow(() -> new ResourceNotFroundException("User not exist with id: " + id));
-
         List<UserSetting> customUserSettings = userSettingRepository.getByUserId(id);
         Map<String, String> customMap = new HashMap<>();
         for (UserSetting userSetting : customUserSettings) {
@@ -106,10 +103,10 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
 
         Map<String, String> userSettingMap = new HashMap<>();
-        userSettingMap.put("study reminder", "07:00");
-        userSettingMap.put("language", "vn");
-        userSettingMap.put("assignment due date reminder", "24");
-        userSettingMap.put("test due date reminder", "24");
+        userSettingMap.put("study reminder", "07:00"); // == "false"
+        userSettingMap.put("language", "en");
+        userSettingMap.put("assignment due date reminder", "24"); // == "false"
+        userSettingMap.put("test due date reminder", "24"); // == "false"
         userSettingMap.put("set added", "TRUE");
         userSettingMap.put("post added", "TRUE");
         userSettingMap.put("assignment assigned", "TRUE");
@@ -123,13 +120,13 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public UserSetting saveUserSettingCustom(int userId, int settingId, String newValue) {
         UserSetting userSetting = userSettingRepository.getUserSettingCustom(userId, settingId);
-        if(newValue==null || newValue.equals("")) {
+        if((newValue==null || newValue.equals("")) && userSetting!=null) {
             userSettingRepository.delete(userSetting);
             return null;
         }
         switch (settingId) {
             case 1:
-                if (!UserSettingValidation.isValidTimeFormat(newValue)) {
+                if (!UserSettingValidation.isValidTimeFormat(newValue) && !newValue.toLowerCase().equals("false")) {
                     throw new IllegalArgumentException("Invalid input for time format. Expected format: HH:mm");
                 }
                 break;
@@ -140,7 +137,7 @@ public class UserSettingServiceImpl implements UserSettingService {
                 break;
             case 3:
             case 4:
-                if (!UserSettingValidation.isValidInteger(newValue)) {
+                if (!UserSettingValidation.isValidInteger(newValue) && !newValue.toLowerCase().equals("false")) {
                     throw new IllegalArgumentException("Invalid input for integer format. Expected an integer value.");
                 }
                 break;

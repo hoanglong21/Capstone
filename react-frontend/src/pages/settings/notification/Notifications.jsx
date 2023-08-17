@@ -213,7 +213,7 @@ const Notifications = () => {
 
     return (
         <div className="noti-settings">
-            <h4 className='noti-h4'>Email Notification</h4>
+            <h4 className="noti-h4">Email Notification</h4>
             <div className="mt-4">
                 {/* successMess message */}
                 {successMess && (
@@ -233,6 +233,17 @@ const Notifications = () => {
                         id="studyReminder"
                         onChange={(event) => {
                             setIsStudyReminder(event.target.checked)
+                            if (event.target.checked) {
+                                setStudyReminder({
+                                    ...studyReminder,
+                                    value: '07:00',
+                                })
+                            } else {
+                                setStudyReminder({
+                                    ...studyReminder,
+                                    value: 'false',
+                                })
+                            }
                         }}
                     />
                     <label className="form-check-label" htmlFor="studyReminder">
@@ -270,6 +281,17 @@ const Notifications = () => {
                             id="assignmentReminder"
                             onChange={(event) => {
                                 setIsAssignDueDate(event.target.checked)
+                                if (event.target.checked) {
+                                    setAssignDueDate({
+                                        ...assignDueDate,
+                                        value: '24',
+                                    })
+                                } else {
+                                    setAssignDueDate({
+                                        ...assignDueDate,
+                                        value: 'false',
+                                    })
+                                }
                             }}
                         />
                         <label
@@ -314,6 +336,17 @@ const Notifications = () => {
                             id="testReminder"
                             onChange={(event) => {
                                 setIsTestDueDate(event.target.checked)
+                                if (event.target.checked) {
+                                    setTestDueDate({
+                                        ...testDueDate,
+                                        value: '24',
+                                    })
+                                } else {
+                                    setTestDueDate({
+                                        ...testDueDate,
+                                        value: 'false',
+                                    })
+                                }
                             }}
                         />
                         <label
@@ -353,7 +386,7 @@ const Notifications = () => {
                 </fieldset>
                 <fieldset className="form-check notification_formContainer mb-3 ps-0">
                     <legend>IN YOUR CLASS, RECEIVE EMAIL WHEN:</legend>
-                    <div className='noti-input'>
+                    <div className="noti-input">
                         <input
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
