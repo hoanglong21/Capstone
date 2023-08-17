@@ -47,8 +47,9 @@ public class TestServiceImpl  implements TestService {
 
 
     @Autowired
-    public TestServiceImpl(JavaMailSender mailSender, ClassLearnerRepository classLearnerRepository, ClassRepository classRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
+    public TestServiceImpl(JavaMailSender mailSender,EntityManager em, ClassLearnerRepository classLearnerRepository, ClassRepository classRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
         this.mailSender = mailSender;
+        this.em = em;
         this.classLearnerRepository = classLearnerRepository;
         this.classRepository = classRepository;
         this.userSettingRepository = userSettingRepository;

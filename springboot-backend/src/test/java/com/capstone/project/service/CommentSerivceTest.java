@@ -249,4 +249,32 @@ public class CommentSerivceTest {
         }
 
     }
+
+    @Order(11)
+    @Test
+    void testGetAllCommentByAssignmentId() {
+        List<Comment> comment = new ArrayList<>();
+        Comment comment1 = Comment.builder().content("Hello guys").build();
+        Comment comment2 = Comment.builder().content("Hello guys again").build();
+        comment.add(comment1);
+        comment.add(comment2);
+
+        when(commentRepository.getCommentByAssignmentId(any(Integer.class))).thenReturn(comment);
+        List<Comment> retrievedComments = commentServiceImpl.getAllCommentByAssignmentId(1);
+        assertThat(retrievedComments).isEqualTo(comment);
+    }
+
+    @Order(12)
+    @Test
+    void testGetAllCommentBySubmissionId() {
+        List<Comment> comment = new ArrayList<>();
+        Comment comment1 = Comment.builder().content("Hello guys").build();
+        Comment comment2 = Comment.builder().content("Hello guys again").build();
+        comment.add(comment1);
+        comment.add(comment2);
+
+        when(commentRepository.getCommentBySubmissionId(any(Integer.class))).thenReturn(comment);
+        List<Comment> retrievedComments = commentServiceImpl.getAllCommentBySubmisionId(1);
+        assertThat(retrievedComments).isEqualTo(comment);
+    }
 }

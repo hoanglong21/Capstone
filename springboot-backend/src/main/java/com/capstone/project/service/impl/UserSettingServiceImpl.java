@@ -106,10 +106,10 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
 
         Map<String, String> userSettingMap = new HashMap<>();
-        userSettingMap.put("study reminder", "07:00");
+        userSettingMap.put("study reminder", "07:00"); // == "false"
         userSettingMap.put("language", "vn");
-        userSettingMap.put("assignment due date reminder", "24");
-        userSettingMap.put("test due date reminder", "24");
+        userSettingMap.put("assignment due date reminder", "24"); // == "false"
+        userSettingMap.put("test due date reminder", "24"); // == "false"
         userSettingMap.put("set added", "TRUE");
         userSettingMap.put("post added", "TRUE");
         userSettingMap.put("assignment assigned", "TRUE");
@@ -123,6 +123,9 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public UserSetting saveUserSettingCustom(int userId, int settingId, String newValue) {
         UserSetting userSetting = userSettingRepository.getUserSettingCustom(userId, settingId);
+        if(settingId == 1 && newValue.toLowerCase().equals("false")) {
+
+        }
         if(newValue==null || newValue.equals("")) {
             userSettingRepository.delete(userSetting);
             return null;
