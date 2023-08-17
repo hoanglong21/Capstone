@@ -393,3 +393,8 @@ svg {
 .noFound {
     word-break: break-all;
 }
+
+/* ignore error */
+/* iframe {
+    display: none;
+} */

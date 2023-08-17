@@ -114,6 +114,48 @@ const getPostGrowth = (id) => {
     return axios.get(API_BASE_URL + '/statistic/postgrowth/' + id)
 }
 
+const getFilterClassStudySet = (
+    studysetassignid,
+    studysetnotassignid,
+    search,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/listclassstudyset?studysetassignid' +
+            studysetassignid +
+            '&studysetnotassignid' +
+            studysetnotassignid +
+            '&search' +
+            search +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
+}
+
+const addStudySetToClass = (classid, studysetid) => {
+    return axios.post(
+        API_BASE_URL +
+            '/assignstudyset?classid=' +
+            classid +
+            '&studysetid=' +
+            studysetid
+    )
+}
+
+const unAssignStudySet = (classid, studysetid) => {
+    return axios.post(
+        API_BASE_URL +
+            '/unassignstudyset?classid=' +
+            classid +
+            '&studysetid=' +
+            studysetid
+    )
+}
+
 const ClassService = {
     createClassroom,
     getFilterList,
@@ -129,6 +171,9 @@ const ClassService = {
     checkUserClassWaiting,
     getLeanerJoinedGrowth,
     getPostGrowth,
+    getFilterClassStudySet,
+    addStudySetToClass,
+    unAssignStudySet,
 }
 
 export default ClassService
