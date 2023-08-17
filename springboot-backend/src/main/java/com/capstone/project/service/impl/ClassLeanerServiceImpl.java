@@ -26,8 +26,9 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
 
     private final ClassLearnerRepository classLearnerRepository;
 
-    public ClassLeanerServiceImpl(ClassLearnerRepository classLearnerRepository) {
+    public ClassLeanerServiceImpl(ClassLearnerRepository classLearnerRepository,EntityManager em) {
         this.classLearnerRepository = classLearnerRepository;
+        this.em = em;
     }
 
     @Override
