@@ -43,6 +43,7 @@ const getAllStudySetByUser = (username) => {
 }
 
 const getFilterListByClass = (
+    authorId,
     search,
     classId,
     assigned,
@@ -53,7 +54,9 @@ const getFilterListByClass = (
 ) => {
     return axios.get(
         API_BASE_URL +
-            '/filterstudysetsclass/?search' +
+            '/filterstudysetsclass?author_id' +
+            authorId +
+            '&search' +
             search +
             '&class_id' +
             classId +

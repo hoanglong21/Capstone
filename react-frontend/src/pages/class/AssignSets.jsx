@@ -40,6 +40,7 @@ const AssignSets = ({
         try {
             const tempAssignSets = (
                 await StudySetService.getFilterListByClass(
+                    `=${userInfo?.id}`,
                     `${search ? `=${search}` : ''}`,
                     `=${classroom.id}`,
                     '=1',
@@ -67,6 +68,7 @@ const AssignSets = ({
         try {
             const tempNotAssignSets = (
                 await StudySetService.getFilterListByClass(
+                    `=${userInfo?.id}`,
                     `${search ? `=${search}` : ''}`,
                     `=${classroom.id}`,
                     '=0',
