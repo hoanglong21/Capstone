@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -49,7 +50,10 @@ public class AssignmentServiceTest {
     private SubmissionRepository submissionRepository;
 
     @Mock
-    private  AttachmentRepository attachmentRepository;
+    private AttachmentRepository attachmentRepository;
+
+    @Mock
+    private Query query;
 
     @Mock
     private CommentRepository commentRepository;
@@ -77,15 +81,15 @@ public class AssignmentServiceTest {
     @Order(2)
     @Test
     void testGetAllAssginmentByClassId() {
-      List<Assignment> assignments = new ArrayList<>();
-      Assignment assignment1 = Assignment.builder().instruction("test for all").title("assignment 1").build();
-      Assignment assignment2 = Assignment.builder().instruction("test for all").title("assignment 2").build();
-      assignments.add(assignment1);
-      assignments.add(assignment2);
+        List<Assignment> assignments = new ArrayList<>();
+        Assignment assignment1 = Assignment.builder().instruction("test for all").title("assignment 1").build();
+        Assignment assignment2 = Assignment.builder().instruction("test for all").title("assignment 2").build();
+        assignments.add(assignment1);
+        assignments.add(assignment2);
 
         when(assignmentRepository.getAssignmentByClassroomId(any(Integer.class))).thenReturn(assignments);
-         List<Assignment> retrievedAssignment = assignmentServiceImpl.getAllAssignmentByClassId(1);
-         assertThat(retrievedAssignment).isEqualTo(assignments);
+        List<Assignment> retrievedAssignment = assignmentServiceImpl.getAllAssignmentByClassId(1);
+        assertThat(retrievedAssignment).isEqualTo(assignments);
     }
 
     @Order(3)
@@ -94,7 +98,7 @@ public class AssignmentServiceTest {
             "1,3, Luyen thi JLPT N5,2023-7-1,2023-08-07,2023-08-30, On thi N3 ",
             "2,4, Luyen thi JLPT N4,2023-9-9,2023-08-07,2023-08-30, On thi N3 "
     })
-    public void testCreateAssignment(int userId,int classId,String instruction,String due_date,String modified_date,String start_date,String title){
+    public void testCreateAssignment(int userId, int classId, String instruction, String due_date, String modified_date, String start_date, String title) {
         try {
             Assignment assignment = Assignment.builder()
                     .user(User.builder().id(userId).build())
@@ -108,7 +112,7 @@ public class AssignmentServiceTest {
             when(assignmentRepository.save(any())).thenReturn(assignment);
             Assignment createdassignment = assignmentServiceImpl.createAssignment(assignment);
             assertThat(assignment).isEqualTo(createdassignment);
-        } catch (ParseException | ResourceNotFroundException e){
+        } catch (ParseException | ResourceNotFroundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -120,10 +124,10 @@ public class AssignmentServiceTest {
                 .instruction("test for all")
                 .title("assignment").build();
         when(assignmentRepository.findById(any())).thenReturn(Optional.ofNullable(assignment));
-        try{
+        try {
             Assignment getAssignment = assignmentServiceImpl.getAssignmentById(1);
             assertThat(getAssignment).isEqualTo(assignment);
-        }catch (ResourceNotFroundException e){
+        } catch (ResourceNotFroundException e) {
             e.printStackTrace();
         }
     }
@@ -135,29 +139,29 @@ public class AssignmentServiceTest {
             "1,3,2023-8-9, Luyen thi JLPT N5,2023-7-1,2023-8-7,2023-8-8, On thi N3 ",
             "2,4,2023-8-9, Luyen thi JLPT N4,2023-9-9,2023-8-7,2023-8-8, On thi N3 "
     })
-    void testUpdateAssignment(int userId,int classId, String created_date,String instruction,String due_date,String modified_date,String start_date,String title) {
-           try{
+    void testUpdateAssignment(int userId, int classId, String created_date, String instruction, String due_date, String modified_date, String start_date, String title) {
+        try {
 
-               Assignment assignment_new = Assignment.builder()
-                       .instruction("Luyen de")
-                       .title("Bt ngu phap N3")
-                       .build();
+            Assignment assignment_new = Assignment.builder()
+                    .instruction("Luyen de")
+                    .title("Bt ngu phap N3")
+                    .build();
 
-               Assignment assignment = Assignment.builder()
-                       .user(User.builder().id(userId).build())
-                       .classroom(Class.builder().id(classId).build())
-                       .created_date(dateFormat.parse(created_date))
-                       .instruction(instruction)
-                       .due_date(dateFormat.parse(due_date))
-                       .modified_date(dateFormat.parse(modified_date))
-                       .start_date(dateFormat.parse(start_date))
-                       .title(title)
-                       .build();
-               when(assignmentRepository.findById(any())).thenReturn(Optional.ofNullable(assignment_new));
-               when(assignmentRepository.save(any())).thenReturn(assignment);
-           }catch (Exception e){
-               e.printStackTrace();
-           }
+            Assignment assignment = Assignment.builder()
+                    .user(User.builder().id(userId).build())
+                    .classroom(Class.builder().id(classId).build())
+                    .created_date(dateFormat.parse(created_date))
+                    .instruction(instruction)
+                    .due_date(dateFormat.parse(due_date))
+                    .modified_date(dateFormat.parse(modified_date))
+                    .start_date(dateFormat.parse(start_date))
+                    .title(title)
+                    .build();
+            when(assignmentRepository.findById(any())).thenReturn(Optional.ofNullable(assignment_new));
+            when(assignmentRepository.save(any())).thenReturn(assignment);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Order(6)
@@ -239,22 +243,44 @@ public class AssignmentServiceTest {
 
 
         Query mockedQuery = mock(Query.class);
-        when(em.createNativeQuery(anyString(),eq(Assignment.class))).thenReturn(mockedQuery);
+        when(em.createNativeQuery(anyString(), eq(Assignment.class))).thenReturn(mockedQuery);
         when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
         when(mockedQuery.setMaxResults(anyInt())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(List.of(assignment));
 
 
-        try{
-            Map<String, Object> result = assignmentServiceImpl.getFilterAssignment(search,author,fromStart,toStart,fromCreated,toCreated,isDraft
-                    ,direction,sortBy,classid,page,size);
+        try {
+            Map<String, Object> result = assignmentServiceImpl.getFilterAssignment(search, author, fromStart, toStart, fromCreated, toCreated, isDraft
+                    , direction, sortBy, classid, page, size);
             assertThat(result.get("list")).isEqualTo(mockedQuery.getResultList());
         } catch (Exception e) {
             assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
         }
     }
-    
+
+
+    @Order(8)
+    @ParameterizedTest(name = "index => assignmentid={0},classid{1}")
+    @CsvSource({
+            "1,2",
+            "2,1",
+    })
+    public void testgetNumSubmitAssignment(int assignmentid, int classid) throws ResourceNotFroundException {
+
+        // Mock the behavior of EntityManager and Query
+        Mockito.when(em.createNativeQuery(anyString())).thenReturn(query);
+        Mockito.when(query.setParameter(anyString(), Mockito.any())).thenReturn(query);
+        Mockito.when(query.getSingleResult()).thenReturn(new Object[]{1L, 2L});
+
+        // Call the method to be tested
+        Map<String, Object> result = assignmentServiceImpl.getNumSubmitAssignment(assignmentid, classid);
+
+        // Verify the results
+        assertEquals(1L, result.get("submitted"));
+        assertEquals(2L, result.get("notsubmitted"));
     }
+
+}
 
 
 

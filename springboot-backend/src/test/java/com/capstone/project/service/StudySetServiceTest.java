@@ -256,7 +256,7 @@ public class StudySetServiceTest {
             "true, false, false, search text, 1, 123, authorName, 2023-01-01, 2023-12-31, 2023-01-01, 2023-12-31, sortByField, ASC, 1, -1",
             // Add more test cases in the same format
     })
-    void testGetFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, int authorId,
+    void testGetFilterList(Boolean isDeleted, Boolean isPublic, Boolean isDraft, String search, int type, String authorUsername,
                            String authorName, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                            String sortBy, String direction, int page, int size) {
         // Prepare mock responses
@@ -268,7 +268,7 @@ public class StudySetServiceTest {
 
         // Call the method to test
         try {
-            Map<String, Object> result = studySetServiceImpl.getFilterList(isDeleted, isPublic, isDraft, search, type, authorId,
+            Map<String, Object> result = studySetServiceImpl.getFilterList(isDeleted, isPublic, isDraft, search, type, authorUsername,
                     authorName, fromDeleted, toDeleted, fromCreated, toCreated, sortBy, direction, page, size);
             assertThat(result.get("list")).isEqualTo(mockedQuery.getResultList());
         } catch (Exception e) {
