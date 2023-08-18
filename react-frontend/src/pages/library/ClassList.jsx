@@ -211,78 +211,88 @@ const ClassList = () => {
                                 </div>
                             </div>
                         ) : (
-                            <div className="sets-list">
-                                {classes?.length === 0 && (
-                                    <p className="noFound">
-                                        No classes matching {search} found
-                                    </p>
-                                )}
-                                {classes?.map((classroom) => (
-                                    <div key={classroom.id}>
-                                        <div className="set-item mb-3">
-                                            <Link to={`/class/${classroom.id}`}>
-                                                <div className="set-body row mb-2">
-                                                    <div className="class-home term-count">
-                                                        {classroom?.member}{' '}
-                                                        member
-                                                    </div>
-                                                    <div className="class-home term-count">
-                                                        {classroom?.studyset}{' '}
-                                                        sets
-                                                    </div>
-                                                    <div
-                                                        className="set-author col d-flex "
-                                                        href="#"
-                                                    >
-                                                        <div className="author-avatar">
-                                                            <img
-                                                                src={
-                                                                    classroom?.avatar
-                                                                        ? classroom?.avatar
-                                                                        : defaultAvatar
-                                                                }
-                                                                alt="author avatar"
-                                                                className="w-100 h-100"
-                                                            />
+                            <div>
+                                <div className="sets-list mb-4">
+                                    {classes?.length === 0 && (
+                                        <p className="noFound">
+                                            No classes matching {search} found
+                                        </p>
+                                    )}
+                                    {classes?.map((classroom) => (
+                                        <div key={classroom.id}>
+                                            <div className="set-item mb-3">
+                                                <Link
+                                                    to={`/class/${classroom.id}`}
+                                                >
+                                                    <div className="set-body row mb-2">
+                                                        <div className="class-home term-count">
+                                                            {classroom?.member}{' '}
+                                                            member
                                                         </div>
-                                                        <span className="author-username ms-2">
-                                                            {classroom?.author}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="class-title set-title d-flex align-items-center">
-                                                        <ClassIcon className="me-2" />
-                                                        {classroom?.class_name}
-                                                    </div>
-                                                    <div className="col d-flex align-items-center">
-                                                        <p
-                                                            className="set-description m-0"
-                                                            style={{
-                                                                whiteSpace:
-                                                                    'pre-wrap',
-                                                            }}
-                                                        >
+                                                        <div className="class-home term-count">
                                                             {
-                                                                classroom?.description
-                                                            }
-                                                        </p>
+                                                                classroom?.studyset
+                                                            }{' '}
+                                                            sets
+                                                        </div>
+                                                        <div
+                                                            className="set-author col d-flex "
+                                                            href="#"
+                                                        >
+                                                            <div className="author-avatar">
+                                                                <img
+                                                                    src={
+                                                                        classroom?.avatar
+                                                                            ? classroom?.avatar
+                                                                            : defaultAvatar
+                                                                    }
+                                                                    alt="author avatar"
+                                                                    className="w-100 h-100"
+                                                                />
+                                                            </div>
+                                                            <span className="author-username ms-2">
+                                                                {
+                                                                    classroom?.author
+                                                                }
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </Link>
+                                                    <div className="row">
+                                                        <div className="class-title set-title d-flex align-items-center">
+                                                            <ClassIcon className="me-2" />
+                                                            {
+                                                                classroom?.class_name
+                                                            }
+                                                        </div>
+                                                        <div className="col d-flex align-items-center">
+                                                            <p
+                                                                className="set-description m-0"
+                                                                style={{
+                                                                    whiteSpace:
+                                                                        'pre-wrap',
+                                                                }}
+                                                            >
+                                                                {
+                                                                    classroom?.description
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
                                         </div>
-                                        {/* Pagination */}
-                                        <Pagination
-                                            className="mb-5"
-                                            currentPage={page}
-                                            totalCount={totalItems}
-                                            pageSize={10}
-                                            onPageChange={(page) => {
-                                                setPage(page)
-                                            }}
-                                        />
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+                                {/* Pagination */}
+                                <Pagination
+                                    className="mb-5"
+                                    currentPage={page}
+                                    totalCount={totalItems}
+                                    pageSize={10}
+                                    onPageChange={(page) => {
+                                        setPage(page)
+                                    }}
+                                />
                             </div>
                         )}
                     </div>

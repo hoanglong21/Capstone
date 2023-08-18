@@ -15,6 +15,7 @@ import { KanjiCard } from './KanjiCard'
 import styles from '../../../assets/styles/Form.module.css'
 import CardStyles from '../../../assets/styles/Card.module.css'
 import '../../../assets/styles/stickyHeader.css'
+import ClassService from '../../../services/ClassService'
 
 const CreateSet = () => {
     const navigate = useNavigate()
@@ -285,17 +286,33 @@ const CreateSet = () => {
         setStudySet({ ...studySet, [event.target.name]: event.target.value })
     }
 
-    const doUpdate = async () => {
-        setSaving(true)
+    const handleChangeAccess = async (event) => {
         setError('')
-        try {
-            if (studySet?._public === false && studySet?.classes.length > 0) {
+        if (userInfo?.role === 'ROLE_TUTOR' && event.target.value === 'false') {
+            const tempAssignClass = (
+                await ClassService.getFilterClassStudySet(
+                    `=${studySet.id}`,
+                    '',
+                    '',
+                    '=1',
+                    '=1'
+                )
+            ).data
+            if (tempAssignClass.totalItems > 0) {
                 setError(
                     'Study set cannot be changed to private if it is assigned to the class.'
                 )
                 document.body.scrollTop = document.documentElement.scrollTop = 0
                 return
             }
+        }
+        setStudySet({ ...studySet, [event.target.name]: event.target.value })
+        doUpdate()
+    }
+
+    const doUpdate = async () => {
+        setSaving(true)
+        try {
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -446,8 +463,7 @@ const CreateSet = () => {
                                 aria-label="public"
                                 name="_public"
                                 value={studySet._public}
-                                onChange={handleChange}
-                                onBlur={doUpdate}
+                                onChange={handleChangeAccess}
                             >
                                 <option value={true}>Public</option>
                                 <option value={false}>Private</option>

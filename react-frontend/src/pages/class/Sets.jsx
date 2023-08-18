@@ -218,7 +218,7 @@ const Sets = () => {
                             <div>No matching found.</div>
                         ) : (
                             <div>
-                                <div className="row">
+                                <div className="row mb-4">
                                     {sets.map((set) => (
                                         <div
                                             className="col-12 col-md-6 col-xl-4"
