@@ -28,11 +28,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
 
+    private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, JavaMailSender mailSender) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, JavaMailSender mailSender, JdbcTemplate jdbcTemplate) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.mailSender = mailSender;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -136,6 +139,7 @@ public class UserServiceImpl implements UserService {
         user.setDeleted_date(null);
         user.setBanned_date(null);
         user.setStatus("active");
+        userRepository.save(user);
         return true;
     }
 
@@ -312,13 +316,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Override
     public Map<String, Object> filterUser(String name, String username, String email,  String gender, String phone, String[] role, String address, String bio, String[] status,
                                  String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
-                                          String sortBy, String direction, int page, int size) {
+                                          String sortBy, String direction, int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
         String sql = "SELECT * FROM user WHERE 1=1";
         List<Object> params = new ArrayList<>();
 
@@ -435,7 +440,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> filterUserCommon(String name, String username, String email, String gender, String[] role, String sortBy, String direction, int page, int size) {
+    public Map<String, Object> filterUserCommon(String name, String username, String email, String gender, String[] role, String sortBy, String direction, int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
+
         String sql = "SELECT * FROM user WHERE role != 'ROLE_ADMIN' AND status != 'banned' AND status != 'deleted'";
         List<Object> params = new ArrayList<>();
 

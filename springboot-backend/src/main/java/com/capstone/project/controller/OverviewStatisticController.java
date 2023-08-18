@@ -20,7 +20,11 @@ public class OverviewStatisticController {
     @GetMapping("/overview/usergrowth")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getUserGrowth() {
-        return ResponseEntity.ok(overviewStatisticService.getUserGrowth());
+        try {
+            return ResponseEntity.ok(overviewStatisticService.getUserGrowth());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/overview/studysetgrowth")
@@ -42,7 +46,11 @@ public class OverviewStatisticController {
     @GetMapping("/overview/registernumber")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getRegisterNumber() {
-        return ResponseEntity.ok(overviewStatisticService.getRegisterNumber());
+        try {
+            return ResponseEntity.ok(overviewStatisticService.getRegisterNumber());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/overview/classnumber")

@@ -5,13 +5,13 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import java.util.List;
 
 public interface OverviewStatisticService {
-    List<Integer> getUserGrowth();
+    List<Integer> getUserGrowth() throws Exception;
 
     List<Integer> getStudySetGrowth() throws Exception;
 
     Integer getAccessNumber();
 
-    Integer getRegisterNumber();
+    Integer getRegisterNumber() throws Exception;
 
     Integer getClassNumber() throws ResourceNotFroundException;
 
