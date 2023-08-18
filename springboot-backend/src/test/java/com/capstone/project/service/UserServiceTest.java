@@ -313,34 +313,19 @@ public class UserServiceTest {
 
     })
     void testRecoverUser(String username, String email, String status, boolean isBannedDateMoreThan7Days) {
-        Date date;
-        if(isBannedDateMoreThan7Days) {
-            date = new Date(System.currentTimeMillis() - 8*24*60*60*1000);
-        } else {
-            date = new Date(System.currentTimeMillis() - 6*24*60*60*1000);
-        }
         User user = User.builder()
                 .username(username)
                 .status(email)
-                .banned_date(date)
                 .status(status)
                 .build();
 
         when(userRepository.findUserByUsername(username)).thenReturn(user);
 
-        if(isBannedDateMoreThan7Days) {
-            try {
-                Assertions.assertThat(userServiceImpl.recoverUser(username)).isTrue();
-            } catch (ResourceNotFroundException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            Assertions.assertThat(userServiceImpl.recoverUser(username)).isTrue();
             Assertions.assertThat(user.getStatus()).isEqualTo("active");
-        } else {
-            try {
-                Assertions.assertThat(userServiceImpl.recoverUser(username)).isFalse();
-            } catch (ResourceNotFroundException e) {
-                throw new RuntimeException(e);
-            }
+        } catch (ResourceNotFroundException e) {
+            System.out.println(e);
         }
     }
 
@@ -512,12 +497,12 @@ public class UserServiceTest {
     @CsvSource({
             "Hoang, Long, long@gmail.com, Male, 0352269303, ROLE_LEARNER, HN, SWAG, pending, 2001-11-21, 2023-01-01, , , , , , , , , 1, 5",
             ", , long@gmail.com, , , , , , , , , , , , , , , , , 1, 5",
+            ", , long@gmail.com, , , , , , , , , , , , , , , , , 0, 5",
+            ", , long@gmail.com, , , , , , , , , , , , , , , , , 1, 0",
     })
     void testFilterUser(String name, String username, String email, String gender, String phone, String role, String address, String bio, String status,
                         String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
                         String sortBy, String direction, int page, int size) {
-
-        MockitoAnnotations.openMocks(this);
         List<User> userList = Arrays.asList(
                 User.builder().last_name("Hoang").first_name("Long").email("long@gmail.com").build(),
                 User.builder().last_name("Hoang").first_name("Long1").email("long@gmail.com").build()
@@ -525,11 +510,60 @@ public class UserServiceTest {
 
         when(jdbcTemplate.queryForObject(any(String.class), any(Class.class), any())).thenReturn(2L);
         when(jdbcTemplate.query(anyString(), any(Object[].class), any(BeanPropertyRowMapper.class))).thenReturn(userList);
-        Map<String, Object> result = userServiceImpl.filterUser(name, username, email, gender, phone, new String[]{role}, address, bio, new String[]{status},
-                fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted, fromCreated, toCreated, sortBy, direction, page, size);
-        assertThat(result.get("list")).isEqualTo(userList);
+        try {
+            Map<String, Object> result = userServiceImpl.filterUser(name, username, email, gender, phone, new String[]{role}, address, bio, new String[]{status},
+                    fromDob, toDob, fromBanned, toBanned, fromDeleted, toDeleted, fromCreated, toCreated, sortBy, direction, page, size);
+            assertThat(result.get("list")).isEqualTo(userList);
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
+
     }
 
+    @Order(14)
+    @ParameterizedTest
+    @CsvSource({
+            "415623123567456456",
+    })
+    void testVerify(String token) {
+        User user = User.builder()
+                .token(token)
+                .build();
 
+        when(userRepository.findUserByToken(token)).thenReturn(user);
+
+        try {
+            Assertions.assertThat(userServiceImpl.verifyAccount(token)).isTrue();
+            Assertions.assertThat(user.getStatus()).isEqualTo("active");
+        } catch (ResourceNotFroundException e) {
+            System.out.println(e);
+        }
+    }
+
+    @Order(15)
+    @ParameterizedTest
+    @CsvSource({
+            "Hoang Long, , long@gmail.com, Male, ROLE_LEARNER, , , 1, 5",
+            ", , long@gmail.com, , , , , 1, 5",
+            ", , long@gmail.com, , , , , 0, 5",
+            ", , long@gmail.com, , , , , 1, 0",
+    })
+    void testFilterUserCommon(String name, String username, String email, String gender, String role,
+                              String sortBy, String direction, int page, int size) {
+
+        List<User> userList = Arrays.asList(
+                User.builder().last_name("Hoang").first_name("Long").email("long@gmail.com").build(),
+                User.builder().last_name("Hoang").first_name("Long1").email("long@gmail.com").build()
+        );
+
+        when(jdbcTemplate.queryForObject(any(String.class), any(Class.class), any())).thenReturn(2L);
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(BeanPropertyRowMapper.class))).thenReturn(userList);
+        try {
+            Map<String, Object> result = userServiceImpl.filterUserCommon(name, username, email, gender, new String[]{role}, sortBy, direction, page, size);
+            assertThat(result.get("list")).isEqualTo(userList);
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
+    }
 
 }

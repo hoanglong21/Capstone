@@ -37,8 +37,8 @@ public interface UserService {
 
     Map<String, Object> filterUser(String name, String username, String email, String gender, String phone, String[] role, String address, String bio, String[] status,
                                    String fromDob, String toDob, String fromBanned, String toBanned, String fromDeleted, String toDeleted, String fromCreated, String toCreated,
-                                   String sortBy, String direction, int page, int size);
+                                   String sortBy, String direction, int page, int size) throws Exception;
 
     Map<String, Object> filterUserCommon(String name, String username, String email, String gender, String[] role,
-                                         String sortBy, String direction, int page, int size);
+                                         String sortBy, String direction, int page, int size) throws Exception;
 }
