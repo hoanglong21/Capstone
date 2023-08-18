@@ -55,7 +55,7 @@ const TestDetails = () => {
                         await TestService.getNumAttempt(test_id, userInfo.id)
                     ).data.num_attempt
                     setNumAttempt(tempNumAttempt)
-                    if (tempNumAttempt > tempTest?.num_attemps) {
+                    if (tempNumAttempt >= tempTest?.num_attemps) {
                         setCanTest(false)
                     }
                 }
@@ -138,11 +138,8 @@ const TestDetails = () => {
                     <div className="d-flex align-items-center justify-content-between mb-2">
                         <div>
                             <div className="instruction_heading">
-                                {test?.title
-                                    ? test?.title
-                                    : test?._draft
-                                    ? 'Draft'
-                                    : '...'}
+                                {test?.title}
+                                {test?._draft ? ' (Draft)' : ''}
                             </div>
                             <div className="d-flex mt-1 instruction_info">
                                 <div>{test?.user?.username}</div>
@@ -230,6 +227,7 @@ const TestDetails = () => {
                             </div>
                         </div>
                     </div>
+                    <div className="my-2">{test?.description}</div>
                     <div className="d-flex justify-content-between mb-2 instruction_date">
                         <div>
                             Maximum number of attempts: {test?.num_attemps}

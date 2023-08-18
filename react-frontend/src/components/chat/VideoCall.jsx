@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 // v9 compat packages are API compatible with v8 code
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/firestore'
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams, useLocation, useSearchParams } from 'react-router-dom'
 import {
     getDatabase,
     ref,
@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUser } from '../../features/user/userAction'
 import { useState } from 'react'
+import { AnswerPhoneSolidIcon, DeclinePhoneSolidIcon } from '../icons'
 // import { AES, enc } from 'crypto-js';
 
 const firebaseConfig = {
@@ -73,6 +74,7 @@ const VideoCall = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const dispatch = useDispatch()
+    const [searchParams] = useSearchParams()
 
     const { call } = useParams()
 
@@ -176,7 +178,6 @@ const VideoCall = () => {
         })
 
         // for short
-        const searchParams = new URLSearchParams(location.search)
         const paramValue = searchParams.get('param')
         // const key = "6A576E5A7234753778217A25432A462D4A614E645267556B5870327335763879"; //256-bit && hex
         // TODO when done add to backend all of key
@@ -326,7 +327,7 @@ const VideoCall = () => {
     return (
         <div>
             {loadingSender && (
-                <div className="d-flex justify-content-center">
+                <div className="d-flex justify-content-center mt-5">
                     <div className="spinner-border" role="status">
                         <span className="visually-hidden">
                             LoadingSender...
@@ -341,7 +342,7 @@ const VideoCall = () => {
                 playsInline
             ></video>
             {loadingReceiver && (
-                <div className="d-flex justify-content-center">
+                <div className="d-flex justify-content-center mt-5">
                     <div className="spinner-border" role="status">
                         <span className="visually-hidden">
                             LoadingSender...
@@ -356,31 +357,34 @@ const VideoCall = () => {
                 playsInline
             ></video>
             {(isCalling && !isWaiting) || call ? (
-                <div className="d-flex justify-content-center">
-                    <button id="answerButton" onClick={answerButtonClick}>
-                        Answer
+                <div className="d-flex justify-content-center mt-5">
+                    <button
+                        id="answerButton"
+                        className="chat_callModalBtn chat_callModalBtn--accept me-3"
+                        onClick={answerButtonClick}
+                    >
+                        <AnswerPhoneSolidIcon />
                     </button>
-                    <button id="hangupButton" onClick={hangupButtonClick}>
-                        Hangup
+                    <button
+                        id="hangupButton"
+                        className="chat_callModalBtn chat_callModalBtn--decline"
+                        onClick={hangupButtonClick}
+                    >
+                        <DeclinePhoneSolidIcon />
                     </button>
                 </div>
             ) : (
-                <div className="d-flex justify-content-center">
-                    {isWaiting ? (
-                        <div className="spinner-border" role="status">
-                            <span className="visually-hidden">
-                                LoadingSender...
-                            </span>
-                        </div>
-                    ) : (
-                        <button
-                            id="callButton"
-                            className="btn btn-outline-primary"
-                            onClick={callButtonClick}
-                        >
-                            Create Call (offer)
-                        </button>
-                    )}
+                <div className="d-flex justify-content-center mt-5">
+                    <button
+                        id="callButton"
+                        className="btn btn-outline-primary"
+                        onClick={callButtonClick}
+                        disabled={isWaiting}
+                    >
+                        {isWaiting
+                            ? 'Waiting for answer...'
+                            : `Create Call to ${searchParams.get('param')}`}
+                    </button>
                 </div>
             )}
         </div>

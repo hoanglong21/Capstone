@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 import firebase from 'firebase/compat/app'
@@ -42,8 +42,6 @@ if (!firebase.apps.length) {
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(firebaseApp)
 export default function Layout() {
-    const navigate = useNavigate()
-
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
 
@@ -60,10 +58,6 @@ export default function Layout() {
 
         onChildRemoved(getData, (data) => {
             const deletedMessage = data.val()
-            console.log(
-                `The message with ID ${data.key} was removed:`,
-                deletedMessage
-            )
             setMessages((messages) =>
                 messages.filter((message) => message.key !== data.key)
             )
