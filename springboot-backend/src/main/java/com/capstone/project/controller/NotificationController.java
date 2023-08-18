@@ -66,6 +66,15 @@ public class NotificationController {
         }
     }
 
+    @GetMapping("/notificationuserid/{id}")
+    public ResponseEntity<?> getNotificationByUserId(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(notificationService.getNotificationByUserId(id));
+        } catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/notification/{id}")
     public ResponseEntity<?> updateNotification(@Valid @RequestBody  NotificationRequest notificationRequest, @PathVariable int id,BindingResult result) {
         if (result.hasErrors()) {

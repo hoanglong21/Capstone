@@ -80,15 +80,15 @@ public class AssignmentServiceImpl implements AssignmentService {
 //        }
         Assignment savedAssignment = assignmentRepository.save(assignment);
 
-        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedAssignment.getClassroom().getId());
-        for (ClassLearner classLearner : classLearners) {
-            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
-            for (UserSetting userSetting : userSettings) {
-                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 7 && userSetting.getValue().equalsIgnoreCase("true") && !assignment.is_draft()) {
-                    sendAssignmentCreatedEmail(classLearner, savedAssignment);
-                }
-            }
-        }
+//        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedAssignment.getClassroom().getId());
+//        for (ClassLearner classLearner : classLearners) {
+//            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
+//            for (UserSetting userSetting : userSettings) {
+//                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 7 && userSetting.getValue().equalsIgnoreCase("true") && !assignment.is_draft()) {
+//                    sendAssignmentCreatedEmail(classLearner, savedAssignment);
+//                }
+//            }
+//        }
         return savedAssignment;
     }
 

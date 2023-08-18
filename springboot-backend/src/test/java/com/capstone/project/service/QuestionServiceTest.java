@@ -3,9 +3,7 @@ package com.capstone.project.service;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
-import com.capstone.project.repository.AnswerRepository;
-import com.capstone.project.repository.CommentRepository;
-import com.capstone.project.repository.QuestionRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.PostServiceImpl;
 import com.capstone.project.service.impl.QuestionServiceImpl;
 import jakarta.persistence.EntityManager;
@@ -38,6 +36,11 @@ public class QuestionServiceTest {
 
     @Mock
     private AnswerRepository answerRepository;
+
+    @Mock
+    private TestLearnerRepository testlearnerRepository;
+    @Mock
+    private TestResultRepository testresultRepository;
 
     @InjectMocks
     private QuestionServiceImpl questionServiceImpl;
@@ -177,11 +180,15 @@ public class QuestionServiceTest {
                 .content("Mango")
                 .is_true(false)
                 .build();
+        TestResult testResult = TestResult.builder().id(1).question(question).build();
+
         doNothing().when(questionRepository).delete(question);
         doNothing().when(answerRepository).delete(answer);
+        doNothing().when(testresultRepository).delete(testResult);
 
         when(questionRepository.findById(1)).thenReturn(Optional.of(question));
         when(answerRepository.getAnswerByQuestionId(1)).thenReturn(List.of(answer));
+        when(testresultRepository.getTestResultByQuestionId(1)).thenReturn(List.of(testResult));
         try {
             questionServiceImpl.deleteQuestion(1);
         } catch (ResourceNotFroundException e) {
