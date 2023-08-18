@@ -179,7 +179,7 @@ public class StudySetController {
     }
 
     @GetMapping("/filterstudysetsclass")
-    public ResponseEntity<?> getFilterListByClass( @RequestParam(value = "author_id", required = false, defaultValue = "0") int authorId,
+        public ResponseEntity<?> getFilterListByClass( @RequestParam(value = "author_id", required = false, defaultValue = "0") int authorId,
                                                    @RequestParam(value = "search", required = false) String search,
                                                    @RequestParam(value = "class_id", required = false, defaultValue = "0") int classId,
                                                    @RequestParam(value = "assigned", required = false, defaultValue = "true") boolean assigned,

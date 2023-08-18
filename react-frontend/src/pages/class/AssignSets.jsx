@@ -117,27 +117,22 @@ const AssignSets = ({
             var tempNot = [...notAssignSets]
             tempNot.splice(index, 1)
             setNotAssignSets([...tempNot])
+            setSuccess(true)
+            setSuccessMess(
+                `Successfully assign ${studySet.title} to ${classroom.class_name}`
+            )
             if (isAssign === false) {
                 setIsAssign(true)
-                setToastMess(
-                    `Successfully assign ${studySet.title} to ${classroom.class_name}`
-                )
-                setShowToast(true)
-                setShowAssignModal(false)
-            } else if (
-                location.pathname.includes(`/class/${classroom.id}/sets`)
-            ) {
-                setSuccess(true)
-                setSuccessMess(
-                    `Successfully assign ${studySet.title} to ${classroom.class_name}`
-                )
-                setTimeout(function () {
-                    setSuccess(false)
-                    setSuccessMess('')
-                    setShowAssignModal(false)
-                    window.location.reload()
-                }, 4000)
             }
+            setTimeout(function () {
+                setSuccess(false)
+                setSuccessMess('')
+                if (location.pathname.includes(`/class/${classroom.id}/sets`)) {
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 4000)
+                }
+            }, 4000)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -154,27 +149,22 @@ const AssignSets = ({
             var temp = [...assignSets]
             temp.splice(index, 1)
             setAssignSets([...temp])
+            setSuccess(true)
+            setSuccessMess(
+                `Successfully unassign ${studySet.title} from ${classroom.class_name}`
+            )
             if (isAssign === false) {
                 setIsAssign(true)
-                setToastMess(
-                    `Successfully unassign ${studySet.title} from ${classroom.class_name}`
-                )
-                setShowToast(true)
-                setShowAssignModal(false)
-            } else if (
-                location.pathname.includes(`/class/${classroom.id}/sets`)
-            ) {
-                setSuccess(true)
-                setSuccessMess(
-                    `Successfully unassign ${studySet.title} from ${classroom.class_name}`
-                )
-                setTimeout(function () {
-                    setSuccess(false)
-                    setSuccessMess('')
-                    setShowAssignModal(false)
-                    window.location.reload()
-                }, 4000)
             }
+            setTimeout(function () {
+                setSuccess(false)
+                setSuccessMess('')
+                if (location.pathname.includes(`/class/${classroom.id}/sets`)) {
+                    setTimeout(function () {
+                        window.location.reload()
+                    }, 4000)
+                }
+            }, 4000)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

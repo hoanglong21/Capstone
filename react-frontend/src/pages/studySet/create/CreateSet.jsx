@@ -287,7 +287,15 @@ const CreateSet = () => {
 
     const doUpdate = async () => {
         setSaving(true)
+        setError('')
         try {
+            if (studySet?._public === false && studySet?.classes.length > 0) {
+                setError(
+                    'Study set cannot be changed to private if it is assigned to the class.'
+                )
+                document.body.scrollTop = document.documentElement.scrollTop = 0
+                return
+            }
             await StudySetService.updateStudySet(studySet.id, studySet)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -335,6 +343,7 @@ const CreateSet = () => {
 
     return (
         <div>
+            {console.log(studySet)}
             <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div

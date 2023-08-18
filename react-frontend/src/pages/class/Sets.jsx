@@ -176,24 +176,6 @@ const Sets = () => {
                                     isAssign={isAssign}
                                     setIsAssign={setIsAssign}
                                 />
-                                {/* assign toast */}
-                                <ToastContainer
-                                    className="p-3"
-                                    position="top-end"
-                                    style={{ zIndex: 1 }}
-                                >
-                                    <Toast
-                                        onClose={() => setShowToast(false)}
-                                        show={showToast}
-                                        bg="dark"
-                                        delay={3000}
-                                        autohide
-                                    >
-                                        <Toast.Body className="text-white">
-                                            {toastMess}
-                                        </Toast.Body>
-                                    </Toast>
-                                </ToastContainer>
                             </div>
                         )}
                     </div>

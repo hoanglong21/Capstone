@@ -159,149 +159,187 @@ const AssignToClass = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-5">
-                {success && (
-                    <div
-                        className="alert alert-success col-12 mb-2"
-                        role="alert"
-                    >
-                        {successMess}
+                {studySet?._public ? (
+                    <div>
+                        {success && (
+                            <div
+                                className="alert alert-success col-12 mb-2"
+                                role="alert"
+                            >
+                                {successMess}
+                            </div>
+                        )}
+                        <form className="input-group mb-3">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Search..."
+                                value={searchInput || ''}
+                                onChange={(event) => {
+                                    setSearchInput(event.target.value)
+                                }}
+                            />
+                            {searchInput && (
+                                <button
+                                    className="btn btn-outline-secondary px-2"
+                                    type="button"
+                                    onClick={() => {
+                                        setSearch('')
+                                        setSearchInput('')
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </button>
+                            )}
+                            <button
+                                className="btn btn-outline-secondary px-2"
+                                type="submit"
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                    setSearch(searchInput)
+                                }}
+                            >
+                                <SearchIcon />
+                            </button>
+                        </form>
+                        <Tabs
+                            defaultActiveKey="assigned"
+                            id="uncontrolled-tab-example"
+                            className="mb-3"
+                        >
+                            <Tab eventKey="assigned" title="Assigned">
+                                {loading ? (
+                                    <div className="d-flex justify-content-center">
+                                        <div
+                                            className="spinner-border"
+                                            role="status"
+                                        >
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    </div>
+                                ) : assignClass?.length > 0 ? (
+                                    <div>
+                                        {assignClass?.map(
+                                            (classroom, index) => (
+                                                <button
+                                                    key={index}
+                                                    className="assignClass_btn d-flex align-items-center justify-content-between"
+                                                    onClick={() =>
+                                                        handleUnassign(
+                                                            classroom,
+                                                            index
+                                                        )
+                                                    }
+                                                >
+                                                    <span>
+                                                        {classroom?.class_name}
+                                                    </span>
+                                                    <MinusIcon
+                                                        size="1.5rem"
+                                                        strokeWidth="2"
+                                                    />
+                                                </button>
+                                            )
+                                        )}
+                                        {/* Pagination */}
+                                        <Pagination
+                                            className="mb-5"
+                                            currentPage={page}
+                                            totalCount={totalItems}
+                                            pageSize={10}
+                                            onPageChange={(page) => {
+                                                setPage(page)
+                                            }}
+                                        />
+                                    </div>
+                                ) : search ? (
+                                    <div>No matching found.</div>
+                                ) : assignClass.length > 0 ||
+                                  notAssignClass.length > 0 ? (
+                                    <div>
+                                        This set has not been assigned to any
+                                        class.
+                                    </div>
+                                ) : (
+                                    <div>
+                                        You don't have any class to unassign.
+                                    </div>
+                                )}
+                            </Tab>
+                            <Tab eventKey="notAssigned" title="Not assigned">
+                                {loadingNot ? (
+                                    <div className="d-flex justify-content-center">
+                                        <div
+                                            className="spinner-border"
+                                            role="status"
+                                        >
+                                            <span className="visually-hidden">
+                                                Loading...
+                                            </span>
+                                        </div>
+                                    </div>
+                                ) : notAssignClass?.length > 0 ? (
+                                    <div>
+                                        {notAssignClass?.map(
+                                            (classroom, index) => (
+                                                <button
+                                                    key={index}
+                                                    className="assignClass_btn d-flex align-items-center justify-content-between"
+                                                    onClick={() => {
+                                                        handleAssign(
+                                                            classroom,
+                                                            index
+                                                        )
+                                                    }}
+                                                >
+                                                    <span>
+                                                        {classroom?.class_name}
+                                                    </span>
+                                                    <AddIcon
+                                                        size="1.5rem"
+                                                        strokeWidth="2"
+                                                    />
+                                                </button>
+                                            )
+                                        )}
+                                        {/* Pagination */}
+                                        <Pagination
+                                            className="mb-5"
+                                            currentPage={pageNot}
+                                            totalCount={totalItemsNot}
+                                            pageSize={10}
+                                            onPageChange={(page) => {
+                                                setPageNot(page)
+                                            }}
+                                        />
+                                    </div>
+                                ) : search ? (
+                                    <div>No matching found.</div>
+                                ) : assignClass.length > 0 ||
+                                  notAssignClass.length > 0 ? (
+                                    <div>
+                                        This set has been assigned to all your
+                                        classes.
+                                    </div>
+                                ) : (
+                                    <div>
+                                        You don't have any class to assign.
+                                    </div>
+                                )}
+                            </Tab>
+                        </Tabs>
+                    </div>
+                ) : (
+                    <div>
+                        <h5>This is a private study set</h5>
+                        <p>
+                            Change this set to public so it's assignable to the
+                            class.
+                        </p>
                     </div>
                 )}
-                <form className="input-group mb-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Search..."
-                        value={searchInput || ''}
-                        onChange={(event) => {
-                            setSearchInput(event.target.value)
-                        }}
-                    />
-                    {searchInput && (
-                        <button
-                            className="btn btn-outline-secondary px-2"
-                            type="button"
-                            onClick={() => {
-                                setSearch('')
-                                setSearchInput('')
-                            }}
-                        >
-                            <CloseIcon />
-                        </button>
-                    )}
-                    <button
-                        className="btn btn-outline-secondary px-2"
-                        type="submit"
-                        onClick={(event) => {
-                            event.preventDefault()
-                            setSearch(searchInput)
-                        }}
-                    >
-                        <SearchIcon />
-                    </button>
-                </form>
-                <Tabs
-                    defaultActiveKey="assigned"
-                    id="uncontrolled-tab-example"
-                    className="mb-3"
-                >
-                    <Tab eventKey="assigned" title="Assigned">
-                        {loading ? (
-                            <div className="d-flex justify-content-center">
-                                <div className="spinner-border" role="status">
-                                    <span className="visually-hidden">
-                                        Loading...
-                                    </span>
-                                </div>
-                            </div>
-                        ) : assignClass?.length > 0 ? (
-                            <div>
-                                {assignClass?.map((classroom, index) => (
-                                    <button
-                                        key={index}
-                                        className="assignClass_btn d-flex align-items-center justify-content-between"
-                                        onClick={() =>
-                                            handleUnassign(classroom, index)
-                                        }
-                                    >
-                                        <span>{classroom?.class_name}</span>
-                                        <MinusIcon
-                                            size="1.5rem"
-                                            strokeWidth="2"
-                                        />
-                                    </button>
-                                ))}
-                                {/* Pagination */}
-                                <Pagination
-                                    className="mb-5"
-                                    currentPage={page}
-                                    totalCount={totalItems}
-                                    pageSize={10}
-                                    onPageChange={(page) => {
-                                        setPage(page)
-                                    }}
-                                />
-                            </div>
-                        ) : search ? (
-                            <div>No matching found.</div>
-                        ) : assignClass.length > 0 ||
-                          notAssignClass.length > 0 ? (
-                            <div>
-                                This set has not been assigned to any class.
-                            </div>
-                        ) : (
-                            <div>You don't have any class to unassign.</div>
-                        )}
-                    </Tab>
-                    <Tab eventKey="notAssigned" title="Not assigned">
-                        {loadingNot ? (
-                            <div className="d-flex justify-content-center">
-                                <div className="spinner-border" role="status">
-                                    <span className="visually-hidden">
-                                        Loading...
-                                    </span>
-                                </div>
-                            </div>
-                        ) : notAssignClass?.length > 0 ? (
-                            <div>
-                                {notAssignClass?.map((classroom, index) => (
-                                    <button
-                                        key={index}
-                                        className="assignClass_btn d-flex align-items-center justify-content-between"
-                                        onClick={() => {
-                                            handleAssign(classroom, index)
-                                        }}
-                                    >
-                                        <span>{classroom?.class_name}</span>
-                                        <AddIcon
-                                            size="1.5rem"
-                                            strokeWidth="2"
-                                        />
-                                    </button>
-                                ))}
-                                {/* Pagination */}
-                                <Pagination
-                                    className="mb-5"
-                                    currentPage={pageNot}
-                                    totalCount={totalItemsNot}
-                                    pageSize={10}
-                                    onPageChange={(page) => {
-                                        setPageNot(page)
-                                    }}
-                                />
-                            </div>
-                        ) : search ? (
-                            <div>No matching found.</div>
-                        ) : assignClass.length > 0 ||
-                          notAssignClass.length > 0 ? (
-                            <div>
-                                This set has been assigned to all your classes.
-                            </div>
-                        ) : (
-                            <div>You don't have any class to assign.</div>
-                        )}
-                    </Tab>
-                </Tabs>
             </Modal.Body>
         </Modal>
     )
