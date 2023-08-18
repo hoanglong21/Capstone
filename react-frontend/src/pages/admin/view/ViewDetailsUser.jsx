@@ -19,6 +19,20 @@ function ViewDetailsUser() {
     // const [seriesDataChart, setSeriesDataChart] = useState([]);
     // const [seriesRadar, setSeriesRadar] = useState([]);
 
+    const week = [
+        'Week 1',
+        'Week 2',
+        'Week 3',
+        'Week 4',
+        'Week 5',
+        'Week 6',
+        'Week 7',
+        'Week 8',
+        'Week 9',
+        'Week 10',
+        'Week 11',
+        'Week 12',
+    ]
     useEffect(() => {
         const fetchData = async () => {
             const temp = (await UserService.getUser(username)).data
@@ -50,20 +64,7 @@ function ViewDetailsUser() {
             },
         },
         xaxis: {
-            categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
-            ],
+            categories: week,
             position: 'top',
             axisBorder: {
                 show: false,
@@ -119,29 +120,13 @@ function ViewDetailsUser() {
         },
     ]
 
-    const week = [
-        'Week 1',
-        'Week 2',
-        'Week 3',
-        'Week 4',
-        'Week 5',
-        'Week 6',
-        'Week 7',
-        'Week 8',
-        'Week 9',
-        'Week 10',
-        'Week 11',
-        'Week 12',
-    ]
-
     const day = [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
+        'W6',
+        'W5',
+        'W4',
+        'W3',
+        'W2',
+        'W1',
     ]
 
     const optionsDataChart = {
@@ -170,7 +155,7 @@ function ViewDetailsUser() {
 
     const optionRadar = {
         xaxis: {
-            categories: ['Kanji', 'Vocabulary', 'Grammar'],
+            categories: ['Vocabulary', 'Kanji', 'Grammar'],
         },
     }
 
@@ -185,8 +170,36 @@ function ViewDetailsUser() {
         dataLabels: {
             enabled: false,
         },
-        colors: ['#008FFB'],
+        tooltip: {
+            enabled: true
+        },
+        plotOptions: {
+            heatmap: {
+              colorScale: {
+                ranges: [{
+                    from: 0,
+                    to: 0,
+                    color: '#FFFFFF',
+                    name: 'low',
+                  },
+                  {
+                    from: 1,
+                    to: 10,
+                    color: '#2772C2',
+                    name: 'medium',
+                  },
+                  {
+                    from: 11,
+                    to: 24,
+                    color: '#103F91',
+                    name: 'high',
+                  }
+                ]
+              }
+            }
+          }
     }
+
 
     useEffect(() => {
         const fetchDataStudySetLearned = async () => {
@@ -233,7 +246,7 @@ function ViewDetailsUser() {
                 var tempSeriesDataHeapChart = []
                 for (let index = 0; index < day.length; index++) {
                     const tempDay = day[index]
-                    const tempArr = temp[index]
+                    const tempArr = temp[day.length - 1 - index]
                     tempSeriesDataHeapChart.push({
                         name: tempDay,
                         data: tempArr,

@@ -3,6 +3,7 @@ import SidebarforAdmin from "../SidebarforAdmin";
 import HeaderAdmin from "../HeaderAdmin";
 import { Link, useParams } from 'react-router-dom';
 import FeedbackService from '../../../services/FeedbackService';
+import ReplyFeedback from '../ReplyFeedback';
 
 function ViewDetailFeedback() {
   const [feedback, setFeedback] = useState([])
@@ -91,7 +92,7 @@ function ViewDetailFeedback() {
                   <Link className="btn btn-secondary me-4" to="/managefeedback">
                     Close
                   </Link>
-                  <Link className="btn btn-primary" type="button" to="/reply">
+                  <Link className="btn btn-primary" type="button" to={`/reply/${feedback.id}`}>
                     Reply
                   </Link>
                 </div>

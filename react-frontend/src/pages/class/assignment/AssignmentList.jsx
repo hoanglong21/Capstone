@@ -7,11 +7,18 @@ import ClassService from '../../../services/ClassService'
 
 import DeleteAssignment from './DeleteAssignment'
 
-import { AccountIcon, AddIcon, AssignmentIcon } from '../../../components/icons'
+import {
+    AccountIcon,
+    AddIcon,
+    AssignmentIcon,
+    CloseIcon,
+    SearchIcon,
+} from '../../../components/icons'
 import tutorEmpty from '../../../assets/images/tutor_assign_empty.png'
 import learnerEmpty from '../../../assets/images/learner_assign_empty.png'
 import './assignment.css'
 import SubmissionService from '../../../services/SubmissionService'
+import Pagination from '../../../components/Pagination'
 
 function AssignmentList() {
     const navigate = useNavigate()
@@ -26,6 +33,12 @@ function AssignmentList() {
     const [loading, setLoading] = useState(true)
     const [today, setToday] = useState(new Date())
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+
+    const [isEmpty, setIsEmpty] = useState(false)
+    const [search, setSearch] = useState('')
+    const [searchInput, setSearchInput] = useState('')
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     function getToday() {
         const today = new Date()
@@ -49,9 +62,12 @@ function AssignmentList() {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true)
+            setIsEmpty(false)
             try {
+                // class
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
+                // assignments
                 const tempAssignments = (
                     await AssignmentService.getFilterList(
                         '',
@@ -71,8 +87,12 @@ function AssignmentList() {
                         '',
                         '=10'
                     )
-                ).data.list
-                setAssignments(tempAssignments)
+                ).data
+                if (tempAssignments.totalItems < 1) {
+                    setIsEmpty(true)
+                }
+                setTotalItems(tempAssignments.totalItems)
+                setAssignments(tempAssignments.list)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -86,6 +106,51 @@ function AssignmentList() {
             fetchData()
         }
     }, [id])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            setIsEmpty(false)
+            try {
+                // class
+                const tempClass = (await ClassService.getClassroomById(id)).data
+                setClassroom(tempClass)
+                // assignments
+                const tempAssignments = (
+                    await AssignmentService.getFilterList(
+                        `${search ? `=${search}` : ''}`,
+                        '',
+                        '',
+                        `${
+                            userInfo.id === tempClass.user.id
+                                ? ''
+                                : `=${getToday()}`
+                        }`,
+                        '',
+                        '',
+                        `${userInfo.id === tempClass.user.id ? '' : `=0`}`,
+                        '',
+                        '',
+                        `=${tempClass.id}`,
+                        `=${page}`,
+                        '=10'
+                    )
+                ).data
+                setTotalItems(tempAssignments.totalItems)
+                setAssignments(tempAssignments.list)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+            setLoading(false)
+        }
+        if (id) {
+            fetchData()
+        }
+    }, [page, search])
 
     const handleInfo = async (assign, index) => {
         try {
@@ -150,35 +215,76 @@ function AssignmentList() {
     } else {
         return (
             <div>
-                {userInfo?.id === classroom?.user?.id ? (
-                    <div>
-                        <button
-                            className="createAssign_btn"
-                            onClick={() => {
-                                navigate('../create-assignment')
-                            }}
-                        >
-                            <AddIcon
-                                className="createAssignIcon_btn"
-                                size="1.125rem"
-                                strokeWidth="2.25"
-                            />
-                            Create
-                        </button>
+                <div className="row d-flex align-items-center">
+                    <div className="col-6">
+                        {userInfo?.id === classroom?.user?.id ? (
+                            <div>
+                                <button
+                                    className="createAssign_btn"
+                                    onClick={() => {
+                                        navigate('../create-assignment')
+                                    }}
+                                >
+                                    <AddIcon
+                                        className="createAssignIcon_btn"
+                                        size="1.125rem"
+                                        strokeWidth="2.25"
+                                    />
+                                    Create
+                                </button>
+                            </div>
+                        ) : (
+                            <div>
+                                <button className="btn btn-outline-primary fw-semibold d-flex align-items-center">
+                                    <AccountIcon
+                                        className="createAssignIcon_btn"
+                                        size="20px"
+                                        strokeWidth="2.25"
+                                    />
+                                    <span>View your work</span>
+                                </button>
+                            </div>
+                        )}
                     </div>
-                ) : (
-                    <div>
-                        <button className="btn btn-outline-primary fw-semibold d-flex align-items-center">
-                            <AccountIcon
-                                className="createAssignIcon_btn"
-                                size="20px"
-                                strokeWidth="2.25"
-                            />
-                            <span>View your work</span>
-                        </button>
-                    </div>
-                )}
-                {assignments.length === 0 && (
+                    {!isEmpty && (
+                        <div className="col-6">
+                            <form className="input-group mb-0">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search..."
+                                    value={searchInput || ''}
+                                    onChange={(event) => {
+                                        setSearchInput(event.target.value)
+                                    }}
+                                />
+                                {searchInput && (
+                                    <button
+                                        className="btn btn-outline-secondary px-2"
+                                        type="button"
+                                        onClick={() => {
+                                            setSearch('')
+                                            setSearchInput('')
+                                        }}
+                                    >
+                                        <CloseIcon />
+                                    </button>
+                                )}
+                                <button
+                                    className="btn btn-outline-secondary px-2"
+                                    type="submit"
+                                    onClick={(event) => {
+                                        event.preventDefault()
+                                        setSearch(searchInput)
+                                    }}
+                                >
+                                    <SearchIcon />
+                                </button>
+                            </form>
+                        </div>
+                    )}
+                </div>
+                {isEmpty ? (
                     <div>
                         {userInfo?.id === classroom?.user?.id ? (
                             <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
@@ -200,157 +306,188 @@ function AssignmentList() {
                             </div>
                         )}
                     </div>
-                )}
-                <div
-                    className="accordion mt-4 accordionAssignments"
-                    id="accordionAssignments"
-                >
-                    {assignments.map((assign, index) => (
+                ) : search && assignments?.length === 0 ? (
+                    <div className="mt-5">No matching found.</div>
+                ) : (
+                    <div>
                         <div
-                            className="accordion-item"
-                            key={index}
-                            onClick={() => handleInfo(assign, index)}
+                            className="accordion my-4 accordionAssignments"
+                            id="accordionAssignments"
                         >
-                            <button
-                                className="accordion-button collapsed d-flex justify-content-between align-items-center"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target={`#assign${assign?.id}`}
-                                aria-expanded="false"
-                                aria-controls={`assign${assign?.id}`}
-                            >
-                                <div className="d-flex align-items-center">
-                                    <div
-                                        className={`accordionAssign_icon ${
-                                            (assign._draft ||
-                                                (!assign._draft &&
-                                                    new Date(
-                                                        assign.start_date
-                                                    ) >= new Date())) &&
-                                            'disabled'
-                                        }`}
+                            {assignments.map((assign, index) => (
+                                <div
+                                    className="accordion-item"
+                                    key={index}
+                                    onClick={() => handleInfo(assign, index)}
+                                >
+                                    <button
+                                        className="accordion-button collapsed d-flex justify-content-between align-items-center"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target={`#assign${assign?.id}`}
+                                        aria-expanded="false"
+                                        aria-controls={`assign${assign?.id}`}
                                     >
-                                        <AssignmentIcon
-                                            size="24px"
-                                            strokeWidth="1.75"
-                                        />
-                                    </div>
-                                    <div>{assign.title || '...'}</div>
-                                </div>
-                                <div>
-                                    {assign._draft
-                                        ? 'Draft'
-                                        : assign?.start_date &&
-                                          new Date(assign?.start_date) > today
-                                        ? `Scheduled for ${assign?.start_date}`
-                                        : assign?.due_date
-                                        ? `Due ${assign?.due_date}`
-                                        : 'No due date'}
-                                </div>
-                            </button>
-                            <div
-                                id={`assign${assign?.id}`}
-                                className="accordion-collapse collapse"
-                                data-bs-parent="#accordionAssignments"
-                            >
-                                <div className="accordion-body">
-                                    <div className="d-flex align-items-center justify-content-between">
-                                        <div>Posted {assign?.created_date}</div>
-                                        {userInfo?.id !==
-                                            classroom?.user?.id && (
-                                            <div>
-                                                {assign?.submission?.mark ? (
-                                                    <div className="assignGraded">
-                                                        Graded
+                                        <div className="d-flex align-items-center">
+                                            <div
+                                                className={`accordionAssign_icon ${
+                                                    (assign._draft ||
+                                                        (!assign._draft &&
+                                                            new Date(
+                                                                assign.start_date
+                                                            ) >= new Date())) &&
+                                                    'disabled'
+                                                }`}
+                                            >
+                                                <AssignmentIcon
+                                                    size="24px"
+                                                    strokeWidth="1.75"
+                                                />
+                                            </div>
+                                            <div>{assign.title || '...'}</div>
+                                        </div>
+                                        <div>
+                                            {assign._draft
+                                                ? 'Draft'
+                                                : assign?.start_date &&
+                                                  new Date(assign?.start_date) >
+                                                      today
+                                                ? `Scheduled for ${assign?.start_date}`
+                                                : assign?.due_date
+                                                ? `Due ${assign?.due_date}`
+                                                : 'No due date'}
+                                        </div>
+                                    </button>
+                                    <div
+                                        id={`assign${assign?.id}`}
+                                        className="accordion-collapse collapse"
+                                        data-bs-parent="#accordionAssignments"
+                                    >
+                                        <div className="accordion-body">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    Posted{' '}
+                                                    {assign?.created_date}
+                                                </div>
+                                                {userInfo?.id !==
+                                                    classroom?.user?.id && (
+                                                    <div>
+                                                        {assign?.submission
+                                                            ?.mark ? (
+                                                            <div className="assignGraded">
+                                                                Graded
+                                                            </div>
+                                                        ) : assign?.submission
+                                                              ?._done ? (
+                                                            <div className="assignSubmitted">
+                                                                Submitted
+                                                            </div>
+                                                        ) : new Date(
+                                                              assign?.due_date
+                                                          ) > today ? (
+                                                            <div className="assignMissing">
+                                                                Missing
+                                                            </div>
+                                                        ) : (
+                                                            'Not submitted'
+                                                        )}
                                                     </div>
-                                                ) : assign?.submission
-                                                      ?._done ? (
-                                                    <div className="assignSubmitted">
-                                                        Submitted
-                                                    </div>
-                                                ) : new Date(assign?.due_date) >
-                                                  today ? (
-                                                    <div className="assignMissing">
-                                                        Missing
-                                                    </div>
-                                                ) : (
-                                                    'Not submitted'
                                                 )}
                                             </div>
-                                        )}
-                                    </div>
-                                    <div className="mt-3 d-flex justify-content-between">
-                                        <button
-                                            className="viewAssign_btn"
-                                            onClick={() =>
-                                                navigate(
-                                                    `../assignment/${assign.id}/details`
-                                                )
-                                            }
-                                        >
-                                            View details
-                                        </button>
-                                        {userInfo?.id === assign?.user?.id && (
-                                            <div className="d-flex">
-                                                <div className="asignInfo_block">
-                                                    <div className="assignInfo_number">
-                                                        {loadingCount && '...'}
-                                                        {assign?.numSubmitted}
+                                            <div className="mt-3 d-flex justify-content-between">
+                                                <button
+                                                    className="viewAssign_btn"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `../assignment/${assign.id}/details`
+                                                        )
+                                                    }
+                                                >
+                                                    View details
+                                                </button>
+                                                {userInfo?.id ===
+                                                    assign?.user?.id && (
+                                                    <div className="d-flex">
+                                                        <div className="asignInfo_block">
+                                                            <div className="assignInfo_number">
+                                                                {loadingCount &&
+                                                                    '...'}
+                                                                {
+                                                                    assign?.numSubmitted
+                                                                }
+                                                            </div>
+                                                            <div className="assignInfo_title">
+                                                                Submitted
+                                                            </div>
+                                                        </div>
+                                                        <div className="asignInfo_block">
+                                                            <div className="assignInfo_number">
+                                                                {loadingCount &&
+                                                                    '...'}
+                                                                {
+                                                                    assign?.numNotSubmitted
+                                                                }
+                                                            </div>
+                                                            <div className="assignInfo_title">
+                                                                Not Submitted
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div className="assignInfo_title">
-                                                        Submitted
-                                                    </div>
-                                                </div>
-                                                <div className="asignInfo_block">
-                                                    <div className="assignInfo_number">
-                                                        {loadingCount && '...'}
-                                                        {
-                                                            assign?.numNotSubmitted
-                                                        }
-                                                    </div>
-                                                    <div className="assignInfo_title">
-                                                        Not Submitted
-                                                    </div>
-                                                </div>
+                                                )}
                                             </div>
-                                        )}
-                                    </div>
-                                    {userInfo?.id === assign?.user?.id && (
-                                        <div className="mt-5 d-flex justify-content-between">
-                                            <button
-                                                className="editAssign_btn"
-                                                onClick={() => {
-                                                    navigate(
-                                                        `../edit-assignment/${assign?.id}`
-                                                    )
-                                                }}
-                                            >
-                                                Edit assignment
-                                            </button>
-                                            <button
-                                                className="deleteAssign_btn"
-                                                type="button"
-                                                onClick={() => {
-                                                    setShowDeleteModal(true)
-                                                }}
-                                            >
-                                                Delete assignment
-                                            </button>
+                                            {userInfo?.id ===
+                                                assign?.user?.id && (
+                                                <div className="mt-5 d-flex justify-content-between">
+                                                    <button
+                                                        className="editAssign_btn"
+                                                        onClick={() => {
+                                                            navigate(
+                                                                `../edit-assignment/${assign?.id}`
+                                                            )
+                                                        }}
+                                                    >
+                                                        Edit assignment
+                                                    </button>
+                                                    <button
+                                                        className="deleteAssign_btn"
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setShowDeleteModal(
+                                                                true
+                                                            )
+                                                        }}
+                                                    >
+                                                        Delete assignment
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                        <DeleteAssignment
+                                            index={index}
+                                            assign={assign}
+                                            assignments={assignments}
+                                            stateChanger={setAssignments}
+                                            showDeleteModal={showDeleteModal}
+                                            setShowDeleteModal={
+                                                setShowDeleteModal
+                                            }
+                                        />
+                                    </div>
                                 </div>
-                                <DeleteAssignment
-                                    index={index}
-                                    assign={assign}
-                                    assignments={assignments}
-                                    stateChanger={setAssignments}
-                                    showDeleteModal={showDeleteModal}
-                                    setShowDeleteModal={setShowDeleteModal}
-                                />
-                            </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                        {/* Pagination */}
+                        <Pagination
+                            className="mb-5"
+                            currentPage={page}
+                            totalCount={totalItems}
+                            pageSize={10}
+                            onPageChange={(page) => {
+                                setPage(page)
+                            }}
+                        />
+                    </div>
+                )}
             </div>
         )
     }

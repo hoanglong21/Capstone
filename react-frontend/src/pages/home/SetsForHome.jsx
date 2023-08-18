@@ -85,57 +85,61 @@ function SetsForHome() {
                     </div>
                 </div>
             ) : (
-                <div className="sets-list">
-                    {sets?.length === 0 && (
-                        <p className="noFound">
-                            No sets matching {search} found
-                        </p>
-                    )}
-                    {sets?.map((set) => (
-                        <div key={set?.id} className="set-item mb-3">
-                            <Link to={`/set/${set.id}`}>
-                                <div className="set-body row mb-2">
-                                    <div className="term-count col-3">
-                                        {set?.count} terms
-                                    </div>
-                                    <div
-                                        className="set-author col d-flex "
-                                        href="#"
-                                    >
-                                        <div className="author-avatar">
-                                            <img
-                                                src={
-                                                    set?.avatar
-                                                        ? set?.avatar
-                                                        : defaultAvatar
-                                                }
-                                                alt="author avatar"
-                                                className="w-100 h-100"
-                                            />
+                <div>
+                    <div className="sets-list mb-4">
+                        {sets?.length === 0 && (
+                            <p className="noFound">
+                                No sets matching {search} found
+                            </p>
+                        )}
+                        {sets?.map((set) => (
+                            <div key={set?.id} className="set-item mb-3">
+                                <Link to={`/set/${set.id}`}>
+                                    <div className="set-body row mb-2">
+                                        <div className="term-count col-3">
+                                            {set?.count} terms
                                         </div>
-                                        <span className="author-username ms-2">
-                                            {set?.author}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="set-title col-3">
-                                        {set?._draft
-                                            ? `(Draft) ${set?.title}`
-                                            : set?.title}
-                                    </div>
-                                    <div className="col d-flex align-items-center">
-                                        <p
-                                            className="set-description m-0"
-                                            style={{ whiteSpace: 'pre-wrap' }}
+                                        <div
+                                            className="set-author col d-flex "
+                                            href="#"
                                         >
-                                            {set?.description}
-                                        </p>
+                                            <div className="author-avatar">
+                                                <img
+                                                    src={
+                                                        set?.avatar
+                                                            ? set?.avatar
+                                                            : defaultAvatar
+                                                    }
+                                                    alt="author avatar"
+                                                    className="w-100 h-100"
+                                                />
+                                            </div>
+                                            <span className="author-username ms-2">
+                                                {set?.author}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        </div>
-                    ))}
+                                    <div className="row">
+                                        <div className="set-title col-3">
+                                            {set?._draft
+                                                ? `(Draft) ${set?.title}`
+                                                : set?.title}
+                                        </div>
+                                        <div className="col d-flex align-items-center">
+                                            <p
+                                                className="set-description m-0"
+                                                style={{
+                                                    whiteSpace: 'pre-wrap',
+                                                }}
+                                            >
+                                                {set?.description}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
                     {/* Pagination */}
                     <Pagination
                         className="mb-5"

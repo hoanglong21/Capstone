@@ -205,7 +205,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         }
 
         if (search != null && !search.isEmpty()) {
-            query += " AND (a.title LIKE :search OR a.instruction LIKE :search)";
+            query += " AND a.title LIKE :search";
             parameters.put("search", "%" + search + "%");
         }
 

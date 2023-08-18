@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import UserService from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UnBanUser = ({ user }) => {
   let navigate = useNavigate();
   const [error, setError] = useState("");
   const [unbanUser, setUnBanUser] = useState({});
-  const [success, setSuccess] = useState(false);
+  // const [success, setSuccess] = useState(false);
   // const [isButtonDisabled, setButtonDisabled] = useState(false);
   useEffect(() => {
     if (user.username) {
@@ -19,9 +21,12 @@ const UnBanUser = ({ user }) => {
     setError("");
     try {
       await UserService.recoverUser(unbanUser.username);
-      setSuccess(true);
+      // setSuccess(true);
       document.getElementById("closeUnBanModal").click()
-      window.location.reload();
+      toast.success('UnBanned successfully !', {
+        position: toast.POSITION.TOP_RIGHT
+      });
+      window.location.reload()
       navigate("/manageusers");
       setError("");
     } catch (error) {
@@ -63,11 +68,11 @@ const UnBanUser = ({ user }) => {
               </div>
             )}
 
-            {success && (
+            {/* {success && (
               <div className="alert alert-success" role="alert">
                 You unbaned {unbanUser.username} successfully!
               </div>
-            )}
+            )} */}
             <p>
               Are you sure unban <strong>{unbanUser.username}</strong> ?
             </p>

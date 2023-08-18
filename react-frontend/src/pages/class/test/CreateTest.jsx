@@ -256,7 +256,7 @@ const CreateTest = () => {
                 return
             }
             // check if point invalid
-            if (ques?.point < 0 || !Number.isInteger(ques?.point)) {
+            if (Number(ques?.point) < 0 || !Number.isInteger(ques?.point)) {
                 setError(
                     `The point of <a href="#question${indexQues}">this</a> question must be a positive integer number.`
                 )

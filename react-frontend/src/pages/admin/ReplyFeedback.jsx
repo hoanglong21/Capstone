@@ -1,59 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import FormStyles from '../../assets/styles/Form.module.css'
 import FeedbackService from "../../services/FeedbackService";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
 function ReplyFeedback() {
-  const { userInfo } = useSelector((state) => state.user);
+  const [feedback, setFeedback] = useState([])
   const [error, setError] = useState("");
   const [id, setId] = useState([]);
-  const [title, setTitle] = useState([]);
-  const [content, setContent] = useState({});
-
+  const [success, setSuccess] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
-      setId({
-        user: {
-          id: userInfo.id,
-        },
-      });
-      setTitle({
-        title: "",
-      });
-      setContent({
-        content: "",
-      });
+      setFeedback({
+        id: await FeedbackService.getFeedbackById(id).data,
+        title: '',
+        content: '',
+    })
     };
-    if (userInfo.username) {
+    if (feedback.id) {
       fetchData();
     }
-  }, [userInfo]);
+  }, [feedback]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     var form = document.querySelector(".needs-validation");
     const titleEl = document.getElementById("title");
     const contentEl = document.getElementById("content");
-    // clear validation
-    form.classList.remove("was-validated");
-    titleEl.classList.remove("is-invalid");
-    contentEl.classList.remove("is-invalid");
-    setError("");
-    form.classList.add("was-validated");
-    if (!title || !content) {
-      if (!title) {
-        titleEl.classList.add("is-invalid");
-      }
-      if (!content) {
-        contentEl.classList.add("is-invalid");
-      }
-    } else {
       try {
-        await FeedbackService.replyfeedback(id, title, content);
+        await FeedbackService.replyfeedback(feedback.id, feedback.title, feedback.content);
         form.classList.remove("was-validated");
         titleEl.classList.remove("is-invalid");
         contentEl.classList.remove("is-invalid");
         setError("");
+        setSuccess(true)
       } catch (error) {
         if (error.response && error.response.data) {
           setError(error.response.data);
@@ -61,7 +40,6 @@ function ReplyFeedback() {
           setError(error.message);
         }
       }
-    }
   };
 
   return (
@@ -73,15 +51,29 @@ function ReplyFeedback() {
           <div className="container">
           <h3 className="text-center">Reply Feedback</h3>
           <div className="mx-5">
+             {/* error message */}
+             {error && (
+                    <div
+                        className="error alert alert-danger"
+                        role="alert"
+                        dangerouslySetInnerHTML={{ __html: error }}
+                    ></div>
+                )}
+                {/* success */}
+                {success && (
+                    <div className="alert alert-primary" role="alert">
+                       Send successfully!
+                    </div>
+                )}
           <p className="mb-2 text-info fs-5">Title</p>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${FormStyles.formControl}`}
             id="title"
             placeholder="Title"
-            value={title || ""}
+            value={feedback.title}
             onChange={(event) => {
-              setTitle({
+              setFeedback({
                 title: event.target.value,
               });
             }}
@@ -90,12 +82,12 @@ function ReplyFeedback() {
           <p className="ms-2 mb-2 text-info fs-5">Content</p>
           <textarea
             id="content"
-            className="form-control"
+            className={`form-control ${FormStyles.formControl}`}
             placeholder="Message"
             style={{ height: "6rem" }}
-            value={content || ""}
+            value={feedback.content}
             onChange={(event) => {
-              setContent({
+              setFeedback({
                 content: event.target.value,
               });
             }}
