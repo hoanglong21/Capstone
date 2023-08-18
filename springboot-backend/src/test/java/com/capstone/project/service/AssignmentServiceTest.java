@@ -224,11 +224,11 @@ public class AssignmentServiceTest {
     @Order(7)
     @ParameterizedTest(name = "index => search={0},author{1},fromStart{2}, toStart{3},fromCreated{4},toCreated{5} ,duedatefrom{6}, duedateto{7},isDraft{8},direction{9}, sortBy{10},classId={11}, page{12}, size{13}")
     @CsvSource({
-            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,DESC,created_date,1,1,5",
-            "Homwork2,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,DESC,created_date,1,0,5",
-            "Homwork2,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,DESC,created_date,1,0,2",
-            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,DESC,created_date,1,1,0",
-            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,DESC,created_date,1,1,-3",
+            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,2023-8-1,2023-8-5,true,DESC,created_date,1,1,5",
+            "Homwork2,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,2023-8-1,2023-8-5,false,DESC,created_date,1,0,5",
+            "Homwork2,ngocnguyen,2023-8-9,2023-8-15,2023-8-1,2023-8-5,2023-8-1,2023-8-5,false,DESC,created_date,1,0,2",
+            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,2023-8-1,2023-8-5,DESC,created_date,1,1,0",
+            "Homework1,quantruong,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,2023-8-1,2023-8-5,DESC,created_date,1,1,-3",
     })
     public void testGetFilterAssignment(String search, String author, String fromStart, String toStart, String fromCreated, String toCreated,
                                         String duedatefrom, String duedateto,Boolean isDraft, String direction, String sortBy, int classid, int page, int size) {
