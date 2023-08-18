@@ -18,8 +18,6 @@ const AssignToClass = ({
     setShowAssignModal,
     studySet,
     userInfo,
-    setShowToast,
-    setToastMess,
 }) => {
     const [assignClass, setAssignClass] = useState([])
     const [notAssignClass, setNotAssignClass] = useState([])
@@ -33,6 +31,9 @@ const AssignToClass = ({
     const [pageNot, setPageNot] = useState(1)
     const [totalItemsNot, setTotalItemsNot] = useState([])
     const [loadingNot, setLoadingNot] = useState(false)
+
+    const [success, setSuccess] = useState(false)
+    const [successMess, setSuccessMess] = useState('')
 
     const fetchAssign = async () => {
         setLoading(true)
@@ -103,10 +104,14 @@ const AssignToClass = ({
             var tempNot = [...notAssignClass]
             tempNot.splice(index, 1)
             setNotAssignClass([...tempNot])
-            setToastMess(
+            setSuccessMess(
                 `Successfully assign ${studySet.title} to ${classroom.class_name}`
             )
-            setShowToast(true)
+            setSuccess(true)
+            setTimeout(function () {
+                setSuccess(false)
+                setSuccessMess('')
+            }, 3000)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -123,10 +128,14 @@ const AssignToClass = ({
             var temp = [...assignClass]
             temp.splice(index, 1)
             setAssignClass([...temp])
-            setToastMess(
+            setSuccessMess(
                 `Successfully unassign ${studySet.title} from ${classroom.class_name}`
             )
-            setShowToast(true)
+            setSuccess(true)
+            setTimeout(function () {
+                setSuccess(false)
+                setSuccessMess('')
+            }, 3000)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -150,6 +159,14 @@ const AssignToClass = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-5">
+                {success && (
+                    <div
+                        className="alert alert-success col-12 mb-2"
+                        role="alert"
+                    >
+                        {successMess}
+                    </div>
+                )}
                 <form className="input-group mb-3">
                     <input
                         type="text"

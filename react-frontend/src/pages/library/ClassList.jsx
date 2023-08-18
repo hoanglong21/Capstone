@@ -5,6 +5,8 @@ import { useEffect } from 'react'
 
 import ClassService from '../../services/ClassService'
 
+import Pagination from '../../components/Pagination'
+
 import { ClassIcon, SearchIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
@@ -21,7 +23,11 @@ const ClassList = () => {
     const [isEmpty, setIsEmpty] = useState(false)
     const [loading, setLoading] = useState(true)
     const [loadingSearch, setLoadingSearch] = useState(true)
+
     const [searchInput, setSearchInput] = useState(search)
+    const [type, setType] = useState('all')
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     const [showCreateModal, setShowCreateModal] = useState(false)
     const [showJoinModal, setShowJoinModal] = useState(false)
@@ -33,21 +39,22 @@ const ClassList = () => {
             const temp = (
                 await ClassService.getFilterList(
                     '',
-                    '',
+                    '=0',
                     `${searchKey ? '=' + searchKey : ''}`,
-                    `=${userInfo.username}`,
-                    `=${userInfo.username}`,
+                    `${type !== 'joined' ? `=${userInfo.username}` : ''}`,
+                    `${type !== 'created' ? `=${userInfo.username}` : ''}`,
                     '',
                     '',
                     '',
                     '',
                     '',
                     '',
-                    '',
-                    ''
+                    `=${page}`,
+                    '=10'
                 )
-            ).data.list
-            setClasses(temp)
+            ).data
+            setTotalItems(temp.totalItems)
+            setClasses(temp.list)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -102,7 +109,7 @@ const ClassList = () => {
         if (userInfo?.username) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search])
+    }, [userInfo, search, type, page])
 
     if (loading) {
         return (
@@ -150,30 +157,48 @@ const ClassList = () => {
                     </div>
                 ) : (
                     <div>
-                        <form className="sets-search mb-4 d-flex align-items-center">
-                            <input
-                                className="search-control flex-grow-1"
-                                placeholder="Search your classes"
-                                type="text"
-                                value={searchInput || ''}
-                                readOnly={loading}
-                                onChange={(event) =>
-                                    setSearchInput(event.target.value)
-                                }
-                            ></input>
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                onClick={(event) => {
-                                    event.preventDefault()
-                                    setSearchParams({
-                                        search: searchInput,
-                                    })
-                                }}
-                            >
-                                <SearchIcon />
-                            </button>
-                        </form>
+                        <div className="row d-flex align-items-center mb-4">
+                            <div className="col-5 d-flex align-items-center">
+                                <select
+                                    className="form-select sets-select py-2 me-2"
+                                    aria-label="Default select example"
+                                    value={type || 'all'}
+                                    onChange={(event) => {
+                                        setType(event.target.value)
+                                    }}
+                                >
+                                    <option value="all">All</option>
+                                    <option value="created">Created</option>
+                                    <option value="joined">Joined</option>
+                                </select>
+                            </div>
+                            <div className="col-7">
+                                <form className="sets-search m-0 d-flex align-items-center">
+                                    <input
+                                        className="search-control flex-grow-1"
+                                        placeholder="Search your classes"
+                                        type="text"
+                                        value={searchInput || ''}
+                                        readOnly={loading}
+                                        onChange={(event) =>
+                                            setSearchInput(event.target.value)
+                                        }
+                                    ></input>
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        onClick={(event) => {
+                                            event.preventDefault()
+                                            setSearchParams({
+                                                search: searchInput,
+                                            })
+                                        }}
+                                    >
+                                        <SearchIcon />
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                         {loadingSearch ? (
                             <div className="d-flex justify-content-center">
                                 <div
@@ -193,56 +218,69 @@ const ClassList = () => {
                                     </p>
                                 )}
                                 {classes?.map((classroom) => (
-                                    <div
-                                        key={classroom.id}
-                                        className="set-item mb-3"
-                                    >
-                                        <Link to={`/class/${classroom.id}`}>
-                                            <div className="set-body row mb-2">
-                                                <div className="class-home term-count">
-                                                    {classroom?.member} member
-                                                </div>
-                                                <div className="class-home term-count">
-                                                    {classroom?.studyset} sets
-                                                </div>
-                                                <div
-                                                    className="set-author col d-flex "
-                                                    href="#"
-                                                >
-                                                    <div className="author-avatar">
-                                                        <img
-                                                            src={
-                                                                classroom?.avatar
-                                                                    ? classroom?.avatar
-                                                                    : defaultAvatar
-                                                            }
-                                                            alt="author avatar"
-                                                            className="w-100 h-100"
-                                                        />
+                                    <div key={classroom.id}>
+                                        <div className="set-item mb-3">
+                                            <Link to={`/class/${classroom.id}`}>
+                                                <div className="set-body row mb-2">
+                                                    <div className="class-home term-count">
+                                                        {classroom?.member}{' '}
+                                                        member
                                                     </div>
-                                                    <span className="author-username ms-2">
-                                                        {classroom?.author}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="class-title set-title d-flex align-items-center">
-                                                    <ClassIcon className="me-2" />
-                                                    {classroom?.class_name}
-                                                </div>
-                                                <div className="col d-flex align-items-center">
-                                                    <p
-                                                        className="set-description m-0"
-                                                        style={{
-                                                            whiteSpace:
-                                                                'pre-wrap',
-                                                        }}
+                                                    <div className="class-home term-count">
+                                                        {classroom?.studyset}{' '}
+                                                        sets
+                                                    </div>
+                                                    <div
+                                                        className="set-author col d-flex "
+                                                        href="#"
                                                     >
-                                                        {classroom?.description}
-                                                    </p>
+                                                        <div className="author-avatar">
+                                                            <img
+                                                                src={
+                                                                    classroom?.avatar
+                                                                        ? classroom?.avatar
+                                                                        : defaultAvatar
+                                                                }
+                                                                alt="author avatar"
+                                                                className="w-100 h-100"
+                                                            />
+                                                        </div>
+                                                        <span className="author-username ms-2">
+                                                            {classroom?.author}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Link>
+                                                <div className="row">
+                                                    <div className="class-title set-title d-flex align-items-center">
+                                                        <ClassIcon className="me-2" />
+                                                        {classroom?.class_name}
+                                                    </div>
+                                                    <div className="col d-flex align-items-center">
+                                                        <p
+                                                            className="set-description m-0"
+                                                            style={{
+                                                                whiteSpace:
+                                                                    'pre-wrap',
+                                                            }}
+                                                        >
+                                                            {
+                                                                classroom?.description
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        </div>
+                                        {/* Pagination */}
+                                        <Pagination
+                                            className="mb-5"
+                                            currentPage={page}
+                                            totalCount={totalItems}
+                                            pageSize={10}
+                                            onPageChange={(page) => {
+                                                setPage(page)
+                                            }}
+                                        />
                                     </div>
                                 ))}
                             </div>

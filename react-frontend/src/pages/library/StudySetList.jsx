@@ -38,7 +38,7 @@ const StudySetList = () => {
 
     const [isDesc, setIsDesc] = useState(true)
     const [isPublic, setIsPublic] = useState(-1)
-    const [isDraft, setIsDraft] = useState(true)
+    const [isDraft, setIsDraft] = useState(false)
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState([])
 
@@ -290,7 +290,6 @@ const StudySetList = () => {
                                 </form>
                             </div>
                         </div>
-
                         {loadingSearch ? (
                             <div className="d-flex justify-content-center">
                                 <div

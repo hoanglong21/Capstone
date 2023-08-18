@@ -71,9 +71,6 @@ const ViewStudySet = () => {
     const [showCommentModal, setShowCommentModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
 
-    const [showToast, setShowToast] = useState(false)
-    const [toastMess, setToastMess] = useState('')
-
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
@@ -824,18 +821,7 @@ const ViewStudySet = () => {
                 setShowAssignModal={setShowAssignModal}
                 studySet={studySet}
                 userInfo={userInfo}
-                setShowToast={setShowToast}
-                setToastMess={setToastMess}
             />
-            {/* assign toast */}
-            <Toast
-                onClose={() => setShowToast(false)}
-                show={showToast}
-                delay={3000}
-                autohide
-            >
-                <Toast.Body>{toastMess}</Toast.Body>
-            </Toast>
         </div>
     )
 }

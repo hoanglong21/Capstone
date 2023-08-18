@@ -13,6 +13,7 @@ import {
     SearchIcon,
 } from '../../components/icons'
 import Pagination from '../../components/Pagination'
+import { useLocation } from 'react-router-dom'
 
 const AssignSets = ({
     showAssignModal,
@@ -21,7 +22,11 @@ const AssignSets = ({
     userInfo,
     setShowToast,
     setToastMess,
+    isAssign,
+    setIsAssign,
 }) => {
+    const location = useLocation()
+
     const [assignSets, setAssignSets] = useState([])
     const [notAssignSets, setNotAssignSets] = useState([])
     const [search, setSearch] = useState('')
@@ -34,6 +39,8 @@ const AssignSets = ({
     const [pageNot, setPageNot] = useState(1)
     const [totalItemsNot, setTotalItemsNot] = useState([])
     const [loadingNot, setLoadingNot] = useState(false)
+    const [success, setSuccess] = useState(false)
+    const [successMess, setSuccessMess] = useState('')
 
     const fetchAssign = async () => {
         setLoading(true)
@@ -110,10 +117,27 @@ const AssignSets = ({
             var tempNot = [...notAssignSets]
             tempNot.splice(index, 1)
             setNotAssignSets([...tempNot])
-            setToastMess(
-                `Successfully assign ${studySet.title} to ${classroom.class_name}`
-            )
-            setShowToast(true)
+            if (isAssign === false) {
+                setIsAssign(true)
+                setToastMess(
+                    `Successfully assign ${studySet.title} to ${classroom.class_name}`
+                )
+                setShowToast(true)
+                setShowAssignModal(false)
+            } else if (
+                location.pathname.includes(`/class/${classroom.id}/sets`)
+            ) {
+                setSuccess(true)
+                setSuccessMess(
+                    `Successfully assign ${studySet.title} to ${classroom.class_name}`
+                )
+                setTimeout(function () {
+                    setSuccess(false)
+                    setSuccessMess('')
+                    setShowAssignModal(false)
+                    window.location.reload()
+                }, 4000)
+            }
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -130,10 +154,27 @@ const AssignSets = ({
             var temp = [...assignSets]
             temp.splice(index, 1)
             setAssignSets([...temp])
-            setToastMess(
-                `Successfully unassign ${studySet.title} from ${classroom.class_name}`
-            )
-            setShowToast(true)
+            if (isAssign === false) {
+                setIsAssign(true)
+                setToastMess(
+                    `Successfully unassign ${studySet.title} from ${classroom.class_name}`
+                )
+                setShowToast(true)
+                setShowAssignModal(false)
+            } else if (
+                location.pathname.includes(`/class/${classroom.id}/sets`)
+            ) {
+                setSuccess(true)
+                setSuccessMess(
+                    `Successfully unassign ${studySet.title} from ${classroom.class_name}`
+                )
+                setTimeout(function () {
+                    setSuccess(false)
+                    setSuccessMess('')
+                    setShowAssignModal(false)
+                    window.location.reload()
+                }, 4000)
+            }
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -157,6 +198,14 @@ const AssignSets = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-5">
+                {success && (
+                    <div
+                        className="alert alert-success col-12 mb-2"
+                        role="alert"
+                    >
+                        {successMess}
+                    </div>
+                )}
                 <form className="input-group mb-3">
                     <input
                         type="text"

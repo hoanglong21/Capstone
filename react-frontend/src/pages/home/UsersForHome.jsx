@@ -21,7 +21,7 @@ function UsersForHome() {
     const fetchData = async (searchKey) => {
         try {
             const temp = (
-                await UserService.filterUser(
+                await UserService.filterUserCommon(
                     '',
                     `${searchKey || author ? `=${searchKey || author}` : ''}`,
                     '',
