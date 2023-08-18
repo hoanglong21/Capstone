@@ -27,7 +27,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
     private DateRangePicker dateRangePicker;
 
     @Override
-    public List<Integer> getUserGrowth() {
+    public List<Integer> getUserGrowth() throws Exception {
         List<Integer> result = new ArrayList<>();
         List<String> listDate = dateRangePicker.getDateRange();
         for(int i=0; i<listDate.size()-1; i++) {
@@ -62,7 +62,7 @@ public class OverviewStatisticServiceImpl implements OverviewStatisticService {
     }
 
     @Override
-    public Integer getRegisterNumber() {
+    public Integer getRegisterNumber() throws Exception {
         List<String> listDate = dateRangePicker.getShortDateRange();
         Map<String, Object> response = userService.filterUser(null,null, null, null, null,
                 new String[]{"ROLE_LEARNER", "ROLE_TUTOR"}, null, null, null,

@@ -1,11 +1,13 @@
 package com.capstone.project.service;
 
+import java.lang.Class;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
 
+import com.capstone.project.dto.FilterStudySetByClassResponse;
 import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
@@ -27,6 +29,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.AssertionErrors;
 
@@ -53,6 +57,9 @@ public class StudySetServiceTest {
 
     @Mock
     private EntityManager entityManager;
+
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
     private StudySetServiceImpl studySetServiceImpl;
@@ -310,5 +317,71 @@ public class StudySetServiceTest {
         when(studySetRepository.countCardInSetWithCondition(anyInt(), anyInt(), anyString(), anyBoolean())).thenReturn(1);
         Map<String, Integer> response = studySetServiceImpl.countCardInSet(1, 1);
         assertThat(response.get("Not studied")).isEqualTo(1);
+    }
+
+    @Order(13)
+    @Test
+    public void getStudySetById() {
+        StudySet initStudySet = StudySet.builder().build();
+        when(studySetRepository.findById(anyInt())).thenReturn(Optional.ofNullable(initStudySet));
+        try {
+            StudySet getStudySet = studySetServiceImpl.getStudySetById(1);
+            assertThat(getStudySet).isEqualTo(initStudySet);
+        } catch (ResourceNotFroundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Order(14)
+    @Test
+    public void recoverStudySet() {
+        StudySet initStudySet = StudySet.builder()
+                .is_deleted(true)
+                .build();
+        when(studySetRepository.findById(anyInt())).thenReturn(Optional.ofNullable(initStudySet));
+        try {
+            studySetServiceImpl.recoverStudySet(1);
+            assertThat(initStudySet.is_deleted()).isEqualTo(false);
+        } catch (ResourceNotFroundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Order(15)
+    @ParameterizedTest
+    @CsvSource({
+            "1, 1, kanji, true, sortByField, ASC, 1, 10",
+    })
+    void getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) {
+        List<FilterStudySetByClassResponse> responseList = Arrays.asList(
+                FilterStudySetByClassResponse.builder().build()
+        );
+
+        when(jdbcTemplate.queryForObject(any(String.class), any(Class.class), any())).thenReturn(2L);
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(BeanPropertyRowMapper.class))).thenReturn(responseList);
+        try {
+            Map<String, Object> result = studySetServiceImpl.getFilterListByClass(authorId, classId, search, isAssigned, sortBy, direction, page, size);
+            assertThat(result.get("list")).isEqualTo(responseList);
+        } catch (Exception e) {
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
+        }
+    }
+
+    @Order(16)
+    @Test
+    public void testPerformSetCleanup() {
+        // Arrange
+        List<Integer> listToDelete = Arrays.asList(1, 2, 3); // Sample list
+        StudySet sampleStudySet = StudySet.builder().id(1).build();
+
+        when(studySetRepository.findListIdToDelete()).thenReturn(listToDelete);
+        when(studySetRepository.findById(anyInt())).thenReturn(Optional.ofNullable(sampleStudySet));
+        doNothing().when(studySetRepository).delete(any(StudySet.class)); // Mocking delete operation
+
+        // Act
+        studySetServiceImpl.performSetCleanup();
+
+        verify(studySetRepository, times(1)).findListIdToDelete();
+        verify(studySetRepository, times(3)).delete(any(StudySet.class));
     }
 }

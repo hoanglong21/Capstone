@@ -49,7 +49,7 @@ public class OverviewStatisticServiceTest {
 
     @Order(1)
     @Test
-    public void getUserGrowth() {
+    public void getUserGrowth() throws Exception {
         Map<String, Object> response = new HashMap<>();
         response.put("totalItems", 2);
         when(dateRangePicker.getDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
@@ -86,7 +86,7 @@ public class OverviewStatisticServiceTest {
 
     @Order(4)
     @Test
-    public void getRegisterNumber() {
+    public void getRegisterNumber() throws Exception {
         Map<String, Object> response = new HashMap<>();
         response.put("totalItems", 2);
         when(dateRangePicker.getShortDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));

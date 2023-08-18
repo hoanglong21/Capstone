@@ -1,6 +1,7 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.dto.CardWrapper;
+import com.capstone.project.dto.FilterStudySetByClassResponse;
 import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.dto.UserFilterResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
@@ -32,13 +33,13 @@ public class StudySetServiceImpl implements StudySetService {
     private final ProgressRepository progressRepository;
     private final CardService cardService;
     private final UserService userService;
-
+    private final JdbcTemplate jdbcTemplate;
     @PersistenceContext
     private EntityManager em;
     private final UserRepository userRepository;
     @Autowired
     public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService,
-                               UserRepository userRepository, UserService userService, ProgressRepository progressRepository, EntityManager em) {
+                               UserRepository userRepository, UserService userService, ProgressRepository progressRepository, EntityManager em, JdbcTemplate jdbcTemplate) {
         this.studySetRepository = studySetRepository;
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
@@ -47,6 +48,7 @@ public class StudySetServiceImpl implements StudySetService {
         this.userService = userService;
         this.progressRepository = progressRepository;
         this.em = em;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -275,8 +277,7 @@ public class StudySetServiceImpl implements StudySetService {
         return result;
     }
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
 
     @Override
     public Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
@@ -286,10 +287,12 @@ public class StudySetServiceImpl implements StudySetService {
 
         String sql = "";
         if(isAssigned==true) {
-            sql = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
+            sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
+                    " IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
                     " AND author_id = " + authorId + " ";
         } else {
-            sql = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
+            sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
+                    " NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
                     " AND author_id = " + authorId + " ";
         }
         sql += " AND is_deleted = false AND is_draft = false AND is_public = true ";
@@ -315,8 +318,8 @@ public class StudySetServiceImpl implements StudySetService {
         params.add(size);
         params.add(offset);
 
-        List<StudySet> userList =
-                jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(StudySet.class));
+        List<FilterStudySetByClassResponse> userList =
+                jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(FilterStudySetByClassResponse.class));
 
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
@@ -414,7 +417,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Scheduled(cron = "0 0 0 * * ?") // Run daily at midnight
-    private void performSetCleanup() {
+    public void performSetCleanup() {
         List<Integer> listToDelete = studySetRepository.findListIdToDelete();
 
         for (Integer id : listToDelete) {
