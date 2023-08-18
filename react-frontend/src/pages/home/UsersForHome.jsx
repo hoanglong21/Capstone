@@ -21,7 +21,7 @@ function UsersForHome() {
     const fetchData = async (searchKey) => {
         try {
             const temp = (
-                await UserService.filterUser(
+                await UserService.filterUserCommon(
                     '',
                     `${searchKey || author ? `=${searchKey || author}` : ''}`,
                     '',
@@ -78,75 +78,79 @@ function UsersForHome() {
                     </div>
                 </div>
             ) : (
-                <div className="sets-list row g-3">
-                    {users?.length === 0 && (
-                        <p className="noFound">
-                            No users matching {search} found
-                        </p>
-                    )}
-                    {users?.map((user) => (
-                        <div
-                            className="col-12 col-md-6 col-xl-4"
-                            key={user?.id}
-                        >
-                            <div className="set-item h-100">
-                                <Link
-                                    to={{
-                                        pathname: '/',
-                                        search: `?author=${user?.username}`,
-                                    }}
-                                >
-                                    <div className="set-body">
-                                        <div className="d-flex align-items-center">
-                                            <div
-                                                className="author-avatar"
-                                                style={{
-                                                    height: '4rem',
-                                                    width: '4rem',
-                                                }}
-                                            >
-                                                <img
-                                                    src={
-                                                        user?.avatar
-                                                            ? user?.avatar
-                                                            : defaultAvatar
-                                                    }
-                                                    alt="author avatar"
-                                                    className="w-100 h-100"
-                                                />
-                                            </div>
-                                            <div className="d-flex flex-column justify-content-center ms-3">
-                                                <span className="set-title">
-                                                    {user?.username}
-                                                </span>
-                                                <p
-                                                    className="set-description m-0 mt-2"
+                <div>
+                    <div className="sets-list mb-4 row g-3">
+                        {users?.length === 0 && (
+                            <p className="noFound">
+                                No users matching {search} found
+                            </p>
+                        )}
+                        {users?.map((user) => (
+                            <div
+                                className="col-12 col-md-6 col-xl-4"
+                                key={user?.id}
+                            >
+                                <div className="set-item h-100">
+                                    <Link
+                                        to={{
+                                            pathname: '/',
+                                            search: `?author=${user?.username}`,
+                                        }}
+                                    >
+                                        <div className="set-body">
+                                            <div className="d-flex align-items-center">
+                                                <div
+                                                    className="author-avatar"
                                                     style={{
-                                                        whiteSpace: 'pre-wrap',
+                                                        height: '4rem',
+                                                        width: '4rem',
                                                     }}
                                                 >
-                                                    {user?.role === 'ROLE_ADMIN'
-                                                        ? 'Admin'
-                                                        : user?.role ===
-                                                          'ROLE_TUTOR'
-                                                        ? 'Tutor'
-                                                        : 'Learner'}
-                                                </p>
+                                                    <img
+                                                        src={
+                                                            user?.avatar
+                                                                ? user?.avatar
+                                                                : defaultAvatar
+                                                        }
+                                                        alt="author avatar"
+                                                        className="w-100 h-100"
+                                                    />
+                                                </div>
+                                                <div className="d-flex flex-column justify-content-center ms-3">
+                                                    <span className="set-title">
+                                                        {user?.username}
+                                                    </span>
+                                                    <p
+                                                        className="set-description m-0 mt-2"
+                                                        style={{
+                                                            whiteSpace:
+                                                                'pre-wrap',
+                                                        }}
+                                                    >
+                                                        {user?.role ===
+                                                        'ROLE_ADMIN'
+                                                            ? 'Admin'
+                                                            : user?.role ===
+                                                              'ROLE_TUTOR'
+                                                            ? 'Tutor'
+                                                            : 'Learner'}
+                                                    </p>
+                                                </div>
                                             </div>
+                                            <p
+                                                className="set-description m-0 mt-2"
+                                                style={{
+                                                    whiteSpace: 'pre-wrap',
+                                                }}
+                                            >
+                                                {user?.bio}
+                                            </p>
                                         </div>
-                                        <p
-                                            className="set-description m-0 mt-2"
-                                            style={{
-                                                whiteSpace: 'pre-wrap',
-                                            }}
-                                        >
-                                            {user?.bio}
-                                        </p>
-                                    </div>
-                                </Link>
+                                    </Link>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                     {/* Pagination */}
                     {users?.length > 0 && (
                         <Pagination
