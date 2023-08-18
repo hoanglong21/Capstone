@@ -50,6 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
         notification.setDatetime(date);
+        notification.set_read(false);
         return notificationRepository.save(notification);
     }
 

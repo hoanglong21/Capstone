@@ -45,7 +45,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
         classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
 //        List<String> listDate = dateRangePicker.getShortDateRange();
-        Map<String, Object> response = testService.getFilterTest(null, null, "DESC", 0, id, null, null,
+        Map<String, Object> response = testService.getFilterTest(null, null, "DESC", 0, id,null,null, null, null,
                 null, null, null, "created_date", 1, 5);
         return Integer.parseInt(String.valueOf(response.get("totalItems")));
     }
@@ -56,7 +56,7 @@ public class ClassStatisticServiceImpl implements ClassStatisticService {
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id: " + id));
 //        List<String> listDate = dateRangePicker.getShortDateRange();
         Map<String, Object> response = assignmentService.getFilterAssignment(null, null, null, null, null, null,
-                null, "DESC", "created_date", id, 1, 5);
+                null,null,null, "DESC", "created_date", id, 1, 5);
         return Integer.parseInt(String.valueOf(response.get("totalItems")));
     }
 

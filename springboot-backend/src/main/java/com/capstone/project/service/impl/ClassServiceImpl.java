@@ -128,8 +128,6 @@ public class ClassServiceImpl implements ClassService {
 
     public void notificationRestoredClass(Class classroom) {
 
-
-
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
 
@@ -139,7 +137,7 @@ public class ClassServiceImpl implements ClassService {
                 Notification notification = new Notification();
                 notification.setContent("Class '" + classroom.getClass_name() + "' has been restored.");
                 notification.setDatetime(date);
-
+                notification.set_read(false);
                 notification.setUser(classLearner.getUser());
 
                 notificationRepository.save(notification);
@@ -168,6 +166,7 @@ public class ClassServiceImpl implements ClassService {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
                 notification.setContent("Your Class " + classroom.getClass_name() + "' has been deleted.");
+                notification.set_read(false);
                 notification.setUser(classLearner.getUser());
                 notification.setDatetime(date);
 

@@ -186,7 +186,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Override
     public Map<String, Object> getFilterAssignment(String search, String author, String fromStart, String toStart,String fromCreated, String toCreated,
-                                                   Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws Exception {
+                                                   String duedatefrom, String duedateto,Boolean isDraft,String direction,String sortBy,int classid ,int page, int size) throws Exception {
         if(page<=0 || size<=0) {
             throw new Exception("Please provide valid page and size");
         }
@@ -212,6 +212,15 @@ public class AssignmentServiceImpl implements AssignmentService {
         if (classid != 0) {
             query += " AND a.class_id = :classId";
             parameters.put("classId", classid);
+        }
+
+        if (duedatefrom != null && !duedatefrom.equals("")) {
+            query += " AND DATE(due_date) >= :duedatefrom";
+            parameters.put("duedatefrom", duedatefrom);
+        }
+        if (duedateto != null && !duedateto.equals("")) {
+            query += " AND DATE(due_date) <= :duedateto";
+            parameters.put("duedateto", duedateto);
         }
 
         if (isDraft != null) {

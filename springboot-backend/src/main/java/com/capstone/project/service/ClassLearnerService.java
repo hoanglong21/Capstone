@@ -31,7 +31,7 @@ public interface ClassLearnerService {
     Map<String, Object> filterClassLearner(int userId, int classId, String fromCreated, String toCreated,String status,
                                               String sortBy, String direction, int page, int size) throws ParseException;
 
-    Map<String, Object> filterGetLearner(int userId, int classId, String status,
+    Map<String, Object> filterGetLearner(int userId, int classId,String username, String status,
                                            String sortBy, String direction, int page, int size) throws ParseException;
 
 }

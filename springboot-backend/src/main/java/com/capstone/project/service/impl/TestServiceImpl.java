@@ -210,7 +210,7 @@ public class TestServiceImpl  implements TestService {
 
     @Override
     public Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid,
-                                             String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws Exception {
+                                             String duedatefrom, String duedateto,String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws Exception {
 
         if(page<=0 || size<=0) {
             throw new Exception("Please provide valid page and size");
@@ -248,6 +248,15 @@ public class TestServiceImpl  implements TestService {
         if (isDraft != null) {
             query += " AND t.is_draft = :isDraft";
             parameters.put("isDraft", isDraft);
+        }
+
+        if (duedatefrom != null && !duedatefrom.equals("")) {
+            query += " AND DATE(due_date) >= :duedatefrom";
+            parameters.put("duedatefrom", duedatefrom);
+        }
+        if (duedateto != null && !duedateto.equals("")) {
+            query += " AND DATE(due_date) <= :duedateto";
+            parameters.put("duedateto", duedateto);
         }
 
         if(fromStarted != null){
