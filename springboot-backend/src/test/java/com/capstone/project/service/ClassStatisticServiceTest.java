@@ -64,7 +64,7 @@ public class ClassStatisticServiceTest {
             response.put("totalItems", 2);
             when(classRepository.findById(anyInt())).thenReturn(Optional.ofNullable(Class.builder().build()));
             when(dateRangePicker.getDateActive()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-            when(testService.getFilterTest(any(), any(), any(), anyInt(), anyInt(), any(), any(),
+            when(testService.getFilterTest(any(), any(), any(), anyInt(), anyInt(), any(), any(),any(), any(),
                     any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
             Integer result = classStatisticService.getTestNumber(1);
             assertThat(result).isEqualTo(2);
@@ -81,7 +81,7 @@ public class ClassStatisticServiceTest {
             response.put("totalItems", 2);
             when(classRepository.findById(anyInt())).thenReturn(Optional.ofNullable(Class.builder().build()));
             when(dateRangePicker.getDateActive()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-            when(assignmentService.getFilterAssignment(any(), any(), any(), any(), any(), any(), any(),
+            when(assignmentService.getFilterAssignment(any(), any(), any(), any(), any(), any(), any(),any(), any(),
                     any(), any(), anyInt(), anyInt(), anyInt())).thenReturn(response);
             Integer result = classStatisticService.getAssignmentNumber(1);
             assertThat(result).isEqualTo(2);

@@ -406,30 +406,22 @@ public class ClassServiceTest {
             "1,1",
             "2,1"
     })
-    public void testAssignStudyset(int classId, int studySetId) throws ResourceNotFroundException {
+    public void testAssignStudyset(int classId,int studysetId ) throws ResourceNotFroundException {
 
-        StudySet studySet = StudySet.builder()
-                .title("Stub")
-                .studySetType(StudySetType.builder().id(1).build())
-                .build();
+        Class classroom = new Class();
+        classroom.setStudySets(new HashSet<>());
+        StudySet studySet = new StudySet();
 
-        Class classroom = Class.builder()
-                .class_name("luyen thi N3")
-                .description("hoc N3")
-                .studySets(new HashSet<>())
-                .build();
-
-        // Mock hàm findById trong repository
         when(classRepository.findById(classId)).thenReturn(Optional.of(classroom));
-        when(studySetRepository.findById(studySetId)).thenReturn(Optional.of(studySet));
+        when(studySetRepository.findById(studysetId)).thenReturn(Optional.of(studySet));
+        when(classRepository.save(any())).thenReturn(classroom);
 
-        // Gọi hàm cần kiểm thử
-        Boolean result = classService.AssignStudyset(classId, studySetId);
+        Class result = classServiceImpl.AssignStudyset(classId, studysetId);
 
-        // Kiểm tra kết quả và interactions
-        assertFalse(result);
-        assertFalse(classroom.getStudySets().contains(studySet));
+        assertEquals(result,classroom);
+        assertTrue(classroom.getStudySets().contains(studySet));
     }
+
 
 
     @Order(12)
@@ -464,16 +456,23 @@ public class ClassServiceTest {
     @Test
     public void testUnassignStudyset() throws ResourceNotFroundException {
         Class classroom = new Class();
+        classroom.setStudySets(new HashSet<>());
         StudySet studySet = new StudySet();
         int classId = 1;
         int studySetId = 1;
 
         when(classRepository.findById(classId)).thenReturn(Optional.of(classroom));
         when(studySetRepository.findById(studySetId)).thenReturn(Optional.of(studySet));
+        Query mockedQuery = mock(Query.class);
+        when(em.createNativeQuery(anyString())).thenReturn(mockedQuery);
+        when(mockedQuery.setParameter(anyString(), any())).thenReturn(mockedQuery);
+        when(mockedQuery.setMaxResults(anyInt())).thenReturn(mockedQuery);
+        when(mockedQuery.getResultList()).thenReturn(List.of(classroom));
 
-        Boolean result = classService.UnassignStudyset(classId, studySetId);
+        Boolean result = classServiceImpl.UnassignStudyset(classId, studySetId);
 
-        assertFalse(result);
+        assertTrue(result);
+        assertFalse(classroom.getStudySets().contains(studySet));
     }
 
     @Order(14)
