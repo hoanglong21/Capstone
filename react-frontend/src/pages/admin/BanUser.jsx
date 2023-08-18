@@ -25,7 +25,7 @@ const BanUser = ({ user }) => {
       toast.success('Banned successfully !', {
         position: toast.POSITION.TOP_RIGHT
       });
-      window.location.reload();
+      window.location.reload()
       navigate('/manageusers')
       setError("")
     } catch (error) {

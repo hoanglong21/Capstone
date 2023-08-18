@@ -72,8 +72,8 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public Assignment createAssignment(Assignment assignment) throws ResourceNotFroundException {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-//        Date date = localDateTimeToDate(localDateTime);
-//        assignment.setCreated_date(date);
+        Date date = localDateTimeToDate(localDateTime);
+        assignment.setCreated_date(date);
 //        if (assignment.getStart_date() != null && assignment.getCreated_date() != null &&
 //                assignment.getStart_date().before(assignment.getCreated_date())) {
 //            throw new ResourceNotFroundException("Start date must be >= created date");
@@ -84,7 +84,7 @@ public class AssignmentServiceImpl implements AssignmentService {
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 7 && !assignment.is_draft()) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 7 && userSetting.getValue().equalsIgnoreCase("true") && !assignment.is_draft()) {
                     sendAssignmentCreatedEmail(classLearner, savedAssignment);
                 }
             }

@@ -85,7 +85,7 @@ public class TestServiceImpl  implements TestService {
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 8 && !test.is_draft()) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 8 && userSetting.getValue().equalsIgnoreCase("true") && !test.is_draft()) {
                     sendTestCreatedEmail(classLearner, savedTest);
                 }
             }

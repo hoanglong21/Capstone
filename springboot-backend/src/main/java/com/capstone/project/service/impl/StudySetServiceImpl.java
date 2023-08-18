@@ -33,13 +33,13 @@ public class StudySetServiceImpl implements StudySetService {
     private final ProgressRepository progressRepository;
     private final CardService cardService;
     private final UserService userService;
-
+    private final JdbcTemplate jdbcTemplate;
     @PersistenceContext
     private EntityManager em;
     private final UserRepository userRepository;
     @Autowired
     public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService,
-                               UserRepository userRepository, UserService userService, ProgressRepository progressRepository, EntityManager em) {
+                               UserRepository userRepository, UserService userService, ProgressRepository progressRepository, EntityManager em, JdbcTemplate jdbcTemplate) {
         this.studySetRepository = studySetRepository;
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
@@ -48,6 +48,7 @@ public class StudySetServiceImpl implements StudySetService {
         this.userService = userService;
         this.progressRepository = progressRepository;
         this.em = em;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -276,8 +277,7 @@ public class StudySetServiceImpl implements StudySetService {
         return result;
     }
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+
 
     @Override
     public Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
@@ -417,7 +417,7 @@ public class StudySetServiceImpl implements StudySetService {
     }
 
     @Scheduled(cron = "0 0 0 * * ?") // Run daily at midnight
-    private void performSetCleanup() {
+    public void performSetCleanup() {
         List<Integer> listToDelete = studySetRepository.findListIdToDelete();
 
         for (Integer id : listToDelete) {
