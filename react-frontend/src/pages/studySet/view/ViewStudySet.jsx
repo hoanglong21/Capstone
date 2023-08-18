@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Toast from 'react-bootstrap/Toast'
 
 import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
+import CommentService from '../../../services/CommentService'
 
 import ViewCard from './ViewCard'
 import DeleteSet from '../DeleteSet'
 import Pagination from '../../../components/Pagination'
+import AssignToClass from '../AssignToClass'
+import Comment from '../../../components/comment/Comment'
+import CardEditor from '../../../components/textEditor/CardEditor'
 
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import {
@@ -25,10 +30,6 @@ import {
     CloseIcon,
 } from '../../../components/icons'
 import './viewStudySet.css'
-import CommentService from '../../../services/CommentService'
-import Comment from '../../../components/comment/Comment'
-import CardEditor from '../../../components/textEditor/CardEditor'
-import AssignToClass from '../AssignToClass'
 
 const ViewStudySet = () => {
     const navigate = useNavigate()
@@ -69,6 +70,9 @@ const ViewStudySet = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showCommentModal, setShowCommentModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
+
+    const [showToast, setShowToast] = useState(false)
+    const [toastMess, setToastMess] = useState('')
 
     // ignore error
     useEffect(() => {
@@ -271,7 +275,10 @@ const ViewStudySet = () => {
     return (
         <div className="container setPageContainer">
             <div className="setTitle">
-                <h2>{studySet?.title}</h2>
+                <h2>
+                    {studySet?.title}
+                    {studySet?._draft && ' (Draft)'}
+                </h2>
             </div>
             {/* Modes */}
             <div className="row mb-4">
@@ -815,8 +822,20 @@ const ViewStudySet = () => {
             <AssignToClass
                 showAssignModal={showAssignModal}
                 setShowAssignModal={setShowAssignModal}
+                studySet={studySet}
                 userInfo={userInfo}
+                setShowToast={setShowToast}
+                setToastMess={setToastMess}
             />
+            {/* assign toast */}
+            <Toast
+                onClose={() => setShowToast(false)}
+                show={showToast}
+                delay={3000}
+                autohide
+            >
+                <Toast.Body>{toastMess}</Toast.Body>
+            </Toast>
         </div>
     )
 }

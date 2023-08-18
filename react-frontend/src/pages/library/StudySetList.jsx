@@ -4,10 +4,23 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import StudySetService from '../../services/StudySetService'
 
+import Pagination from '../../components/Pagination'
+
+import {
+    ArrowSmallDownIcon,
+    ArrowSmallUpIcon,
+    CheckIcon,
+    CloseIcon,
+    DeleteIcon,
+    DeleteSolidIcon,
+    EditIcon,
+    OptionVerIcon,
+    SearchIcon,
+} from '../../components/icons'
 import empty from '../../assets/images/empty-state.png'
 import defaultAvatar from '../../assets/images/default_avatar.png'
-import { SearchIcon } from '../../components/icons'
 import '../../assets/styles/LibrarySearchList.css'
+import DeleteSet from '../studySet/DeleteSet'
 
 const StudySetList = () => {
     const navigate = useNavigate()
@@ -23,17 +36,27 @@ const StudySetList = () => {
     const [loadingSearch, setLoadingSearch] = useState(true)
     const [searchInput, setSearchInput] = useState(search)
 
+    const [isDesc, setIsDesc] = useState(true)
+    const [isPublic, setIsPublic] = useState(-1)
+    const [isDraft, setIsDraft] = useState(true)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState([])
+
+    const [deleteSet, setDeleteSet] = useState({})
+    const [isDelete, setIsDelete] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
         try {
             setIsEmpty(false)
             const temp = (
                 await StudySetService.getFilterList(
-                    '',
-                    '',
-                    '',
+                    '=0',
+                    `${isPublic == -1 ? '' : isPublic == 1 ? '=1' : '=0'}`,
+                    `${isDraft ? '=1' : ''}`,
                     `${searchKey ? '=' + searchKey : ''}`,
-                    `=${userInfo.id}`,
+                    `=${userInfo.username}`,
                     '',
                     '',
                     '',
@@ -41,12 +64,13 @@ const StudySetList = () => {
                     '',
                     '',
                     '',
-                    '',
-                    '',
-                    ''
+                    `=${isDesc ? 'desc' : 'asc'}`,
+                    `=${page}`,
+                    `=10`
                 )
-            ).data.list
-            setSets(temp)
+            ).data
+            setTotalItems(temp.totalItems)
+            setSets(temp.list)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -63,21 +87,21 @@ const StudySetList = () => {
             setIsEmpty(false)
             const temp = (
                 await StudySetService.getFilterList(
+                    '=0',
+                    '',
+                    '',
+                    '',
+                    `=${userInfo.username}`,
                     '',
                     '',
                     '',
                     '',
-                    `=${userInfo.id}`,
                     '',
                     '',
                     '',
                     '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
+                    '=1',
+                    '=10'
                 )
             ).data.list
             if (temp.length === 0) {
@@ -103,15 +127,14 @@ const StudySetList = () => {
         if (userInfo.username) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search])
+    }, [userInfo, search, page, isDesc, isPublic, isDraft])
 
-    const handleViewSet = (studySet) => {
-        if (studySet._draft) {
-            navigate(`/edit-set/${studySet.id}`)
-        } else {
-            navigate(`/set/${studySet.id}`)
+    useEffect(() => {
+        if (isDelete === true) {
+            setIsDelete(false)
+            fetchData(search ? search : '')
         }
-    }
+    }, [isDelete])
 
     if (loading) {
         return (
@@ -184,30 +207,90 @@ const StudySetList = () => {
                     </div>
                 ) : (
                     <div>
-                        <form className="sets-search mb-4 d-flex align-items-center">
-                            <input
-                                className="search-control flex-grow-1"
-                                placeholder="Search your sets"
-                                type="text"
-                                value={searchInput || ''}
-                                readOnly={loading}
-                                onChange={(event) =>
-                                    setSearchInput(event.target.value)
-                                }
-                            ></input>
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                onClick={(event) => {
-                                    event.preventDefault()
-                                    setSearchParams({
-                                        search: searchInput,
-                                    })
-                                }}
-                            >
-                                <SearchIcon />
-                            </button>
-                        </form>
+                        <div className="row d-flex align-items-center mb-4">
+                            <div className="col-5 d-flex align-items-center">
+                                <select
+                                    className="form-select sets-select py-2 me-2"
+                                    aria-label="Default select example"
+                                    value={isPublic || 0}
+                                    onChange={(event) => {
+                                        setIsPublic(event.target.value)
+                                    }}
+                                >
+                                    <option value={-1}>All access</option>
+                                    <option value={1}>Public</option>
+                                    <option value={0}>Private</option>
+                                </select>
+                                <button
+                                    className="btn btn-light p-2 me-2"
+                                    onClick={() => {
+                                        setIsDesc(!isDesc)
+                                    }}
+                                >
+                                    {isDesc ? (
+                                        <ArrowSmallDownIcon />
+                                    ) : (
+                                        <ArrowSmallUpIcon />
+                                    )}
+                                </button>
+                                <button
+                                    className="btn btn-light p-2 d-flex align-items-center"
+                                    onClick={() => {
+                                        setIsDraft(!isDraft)
+                                    }}
+                                >
+                                    <span className="me-1">Only draft</span>
+                                    {isDraft ? (
+                                        <CheckIcon size="1.1rem" />
+                                    ) : (
+                                        <CloseIcon size="1.1rem" />
+                                    )}
+                                </button>
+                            </div>
+                            <div className="col-7">
+                                <form className="sets-search d-flex align-items-center mb-0">
+                                    <input
+                                        className="search-control flex-grow-1"
+                                        placeholder="Search your sets"
+                                        type="text"
+                                        value={searchInput || ''}
+                                        readOnly={loading}
+                                        onChange={(event) =>
+                                            setSearchInput(event.target.value)
+                                        }
+                                    ></input>
+                                    {searchInput && (
+                                        <button
+                                            className="btn btn-outline-secondary px-2"
+                                            type="button"
+                                            onClick={() => {
+                                                setSearchInput('')
+                                                if (search != '') {
+                                                    setSearchParams({
+                                                        search: '',
+                                                    })
+                                                }
+                                            }}
+                                        >
+                                            <CloseIcon />
+                                        </button>
+                                    )}
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        onClick={(event) => {
+                                            event.preventDefault()
+                                            setSearchParams({
+                                                search: searchInput,
+                                            })
+                                        }}
+                                    >
+                                        <SearchIcon />
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
                         {loadingSearch ? (
                             <div className="d-flex justify-content-center">
                                 <div
@@ -221,65 +304,153 @@ const StudySetList = () => {
                             </div>
                         ) : (
                             <div className="sets-list">
-                                {sets?.length === 0 && (
+                                {sets?.length === 0 ? (
                                     <p className="noFound">
                                         No sets matching {search} found
                                     </p>
-                                )}
-                                {sets?.map((set) => (
-                                    <div
-                                        key={set?.id}
-                                        className="set-item mb-3"
-                                    >
-                                        <div
-                                            onClick={() => handleViewSet(set)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <div className="set-body row mb-2">
-                                                <div className="term-count col-3">
-                                                    {set?.count} terms
-                                                </div>
-                                                <div
-                                                    className="set-author col d-flex align-items-center"
-                                                    href="#"
-                                                >
-                                                    <div className="author-avatar">
-                                                        <img
-                                                            src={
-                                                                userInfo?.avatar
-                                                                    ? userInfo?.avatar
-                                                                    : defaultAvatar
-                                                            }
-                                                            alt="author avatar"
-                                                            className="w-100 h-100"
-                                                        />
+                                ) : (
+                                    <div>
+                                        {sets?.map((set) => (
+                                            <div
+                                                key={set?.id}
+                                                className="set-item mb-3"
+                                            >
+                                                <div className="row">
+                                                    <div className="col-11">
+                                                        <div
+                                                            onClick={(
+                                                                event
+                                                            ) => {
+                                                                event.preventDefault()
+                                                                navigate(
+                                                                    `/set/${set?.id}`
+                                                                )
+                                                            }}
+                                                            style={{
+                                                                cursor: 'pointer',
+                                                            }}
+                                                        >
+                                                            <div className="set-body row mb-2">
+                                                                <div className="term-count col-3">
+                                                                    {set?.count}{' '}
+                                                                    terms
+                                                                </div>
+                                                                <div
+                                                                    className="set-author col d-flex align-items-center"
+                                                                    href="#"
+                                                                >
+                                                                    <div className="author-avatar">
+                                                                        <img
+                                                                            src={
+                                                                                userInfo?.avatar
+                                                                                    ? userInfo?.avatar
+                                                                                    : defaultAvatar
+                                                                            }
+                                                                            alt="author avatar"
+                                                                            className="w-100 h-100"
+                                                                        />
+                                                                    </div>
+                                                                    <span className="author-username ms-2">
+                                                                        {
+                                                                            userInfo?.username
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="set-title col-3">
+                                                                    {set?._draft
+                                                                        ? `(Draft) ${set?.title}`
+                                                                        : set?.title}
+                                                                </div>
+                                                                <div className="col-9 d-flex align-items-center">
+                                                                    <p
+                                                                        className="set-description m-0"
+                                                                        style={{
+                                                                            whiteSpace:
+                                                                                'pre-wrap',
+                                                                        }}
+                                                                    >
+                                                                        {
+                                                                            set?.description
+                                                                        }
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <span className="author-username ms-2">
-                                                        {userInfo?.username}
-                                                    </span>
+                                                    <div className="col-1">
+                                                        <button
+                                                            type="button dropdown-toggle"
+                                                            className="btn btn-customLight"
+                                                            data-bs-toggle="dropdown"
+                                                            aria-expanded="false"
+                                                        >
+                                                            <OptionVerIcon />
+                                                        </button>
+                                                        <ul className="dropdown-menu">
+                                                            <li>
+                                                                <button
+                                                                    className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                    onClick={() => {
+                                                                        navigate(
+                                                                            `/edit-set/${set?.id}`
+                                                                        )
+                                                                    }}
+                                                                >
+                                                                    <EditIcon
+                                                                        size="20px"
+                                                                        className="me-2"
+                                                                    />
+                                                                    Edit
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button
+                                                                    className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                    onClick={() => {
+                                                                        setDeleteSet(
+                                                                            set
+                                                                        )
+                                                                        setShowDeleteModal(
+                                                                            true
+                                                                        )
+                                                                    }}
+                                                                >
+                                                                    <DeleteSolidIcon
+                                                                        size="20px"
+                                                                        className="me-2"
+                                                                    />
+                                                                    Delete
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="row">
-                                                <div className="set-title col-3">
-                                                    {set?._draft
-                                                        ? `(Draft) ${set?.title}`
-                                                        : set?.title}
-                                                </div>
-                                                <div className="col d-flex align-items-center">
-                                                    <p
-                                                        className="set-description m-0"
-                                                        style={{
-                                                            whiteSpace:
-                                                                'pre-wrap',
-                                                        }}
-                                                    >
-                                                        {set?.description}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        ))}
+                                        {/* delete set modal */}
+                                        <DeleteSet
+                                            studySet={deleteSet}
+                                            showDeleteModal={showDeleteModal}
+                                            setShowDeleteModal={
+                                                setShowDeleteModal
+                                            }
+                                            isDelete={isDelete}
+                                            setIsDelete={setIsDelete}
+                                        />
+                                        {/* Pagination */}
+                                        <Pagination
+                                            className="mb-5"
+                                            currentPage={page}
+                                            totalCount={totalItems}
+                                            pageSize={10}
+                                            onPageChange={(page) => {
+                                                setPage(page)
+                                            }}
+                                        />
                                     </div>
-                                ))}
+                                )}
                             </div>
                         )}
                     </div>

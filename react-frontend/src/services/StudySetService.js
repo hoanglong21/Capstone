@@ -26,6 +26,14 @@ const deleteStudySet = (id) => {
     })
 }
 
+const deleteHardStudySet = (id) => {
+    return axios.delete(API_BASE_URL + '/deletestudysets/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 const getStudySetById = (id) => {
     return axios.get(API_BASE_URL + '/studysets/' + id)
 }
@@ -40,6 +48,37 @@ const checkStudySet = (id) => {
 
 const getAllStudySetByUser = (username) => {
     return axios.get(API_BASE_URL + '/studysetAuthor/' + username)
+}
+
+const getFilterListByClass = (
+    authorId,
+    search,
+    classId,
+    assigned,
+    sortBy,
+    direction,
+    page,
+    size
+) => {
+    return axios.get(
+        API_BASE_URL +
+            '/filterstudysetsclass?author_id' +
+            authorId +
+            '&search' +
+            search +
+            '&class_id' +
+            classId +
+            '&assigned' +
+            assigned +
+            '&sortby' +
+            sortBy +
+            '&direction' +
+            direction +
+            '&page' +
+            page +
+            '&size' +
+            size
+    )
 }
 
 const getFilterList = (
@@ -152,6 +191,8 @@ const StudySetService = {
     getQuizByStudySetId,
     countCardInSet,
     getLearningStudySetId,
+    getFilterListByClass,
+    deleteHardStudySet,
 }
 
 export default StudySetService

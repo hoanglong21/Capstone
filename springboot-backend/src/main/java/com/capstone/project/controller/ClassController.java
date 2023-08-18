@@ -152,21 +152,32 @@ public class ClassController {
     @GetMapping("/listclassstudyset")
     public ResponseEntity<?> getFilterClassStudySet(@RequestParam(value = "studysetassignid", required = false) Optional<Integer> studysetassignid,
                                                     @RequestParam(value = "studysetnotassignid", required = false) Optional<Integer> studysetnotassignid,
+                                                    @RequestParam(value = "authorid", required = false) Optional<Integer> authorid,
                                                     @RequestParam(value = "search", required = false) String search,
                                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
     try {
-        return ResponseEntity.ok(classService.getFilterClassStudySet(search,studysetassignid.orElse(0),studysetnotassignid.orElse(0),page,size));
+        return ResponseEntity.ok(classService.getFilterClassStudySet(search,studysetassignid.orElse(0),studysetnotassignid.orElse(0),authorid.orElse(0),page,size));
     } catch(ResourceNotFroundException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
     }
 
     @PostMapping("/assignstudyset")
-    public ResponseEntity<?> addStudySetToClass(@RequestParam(value = "classid", required = false) int classid,
+    public ResponseEntity<?> AssignStudySet(@RequestParam(value = "classid", required = false) int classid,
                                                 @RequestParam(value = "studysetid", required = false) int  studysetid) {
         try {
             return ResponseEntity.ok(classService.AssignStudyset(classid,studysetid));
+        } catch(ResourceNotFroundException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/unassignstudyset")
+    public ResponseEntity<?> unAssignStudySet(@RequestParam(value = "classid", required = false) int classid,
+                                                @RequestParam(value = "studysetid", required = false) int  studysetid) {
+        try {
+            return ResponseEntity.ok(classService.UnassignStudyset(classid,studysetid));
         } catch(ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

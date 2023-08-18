@@ -21,15 +21,13 @@ import org.springframework.data.domain.Sort;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ClassLearnerServiceTest {
@@ -163,4 +161,108 @@ public class ClassLearnerServiceTest {
 
         }
     }
-}
+
+    @Order(6)
+    @ParameterizedTest(name = "index => userId={0}, classId={1},status{2}")
+    @CsvSource({
+            "1,3,enrolled ",
+            "2,4,unenrolled "
+    })
+    void testUpdateClassLearner(int userId, int classId, String status) {
+        try {
+
+            ClassLearner classLearner_new = ClassLearner.builder()
+                    .status("enrolled")
+                    .build();
+
+            ClassLearner classLearner = ClassLearner.builder()
+                    .user(User.builder().id(userId).build())
+                    .classroom(Class.builder().id(classId).build())
+                    .status(status)
+                    .build();
+
+
+            when(classLearnerRepository.findById(any())).thenReturn(Optional.ofNullable(classLearner_new));
+            when(classLearnerRepository.save(any())).thenReturn(classLearner);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Order(7)
+    @Test
+    void testDeleteClassLearnerById() {
+
+        ClassLearner classLearner = ClassLearner.builder()
+                .id(1)
+                .status("enrolled")
+                .build();
+
+        when(classLearnerRepository.findById(any())).thenReturn(Optional.ofNullable(classLearner));
+        doNothing().when(classLearnerRepository).delete(classLearner);
+        try {
+            classLeanerService.deleteClassLearnerById(1);
+        } catch (ResourceNotFroundException e) {
+            e.printStackTrace();
+        }
+        verify(classLearnerRepository, times(1)).delete(classLearner);
+    }
+
+    @Order(8)
+    @ParameterizedTest(name = "index => userId={0}, classId={1}")
+    @CsvSource({
+            "1,3 ",
+            "2,4 "
+    })
+    void testDeleteClassLearner(int userid, int classid) throws ResourceNotFroundException {
+
+
+        ClassLearner classLearner = new ClassLearner(); // Create a sample classLearner object
+
+        // Mock the behavior of classLearnerRepository
+        when(classLearnerRepository.findByUserIdAndClassroomId(userid, classid)).thenReturn(classLearner);
+
+        // When
+        Boolean result = classLeanerService.deleteClassLearner(userid, classid);
+
+        // Then
+        assertTrue(result); // Assert that the result is true
+
+        // Verify that the delete method was called with the correct classLearner object
+        verify(classLearnerRepository).delete(classLearner);
+    }
+
+
+    @Order(9)
+    @ParameterizedTest(name = "index => userId{0}, clasId={1} " +
+            " status{2}, sortBy{3},direction{4},page={5}, size{6}")
+    @CsvSource({
+            "1,1,enrolled,created_date,DESC,1,5 ",
+            "2,1,pending,created_date,DESC,1,5, "
+    })
+    public void testFilterGetLearner(int userId, int classId, String status,
+                                       String sortBy, String direction, int page, int size) throws ResourceNotFroundException {
+
+        Query mockedQuery = mock(Query.class);
+        when(entityManager.createNativeQuery(anyString(), anyString())).thenReturn(mockedQuery);
+        when(mockedQuery.getResultList()).thenReturn(Arrays.asList(new ClassLearner(), new ClassLearner()));
+
+        Map<String, Object> result = classLeanerService.filterGetLearner(userId, classId, status, sortBy, direction, page, size);
+
+        List<ClassLearner> resultList = (List<ClassLearner>) result.get("list");
+        int totalItems = (int) result.get("totalItems");
+
+        assertEquals(2, resultList.size());
+        assertEquals(2, totalItems);
+    }
+
+
+    }
+
+
+
+
+
+
+

@@ -41,8 +41,9 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final ClassService classService;
 
     @Autowired
-    public AssignmentServiceImpl(JavaMailSender mailSender, AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, UserSettingRepository userSettingRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, ClassLearnerRepository classLearnerRepository, UserService userService, ClassService classService) {
+    public AssignmentServiceImpl(JavaMailSender mailSender,EntityManager em, AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, UserSettingRepository userSettingRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, ClassLearnerRepository classLearnerRepository, UserService userService, ClassService classService) {
         this.mailSender = mailSender;
+        this.em = em;
         this.assignmentRepository = assignmentRepository;
         this.submissionRepository = submissionRepository;
         this.userSettingRepository = userSettingRepository;

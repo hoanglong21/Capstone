@@ -81,6 +81,17 @@ public class StudySetController {
         }
     }
 
+    @GetMapping("/recoverstudysets/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> recoverStudySet(@PathVariable int id) {
+        try {
+            studySetService.recoverStudySet(id);
+            return ResponseEntity.ok("Recover successfully");
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/checkstudyset/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> checkStudySet(@PathVariable int id) {
@@ -167,5 +178,24 @@ public class StudySetController {
         }
     }
 
-
+    @GetMapping("/filterstudysetsclass")
+    public ResponseEntity<?> getFilterListByClass( @RequestParam(value = "author_id", required = false, defaultValue = "0") int authorId,
+                                                   @RequestParam(value = "search", required = false) String search,
+                                                   @RequestParam(value = "class_id", required = false, defaultValue = "0") int classId,
+                                                   @RequestParam(value = "assigned", required = false, defaultValue = "true") boolean assigned,
+                                                   @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                                   @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                   @RequestParam(value = "size", required = false, defaultValue = "5") int size) throws Exception {
+        try {
+            return ResponseEntity.ok(studySetService.getFilterListByClass(authorId, classId, search,assigned, sortBy, direction, page, size));
+        }
+        catch (Exception e) {
+            if(e.getMessage().equals("Please provide valid page and size")) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            } else {
+                return ResponseEntity.badRequest().body("Check the input again");
+            }
+        }
+    }
 }

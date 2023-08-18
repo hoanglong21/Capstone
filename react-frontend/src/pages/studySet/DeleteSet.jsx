@@ -4,7 +4,13 @@ import Modal from 'react-bootstrap/Modal'
 
 import StudySetService from '../../services/StudySetService'
 
-const DeleteSet = ({ studySet, showDeleteModal, setShowDeleteModal }) => {
+const DeleteSet = ({
+    studySet,
+    showDeleteModal,
+    setShowDeleteModal,
+    isDelete,
+    setIsDelete,
+}) => {
     let navigate = useNavigate()
 
     const [error, setError] = useState('')
@@ -17,8 +23,12 @@ const DeleteSet = ({ studySet, showDeleteModal, setShowDeleteModal }) => {
         setLoading(true)
         try {
             await StudySetService.deleteStudySet(studySet.id)
-            document.getElementById('closeDeleteSetModal').click()
-            navigate('/')
+            setShowDeleteModal(false)
+            if (isDelete === false) {
+                setIsDelete(true)
+            } else {
+                navigate('/')
+            }
             // clear validation
             setError('')
         } catch (error) {

@@ -22,6 +22,8 @@ public interface StudySetService {
 
     Boolean deleteHardStudySet(int id) throws ResourceNotFroundException;
 
+    Boolean recoverStudySet( int id) throws ResourceNotFroundException;
+
 //    ResponseEntity<Map<String, Object>> getAllEmployeesFilterAndPagination(String id, int page, int size);
 
     List<Integer> checkBlankCard(int id) throws ResourceNotFroundException;
@@ -38,5 +40,5 @@ public interface StudySetService {
 
     Map<String, Integer> countCardInSet(int studySetId, int userId);
 
-    Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size);
+    Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception;
 }

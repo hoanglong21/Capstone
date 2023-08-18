@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
+import Toast from 'react-bootstrap/Toast'
 
 import ClassService from '../../../services/ClassService'
 import ClassLearnerService from '../../../services/ClassLearnerService'
@@ -11,6 +12,7 @@ import UpdateClass from '../UpdateClass'
 import DeleteClass from '../DeleteClass'
 
 import {
+    AddCircleIcon,
     ClassIcon,
     DeleteIcon,
     EditIcon,
@@ -21,6 +23,7 @@ import {
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import './classLayout.css'
+import AssignSets from '../AssignSets'
 
 const ClassLayout = () => {
     const navigate = useNavigate()
@@ -37,6 +40,10 @@ const ClassLayout = () => {
     const [showUnenrollModal, setShowUnenrollModal] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showAssignModal, setShowAssignModal] = useState(false)
+
+    const [showToast, setShowToast] = useState(false)
+    const [toastMess, setToastMess] = useState('')
 
     // fetch data
     useEffect(() => {
@@ -184,6 +191,23 @@ const ClassLayout = () => {
                                     <button
                                         className="dropdown-item py-2 px-3 d-flex align-items-center"
                                         type="button"
+                                        onClick={() => {
+                                            setShowAssignModal(true)
+                                        }}
+                                    >
+                                        <AddCircleIcon
+                                            className="me-3"
+                                            size="1.3rem"
+                                        />
+                                        <span className="align-middle fw-semibold">
+                                            Add sets
+                                        </span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                        type="button"
                                     >
                                         <ReportIcon
                                             className="me-3"
@@ -277,6 +301,21 @@ const ClassLayout = () => {
                                     >
                                         <span className="align-middle">
                                             Stream
+                                        </span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="sets"
+                                        end
+                                        className={
+                                            'mainClass_navlink ' +
+                                            (({ isActive }) =>
+                                                isActive ? 'active' : '')
+                                        }
+                                    >
+                                        <span className="align-middle">
+                                            Sets
                                         </span>
                                     </NavLink>
                                 </li>
@@ -457,6 +496,24 @@ const ClassLayout = () => {
                     </button>
                 </Modal.Footer>
             </Modal>
+            {/* assign modal */}
+            <AssignSets
+                showAssignModal={showAssignModal}
+                setShowAssignModal={setShowAssignModal}
+                classroom={classroom}
+                userInfo={userInfo}
+                setShowToast={setShowToast}
+                setToastMess={setToastMess}
+            />
+            {/* assign toast */}
+            <Toast
+                onClose={() => setShowToast(false)}
+                show={showToast}
+                delay={3000}
+                autohide
+            >
+                <Toast.Body>{toastMess}</Toast.Body>
+            </Toast>
         </div>
     )
 }

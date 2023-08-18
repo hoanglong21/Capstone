@@ -66,7 +66,7 @@ public class OverviewStatisticServiceTest {
         Map<String, Object> response = new HashMap<>();
         response.put("totalItems", 2);
         when(dateRangePicker.getDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-        when(studySetService.getFilterList(any(), any(), any(), any(), anyInt(), anyInt(), any(),
+        when(studySetService.getFilterList(any(), any(), any(), any(), anyInt(), any(), any(),
                 any(), any(), any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
         List<Integer> list = overviewStatisticService.getStudySetGrowth();
         assertThat(list.size()).isEqualTo(1);
@@ -120,7 +120,7 @@ public class OverviewStatisticServiceTest {
         Map<String, Object> response = new HashMap<>();
         response.put("totalItems", 2);
         when(dateRangePicker.getShortDateRange()).thenReturn(Arrays.asList("2023-01-01", "2023-02-01"));
-        when(studySetService.getFilterList(any(), any(), any(), any(), anyInt(), anyInt(), any(), any(),
+        when(studySetService.getFilterList(any(), any(), any(), any(), anyInt(), any(), any(), any(),
                 any(), any(), any(), any(), any(), anyInt(), anyInt())).thenReturn(response);
         Integer result = overviewStatisticService.getStudySetNumber();
         assertThat(result).isEqualTo(2);

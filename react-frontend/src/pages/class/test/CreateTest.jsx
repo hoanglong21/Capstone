@@ -196,7 +196,8 @@ const CreateTest = () => {
         // check num attempts > 0
         if (
             test?.num_attemps &&
-            (test?.num_attemps <= 0 || !Number.isInteger(test?.num_attemps))
+            (Number(test?.num_attemps) <= 0 ||
+                !Number.isInteger(Number(test?.num_attemps)))
         ) {
             setError('Number of attempts must be a positive integer number')
             return
@@ -752,6 +753,7 @@ const CreateTest = () => {
 
     return (
         <div>
+            {/* button */}
             <div
                 className={`d-flex justify-content-between align-items-center sticky-top sticky-header ${
                     isScroll ? 'scroll-shadows p-3 rounded-bottom' : ''
@@ -802,9 +804,9 @@ const CreateTest = () => {
                         disabled={!test?.title || loadingCreate}
                     >
                         {loadingCreate ? (
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">
+                            <div className="d-flex justify-content-center">
+                                <div className="spinner-border" role="status">
+                                    <span className="visually-hidden">
                                         Loading...
                                     </span>
                                 </div>

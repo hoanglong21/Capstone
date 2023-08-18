@@ -2,6 +2,7 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.dto.CardWrapper;
 import com.capstone.project.dto.StudySetResponse;
+import com.capstone.project.dto.UserFilterResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
@@ -13,8 +14,12 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -102,6 +107,16 @@ public class StudySetServiceImpl implements StudySetService {
             cardRepository.delete(card);
         }
         studySetRepository.delete(studySet);
+        return true;
+    }
+
+    @Override
+    public Boolean recoverStudySet(int id) throws ResourceNotFroundException {
+        StudySet studySet = studySetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id: " + id));
+        studySet.set_deleted(false);
+        studySet.setDeleted_date(null);
+        studySetRepository.save(studySet);
         return true;
     }
 
@@ -260,9 +275,58 @@ public class StudySetServiceImpl implements StudySetService {
         return result;
     }
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Override
-    public Map<String, Object> getFilterListByClass(int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) {
-        return null;
+    public Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
+
+        String sql = "";
+        if(isAssigned==true) {
+            sql = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
+                    " AND author_id = " + authorId + " ";
+        } else {
+            sql = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
+                    " AND author_id = " + authorId + " ";
+        }
+        sql += " AND is_deleted = false AND is_draft = false AND is_public = true ";
+        List<Object> params = new ArrayList<>();
+
+        if (search != null && !search.isEmpty()) {
+            sql += " AND (title LIKE ? OR description LIKE ?) ";
+            params.add("%" + search + "%");
+            params.add("%" + search + "%");
+        }
+
+        if(sortBy != null && !sortBy.equals("") && direction != null && !direction.equals("")) {
+            sql += " ORDER BY " + sortBy + " " + direction;
+        }
+
+        // Count total items
+        String countSql = "SELECT COUNT(*) FROM (" + sql + ") AS countQuery";
+        long totalItems = jdbcTemplate.queryForObject(countSql, Long.class, params.toArray());
+
+        // Apply pagination
+        int offset = (page - 1) * size;
+        sql += " LIMIT ? OFFSET ?";
+        params.add(size);
+        params.add(offset);
+
+        List<StudySet> userList =
+                jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(StudySet.class));
+
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", userList);
+        response.put("currentPage", page);
+        response.put("totalItems", totalItems);
+        response.put("totalPages", totalPages);
+
+        return response;
     }
 
     private List<Map<String, Object>> getLearningMethod(List<Card> cardList, int[] questionType, int numberOfQuestion, boolean isRandom, int userId, boolean star) {
@@ -347,6 +411,19 @@ public class StudySetServiceImpl implements StudySetService {
         }
 
         return response;
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // Run daily at midnight
+    private void performSetCleanup() {
+        List<Integer> listToDelete = studySetRepository.findListIdToDelete();
+
+        for (Integer id : listToDelete) {
+            try {
+                deleteHardStudySet(id);
+            } catch (ResourceNotFroundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
 }

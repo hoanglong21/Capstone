@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -206,6 +207,21 @@ public class SubmissionServiceTest {
         List<Submission> list = (List<Submission>) submissionServiceImpl.getFilterSubmission(search, authorId, assignmentId,isDone,
                                                      mark, fromCreated, toCreated, direction, page, size).get("list");
         assertThat(list.size()).isGreaterThan(0);
+    }
+
+    @Order(8)
+    @Test
+    public void testGetByAuthorIdandAssignmentId() {
+        int authorId = 1;
+        int assignmentId = 1;
+        Submission expectedSubmission = new Submission();
+
+        when(submissionRepository.getByUserIdAndAssignmentId(authorId, assignmentId)).thenReturn(expectedSubmission);
+
+        Submission result = submissionServiceImpl.getByAuthorIdandAssignmentId(authorId, assignmentId);
+
+        assertEquals(expectedSubmission, result);
+        verify(submissionRepository, times(1)).getByUserIdAndAssignmentId(authorId, assignmentId);
     }
 
 }

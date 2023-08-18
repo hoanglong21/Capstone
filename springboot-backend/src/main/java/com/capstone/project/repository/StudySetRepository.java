@@ -20,4 +20,6 @@ public interface StudySetRepository extends JpaRepository<StudySet, Integer> {
             " AND c.studyset_id = :studySetId AND (:star = false OR COALESCE(p.is_star, false) = :star)", nativeQuery = true)
     Integer countCardInSetWithCondition(int studySetId, int userId, String status, boolean star);
 
+    @Query(value = " SELECT id FROM studyset WHERE is_deleted = 1 AND deleted_date <= DATE_SUB(NOW(), INTERVAL 30 DAY) ", nativeQuery = true)
+    List<Integer> findListIdToDelete();
 }
