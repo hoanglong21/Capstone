@@ -2,14 +2,15 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
-import com.capstone.project.repository.AttachmentRepository;
-import com.capstone.project.repository.CommentRepository;
-import com.capstone.project.repository.SubmissionRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.SubmissionService;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,11 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @PersistenceContext
     private EntityManager em;
+
+    private final JavaMailSender mailSender;
     private final SubmissionRepository submissionRepository;
+    private final ClassLearnerRepository classLearnerRepository;
+    private final UserSettingRepository userSettingRepository;
 
     private final AttachmentRepository attachmentRepository;
     private final CommentRepository commentRepository;
@@ -32,8 +37,11 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 
     @Autowired
-    public SubmissionServiceImpl(SubmissionRepository submissionRepository, AttachmentRepository attachmentRepository, CommentRepository commentRepository) {
+    public SubmissionServiceImpl(JavaMailSender mailSender, SubmissionRepository submissionRepository, ClassLearnerRepository classLearnerRepository, UserSettingRepository userSettingRepository, AttachmentRepository attachmentRepository, CommentRepository commentRepository) {
+        this.mailSender = mailSender;
         this.submissionRepository = submissionRepository;
+        this.classLearnerRepository = classLearnerRepository;
+        this.userSettingRepository = userSettingRepository;
         this.attachmentRepository = attachmentRepository;
         this.commentRepository = commentRepository;
     }
@@ -60,27 +68,6 @@ public class SubmissionServiceImpl implements SubmissionService {
 
         Submission savedSubmission = submissionRepository.save(submission);
 
-//        if (file_names != null && urls != null && file_types != null  && type != 0) {
-//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-//            for (int i = 0; i < numOfAttachments; i++) {
-//                String file_name = file_names.get(i);
-//                String url = urls.get(i);
-//                String file_type = file_types.get(i);
-//
-//                Attachment attachment = new Attachment();
-//                attachment.setFile_name(file_name);
-//                attachment.setFile_url(file_type);
-//                attachment.setFile_url(url);
-//
-//                AttachmentType attachmentType = new AttachmentType();
-//                attachmentType.setId(type);
-//
-//                attachment.setAttachmentType(attachmentType);
-//                attachment.setSubmission(savedSubmission);
-//
-//                attachmentRepository.save(attachment);
-//            }
-//        }
             return savedSubmission;
     }
 
@@ -103,39 +90,63 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .orElseThrow(() -> new ResourceNotFroundException("Submission does not exist with id: " + id));
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
+
+        Double existingMark = existingSubmission.getMark();
+        Double newMark = submission.getMark();
+
+        if ((existingMark == null && newMark != null) || (existingMark != null && Double.compare(existingMark, newMark) != 0)) {
+            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(existingSubmission.getAssignment().getClassroom().getId());
+            for (ClassLearner classLearner : classLearners) {
+                List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
+                for (UserSetting userSetting : userSettings) {
+                    if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 9 && userSetting.getValue().equalsIgnoreCase("true") && existingSubmission.is_done()) {
+                        sendSubmissionGradedEmail(classLearner, existingSubmission);
+                    }
+                }
+            }
+        }
         existingSubmission.setDescription(submission.getDescription());
         existingSubmission.setModified_date(date);
         existingSubmission.setMark(submission.getMark());
         existingSubmission.set_done(submission.is_done());
 
-//        List<Attachment> attachments = attachmentRepository.getAttachmentBySubmissionId(existingSubmission.getId());
-
-//        for (Attachment attachment : attachments) {
-//            attachmentRepository.delete(attachment);
-//        }
-
-//        if (file_names != null && urls != null && file_types != null  && type != 0) {
-//            int numOfAttachments = Math.min(file_names.size(), Math.min(urls.size(), file_types.size()));
-//            for (int i = 0; i < numOfAttachments; i++) {
-//                String file_name = file_names.get(i);
-//                String url = urls.get(i);
-//                String file_type = file_types.get(i);
-//
-//                Attachment attachment = new Attachment();
-//                attachment.setFile_name(file_name);
-//                attachment.setFile_url(file_type);
-//                attachment.setFile_url(url);
-//
-//                AttachmentType attachmentType = new AttachmentType();
-//                attachmentType.setId(type);
-//
-//                attachment.setAttachmentType(attachmentType);
-//                attachment.setSubmission(existingSubmission);
-//
-//                attachmentRepository.save(attachment);
-//            }
-//        }
         return submissionRepository.save(existingSubmission);
+    }
+
+    public void sendSubmissionGradedEmail(ClassLearner classLearner, Submission submission) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = classLearner.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            subject = "[NihongoLevelUp]: Submission graded ";
+            content = "Hi [[name]],<br><br>"
+                    + "Your submission in assignment << " + submission.getAssignment().getTitle() + " >>  in class << " + classLearner.getClassroom().getClass_name() + " >> has been upgraded ! Let's check it out !<br><br>"
+//                    + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Do Assignment</a><br><br>"
+                    + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                    + "Best regards,<br>"
+                    + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", classLearner.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
