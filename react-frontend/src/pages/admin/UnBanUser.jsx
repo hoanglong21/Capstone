@@ -26,7 +26,7 @@ const UnBanUser = ({ user }) => {
       toast.success('UnBanned successfully !', {
         position: toast.POSITION.TOP_RIGHT
       });
-      window.location.reload();
+      window.location.reload()
       navigate("/manageusers");
       setError("");
     } catch (error) {

@@ -7,8 +7,7 @@ const createFeedback = (feedback) => {
 };
 
 const replyfeedback = (id, title, content) => {
-  return axios.get(
-    `${API_BASE_URL}/replyfeedback?id=${id}&title=${title.title}&content=${content.content}`,
+  return axios.get(API_BASE_URL + "/replyfeedback?id=" + id + "&title=" +title + "&content=" + content,
     {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`,
