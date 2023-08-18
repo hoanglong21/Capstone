@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.Query;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -30,6 +32,7 @@ public class ClassServiceImpl implements ClassService {
     private final TestResultRepository testResultRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final NotificationRepository notificationRepository;
     private final CommentRepository commentRepository;
     private final AssignmentRepository assignmentRepository;
     private final AttachmentRepository attachmentRepository;
@@ -42,7 +45,7 @@ public class ClassServiceImpl implements ClassService {
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository,EntityManager em, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.postRepository = postRepository;
         this.testRepository = testRepository;
@@ -50,6 +53,7 @@ public class ClassServiceImpl implements ClassService {
         this.testResultRepository = testResultRepository;
         this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
+        this.notificationRepository = notificationRepository;
         this.commentRepository = commentRepository;
         this.assignmentRepository = assignmentRepository;
         this.attachmentRepository = attachmentRepository;
@@ -60,6 +64,10 @@ public class ClassServiceImpl implements ClassService {
         this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
         this.em = em;
+    }
+
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     @Override
@@ -100,20 +108,72 @@ public class ClassServiceImpl implements ClassService {
     public Class updateClassroom(Class classrooms, int id) throws ResourceNotFroundException {
         Class classroom = classRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
+        boolean wasDeleted = classroom.is_deleted();
+
         classroom.setClass_name(classrooms.getClass_name());
         classroom.setDescription(classrooms.getDescription());
         classroom.set_deleted(classrooms.is_deleted());
-        return classRepository.save(classroom);
+
+        Class updatedClassroom = classRepository.save(classroom);
+
+        boolean isDeleted = updatedClassroom.is_deleted();
+
+        if (wasDeleted == true && isDeleted == false) {
+            notificationRestoredClass(updatedClassroom);
+        }
+
+        return updatedClassroom;
+    }
+
+    public void notificationRestoredClass(Class classroom) {
+
+
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for (ClassLearner classLearner : classLearnerList) {
+            if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setContent("Class '" + classroom.getClass_name() + "' has been restored.");
+                notification.setDatetime(date);
+
+                notification.setUser(classLearner.getUser());
+
+                notificationRepository.save(notification);
+            }
+        }
     }
 
     @Override
     public Boolean deleteClass(int id) throws ResourceNotFroundException {
         Class classroom = classRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
-        classroom.set_deleted(true);
-        classroom.setDeleted_date(new Date());
-        classRepository.save(classroom);
+        if (!classroom.is_deleted()) {
+            classroom.set_deleted(true);
+            classroom.setDeleted_date(new Date());
+            classRepository.save(classroom);
+            notificationForDeletedClass(classroom);
+        }
         return true;
+    }
+
+    private void notificationForDeletedClass(Class classroom) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for(ClassLearner classLearner : classLearnerList){
+            if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setContent("Your Class " + classroom.getClass_name() + "' has been deleted.");
+                notification.setUser(classLearner.getUser());
+                notification.setDatetime(date);
+
+                notificationRepository.save(notification);
+            }
+        }
+
     }
 
     @Override
@@ -356,6 +416,8 @@ public class ClassServiceImpl implements ClassService {
             query += " AND author_id = :authorId";
             parameters.put("authorId", authorid);
         }
+
+        query += "AND is_deleted = false";
 
 
         Query q = em.createNativeQuery(query, Class.class);
