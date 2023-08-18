@@ -10,7 +10,12 @@ import CommentService from '../../../services/CommentService'
 import Comment from '../../../components/comment/Comment'
 import './assignment.css'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
-import { ProfileSolidIcon, SendIcon } from '../../../components/icons'
+import {
+    CloseIcon,
+    ProfileSolidIcon,
+    SearchIcon,
+    SendIcon,
+} from '../../../components/icons'
 import CardEditor from '../../../components/textEditor/CardEditor'
 
 const TutorSubmission = ({ assignment }) => {
@@ -28,6 +33,13 @@ const TutorSubmission = ({ assignment }) => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
+
+    const [isEmpty, setIsEmpty] = useState(false)
+    const [search, setSearch] = useState('')
+    const [searchInput, setSearchInput] = useState('')
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
+    const [isDesc, setIsDesc] = useState(true)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -52,8 +64,8 @@ const TutorSubmission = ({ assignment }) => {
                         '',
                         ''
                     )
-                ).data.list
-                setLearners(tempLearners)
+                ).data
+                setLearners(tempLearners.list)
                 // count
                 const tempCountSubmit = (
                     await AssignmentService.getNumSubmitAssignment(
@@ -103,6 +115,65 @@ const TutorSubmission = ({ assignment }) => {
             fetchData()
         }
     }, [assignment])
+
+    // search
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         setError('')
+    //         try {
+    //             // learners
+    //             const tempLearners = (
+    //                 await ClassLearnerService.filterGetLeaner(
+    //                     '',
+    //                     `=${assignment?.classroom?.id}`,
+    //                     `=${1}`,
+    //                     '',
+    //                     '',
+    //                     '',
+    //                     ''
+    //                 )
+    //             ).data
+    //             setLearners(tempLearners.list)
+    //             // submission
+    //             if (tempLearners.length > 0) {
+    //                 var tempSubmission = (
+    //                     await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
+    //                         tempLearners[0].id,
+    //                         assignment.id
+    //                     )
+    //                 ).data
+    //                 if (tempSubmission?.id) {
+    //                     // attachments
+    //                     const tempAttachments = (
+    //                         await AttachmentService.getAttachmentsBySubmissionId(
+    //                             tempSubmission.id
+    //                         )
+    //                     ).data
+    //                     setAttachments(tempAttachments)
+    //                     // comments
+    //                     const tempComments = (
+    //                         await CommentService.getAllCommentBySubmisionId(
+    //                             tempSubmission.id
+    //                         )
+    //                     ).data
+    //                     setComments(tempComments)
+    //                 } else {
+    //                     tempSubmission = { user: tempLearners[0] }
+    //                 }
+    //                 setSubmission(tempSubmission)
+    //             }
+    //         } catch (error) {
+    //             if (error.response && error.response.data) {
+    //                 console.log(error.response.data)
+    //             } else {
+    //                 console.log(error.message)
+    //             }
+    //         }
+    //     }
+    //     if (assignment?.id) {
+    //         fetchData()
+    //     }
+    // }, [search])
 
     const handleUpdateGrade = async () => {
         setSaving(true)
@@ -253,7 +324,44 @@ const TutorSubmission = ({ assignment }) => {
             {/* header */}
             <div className="submission_heading border-bottom">
                 <div className="d-flex justify-content-between">
-                    <div className="submission_title">{assignment?.title}</div>
+                    <div>
+                        <div className="submission_title mb-2">
+                            {assignment?.title}
+                        </div>
+                        <form className="input-group mb-0">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Search..."
+                                value={searchInput || ''}
+                                onChange={(event) => {
+                                    setSearchInput(event.target.value)
+                                }}
+                            />
+                            {searchInput && (
+                                <button
+                                    className="btn btn-outline-secondary px-2"
+                                    type="button"
+                                    onClick={() => {
+                                        setSearch('')
+                                        setSearchInput('')
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </button>
+                            )}
+                            <button
+                                className="btn btn-outline-secondary px-2"
+                                type="submit"
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                    setSearch(searchInput)
+                                }}
+                            >
+                                <SearchIcon />
+                            </button>
+                        </form>
+                    </div>
                     <div className="d-flex">
                         <div className="asignInfo_block">
                             <div className="assignInfo_number">{numSubmit}</div>

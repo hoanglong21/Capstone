@@ -69,7 +69,7 @@ const Results = () => {
                     <tbody>
                         {results?.map((result, index) => (
                             <>
-                                <tr key={index}>
+                                <tr>
                                     <th
                                         scope="row"
                                         rowSpan={

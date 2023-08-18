@@ -5,30 +5,36 @@ import AssignmentService from '../../../services/AssignmentService'
 import { deleteFolder } from '../../../features/fileManagement'
 
 import './assignment.css'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const DeleteAssignment = ({
-    assignments,
+    isDelete,
+    setIsDelete,
     assign,
-    stateChanger,
-    index,
     showDeleteModal,
     setShowDeleteModal,
 }) => {
+    const location = useLocation()
+    const navigate = useNavigate()
+
     const [loading, setLoading] = useState(false)
 
     const handleSubmit = async () => {
         // clear validation
         setLoading(true)
         try {
-            await AssignmentService.deleteAssignment(assign.id)
-            if (index) {
-                var tempAssignments = [...assignments]
-                tempAssignments.splice(index, 1)
-                stateChanger(tempAssignments)
+            await AssignmentService.deleteAssignment(assign?.id)
+            if (isDelete === false) {
+                setIsDelete(true)
             }
             await deleteFolder(
                 `files/${assign.classroom.user.username}/class/${assign.classroom.id}/assignment/${assign.id}`
             )
+            if (
+                location.pathname.includes(`/assignment/${assign?.id}/details`)
+            ) {
+                navigate(`/class/${assign?.classroom?.id}/assignments`)
+            }
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

@@ -7,7 +7,12 @@ import ClassService from '../../services/ClassService'
 
 import Pagination from '../../components/Pagination'
 
-import { ClassIcon, SearchIcon } from '../../components/icons'
+import {
+    ArrowSmallDownIcon,
+    ArrowSmallUpIcon,
+    ClassIcon,
+    SearchIcon,
+} from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import '../../assets/styles/LibrarySearchList.css'
 import '../../assets/styles/Home.css'
@@ -28,6 +33,7 @@ const ClassList = () => {
     const [type, setType] = useState('all')
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
+    const [isDesc, setIsDesc] = useState(true)
 
     const [showCreateModal, setShowCreateModal] = useState(false)
     const [showJoinModal, setShowJoinModal] = useState(false)
@@ -48,7 +54,7 @@ const ClassList = () => {
                     '',
                     '',
                     '',
-                    '',
+                    `=${isDesc ? 'desc' : 'asc'}`,
                     `=${page}`,
                     '=10'
                 )
@@ -109,7 +115,7 @@ const ClassList = () => {
         if (userInfo?.username) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search, type, page])
+    }, [userInfo, search, type, page, isDesc])
 
     if (loading) {
         return (
@@ -171,6 +177,18 @@ const ClassList = () => {
                                     <option value="created">Created</option>
                                     <option value="joined">Joined</option>
                                 </select>
+                                <button
+                                    className="btn btn-light p-2 me-2"
+                                    onClick={() => {
+                                        setIsDesc(!isDesc)
+                                    }}
+                                >
+                                    {isDesc ? (
+                                        <ArrowSmallDownIcon />
+                                    ) : (
+                                        <ArrowSmallUpIcon />
+                                    )}
+                                </button>
                             </div>
                             <div className="col-7">
                                 <form className="sets-search m-0 d-flex align-items-center">

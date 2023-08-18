@@ -10,6 +10,8 @@ import DeleteAssignment from './DeleteAssignment'
 import {
     AccountIcon,
     AddIcon,
+    ArrowSmallDownIcon,
+    ArrowSmallUpIcon,
     AssignmentIcon,
     CloseIcon,
     SearchIcon,
@@ -32,6 +34,8 @@ function AssignmentList() {
     const [loadingCount, setLoadingCount] = useState(false)
     const [loading, setLoading] = useState(true)
     const [today, setToday] = useState(new Date())
+
+    const [isDelete, setIsDelete] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const [isEmpty, setIsEmpty] = useState(false)
@@ -39,6 +43,9 @@ function AssignmentList() {
     const [searchInput, setSearchInput] = useState('')
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
+    const [isDesc, setIsDesc] = useState(true)
+
+    const [deleteAssign, setDeleteAssign] = useState({})
 
     function getToday() {
         const today = new Date()
@@ -112,26 +119,22 @@ function AssignmentList() {
             setLoading(true)
             setIsEmpty(false)
             try {
-                // class
-                const tempClass = (await ClassService.getClassroomById(id)).data
-                setClassroom(tempClass)
-                // assignments
                 const tempAssignments = (
                     await AssignmentService.getFilterList(
                         `${search ? `=${search}` : ''}`,
                         '',
                         '',
                         `${
-                            userInfo.id === tempClass.user.id
+                            userInfo.id === classroom.user.id
                                 ? ''
                                 : `=${getToday()}`
                         }`,
                         '',
                         '',
-                        `${userInfo.id === tempClass.user.id ? '' : `=0`}`,
+                        `${userInfo.id === classroom.user.id ? '' : `=0`}`,
+                        `=${isDesc ? 'desc' : 'asc'}`,
                         '',
-                        '',
-                        `=${tempClass.id}`,
+                        `=${classroom.id}`,
                         `=${page}`,
                         '=10'
                     )
@@ -147,10 +150,55 @@ function AssignmentList() {
             }
             setLoading(false)
         }
-        if (id) {
+        if (id && userInfo?.id && classroom?.id) {
             fetchData()
         }
-    }, [page, search])
+    }, [page, search, isDesc])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            setIsEmpty(false)
+            try {
+                const tempAssignments = (
+                    await AssignmentService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        `${
+                            userInfo.id === classroom.user.id
+                                ? ''
+                                : `=${getToday()}`
+                        }`,
+                        '',
+                        '',
+                        `${userInfo.id === classroom.user.id ? '' : `=0`}`,
+                        '',
+                        '',
+                        `=${classroom.id}`,
+                        '',
+                        '=10'
+                    )
+                ).data
+                if (tempAssignments.totalItems < 1) {
+                    setIsEmpty(true)
+                }
+                setTotalItems(tempAssignments.totalItems)
+                setAssignments(tempAssignments.list)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+            setLoading(false)
+        }
+        if (isDelete === true) {
+            fetchData()
+            setIsDelete(false)
+        }
+    }, [isDelete])
 
     const handleInfo = async (assign, index) => {
         try {
@@ -247,7 +295,19 @@ function AssignmentList() {
                         )}
                     </div>
                     {!isEmpty && (
-                        <div className="col-6">
+                        <div className="col-6 d-flex">
+                            <button
+                                className="btn btn-light p-2 me-2"
+                                onClick={() => {
+                                    setIsDesc(!isDesc)
+                                }}
+                            >
+                                {isDesc ? (
+                                    <ArrowSmallDownIcon />
+                                ) : (
+                                    <ArrowSmallUpIcon />
+                                )}
+                            </button>
                             <form className="input-group mb-0">
                                 <input
                                     type="text"
@@ -452,6 +512,9 @@ function AssignmentList() {
                                                         className="deleteAssign_btn"
                                                         type="button"
                                                         onClick={() => {
+                                                            setDeleteAssign(
+                                                                assign
+                                                            )
                                                             setShowDeleteModal(
                                                                 true
                                                             )
@@ -462,16 +525,6 @@ function AssignmentList() {
                                                 </div>
                                             )}
                                         </div>
-                                        <DeleteAssignment
-                                            index={index}
-                                            assign={assign}
-                                            assignments={assignments}
-                                            stateChanger={setAssignments}
-                                            showDeleteModal={showDeleteModal}
-                                            setShowDeleteModal={
-                                                setShowDeleteModal
-                                            }
-                                        />
                                     </div>
                                 </div>
                             ))}
@@ -485,6 +538,14 @@ function AssignmentList() {
                             onPageChange={(page) => {
                                 setPage(page)
                             }}
+                        />
+                        {/* delete modal */}
+                        <DeleteAssignment
+                            isDelete={isDelete}
+                            setIsDelete={setIsDelete}
+                            assign={deleteAssign}
+                            showDeleteModal={showDeleteModal}
+                            setShowDeleteModal={setShowDeleteModal}
                         />
                     </div>
                 )}
