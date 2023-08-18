@@ -136,6 +136,7 @@ public class UserServiceImpl implements UserService {
         user.setDeleted_date(null);
         user.setBanned_date(null);
         user.setStatus("active");
+        userRepository.save(user);
         return true;
     }
 
