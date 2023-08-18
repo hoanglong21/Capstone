@@ -64,6 +64,11 @@ public class ClassServiceTest {
     private TestRepository testRepository;
 
     @Mock
+    private TestLearnerRepository testlearnerRepository;
+    @Mock
+    private TestResultRepository testresultRepository;
+
+    @Mock
     private QuestionRepository questionRepository;
 
     @Mock
@@ -221,6 +226,11 @@ public class ClassServiceTest {
         Answer answer = Answer.builder().question(question).is_true(true).content("Knight").build();
         answerRepository.save(answer);
 
+        TestLearner testLearner = TestLearner.builder().id(1).test(test).user(User.builder().build()).build();
+
+        TestResult testResult = TestResult.builder().id(1).question(question).build();
+
+
         Assignment assignment = Assignment.builder()
                 .id(1)
                 .user(User.builder().id(2).build())
@@ -246,6 +256,8 @@ public class ClassServiceTest {
         doNothing().when(assignmentRepository).delete(assignment);
         doNothing().when(submissionRepository).delete(submission);
         doNothing().when(attachmentRepository).delete(attachment);
+        doNothing().when(testlearnerRepository).delete(testLearner);
+        doNothing().when(testresultRepository).delete(testResult);
 
         when(classRepository.findById(1)).thenReturn(Optional.of(classroom));
         when(postRepository.getPostByClassroomId(1)).thenReturn(List.of(post));
@@ -259,7 +271,10 @@ public class ClassServiceTest {
         when(commentRepository.getCommentByAssignmentId(1)).thenReturn(List.of(comment));
         when(testRepository.getTestByClassroomId(1)).thenReturn(List.of(test));
         when(questionRepository.getQuestionByTestId(1)).thenReturn(List.of(question));
+        when(testresultRepository.getTestResultByQuestionId(1)).thenReturn(List.of(testResult));
         when(answerRepository.getAnswerByQuestionId(1)).thenReturn(List.of(answer));
+        when(testlearnerRepository.getTestLearnerByTestId(1)).thenReturn(List.of(testLearner));
+        when(testresultRepository.getTestResultBytestLearnerId(1)).thenReturn(List.of(testResult));
         when(commentRepository.getCommentByTestId(1)).thenReturn(List.of(comment));
         try {
             classServiceImpl.deleteHardClass(1);
