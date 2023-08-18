@@ -12,6 +12,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import net.loomchild.segment.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.Query;
 
@@ -408,7 +409,7 @@ public class ClassServiceImpl implements ClassService {
         }
 
         if (search != null && !search.isEmpty()) {
-            query += "  AND class_name LIKE :search";
+            query += " AND class_name LIKE :search";
             parameters.put("search", "%" + search + "%");
         }
 
@@ -417,7 +418,7 @@ public class ClassServiceImpl implements ClassService {
             parameters.put("authorId", authorid);
         }
 
-        query += "AND is_deleted = false";
+        query += " AND is_deleted = false";
 
 
         Query q = em.createNativeQuery(query, Class.class);
@@ -543,6 +544,17 @@ public class ClassServiceImpl implements ClassService {
         return false;
     }
 
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteClassAfter30() throws ResourceNotFroundException {
+
+        List<Integer> listSoftDeleteClass = classRepository.findListIdToDelete();
+
+        for (Integer classId : listSoftDeleteClass) {
+            deleteHardClass(classId);
+        }
+    }
 
 }
 

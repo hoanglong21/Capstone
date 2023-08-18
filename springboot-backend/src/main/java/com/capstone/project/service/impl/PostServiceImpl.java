@@ -82,7 +82,7 @@ public class PostServiceImpl implements PostService {
         for (ClassLearner classLearner : classLearners) {
             List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
             for (UserSetting userSetting : userSettings) {
-                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 6) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 6 && userSetting.getValue().equalsIgnoreCase("true")) {
                     sendPostCreatedEmail(classLearner);
                 }
             }
