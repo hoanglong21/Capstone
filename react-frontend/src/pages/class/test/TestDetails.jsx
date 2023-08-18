@@ -55,7 +55,7 @@ const TestDetails = () => {
                         await TestService.getNumAttempt(test_id, userInfo.id)
                     ).data.num_attempt
                     setNumAttempt(tempNumAttempt)
-                    if (tempNumAttempt > tempTest?.num_attemps) {
+                    if (tempNumAttempt >= tempTest?.num_attemps) {
                         setCanTest(false)
                     }
                 }
