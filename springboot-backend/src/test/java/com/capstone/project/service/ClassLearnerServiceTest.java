@@ -236,19 +236,19 @@ public class ClassLearnerServiceTest {
 
     @Order(9)
     @ParameterizedTest(name = "index => userId{0}, clasId={1} " +
-            " status{2}, sortBy{3},direction{4},page={5}, size{6}")
+            "username{2}, status{3}, sortBy{4},direction{5},page={6}, size{7}")
     @CsvSource({
-            "1,1,enrolled,created_date,DESC,1,5 ",
-            "2,1,pending,created_date,DESC,1,5, "
+            "1,1,quantruong,enrolled,created_date,DESC,1,5 ",
+            "2,1,ngocnguyen,pending,created_date,DESC,1,5, "
     })
-    public void testFilterGetLearner(int userId, int classId, String status,
+    public void testFilterGetLearner(int userId, int classId, String status,String username,
                                        String sortBy, String direction, int page, int size) throws ResourceNotFroundException {
 
         Query mockedQuery = mock(Query.class);
         when(entityManager.createNativeQuery(anyString(), anyString())).thenReturn(mockedQuery);
         when(mockedQuery.getResultList()).thenReturn(Arrays.asList(new ClassLearner(), new ClassLearner()));
 
-        Map<String, Object> result = classLeanerService.filterGetLearner(userId, classId, status, sortBy, direction, page, size);
+        Map<String, Object> result = classLeanerService.filterGetLearner(userId, classId,username, status, sortBy, direction, page, size);
 
         List<ClassLearner> resultList = (List<ClassLearner>) result.get("list");
         int totalItems = (int) result.get("totalItems");

@@ -26,7 +26,7 @@ public interface ClassService {
 
     Map<String, Object> getFilterClassStudySet(String search, int studysetassigned, int studysetnotassigned,int authorId, int page, int size) throws ResourceNotFroundException;
 
-    Boolean AssignStudyset(int classid, int studysetid) throws ResourceNotFroundException;
+    Class AssignStudyset(int classid, int studysetid) throws ResourceNotFroundException;
     Boolean UnassignStudyset(int classid, int studysetid) throws ResourceNotFroundException;
 
     Class ResetClassCode(int id) throws ResourceNotFroundException;
