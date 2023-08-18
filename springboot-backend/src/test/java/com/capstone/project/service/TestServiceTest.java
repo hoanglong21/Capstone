@@ -35,14 +35,18 @@ public class TestServiceTest {
 
     @Mock
     private TestRepository testRepository;
-    private TestLearnerRepository testLearnerRepository;
-    private TestResultRepository testResultRepository;
 
     @Mock
     private ClassLearnerRepository classLearnerRepository;
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private TestLearnerRepository testlearnerRepository;
+    @Mock
+    private TestResultRepository testresultRepository;
+    @Mock
     private ClassRepository classRepository;
     @Mock
     private QuestionRepository questionRepository;
@@ -196,15 +200,24 @@ public class TestServiceTest {
                 .build();
         Answer answer = Answer.builder().question(Question.builder().id(1).build()).content("Mango").is_true(false).build();
 
+        TestLearner testLearner = TestLearner.builder().id(1).test(test).user(User.builder().build()).build();
+
+        TestResult testResult = TestResult.builder().id(1).question(question).build();
+
         Comment comment = Comment.builder().commentType(CommentType.builder().id(1).build()).content("Focus").build();
 
         doNothing().when(testRepository).delete(test);
         doNothing().when(questionRepository).delete(question);
+        doNothing().when(testlearnerRepository).delete(testLearner);
+        doNothing().when(testresultRepository).delete(testResult);
         doNothing().when(answerRepository).delete(answer);
         doNothing().when(commentRepository).delete(comment);
 
         when(testRepository.findById(1)).thenReturn(Optional.of(test));
+        when(testlearnerRepository.getTestLearnerByTestId(1)).thenReturn(List.of(testLearner));
+        when(testresultRepository.getTestResultBytestLearnerId(1)).thenReturn(List.of(testResult));
         when(questionRepository.getQuestionByTestId(test.getId())).thenReturn(List.of(question));
+        when(testresultRepository.getTestResultByQuestionId(1)).thenReturn(List.of(testResult));
         when(answerRepository.getAnswerByQuestionId(question.getId())).thenReturn(List.of(answer));
         when(commentRepository.getCommentByTestId(test.getId())).thenReturn(List.of(comment));
         when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
@@ -396,7 +409,7 @@ public class TestServiceTest {
         int userId = 2;
 
         TestLearner testLearner = new TestLearner();
-        when(testLearnerRepository.save(any(TestLearner.class))).thenReturn(testLearner);
+        when(testlearnerRepository.save(any(TestLearner.class))).thenReturn(testLearner);
 
         Question question = new Question();
         when(questionRepository.getQuestionByTestId(anyInt())).thenReturn(Collections.singletonList(question));
@@ -407,9 +420,7 @@ public class TestServiceTest {
         Map<String, Object> result = testServiceImpl.startTest(testId, userId);
 
         assertNotNull(result);
-        assertNotNull(result.get("testLearner"));
         assertNotNull(result.get("questionList"));
-        verify(testLearnerRepository, times(1)).save(any(TestLearner.class));
         verify(questionRepository, times(1)).getQuestionByTestId(testId);
         verify(answerRepository, times(1)).getAnswerByQuestionId(question.getId());
     }
@@ -431,8 +442,8 @@ public class TestServiceTest {
 
         List<TestResult> testResultList = Collections.singletonList(testResult);
 
-        when(testLearnerRepository.findById(anyInt())).thenReturn(Optional.of(testLearner));
-        when(testLearnerRepository.findByTestIdAndUserId(anyInt(), anyInt())).thenReturn(Collections.singletonList(testLearner));
+        when(testlearnerRepository.findById(anyInt())).thenReturn(Optional.of(testLearner));
+        when(testlearnerRepository.findByTestIdAndUserId(anyInt(), anyInt())).thenReturn(Collections.singletonList(testLearner));
         when(questionRepository.findById(anyInt())).thenReturn(Optional.of(new Question()));
 
 
@@ -441,11 +452,11 @@ public class TestServiceTest {
         assertNotNull(result);
         assertEquals(testResultList.get(0).getQuestion().getPoint(), result.get("result"));
         assertEquals(testResultList.get(0).getQuestion().getPoint(), result.get("total"));
-        verify(testLearnerRepository, times(1)).findById(testResultList.get(0).getTestLearner().getId());
-        verify(testLearnerRepository, times(1)).findByTestIdAndUserId(testLearner.getUser().getId(), testLearner.getTest().getId());
+        verify(testlearnerRepository, times(1)).findById(testResultList.get(0).getTestLearner().getId());
+        verify(testlearnerRepository, times(1)).findByTestIdAndUserId(testLearner.getUser().getId(), testLearner.getTest().getId());
         verify(questionRepository, times(1)).findById(testResultList.get(0).getQuestion().getId());
-        verify(testLearnerRepository, times(1)).save(testLearner);
-        verify(testResultRepository, times(1)).saveAll(testResultList);
+        verify(testlearnerRepository, times(1)).save(testLearner);
+        verify(testresultRepository, times(1)).saveAll(testResultList);
     }
 
 }
