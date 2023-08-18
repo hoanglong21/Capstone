@@ -12,6 +12,8 @@ import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.FeedbackServiceImpl;
 import com.capstone.project.service.impl.StudySetServiceImpl;
 import com.capstone.project.service.impl.UserServiceImpl;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.assertj.core.api.Assertions;
@@ -24,6 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.AssertionErrors;
 
@@ -39,6 +42,9 @@ public class FeedbackServiceTest {
 
     @Mock
     private EntityManager entityManager;
+
+    @Mock
+    private JavaMailSender mailSender;
 
     @InjectMocks
     private FeedbackServiceImpl feedbackService;
@@ -147,11 +153,13 @@ public class FeedbackServiceTest {
     @CsvSource({
             // Add test cases here in the format: "search, type, authorId, authorName, destination, fromCreated, toCreated, sortBy, direction, page, size, expectedTotalItems, expectedTotalPages"
             "'keyword', 1, 0, '', 'destination', '2023-07-01', '2023-07-23', 'created_date', 'asc', 1, 10, true",
+            "'keyword', 1, 0, '', 'destination', '2023-07-01', '2023-07-23', 'created_date', 'asc', 0, 10, true",
+            "'keyword', 1, 0, '', 'destination', '2023-07-01', '2023-07-23', 'created_date', 'asc', 1, 0, true",
     })
     void testFilterFeedback(String search, int type, int authorId, String authorName, String destination,
                             String fromCreated, String toCreated, String sortBy, String direction,
                             int page, int size, boolean greaterThanZero) throws ParseException {
-        MockitoAnnotations.openMocks(this);
+
         try {
             Feedback feedback = Feedback.builder()
                     .user(User.builder().id(1).build())
@@ -180,7 +188,26 @@ public class FeedbackServiceTest {
                     page, size).get("list");
             assertThat(list.size()>0).isEqualTo(greaterThanZero);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
         }
+    }
+
+    @Order(5)
+    @Test
+    public void replyFeedback() {
+        Feedback feedback = Feedback.builder()
+                .user(User.builder().email("test_stub@gmail.com").build())
+                .id(1)
+                .title("stub")
+                .build();
+        when(feedbackRepository.findById(any())).thenReturn(Optional.ofNullable(feedback));
+        when(mailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+        doNothing().when(mailSender).send(any(MimeMessage.class));
+        try {
+            feedbackService.replyFeedback(1, "subject", "content");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        verify(mailSender, times(1)).send(any(MimeMessage.class));
     }
 }

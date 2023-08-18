@@ -20,7 +20,7 @@ public interface FeedbackService {
     Boolean deleteFeedback(int id) throws ResourceNotFroundException;
 
     Map<String, Object> filterFeedback(String search, int type, int authorId, String authorName, String destination, String fromCreated, String toCreated,
-                                       String sortBy, String direction, int page, int size) throws ParseException;
+                                       String sortBy, String direction, int page, int size) throws Exception;
 
     String replyFeedback(int feedbackId, String title, String content) throws Exception;
 }
