@@ -417,7 +417,12 @@ public class TestServiceTest {
         Answer answer = new Answer();
         when(answerRepository.getAnswerByQuestionId(anyInt())).thenReturn(Collections.singletonList(answer));
 
-        Map<String, Object> result = testServiceImpl.startTest(testId, userId);
+        Map<String, Object> result = null;
+        try {
+            result = testServiceImpl.startTest(testId, userId);
+        } catch (ResourceNotFroundException e) {
+            System.out.println(e.getMessage());
+        }
 
         assertNotNull(result);
         assertNotNull(result.get("questionList"));
