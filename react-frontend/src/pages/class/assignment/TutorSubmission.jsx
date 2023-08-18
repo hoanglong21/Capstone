@@ -34,12 +34,8 @@ const TutorSubmission = ({ assignment }) => {
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
 
-    const [isEmpty, setIsEmpty] = useState(false)
     const [search, setSearch] = useState('')
     const [searchInput, setSearchInput] = useState('')
-    const [page, setPage] = useState(1)
-    const [totalItems, setTotalItems] = useState(0)
-    const [isDesc, setIsDesc] = useState(true)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {

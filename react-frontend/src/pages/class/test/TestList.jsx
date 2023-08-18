@@ -240,7 +240,7 @@ const TestList = () => {
                 <div>
                     <div className="row d-flex align-items-center">
                         <div className="col-6">
-                            {userInfo?.id === classroom?.user?.id ? (
+                            {userInfo?.id === classroom?.user?.id && (
                                 <button
                                     className="createTest_btn"
                                     onClick={() => {
@@ -254,17 +254,6 @@ const TestList = () => {
                                     />
                                     Create
                                 </button>
-                            ) : (
-                                <div>
-                                    <button className="btn btn-outline-primary fw-semibold d-flex align-items-center">
-                                        <AccountIcon
-                                            className="createAssignIcon_btn"
-                                            size="20px"
-                                            strokeWidth="2.25"
-                                        />
-                                        <span>View your work</span>
-                                    </button>
-                                </div>
                             )}
                         </div>
                         {!isEmpty && (
