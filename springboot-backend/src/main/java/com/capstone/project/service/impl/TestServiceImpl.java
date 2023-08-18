@@ -81,15 +81,15 @@ public class TestServiceImpl  implements TestService {
 
         Test savedTest = testRepository.save(test);
 
-        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedTest.getClassroom().getId());
-        for (ClassLearner classLearner : classLearners) {
-            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
-            for (UserSetting userSetting : userSettings) {
-                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 8 && userSetting.getValue().equalsIgnoreCase("true") && !test.is_draft()) {
-                    sendTestCreatedEmail(classLearner, savedTest);
-                }
-            }
-        }
+//        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(savedTest.getClassroom().getId());
+//        for (ClassLearner classLearner : classLearners) {
+//            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
+//            for (UserSetting userSetting : userSettings) {
+//                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 8 && userSetting.getValue().equalsIgnoreCase("true") && !test.is_draft()) {
+//                    sendTestCreatedEmail(classLearner, savedTest);
+//                }
+//            }
+//        }
 
         return savedTest;
     }
@@ -479,10 +479,14 @@ public class TestServiceImpl  implements TestService {
     }
 
 
-    public Map<String, Object> startTest(int testId, int userId) {
+    public Map<String, Object> startTest(int testId, int userId) throws ResourceNotFroundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFroundException("User is not exist with id: " + userId));
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + testId));
         TestLearner testLearner = TestLearner.builder()
-                .test(Test.builder().id(testId).build())
-                .user(User.builder().id(userId).build())
+                .test(test)
+                .user(user)
                 .start(new Date())
                 .build();
         List<QuestionWrapper> questionWrappers = new ArrayList<>();

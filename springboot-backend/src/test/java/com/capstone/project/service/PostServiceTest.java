@@ -2,10 +2,7 @@ package com.capstone.project.service;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;
-import com.capstone.project.repository.AttachmentRepository;
-import com.capstone.project.repository.ClassLearnerRepository;
-import com.capstone.project.repository.CommentRepository;
-import com.capstone.project.repository.PostRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.PostServiceImpl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -34,6 +31,8 @@ public class PostServiceTest {
     private EntityManager em;
     @Mock
     private PostRepository postRepository;
+    @Mock
+    private ClassRepository classRepository;
 
     @Mock
     private ClassLearnerRepository classLearnerRepository;
@@ -102,8 +101,9 @@ public class PostServiceTest {
                 .classroom(Class.builder().id(classId).build())
                 .content(content)
                 .build();
-
+        Class classroom = new Class();
         when(postRepository.save(any())).thenReturn(post);
+        when(classRepository.findClassById(anyInt())).thenReturn(classroom);
         Post createdpost = postServiceImpl.createPost(post);
         assertThat(post).isEqualTo(createdpost);
     }

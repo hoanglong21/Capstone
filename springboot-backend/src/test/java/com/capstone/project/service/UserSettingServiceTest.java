@@ -202,14 +202,14 @@ public class UserSettingServiceTest {
             UserSetting userSetting2 = UserSetting.builder()
                     .user(User.builder().id(1).build())
                     .setting(Setting.builder().id(1).build())
-                    .value("vn")
+                    .value("en")
                     .build();
             userSettings.add(userSetting1);
             userSettings.add(userSetting2);
 
             Map<String, String> result = userSettingService.CustomGetUserSettingByUserId(1);
 
-            assertThat(result.get("language")).isEqualTo("vn");
+            assertThat(result.get("language")).isEqualTo("en");
             assertThat(result.get("study reminder")).isEqualTo("07:00");
             assertThat(result.get("assignment due date reminder")).isEqualTo("24");
             assertThat(result.get("set added")).isEqualTo("TRUE");

@@ -88,7 +88,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     public Boolean deleteUserSetting(int id) throws ResourceNotFroundException {
         UserSetting usersettings = userSettingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("UserSetting not exist with id:" + id));
-             userSettingRepository.delete(usersettings);
+        userSettingRepository.delete(usersettings);
         return true;
     }
 
@@ -120,7 +120,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Override
     public UserSetting saveUserSettingCustom(int userId, int settingId, String newValue) {
         UserSetting userSetting = userSettingRepository.getUserSettingCustom(userId, settingId);
-        if((newValue==null || newValue.equals("")) && userSetting!=null) {
+        if ((newValue == null || newValue.equals("")) && userSetting != null) {
             userSettingRepository.delete(userSetting);
             return null;
         }
@@ -171,7 +171,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             String fromAddress = "nihongolevelup.box@gmail.com";
             String senderName = "NihongoLevelUp";
 
-            if(userSetting.getSetting().getId() == 1) {
+            if (userSetting.getSetting().getId() == 1) {
                 subject = "[NihongoLevelUp]: Time to study";
                 content = "Hi [[name]],<br><br>"
                         + "It's time to study, don't lose your momentum. Join with us and study new things <br><br>"
@@ -210,11 +210,49 @@ public class UserSettingServiceImpl implements UserSettingService {
             String fromAddress = "nihongolevelup.box@gmail.com";
             String senderName = "NihongoLevelUp";
 
-            if(userSetting.getSetting().getId() == 4) {
+            if (userSetting.getSetting().getId() == 4) {
                 subject = "[NihongoLevelUp]: Test due date";
                 content = "Hi [[name]],<br><br>"
                         + "Your test << " + test.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in 30 minutes. Complete it before the time is due!<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Test</a><br><br>"
+                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                        + "Best regards,<br>"
+                        + "NihongoLevelUp Team";
+            }
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", userSetting.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendTestStartDateMail(UserSetting userSetting, Test test, Class classroom) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = userSetting.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            if (userSetting.getSetting().getId() == 8) {
+                subject = "[NihongoLevelUp]: Test assigned";
+                content = "Hi [[name]],<br><br>"
+                        + "A new test << " + test.getTitle() + " >> in class << " + classroom.getClass_name() + " >> is assigned. Do the test now!<br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Do Test</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
                         + "NihongoLevelUp Team";
@@ -248,7 +286,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             String fromAddress = "nihongolevelup.box@gmail.com";
             String senderName = "NihongoLevelUp";
 
-            if(userSetting.getSetting().getId() == 3) {
+            if (userSetting.getSetting().getId() == 3) {
                 subject = "[NihongoLevelUp]: Assignment due date";
                 content = "Hi [[name]],<br><br>"
                         + "Your assignment << " + assignment.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in 30 minutes. Complete it before the time is due!<br><br>"
@@ -278,7 +316,46 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
+    public void sendAssignmentStartDateMail(UserSetting userSetting, Assignment assignment, Class classroom) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = userSetting.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            if (userSetting.getSetting().getId() == 7) {
+                subject = "[NihongoLevelUp]: Assignment assigned";
+                content = "Hi [[name]],<br><br>"
+                        + "Your assignment << " + assignment.getTitle() + " >> in class << " + classroom.getClass_name() + " >> assigned now. Complete it !<br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Assignment</a><br><br>"
+                        + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                        + "Best regards,<br>"
+                        + "NihongoLevelUp Team";
+            }
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", userSetting.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Map<Integer, Boolean> studyRemindMailSent = new HashMap<>();
+
     @Scheduled(cron = "10 * * * * * ")
     public void sendStudyReminderMails() {
         List<UserSetting> userSettings = userSettingRepository.findAll();
@@ -304,6 +381,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
 
     private Set<LocalDateTime> sentDueDates = new HashSet<>();
+
     @Scheduled(fixedRate = 10000)
     public void sendAssignmentDueDateMails() throws ResourceNotFroundException {
         List<UserSetting> userSettings = userSettingRepository.findAll();
@@ -325,13 +403,13 @@ public class UserSettingServiceImpl implements UserSettingService {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                     LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
 
-                    // Giảm thời gian due date đi 30 phút
-                    LocalDateTime reminderTime = duedateTime.minusMinutes(30);
+//                    long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
 
-                    // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
+                    LocalDateTime reminderTime = duedateTime.minusHours(24);
+
                     LocalDateTime currentTime = LocalDateTime.now();
                     if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
-                        sendAssignmentDueDateMail(userSetting,assignment,classroom);
+                        sendAssignmentDueDateMail(userSetting, assignment, classroom);
                         sentDueDates.add(duedateTime);
 
                     }
@@ -340,7 +418,42 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
+    private Set<LocalDateTime> sentAssignStartDates = new HashSet<>();
+
+    @Scheduled(fixedRate = 10000)
+    public void sendAssignmentStartDateMails() throws ResourceNotFroundException {
+        List<UserSetting> userSettings = userSettingRepository.findAll();
+
+        for (UserSetting userSetting : userSettings) {
+            int userSettingId = userSetting.getId();
+            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
+
+            for (ClassLearner classLearner : classLearners) {
+                Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
+                List<Assignment> assignments = assignmentRepository.getAssignmentByClassroomId(classroom.getId());
+
+                List<Assignment> validAssignments = assignments.stream()
+                        .filter(assignment -> assignment.getStart_date() != null)
+                        .collect(Collectors.toList());
+
+                for (Assignment assignment : validAssignments) {
+                    String startdate = String.valueOf(assignment.getStart_date());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                    LocalDateTime startdateTime = LocalDateTime.parse(startdate, formatter);
+
+                    LocalDateTime currentTime = LocalDateTime.now();
+                    if (userSetting.getSetting().getId() == 7 && userSetting.getValue().equalsIgnoreCase("true") && !sentAssignStartDates.contains(startdateTime) && currentTime.isAfter(startdateTime) && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
+                        sendAssignmentStartDateMail(userSetting, assignment, classroom);
+                        sentAssignStartDates.add(startdateTime);
+
+                    }
+                }
+            }
+        }
+    }
+
     private Set<LocalDateTime> sentTestDueDates = new HashSet<>();
+
     @Scheduled(fixedRate = 10000)
     public void sendTestDueDateMails() throws ResourceNotFroundException {
         List<UserSetting> userSettings = userSettingRepository.findAll();
@@ -361,13 +474,13 @@ public class UserSettingServiceImpl implements UserSettingService {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                     LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
 
-                    // Giảm thời gian due date đi 30 phút
-                    LocalDateTime reminderTime = duedateTime.minusMinutes(30);
+//                    long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
 
-                    // So sánh thời gian hiện tại với thời gian giảm đi 30 phút
+                    LocalDateTime reminderTime = duedateTime.minusHours(24);
+
                     LocalDateTime currentTime = LocalDateTime.now();
                     if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
-                        sendTestDueDateMail(userSetting,test,classroom);
+                        sendTestDueDateMail(userSetting, test, classroom);
                         sentTestDueDates.add(duedateTime);
 
                     }
@@ -376,5 +489,37 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
+    private Set<LocalDateTime> sentTestStartDates = new HashSet<>();
+
+    @Scheduled(fixedRate = 10000)
+    public void sendTestStartDateMails() throws ResourceNotFroundException {
+        List<UserSetting> userSettings = userSettingRepository.findAll();
+
+        for (UserSetting userSetting : userSettings) {
+            int userSettingId = userSetting.getId();
+            List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
+            for (ClassLearner classLearner : classLearners) {
+                Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
+                List<Test> tests = testRepository.getTestByClassroomId(classroom.getId());
+
+                List<Test> validTests = tests.stream()
+                        .filter(test -> test.getStart_date() != null)
+                        .collect(Collectors.toList());
+
+                for (Test test : validTests) {
+                    String startdate = String.valueOf(test.getStart_date());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                    LocalDateTime startdateTime = LocalDateTime.parse(startdate, formatter);
+
+                    LocalDateTime currentTime = LocalDateTime.now();
+                    if (userSetting.getSetting().getId() == 8 & userSetting.getValue().equalsIgnoreCase("true") && !sentTestStartDates.contains(startdateTime) && currentTime.isAfter(startdateTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
+                        sendTestStartDateMail(userSetting, test, classroom);
+                        sentTestStartDates.add(startdateTime);
+
+                    }
+                }
+            }
+        }
+    }
 
 }
