@@ -28,6 +28,7 @@ const UnBanUser = ({ user }) => {
       });
       window.location.reload()
       navigate("/manageusers");
+      console.log("ahihi1")
       setError("");
     } catch (error) {
       if (error.response && error.response.data) {
