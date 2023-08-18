@@ -1,6 +1,7 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.dto.CardWrapper;
+import com.capstone.project.dto.FilterStudySetByClassResponse;
 import com.capstone.project.dto.StudySetResponse;
 import com.capstone.project.dto.UserFilterResponse;
 import com.capstone.project.exception.ResourceNotFroundException;
@@ -286,10 +287,12 @@ public class StudySetServiceImpl implements StudySetService {
 
         String sql = "";
         if(isAssigned==true) {
-            sql = " SELECT * FROM studyset WHERE id IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
+            sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
+                    " IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
                     " AND author_id = " + authorId + " ";
         } else {
-            sql = " SELECT * FROM studyset WHERE id NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
+            sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
+                    " NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
                     " AND author_id = " + authorId + " ";
         }
         sql += " AND is_deleted = false AND is_draft = false AND is_public = true ";
@@ -315,8 +318,8 @@ public class StudySetServiceImpl implements StudySetService {
         params.add(size);
         params.add(offset);
 
-        List<StudySet> userList =
-                jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(StudySet.class));
+        List<FilterStudySetByClassResponse> userList =
+                jdbcTemplate.query(sql, params.toArray(), new BeanPropertyRowMapper<>(FilterStudySetByClassResponse.class));
 
         int totalPages = (int) Math.ceil((double) totalItems / size);
 
