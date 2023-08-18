@@ -87,6 +87,8 @@ function AssignmentList() {
                         }`,
                         '',
                         '',
+                        '',
+                        '',
                         `${userInfo.id === tempClass.user.id ? '' : `=0`}`,
                         '',
                         '',
@@ -131,6 +133,8 @@ function AssignmentList() {
                         }`,
                         '',
                         '',
+                        '',
+                        '',
                         `${userInfo.id === classroom.user.id ? '' : `=0`}`,
                         `=${isDesc ? 'desc' : 'asc'}`,
                         '',
@@ -170,6 +174,8 @@ function AssignmentList() {
                                 ? ''
                                 : `=${getToday()}`
                         }`,
+                        '',
+                        '',
                         '',
                         '',
                         `${userInfo.id === classroom.user.id ? '' : `=0`}`,

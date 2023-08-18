@@ -21,6 +21,8 @@ const deleteTest = (id) => {
 const getFilterList = (
     search,
     author,
+    duedatefrom,
+    duedateto,
     fromStart,
     toStart,
     fromCreated,
@@ -39,6 +41,8 @@ const getFilterList = (
             search +
             '&author' +
             author +
+            (duedatefrom ? `&duedatefrom${duedatefrom}` : '') +
+            (duedateto ? `&duedateto${duedateto}` : '') +
             (fromStart ? `&fromstarted${fromStart}` : '') +
             (toStart ? `&tostarted${toStart}` : '') +
             (fromCreated ? `&fromcreated${fromCreated}` : '') +
