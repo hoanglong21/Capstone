@@ -12,6 +12,8 @@ public interface NotificationService {
 
     Notification getNotificationById(int id) throws ResourceNotFroundException;
 
+    Notification getNotificationByUserId(int id) throws ResourceNotFroundException;
+
     Notification createNotification(Notification noti);
 
     Notification updateNotification( Notification noti,  int id) throws ResourceNotFroundException;
