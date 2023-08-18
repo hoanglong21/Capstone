@@ -30,13 +30,15 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final UserRepository userRepository;
     private FeedbackTypeRepository feedbackTypeRepository;
     private final JavaMailSender mailSender;
+    private final EntityManager entityManager;
 
     @Autowired
-    public FeedbackServiceImpl(FeedbackRepository feedbackRepository, UserRepository userRepository, FeedbackTypeRepository feedbackTypeRepository, JavaMailSender mailSender) {
+    public FeedbackServiceImpl(FeedbackRepository feedbackRepository, UserRepository userRepository, FeedbackTypeRepository feedbackTypeRepository, JavaMailSender mailSender, EntityManager entityManager) {
         this.feedbackRepository = feedbackRepository;
         this.userRepository = userRepository;
         this.feedbackTypeRepository = feedbackTypeRepository;
         this.mailSender = mailSender;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -77,13 +79,15 @@ public class FeedbackServiceImpl implements FeedbackService {
         return true;
     }
 
-    @Autowired
-    private EntityManager entityManager;
+
 
     @Override
     public Map<String, Object> filterFeedback(String search, int type, int authorId, String authorName, String destination,
                                               String fromCreated, String toCreated, String sortBy, String direction,
-                                              int page, int size) throws ParseException {
+                                              int page, int size) throws Exception {
+        if(page<=0 || size<=0) {
+            throw new Exception("Please provide valid page and size");
+        }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "FROM Feedback f LEFT JOIN FETCH f.user WHERE 1=1 ";
         Map<String, Object> params = new HashMap<>();

@@ -380,7 +380,7 @@ const App = () => {
                         element={<ViewVocabularyDetail />}
                     />
                     <Route path="/registeradmin" element={<RegisterAdmin />} />
-                    <Route path="/reply" element={<ReplyFeedback />} />
+                    <Route path="/reply/:id" element={<ReplyFeedback />} />
                     <Route
                         path="/settingsadmin"
                         element={<SettingForAdmin />}
