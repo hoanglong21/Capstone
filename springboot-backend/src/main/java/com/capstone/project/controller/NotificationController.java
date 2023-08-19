@@ -10,12 +10,14 @@ import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -102,4 +104,17 @@ public class NotificationController {
         }
     }
 
+    @GetMapping("/filternotification")
+    public ResponseEntity<?> getFilterNotification(@RequestParam(value = "content", required = false) String content ,
+                                                   @RequestParam(value = "isread", required = false) Boolean isRead,
+                                                   @RequestParam(value = "title", required = false) String title,
+                                                   @RequestParam(value = "fromdatetime", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromDatetime,
+                                                   @RequestParam(value = "todatetime", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toDatetime,
+                                                   @RequestParam(value = "userid", required = false) Optional<Integer> userid,
+                                                   @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
+                                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                   @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+        return ResponseEntity.ok(notificationService.getFilterNotification(content,isRead,title,fromDatetime,toDatetime,userid.orElse(0),direction,page,size));
+
+    }
 }
