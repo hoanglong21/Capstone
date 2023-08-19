@@ -9,7 +9,6 @@ import AuthService from './services/AuthService'
 import AuthVerify from './components/common/authVerify'
 import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
-import Chat from './pages/Chat'
 import Layout from './components/layouts/Layout'
 import Flashcard from './pages/studySet/flashcard/Flashcard'
 import ClassLayout from './pages/class/classLayout/ClassLayout'
@@ -223,10 +222,7 @@ const App = () => {
                             {/* Class */}
                             <Route path="class/:id" element={<ClassLayout />}>
                                 <Route index element={<Stream />} />
-                                <Route
-                                    path="sets"
-                                    element={<Sets />}
-                                />
+                                <Route path="sets" element={<Sets />} />
                                 <Route
                                     path="assignments"
                                     element={<AssignmentList />}
@@ -370,7 +366,6 @@ const App = () => {
                         path="/viewdetailsubmission/:id"
                         element={<ViewDetailSubmission />}
                     />
-                    <Route path="/chatbox" element={<Chat />} />
                     <Route
                         path="/viewdetailkanji"
                         element={<ViewKanjiDetail />}
