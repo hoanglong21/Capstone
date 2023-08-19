@@ -151,4 +151,12 @@ header {
         border: 0px solid #fff !important;
         border-radius: 0px !important;
     }
+
+    .header-dropdown{
+        min-width: 7rem !important;
+    }
+
+    .notifications {
+        width: 250px;
+    }
 }

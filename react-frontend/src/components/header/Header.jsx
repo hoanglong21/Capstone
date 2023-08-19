@@ -194,7 +194,7 @@ const Header = () => {
                                 size="3.5rem"
                             />
                         </button>
-                        <ul className="dropdown-menu dropdown-menu-end p-2">
+                        <ul className="dropdown-menu dropdown-menu-end p-2 header-dropdown">
                             <li>
                                 <a
                                     className="dropdown-item py-2 px-2"
@@ -207,7 +207,7 @@ const Header = () => {
                                     </span>
                                 </a>
                                 <ul
-                                    className="dropdown-menu dropdown-submenu dropdown-submenu-left"
+                                    className="submenu dropdown-menu dropdown-submenu dropdown-submenu-left header-dropdown"
                                     aria-labelledby="dropdownMenuButton"
                                 >
                                     <li>

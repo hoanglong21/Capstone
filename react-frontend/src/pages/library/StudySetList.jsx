@@ -208,7 +208,7 @@ const StudySetList = () => {
                 ) : (
                     <div>
                         <div className="row d-flex align-items-center mb-4">
-                            <div className="col-5 d-flex align-items-center">
+                            <div className="studyset-col-5 d-flex align-items-center">
                                 <select
                                     className="form-select sets-select py-2 me-2"
                                     aria-label="Default select example"
@@ -247,7 +247,7 @@ const StudySetList = () => {
                                     )}
                                 </button>
                             </div>
-                            <div className="col-7">
+                            <div className="studyset-col-7">
                                 <form className="sets-search d-flex align-items-center mb-0">
                                     <input
                                         className="search-control flex-grow-1"
