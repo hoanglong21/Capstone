@@ -152,7 +152,11 @@ public class TestController {
     @GetMapping("/starttest")
     public ResponseEntity<?> startTest(@RequestParam("userid") int userId,
                                        @RequestParam("testid") int testId){
-        return ResponseEntity.ok(testService.startTest(testId, userId));
+        try {
+            return ResponseEntity.ok(testService.startTest(testId, userId));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/endtest")

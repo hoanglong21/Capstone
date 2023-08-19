@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux'
 
 import AssignmentService from '../../../services/AssignmentService'
 import AttachmentService from '../../../services/AttachmentService'
-import { deleteFolder } from '../../../features/fileManagement'
 import SubmissionService from '../../../services/SubmissionService'
 import CommentService from '../../../services/CommentService'
 
 import Comment from '../../../components/comment/Comment'
 import CardEditor from '../../../components/textEditor/CardEditor'
+import DeleteAssignment from './DeleteAssignment'
 
 import {
     MemberSolidIcon,
@@ -17,9 +17,10 @@ import {
     SendIcon,
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
-import DeleteAssignment from './DeleteAssignment'
 
 const Instructions = () => {
+    const navigate = useNavigate()
+
     const { assign_id } = useParams()
 
     const { userInfo } = useSelector((state) => state.user)
@@ -144,14 +145,17 @@ const Instructions = () => {
                                 assignment?.classroom?.user?.id && (
                                 <div>
                                     <li>
-                                        <Link
+                                        <button
                                             className="dropdown-item py-1 px-3 d-flex align-items-center"
                                             type="button"
-                                            to={`../../../edit-assignment/${assign_id}`}
-                                            relative="path"
+                                            onClick={() => {
+                                                navigate(
+                                                    `/class/${assignment?.classroom?.id}/edit-assignment/${assign_id}`
+                                                )
+                                            }}
                                         >
                                             Edit
-                                        </Link>
+                                        </button>
                                     </li>
                                     <li>
                                         <button
@@ -197,7 +201,7 @@ const Instructions = () => {
                 <div className="d-flex mb-2 instruction_info">
                     <div>{assignment?.user?.username}</div>
                     <div className="mx-1">·</div>
-                    <div className='instruction-date'>
+                    <div className="instruction-date">
                         {assignment?.created_date}{' '}
                         {assignment?.modified_date
                             ? `(Edited ${assignment?.modified_date})`

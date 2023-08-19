@@ -3,12 +3,13 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import ClassService from '../../services/ClassService'
 import PostService from '../../services/PostService'
 import { uploadFile } from '../../features/fileManagement'
 import AttachmentService from '../../services/AttachmentService'
+import AssignmentService from '../../services/AssignmentService'
 
 import Post from './post/Post'
 import PostEditor from '../../components/textEditor/PostEditor'
@@ -23,6 +24,7 @@ import {
     UploadIcon,
 } from '../../components/icons'
 import '../../assets/styles/class.css'
+import TestService from '../../services/TestService'
 
 const Stream = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -42,12 +44,36 @@ const Stream = () => {
     const [uploadFiles, setUploadFiles] = useState([])
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
 
+    const [assignments, setAssignments] = useState([])
+    const [tests, setTests] = useState([])
+
+    function getToday() {
+        const today = new Date()
+        return (
+            today.getFullYear() +
+            '-' +
+            padWithLeadingZeros(today.getMonth() + 1, 2) +
+            '-' +
+            padWithLeadingZeros(today.getDate(), 2) +
+            'T' +
+            padWithLeadingZeros(today.getHours(), 2) +
+            ':' +
+            padWithLeadingZeros(today.getMinutes(), 2)
+        )
+    }
+
+    function padWithLeadingZeros(num, totalLength) {
+        return String(num).padStart(totalLength, '0')
+    }
+
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // class
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
+                // posts
                 setPosts(
                     (
                         await PostService.getFilterList(
@@ -63,6 +89,7 @@ const Stream = () => {
                         )
                     ).data.list
                 )
+                // add post
                 setAddPost({
                     user: {
                         id: userInfo.id,
@@ -73,6 +100,46 @@ const Stream = () => {
                     },
                     content: '',
                 })
+                // upcoming
+                const tempAssignments = (
+                    await AssignmentService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        `=${getToday()}`,
+                        '',
+                        '',
+                        `=${getToday()}`,
+                        '',
+                        `${userInfo.id === tempClass.user.id ? '' : `=0`}`,
+                        '',
+                        '',
+                        `=${tempClass.id}`,
+                        '=1',
+                        '=5'
+                    )
+                ).data.list
+                setAssignments(tempAssignments)
+                const tempTests = (
+                    await TestService.getFilterList(
+                        '',
+                        '',
+                        `=${getToday()}`,
+                        '',
+                        '',
+                        `=${getToday()}`,
+                        '',
+                        '',
+                        `=0`,
+                        '',
+                        '',
+                        '',
+                        `=${tempClass.id}`,
+                        '=1',
+                        '=5'
+                    )
+                ).data.list
+                setTests(tempTests)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -282,7 +349,42 @@ const Stream = () => {
                             <div className="card-title mainClass_sectionTitle">
                                 Upcoming
                             </div>
-                            <p className="mainClass_subText">No work due</p>
+                            <div className="mb-1">Assignment</div>
+                            {assignments?.length === 0 ? (
+                                <p className="mainClass_subText">No work due</p>
+                            ) : (
+                                assignments?.map((assignment, index) => (
+                                    <div key={index} className="mb-1">
+                                        <div className="mainClass_dueDate">
+                                            Due {assignment.due_date}
+                                        </div>
+                                        <Link
+                                            to={`assignment/${assignment.id}/details`}
+                                            className="mainClass_upcomingLink"
+                                        >
+                                            {assignment?.title}
+                                        </Link>
+                                    </div>
+                                ))
+                            )}
+                            <div className="mb-1">Test</div>
+                            {tests?.length === 0 ? (
+                                <p className="mainClass_subText">No work due</p>
+                            ) : (
+                                tests?.map((test, index) => (
+                                    <div key={index} className="mb-1">
+                                        <div className="mainClass_dueDate">
+                                            Due {test.due_date}
+                                        </div>
+                                        <Link
+                                            to={`test/${test.id}/details`}
+                                            className="mainClass_upcomingLink"
+                                        >
+                                            {test?.title}
+                                        </Link>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>

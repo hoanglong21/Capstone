@@ -479,10 +479,14 @@ public class TestServiceImpl  implements TestService {
     }
 
 
-    public Map<String, Object> startTest(int testId, int userId) {
+    public Map<String, Object> startTest(int testId, int userId) throws ResourceNotFroundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFroundException("User is not exist with id: " + userId));
+        Test test = testRepository.findById(testId)
+                .orElseThrow(() -> new ResourceNotFroundException("Test is not exist with id: " + testId));
         TestLearner testLearner = TestLearner.builder()
-                .test(Test.builder().id(testId).build())
-                .user(User.builder().id(userId).build())
+                .test(test)
+                .user(user)
                 .start(new Date())
                 .build();
         List<QuestionWrapper> questionWrappers = new ArrayList<>();

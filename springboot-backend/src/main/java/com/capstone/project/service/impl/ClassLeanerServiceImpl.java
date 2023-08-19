@@ -225,8 +225,8 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         }
 
         if (username != null) {
-            query += " AND username = :username";
-            parameters.put("username", username);
+            query += " AND username LIKE :username";
+            parameters.put("username", "%" + username + "%");
 
         }
 
