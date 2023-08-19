@@ -95,6 +95,8 @@ public class TestController {
     @GetMapping("/filtertest")
     public ResponseEntity<?> getFilterList(@RequestParam(value = "search", required = false) String search,
                                            @RequestParam(value = "author", required = false) String author,
+                                           @RequestParam(value = "duedatefrom", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String duedatefrom,
+                                           @RequestParam(value = "duedateto", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String duedateto,
                                            @RequestParam(value = "fromstarted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromStart,
                                            @RequestParam(value = "tostarted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toStart,
                                            @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
@@ -108,7 +110,7 @@ public class TestController {
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
 
         try{
-            return ResponseEntity.ok(testService.getFilterTest(search,author,direction,duration.orElse(0),classid.orElse(0),fromStart,toStart,fromCreated,toCreated,isDraft, sortBy,page,size));
+            return ResponseEntity.ok(testService.getFilterTest(search,author,direction,duration.orElse(0),classid.orElse(0),duedatefrom,duedateto,fromStart,toStart,fromCreated,toCreated,isDraft, sortBy,page,size));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -150,7 +152,11 @@ public class TestController {
     @GetMapping("/starttest")
     public ResponseEntity<?> startTest(@RequestParam("userid") int userId,
                                        @RequestParam("testid") int testId){
-        return ResponseEntity.ok(testService.startTest(testId, userId));
+        try {
+            return ResponseEntity.ok(testService.startTest(testId, userId));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/endtest")

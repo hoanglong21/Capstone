@@ -28,7 +28,7 @@ public interface TestService {
     Boolean deleteTest( int id) throws ResourceNotFroundException;
 
     Map<String, Object> getFilterTest(String search, String author, String direction, int duration, int classid,
-                                      String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws Exception;
+                                      String duedatefrom, String duedateto,String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft, String sortBy, int page, int size) throws Exception;
 
     Map<String, Object> getNumAttemptTest(int testid, int classid) throws ResourceNotFroundException;
 
@@ -36,7 +36,7 @@ public interface TestService {
 
     List<TestandClassLearnerDTO> getFilterTestLearner(String username, Double mark, int classid, int authorid,int testid, String direction, String sortBy, int page, int size) ;
 
-    Map<String, Object> startTest(int testId, int userId);
+    Map<String, Object> startTest(int testId, int userId) throws ResourceNotFroundException;
 
     Map<String, Object> endTest(List<TestResult> testResultList) throws Exception;
 }

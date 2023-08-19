@@ -202,7 +202,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
 
 
     @Override
-    public Map<String, Object> filterGetLearner(int userId, int classId, String status, String sortBy, String direction, int page, int size) {
+    public Map<String, Object> filterGetLearner(int userId, int classId,String username, String status, String sortBy, String direction, int page, int size) {
 
         int offset = (page - 1) * size;
 
@@ -222,6 +222,12 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
         if (userId != 0) {
             query += " AND user_id = :userId";
             parameters.put("userId", userId);
+        }
+
+        if (username != null) {
+            query += " AND username LIKE :username";
+            parameters.put("username", "%" + username + "%");
+
         }
 
         if (status != null) {

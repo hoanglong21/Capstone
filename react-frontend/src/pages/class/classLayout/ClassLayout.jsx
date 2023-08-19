@@ -25,6 +25,7 @@ import {
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import './classLayout.css'
 import AssignSets from '../AssignSets'
+import NotificationService from '../../../services/NotificationService'
 
 const ClassLayout = () => {
     const navigate = useNavigate()
@@ -83,12 +84,21 @@ const ClassLayout = () => {
 
     const handleRequest = async () => {
         try {
-            await ClassLearnerService.createClassLeaner({
+            ClassLearnerService.createClassLeaner({
                 user: { id: userInfo.id, username: userInfo.username },
                 classroom: {
                     id: classroom.id,
                 },
                 status: 'pending',
+            })
+            NotificationService.createNotification({
+                title: 'Request to join class',
+                content: `You have a request to join class ${classroom.class_name} from ${userInfo?.username}`,
+                user: {
+                    id: classroom.user.id,
+                    username: classroom.user.username,
+                },
+                url: `/class/${classroom.id}/people`,
             })
             setIsWaiting(true)
         } catch (error) {
@@ -102,10 +112,7 @@ const ClassLayout = () => {
 
     const handleCancelRequest = async () => {
         try {
-            await ClassLearnerService.deleteClassLearner(
-                userInfo.id,
-                classroom.id
-            )
+            ClassLearnerService.deleteClassLearner(userInfo.id, classroom.id)
             setIsWaiting(false)
         } catch (error) {
             if (error.response && error.response.data) {

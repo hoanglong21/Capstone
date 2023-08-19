@@ -2,6 +2,7 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.PostService;
@@ -30,6 +31,8 @@ public class PostServiceImpl implements PostService {
 
     private final JavaMailSender mailSender;
     private final PostRepository postRepository;
+    private final ClassRepository classRepository;
+    private final NotificationRepository notificationRepository;
     private final ClassLearnerRepository classLearnerRepository;
     private final CommentRepository commentRepository;
     private final UserSettingRepository userSettingRepository;
@@ -38,9 +41,11 @@ public class PostServiceImpl implements PostService {
     private final ClassService classService;
 
     @Autowired
-    public PostServiceImpl(JavaMailSender mailSender, PostRepository postRepository, ClassLearnerRepository classLearnerRepository, CommentRepository commentRepository, UserSettingRepository userSettingRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
+    public PostServiceImpl(JavaMailSender mailSender, PostRepository postRepository, ClassRepository clasRepository, ClassRepository classRepository, NotificationRepository notificationRepository, ClassLearnerRepository classLearnerRepository, CommentRepository commentRepository, UserSettingRepository userSettingRepository, AttachmentRepository attachmentRepository, UserService userService, ClassService classService) {
         this.mailSender = mailSender;
         this.postRepository = postRepository;
+        this.classRepository = classRepository;
+        this.notificationRepository = notificationRepository;
         this.classLearnerRepository = classLearnerRepository;
         this.commentRepository = commentRepository;
         this.userSettingRepository = userSettingRepository;
@@ -87,7 +92,28 @@ public class PostServiceImpl implements PostService {
                 }
             }
         }
+        Class classroom = classRepository.findClassById(savedPost.getClassroom().getId());
+        notificationPostCreated(classroom);
         return savedPost;
+    }
+
+    public void notificationPostCreated(Class classroom) {
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for (ClassLearner classLearner : classLearnerList) {
+            if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setContent("A new post in class '" + classroom.getClass_name() + "'");
+                notification.setDatetime(date);
+                notification.set_read(false);
+                notification.setUser(classLearner.getUser());
+
+                notificationRepository.save(notification);
+            }
+        }
     }
 
     public void sendPostCreatedEmail(ClassLearner classLearner) {

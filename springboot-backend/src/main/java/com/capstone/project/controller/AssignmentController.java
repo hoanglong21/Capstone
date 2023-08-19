@@ -92,6 +92,8 @@ public class AssignmentController {
                                            @RequestParam(value = "tostarted", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toStart,
                                            @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
                                            @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
+                                           @RequestParam(value = "duedatefrom", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String duedatefrom,
+                                           @RequestParam(value = "duedateto", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String duedateto,
                                            @RequestParam(value = "draft", required = false) Boolean isDraft,
                                            @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                            @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
@@ -100,7 +102,7 @@ public class AssignmentController {
                                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
 
         try{
-            return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,fromStart,toStart,fromCreated,toCreated,isDraft,direction,sortBy,classid.orElse(0),page,size));
+            return ResponseEntity.ok(assignmentService.getFilterAssignment(search,author,fromStart,toStart,fromCreated,toCreated, duedatefrom, duedateto,isDraft,direction,sortBy,classid.orElse(0),page,size));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }

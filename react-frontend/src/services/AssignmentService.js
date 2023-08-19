@@ -25,6 +25,8 @@ const getFilterList = (
     toStart,
     fromCreated,
     toCreated,
+    duedatefrom,
+    duedateto,
     draft,
     direction,
     sortBy,
@@ -42,6 +44,8 @@ const getFilterList = (
             (toStart ? `&tostarted${toStart}` : '') +
             (fromCreated ? `&fromcreated${fromCreated}` : '') +
             (toCreated ? `&tocreated${toCreated}` : '') +
+            (duedatefrom ? `&duedatefrom${duedatefrom}` : '') +
+            (duedateto ? `&duedateto${duedateto}` : '') +
             '&draft' +
             draft +
             '&direction' +

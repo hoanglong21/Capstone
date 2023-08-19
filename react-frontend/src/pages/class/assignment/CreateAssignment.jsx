@@ -130,7 +130,7 @@ function CreateAssignment() {
         if (userInfo?.id) {
             fetchData()
         }
-    }, [userInfo, assign_id])
+    }, [userInfo])
 
     const handleUploadFile = async (event) => {
         setLoadingUploadFile(true)
@@ -227,7 +227,6 @@ function CreateAssignment() {
                 tempAssignment.modified_date
             )
             tempAssignment.due_date = toBEDate(tempAssignment.due_date)
-            setAssignment({ ...assignment, _draft: draft })
             await AssignmentService.updateAssignment(
                 assignment.id,
                 tempAssignment
@@ -246,6 +245,7 @@ function CreateAssignment() {
         setLoadingCreateAssign(true)
         handleUpdate(draft)
         navigate(`/class/${classroom.id}/assignment/${assignment.id}/details`)
+        setAssignment({ ...assignment, _draft: draft })
         setLoadingCreateAssign(false)
     }
 
@@ -288,7 +288,7 @@ function CreateAssignment() {
                 ) : (
                     <button
                         className="createAssign_submitBtn"
-                        disabled={!assignment?.title}
+                        disabled={!assignment?.title || loadingCreateAssign}
                         onClick={() => handleSubmit(false)}
                     >
                         {loadingCreateAssign ? 'Saving...' : 'Save'}

@@ -7,11 +7,14 @@ import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.StudySetService;
 import com.capstone.project.service.UserService;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import net.loomchild.segment.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.Query;
@@ -26,7 +29,9 @@ public class ClassServiceImpl implements ClassService {
     @PersistenceContext
     private EntityManager em;
 
+    private final JavaMailSender mailSender;
     private final ClassRepository classRepository;
+    private final UserSettingRepository userSettingRepository;
     private final PostRepository postRepository;
     private final TestRepository testRepository;
     private final TestLearnerRepository testLearnerRepository;
@@ -46,8 +51,10 @@ public class ClassServiceImpl implements ClassService {
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, JavaMailSender mailSender, UserSettingRepository usersettingRepository, UserSettingRepository userSettingRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
+        this.mailSender = mailSender;
+        this.userSettingRepository = userSettingRepository;
         this.postRepository = postRepository;
         this.testRepository = testRepository;
         this.testLearnerRepository = testLearnerRepository;
@@ -128,8 +135,6 @@ public class ClassServiceImpl implements ClassService {
 
     public void notificationRestoredClass(Class classroom) {
 
-
-
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
 
@@ -139,7 +144,7 @@ public class ClassServiceImpl implements ClassService {
                 Notification notification = new Notification();
                 notification.setContent("Class '" + classroom.getClass_name() + "' has been restored.");
                 notification.setDatetime(date);
-
+                notification.set_read(false);
                 notification.setUser(classLearner.getUser());
 
                 notificationRepository.save(notification);
@@ -168,6 +173,7 @@ public class ClassServiceImpl implements ClassService {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
                 notification.setContent("Your Class " + classroom.getClass_name() + "' has been deleted.");
+                notification.set_read(false);
                 notification.setUser(classLearner.getUser());
                 notification.setDatetime(date);
 
@@ -444,18 +450,81 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
-    public Boolean AssignStudyset(int classid, int studysetid) throws ResourceNotFroundException {
+    public Class AssignStudyset(int classid, int studysetid) throws ResourceNotFroundException {
         Class classroom = classRepository.findById(classid)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + classid));
 
         StudySet studySet = studySetRepository.findById(studysetid)
                 .orElseThrow(() -> new ResourceNotFroundException("Studyset not exist with id:" + studysetid));
 
-//        StudySet studySet_class = studySetService.createStudySet(studySet);
-
         classroom.getStudySets().add(studySet);
-        classRepository.save(classroom);
-        return true;
+        Class savedclass = classRepository.save(classroom);
+
+        List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for (ClassLearner classLearner : classLearners) {
+            List<UserSetting> userSettings = userSettingRepository.getByUserId(classLearner.getUser().getId());
+            for (UserSetting userSetting : userSettings) {
+                if (classLearner.getStatus().equals("enrolled") && userSetting.getSetting().getId() == 5 && userSetting.getValue().equalsIgnoreCase("true")) {
+                    sendStudysetEmail(classLearner);
+                }
+            }
+        }
+        notificationStudysetAssigned(classroom);
+        return savedclass;
+    }
+
+    public void notificationStudysetAssigned(Class classroom) {
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for (ClassLearner classLearner : classLearnerList) {
+            if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setContent("A new studyset is added to class '" + classroom.getClass_name() + "'");
+                notification.setDatetime(date);
+                notification.set_read(false);
+                notification.setUser(classLearner.getUser());
+
+                notificationRepository.save(notification);
+            }
+        }
+    }
+
+    public void sendStudysetEmail(ClassLearner classLearner) {
+        String subject = null;
+        String content = null;
+        try {
+            String toAddress = classLearner.getUser().getEmail();
+            String fromAddress = "nihongolevelup.box@gmail.com";
+            String senderName = "NihongoLevelUp";
+
+            subject = "[NihongoLevelUp]: New Studyset ";
+            content = "Hi [[name]],<br><br>"
+                    + "A new studyset was added to your class << " + classLearner.getClassroom().getClass_name() + " >>.<br><br>"
+                    + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
+                    + "Best regards,<br>"
+                    + "NihongoLevelUp Team";
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message);
+
+            helper.setFrom(fromAddress, senderName);
+            helper.setTo(toAddress);
+            helper.setSubject(subject);
+
+            content = content.replace("[[name]]", classLearner.getUser().getUsername());
+
+            String URL = "https://www.nihongolevelup.com";
+            content = content.replace("[[URL]]", URL);
+
+            helper.setText(content, true);
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Transactional
@@ -474,6 +543,7 @@ public class ClassServiceImpl implements ClassService {
 
         return true;
     }
+
 
     @Transactional
     public void deleteClassStudyset(int studysetid){

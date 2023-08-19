@@ -46,10 +46,18 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public Notification getNotificationByUserId(int id) throws ResourceNotFroundException {
+        Notification notification = notificationRepository.getNotificationByUserId(id);
+        return notification;
+    }
+
+
+    @Override
     public Notification createNotification(Notification notification) {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
         notification.setDatetime(date);
+        notification.set_read(false);
         return notificationRepository.save(notification);
     }
 

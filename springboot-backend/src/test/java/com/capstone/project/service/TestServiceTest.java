@@ -233,16 +233,16 @@ public class TestServiceTest {
     }
 
     @Order(7)
-    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, duration{3},classId={4}, fromStart{5}, " +
-                                      "toStart{6},fromCreated{7},toCreated{8} ,isDraft{9}, sortBy{10}, page{11}, size{12}")
+    @ParameterizedTest(name = "index => search={0},author{1},direction{2}, duration{3},classId={4},duedatefrom{5},duedateto{6} fromStart{7}, " +
+                                      "toStart{8},fromCreated{9},toCreated{10} ,isDraft{11}, sortBy{12}, page{13}, size{14}")
     @CsvSource({
-            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,5",
-            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,0,5",
-            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,-5",
-            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,1,0",
+            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,5",
+            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,0,5",
+            "Homework,quantruong,DESC,45,1,2023-8-9,2023-8-15,2023-8-9,2023-8-15,2023-8-1,2023-8-5,true,created_date,1,-5",
+            "Homwork,ngocnguyen,DESC,15,2,2023-8-9,2023-8-15,2023-8-9,2023-8-15,2023-8-1,2023-8-5,false,created_date,1,0",
     })
     public void testGetFilterTest(String search, String author, String direction, int duration, int classid,
-                                  String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft,
+                                  String duedatefrom, String duedateto,String fromStarted, String toStarted, String fromCreated, String toCreated, Boolean isDraft,
                                   String sortBy, int page, int size) throws ResourceNotFroundException {
 
         MockitoAnnotations.openMocks(this);
@@ -261,7 +261,7 @@ public class TestServiceTest {
 
         try {
             List<com.capstone.project.model.Test> list = (List<com.capstone.project.model.Test>) testServiceImpl.getFilterTest(search, author, direction, duration,
-                    classid, fromStarted, toStarted, fromCreated, toCreated,
+                    classid,duedatefrom,duedateto, fromStarted, toStarted, fromCreated, toCreated,
                     isDraft, sortBy, page, size).get("list");
             assertThat(list.size()).isGreaterThan(0);
         } catch (Exception e) {
@@ -417,7 +417,12 @@ public class TestServiceTest {
         Answer answer = new Answer();
         when(answerRepository.getAnswerByQuestionId(anyInt())).thenReturn(Collections.singletonList(answer));
 
-        Map<String, Object> result = testServiceImpl.startTest(testId, userId);
+        Map<String, Object> result = null;
+        try {
+            result = testServiceImpl.startTest(testId, userId);
+        } catch (ResourceNotFroundException e) {
+            System.out.println(e.getMessage());
+        }
 
         assertNotNull(result);
         assertNotNull(result.get("questionList"));
