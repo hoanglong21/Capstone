@@ -80,7 +80,6 @@ public class FeedbackController {
         try {
             return ResponseEntity.ok(feedbackService.filterFeedback(search, type, authorId, authorName, destination, fromCreated, toCreated, sortBy, direction, page, size));
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.badRequest().body("Check the input again");
         }
     }
