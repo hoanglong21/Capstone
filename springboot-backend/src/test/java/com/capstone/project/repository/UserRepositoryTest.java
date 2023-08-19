@@ -293,7 +293,7 @@ public class UserRepositoryTest {
         Assertions.assertThat(user1).isNull();
     }
 
-    @Order(10)
+    @Order(11)
     @Test
     public void testExistsByToken() {
         User userInit = User.builder()
@@ -310,7 +310,7 @@ public class UserRepositoryTest {
         Assertions.assertThat(exists).isFalse();
     }
 
-    @Order(10)
+    @Order(12)
     @Test
     public void testFindUserByToken() {
         User userInit = User.builder()

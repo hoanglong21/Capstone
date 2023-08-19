@@ -192,7 +192,7 @@ public class FeedbackServiceTest {
         }
     }
 
-    @Order(5)
+    @Order(7)
     @Test
     public void replyFeedback() {
         Feedback feedback = Feedback.builder()
