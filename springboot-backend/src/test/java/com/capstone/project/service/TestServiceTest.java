@@ -404,12 +404,15 @@ public class TestServiceTest {
 
     @Order(12)
     @Test
-    public void testStartTest() {
+    public void testStartTest() throws ResourceNotFroundException {
         int testId = 1;
         int userId = 2;
 
-        TestLearner testLearner = new TestLearner();
-        when(testlearnerRepository.save(any(TestLearner.class))).thenReturn(testLearner);
+        User user = new User();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        com.capstone.project.model.Test test = new com.capstone.project.model.Test();
+        when(testRepository.findById(testId)).thenReturn(Optional.of(test));
 
         Question question = new Question();
         when(questionRepository.getQuestionByTestId(anyInt())).thenReturn(Collections.singletonList(question));
@@ -417,17 +420,22 @@ public class TestServiceTest {
         Answer answer = new Answer();
         when(answerRepository.getAnswerByQuestionId(anyInt())).thenReturn(Collections.singletonList(answer));
 
-        Map<String, Object> result = null;
-        try {
-            result = testServiceImpl.startTest(testId, userId);
-        } catch (ResourceNotFroundException e) {
-            System.out.println(e.getMessage());
-        }
+
+        TestLearner savedTestLearner = new TestLearner();
+        when(testlearnerRepository.save(any(TestLearner.class))).thenReturn(savedTestLearner);
+        
+        Map<String, Object> result = testServiceImpl.startTest(testId, userId);
 
         assertNotNull(result);
+        assertNotNull(result.get("testLearner"));
         assertNotNull(result.get("questionList"));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(testRepository, times(1)).findById(testId);
         verify(questionRepository, times(1)).getQuestionByTestId(testId);
         verify(answerRepository, times(1)).getAnswerByQuestionId(question.getId());
+        verify(testlearnerRepository, times(1)).save(any(TestLearner.class));
+
     }
 
 
