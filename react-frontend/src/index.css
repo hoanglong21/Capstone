@@ -394,6 +394,11 @@ svg {
     word-break: break-all;
 }
 
+
+button{
+    border: none;
+    background-color: #fff;
+}
 /* ignore error */
 /* iframe {
     display: none;

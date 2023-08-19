@@ -277,6 +277,7 @@ const StudySetList = () => {
                                     )}
                                     <button
                                         type="submit"
+                                        style={{border: "none", backgroundColor:"#fff"}}
                                         disabled={loading}
                                         onClick={(event) => {
                                             event.preventDefault()
