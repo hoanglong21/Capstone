@@ -3,34 +3,37 @@ import FormStyles from '../../assets/styles/Form.module.css'
 import FeedbackService from "../../services/FeedbackService";
 import SidebarforAdmin from "./SidebarforAdmin";
 import HeaderAdmin from "./HeaderAdmin";
+import { Link, useParams } from "react-router-dom";
+
 function ReplyFeedback() {
   const [feedback, setFeedback] = useState([])
   const [error, setError] = useState("");
-  const [id, setId] = useState([]);
+  const [feedbackR, setFeedbackR] = useState([]);
   const [success, setSuccess] = useState(false)
+  const {id} = useParams();
+
   useEffect(() => {
     const fetchData = async () => {
-      setFeedback({
-        id: await FeedbackService.getFeedbackById(id).data,
+      const temp = (await FeedbackService.getFeedbackById(id)).data;
+      setFeedback(temp);
+    };
+    const fetchDataR = async () => {
+      setFeedbackR({
+        id: feedback.id,
         title: '',
         content: '',
     })
     };
-    if (feedback.id) {
+    if (id) {
       fetchData();
+      fetchDataR();
     }
-  }, [feedback]);
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    var form = document.querySelector(".needs-validation");
-    const titleEl = document.getElementById("title");
-    const contentEl = document.getElementById("content");
       try {
-        await FeedbackService.replyfeedback(feedback.id, feedback.title, feedback.content);
-        form.classList.remove("was-validated");
-        titleEl.classList.remove("is-invalid");
-        contentEl.classList.remove("is-invalid");
+        await FeedbackService.replyfeedback(feedback.id, feedbackR.title, feedbackR.content);
         setError("");
         setSuccess(true)
       } catch (error) {
@@ -61,19 +64,26 @@ function ReplyFeedback() {
                 )}
                 {/* success */}
                 {success && (
-                    <div className="alert alert-primary" role="alert">
-                       Send successfully!
+                    <div className="alert alert-success" role="alert">
+                       Send reply successfully!
                     </div>
                 )}
+          <input
+            type="text"
+            className={`form-control ${FormStyles.formControl}`}
+            id="id"
+            value={feedback.id}
+            hidden
+          />
           <p className="mb-2 text-info fs-5">Title</p>
           <input
             type="text"
             className={`form-control ${FormStyles.formControl}`}
             id="title"
             placeholder="Title"
-            value={feedback.title}
+            value={feedbackR.title}
             onChange={(event) => {
-              setFeedback({
+              setFeedbackR({
                 title: event.target.value,
               });
             }}
@@ -85,26 +95,25 @@ function ReplyFeedback() {
             className={`form-control ${FormStyles.formControl}`}
             placeholder="Message"
             style={{ height: "6rem" }}
-            value={feedback.content}
+            value={feedbackR.content}
             onChange={(event) => {
-              setFeedback({
+              setFeedbackR({
                 content: event.target.value,
               });
             }}
           ></textarea>
           </div>
           <div className="text-center mt-4">
-          <button
+          <Link
             type="button"
             className="btn btn-secondary me-4"
-            data-bs-dismiss="modal"
-            aria-label="Close"
+            to={`/viewdetailfb/${feedback.id}`}
           >
-            Cancel
-          </button>
+            Back
+          </Link>
           <button
             type="button"
-            className="btn btn-success"
+            className="btn btn-primary"
             onClick={handleSubmit}
           >
             Send
