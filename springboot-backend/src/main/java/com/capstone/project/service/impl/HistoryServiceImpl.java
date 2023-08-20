@@ -2,10 +2,11 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import com.capstone.project.repository.HistoryRepository;
 import com.capstone.project.repository.UserRepository;
-import com.capstone.project.service.HistoryService;
-import com.capstone.project.service.UserAchievementService;
+import com.capstone.project.service.*;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,21 @@ public class HistoryServiceImpl implements HistoryService {
 
     private final UserAchievementService userAchievementService;
 
+    private final ClassService classService;
+
+    private final AchievementService achievementService;
+
+    private final NotificationService notificationService;
+
     @Autowired
-    public HistoryServiceImpl(HistoryRepository historyRepository, JdbcTemplate jdbcTemplate, UserRepository userRepository, UserAchievementService userAchievementService) {
+    public HistoryServiceImpl(HistoryRepository historyRepository, JdbcTemplate jdbcTemplate, UserRepository userRepository, UserAchievementService userAchievementService, ClassService classService, AchievementService achievementService, NotificationService notificationService) {
         this.historyRepository = historyRepository;
         this.jdbcTemplate = jdbcTemplate;
         this.userRepository = userRepository;
         this.userAchievementService = userAchievementService;
+        this.classService = classService;
+        this.achievementService = achievementService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -219,7 +229,8 @@ public class HistoryServiceImpl implements HistoryService {
                 achievementId = setsToAchievementMap.get(result);
             }
             if(history.getHistoryType().getId()==3) {
-                String sql = " SELECT COUNT(*) FROM class_learner WHERE class_id = " + history.getClassroom().getId() + " AND status = 'enrolled' ";
+                Class classroom = classService.getClassroomById(history.getClassroom().getId());
+                String sql = " SELECT COUNT(*) FROM class_learner WHERE class_id = " + classroom.getId() + " AND status = 'enrolled' ";
                 Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
 
                 Map<Integer, Integer> membersToAchievementMap = new HashMap<>();
@@ -256,6 +267,15 @@ public class HistoryServiceImpl implements HistoryService {
                         .created_date(new Date())
                         .build();
                 userAchievementService.createUserAchievement(userAchievement);
+                Achievement achievement = achievementService.getById(achievementId);
+
+                Dotenv dotenv = Dotenv.load();
+                notificationService.createNotification(Notification.builder()
+                        .title("Unlock " + achievement.getName() + " achievement")
+                        .user(user)
+                        .url(dotenv.get("FRONTEND_HOST_URL") + "/library/achievements")
+                        .content(achievement.getDescription())
+                        .build());
             }
         } catch (Exception e) {
 //            System.out.println(e.getMessage());
