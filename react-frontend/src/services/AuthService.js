@@ -14,7 +14,7 @@ const logout = () => {
     const temptToken = localStorage.getItem('userToken')
     if (temptToken) {
         localStorage.removeItem('userToken')
-        return axios.get(API_BASE_URL + '/logout', temptToken)
+        return axios.get(API_BASE_URL + '/logout?token=' + temptToken)
     }
 }
 

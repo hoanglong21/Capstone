@@ -278,6 +278,7 @@
     font-weight: 600;
     line-height: 1.285;
     transition: all 0.12s cubic-bezier(0.47, 0, 0.745, 0.715);
+    background-color: transparent;
 }
 
 .people_btn:hover {
