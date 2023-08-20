@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
         }
         try {
             Dotenv dotenv = Dotenv.load();
-            String siteURL = dotenv.get("BACKEND_HOST_URL");
+            String siteURL = dotenv.get("FRONTEND_HOST_URL");
 
             String toAddress = user.getEmail();
             String fromAddress = "nihongolevelup.box@gmail.com";
