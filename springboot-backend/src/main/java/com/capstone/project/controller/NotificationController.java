@@ -117,4 +117,10 @@ public class NotificationController {
         return ResponseEntity.ok(notificationService.getFilterNotification(content,isRead,title,fromDatetime,toDatetime,userid.orElse(0),direction,page,size));
 
     }
+
+    @GetMapping("/markasread/{id}")
+    public ResponseEntity<?> markAsRead(@PathVariable int id) {
+            return ResponseEntity.ok(notificationService.markAsRead(id));
+    }
+
 }

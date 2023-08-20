@@ -13,7 +13,7 @@ public interface NotificationService {
 
     Notification getNotificationById(int id) throws ResourceNotFroundException;
 
-    Notification getNotificationByUserId(int id) throws ResourceNotFroundException;
+    List<Notification> getNotificationByUserId(int id) throws ResourceNotFroundException;
 
     Notification createNotification(Notification noti);
 
@@ -21,4 +21,6 @@ public interface NotificationService {
     Boolean deleteNotification( int id) throws ResourceNotFroundException;
 
     Map<String, Object> getFilterNotification(String content, Boolean isRead, String title, String fromdatetime, String todatetime, int userid, String direction, int page, int size);
+
+    List<Notification> markAsRead(int userid);
 }
