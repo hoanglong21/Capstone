@@ -143,11 +143,11 @@ const App = () => {
                             path="account-deleted"
                             element={<AccountDeleted />}
                         />
-                        <Route path="verify" element={<ResetPassword />} />
                         <Route
-                            path="account-deleted"
-                            element={<VerifyAccount />}
+                            path="reset-password"
+                            element={<ResetPassword />}
                         />
+                        <Route path="verify" element={<VerifyAccount />} />
                     </Route>
                     {/* Page not found */}
                     <Route path="*" element={<NotFound />} />

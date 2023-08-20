@@ -92,6 +92,10 @@ export const sendVerificationEmail = (username) => {
     })
 }
 
+export const verifyAccount = (token) => {
+    return axios.get(API_BASE_URL + '/verify?token=' + token)
+}
+
 export const filterUserAdmin = (
     name,
     username,
@@ -259,6 +263,7 @@ const UserService = {
     filterUserCommon,
     filterUserAdmin,
     sendVerificationEmail,
+    verifyAccount,
 }
 
 export default UserService
