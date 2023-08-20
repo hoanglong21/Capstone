@@ -27,7 +27,6 @@ const VerifyAccount = () => {
             try {
                 await UserService.verifyAccount(searchParams.get('token'))
                 dispatch(getUser(userToken))
-                sessionStorage.setItem('verifyAcc', 'true')
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)

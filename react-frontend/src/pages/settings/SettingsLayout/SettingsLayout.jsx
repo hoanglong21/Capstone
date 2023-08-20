@@ -20,11 +20,6 @@ const AccountLayout = () => {
         try {
             await UserService.sendVerificationEmail(userInfo?.username)
             setShowVerifyModal(true)
-            chrome.tabs.query({ windowType: 'normal' }, function (tabs) {
-                for (var i = 0; i < tabs.length; i++) {
-                    chrome.tabs.update(tabs[i].id, { url: tabs[i].url })
-                }
-            })
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
