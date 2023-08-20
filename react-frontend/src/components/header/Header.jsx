@@ -79,14 +79,14 @@ const Header = () => {
     }
 
     return (
-        <header className="px-4 header-css border-bottom">
+        <header className="header-css border-bottom">
             <nav className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start navbar navbar-expand-sm">
                 <a
                     href="/"
                     className="navbar-brand d-flex align-items-center mb-2 mb-lg-0 me-2 text-white text-decoration-none"
                 >
                     <img
-                        className="bi me-5"
+                        className="header_img bi"
                         src={logo}
                         alt="logo"
                         width="60rem"
@@ -94,7 +94,7 @@ const Header = () => {
                 </a>
 
                 <button
-                    className="navbar-toggler"
+                    className="navbar-toggler header_navbar"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarNav"
@@ -194,7 +194,7 @@ const Header = () => {
                                 size="3.5rem"
                             />
                         </button>
-                        <ul className="dropdown-menu dropdown-menu-end p-2">
+                        <ul className="dropdown-menu dropdown-menu-end p-2 header-dropdown">
                             <li>
                                 <a
                                     className="dropdown-item py-2 px-2"
@@ -207,7 +207,7 @@ const Header = () => {
                                     </span>
                                 </a>
                                 <ul
-                                    className="dropdown-menu dropdown-submenu dropdown-submenu-left"
+                                    className="submenu dropdown-menu dropdown-submenu dropdown-submenu-left header-dropdown"
                                     aria-labelledby="dropdownMenuButton"
                                 >
                                     <li>

@@ -3,7 +3,6 @@ import SidebarforAdmin from "../SidebarforAdmin";
 import HeaderAdmin from "../HeaderAdmin";
 import { Link, useParams } from 'react-router-dom';
 import FeedbackService from '../../../services/FeedbackService';
-import ReplyFeedback from '../ReplyFeedback';
 
 function ViewDetailFeedback() {
   const [feedback, setFeedback] = useState([])
