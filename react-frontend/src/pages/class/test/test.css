@@ -347,6 +347,11 @@
     padding-left: 3rem !important;
 }
 
+.test-col-6{
+    flex: 0 0 auto;
+    width: 50% !important;
+}
+
 @media only screen and (max-width: 768px) {
     .createTest_formLabel{
         font-size: 14px;
@@ -379,6 +384,14 @@
 
     .createTest_cancelBtn {
         font-size: 0.75rem;
+    }
+
+    .test-col-6{
+        width: 100% !important;
+    }
+
+    .testList{
+        margin-top: 10px;
     }
 }
 .testResult_container td,
