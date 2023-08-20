@@ -261,7 +261,7 @@ public class ClassServiceImpl implements ClassService {
 
         String query = "SELECT c.*, COUNT(CASE WHEN cl.status = 'enrolled' THEN cl.user_id END) AS member,  (SELECT COUNT(studyset_id) FROM class_studyset cs WHERE cs.class_id = c.id) AS studyset,u.avatar,u.username as author " +
                 "FROM class c " +
-                "LEFT JOIN class_learner cl ON c.id = cl.class_id " +
+                "LEFT JOIN class_learner cl ON c.id = cl.class_id AND cl.status = 'enrolled'" +
                 "LEFT JOIN class_studyset cs ON c.id = cs.class_id " +
                 "LEFT JOIN user u ON u.id = c.author_id " +
                 "GROUP BY c.id HAVING 1=1 ";
