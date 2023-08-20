@@ -49,9 +49,9 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification getNotificationByUserId(int id) throws ResourceNotFroundException {
-        Notification notification = notificationRepository.getNotificationByUserId(id);
-        return notification;
+    public List<Notification> getNotificationByUserId(int id) throws ResourceNotFroundException {
+        List<Notification> notificationlist = notificationRepository.getNotificationByUserId(id);
+        return notificationlist;
     }
 
 
@@ -143,6 +143,18 @@ public class NotificationServiceImpl implements NotificationService {
         response.put("totalItems", totalItems);
 
         return response;
+    }
+
+    @Override
+    public List<Notification> markAsRead(int userid) {
+        List<Notification> listnoti = notificationRepository.getNotificationByUserId(userid);
+        for(Notification noti : listnoti){
+            if(!noti.is_read()){
+                noti.set_read(true);
+                notificationRepository.save(noti);
+            }
+        }
+        return listnoti;
     }
 
 
