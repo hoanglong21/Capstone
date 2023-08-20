@@ -6,12 +6,15 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 
 import { logout as authLogout } from '../../features/auth/authSlice'
 import { logout as userLogout } from '../../features/user/userSlice'
+import { getUser } from '../../features/user/userAction'
+import NotificationService from '../../services/NotificationService'
 
 import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/class/JoinClass'
-import { getUser } from '../../features/user/userAction'
 
 import logo from '../../assets/images/logo-2.png'
+import defaultAvatar from '../../assets/images/default_avatar.png'
+import noNotify from '../../assets/images/no-notification.png'
 import {
     HomeIcon,
     TranslateIcon,
@@ -24,8 +27,10 @@ import {
     SettingIcon,
     AchievementIcon,
 } from '../icons'
-import defaultAvatar from '../../assets/images/default_avatar.png'
 import './Header.css'
+import AuthService from '../../services/AuthService'
+import { getNumUnread } from '../../features/notify/notifyAction'
+import Pagination from '../Pagination'
 
 const Header = () => {
     const dispatch = useDispatch()
@@ -33,11 +38,25 @@ const Header = () => {
 
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
+    const { numUnread } = useSelector((state) => state.notify)
 
     const [showLogoutMess, setShowLogoutMess] = useState(false)
 
     const [showCreateModal, setShowCreateModal] = useState(false)
     const [showJoinModal, setShowJoinModal] = useState(false)
+
+    const [isEmpty, setIsEmpty] = useState(false)
+    const [notifications, setNotifications] = useState([])
+    const [totalItems, setTotalItems] = useState(0)
+    const [page, setPage] = useState(1)
+    const [isRead, setIsRead] = useState(false)
+
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return new String(date?.replace(/\s/g, 'T') + '.000' + '+07:00')
+        }
+        return ''
+    }
 
     useEffect(() => {
         if (userToken) {
@@ -45,13 +64,75 @@ const Header = () => {
         }
     }, [userToken])
 
+    // check notification empty
+    useEffect(() => {
+        const fetchData = async () => {
+            const tempNotifications = (
+                await NotificationService.getFilterNotification(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    `=${userInfo.id}`,
+                    '',
+                    '=1',
+                    '=5'
+                )
+            ).data
+            if (tempNotifications.totalItems === 0) {
+                setIsEmpty(true)
+            }
+            setPage(1)
+            setTotalItems(tempNotifications.totalItems)
+            setNotifications(tempNotifications.list)
+        }
+        if (userInfo?.id) {
+            fetchData()
+        }
+    }, [userInfo, numUnread])
+
+    // notifications
+    useEffect(() => {
+        const fetchData = async () => {
+            const tempNotifications = (
+                await NotificationService.getFilterNotification(
+                    '',
+                    `${isRead === false ? '' : '=0'}`,
+                    '',
+                    '',
+                    '',
+                    `=${userInfo.id}`,
+                    '',
+                    `=${page}`,
+                    '=5'
+                )
+            ).data
+            setIsEmpty(false)
+            setTotalItems(tempNotifications.totalItems)
+            setNotifications(tempNotifications.list)
+        }
+        if (userInfo?.id) {
+            fetchData()
+        }
+    }, [page, isRead])
+
     const toggleShowLogoutMess = () => setShowLogoutMess(!showLogoutMess)
 
     const handleLogout = () => {
-        dispatch(userLogout())
-        dispatch(authLogout())
-        toggleShowLogoutMess()
-        navigate('/')
+        try {
+            dispatch(userLogout())
+            dispatch(authLogout())
+            AuthService.logout()
+            toggleShowLogoutMess()
+            navigate('/')
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
     }
 
     const handleAddStudySet = async (type) => {
@@ -78,6 +159,40 @@ const Header = () => {
         }
     }
 
+    const handleRead = async (notify) => {
+        try {
+            var tempNotify = { ...notify, _read: true }
+            tempNotify.datetime = toBEDate(tempNotify.datetime)
+            if (tempNotify?.user) {
+                tempNotify.user.created_date = toBEDate(
+                    tempNotify.user.created_date
+                )
+            }
+            await NotificationService.updateNotification(notify.id, tempNotify)
+            dispatch(getNumUnread(userInfo.id))
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
+
+    const handleMarkAllRead = async (event) => {
+        try {
+            event.stopPropagation()
+            await NotificationService.markAsRead(userInfo.id)
+            dispatch(getNumUnread(userInfo.id))
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
+
     return (
         <header className="header-css border-bottom">
             <nav className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start navbar navbar-expand-sm">
@@ -92,7 +207,6 @@ const Header = () => {
                         width="60rem"
                     />
                 </a>
-
                 <button
                     className="navbar-toggler header_navbar"
                     type="button"
@@ -103,7 +217,6 @@ const Header = () => {
                 >
                     <span className="navbar-toggler-icon fs-7"></span>
                 </button>
-
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav d-flex align-items-center flex-grow-1 me-3 mb-2 mb-md-0 fw-semibold">
                         <li className="nav-item">
@@ -271,45 +384,155 @@ const Header = () => {
                                 className="dropdown d-inline-flex me-2"
                             >
                                 <button
-                                    className="btn notify_btn btn-outline-secondary icon-outline-secondary"
+                                    className="btn notify_btn btn-outline-secondary icon-outline-secondary position-relative"
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
                                     <NotifyIcon strokeWidth="2" />
+                                    {numUnread > 0 && (
+                                        <span
+                                            className="position-absolute translate-middle bg-danger border border-light rounded-circle"
+                                            style={{
+                                                top: '10%',
+                                                left: '85%',
+                                                padding: '0.375rem',
+                                            }}
+                                        >
+                                            <span className="visually-hidden">
+                                                New alerts
+                                            </span>
+                                        </span>
+                                    )}
                                 </button>
                                 <ul
                                     className="dropdown-menu dropdown-menu-end p-2 notifications"
+                                    style={{ minHeight: '82vh' }}
                                     id="box"
                                 >
-                                    <li className="notifications-item dropdown-item">
-                                        <div className="text">
-                                            <h4>AnhDuong</h4>
-                                            <p
-                                                style={{
-                                                    marginBottom: '0',
-                                                    fontSize: '14px',
+                                    {isEmpty ? (
+                                        <li className="d-flex flex-column align-items-center">
+                                            <img
+                                                src={noNotify}
+                                                className="notifyEmpty"
+                                            />
+                                            <span className="notifyFilter_heading mt-2">
+                                                No Notifications Yet
+                                            </span>
+                                            <span className="notifyFilter_subtext mt-1">
+                                                You have no notification right
+                                                now
+                                            </span>
+                                            <span className="notifyFilter_subtext mt-1 mb-2">
+                                                Come back later
+                                            </span>
+                                        </li>
+                                    ) : (
+                                        <>
+                                            <li className="d-flex mb-2">
+                                                <button
+                                                    className={`notifyFilter_btn ${
+                                                        isRead === false
+                                                            ? 'active'
+                                                            : ''
+                                                    } me-1`}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation()
+                                                        if (isRead === true) {
+                                                            setIsRead(false)
+                                                        }
+                                                    }}
+                                                >
+                                                    All
+                                                </button>
+                                                <button
+                                                    className={`notifyFilter_btn ${
+                                                        isRead === true
+                                                            ? 'active'
+                                                            : ''
+                                                    }`}
+                                                    onClick={(event) => {
+                                                        event.stopPropagation()
+                                                        if (isRead === false) {
+                                                            setIsRead(true)
+                                                        }
+                                                    }}
+                                                >
+                                                    Unread
+                                                </button>
+                                            </li>
+                                            <li className="d-flex align-items-center mb-1">
+                                                <span className="notifyFilter_heading flex-fill">
+                                                    Earlier
+                                                </span>
+                                                <a
+                                                    className="notifyFilter_link"
+                                                    onClick={handleMarkAllRead}
+                                                >
+                                                    Mark all as read
+                                                </a>
+                                            </li>
+                                            {/* Pagination */}
+                                            <Pagination
+                                                className="mt-1 mb-1"
+                                                small={true}
+                                                currentPage={page}
+                                                totalCount={totalItems}
+                                                pageSize={5}
+                                                onPageChange={(page) => {
+                                                    setPage(page)
                                                 }}
-                                            >
-                                                You have homework to do
-                                            </p>
-                                            <p>10 minutes ago</p>
-                                        </div>
-                                    </li>
-                                    <li className="notifications-item dropdown-item">
-                                        <div className="text">
-                                            <h4>AnhDuong</h4>
-                                            <p
-                                                style={{
-                                                    marginBottom: '0',
-                                                    fontSize: '14px',
-                                                }}
-                                            >
-                                                You have homework to do
-                                            </p>
-                                            <p>10 minutes ago</p>
-                                        </div>
-                                    </li>
+                                            />
+                                            {notifications?.map(
+                                                (notify, index) => (
+                                                    <li
+                                                        key={index}
+                                                        className="notifications-item dropdown-item"
+                                                        onClick={() => {
+                                                            handleRead(
+                                                                notify,
+                                                                index
+                                                            )
+                                                            navigate(
+                                                                `${notify?.url}`
+                                                            )
+                                                        }}
+                                                    >
+                                                        <div className="d-flex flex-column">
+                                                            <h4
+                                                                className={`mb-1 ${
+                                                                    notify?._read ===
+                                                                        true &&
+                                                                    'notifications_read'
+                                                                }`}
+                                                            >
+                                                                {notify?.title}
+                                                                {notify?._read ===
+                                                                    false && (
+                                                                    <span className="ms-2 badge text-bg-primary p-1 rounded-circle">
+                                                                        <span className="visually-hidden">
+                                                                            New
+                                                                            alerts
+                                                                        </span>
+                                                                    </span>
+                                                                )}
+                                                            </h4>
+                                                            <span className="notify_content">
+                                                                {
+                                                                    notify?.content
+                                                                }
+                                                            </span>
+                                                            <span className="notify_datetime">
+                                                                {
+                                                                    notify?.datetime
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            )}
+                                        </>
+                                    )}
                                 </ul>
                             </div>
                             {/* User */}

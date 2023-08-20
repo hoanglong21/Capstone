@@ -11,6 +11,7 @@ const initialState = {
     userToken,
     error: null,
     success: null,
+    loading: null,
 }
 
 export const authSlice = createSlice({
@@ -31,27 +32,33 @@ export const authSlice = createSlice({
             // register user
             .addCase(register.pending, (state) => {
                 state.error = null
+                state.loading = true
             })
             .addCase(register.fulfilled, (state) => {
                 state.success = true // registration successful
                 state.error = null
+                state.loading = false
             })
             .addCase(register.rejected, (state, { payload }) => {
                 state.error = payload
+                state.loading = false
             })
             // login user
             .addCase(login.pending, (state) => {
                 state.error = null
                 state.success = null
+                state.loading = true
             })
             .addCase(login.fulfilled, (state) => {
                 state.userToken = localStorage.getItem('userToken')
                 state.error = null
                 state.success = true
+                state.loading = false
             })
             .addCase(login.rejected, (state, { payload }) => {
                 state.error = payload
                 state.success = false
+                state.loading = false
             })
     },
 })

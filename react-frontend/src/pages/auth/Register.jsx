@@ -13,11 +13,10 @@ const Register = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const { userToken, error, success } = useSelector((state) => state.auth)
+    const { userToken, error, success, loading } = useSelector((state) => state.auth)
     const { register, handleSubmit } = useForm()
 
     const [emptyMess, setEmptyMess] = useState('')
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         if (userToken) navigate('/')
@@ -120,11 +119,9 @@ const Register = () => {
         ) {
             setEmptyMess('Please complete all the fields.')
         } else {
-            setLoading(true)
             dispatch(userRegister({ ...data }))
             // clear validation
             dispatch(reset())
-            setLoading(false)
             form.classList.remove('was-validated')
             usernameEl.classList.remove('is-invalid')
             emailEl.classList.remove('is-invalid')
@@ -301,7 +298,7 @@ const Register = () => {
                         className={`btn btn-primary col-12 ${styles.btn}`}
                         disabled={loading}
                     >
-                        {loading ? (
+                        {loading === true ? (
                             <div
                                 className="spinner-border text-secondary mx-auto mb-1"
                                 role="status"
