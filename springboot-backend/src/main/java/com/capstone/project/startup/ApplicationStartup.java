@@ -149,7 +149,7 @@ public class ApplicationStartup implements ApplicationRunner {
         }
 
         if (historyTypeRepository.count() == 0) {
-            List<String> defaultNames = Arrays.asList("attend", "studyset", "class");
+            List<String> defaultNames = Arrays.asList("attend", "studyset", "class", "createset", "donelearn", "donetest", "doneflashcard", "acceptjoin");
             List<HistoryType> historyTypes = new ArrayList<>();
             for (String name : defaultNames) {
                 HistoryType historyType = new HistoryType();
@@ -161,7 +161,7 @@ public class ApplicationStartup implements ApplicationRunner {
 
         if(achievementRepository.count() == 0) {
             List<Achievement> achievements = Arrays.asList(
-                    new Achievement(1, "Active learner", "Awarded for studying with Learn for the first time!"),
+                    new Achievement(1, "Active learner", "Awarded for completing your first Flashcard session!"),
                     new Achievement(1, "Committed learner", "Awarded for completing your first Learn session!"),
                     new Achievement(1, "Night owl", "Awarded for a late night study session!"),
                     new Achievement(1, "Early bird", "Awarded for an early morning study session!"),
