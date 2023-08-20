@@ -100,7 +100,7 @@ const ChangePassword = () => {
 
     return (
         <div className="settings-css">
-            <h4 className='settings-h4'>Change your password</h4>
+            <h4 className="settings-h4">Change your password</h4>
             <form className="mt-5 needs-validation" noValidate>
                 {/* error message */}
                 {error && (
@@ -127,6 +127,7 @@ const ChangePassword = () => {
                         value={currentPass}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={(event) => setCurrentPass(event.target.value)}
+                        disabled={userInfo?.status === 'pending'}
                         required
                     />
                 </div>
@@ -139,6 +140,7 @@ const ChangePassword = () => {
                         value={newPass}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={(event) => setNewPass(event.target.value)}
+                        disabled={userInfo?.status === 'pending'}
                         required
                     />
                 </div>
@@ -153,11 +155,13 @@ const ChangePassword = () => {
                         value={confirmPass}
                         className={`form-control ${FormStyles.formControl}`}
                         onChange={(event) => setConfirmPass(event.target.value)}
+                        disabled={userInfo?.status === 'pending'}
                         required
                     />
                 </div>
                 <button
                     className="btn btn-primary px-4 mt-1"
+                    disabled={userInfo?.status === 'pending'}
                     onClick={handleSubmit}
                 >
                     Save
