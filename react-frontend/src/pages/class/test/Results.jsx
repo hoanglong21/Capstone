@@ -69,7 +69,7 @@ const Results = () => {
                     <tbody>
                         {results?.map((result, index) => (
                             <>
-                                <tr key={index}>
+                                <tr>
                                     <th
                                         scope="row"
                                         rowSpan={
@@ -82,10 +82,14 @@ const Results = () => {
                                     </th>
                                     <td>
                                         {result?.testLearner?.length === 0 &&
-                                        new Date(test?.due_date) > new Date()
-                                            ? 'Missing'
-                                            : result?.testLearner[0]?.mark ||
-                                              ''}
+                                        new Date(test?.due_date) >
+                                            new Date() ? (
+                                            <div style={{ color: '#d50000' }}>
+                                                Missing
+                                            </div>
+                                        ) : (
+                                            result?.testLearner[0]?.mark || ''
+                                        )}
                                     </td>
                                     <td>
                                         {result?.testLearner[0]?.num_attempt}

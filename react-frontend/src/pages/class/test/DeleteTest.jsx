@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import Modal from 'react-bootstrap/Modal'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { deleteFolder } from '../../../features/fileManagement'
 import TestService from '../../../services/TestService'
 
 const DeleteTest = ({
-    tests,
+    isDelete,
+    setIsDelete,
     test,
-    stateChanger,
-    index,
     classroom,
     showDeleteModal,
     setShowDeleteModal,
 }) => {
+    const location = useLocation()
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
@@ -23,16 +23,21 @@ const DeleteTest = ({
         setLoading(true)
         try {
             await TestService.deleteTest(test.id)
-            if (index) {
-                var tempTests = [...tests]
-                tempTests.splice(index, 1)
-                stateChanger(tempTests)
+            if (isDelete === false) {
+                setIsDelete(true)
             }
             setShowDeleteModal(false)
-            navigate(`/class/${classroom.id}/tests`)
+            if (
+                location.pathname.includes(`/test/${test?.id}/details`)
+            ) {
+                navigate(`/class/${classroom.id}/tests`)
+            }
             await deleteFolder(
                 `files/${classroom.user.username}/class/${classroom.id}/test/${test.id}`
             )
+            if (location.pathname.includes(`/test/${test?.id}/details`)) {
+                navigate(`/class/${test?.classroom?.id}/tests`)
+            }
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

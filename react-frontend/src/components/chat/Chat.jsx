@@ -19,6 +19,8 @@ import {
     CloseIcon,
     DeleteSolidIcon,
     EditSquareSolidIcon,
+    SearchIcon,
+    SendIcon,
     VideoCallSolidIcon,
 } from '../icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
@@ -48,13 +50,12 @@ if (!firebase.apps.length) {
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(firebaseApp)
 
-const Chat = () => {
+const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [loading, setLoading] = useState(false)
-    const [showNew, setShowNew] = useState(false)
-    const [showChat, setShowChat] = useState(false)
     const [search, setSearch] = useState('')
+    const [searchInput, setSearchInput] = useState('')
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState([])
     const [receiverUser, setReceiverUser] = useState(null)
@@ -108,30 +109,42 @@ const Chat = () => {
         event.preventDefault()
         // get message
         var message = document.getElementById('message').value
-        document.getElementById('message').value = ''
-        // console.log(message);
+        if (message.length > 0) {
+            document.getElementById('message').value = ''
+            // console.log(message);
 
-        let current = new Date();
-        let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
-        let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-        let dateTime = cDate + ' ' + cTime;
+            let current = new Date()
+            let cDate =
+                current.getFullYear() +
+                '-' +
+                (current.getMonth() + 1) +
+                '-' +
+                current.getDate()
+            let cTime =
+                current.getHours() +
+                ':' +
+                current.getMinutes() +
+                ':' +
+                current.getSeconds()
+            let dateTime = cDate + ' ' + cTime
 
-        // save in database
-        // A post entry.
-        const postData = {
-            sender: userInfo.username,
-            receiver: receiverUser.username,
-            message: message,
-            seenByReceiver: false,
-            datetime: dateTime
+            // save in database
+            // A post entry.
+            const postData = {
+                sender: userInfo.username,
+                receiver: receiverUser.username,
+                message: message,
+                seenByReceiver: false,
+                datetime: dateTime,
+            }
+
+            // Get a key for a new Post.
+            const newPostKey = push(child(ref(database), 'messages')).key
+
+            const updates = {}
+            updates['/messages/' + newPostKey] = postData
+            update(ref(database), updates)
         }
-
-        // Get a key for a new Post.
-        const newPostKey = push(child(ref(database), 'messages')).key
-
-        const updates = {}
-        updates['/messages/' + newPostKey] = postData
-        update(ref(database), updates)
     }
 
     const deleteMessage = (messageId) => {
@@ -170,12 +183,12 @@ const Chat = () => {
 
     const markMessageAsSeen = (message) => {
         if (message.receiver === userInfo.username && !message.seenByReceiver) {
-          // Mark the message as seen by the receiver in the database
-          const updates = {};
-          updates['/messages/' + message.key + '/seenByReceiver'] = true;
-          update(ref(database), updates);
+            // Mark the message as seen by the receiver in the database
+            const updates = {}
+            updates['/messages/' + message.key + '/seenByReceiver'] = true
+            update(ref(database), updates)
         }
-      };
+    }
 
     return (
         <div className="d-flex">
@@ -195,14 +208,37 @@ const Chat = () => {
                         </div>
                         <div className="chatNew_searchContainer d-flex align-items-center">
                             <div>To:</div>
-                            <input
-                                type="text"
-                                className="chat_search"
-                                value={search}
-                                onChange={(event) => {
-                                    setSearch(event.target.value)
-                                }}
-                            />
+                            <form className="mb-0 d-flex align-items-center w-100">
+                                <input
+                                    type="text"
+                                    className="chat_search flex-grow-1"
+                                    value={searchInput || ''}
+                                    onChange={(event) => {
+                                        setSearchInput(event.target.value)
+                                    }}
+                                />
+                                {searchInput && (
+                                    <button
+                                        className="btn p-1"
+                                        onClick={() => {
+                                            setSearchInput('')
+                                            setSearch('')
+                                        }}
+                                    >
+                                        <CloseIcon size="1rem" />
+                                    </button>
+                                )}
+                                <button
+                                    className="btn p-1"
+                                    type="submit"
+                                    onClick={(event) => {
+                                        event.preventDefault()
+                                        setSearch(searchInput)
+                                    }}
+                                >
+                                    <SearchIcon size="1rem" />
+                                </button>
+                            </form>
                         </div>
                     </div>
                     {loading ? (
@@ -216,7 +252,7 @@ const Chat = () => {
                     ) : (
                         <div>
                             {users.length > 0 ? (
-                                <ul className="chat_searchResults">
+                                <ul className="chat_searchResults h-100">
                                     {users?.map((user) => (
                                         <li
                                             className="d-flex"
@@ -245,7 +281,7 @@ const Chat = () => {
                                     ))}
                                 </ul>
                             ) : (
-                                'Result not found'
+                                <div className="p-2">Result not found</div>
                             )}
                         </div>
                     )}
@@ -265,7 +301,7 @@ const Chat = () => {
                             </div>
                             <div>
                                 <button
-                                    className="chat_btn"
+                                    className="chat_btn me-2"
                                     onClick={openVideoChat}
                                 >
                                     <VideoCallSolidIcon size="20px" />
@@ -295,73 +331,91 @@ const Chat = () => {
                                                 userInfo.username)) &&
                                     message.video_call !== true
                             )
-                            .map((message) => (
-                                markMessageAsSeen(message),
-                                <div key={message.key}>
-                                    {message.video_call ? (
-                                        <a
-                                            href={
-                                                'videochat/' + message.message
-                                            }
-                                        >
-                                            Call
-                                        </a>
-                                    ) : (
-                                        <div>
-                                            {message.sender ==
-                                            userInfo.username ? (
-                                                <div className="chat_messContainer d-flex align-items-center justify-content-end">
-                                                    <button
-                                                        className="chat_btn me-1"
-                                                        data-id={message.key}
-                                                        onClick={() =>
-                                                            deleteMessage(
-                                                                message.key
-                                                            )
-                                                        }
-                                                    >
-                                                        <DeleteSolidIcon size="1rem" />
-                                                    </button>
-                                                    <div className="chat_messSender">
-                                                        {message.message}
-                                                    </div>
-                                                </div>
+                            .map(
+                                (message) => (
+                                    markMessageAsSeen(message),
+                                    (
+                                        <div key={message.key}>
+                                            {message.video_call ? (
+                                                <a
+                                                    href={
+                                                        'videochat/' +
+                                                        message.message
+                                                    }
+                                                >
+                                                    Call
+                                                </a>
                                             ) : (
-                                                <div className="chat_messContainer">
-                                                    <div className="chat_messReceiver d-flex align-items-center justify-content-start">
-                                                        <img
-                                                            src={
-                                                                receiverUser.avatar ||
-                                                                defaultAvatar
-                                                            }
-                                                        />
-                                                        <span>
-                                                            {message.message}
-                                                        </span>
-                                                    </div>
+                                                <div>
+                                                    {message.sender ==
+                                                    userInfo.username ? (
+                                                        <div className="chat_messContainer d-flex align-items-center justify-content-end">
+                                                            <button
+                                                                className="chat_btn me-1"
+                                                                data-id={
+                                                                    message.key
+                                                                }
+                                                                onClick={() =>
+                                                                    deleteMessage(
+                                                                        message.key
+                                                                    )
+                                                                }
+                                                            >
+                                                                <DeleteSolidIcon size="1rem" />
+                                                            </button>
+                                                            <div className="chat_messSender">
+                                                                {
+                                                                    message.message
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="chat_messContainer">
+                                                            <div className="chat_messReceiver d-flex align-items-center justify-content-start">
+                                                                <img
+                                                                    src={
+                                                                        receiverUser.avatar ||
+                                                                        defaultAvatar
+                                                                    }
+                                                                />
+                                                                <span>
+                                                                    {
+                                                                        message.message
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
-                                    )}
-                                </div>
-                            ))}
+                                    )
+                                )
+                            )}
                     </div>
-                    <form className="chat_sendMess" onSubmit={sendMessage}>
+                    <form className="chat_sendMess d-flex">
                         <input
                             id="message"
                             placeholder="Enter message"
                             autoComplete="off"
                         />
-                        <input type="submit" className="d-none" />
+                        <button
+                            className="btn ms-1 p-1"
+                            type="submit"
+                            onClick={sendMessage}
+                        >
+                            <SendIcon />
+                        </button>
                     </form>
                 </div>
             )}
             <OverlayTrigger placement="left" overlay={tooltip}>
                 <button
-                    className="chatNew_btn"
+                    className="chatElement_btn chatNew_btn"
                     onClick={() => {
                         setShowNew(!showNew)
                         setShowChat(false)
+                        setShowGPT(false)
                     }}
                 >
                     <EditSquareSolidIcon size="20px" />

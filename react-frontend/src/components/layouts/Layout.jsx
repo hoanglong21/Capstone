@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 import firebase from 'firebase/compat/app'
@@ -13,10 +13,11 @@ import {
 
 import Header from '../header/Header'
 import Footer from '../footer/Footer'
-import ChatContainer from '../chat/Chat'
+import Chat from '../chat/Chat'
+import ChatGPT from '../chat/ChatGPT'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
-import { CloseIcon, VideoCallSolidIcon } from '../icons'
+import { CloseIcon, MessageIcon, VideoCallSolidIcon } from '../icons'
 import '../chat/chat.css'
 
 const firebaseConfig = {
@@ -42,13 +43,14 @@ if (!firebase.apps.length) {
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(firebaseApp)
 export default function Layout() {
-    const navigate = useNavigate()
-
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
 
     const [messages, setMessages] = useState([])
     const [isAccept, setIsAccept] = useState(false)
+    const [showNew, setShowNew] = useState(false)
+    const [showChat, setShowChat] = useState(false)
+    const [showGPT, setShowGPT] = useState(false)
 
     useEffect(() => {
         const getData = ref(database, 'messages/')
@@ -60,10 +62,6 @@ export default function Layout() {
 
         onChildRemoved(getData, (data) => {
             const deletedMessage = data.val()
-            console.log(
-                `The message with ID ${data.key} was removed:`,
-                deletedMessage
-            )
             setMessages((messages) =>
                 messages.filter((message) => message.key !== data.key)
             )
@@ -95,62 +93,90 @@ export default function Layout() {
             <Header />
             <div className="flex-grow-1">
                 <Outlet />
-                {userToken && <ChatContainer />}
+                {userToken && (
+                    <div className="chatGroup_container">
+                        <button className="chatGroup_btn">
+                            <MessageIcon />
+                        </button>
+                        {userToken && (
+                            <Chat
+                                showChat={showChat}
+                                setShowChat={setShowChat}
+                                showNew={showNew}
+                                setShowNew={setShowNew}
+                                setShowGPT={setShowGPT}
+                            />
+                        )}
+                        {userToken && (
+                            <ChatGPT
+                                showGPT={showGPT}
+                                setShowGPT={setShowGPT}
+                                setShowChat={setShowChat}
+                                setShowNew={setShowNew}
+                                userInfo={userInfo}
+                            />
+                        )}
+                    </div>
+                )}
             </div>
             <Footer />
             {/* video call modal */}
-            {!isAccept && messages
-                ?.filter(
-                    (message) =>
-                        message.video_call === true &&
-                        message.receiver === userInfo.username
-                )
-                .map((message, index) => (
-                    <div className="chat_callModal" key={index}>
-                        <div className="chat_callModalContent">
-                            <button
-                                className="chat_btn chat_callModalClose"
-                                onClick={() => {
-                                    rejectCall(message)
-                                }}
-                            >
-                                <CloseIcon />
-                            </button>
-                            <div className="d-flex flex-column align-items-center h-100">
-                                <img
-                                    src={message.senderAvatar || defaultAvatar}
-                                />
-                                <div className="flex-grow-1">
-                                    <div className="chat_callModalHeading my-1">
-                                        {message.sender} is calling you
+            {!isAccept &&
+                messages
+                    ?.filter(
+                        (message) =>
+                            message.video_call === true &&
+                            message.receiver === userInfo.username
+                    )
+                    .map((message, index) => (
+                        <div className="chat_callModal" key={index}>
+                            <div className="chat_callModalContent">
+                                <button
+                                    className="chat_btn chat_callModalClose"
+                                    onClick={() => {
+                                        rejectCall(message)
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </button>
+                                <div className="d-flex flex-column align-items-center h-100">
+                                    <img
+                                        src={
+                                            message.senderAvatar ||
+                                            defaultAvatar
+                                        }
+                                    />
+                                    <div className="flex-grow-1">
+                                        <div className="chat_callModalHeading my-1">
+                                            {message.sender} is calling you
+                                        </div>
+                                        <div className="chat_callModalSpan mb-4">
+                                            The call will start as soon as you
+                                            accept
+                                        </div>
                                     </div>
-                                    <div className="chat_callModalSpan mb-4">
-                                        The call will start as soon as you
-                                        accept
+                                    <div>
+                                        <button
+                                            className="chat_callModalBtn chat_callModalBtn--decline me-3"
+                                            onClick={() => {
+                                                rejectCall(message)
+                                            }}
+                                        >
+                                            <CloseIcon strokeWidth="2" />
+                                        </button>
+                                        <button
+                                            className="chat_callModalBtn chat_callModalBtn--accept"
+                                            onClick={() => {
+                                                answerCall(message)
+                                            }}
+                                        >
+                                            <VideoCallSolidIcon />
+                                        </button>
                                     </div>
-                                </div>
-                                <div>
-                                    <button
-                                        className="chat_callModalBtn chat_callModalBtn--decline me-3"
-                                        onClick={() => {
-                                            rejectCall(message)
-                                        }}
-                                    >
-                                        <CloseIcon strokeWidth="2" />
-                                    </button>
-                                    <button
-                                        className="chat_callModalBtn chat_callModalBtn--accept"
-                                        onClick={() => {
-                                            answerCall(message)
-                                        }}
-                                    >
-                                        <VideoCallSolidIcon />
-                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
         </div>
     )
 }

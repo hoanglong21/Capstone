@@ -244,6 +244,7 @@
     font-weight: 600;
     min-height: 3rem;
     width: 10rem;
+    border: none;
 }
 
 .setPageTermHeader_dropdown {
@@ -351,6 +352,7 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
+    border: none;
 }
 
 .setPage_editCardModal .close:hover,

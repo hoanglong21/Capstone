@@ -6,6 +6,7 @@ import com.capstone.project.repository.NotificationRepository;
 import com.capstone.project.service.NotificationService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,9 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -79,4 +82,68 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.delete(notification);
         return true;
     }
+
+    @Override
+    public Map<String, Object> getFilterNotification(String content, Boolean isRead, String title, String fromdatetime, String todatetime, int userid, String direction, int page, int size) {
+        int offset = (page - 1) * size;
+
+        String query ="SELECT * FROM notification WHERE 1=1";
+
+        Map<String, Object> parameters = new HashMap<>();
+
+        if (content != null && !content.isEmpty()) {
+            query += " AND content LIKE :content";
+            parameters.put("content", "%" + content + "%");
+        }
+
+        if (isRead != null) {
+            query += " AND is_read = :isRead";
+            parameters.put("isRead", isRead);
+        }
+
+        if (userid != 0) {
+            query += " AND user_id = :userId";
+            parameters.put("userId", userid);
+        }
+
+        if (title != null && !title.isEmpty()) {
+            query += " AND title LIKE :title";
+            parameters.put("title","%" + title + "%");
+        }
+
+        if (fromdatetime != null && !fromdatetime.equals("")) {
+            query += " AND datetime >= :fromdattime";
+            parameters.put("fromdatetime", fromdatetime);
+        }
+        if (todatetime != null && !todatetime.equals("")) {
+            query += " AND datetime <= :todatetime";
+            parameters.put("todatetime", todatetime);
+        }
+
+        query += " ORDER BY datetime " + direction;
+
+
+        Query q = em.createNativeQuery(query, Notification.class);
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            q.setParameter(entry.getKey(), entry.getValue());
+        }
+
+        int totalItems = q.getResultList().size();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        q.setFirstResult(offset);
+        q.setMaxResults(size);
+
+        List<Notification> resultList = q.getResultList();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("list", resultList);
+        response.put("currentPage", page);
+        response.put("totalPages", totalPages);
+        response.put("totalItems", totalItems);
+
+        return response;
+    }
+
+
 }

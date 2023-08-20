@@ -8,6 +8,7 @@ import ClassService from '../../services/ClassService'
 import ClassLearnerService from '../../services/ClassLearnerService'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
+import NotificationService from '../../services/NotificationService'
 
 const People = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -101,6 +102,16 @@ const People = () => {
             // set learners
             var tempLearners = [...learners, { ...tempRequest }]
             setLearners(tempLearners)
+            // send notification
+            NotificationService.createNotification({
+                title: 'Request to join class',
+                content: `Your request to join class ${classroom.class_name} have been accepted`,
+                user: {
+                    id: request.user.id,
+                    username: request.user.username,
+                },
+                url: `/class/${classroom.id}`,
+            })
             setMessToast(`${request.user.username} is now a member`)
             setShowToast(true)
         } catch (error) {
@@ -114,10 +125,21 @@ const People = () => {
 
     const handleDecline = async (request, index) => {
         try {
+            // delete request
             await ClassLearnerService.deleteClassLearnerById(request.id)
             var tempRequests = [...requests]
             tempRequests.splice(index, 1)
             setRequests(tempRequests)
+            // send notification
+            NotificationService.createNotification({
+                title: 'Request to join class',
+                content: `Your request to join class ${classroom.class_name} have been rejected`,
+                user: {
+                    id: request.user.id,
+                    username: request.user.username,
+                },
+                url: `/class/${classroom.id}`,
+            })
             setMessToast(`${request.user.username} rejected`)
             setShowToast(true)
         } catch (error) {
