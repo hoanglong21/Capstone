@@ -159,7 +159,7 @@ const Header = () => {
         }
     }
 
-    const handleRead = async (notify, index) => {
+    const handleRead = async (notify) => {
         try {
             var tempNotify = { ...notify, _read: true }
             tempNotify.datetime = toBEDate(tempNotify.datetime)
@@ -168,10 +168,21 @@ const Header = () => {
                     tempNotify.user.created_date
                 )
             }
-            NotificationService.updateNotification(notify.id, tempNotify)
-            var tempNotifications = [...notifications]
-            tempNotifications[index] = { ...tempNotify }
-            setNotifications(tempNotifications)
+            await NotificationService.updateNotification(notify.id, tempNotify)
+            dispatch(getNumUnread(userInfo.id))
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
+
+    const handleMarkAllRead = async (event) => {
+        try {
+            event.stopPropagation()
+            await NotificationService.markAsRead(userInfo.id)
             dispatch(getNumUnread(userInfo.id))
         } catch (error) {
             if (error.response && error.response.data) {
@@ -454,7 +465,10 @@ const Header = () => {
                                                 <span className="notifyFilter_heading flex-fill">
                                                     Earlier
                                                 </span>
-                                                <a className="notifyFilter_link">
+                                                <a
+                                                    className="notifyFilter_link"
+                                                    onClick={handleMarkAllRead}
+                                                >
                                                     Mark all as read
                                                 </a>
                                             </li>

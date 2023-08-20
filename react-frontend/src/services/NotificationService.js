@@ -10,6 +10,10 @@ const updateNotification = (id, notification) => {
     return axios.put(API_BASE_URL + '/notification/' + id, notification)
 }
 
+const markAsRead = (id) => {
+    return axios.get(API_BASE_URL + '/markasread/' + id)
+}
+
 const getFilterNotification = (
     content,
     isRead,
@@ -48,6 +52,7 @@ const NotificationService = {
     createNotification,
     getFilterNotification,
     updateNotification,
+    markAsRead,
 }
 
 export default NotificationService
