@@ -84,6 +84,14 @@ export const resetPassword = (username, pin, newPassword) => {
     )
 }
 
+export const sendVerificationEmail = (username) => {
+    return axios.get(API_BASE_URL + '/sendverify?username=' + username, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 export const filterUserAdmin = (
     name,
     username,
@@ -250,6 +258,7 @@ const UserService = {
     resetPassword,
     filterUserCommon,
     filterUserAdmin,
+    sendVerificationEmail,
 }
 
 export default UserService
