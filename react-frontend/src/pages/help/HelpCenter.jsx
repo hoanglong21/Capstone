@@ -54,7 +54,7 @@ function HelpCenter() {
                         </li>
                         <li>
                             <div className="hkb-category  hkb-category--withdesc hkb-category--style7 hkb-category--withicon hkb-category--3">
-                                <Link className="hkb-category__link" to="/useaccount">
+                                <Link className="hkb-category__link" to="/useclass">
                                     <div className="hkb-category__iconwrap">
                                         <img
                                             src="https://demo.herothemes.com/knowall/wp-content/uploads/sites/23/2016/03/04-1.png"
@@ -65,7 +65,7 @@ function HelpCenter() {
 
                                     <div className="hkb-category__content">
                                         <h2 className="hkb-category__title">
-                                            Getting Started{' '}
+                                            Class And Flashcard{' '}
                                         </h2>
 
                                         <div className="hkb-category__description">

@@ -1,5 +1,7 @@
 header {
     background-color: var(--header-bg-color);
+    padding-right: 1.5rem !important;
+    padding-left: 1.5rem !important; 
 }
 
 .btn.icon-outline-secondary {
@@ -116,4 +118,45 @@ header {
 .notifications-item .text p {
     color: #aaa;
     font-size: 12px;
+}
+
+.header_img{
+    margin-right: 3rem !important;
+}
+
+@media only screen and (max-width: 768px) {
+    header {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+    .header-css{
+        display: contents;
+    }
+
+    .btn-avatar > svg{
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .notify_btn > svg{
+        width: 1.3rem;
+        height: 1.3rem;
+    }
+
+    .header_img{
+        margin-right: 1rem !important;
+    }
+
+    .header_navbar{
+        border: 0px solid #fff !important;
+        border-radius: 0px !important;
+    }
+
+    .header-dropdown{
+        min-width: 7rem !important;
+    }
+
+    .notifications {
+        width: 250px;
+    }
 }
