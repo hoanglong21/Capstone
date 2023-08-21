@@ -103,7 +103,7 @@ function SettingForAdmin() {
     <div className="container-fluid">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="container mt-4 mb-5">
             <h3>Account Settings</h3>

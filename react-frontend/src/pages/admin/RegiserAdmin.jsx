@@ -9,6 +9,7 @@ import { reset } from "../../features/auth/authSlice";
 import styles from "../../assets/styles/Form.module.css";
 import { logout as authLogout } from '../../features/auth/authSlice'
 import { logout as userLogout } from '../../features/user/userSlice'
+import "../../assets/styles/sidebar.css";
 
 const RegisterAdmin = () => {
   const navigate = useNavigate();
@@ -116,27 +117,27 @@ const RegisterAdmin = () => {
         <SidebarforAdmin />
         <div className="col-10">
           <HeaderAdmin />
-          <div className="container bg-white p-5">
+          <div className="container register-admin">
               <div className="row px-4">
                 <div className="col-12">
-                  <div className="pe-4" style={{ position: "relative" }}>
+                  <div className="r-admin" style={{ position: "relative" }}>
                     {/* <button
                       className="backHomeBtn"
                       onClick={() => navigate("/")}
                     >
                       <ArrowLeftLongIcon />
                     </button> */}
-                    <h2 className="text-center">New Account ?</h2>
+                    <h2 className="text-center admin-h2">New Account ?</h2>
                     <h5
-                      className="fw-normal text-center"
+                      className="fw-normal text-center admin-h5"
                       style={{ color: "var(--text-light)" }}
                     >
                       Create new account for another Admin
                     </h5>
                     <form
                       id="registerForm"
-                      className="form mx-auto px-5"
-                      style={{ marginTop: "4rem" }}
+                      className="form form-admin mx-auto"
+                      // style={{ marginTop: "4rem" }}
                       onSubmit={handleSubmit(submitForm)}
                       noValidate
                     >

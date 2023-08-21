@@ -7,11 +7,13 @@ import language from "../../assets/images/language.png";
 import changePass from "../../assets/images/change-password.png";
 import resetPass from "../../assets/images/resetpass.png";
 import deleteAcc from "../../assets/images/deleteaccount.png";
+import '../../assets/styles/Helpcenter.css'
+
 function UseAccount() {
   return (
     <div className="container">
       <div className="row useaccount mt-4">
-        <div className="col-8">
+        <div className="use-account-col-8">
           <h4>Create Account ?</h4>
           <ul className="useaccount-ul">
             <li>
@@ -29,16 +31,16 @@ function UseAccount() {
             </li>
           </ul>
         </div>
-        <div className="col-4">
+        <div className="use-account-col-4">
           <img
             src={register}
             alt=""
-            style={{ width: "300px", height: "200px" }}
+            // style={{ width: "300px", height: "200px" }}
           />
         </div>
       </div>
       <div className="row useaccount mt-4">
-        <div className="col-8">
+        <div className="use-account-col-8">
           <h4>Update profile?</h4>
           <ul className="useaccount-ul">
             <li>
@@ -55,16 +57,16 @@ function UseAccount() {
             </li>
           </ul>
         </div>
-        <div className="col-4">
+        <div className="use-account-col-4">
           <img
             src={account}
             alt=""
-            style={{ width: "300px", height: "200px" }}
+            // style={{ width: "300px", height: "200px" }}
           />
         </div>
       </div>
       <div className="row useaccount mt-4">
-        <div className="col-8">
+        <div className="use-account-col-8">
           <h4>Change Language?</h4>
           <ul className="useaccount-ul">
             <li>
@@ -78,16 +80,16 @@ function UseAccount() {
             </li>
           </ul>
         </div>
-        <div className="col-4">
+        <div className="use-account-col-4">
           <img
             src={language}
             alt=""
-            style={{ width: "300px", height: "200px" }}
+            // style={{ width: "300px", height: "200px" }}
           />
         </div>
       </div>
       <div className="row useaccount mt-4">
-        <div className="col-8">
+        <div className="use-account-col-8">
           <h4>Change your Password?</h4>
           <ul className="useaccount-ul">
             <li>
@@ -104,16 +106,16 @@ function UseAccount() {
             </li>
           </ul>
         </div>
-        <div className="col-4">
+        <div className="use-account-col-4">
           <img
             src={changePass}
             alt=""
-            style={{ width: "300px", height: "200px" }}
+            // style={{ width: "300px", height: "200px" }}
           />
         </div>
       </div>
       <div className="row useaccount mt-4">
-        <div className="col-8">
+        <div className="use-account-col-8">
           <h4>Reset Password?</h4>
           <ul className="useaccount-ul">
             <li>
@@ -139,16 +141,16 @@ function UseAccount() {
             <li>Now, user reset password successfully.</li>
           </ul>
         </div>
-        <div className="col-4">
+        <div className="use-account-col-4">
           <img
             src={resetPass}
             alt=""
-            style={{ width: "300px", height: "200px" }}
+            // style={{ width: "300px", height: "200px" }}
           />
         </div>
       </div>
       <div className="row useaccount mt-4">
-        <div className="col-8">
+        <div className="use-account-col-8">
           <h4>Delete Account?</h4>
           <ul className="useaccount-ul">
             <li>
@@ -163,11 +165,11 @@ function UseAccount() {
             </li>
           </ul>
         </div>
-        <div className="col-4">
+        <div className="use-account-col-4">
           <img
             src={deleteAcc}
             alt=""
-            style={{ width: "300px", height: "200px" }}
+            // style={{ width: "300px", height: "200px" }}
           />
         </div>
       </div>
