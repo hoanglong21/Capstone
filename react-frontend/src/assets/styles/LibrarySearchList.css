@@ -104,36 +104,16 @@
     color: var(--text-bold);
 }
 
-.UserAuthorAvatarContainer {
-    position: relative;
-    height: 4rem;
-    width: 4rem;
-}
-
-.UserAuthorAvatar {
+.userAuthorAvatar {
     height: 4rem;
     width: 4rem;
     border-radius: 100%;
     overflow: hidden;
 }
 
-.UserAuthorAvatarTag {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 14px;
-    height: 14px;
-}
-
-.UserAuthorAvatarTag--banned {
-    background-color: #fff;
-    border-radius: 50%;
-}
-
-.author-avatarContainer {
-    position: relative;
-    height: 16px;
+.userAuthorAvatarTag {
     width: 16px;
+    height: 16px;
 }
 
 .author-avatar {
@@ -144,9 +124,6 @@
 }
 
 .author-avatarTag {
-    position: absolute;
-    bottom: 0;
-    right: 0;
     width: 14px;
     height: 14px;
 }

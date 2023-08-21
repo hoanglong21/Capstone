@@ -331,56 +331,56 @@ const ViewStudySet = () => {
             {/* Author + Options */}
             <div className="setPageInformation d-flex justify-content-between">
                 <div className="d-flex align-items-center">
-                    <div className="setAuthorAvatarContainer">
-                        <img
-                            alt="avatarAuthor"
-                            className="setAuthorAvatar"
-                            src={
-                                studySet?.user?.avatar
-                                    ? studySet.user.avatar
-                                    : defaultAvatar
-                            }
-                        />
-                        {studySet?.user?.status === 'banned' && (
-                            <OverlayTrigger
-                                placement="bottom"
-                                overlay={tooltip}
-                            >
-                                <img
-                                    className="setAuthorAvatarTag setAuthorAvatarTag--banned"
-                                    src={banned}
-                                />
-                            </OverlayTrigger>
-                        )}
-                        {studySet?.user?.status === 'active' && (
-                            <OverlayTrigger
-                                placement="bottom"
-                                overlay={tooltip}
-                            >
-                                <img
-                                    className="setAuthorAvatarTag"
-                                    src={verified}
-                                />
-                            </OverlayTrigger>
-                        )}
-                        {studySet?.user?.status === 'deleted' && (
-                            <OverlayTrigger
-                                placement="bottom"
-                                overlay={tooltip}
-                            >
-                                <img
-                                    className="setAuthorAvatarTag"
-                                    src={deleted}
-                                />
-                            </OverlayTrigger>
-                        )}
-                    </div>
+                    <img
+                        alt="avatarAuthor"
+                        className="setAuthorAvatar"
+                        src={
+                            studySet?.user?.avatar
+                                ? studySet.user.avatar
+                                : defaultAvatar
+                        }
+                    />
                     <div className="setAuthorInfo ms-2">
                         <span className="setAuthorInfo_createdBy">
                             Created by
                         </span>
-                        <div className="setAuthorInfo_username">
-                            {studySet?.user?.username}
+                        <div className="d-flex align-items-center">
+                            <div className="setAuthorInfo_username">
+                                {studySet?.user?.username}
+                            </div>
+                            {studySet?.user?.status === 'banned' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={tooltip}
+                                >
+                                    <img
+                                        className="ms-1 setAuthorAvatarTag setAuthorAvatarTag--banned"
+                                        src={banned}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                            {studySet?.user?.status === 'active' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={tooltip}
+                                >
+                                    <img
+                                        className="ms-1 setAuthorAvatarTag"
+                                        src={verified}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                            {studySet?.user?.status === 'deleted' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={tooltip}
+                                >
+                                    <img
+                                        className="ms-1 setAuthorAvatarTag"
+                                        src={deleted}
+                                    />
+                                </OverlayTrigger>
+                            )}
                         </div>
                     </div>
                 </div>
