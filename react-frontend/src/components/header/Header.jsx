@@ -293,7 +293,7 @@ const Header = () => {
                         )}
                     </ul>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="landing-header">
                     {/* Add button */}
                     <div className="dropdown d-inline-flex">
                         <button
@@ -407,7 +407,7 @@ const Header = () => {
                                 </button>
                                 <ul
                                     className="dropdown-menu dropdown-menu-end p-2 notifications"
-                                    style={{ minHeight: '82vh' }}
+                                    // style={{ minHeight: '82vh' }}
                                     id="box"
                                 >
                                     {isEmpty ? (
@@ -499,24 +499,33 @@ const Header = () => {
                                                         }}
                                                     >
                                                         <div className="d-flex flex-column">
-                                                            <h4
-                                                                className={`mb-1 ${
-                                                                    notify?._read ===
-                                                                        true &&
-                                                                    'notifications_read'
-                                                                }`}
-                                                            >
-                                                                {notify?.title}
-                                                                {notify?._read ===
-                                                                    false && (
-                                                                    <span className="ms-2 badge text-bg-primary p-1 rounded-circle">
-                                                                        <span className="visually-hidden">
-                                                                            New
-                                                                            alerts
+                                                            <div className="row mb-1">
+                                                                <div className="col-11">
+                                                                    <h4
+                                                                        className={`${
+                                                                            notify?._read ===
+                                                                                true &&
+                                                                            'notifications_read'
+                                                                        }`}
+                                                                    >
+                                                                        {
+                                                                            notify?.title
+                                                                        }
+                                                                    </h4>
+                                                                </div>
+                                                                <div className="col-1">
+                                                                    {notify?._read ===
+                                                                        false && (
+                                                                        <span className="badge text-bg-primary p-1 rounded-circle">
+                                                                            <span className="visually-hidden">
+                                                                                New
+                                                                                alerts
+                                                                            </span>
                                                                         </span>
-                                                                    </span>
-                                                                )}
-                                                            </h4>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
                                                             <span className="notify_content">
                                                                 {
                                                                     notify?.content
@@ -664,7 +673,7 @@ const Header = () => {
                             <Link to="/login">
                                 <button
                                     type="button"
-                                    className="btn btn-light me-2"
+                                    className="landing-btn btn btn-light me-2"
                                 >
                                     Login
                                 </button>
@@ -672,7 +681,7 @@ const Header = () => {
                             <Link to="register">
                                 <button
                                     type="button"
-                                    className="btn btn-warning"
+                                    className="landing-btn btn btn-warning"
                                 >
                                     Sign up
                                 </button>

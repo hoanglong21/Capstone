@@ -273,73 +273,69 @@ p.kanji-search-bold {
   display: flex !important;
 }
 
-.vocab-dict {
+.vocab-dict{
   flex: 0 0 auto;
   width: 16.66666667% !important;
 }
 
-.vocab-dict-col-7 {
+.vocab-dict-col-7{
   flex: 0 0 auto;
   width: 58.33333333% !important;
 }
 
-.vocab-dict-3,
-.kanji-dict-3,
-.grammar-dict-col-3 {
+.vocab-dict-3, .kanji-dict-3, .grammar-dict-col-3{
   flex: 0 0 auto;
   width: 25% !important;
 }
 
-.kanji-dict {
+.kanji-dict{
   flex: 0 0 auto;
   width: 83.33333333% !important;
 }
 
-.kanji-dict-col-9 {
+.kanji-dict-col-9{
   flex: 0 0 auto;
   width: 75% !important;
 }
 
-.grammar-detail-col-4 {
+.grammar-detail-col-4{
   flex: 0 0 auto;
   width: 33.33333333% !important;
 }
 
 @media only screen and (max-width: 768px) {
-  .form-dictionary {
-    width: 100% !important;
-  }
+    .form-dictionary {
+        width: 100% !important;
+    }
 
-  .nav-dictionary {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    margin-right: 0.5rem !important;
-    margin-left: 0.5rem !important;
-    overflow-x: scroll;
-  }
+    .nav-dictionary {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        margin-right: 0.5rem !important;
+        margin-left: 0.5rem !important;
+        overflow-x: scroll;
+    }
 
-  .nav-dictionary > li {
-    width: fix-content;
-  }
+    .nav-dictionary > li {
+        width: fix-content;
+    }
 
-  .nav-dictionary::-webkit-scrollbar,
-  .vocab-dict::-webkit-scrollbar {
+  .nav-dictionary::-webkit-scrollbar, .vocab-dict::-webkit-scrollbar {
     display: none;
   }
 
-  .nav-dictionary,
-  .vocab-dict {
+  .nav-dictionary, .vocab-dict {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
 
-  .vocab-dict {
+  .vocab-dict{
     display: inline-block;
     overflow-x: scroll;
     width: 100% !important;
   }
 
-  .dictResultWordList {
+  .dictResultWordList{
     display: inline-flex;
     overflow-x: scroll;
   }
@@ -348,18 +344,17 @@ p.kanji-search-bold {
     margin-right: 10px;
   }
 
-  .vocab-dict-col-7,
-  .kanji-dict {
+  .vocab-dict-col-7, .kanji-dict{
     margin-top: 30px !important;
     width: 100% !important;
   }
 
-  .vocab-dict-3 {
+  .vocab-dict-3{
     margin-top: 10px !important;
     width: 100% !important;
   }
 
-  .kanji-dict-3 {
+  .kanji-dict-3{
     width: 100% !important;
     margin-bottom: 20px;
   }
@@ -368,15 +363,15 @@ p.kanji-search-bold {
     text-align: center;
   }
 
-  .kanji-dict-col-9 {
+  .kanji-dict-col-9{
     width: 100% !important;
   }
 
-  .grammar-dict-col-3 {
+  .grammar-dict-col-3{
     width: 50% !important;
   }
 
-  .grammar-detail-col-4 {
+  .grammar-detail-col-4{
     width: 100% !important;
   }
 }

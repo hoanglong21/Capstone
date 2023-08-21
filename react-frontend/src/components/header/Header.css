@@ -150,6 +150,7 @@ header {
 }
 
 .notifications {
+    min-height: 82vh;
     width: 300px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -212,6 +213,11 @@ header {
     margin-right: 3rem !important;
 }
 
+.landing-header{
+    display: flex !important;
+    align-items: center !important;
+}
+
 @media only screen and (max-width: 768px) {
     header {
         padding-left: 0.5rem !important;
@@ -232,7 +238,7 @@ header {
     }
 
     .header_img {
-        margin-right: 1rem !important;
+        margin-right: 0.5rem !important;
     }
 
     .header_navbar {
@@ -246,5 +252,19 @@ header {
 
     .notifications {
         width: 250px;
+        min-height: 30vh;
+    }
+
+    .landing-header{
+        display: contents !important;
+    }
+
+    .landing-btn{
+        padding: 0.5rem 0.7rem !important;
+    }
+
+    .notifyEmpty {
+        max-width: 35%;
+        max-height: 100px;
     }
 }

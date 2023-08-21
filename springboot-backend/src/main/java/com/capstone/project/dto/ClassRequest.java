@@ -44,6 +44,7 @@ public class ClassRequest {
 
     private String author;
     private String avatar;
+    private String authorstatus;
 
     // Custom getter for class_name
     public String getClass_name() {

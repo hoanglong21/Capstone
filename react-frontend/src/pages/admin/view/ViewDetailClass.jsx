@@ -191,7 +191,7 @@ function ViewDetailClass() {
     <div className="container-fluid">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
@@ -204,7 +204,7 @@ function ViewDetailClass() {
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
-                          <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
+                          <div className="fw-bold text-white text-uppercase mb-1">
                             Member's Joined
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-white">
@@ -223,7 +223,7 @@ function ViewDetailClass() {
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
-                          <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
+                          <div className="fw-bold text-white text-uppercase mb-1">
                             Number of assignments
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-white">
@@ -242,7 +242,7 @@ function ViewDetailClass() {
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
-                          <div className="text-xs font-weight-bold text-white text-uppercase mb-1">
+                          <div className="fw-bold text-white text-uppercase mb-1">
                             Number of tests
                           </div>
                           <div className="h5 mb-0 font-weight-bold text-white">

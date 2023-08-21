@@ -23,6 +23,8 @@ public class ClassLearnerRequest {
 
     private String avatar;
 
+    private String userstatus;
+
     private String status;
 
     private Date created_date;
