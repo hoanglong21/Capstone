@@ -43,7 +43,7 @@ public class ClassController {
     }
 
 
-//    @PreAuthorize("hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/class")
     public ResponseEntity<?> createClassroom(@Valid @RequestBody ClassRequest classRequest, BindingResult result) throws ParseException {
         if (result.hasErrors()) {
@@ -74,7 +74,7 @@ public class ClassController {
     }
 
 
-//    @PreAuthorize("hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PutMapping("/class/{id}")
     public ResponseEntity<?> updateClassroom(@Valid @RequestBody  ClassRequest classRequest, @PathVariable int id,BindingResult result) {
         if (result.hasErrors()) {
@@ -94,7 +94,7 @@ public class ClassController {
     }
 
 
-//    @PreAuthorize("hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @DeleteMapping("/class/{id}")
         public ResponseEntity<?> deleteClass(@PathVariable int id) {
         try {
@@ -104,7 +104,7 @@ public class ClassController {
         }
         }
 
-//    @PreAuthorize("hasRole('ROLE_TUTOR')")
+    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @DeleteMapping("/deleteclass/{id}")
     public ResponseEntity<?> deleteHardClass(@PathVariable int id) {
         try {
@@ -138,6 +138,7 @@ public class ClassController {
     }
     }
 
+    @PreAuthorize("hasRole('ROLE_LEARNER')")
     @PostMapping("/joinclass")
     public ResponseEntity<?> joinClass(@RequestParam String classCode, @RequestParam String username) {
         try {
@@ -182,7 +183,7 @@ public class ClassController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/resetclasscode/{id}")
     public ResponseEntity<?> ResetClassCode(@PathVariable int id){
         try {
