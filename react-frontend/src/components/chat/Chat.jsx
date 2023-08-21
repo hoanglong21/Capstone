@@ -162,7 +162,7 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
     function openVideoChat() {
         const myParameter = receiverUser.username
         // const url = 'http://localhost:3000/videochat?param=' + AES.encrypt(myParameter, key).toString();
-        const url = 'http://localhost:3000/video-call?param=' + myParameter
+        const url = `${process.env.REACT_APP_HOST}?param=` + myParameter
         // Try to get a reference to the existing video chat window
         var myWindow = window.open('', 'myWindow')
         // Check if the window is already open

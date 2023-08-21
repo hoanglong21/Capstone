@@ -10,7 +10,11 @@ import {
 import { updateUser } from '../../../features/user/userAction'
 import { reset } from '../../../features/user/userSlice'
 
-import { DeleteIcon, EditIcon } from '../../../components/icons'
+import {
+    DeleteIcon,
+    EditIcon,
+    WarningSolidIcon,
+} from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
@@ -164,7 +168,7 @@ const Profile = () => {
 
     return (
         <div className="setting-profile">
-            <h4 className='my-profile'>My Profile</h4>
+            <h4 className="my-profile">My Profile</h4>
             <form className="row g-4 needs-validation" noValidate>
                 {/* error message */}
                 {(errorMess || error) && (
@@ -196,6 +200,7 @@ const Profile = () => {
                         <button
                             type="button"
                             className="btn btn-primary p-0"
+                            disabled={userInfo?.status === 'pending'}
                             onClick={() => setShowAvatarModal(true)}
                         >
                             <EditIcon size="0.75rem" />
@@ -207,10 +212,11 @@ const Profile = () => {
                     <label className={FormStyles.formLabel}>Username</label>
                     <input
                         id="username"
+                        className="form-control-plaintext p-0"
                         name="username"
                         type="text"
                         value={newUser.username || ''}
-                        className="form-control-plaintext p-0"
+                        disabled={userInfo?.status === 'pending'}
                         readOnly
                     />
                 </div>
@@ -223,6 +229,7 @@ const Profile = () => {
                         type="email"
                         value={newUser.email || ''}
                         className="form-control-plaintext p-0"
+                        disabled={userInfo?.status === 'pending'}
                         readOnly
                     />
                 </div>
@@ -235,6 +242,7 @@ const Profile = () => {
                         type="text"
                         value={newUser.first_name || ''}
                         className={`form-control ${FormStyles.formControl}`}
+                        disabled={userInfo?.status === 'pending'}
                         onChange={handleChange}
                         required
                     />
@@ -248,6 +256,7 @@ const Profile = () => {
                         type="text"
                         value={newUser.last_name || ''}
                         className={`form-control ${FormStyles.formControl}`}
+                        disabled={userInfo?.status === 'pending'}
                         onChange={handleChange}
                         required
                     />
@@ -259,12 +268,13 @@ const Profile = () => {
                     </label>
                     <input
                         id="dob"
+                        className={`form-control ${FormStyles.formControl}`}
                         name="dob"
                         type="date"
                         value={
                             newUser.dob ? formatDate(newUser.dob) : undefined
                         }
-                        className={`form-control ${FormStyles.formControl}`}
+                        disabled={userInfo?.status === 'pending'}
                         onChange={handleChange}
                     />
                 </div>
@@ -273,10 +283,11 @@ const Profile = () => {
                     <label className={FormStyles.formLabel}>Phone</label>
                     <input
                         id="phone"
+                        className={`form-control ${FormStyles.formControl}`}
                         name="phone"
                         type="phone"
                         value={newUser.phone || ''}
-                        className={`form-control ${FormStyles.formControl}`}
+                        disabled={userInfo?.status === 'pending'}
                         onChange={handleChange}
                     />
                 </div>
@@ -294,6 +305,7 @@ const Profile = () => {
                             value="male"
                             autoComplete="off"
                             checked={newUser.gender === 'male' ? true : false}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="male">
@@ -309,6 +321,7 @@ const Profile = () => {
                             value="female"
                             autoComplete="off"
                             checked={newUser.gender === 'female' ? true : false}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="female">
@@ -324,6 +337,7 @@ const Profile = () => {
                             value="other"
                             autoComplete="off"
                             checked={newUser.gender === 'other' ? true : false}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="other">
@@ -345,6 +359,7 @@ const Profile = () => {
                                 : 'Admin'
                         }
                         className="form-control-plaintext p-0"
+                        disabled={userInfo?.status === 'pending'}
                         readOnly
                     />
                 </div>
@@ -357,6 +372,7 @@ const Profile = () => {
                         type="text"
                         value={newUser.address || ''}
                         className={`form-control ${FormStyles.formControl}`}
+                        disabled={userInfo?.status === 'pending'}
                         onChange={handleChange}
                     />
                 </div>
@@ -368,12 +384,14 @@ const Profile = () => {
                         name="bio"
                         value={newUser.bio || ''}
                         className={`form-control ${FormStyles.formControl}`}
+                        disabled={userInfo?.status === 'pending'}
                         onChange={handleChange}
                     />
                 </div>
                 <div className="col-12">
                     <button
                         className="btn btn-primary px-4 mt-1"
+                        disabled={userInfo?.status === 'pending'}
                         onClick={handleSubmit}
                     >
                         Save

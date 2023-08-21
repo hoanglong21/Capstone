@@ -26,4 +26,6 @@ public class NotificationRequest {
     private String content;
 
     private String url;
+
+    private boolean is_read;
 }

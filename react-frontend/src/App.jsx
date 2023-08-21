@@ -100,6 +100,7 @@ import UserProtectedRoute from './pages/protectedRoute/UserProrectedRoute'
 import AdminProtectedRoute from './pages/protectedRoute/AdminProrectedRoute'
 import Sets from './pages/class/Sets'
 import UseClas from './pages/help/UseClass'
+import VerifyAccount from './pages/auth/VerifyAccount'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -146,6 +147,7 @@ const App = () => {
                             path="reset-password"
                             element={<ResetPassword />}
                         />
+                        <Route path="verify" element={<VerifyAccount />} />
                     </Route>
                     {/* Page not found */}
                     <Route path="*" element={<NotFound />} />
@@ -154,7 +156,7 @@ const App = () => {
                     <Route path="privacy" element={<Privacy />} />
                     <Route path="help-center" element={<HelpCenter />} />
                     <Route path="/useaccount" element={<UseAccount />} />
-                    <Route path='/useclass' element={<UseClas />} />
+                    <Route path="/useclass" element={<UseClas />} />
                     {/* Discovery */}
                     <Route path="discovery" element={<Home />}>
                         <Route index element={<AllForHome />} />

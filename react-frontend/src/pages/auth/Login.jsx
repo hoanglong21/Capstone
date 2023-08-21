@@ -18,11 +18,10 @@ const Login = () => {
 
     const { register, handleSubmit } = useForm()
 
-    const { userToken, error } = useSelector((state) => state.auth)
+    const { userToken, error, loading } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
 
     const [emptyMess, setEmptyMess] = useState('')
-    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         dispatch(reset())
@@ -67,7 +66,6 @@ const Login = () => {
             }
             return
         }
-        setLoading(true)
         dispatch(login(data))
         // clear
         form.classList.remove('was-validated')
@@ -76,7 +74,6 @@ const Login = () => {
         dispatch(reset())
         setEmptyMess('')
         document.body.scrollTop = document.documentElement.scrollTop = 0
-        setLoading(false)
     }
 
     return (
@@ -145,7 +142,7 @@ const Login = () => {
                             className={`btn btn-primary col-12 ${styles.btn}`}
                             disabled={loading}
                         >
-                            {loading ? (
+                            {loading === true ? (
                                 <div
                                     className="spinner-border text-secondary mx-auto mb-1"
                                     role="status"

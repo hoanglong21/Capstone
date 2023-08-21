@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react'
 import { withRouter } from './withRouter'
 import jwtDecode from 'jwt-decode'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import HistoryService from '../../services/HistoryService'
 import UserService from '../../services/UserService'
+import { getNumUnread } from '../../features/notify/notifyAction'
 
 const AuthVerify = (props) => {
     let location = props.router.location
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const [token, setToken] = useState('')
     const [user, setUser] = useState({})
 
-    function setCookie(cname, cvalue, date) {
+    function setCookie(cname, cvalue, date, time) {
         var d = date === null ? new Date() : new Date(date)
-        d.setTime(d.getTime() + 60 * 60 * 1000)
+        d.setTime(d.getTime() + time * 60 * 60 * 1000)
         let expires = 'expires=' + d.toUTCString()
         document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/'
     }
@@ -41,6 +44,7 @@ const AuthVerify = (props) => {
             const username = jwtDecode(token).sub
             const tempUser = (await UserService.getUser(username)).data
             setUser(tempUser)
+            dispatch(getNumUnread(tempUser.id))
         }
         if (token) {
             check()
@@ -48,6 +52,7 @@ const AuthVerify = (props) => {
     }, [token])
 
     useEffect(() => {
+        // history
         const check = async () => {
             // attendance
             if (getCookie(`userAttend_${user.username}`) == '') {
@@ -75,7 +80,7 @@ const AuthVerify = (props) => {
                             },
                             null
                         )
-                        setCookie(`userAttend_${user.username}`, token, null)
+                        setCookie(`userAttend_${user.username}`, token, null, 1)
                     } else {
                         const current = new Date()
                         const historyDate = new Date(historyAttend[0].datetime)
@@ -86,7 +91,8 @@ const AuthVerify = (props) => {
                             setCookie(
                                 `userAttend_${user.username}`,
                                 token,
-                                historyAttend[0].datetime
+                                historyAttend[0].datetime,
+                                1
                             )
                         } else {
                             HistoryService.createHistory({
@@ -96,7 +102,8 @@ const AuthVerify = (props) => {
                             setCookie(
                                 `userAttend_${user.username}`,
                                 token,
-                                null
+                                null,
+                                1
                             )
                         }
                     }
@@ -155,7 +162,8 @@ const AuthVerify = (props) => {
                                 setCookie(
                                     `user_${user?.username}_class_${id}`,
                                     token,
-                                    null
+                                    null,
+                                    1
                                 )
                             } else {
                                 const current = new Date()
@@ -169,7 +177,8 @@ const AuthVerify = (props) => {
                                     setCookie(
                                         `user_${user?.username}_class_${id}`,
                                         token,
-                                        historyClass[0].datetime
+                                        historyClass[0].datetime,
+                                        1
                                     )
                                 } else {
                                     HistoryService.createHistory({
@@ -185,7 +194,8 @@ const AuthVerify = (props) => {
                                     setCookie(
                                         `user_${user?.username}_class_${id}`,
                                         token,
-                                        null
+                                        null,
+                                        1
                                     )
                                 }
                             }
@@ -202,8 +212,29 @@ const AuthVerify = (props) => {
                 id = null
             }
         }
+        // notification
+        const getNotification = () => {
+            if (getCookie(`userNotification_${user.username}`) == '') {
+                try {
+                    setCookie(
+                        `userNotification_${user.username}`,
+                        token,
+                        null,
+                        0.08
+                    )
+                    dispatch(getNumUnread(user.id))
+                } catch (error) {
+                    if (error.response && error.response.data) {
+                        console.log(error.response.data)
+                    } else {
+                        console.log(error.message)
+                    }
+                }
+            }
+        }
         if (user?.id) {
             check()
+            getNotification()
         }
     }, [user, location])
 

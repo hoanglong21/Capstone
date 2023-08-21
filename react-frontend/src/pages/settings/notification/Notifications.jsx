@@ -227,10 +227,11 @@ const Notifications = () => {
                 <fieldset className="notification_formContainer form-check mb-3 ps-0">
                     <legend>STUDY REMINDERS</legend>
                     <input
+                        id="studyReminder"
                         className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                         type="checkbox"
                         checked={isStudyReminder}
-                        id="studyReminder"
+                        disabled={userInfo?.status === 'pending'}
                         onChange={(event) => {
                             setIsStudyReminder(event.target.checked)
                             if (event.target.checked) {
@@ -261,7 +262,10 @@ const Notifications = () => {
                             className={`form-control ${FormStyles.formControl} ms-0`}
                             id="studyReminderTime"
                             value={studyReminder?.value || ''}
-                            disabled={!isStudyReminder}
+                            disabled={
+                                !isStudyReminder ||
+                                userInfo?.status === 'pending'
+                            }
                             onChange={(event) => {
                                 setStudyReminder({
                                     ...studyReminder,
@@ -275,10 +279,11 @@ const Notifications = () => {
                     <legend>DUE DATE REMINDERS</legend>
                     <div className="mb-3">
                         <input
+                            id="assignmentReminder"
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
                             checked={isAssignDueDate}
-                            id="assignmentReminder"
+                            disabled={userInfo?.status === 'pending'}
                             onChange={(event) => {
                                 setIsAssignDueDate(event.target.checked)
                                 if (event.target.checked) {
@@ -312,10 +317,13 @@ const Notifications = () => {
                                 </div>
                                 <div className="remind-noti-col-10 notification_formTime">
                                     <input
-                                        type="number"
-                                        className={`form-control ${FormStyles.formControl} ms-0`}
                                         id="assignDueDateReminderTime"
-                                        disabled={!isAssignDueDate}
+                                        className={`form-control ${FormStyles.formControl} ms-0`}
+                                        type="number"
+                                        disabled={
+                                            !isAssignDueDate ||
+                                            userInfo?.status === 'pending'
+                                        }
                                         value={assignDueDate?.value || ''}
                                         onChange={(event) => {
                                             setAssignDueDate({
@@ -330,10 +338,11 @@ const Notifications = () => {
                     </div>
                     <div>
                         <input
+                            id="testReminder"
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
                             checked={isTestDueDate}
-                            id="testReminder"
+                            disabled={userInfo?.status === 'pending'}
                             onChange={(event) => {
                                 setIsTestDueDate(event.target.checked)
                                 if (event.target.checked) {
@@ -370,7 +379,10 @@ const Notifications = () => {
                                         type="number"
                                         className={`form-control ${FormStyles.formControl} ms-0`}
                                         id="testDueDateReminderTime"
-                                        disabled={!isTestDueDate}
+                                        disabled={
+                                            !isTestDueDate ||
+                                            userInfo?.status === 'pending'
+                                        }
                                         value={testDueDate?.value || ''}
                                         onChange={(event) => {
                                             setTestDueDate({
@@ -388,10 +400,11 @@ const Notifications = () => {
                     <legend>IN YOUR CLASS, RECEIVE EMAIL WHEN:</legend>
                     <div className="noti-input">
                         <input
+                            id="setAdded"
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            id="setAdded"
                             checked={setAdded?.value}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={(event) => {
                                 setSetAdded({
                                     ...setAdded,
@@ -405,10 +418,11 @@ const Notifications = () => {
                     </div>
                     <div>
                         <input
+                            id="postPosted"
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            id="postPosted"
                             checked={postAdded?.value}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={(event) => {
                                 setPostAdded({
                                     ...postAdded,
@@ -425,10 +439,11 @@ const Notifications = () => {
                     </div>
                     <div>
                         <input
+                            id="assignmentAssigned"
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            id="assignmentAssigned"
                             checked={assignAssigned?.value}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={(event) => {
                                 setAssignAssigned({
                                     ...assignAssigned,
@@ -445,10 +460,11 @@ const Notifications = () => {
                     </div>
                     <div>
                         <input
+                            id="testAssigned"
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            id="testAssigned"
                             checked={testAssigned?.value}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={(event) => {
                                 setTestAssigned({
                                     ...testAssigned,
@@ -465,10 +481,11 @@ const Notifications = () => {
                     </div>
                     <div>
                         <input
+                            id="submissionGraded"
                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
                             type="checkbox"
-                            id="submissionGraded"
                             checked={submitGraded?.value}
+                            disabled={userInfo?.status === 'pending'}
                             onChange={(event) => {
                                 setSubmitGraded({
                                     ...submitGraded,
@@ -486,6 +503,7 @@ const Notifications = () => {
                 </fieldset>
                 <button
                     className="btn btn-primary px-4 mt-4"
+                    disabled={userInfo?.status === 'pending'}
                     onClick={handleSave}
                 >
                     Save
