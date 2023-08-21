@@ -407,7 +407,7 @@ const Header = () => {
                                 </button>
                                 <ul
                                     className="dropdown-menu dropdown-menu-end p-2 notifications"
-                                    style={{ minHeight: '82vh' }}
+                                    // style={{ minHeight: '82vh' }}
                                     id="box"
                                 >
                                     {isEmpty ? (
