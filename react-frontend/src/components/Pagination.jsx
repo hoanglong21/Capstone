@@ -2,6 +2,7 @@ import { usePagination, DOTS } from '../hooks/usePagination '
 
 const Pagination = (props) => {
     const {
+        small,
         onPageChange,
         totalCount,
         siblingCount = 1,
@@ -22,13 +23,15 @@ const Pagination = (props) => {
         return null
     }
 
-    const onNext = () => {
+    const onNext = (event) => {
+        event.stopPropagation()
         if (currentPage < lastPage) {
             onPageChange(currentPage + 1)
         }
     }
 
-    const onPrevious = () => {
+    const onPrevious = (event) => {
+        event.stopPropagation()
         if (currentPage > 1) {
             onPageChange(currentPage - 1)
         }
@@ -38,7 +41,11 @@ const Pagination = (props) => {
 
     return (
         <nav>
-            <ul className={`pagination justify-content-center ${className}`}>
+            <ul
+                className={`pagination ${
+                    small === true && 'pagination-sm'
+                } justify-content-center ${className}`}
+            >
                 {/* Left navigation arrow */}
                 <li
                     className={`page-item ${
@@ -65,7 +72,10 @@ const Pagination = (props) => {
                             className={`page-item ${
                                 pageNumber === currentPage ? 'active' : ''
                             }`}
-                            onClick={() => onPageChange(pageNumber)}
+                            onClick={(event) => {
+                                event.stopPropagation()
+                                onPageChange(pageNumber)
+                            }}
                         >
                             <span className="page-link">{pageNumber}</span>
                         </li>
