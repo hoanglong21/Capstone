@@ -280,7 +280,7 @@ public class StudySetServiceImpl implements StudySetService {
 
 
     @Override
-    public Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
+    public Map<String, Object> getFilterListByClass(int authorId, int classId, int categoryId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
         if(page<=0 || size<=0) {
             throw new Exception("Please provide valid page and size");
         }
@@ -289,11 +289,11 @@ public class StudySetServiceImpl implements StudySetService {
         if(isAssigned==true) {
             sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
                     " IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
-                    " AND author_id = " + authorId + " ";
+                    " AND author_id = " + authorId + " AND type_id = " + categoryId + " ";
         } else {
             sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
                     " NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
-                    " AND author_id = " + authorId + " ";
+                    " AND author_id = " + authorId + " AND type_id = " + categoryId + " ";
         }
         sql += " AND is_deleted = false AND is_draft = false AND is_public = true ";
         List<Object> params = new ArrayList<>();

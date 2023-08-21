@@ -55,19 +55,15 @@ public class UserAchievementController {
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> filterUserAchievement(@RequestParam(value = "userid", required = false, defaultValue = "0") int userId,
                                         @RequestParam(value = "achievementid", required = false, defaultValue = "0") int achievementId,
-                                       @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
-                                       @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
-                                       @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
+                                        @RequestParam(value = "fromcreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String fromCreated,
+                                        @RequestParam(value = "tocreated", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") String toCreated,
+                                        @RequestParam(value = "sortby", required = false, defaultValue = "created_date") String sortBy,
                                         @RequestParam(value = "direction", required = false, defaultValue = "DESC") String direction,
                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
-//        try {
         try {
             return ResponseEntity.ok(userAchievementService.filterUserAchievement(userId, achievementId, fromCreated, toCreated,
                     sortBy, direction, page, size));
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Check the input again");
         }

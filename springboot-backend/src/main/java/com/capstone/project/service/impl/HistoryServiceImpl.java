@@ -228,7 +228,7 @@ public class HistoryServiceImpl implements HistoryService {
 
                 achievementId = setsToAchievementMap.get(result);
             }
-            if(history.getHistoryType().getId()==3) {
+            if(history.getHistoryType().getId()==8) {
                 Class classroom = classService.getClassroomById(history.getClassroom().getId());
                 String sql = " SELECT COUNT(*) FROM class_learner WHERE class_id = " + classroom.getId() + " AND status = 'enrolled' ";
                 Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
