@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getAllPostByClassId(id));
     }
 
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     @PostMapping("/post")
     public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult result)  {
         if (result.hasErrors()) {
@@ -73,6 +75,7 @@ public class PostController {
     }
     }
 
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     @PutMapping("/post/{id}")
     public ResponseEntity<?> updatePost(@Valid @RequestBody PostRequest postRequest, @PathVariable int id,
                                         BindingResult result ) {
@@ -93,6 +96,7 @@ public class PostController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     @DeleteMapping("/post/{id}")
     public ResponseEntity<?> deletePost(@PathVariable int id) {
         try {
