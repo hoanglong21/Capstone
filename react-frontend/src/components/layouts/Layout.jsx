@@ -133,7 +133,7 @@ export default function Layout() {
                     ?.filter(
                         (message) =>
                             message.video_call === true &&
-                            message.receiver === userInfo.username
+                            message.receiver === userInfo?.username
                     )
                     .map((message, index) => (
                         <div className="chat_callModal" key={index}>

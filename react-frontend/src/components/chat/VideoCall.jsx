@@ -87,16 +87,18 @@ const VideoCall = () => {
     const [callId, setCallId] = useState('')
 
     useEffect(() => {
-        let string = localStorage.getItem('userToken')
-        // console.log(string)
-        if (string == null) {
-            // TODO navigation
-            navigate('/login')
-        } else {
-            let decode = jwt_decode(string)
-            myUsername = decode.sub
+        if (userInfo?.id) {
+            let string = localStorage.getItem('userToken')
+            // console.log(string)
+            if (string == null) {
+                // TODO navigation
+                navigate('/login')
+            } else {
+                let decode = jwt_decode(string)
+                myUsername = decode.sub
+            }            
+            webcamButtonClick()
         }
-        webcamButtonClick()
     }, [userInfo])
 
     useEffect(() => {
@@ -133,126 +135,154 @@ const VideoCall = () => {
 
         // After run all
         const accepted = searchParams.get('accepted');
-        console.log(accepted);
         if(accepted == 'true') {
             answerButtonClick();
         } else if(accepted == 'false') {
-            hangupButtonClick();
+            answerButtonClick();
         } else {
             callButtonClick();
         }
     }
 
     let callButtonClick = async () => {
-        setIsCalling(true)
-        setIsWaiting(true)
-        // Reference Firestore collections for signaling
-        const callDoc = firestore.collection('calls').doc()
-
-        const offerCandidates = callDoc.collection('offerCandidates')
-        const answerCandidates = callDoc.collection('answerCandidates')
-
-        setCallId(callDoc.id)
-        // Get candidates for caller, save to db
-        pc.onicecandidate = (event) => {
-            event.candidate && offerCandidates.add(event.candidate.toJSON())
-        }
-
-        // Create offer
-        const offerDescription = await pc.createOffer()
-        await pc.setLocalDescription(offerDescription)
-
-        const offer = {
-            sdp: offerDescription.sdp,
-            type: offerDescription.type,
-        }
-
-        await callDoc.set({ offer })
-
-        // Listen for remote answer
-        callDoc.onSnapshot((snapshot) => {
-            const data = snapshot.data()
-            if (!pc.currentRemoteDescription && data?.answer) {
-                const answerDescription = new RTCSessionDescription(data.answer)
-                pc.setRemoteDescription(answerDescription)
+        try{
+            setIsCalling(true)
+            setIsWaiting(true)
+            // Reference Firestore collections for signaling
+            const callDoc = firestore.collection('calls').doc()
+    
+            const offerCandidates = callDoc.collection('offerCandidates')
+            const answerCandidates = callDoc.collection('answerCandidates')
+    
+            setCallId(callDoc.id)
+            // Get candidates for caller, save to db
+            pc.onicecandidate = (event) => {
+                event.candidate && offerCandidates.add(event.candidate.toJSON())
             }
-        })
-
-        // When answered, add candidate to peer connection
-        answerCandidates.onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === 'added') {
-                    const candidate = new RTCIceCandidate(change.doc.data())
-                    pc.addIceCandidate(candidate)
+    
+            // Create offer
+            const offerDescription = await pc.createOffer()
+            try {
+                await pc.setLocalDescription(offerDescription)
+            } catch (error) {
+                console.error('Error setting local description:', error);
+            }           
+    
+            const offer = {
+                sdp: offerDescription.sdp,
+                type: offerDescription.type,
+            }
+    
+            await callDoc.set({ offer })
+    
+            // Listen for remote answer
+            callDoc.onSnapshot((snapshot) => {
+                const data = snapshot.data()
+                if (!pc.currentRemoteDescription && data?.answer) {
+                    const answerDescription = new RTCSessionDescription(data.answer)
+                    pc.setRemoteDescription(answerDescription)
                 }
             })
-        })
+    
+            // When answered, add candidate to peer connection
+            answerCandidates.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const candidate = new RTCIceCandidate(change.doc.data())
+                        pc.addIceCandidate(candidate)
+                    }
+                })
+            })
+    
+            // for short
+            const paramValue = searchParams.get('param')
+            // const key = "6A576E5A7234753778217A25432A462D4A614E645267556B5870327335763879"; //256-bit && hex
+            // TODO when done add to backend all of key
+            var message = call
+            // var receiverUsername = AES.decrypt(param, key).toString(enc.Utf8);
+            var receiverUsername = paramValue
+    
+            // save in database
+            // A post entry.
+            const postData = {
+                sender: myUsername,
+                senderAvatar: userInfo.avatar || '',
+                receiver: receiverUsername,
+                message: callDoc.id,
+                video_call: true,
+            }
+    
+            // Get a key for a new Post.
+            newPostKey = push(child(ref(database), 'messages')).key
+    
+            const updates = {}
+            updates['/messages/' + newPostKey] = postData
+            update(ref(database), updates)
+            setIsCalling(true)
 
-        // for short
-        const paramValue = searchParams.get('param')
-        // const key = "6A576E5A7234753778217A25432A462D4A614E645267556B5870327335763879"; //256-bit && hex
-        // TODO when done add to backend all of key
-        var message = call
-        // var receiverUsername = AES.decrypt(param, key).toString(enc.Utf8);
-        var receiverUsername = paramValue
-
-        // save in database
-        // A post entry.
-        const postData = {
-            sender: myUsername,
-            senderAvatar: userInfo.avatar || '',
-            receiver: receiverUsername,
-            message: callDoc.id,
-            video_call: true,
+            
+        } catch (err) {
+            console.log("Try call again")
         }
-
-        // Get a key for a new Post.
-        newPostKey = push(child(ref(database), 'messages')).key
-
-        const updates = {}
-        updates['/messages/' + newPostKey] = postData
-        update(ref(database), updates)
-        setIsCalling(true)
+        
     }
 
     let answerButtonClick = async () => {
-        setLoadingReceiver(true)
-        const callId = call
-        const callDoc = firestore.collection('calls').doc(callId)
-        const answerCandidates = callDoc.collection('answerCandidates')
-        const offerCandidates = callDoc.collection('offerCandidates')
-
-        pc.onicecandidate = (event) => {
-            event.candidate && answerCandidates.add(event.candidate.toJSON())
-        }
-
-        const callData = (await callDoc.get()).data()
-
-        const offerDescription = callData.offer
-        await pc.setRemoteDescription(
-            new RTCSessionDescription(offerDescription)
-        )
-
-        const answerDescription = await pc.createAnswer()
-        await pc.setLocalDescription(answerDescription)
-
-        const answer = {
-            type: answerDescription.type,
-            sdp: answerDescription.sdp,
-        }
-
-        await callDoc.update({ answer })
-
-        offerCandidates.onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                // console.log(change);
-                if (change.type === 'added') {
-                    let data = change.doc.data()
-                    pc.addIceCandidate(new RTCIceCandidate(data))
-                }
+        try {
+            if (!pc || pc.connectionState === 'closed' || pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
+                // The pc (RTCPeerConnection) is not in a valid state.
+                // You can log a message or handle this case accordingly.
+                console.error('RTCPeerConnection is not in a valid state.');
+                return;
+            }
+            setLoadingReceiver(true)
+            const callId = call
+            const callDoc = firestore.collection('calls').doc(callId)
+            const answerCandidates = callDoc.collection('answerCandidates')
+            const offerCandidates = callDoc.collection('offerCandidates')
+    
+            pc.onicecandidate = (event) => {
+                event.candidate && answerCandidates.add(event.candidate.toJSON())
+            }
+    
+            const callData = (await callDoc.get()).data()
+    
+            const offerDescription = callData.offer
+            await pc.setRemoteDescription(
+                new RTCSessionDescription(offerDescription)
+            )
+    
+            const answerDescription = await pc.createAnswer()
+            try {
+                await pc.setLocalDescription(answerDescription)
+            } catch (error) {
+                console.error('Error setting local description:', error);
+            }
+            
+            const answer = {
+                type: answerDescription.type,
+                sdp: answerDescription.sdp,
+            }
+    
+            await callDoc.update({ answer })
+    
+            offerCandidates.onSnapshot((snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    // console.log(change);
+                    if (change.type === 'added') {
+                        let data = change.doc.data()
+                        pc.addIceCandidate(new RTCIceCandidate(data))
+                    }
+                })
             })
-        })
-        setLoadingReceiver(false)
+            setLoadingReceiver(false)
+            const accepted = searchParams.get('accepted');
+            if(accepted == 'false') {
+                setTimeout(hangupButtonClick, 1);
+            }
+        } catch (err) {
+            console.log("Try answer again")
+        }
     }
 
     let hangupButtonClick = () => {
@@ -369,13 +399,13 @@ const VideoCall = () => {
             ></video>
             {(isCalling && !isWaiting) || call ? (
                 <div className="d-flex justify-content-center mt-5">
-                    <button
+                    {/* <button
                         id="answerButton"
                         className="chat_callModalBtn chat_callModalBtn--accept me-3"
                         onClick={answerButtonClick}
                     >
                         <AnswerPhoneSolidIcon />
-                    </button>
+                    </button> */}
                     <button
                         id="hangupButton"
                         className="chat_callModalBtn chat_callModalBtn--decline"
