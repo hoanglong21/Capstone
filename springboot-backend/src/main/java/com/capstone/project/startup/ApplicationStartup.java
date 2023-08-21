@@ -161,12 +161,12 @@ public class ApplicationStartup implements ApplicationRunner {
 
         if(achievementRepository.count() == 0) {
             List<Achievement> achievements = Arrays.asList(
-                    new Achievement(1, "Active learner", "Awarded for completing your first Flashcard session!", null),
-                    new Achievement(1, "Committed learner", "Awarded for completing your first Learn session!", null),
-                    new Achievement(1, "Night owl", "Awarded for a late night study session!", null),
-                    new Achievement(1, "Early bird", "Awarded for an early morning study session!", null),
-                    new Achievement(1, "Test acer", "Awarded for studying with Test for the first time!", null),
-                    new Achievement(1, "Set builder", "Awarded for creating your first set!", null),
+                    new Achievement(1, "Active learner", "Awarded for completing your first Flashcard session!", 0),
+                    new Achievement(1, "Committed learner", "Awarded for completing your first Learn session!", 0),
+                    new Achievement(1, "Night owl", "Awarded for a late night study session!", 0),
+                    new Achievement(1, "Early bird", "Awarded for an early morning study session!", 0),
+                    new Achievement(1, "Test acer", "Awarded for studying with Test for the first time!", 0),
+                    new Achievement(1, "Set builder", "Awarded for creating your first set!", 0),
                     new Achievement(2, "Studied first set", "Awarded for studying your first set.", 1),
                     new Achievement(2, "3 sets studied", "Awarded for studying 3 sets.", 3),
                     new Achievement(2, "5 sets studied", "Awarded for studying 5 sets.", 5),
