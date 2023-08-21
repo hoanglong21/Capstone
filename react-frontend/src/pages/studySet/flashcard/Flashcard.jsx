@@ -400,13 +400,29 @@ const Flashcard = () => {
 
     // congratulation animation
     useEffect(() => {
-        if (isEnd) {
-            document
-                .querySelector('#flashcardAnimation .confetti-container')
-                ?.remove()
-            window.confettiful = new Confettiful(
-                document.getElementById('flashcardAnimation')
-            )
+        if (isEnd === true) {
+            try {
+                document
+                    .querySelector('#flashcardAnimation .confetti-container')
+                    ?.remove()
+                window.confettiful = new Confettiful(
+                    document.getElementById('flashcardAnimation')
+                )
+                HistoryService.createHistory({
+                    historyType: { id: 7 },
+                    user: {
+                        id: userInfo.id,
+                        username: userInfo.username,
+                    },
+                    studySet: { id: id },
+                })
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
     }, [isEnd])
 

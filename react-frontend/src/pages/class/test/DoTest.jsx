@@ -10,6 +10,7 @@ import Pagination from '../../../components/Pagination'
 
 import { CloseIcon } from '../../../components/icons'
 import '../../../assets/styles/test.css'
+import HistoryService from '../../../services/HistoryService'
 
 const DoTest = () => {
     const dispatch = useDispatch()
@@ -245,6 +246,11 @@ const DoTest = () => {
             setTestEnd(tempEnd)
             setIsEnd(true)
             setShowResultModal(true)
+            HistoryService.createHistory({
+                historyType: { id: 6 },
+                user: { id: userInfo.id, username: userInfo.username },
+                classroom: { id: test.classroom.id },
+            })
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

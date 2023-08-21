@@ -47,11 +47,12 @@ public class ClassServiceImpl implements ClassService {
     private final StudySetRepository studySetRepository;
     private final StudySetService studySetService;
     private final ClassLearnerRepository classLearnerRepository;
+    private final HistoryRepository historyRepository;
 
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, JavaMailSender mailSender, UserSettingRepository usersettingRepository, UserSettingRepository userSettingRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, JavaMailSender mailSender, UserSettingRepository usersettingRepository, UserSettingRepository userSettingRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService, HistoryRepository historyRepository) {
         this.classRepository = classRepository;
         this.mailSender = mailSender;
         this.userSettingRepository = userSettingRepository;
@@ -71,6 +72,7 @@ public class ClassServiceImpl implements ClassService {
         this.studySetService = studySetService;
         this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
+        this.historyRepository = historyRepository;
         this.em = em;
     }
 
@@ -358,7 +360,6 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("Class not exist with code: " +classCode);
         }
 
-
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " +username);
@@ -389,6 +390,16 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setCreated_date(new Date());
         classLearner.setStatus("enrolled");
         classLearnerRepository.save(classLearner);
+
+        HistoryType historyType = new HistoryType();
+        historyType.setId(8);
+
+        History history = new History();
+        history.setClassroom(classroom);
+        history.setDatetime(new Date());
+        history.setHistoryType(historyType);
+        history.setUser(classroom.getUser());
+        historyRepository.save(history);
 
         return classRepository.save(classroom);
     }

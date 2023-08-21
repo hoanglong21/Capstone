@@ -53,20 +53,28 @@ export default function Layout() {
     const [showGPT, setShowGPT] = useState(false)
 
     useEffect(() => {
-        const getData = ref(database, 'messages/')
+        if (userInfo?.id) {
+            const getData = ref(database, 'messages/')
 
-        onChildAdded(getData, (data) => {
-            let temp = { ...data.val(), key: data.key }
-            setMessages((messages) => [...messages, temp])
-        })
+            onChildAdded(getData, (data) => {
+                let temp = { ...data.val(), key: data.key }
+                if (
+                    temp?.video_call === true &&
+                    temp?.receiver === userInfo?.username
+                ) {
+                    setIsAccept(true)
+                }
+                setMessages((messages) => [...messages, temp])
+            })
 
-        onChildRemoved(getData, (data) => {
-            const deletedMessage = data.val()
-            setMessages((messages) =>
-                messages.filter((message) => message.key !== data.key)
-            )
-        })
-    }, [])
+            onChildRemoved(getData, (data) => {
+                const deletedMessage = data.val()
+                setMessages((messages) =>
+                    messages.filter((message) => message.key !== data.key)
+                )
+            })
+        }
+    }, [userInfo])
 
     const rejectCall = async (message) => {
         setIsAccept(false)
@@ -74,7 +82,8 @@ export default function Layout() {
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = '/video-call/' + message.message + '?accepted=false'
+            myWindow.location.href =
+                '/video-call/' + message.message + '?accepted=false'
         } else {
             // If the window is already open and navigated to a page, focus it
             myWindow.focus()
@@ -87,7 +96,8 @@ export default function Layout() {
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = '/video-call/' + message.message + '?accepted=true'
+            myWindow.location.href =
+                '/video-call/' + message.message + '?accepted=true'
         } else {
             // If the window is already open and navigated to a page, focus it
             myWindow.focus()
