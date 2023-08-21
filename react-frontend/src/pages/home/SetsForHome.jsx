@@ -19,6 +19,7 @@ function SetsForHome() {
     const search = searchParams.get('search')
     const author = searchParams.get('author')
 
+    const [type, setType] = useState(-1)
     const [sets, setSets] = useState([])
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
@@ -34,7 +35,7 @@ function SetsForHome() {
                     `${!author && searchKey ? '=' + searchKey : ''}`,
                     `${author ? `=${author}` : ''}`,
                     '',
-                    '',
+                    `${type == -1 ? '' : `=${type}`}`,
                     '',
                     '',
                     '',
@@ -79,7 +80,7 @@ function SetsForHome() {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search, author, page])
+    }, [search, author, page, type])
 
     return (
         <div className="mt-4 mb-5">
@@ -91,6 +92,19 @@ function SetsForHome() {
                 </div>
             ) : (
                 <div>
+                    <select
+                        className="form-select sets-select py-2 mb-3"
+                        aria-label="Default select example"
+                        value={type || -1}
+                        onChange={(event) => {
+                            setType(event.target.value)
+                        }}
+                    >
+                        <option value={-1}>All type</option>
+                        <option value={1}>Vocabulary</option>
+                        <option value={2}>Kanji</option>
+                        <option value={3}>Grammar</option>
+                    </select>
                     <div className="sets-list mb-4">
                         {sets?.length === 0 && (
                             <p className="noFound">

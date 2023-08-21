@@ -60,6 +60,7 @@ const updateClassLeanerById = (classLearner, userId, classId) => {
 const filterGetLeaner = (
     userId,
     classId,
+    username,
     isAccepted,
     sortBy,
     direction,
@@ -72,6 +73,8 @@ const filterGetLeaner = (
             userId +
             '&classid' +
             classId +
+            '&username' +
+            username +
             '&accepted' +
             isAccepted +
             '&sortby' +

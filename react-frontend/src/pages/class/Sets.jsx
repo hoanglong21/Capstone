@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import Toast from 'react-bootstrap/Toast'
-import ToastContainer from 'react-bootstrap/ToastContainer'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import ClassService from '../../services/ClassService'
 import StudySetService from '../../services/StudySetService'
 
 import AssignSets from './AssignSets'
+import Pagination from '../../components/Pagination'
 
 import { CloseIcon, SearchIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
-import Pagination from '../../components/Pagination'
+import banned from '../../assets/images/banned.png'
+import verified from '../../assets/images/verified.png'
+import deleted from '../../assets/images/deleted.png'
 
 const Sets = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -25,6 +27,7 @@ const Sets = () => {
 
     const [search, setSearch] = useState('')
     const [searchInput, setSearchInput] = useState('')
+    const [type, setType] = useState(-1)
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
 
@@ -99,7 +102,7 @@ const Sets = () => {
         if (id && userInfo?.id) {
             fetchData()
         }
-    }, [search, page])
+    }, [search, page, type])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -182,6 +185,19 @@ const Sets = () => {
                 ) : (
                     <div>
                         <form className="input-group mb-3">
+                            <select
+                                className="form-select sets-select py-2 me-2"
+                                aria-label="Default select example"
+                                value={type || -1}
+                                onChange={(event) => {
+                                    setType(event.target.value)
+                                }}
+                            >
+                                <option value={-1}>All type</option>
+                                <option value={1}>Vocabulary</option>
+                                <option value={2}>Kanji</option>
+                                <option value={3}>Grammar</option>
+                            </select>
                             <input
                                 type="text"
                                 className="form-control"
@@ -247,10 +263,7 @@ const Sets = () => {
                                                         >
                                                             {set?.description}
                                                         </p>
-                                                        <div
-                                                            className="set-author d-flex align-items-center"
-                                                            href="#"
-                                                        >
+                                                        <div className="set-author d-flex align-items-center">
                                                             <div className="author-avatar">
                                                                 <img
                                                                     src={
@@ -273,6 +286,72 @@ const Sets = () => {
                                                                         ?.username
                                                                 }
                                                             </span>
+                                                            {classroom?.user
+                                                                ?.status ===
+                                                                'banned' && (
+                                                                <OverlayTrigger
+                                                                    placement="bottom"
+                                                                    overlay={
+                                                                        <Tooltip id="tooltip">
+                                                                            This
+                                                                            account
+                                                                            is
+                                                                            banned.
+                                                                        </Tooltip>
+                                                                    }
+                                                                >
+                                                                    <img
+                                                                        className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                                        src={
+                                                                            banned
+                                                                        }
+                                                                    />
+                                                                </OverlayTrigger>
+                                                            )}
+                                                            {classroom?.user
+                                                                ?.status ===
+                                                                'active' && (
+                                                                <OverlayTrigger
+                                                                    placement="bottom"
+                                                                    overlay={
+                                                                        <Tooltip id="tooltip">
+                                                                            This
+                                                                            account
+                                                                            is
+                                                                            verified.
+                                                                        </Tooltip>
+                                                                    }
+                                                                >
+                                                                    <img
+                                                                        className="ms-1 author-avatarTag"
+                                                                        src={
+                                                                            verified
+                                                                        }
+                                                                    />
+                                                                </OverlayTrigger>
+                                                            )}
+                                                            {classroom?.user
+                                                                ?.status ===
+                                                                'deleted' && (
+                                                                <OverlayTrigger
+                                                                    placement="bottom"
+                                                                    overlay={
+                                                                        <Tooltip id="tooltip">
+                                                                            This
+                                                                            account
+                                                                            is
+                                                                            deleted.
+                                                                        </Tooltip>
+                                                                    }
+                                                                >
+                                                                    <img
+                                                                        className="ms-1 author-avatarTag"
+                                                                        src={
+                                                                            deleted
+                                                                        }
+                                                                    />
+                                                                </OverlayTrigger>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </Link>

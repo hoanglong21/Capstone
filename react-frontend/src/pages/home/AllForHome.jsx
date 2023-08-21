@@ -338,6 +338,57 @@ function AllForHome() {
                                                 <span className="author-username ms-2">
                                                     {classroom?.author}
                                                 </span>
+                                                {classroom?.authorstatus ===
+                                                    'banned' && (
+                                                    <OverlayTrigger
+                                                        placement="bottom"
+                                                        overlay={
+                                                            <Tooltip id="tooltip">
+                                                                This account is
+                                                                banned.
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <img
+                                                            className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                            src={banned}
+                                                        />
+                                                    </OverlayTrigger>
+                                                )}
+                                                {classroom?.authorstatus ===
+                                                    'active' && (
+                                                    <OverlayTrigger
+                                                        placement="bottom"
+                                                        overlay={
+                                                            <Tooltip id="tooltip">
+                                                                This account is
+                                                                verified.
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <img
+                                                            className="ms-1 author-avatarTag"
+                                                            src={verified}
+                                                        />
+                                                    </OverlayTrigger>
+                                                )}
+                                                {classroom?.authorstatus ===
+                                                    'deleted' && (
+                                                    <OverlayTrigger
+                                                        placement="bottom"
+                                                        overlay={
+                                                            <Tooltip id="tooltip">
+                                                                This account is
+                                                                deleted.
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <img
+                                                            className="ms-1 author-avatarTag"
+                                                            src={deleted}
+                                                        />
+                                                    </OverlayTrigger>
+                                                )}
                                             </div>
                                             <div className="term-count">
                                                 {classroom?.member} member
