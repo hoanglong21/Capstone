@@ -182,7 +182,7 @@ function ClassStatistics() {
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
-                          <div className="fs-5 fw-bold text-white text-uppercase mb-1">
+                          <div className="fw-bold text-white text-uppercase mb-1">
                             Member's Joined
                           </div>
                           <div className="h5 mb-0 fw-bold text-white">
@@ -201,7 +201,7 @@ function ClassStatistics() {
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
-                          <div className="fs-5 fw-bold text-white text-uppercase mb-1">
+                          <div className="fw-bold text-white text-uppercase mb-1">
                             Number of assignments
                           </div>
                           <div className="h5 mb-0 fw-bold text-white">
@@ -220,7 +220,7 @@ function ClassStatistics() {
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
-                          <div className="fs-5 fw-bold text-white text-uppercase mb-1">
+                          <div className="fw-bold text-white text-uppercase mb-1">
                             Number of tests
                           </div>
                           <div className="h5 mb-0 fw-bold text-white">
