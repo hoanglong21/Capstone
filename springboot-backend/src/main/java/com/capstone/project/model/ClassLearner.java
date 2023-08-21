@@ -19,6 +19,7 @@ import java.util.Date;
                         @ColumnResult(name = "status", type =String.class),
                         @ColumnResult(name = "username", type =String.class),
                         @ColumnResult(name = "avatar", type =String.class),
+                        @ColumnResult(name = "userstatus", type =String.class),
 
                 }
         )
