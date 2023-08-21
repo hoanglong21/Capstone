@@ -51,7 +51,7 @@ useEffect(() => {
     <div className="container-fluid">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="container">
           <ToastContainer />

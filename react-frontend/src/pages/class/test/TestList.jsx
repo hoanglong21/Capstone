@@ -245,7 +245,7 @@ const TestList = () => {
             <div>
                 <div>
                     <div className="row d-flex align-items-center">
-                        <div className="col-6">
+                        <div className="test-col-6">
                             {userInfo?.id === classroom?.user?.id && (
                                 <button
                                     className="createTest_btn"
@@ -263,7 +263,7 @@ const TestList = () => {
                             )}
                         </div>
                         {!isEmpty && (
-                            <div className="col-6 d-flex">
+                            <div className="test-col-6 testList d-flex">
                                 <button
                                     className="btn btn-light p-2 me-2"
                                     onClick={() => {

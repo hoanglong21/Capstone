@@ -288,7 +288,7 @@ function ViewDetailsUser() {
         <div className="container-fluid">
             <div className="row">
                 <SidebarforAdmin />
-                <div className="col-sm-10">
+                <div className="col-10">
                     <HeaderAdmin />
                     <div className="card mb-4">
                         <div className="card-header fs-5 fw-bold text-uppercase">
