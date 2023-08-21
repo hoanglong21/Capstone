@@ -12,7 +12,7 @@ function DictionaryForAdmin() {
     <div className="container-fluid bg-white">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm-10 col-lg-10 col-md-10">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="container">
             {/* Search */}
