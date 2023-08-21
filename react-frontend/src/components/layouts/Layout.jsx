@@ -121,7 +121,8 @@ export default function Layout() {
             </div>
             <Footer />
             {/* video call modal */}
-            {!isAccept &&
+            {userToken &&
+                !isAccept &&
                 messages
                     ?.filter(
                         (message) =>

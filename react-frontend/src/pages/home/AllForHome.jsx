@@ -394,13 +394,7 @@ function AllForHome() {
                                     >
                                         <div className="set-body">
                                             <div className="d-flex align-items-center">
-                                                <div
-                                                    className="author-avatar"
-                                                    style={{
-                                                        height: '4rem',
-                                                        width: '4rem',
-                                                    }}
-                                                >
+                                                <div className="UserAuthorAvatarContainer">
                                                     <img
                                                         src={
                                                             user?.avatar
@@ -408,8 +402,59 @@ function AllForHome() {
                                                                 : defaultAvatar
                                                         }
                                                         alt="author avatar"
-                                                        className="w-100 h-100"
+                                                        className="UserAuthorAvatar"
                                                     />
+                                                    {user?.status ===
+                                                        'banned' && (
+                                                        <OverlayTrigger
+                                                            placement="bottom"
+                                                            overlay={
+                                                                <Tooltip id="tooltip">
+                                                                    This account
+                                                                    is banned.
+                                                                </Tooltip>
+                                                            }
+                                                        >
+                                                            <img
+                                                                className="UserAuthorAvatarTag UserAuthorAvatarTag--banned"
+                                                                src={banned}
+                                                            />
+                                                        </OverlayTrigger>
+                                                    )}
+                                                    {user?.status ===
+                                                        'active' && (
+                                                        <OverlayTrigger
+                                                            placement="bottom"
+                                                            overlay={
+                                                                <Tooltip id="tooltip">
+                                                                    This account
+                                                                    is verified.
+                                                                </Tooltip>
+                                                            }
+                                                        >
+                                                            <img
+                                                                className="UserAuthorAvatarTag"
+                                                                src={verified}
+                                                            />
+                                                        </OverlayTrigger>
+                                                    )}
+                                                    {user?.status ===
+                                                        'deleted' && (
+                                                        <OverlayTrigger
+                                                            placement="bottom"
+                                                            overlay={
+                                                                <Tooltip id="tooltip">
+                                                                    This account
+                                                                    is deleted.
+                                                                </Tooltip>
+                                                            }
+                                                        >
+                                                            <img
+                                                                className="UserAuthorAvatarTag"
+                                                                src={deleted}
+                                                            />
+                                                        </OverlayTrigger>
+                                                    )}
                                                 </div>
                                                 <div className="d-flex flex-column justify-content-center ms-3">
                                                     <span className="set-title">
