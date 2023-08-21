@@ -350,9 +350,9 @@ public class StudySetServiceTest {
     @Order(15)
     @ParameterizedTest
     @CsvSource({
-            "1, 1, kanji, true, sortByField, ASC, 1, 10",
+            "1, 1, 1, kanji, true, sortByField, ASC, 1, 10",
     })
-    void getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) {
+    void getFilterListByClass(int authorId, int classId, int categoryId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) {
         List<FilterStudySetByClassResponse> responseList = Arrays.asList(
                 FilterStudySetByClassResponse.builder().build()
         );
@@ -360,7 +360,7 @@ public class StudySetServiceTest {
         when(jdbcTemplate.queryForObject(any(String.class), any(Class.class), any())).thenReturn(2L);
         when(jdbcTemplate.query(anyString(), any(Object[].class), any(BeanPropertyRowMapper.class))).thenReturn(responseList);
         try {
-            Map<String, Object> result = studySetServiceImpl.getFilterListByClass(authorId, classId, search, isAssigned, sortBy, direction, page, size);
+            Map<String, Object> result = studySetServiceImpl.getFilterListByClass(authorId, classId, categoryId, search, isAssigned, sortBy, direction, page, size);
             assertThat(result.get("list")).isEqualTo(responseList);
         } catch (Exception e) {
             assertThat("Please provide valid page and size").isEqualTo(e.getMessage());
