@@ -6,6 +6,7 @@ import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.UserSettingService;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -191,8 +192,10 @@ public class UserSettingServiceImpl implements UserSettingService {
             helper.setSubject(subject);
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
-
-            String URL = "https://nihongolevelup.com";
+            
+//            String URL = "https://nihongolevelup.com";
+            Dotenv dotenv = Dotenv.load();
+            String URL = dotenv.get("FRONTEND_HOST_URL");
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -361,17 +364,20 @@ public class UserSettingServiceImpl implements UserSettingService {
     @Scheduled(fixedRate = 10000)
     public void sendStudyReminderMails() {
         List<UserSetting> userSettings = userSettingRepository.findAll();
-
         for (UserSetting userSetting : userSettings) {
-            int userSettingId = userSetting.getId();
-            String studytime = userSetting.getValue();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            LocalTime studyTime = LocalTime.parse(studytime, formatter);
+            if (userSetting.getSetting().getId() == 1) {
+                String studyTimeString = userSetting.getValue();
+                if(studyTimeString.equalsIgnoreCase("false")) {
+                    return;
+                }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                LocalTime studyTime = LocalTime.parse(studyTimeString, formatter);
 
-            LocalTime currentTime = LocalTime.now();
-            if (userSetting.getSetting().getId() == 1 && !sentStudytime.contains(studyTime) && currentTime.isAfter(studyTime)) {
-                sendMail(userSetting);
-                sentStudytime.add(studyTime);
+                LocalTime currentTime = LocalTime.now();
+                if(!sentStudytime.contains(studyTime) && currentTime.isAfter(studyTime)) {
+                    sendMail(userSetting);
+                    sentStudytime.add(studyTime);
+                }
             }
         }
     }

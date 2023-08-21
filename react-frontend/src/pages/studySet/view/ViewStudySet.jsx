@@ -386,7 +386,7 @@ const ViewStudySet = () => {
                 </div>
                 <div className="d-flex align-items-center">
                     <button
-                        className="btn d-flex align-items-center comment_label me-4"
+                        className="btn d-flex align-items-center comment_label-me-4"
                         onClick={() => {
                             setShowCommentModal(true)
                         }}

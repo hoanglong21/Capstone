@@ -160,6 +160,17 @@
     flex: 0 0 auto;
     width: 58.33333333% !important;
 }
+
+.studyset-col-11{
+    flex: 0 0 auto;
+    width: 91.66666667% !important;
+}
+
+.studyset-col-1 {
+    flex: 0 0 auto;
+    width: 8.33333333% !important;
+}
+
 @media only screen and (max-width: 768px) {
     .set-title {
         font-size: 1rem;
@@ -172,5 +183,19 @@
 
     .studyset-col-5 {
         margin-bottom: 10px;
+    }
+
+    .studyset-col-11{
+        flex: 0 0 auto;
+        width: 85% !important;
+    }
+    
+    .studyset-col-1 {
+        flex: 0 0 auto;
+        width: 8.33333333%;
+    }
+
+    .studyset-roww{
+        flex-wrap: nowrap !important;
     }
 }
