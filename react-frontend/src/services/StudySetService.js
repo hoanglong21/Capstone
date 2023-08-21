@@ -54,6 +54,7 @@ const getFilterListByClass = (
     authorId,
     search,
     classId,
+    categoryId,
     assigned,
     sortBy,
     direction,
@@ -68,6 +69,8 @@ const getFilterListByClass = (
             search +
             '&class_id' +
             classId +
+            '&category_id' +
+            categoryId +
             '&assigned' +
             assigned +
             '&sortby' +
