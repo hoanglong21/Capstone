@@ -104,7 +104,7 @@ const Sets = () => {
         if (id && userInfo?.id) {
             fetchData()
         }
-    }, [search, page])
+    }, [search, page, type])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -233,7 +233,7 @@ const Sets = () => {
                                 <SearchIcon />
                             </button>
                         </form>
-                        {search ? (
+                        {sets?.length === 0 ? (
                             <div>No matching found.</div>
                         ) : (
                             <div>

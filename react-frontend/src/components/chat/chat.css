@@ -4,7 +4,7 @@
     height: 70px;
     bottom: 50px;
     right: 18px;
-    z-index: 50px;
+    z-index: 50;
 }
 
 .chatGroup_container:hover {

@@ -17,7 +17,10 @@ import './achievement.css'
 function Achievements() {
     const { userInfo } = useSelector((state) => state.user)
 
-    const [achievements, setAchievements] = useState([])
+    const [awards, setAwards] = useState([])
+    const [streaks, setStreaks] = useState([])
+    const [roundStudied, setRoundStudied] = useState([])
+    const [classes, setClasses] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,7 +29,11 @@ function Achievements() {
                     userInfo.id
                 )
             ).data
-            setAchievements(tempAchievements)
+            console.log(tempAchievements)
+            setAwards(tempAchievements.study)
+            setStreaks(tempAchievements.streaks)
+            setRoundStudied(tempAchievements.study)
+            setClasses(tempAchievements.class)
         }
         if (userInfo?.id) {
             fetchData()
@@ -35,109 +42,155 @@ function Achievements() {
 
     return (
         <div className="my-5">
-            {console.log(achievements)}
             <div className="row gx-3 mb-5">
                 <div className="col-xl-12 col-lg-12">
-                    <h4 className="achievement_title mb-3">Award</h4>
+                    <h4 className="achievement_title mb-3">Studying</h4>
                     <div className="card achievement_section">
                         <div className="card-body achievement">
-                            <div className="achievement-streak">
-                                <div className="streak-ct">
-                                    <div className="streak-img">
-                                        <img
-                                            src={nightowl}
-                                            alt="nightowl"
-                                            className="img1"
-                                        />
-                                    </div>
-                                    Night owl
-                                    <span className="streak-date">
-                                        24 tháng 3, 2023
-                                    </span>
+                            {awards?.length === 0 ? (
+                                <div className="empty">
+                                    You don't have any achievements yet.
                                 </div>
-                            </div>
-                            <div className="achievement-streak">
-                                <div className="streak-ct">
-                                    <div className="streak-img">
-                                        <img
-                                            src={activeLearner}
-                                            alt="nightowl"
-                                            className="img1"
-                                        />
-                                    </div>
-                                    Active learner
-                                    <span className="streak-date">
-                                        24 tháng 3, 2023
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="achievement-streak">
-                                <div className="streak-ct">
-                                    <div className="streak-img">
-                                        <img
-                                            src={committedLearner}
-                                            alt="nightowl"
-                                            className="img1"
-                                        />
-                                    </div>
-                                    Committed learner
-                                    <span className="streak-date">
-                                        24 tháng 3, 2023
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="achievement-streak">
-                                <div className="streak-ct">
-                                    <div className="streak-img">
-                                        <img
-                                            src={createfirstset}
-                                            alt="nightowl"
-                                            className="img1"
-                                        />
-                                    </div>
-                                    Set builder
-                                    <span className="streak-date">
-                                        24 tháng 3, 2023
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="achievement-streak">
-                                <div className="streak-ct">
-                                    <div className="streak-img">
-                                        <img
-                                            src={studywithtest}
-                                            alt="nightowl"
-                                            className="img1"
-                                        />
-                                    </div>
-                                    Test acer
-                                    <span className="streak-date">
-                                        24 tháng 3, 2023
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="achievement-streak">
-                                <div className="streak-ct">
-                                    <div className="streak-img">
-                                        <img
-                                            src={earkyBird}
-                                            alt="nightowl"
-                                            className="img1"
-                                        />
-                                    </div>
-                                    Early bird
-                                    <span className="streak-date">
-                                        24 tháng 3, 2023
-                                    </span>
-                                </div>
-                            </div>
+                            ) : (
+                                awards?.map((item, index) => {
+                                    switch (item.achievement.id) {
+                                        case 1:
+                                            // Active learner
+                                            return (
+                                                <div
+                                                    className="achievement-streak"
+                                                    key={index}
+                                                >
+                                                    <div className="streak-ct">
+                                                        <div className="streak-img">
+                                                            <img
+                                                                src={
+                                                                    activeLearner
+                                                                }
+                                                                alt="nightowl"
+                                                                className="img1"
+                                                            />
+                                                        </div>
+                                                        Active learner
+                                                        <span className="streak-date">
+                                                            24 tháng 3, 2023
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )
+                                        case 2:
+                                            // Committed learner
+                                            return (
+                                                <div className="achievement-streak">
+                                                    <div className="streak-ct">
+                                                        <div className="streak-img">
+                                                            <img
+                                                                src={
+                                                                    committedLearner
+                                                                }
+                                                                alt="nightowl"
+                                                                className="img1"
+                                                            />
+                                                        </div>
+                                                        Committed learner
+                                                        <span className="streak-date">
+                                                            24 tháng 3, 2023
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )
+                                        case 3:
+                                            // Night owl
+                                            return (
+                                                <div className="achievement-streak">
+                                                    <div className="streak-ct">
+                                                        <div className="streak-img">
+                                                            <img
+                                                                src={nightowl}
+                                                                alt="nightowl"
+                                                                className="img1"
+                                                            />
+                                                        </div>
+                                                        Night owl
+                                                        <span className="streak-date">
+                                                            24 tháng 3, 2023
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )
+                                        case 4:
+                                            // Early bird
+                                            return (
+                                                <div className="achievement-streak">
+                                                    <div className="streak-ct">
+                                                        <div className="streak-img">
+                                                            <img
+                                                                src={earkyBird}
+                                                                alt="nightowl"
+                                                                className="img1"
+                                                            />
+                                                        </div>
+                                                        Early bird
+                                                        <span className="streak-date">
+                                                            24 tháng 3, 2023
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )
+                                        case 5:
+                                            // Test acer
+                                            return (
+                                                <div className="achievement-streak">
+                                                    <div className="streak-ct">
+                                                        <div className="streak-img">
+                                                            <img
+                                                                src={
+                                                                    studywithtest
+                                                                }
+                                                                alt="nightowl"
+                                                                className="img1"
+                                                            />
+                                                        </div>
+                                                        Test acer
+                                                        <span className="streak-date">
+                                                            24 tháng 3, 2023
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )
+                                        case 6:
+                                            // Set builder
+                                            return (
+                                                <div className="achievement-streak">
+                                                    <div className="streak-ct">
+                                                        <div className="streak-img">
+                                                            <img
+                                                                src={
+                                                                    createfirstset
+                                                                }
+                                                                alt="nightowl"
+                                                                className="img1"
+                                                            />
+                                                        </div>
+                                                        Set builder
+                                                        <span className="streak-date">
+                                                            24 tháng 3, 2023
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )
+                                        default:
+                                            break
+                                    }
+                                })
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
             <div className="row gx-3 mb-5">
                 <div className="col-xl-12 col-lg-12">
-                    <h4 className="achievement_title mb-3">Streak</h4>
+                    <h4 className="achievement_title mb-3">Streaks</h4>
                     <div className="card achievement_section">
                         <div className="card-body achievement">
                             <div className="achievement-streak">
@@ -530,7 +583,7 @@ function Achievements() {
             </div>
             <div className="row gx-3 mb-5">
                 <div className="col-xl-12 col-lg-12">
-                    <h4 className="achievement_title mb-3">Studied</h4>
+                    <h4 className="achievement_title mb-3">Rounds studied</h4>
                     <div className="card achievement_section">
                         <div className="card-body achievement">
                             <div className="achievement-streak">

@@ -19,6 +19,13 @@
     justify-content: center;
 }
 
+.achievement .empty {
+    font-size: 1.25rem;
+    letter-spacing: normal;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
 .achievement-streak {
     width: 9.25rem;
 }

@@ -26,6 +26,7 @@ import {
     LibraryIcon,
     SettingIcon,
     AchievementIcon,
+    DeleteIcon,
 } from '../icons'
 import './Header.css'
 import AuthService from '../../services/AuthService'
@@ -627,6 +628,23 @@ const Header = () => {
                                             />
                                             <span className="align-middle fw-semibold">
                                                 Settings
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 px-3"
+                                            type="button"
+                                            onClick={() => {
+                                                navigate('/trash/sets')
+                                            }}
+                                        >
+                                            <DeleteIcon
+                                                className="me-3"
+                                                strokeWidth="2"
+                                            />
+                                            <span className="align-middle fw-semibold">
+                                                Recycle Bin
                                             </span>
                                         </button>
                                     </li>

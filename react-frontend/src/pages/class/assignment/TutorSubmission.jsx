@@ -400,7 +400,7 @@ const TutorSubmission = ({ assignment }) => {
                                         <span className="submission_learnerUsername ms-4">
                                             {learner?.username}
                                         </span>
-                                        {learner?.status === 'banned' && (
+                                        {learner?.userstatus === 'banned' && (
                                             <OverlayTrigger
                                                 placement="bottom"
                                                 overlay={
@@ -415,7 +415,7 @@ const TutorSubmission = ({ assignment }) => {
                                                 />
                                             </OverlayTrigger>
                                         )}
-                                        {learner?.status === 'active' && (
+                                        {learner?.userstatus === 'active' && (
                                             <OverlayTrigger
                                                 placement="bottom"
                                                 overlay={
@@ -431,7 +431,7 @@ const TutorSubmission = ({ assignment }) => {
                                                 />
                                             </OverlayTrigger>
                                         )}
-                                        {learner?.status === 'deleted' && (
+                                        {learner?.userstatus === 'deleted' && (
                                             <OverlayTrigger
                                                 placement="bottom"
                                                 overlay={

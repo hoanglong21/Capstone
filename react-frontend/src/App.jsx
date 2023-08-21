@@ -101,7 +101,9 @@ import AdminProtectedRoute from './pages/protectedRoute/AdminProrectedRoute'
 import Sets from './pages/class/Sets'
 import UseClas from './pages/help/UseClass'
 import VerifyAccount from './pages/auth/VerifyAccount'
-import Trash from './pages/library/Trash'
+import Trash from './pages/trash/Trash'
+import TrashSets from './pages/trash/TrashSets'
+import TrashClasses from './pages/trash/TrashClasses'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -272,7 +274,10 @@ const App = () => {
                             element={<SendFeedback />}
                         />
                         {/* Trash */}
-                        <Route path="trash" element={<Trash />} />
+                        <Route path="trash" element={<Trash />}>
+                            <Route path="sets" element={<TrashSets />} />
+                            <Route path="classes" element={<TrashClasses />} />
+                        </Route>
                     </Route>
                     {/* No header + footer */}
                     {/* Auth */}
