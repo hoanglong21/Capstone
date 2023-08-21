@@ -336,8 +336,8 @@ const StudySetList = () => {
                                                     key={set?.id}
                                                     className="set-item mb-3"
                                                 >
-                                                    <div className="row">
-                                                        <div className="col-11">
+                                                    <div className="row studyset-roww">
+                                                        <div className="studyset-col-11">
                                                             <div
                                                                 onClick={(
                                                                     event
@@ -462,7 +462,7 @@ const StudySetList = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="col-1">
+                                                        <div className="studyset-col-1">
                                                             <button
                                                                 type="button dropdown-toggle"
                                                                 className="btn btn-customLight"

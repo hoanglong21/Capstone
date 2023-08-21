@@ -38,6 +38,20 @@
     margin-top: 4rem !important;
 }
 
+.card-account__container_admin {
+    background-color: white;
+    border-radius: 1.25rem;
+    margin-top: 2rem;
+    padding: 2rem;
+}
+
+.stt-admin{
+    padding-left: 1rem !important;
+    padding-right: 3rem !important;
+    margin-right: 3rem !important;
+    margin-left: 3rem !important;
+}
+
 @media only screen and (max-width: 768px) {
     .icon-db{
         font-size: 1.5rem;
@@ -68,4 +82,21 @@
     .admin-h2{
         font-size: 24px;
     }
+
+    .card-account__container_admin {
+        padding: 1rem 0rem;
+    }
+    
+    .stt-admin{
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        margin-right: 1rem !important;
+        margin-left: 1rem !important;
+    }
+
+    .admin-stt-h3{
+        margin-top: 0.2rem;
+        font-size: 24px;
+    }
+    
 }
