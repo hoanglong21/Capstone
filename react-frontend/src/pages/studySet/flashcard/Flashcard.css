@@ -221,9 +221,12 @@
     letter-spacing: normal;
     line-height: 1.428;
     font-weight: 600;
-    color: var(--text-light);
     cursor: pointer;
     z-index: 2000;
+    padding: 1rem 1rem;
+    border-radius: 10px;
+    color: #ffffff;
+    background-color: #939bb4;
 }
 
 /* congratulation animation */
@@ -496,5 +499,9 @@
 
     .flashCardField_label {
         font-size: 1rem;
+    }
+
+    .flashcardEnd_btn {
+        margin-right: 10px;
     }
 }

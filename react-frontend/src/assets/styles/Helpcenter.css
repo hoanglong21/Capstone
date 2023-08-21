@@ -223,6 +223,20 @@
 .useaccount-ul li {
   list-style-type: circle;
 }
+.use-account-col-8 {
+  flex: 0 0 auto;
+  width: 66.66666667% !important;
+}
+
+.use-account-col-4 {
+  flex: 0 0 auto;
+  width: 33.33333333% !important;
+}
+
+.use-account-col-4 > img{
+  width: 300px;
+  height: 200px;
+}
 
 @media only screen and (max-width: 768px) {
   .site-header__title {
@@ -252,4 +266,17 @@
   .sidebar {
     margin-top: 20px;
   }
+
+  .use-account-col-8 {
+    width: 100% !important;
+  }
+  
+  .use-account-col-4 {
+    width: 100% !important;
+  }
+
+  .use-account-col-4 > img{
+    width: inherit;
+  }
+  
 }
