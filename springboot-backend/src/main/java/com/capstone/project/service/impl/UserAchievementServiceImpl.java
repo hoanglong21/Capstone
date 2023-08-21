@@ -56,8 +56,13 @@ public class UserAchievementServiceImpl implements UserAchievementService {
     }
 
     @Override
-    public List<UserAchievement> getUserAchievementByUserId(int id) {
-        return userAchievementRepository.getUserAchievementByUserId(id);
+    public Map<String, Object> getUserAchievementByUserId(int id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("study", userAchievementRepository.getUserAchievementByUserIdAndTypeId(id, 1));
+        response.put("lifetime", userAchievementRepository.getUserAchievementByUserIdAndTypeId(id, 2));
+        response.put("streaks", userAchievementRepository.getUserAchievementByUserIdAndTypeId(id, 3));
+        response.put("class", userAchievementRepository.getUserAchievementByUserIdAndTypeId(id, 4));
+        return response;
     }
 
     @Override

@@ -289,14 +289,19 @@ public class StudySetServiceImpl implements StudySetService {
         if(isAssigned==true) {
             sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
                     " IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
-                    " AND author_id = " + authorId + " AND type_id = " + categoryId + " ";
+                    " AND author_id = " + authorId + " ";
         } else {
             sql = " SELECT *, (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS Count FROM studyset s WHERE s.id " +
                     " NOT IN (SELECT studyset_id FROM class_studyset WHERE class_id = " + classId +") " +
-                    " AND author_id = " + authorId + " AND type_id = " + categoryId + " ";
+                    " AND author_id = " + authorId + " ";
         }
         sql += " AND is_deleted = false AND is_draft = false AND is_public = true ";
+
         List<Object> params = new ArrayList<>();
+        if(categoryId!=0) {
+            sql += " AND type_id = ? ";
+            params.add(categoryId);
+        }
 
         if (search != null && !search.isEmpty()) {
             sql += " AND (title LIKE ? OR description LIKE ?) ";
