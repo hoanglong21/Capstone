@@ -183,6 +183,12 @@ public class KanjiServiceImpl implements KanjiService {
                 return true;
             }
         }
+
+        for (String radical : kanji.getRadicals()) {
+            if (radical.toLowerCase().contains(lowercaseQuery)) {
+                return true;
+            }
+        }
         return false;
     }
 
