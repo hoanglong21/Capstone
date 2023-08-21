@@ -156,7 +156,7 @@ public class StudySetServiceImpl implements StudySetService {
         int offset = (page - 1) * size;
 
         String query = "SELECT s.id, s.title, s.description, s.is_deleted, s.is_public, s.is_draft, s.type_id, s.author_id, s.deleted_date, s.created_date," +
-                " u.username as author, u.avatar, u.first_name AS author_firstname, u.last_name AS author_lastname, u.status AS author_status" +
+                " u.username as author, u.avatar, u.first_name AS author_firstname, u.last_name AS author_lastname, u.status AS author_status, " +
                 " (SELECT COUNT(*) FROM capstone.card WHERE studyset_id = s.id) AS `count` FROM studyset s LEFT JOIN `user` u ON s.author_id = u.id WHERE 1=1";
 
         Map<String, Object> parameters = new HashMap<>();
