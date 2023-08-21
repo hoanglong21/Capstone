@@ -52,42 +52,42 @@ const GrammarDictForAdmin = () => {
     } else {
         return (
             <div>
-                <div className="row mt-4 mb-5">
-                    {grammars.length == 0 && (
-                        <p className="noFound">
-                            No grammars matching {search} found
-                        </p>
-                    )}
-                    {grammars.map((grammarInfo, index) => (
-                        <div className="grammar-dict-col-3 mb-2" key={index}>
-                            <div
-                                className="card h-100 grammar_item"
-                                onClick={() => {
-                                    setGrammar(grammarInfo)
-                                    setShowGrammarDetail(true)
-                                }}
-                            >
-                                <div className="card-body">
-                                    <div className="grammar_title">
-                                        {grammarInfo.title}
-                                    </div>
-                                    <div className="grammar_meaning">
-                                        {grammarInfo.explanation}
-                                    </div>
+            <div className="row mt-4 mb-5">
+                {grammars.length == 0 && (
+                    <p className="noFound">
+                        No grammars matching {search} found
+                    </p>
+                )}
+                {grammars.map((grammarInfo, index) => (
+                    <div className="grammar-dict-col-3 mb-2" key={index}>
+                        <div
+                            className="card h-100 grammar_item"
+                            onClick={() => {
+                                setGrammar(grammarInfo)
+                                setShowGrammarDetail(true)
+                            }}
+                        >
+                            <div className="card-body">
+                                <div className="grammar_title">
+                                    {grammarInfo.title}
+                                </div>
+                                <div className="grammar_meaning">
+                                    {grammarInfo.explanation}
                                 </div>
                             </div>
                         </div>
-                    ))}
-                </div>
-                {/* Grammar modal */}
-                {showGrammarDetail && (
-                    <GrammarDetail
-                        grammar={grammar}
-                        showGrammarDetail={showGrammarDetail}
-                        setShowGrammarDetail={setShowGrammarDetail}
-                    />
-                )}
+                    </div>
+                ))}
             </div>
+            {/* Grammar modal */}
+            {showGrammarDetail && (
+                <GrammarDetail
+                    grammar={grammar}
+                    showGrammarDetail={showGrammarDetail}
+                    setShowGrammarDetail={setShowGrammarDetail}
+                />
+            )}
+        </div>
         )
     }
 }
