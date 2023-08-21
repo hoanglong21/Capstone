@@ -14,10 +14,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -175,7 +177,7 @@ public class UserSettingServiceImpl implements UserSettingService {
                 subject = "[NihongoLevelUp]: Time to study";
                 content = "Hi [[name]],<br><br>"
                         + "It's time to study, don't lose your momentum. Join with us and study new things <br><br>"
-                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Start Studying</a><br><br>"
+                        + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Start</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
                         + "NihongoLevelUp Team";
@@ -213,7 +215,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             if (userSetting.getSetting().getId() == 4) {
                 subject = "[NihongoLevelUp]: Test due date";
                 content = "Hi [[name]],<br><br>"
-                        + "Your test << " + test.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in 30 minutes. Complete it before the time is due!<br><br>"
+                        + "Your test << " + test.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in soon. Complete it before the time is due!<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Test</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
@@ -289,7 +291,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             if (userSetting.getSetting().getId() == 3) {
                 subject = "[NihongoLevelUp]: Assignment due date";
                 content = "Hi [[name]],<br><br>"
-                        + "Your assignment << " + assignment.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in 30 minutes. Complete it before the time is due!<br><br>"
+                        + "Your assignment << " + assignment.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in soon. Complete it before the time is due!<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Assignment</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
@@ -354,31 +356,30 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
-    private Map<Integer, Boolean> studyRemindMailSent = new HashMap<>();
+    private Set<LocalTime> sentStudytime = new HashSet<>();
 
-    @Scheduled(cron = "10 * * * * * ")
+    @Scheduled(fixedRate = 10000)
     public void sendStudyReminderMails() {
         List<UserSetting> userSettings = userSettingRepository.findAll();
 
         for (UserSetting userSetting : userSettings) {
             int userSettingId = userSetting.getId();
             String studytime = userSetting.getValue();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-            LocalTime dateTime = LocalTime.parse(studytime, formatter);
-            if (userSetting.getSetting().getId() == 1 && !studyRemindMailSent.getOrDefault(userSettingId, false)) {
-                if (isTimeReached(dateTime)) {
-                    sendMail(userSetting);
-                    studyRemindMailSent.put(userSettingId, true);
-                }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            LocalTime studyTime = LocalTime.parse(studytime, formatter);
+
+            LocalTime currentTime = LocalTime.now();
+            if (userSetting.getSetting().getId() == 1 && !sentStudytime.contains(studyTime) && currentTime.isAfter(studyTime)) {
+                sendMail(userSetting);
+                sentStudytime.add(studyTime);
             }
         }
     }
 
-    private boolean isTimeReached(LocalTime dateTime) {
-        LocalTime now = LocalTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        return now.equals(dateTime) || now.isAfter(dateTime);
+    private boolean isTimeReached(LocalTime targetTime, LocalDateTime currentTime) {
+        LocalTime currentLocalTime = currentTime.toLocalTime();
+        return currentLocalTime.isAfter(targetTime);
     }
-
 
     private Set<LocalDateTime> sentDueDates = new HashSet<>();
 
@@ -403,15 +404,19 @@ public class UserSettingServiceImpl implements UserSettingService {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                     LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
 
-//                    long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
+                    try {
+                        long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
 
-                    LocalDateTime reminderTime = duedateTime.minusHours(24);
+                        LocalDateTime reminderTime = duedateTime.minusHours(hoursBeforeDueDate);
 
-                    LocalDateTime currentTime = LocalDateTime.now();
-                    if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
-                        sendAssignmentDueDateMail(userSetting, assignment, classroom);
-                        sentDueDates.add(duedateTime);
+                        LocalDateTime currentTime = LocalDateTime.now();
+                        if (userSetting.getSetting().getId() == 3 && !sentDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
+                            sendAssignmentDueDateMail(userSetting, assignment, classroom);
+                            sentDueDates.add(duedateTime);
 
+                        }
+                    }catch (NumberFormatException e){
+                        e.printStackTrace();
                     }
                 }
             }
@@ -474,15 +479,18 @@ public class UserSettingServiceImpl implements UserSettingService {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
                     LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
 
-//                    long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
+                    try {
+                        long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
 
-                    LocalDateTime reminderTime = duedateTime.minusHours(24);
+                        LocalDateTime reminderTime = duedateTime.minusHours(hoursBeforeDueDate);
 
-                    LocalDateTime currentTime = LocalDateTime.now();
-                    if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
-                        sendTestDueDateMail(userSetting, test, classroom);
-                        sentTestDueDates.add(duedateTime);
-
+                        LocalDateTime currentTime = LocalDateTime.now();
+                        if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
+                            sendTestDueDateMail(userSetting, test, classroom);
+                            sentTestDueDates.add(duedateTime);
+                        }
+                    }catch (NumberFormatException e){
+                        e.printStackTrace();
                     }
                 }
             }
