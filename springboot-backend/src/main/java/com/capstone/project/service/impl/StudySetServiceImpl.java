@@ -280,7 +280,7 @@ public class StudySetServiceImpl implements StudySetService {
 
 
     @Override
-    public Map<String, Object> getFilterListByClass(int authorId, int classId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
+    public Map<String, Object> getFilterListByClass(int authorId, int classId, int categoryId, String search, boolean isAssigned, String sortBy, String direction, int page, int size) throws Exception {
         if(page<=0 || size<=0) {
             throw new Exception("Please provide valid page and size");
         }
@@ -296,7 +296,12 @@ public class StudySetServiceImpl implements StudySetService {
                     " AND author_id = " + authorId + " ";
         }
         sql += " AND is_deleted = false AND is_draft = false AND is_public = true ";
+
         List<Object> params = new ArrayList<>();
+        if(categoryId!=0) {
+            sql += " AND type_id = ? ";
+            params.add(categoryId);
+        }
 
         if (search != null && !search.isEmpty()) {
             sql += " AND (title LIKE ? OR description LIKE ?) ";

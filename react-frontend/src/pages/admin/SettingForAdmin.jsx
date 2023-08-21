@@ -103,11 +103,11 @@ function SettingForAdmin() {
     <div className="container-fluid">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="container mt-4 mb-5">
-            <h3>Account Settings</h3>
-            <div className="card-account__container">
+            <h3 className="admin-stt-h3">Account Settings</h3>
+            <div className="card-account__container_admin">
               <div className="row">
                 {/* <div className="card-account__sidebar d-flex flex-column border-end pe-4 col-4 col-lg-3 col-xxl-2">
                   <NavLink
@@ -130,7 +130,7 @@ function SettingForAdmin() {
                   </NavLink>
                 </div> */}
                 <div className="card-account__body col">
-                  <div className="mx-5 ps-3 pe-5">
+                  <div className="stt-admin">
                     <h4>Change your password</h4>
                     <form className="mt-5 needs-validation" noValidate>
                       {/* error message */}

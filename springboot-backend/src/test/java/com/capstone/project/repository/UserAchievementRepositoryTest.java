@@ -41,7 +41,7 @@ public class UserAchievementRepositoryTest {
             userAchievementRepository.save(userAchievement);
 
             // Test
-            List<UserAchievement> userAchievements = userAchievementRepository.getUserAchievementByUserId(1);
+            List<UserAchievement> userAchievements = userAchievementRepository.getUserAchievementByUserIdAndTypeId(1, 1);
             assertThat(userAchievements.size()).isGreaterThan(0);
 
         } catch (ParseException e) {

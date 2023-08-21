@@ -26,11 +26,14 @@ public class Achievement {
     @Column(columnDefinition="TEXT")
     private String description;
 
-    public Achievement(int typeId, String name, String description) {
+    private Integer value;
+
+    public Achievement(int typeId, String name, String description, Integer value) {
         AchievementType achievementType = new AchievementType();
         achievementType.setId(typeId);
         this.achievementType = achievementType;
         this.name = name;
         this.description = description;
+        this.value = value;
     }
 }

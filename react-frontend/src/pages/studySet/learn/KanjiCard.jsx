@@ -542,7 +542,7 @@ const KanjiCard = ({
                             </div>
                             <div className="col-6">
                                 <div className="quizQues_question--right h-100">
-                                    {ques.question.content.map(
+                                    {ques.answers[0].content.map(
                                         (itemContent, index) => {
                                             if (
                                                 trueFalseAnswerWith?.includes(

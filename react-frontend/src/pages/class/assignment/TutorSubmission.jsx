@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import ClassLearnerService from '../../../services/ClassLearnerService'
 import AssignmentService from '../../../services/AssignmentService'
@@ -8,15 +9,19 @@ import AttachmentService from '../../../services/AttachmentService'
 import CommentService from '../../../services/CommentService'
 
 import Comment from '../../../components/comment/Comment'
-import './assignment.css'
+import CardEditor from '../../../components/textEditor/CardEditor'
+
 import defaultAvatar from '../../../assets/images/default_avatar.png'
+import banned from '../../../assets/images/banned.png'
+import verified from '../../../assets/images/verified.png'
+import deleted from '../../../assets/images/deleted.png'
 import {
     CloseIcon,
     ProfileSolidIcon,
     SearchIcon,
     SendIcon,
 } from '../../../components/icons'
-import CardEditor from '../../../components/textEditor/CardEditor'
+import './assignment.css'
 
 const TutorSubmission = ({ assignment }) => {
     const { userInfo } = useSelector((state) => state.user)
@@ -113,63 +118,64 @@ const TutorSubmission = ({ assignment }) => {
     }, [assignment])
 
     // search
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         setError('')
-    //         try {
-    //             // learners
-    //             const tempLearners = (
-    //                 await ClassLearnerService.filterGetLeaner(
-    //                     '',
-    //                     `=${assignment?.classroom?.id}`,
-    //                     `=${1}`,
-    //                     '',
-    //                     '',
-    //                     '',
-    //                     ''
-    //                 )
-    //             ).data
-    //             setLearners(tempLearners.list)
-    //             // submission
-    //             if (tempLearners.length > 0) {
-    //                 var tempSubmission = (
-    //                     await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
-    //                         tempLearners[0].id,
-    //                         assignment.id
-    //                     )
-    //                 ).data
-    //                 if (tempSubmission?.id) {
-    //                     // attachments
-    //                     const tempAttachments = (
-    //                         await AttachmentService.getAttachmentsBySubmissionId(
-    //                             tempSubmission.id
-    //                         )
-    //                     ).data
-    //                     setAttachments(tempAttachments)
-    //                     // comments
-    //                     const tempComments = (
-    //                         await CommentService.getAllCommentBySubmisionId(
-    //                             tempSubmission.id
-    //                         )
-    //                     ).data
-    //                     setComments(tempComments)
-    //                 } else {
-    //                     tempSubmission = { user: tempLearners[0] }
-    //                 }
-    //                 setSubmission(tempSubmission)
-    //             }
-    //         } catch (error) {
-    //             if (error.response && error.response.data) {
-    //                 console.log(error.response.data)
-    //             } else {
-    //                 console.log(error.message)
-    //             }
-    //         }
-    //     }
-    //     if (assignment?.id) {
-    //         fetchData()
-    //     }
-    // }, [search])
+    useEffect(() => {
+        const fetchData = async () => {
+            setError('')
+            try {
+                // learners
+                const tempLearners = (
+                    await ClassLearnerService.filterGetLeaner(
+                        '',
+                        `=${assignment?.classroom?.id}`,
+                        `${search ? `=${search}` : ''}`,
+                        `=${1}`,
+                        '',
+                        '',
+                        '',
+                        ''
+                    )
+                ).data
+                setLearners(tempLearners.list)
+                // submission
+                if (tempLearners.length > 0) {
+                    var tempSubmission = (
+                        await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
+                            tempLearners[0].id,
+                            assignment.id
+                        )
+                    ).data
+                    if (tempSubmission?.id) {
+                        // attachments
+                        const tempAttachments = (
+                            await AttachmentService.getAttachmentsBySubmissionId(
+                                tempSubmission.id
+                            )
+                        ).data
+                        setAttachments(tempAttachments)
+                        // comments
+                        const tempComments = (
+                            await CommentService.getAllCommentBySubmisionId(
+                                tempSubmission.id
+                            )
+                        ).data
+                        setComments(tempComments)
+                    } else {
+                        tempSubmission = { user: tempLearners[0] }
+                    }
+                    setSubmission(tempSubmission)
+                }
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
+        }
+        if (assignment?.id) {
+            fetchData()
+        }
+    }, [search])
 
     const handleUpdateGrade = async () => {
         setSaving(true)
@@ -394,6 +400,52 @@ const TutorSubmission = ({ assignment }) => {
                                         <span className="submission_learnerUsername ms-4">
                                             {learner?.username}
                                         </span>
+                                        {learner?.status === 'banned' && (
+                                            <OverlayTrigger
+                                                placement="bottom"
+                                                overlay={
+                                                    <Tooltip id="tooltip">
+                                                        This account is banned.
+                                                    </Tooltip>
+                                                }
+                                            >
+                                                <img
+                                                    className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                    src={banned}
+                                                />
+                                            </OverlayTrigger>
+                                        )}
+                                        {learner?.status === 'active' && (
+                                            <OverlayTrigger
+                                                placement="bottom"
+                                                overlay={
+                                                    <Tooltip id="tooltip">
+                                                        This account is
+                                                        verified.
+                                                    </Tooltip>
+                                                }
+                                            >
+                                                <img
+                                                    className="ms-1 author-avatarTag"
+                                                    src={verified}
+                                                />
+                                            </OverlayTrigger>
+                                        )}
+                                        {learner?.status === 'deleted' && (
+                                            <OverlayTrigger
+                                                placement="bottom"
+                                                overlay={
+                                                    <Tooltip id="tooltip">
+                                                        This account is deleted.
+                                                    </Tooltip>
+                                                }
+                                            >
+                                                <img
+                                                    className="ms-1 author-avatarTag"
+                                                    src={deleted}
+                                                />
+                                            </OverlayTrigger>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

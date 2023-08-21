@@ -219,7 +219,6 @@ const VideoCall = () => {
             updates['/messages/' + newPostKey] = postData
             update(ref(database), updates)
             setIsCalling(true)
-
             
         } catch (err) {
             console.log("Try call again")
@@ -328,11 +327,16 @@ const VideoCall = () => {
                 deleteMessage(newPostKey)
             }
         }
-        // Wait for the connection state to transition to "disconnected"
-        setTimeout(() => {
-            console.log(pc.iceConnectionState) // "disconnected"
-        }, 5000) // Wait for 5 seconds for the state to change
 
+        // // Wait for the connection state to transition to "disconnected"
+        // setTimeout(() => {
+        //     console.log(pc.iceConnectionState) // "disconnected"
+        // }, 5000) // Wait for 5 seconds for the state to change
+        const accepted = searchParams.get('accepted');
+        if(accepted == 'false') {
+            window.close();
+            return;
+        } 
         alert('Call has disconnected, turn off')
         window.close()
     }

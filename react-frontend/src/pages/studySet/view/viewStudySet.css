@@ -54,6 +54,16 @@
     width: 48px;
 }
 
+.setAuthorAvatarTag {
+    width: 14px;
+    height: 14px;
+}
+
+.setAuthorAvatarTag--banned {
+    background-color: #fff;
+    border-radius: 50%;
+}
+
 .setAuthorInfo_createdBy {
     font-size: 0.625rem;
     color: #939bb4;
@@ -654,6 +664,14 @@
     line-height: 1.33;
 }
 
+.comment_label-me-4 {
+    letter-spacing: 0.01785714em;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    margin-right: 1.5rem !important;
+}
+
 @media only screen and (max-width: 768px) {
     .setModalTitle {
         font-size: 1.5rem;
@@ -661,6 +679,19 @@
 
     .setModalHeading {
         font-size: 1.1rem;
+    }
+
+    .comment_label-me-4 {
+        margin-right: -0.2rem !important;
+    }
+
+    .setAuthorAvatar {
+        height: 30px;
+        width: 30px;
+    }
+
+    .setPageContainer {
+        padding: 1rem;
     }
 }
 

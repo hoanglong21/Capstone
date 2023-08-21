@@ -43,7 +43,7 @@ function HeaderAdmin() {
   return (
     <>
       <nav className="navbar bg-white">
-        <form className="d-flex w-50" role="search">
+        <form className="d-flex search-admin" role="search">
           <input
             class="form-control ms-3 me-2"
             type="search"
@@ -75,7 +75,7 @@ function HeaderAdmin() {
             <img
               src={userInfo?.avatar ? userInfo?.avatar : defaultAvatar}
               alt="avatar"
-              className="avatar me-3"
+              className="avatar ava-admin me-3"
             />
           </button>
           <ul className="dropdown-menu dropdown-menu-end p-2">

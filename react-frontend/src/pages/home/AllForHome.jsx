@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import StudySetService from '../../services/StudySetService'
 import ClassService from '../../services/ClassService'
 import UserService from '../../services/UserService'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
+import banned from '../../assets/images/banned.png'
+import verified from '../../assets/images/verified.png'
+import deleted from '../../assets/images/deleted.png'
 import { ClassIcon } from '../../components/icons'
 
 function AllForHome() {
@@ -194,24 +198,72 @@ function AllForHome() {
                                             >
                                                 {set?.description}
                                             </p>
-                                            <div
-                                                className="set-author d-flex align-items-center"
-                                                href="#"
-                                            >
-                                                <div className="author-avatar">
-                                                    <img
-                                                        src={
-                                                            set?.avatar
-                                                                ? set?.avatar
-                                                                : defaultAvatar
-                                                        }
-                                                        alt="author avatar"
-                                                        className="w-100 h-100"
-                                                    />
+                                            <div className="set-author d-flex align-items-center">
+                                                <img
+                                                    src={
+                                                        set?.avatar
+                                                            ? set?.avatar
+                                                            : defaultAvatar
+                                                    }
+                                                    alt="author avatar"
+                                                    className="author-avatar"
+                                                />
+                                                <div className="d-flex align-items-center">
+                                                    <span className="author-username ms-2">
+                                                        {set?.author}
+                                                    </span>
+                                                    {set?.author_status ===
+                                                        'banned' && (
+                                                        <OverlayTrigger
+                                                            placement="bottom"
+                                                            overlay={
+                                                                <Tooltip id="tooltip">
+                                                                    This account
+                                                                    is banned.
+                                                                </Tooltip>
+                                                            }
+                                                        >
+                                                            <img
+                                                                className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                                src={banned}
+                                                            />
+                                                        </OverlayTrigger>
+                                                    )}
+                                                    {set?.author_status ===
+                                                        'active' && (
+                                                        <OverlayTrigger
+                                                            placement="bottom"
+                                                            overlay={
+                                                                <Tooltip id="tooltip">
+                                                                    This account
+                                                                    is verified.
+                                                                </Tooltip>
+                                                            }
+                                                        >
+                                                            <img
+                                                                className="ms-1 author-avatarTag"
+                                                                src={verified}
+                                                            />
+                                                        </OverlayTrigger>
+                                                    )}
+                                                    {set?.author_status ===
+                                                        'deleted' && (
+                                                        <OverlayTrigger
+                                                            placement="bottom"
+                                                            overlay={
+                                                                <Tooltip id="tooltip">
+                                                                    This account
+                                                                    is deleted.
+                                                                </Tooltip>
+                                                            }
+                                                        >
+                                                            <img
+                                                                className="ms-1 author-avatarTag"
+                                                                src={deleted}
+                                                            />
+                                                        </OverlayTrigger>
+                                                    )}
                                                 </div>
-                                                <span className="author-username ms-2">
-                                                    {set?.author}
-                                                </span>
                                             </div>
                                         </div>
                                     </Link>
@@ -286,6 +338,57 @@ function AllForHome() {
                                                 <span className="author-username ms-2">
                                                     {classroom?.author}
                                                 </span>
+                                                {classroom?.authorstatus ===
+                                                    'banned' && (
+                                                    <OverlayTrigger
+                                                        placement="bottom"
+                                                        overlay={
+                                                            <Tooltip id="tooltip">
+                                                                This account is
+                                                                banned.
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <img
+                                                            className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                            src={banned}
+                                                        />
+                                                    </OverlayTrigger>
+                                                )}
+                                                {classroom?.authorstatus ===
+                                                    'active' && (
+                                                    <OverlayTrigger
+                                                        placement="bottom"
+                                                        overlay={
+                                                            <Tooltip id="tooltip">
+                                                                This account is
+                                                                verified.
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <img
+                                                            className="ms-1 author-avatarTag"
+                                                            src={verified}
+                                                        />
+                                                    </OverlayTrigger>
+                                                )}
+                                                {classroom?.authorstatus ===
+                                                    'deleted' && (
+                                                    <OverlayTrigger
+                                                        placement="bottom"
+                                                        overlay={
+                                                            <Tooltip id="tooltip">
+                                                                This account is
+                                                                deleted.
+                                                            </Tooltip>
+                                                        }
+                                                    >
+                                                        <img
+                                                            className="ms-1 author-avatarTag"
+                                                            src={deleted}
+                                                        />
+                                                    </OverlayTrigger>
+                                                )}
                                             </div>
                                             <div className="term-count">
                                                 {classroom?.member} member
@@ -342,27 +445,82 @@ function AllForHome() {
                                     >
                                         <div className="set-body">
                                             <div className="d-flex align-items-center">
-                                                <div
-                                                    className="author-avatar"
-                                                    style={{
-                                                        height: '4rem',
-                                                        width: '4rem',
-                                                    }}
-                                                >
-                                                    <img
-                                                        src={
-                                                            user?.avatar
-                                                                ? user?.avatar
-                                                                : defaultAvatar
-                                                        }
-                                                        alt="author avatar"
-                                                        className="w-100 h-100"
-                                                    />
-                                                </div>
+                                                <img
+                                                    src={
+                                                        user?.avatar
+                                                            ? user?.avatar
+                                                            : defaultAvatar
+                                                    }
+                                                    alt="author avatar"
+                                                    className="UserAuthorAvatar"
+                                                />
                                                 <div className="d-flex flex-column justify-content-center ms-3">
-                                                    <span className="set-title">
-                                                        {user?.username}
-                                                    </span>
+                                                    <div className="d-flex align-items-center">
+                                                        <span className="set-title">
+                                                            {user?.username}
+                                                        </span>
+                                                        {user?.status ===
+                                                            'banned' && (
+                                                            <OverlayTrigger
+                                                                placement="bottom"
+                                                                overlay={
+                                                                    <Tooltip id="tooltip">
+                                                                        This
+                                                                        account
+                                                                        is
+                                                                        banned.
+                                                                    </Tooltip>
+                                                                }
+                                                            >
+                                                                <img
+                                                                    className="ms-1 UserAuthorAvatarTag UserAuthorAvatarTag--banned"
+                                                                    src={banned}
+                                                                />
+                                                            </OverlayTrigger>
+                                                        )}
+                                                        {user?.status ===
+                                                            'active' && (
+                                                            <OverlayTrigger
+                                                                placement="bottom"
+                                                                overlay={
+                                                                    <Tooltip id="tooltip">
+                                                                        This
+                                                                        account
+                                                                        is
+                                                                        verified.
+                                                                    </Tooltip>
+                                                                }
+                                                            >
+                                                                <img
+                                                                    className="ms-1 UserAuthorAvatarTag"
+                                                                    src={
+                                                                        verified
+                                                                    }
+                                                                />
+                                                            </OverlayTrigger>
+                                                        )}
+                                                        {user?.status ===
+                                                            'deleted' && (
+                                                            <OverlayTrigger
+                                                                placement="bottom"
+                                                                overlay={
+                                                                    <Tooltip id="tooltip">
+                                                                        This
+                                                                        account
+                                                                        is
+                                                                        deleted.
+                                                                    </Tooltip>
+                                                                }
+                                                            >
+                                                                <img
+                                                                    className="ms-1 userAuthorAvatar"
+                                                                    src={
+                                                                        deleted
+                                                                    }
+                                                                />
+                                                            </OverlayTrigger>
+                                                        )}
+                                                    </div>
                                                     <p
                                                         className="set-description m-0 mt-2"
                                                         style={{

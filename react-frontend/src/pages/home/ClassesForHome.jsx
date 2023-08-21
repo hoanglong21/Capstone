@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import ClassService from '../../services/ClassService'
 
@@ -8,6 +9,9 @@ import Pagination from '../../components/Pagination'
 
 import { ClassIcon } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
+import banned from '../../assets/images/banned.png'
+import verified from '../../assets/images/verified.png'
+import deleted from '../../assets/images/deleted.png'
 import '../../assets/styles/LibrarySearchList.css'
 import '../../assets/styles/Home.css'
 
@@ -103,7 +107,7 @@ const ClassesForHome = () => {
                                         <div className="class-home term-count">
                                             {classroom?.studyset} sets
                                         </div>
-                                        <div className="set-author col d-flex ">
+                                        <div className="set-author col d-flex align-items-center">
                                             <div className="author-avatar">
                                                 <img
                                                     src={
@@ -118,6 +122,57 @@ const ClassesForHome = () => {
                                             <span className="author-username ms-2">
                                                 {classroom?.author}
                                             </span>
+                                            {classroom?.authorstatus ===
+                                                'banned' && (
+                                                <OverlayTrigger
+                                                    placement="bottom"
+                                                    overlay={
+                                                        <Tooltip id="tooltip">
+                                                            This account is
+                                                            banned.
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <img
+                                                        className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                        src={banned}
+                                                    />
+                                                </OverlayTrigger>
+                                            )}
+                                            {classroom?.authorstatus ===
+                                                'active' && (
+                                                <OverlayTrigger
+                                                    placement="bottom"
+                                                    overlay={
+                                                        <Tooltip id="tooltip">
+                                                            This account is
+                                                            verified.
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <img
+                                                        className="ms-1 author-avatarTag"
+                                                        src={verified}
+                                                    />
+                                                </OverlayTrigger>
+                                            )}
+                                            {classroom?.authorstatus ===
+                                                'deleted' && (
+                                                <OverlayTrigger
+                                                    placement="bottom"
+                                                    overlay={
+                                                        <Tooltip id="tooltip">
+                                                            This account is
+                                                            deleted.
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <img
+                                                        className="ms-1 author-avatarTag"
+                                                        src={deleted}
+                                                    />
+                                                </OverlayTrigger>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="row">

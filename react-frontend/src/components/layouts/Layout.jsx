@@ -47,7 +47,7 @@ export default function Layout() {
     const { userInfo } = useSelector((state) => state.user)
 
     const [messages, setMessages] = useState([])
-    const [isAccept, setIsAccept] = useState(false)
+    const [isAccept, setIsAccept] = useState(null)
     const [showNew, setShowNew] = useState(false)
     const [showChat, setShowChat] = useState(false)
     const [showGPT, setShowGPT] = useState(false)
@@ -68,13 +68,22 @@ export default function Layout() {
         })
     }, [])
 
+    // useEffect(() => {
+    //     if (isAccept !== null) {
+    //         setTimeout(() => {                
+    //             setIsAccept(null)
+    //         }, 50000);
+    //     }
+    // }, [isAccept])
+
     const rejectCall = async (message) => {
         setIsAccept(false)
         var myWindow = window.open('', 'myWindow')
+        var newURL = window.location.origin + '/video-call/' + message.message + '?accepted=false';
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = '/video-call/' + message.message + '?accepted=false'
+            myWindow.location.href = newURL;
         } else {
             // If the window is already open and navigated to a page, focus it
             myWindow.focus()
@@ -84,10 +93,11 @@ export default function Layout() {
     const answerCall = async (message) => {
         setIsAccept(true)
         var myWindow = window.open('', 'myWindow')
+        var newURL = window.location.origin + '/video-call/' + message.message + '?accepted=true';
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = '/video-call/' + message.message + '?accepted=true'
+            myWindow.location.href = newURL;
         } else {
             // If the window is already open and navigated to a page, focus it
             myWindow.focus()
@@ -127,7 +137,8 @@ export default function Layout() {
             </div>
             <Footer />
             {/* video call modal */}
-            {userToken && !isAccept &&
+            {userToken &&
+                isAccept === null &&
                 messages
                     ?.filter(
                         (message) =>
