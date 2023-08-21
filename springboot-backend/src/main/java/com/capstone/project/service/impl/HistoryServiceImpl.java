@@ -269,11 +269,10 @@ public class HistoryServiceImpl implements HistoryService {
                 userAchievementService.createUserAchievement(userAchievement);
                 Achievement achievement = achievementService.getById(achievementId);
 
-                Dotenv dotenv = Dotenv.load();
                 notificationService.createNotification(Notification.builder()
                         .title("Unlock " + achievement.getName() + " achievement")
                         .user(user)
-                        .url(dotenv.get("FRONTEND_HOST_URL") + "/library/achievements")
+                        .url("/library/achievements")
                         .content(achievement.getDescription())
                         .build());
             }

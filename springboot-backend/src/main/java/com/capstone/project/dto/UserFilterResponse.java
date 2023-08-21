@@ -16,4 +16,5 @@ public class UserFilterResponse {
     private String bio;
     private String role;
     private String avatar;
+    private String status;
 }
