@@ -499,24 +499,33 @@ const Header = () => {
                                                         }}
                                                     >
                                                         <div className="d-flex flex-column">
-                                                            <h4
-                                                                className={`mb-1 ${
-                                                                    notify?._read ===
-                                                                        true &&
-                                                                    'notifications_read'
-                                                                }`}
-                                                            >
-                                                                {notify?.title}
-                                                                {notify?._read ===
-                                                                    false && (
-                                                                    <span className="ms-2 badge text-bg-primary p-1 rounded-circle">
-                                                                        <span className="visually-hidden">
-                                                                            New
-                                                                            alerts
+                                                            <div className="row mb-1">
+                                                                <div className="col-11">
+                                                                    <h4
+                                                                        className={`${
+                                                                            notify?._read ===
+                                                                                true &&
+                                                                            'notifications_read'
+                                                                        }`}
+                                                                    >
+                                                                        {
+                                                                            notify?.title
+                                                                        }
+                                                                    </h4>
+                                                                </div>
+                                                                <div className="col-1">
+                                                                    {notify?._read ===
+                                                                        false && (
+                                                                        <span className="badge text-bg-primary p-1 rounded-circle">
+                                                                            <span className="visually-hidden">
+                                                                                New
+                                                                                alerts
+                                                                            </span>
                                                                         </span>
-                                                                    </span>
-                                                                )}
-                                                            </h4>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
                                                             <span className="notify_content">
                                                                 {
                                                                     notify?.content

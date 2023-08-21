@@ -1,17 +1,18 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import StudySetService from '../../services/StudySetService'
 
 import Pagination from '../../components/Pagination'
+import DeleteSet from '../studySet/DeleteSet'
 
 import {
     ArrowSmallDownIcon,
     ArrowSmallUpIcon,
     CheckIcon,
     CloseIcon,
-    DeleteIcon,
     DeleteSolidIcon,
     EditIcon,
     OptionVerIcon,
@@ -19,8 +20,10 @@ import {
 } from '../../components/icons'
 import empty from '../../assets/images/empty-state.png'
 import defaultAvatar from '../../assets/images/default_avatar.png'
+import banned from '../../assets/images/banned.png'
+import verified from '../../assets/images/verified.png'
+import deleted from '../../assets/images/deleted.png'
 import '../../assets/styles/LibrarySearchList.css'
-import DeleteSet from '../studySet/DeleteSet'
 
 const StudySetList = () => {
     const navigate = useNavigate()
@@ -36,6 +39,7 @@ const StudySetList = () => {
     const [loadingSearch, setLoadingSearch] = useState(true)
     const [searchInput, setSearchInput] = useState(search)
 
+    const [type, setType] = useState(-1)
     const [isDesc, setIsDesc] = useState(true)
     const [isPublic, setIsPublic] = useState(-1)
     const [isDraft, setIsDraft] = useState(false)
@@ -58,7 +62,7 @@ const StudySetList = () => {
                     `${searchKey ? '=' + searchKey : ''}`,
                     `=${userInfo.username}`,
                     '',
-                    '',
+                    `${type == -1 ? '' : `=${type}`}`,
                     '',
                     '',
                     '',
@@ -127,7 +131,7 @@ const StudySetList = () => {
         if (userInfo.username) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search, page, isDesc, isPublic, isDraft])
+    }, [userInfo, search, page, isDesc, isPublic, isDraft, type])
 
     useEffect(() => {
         if (isDelete === true) {
@@ -212,7 +216,7 @@ const StudySetList = () => {
                                 <select
                                     className="form-select sets-select py-2 me-2"
                                     aria-label="Default select example"
-                                    value={isPublic || 0}
+                                    value={isPublic || -1}
                                     onChange={(event) => {
                                         setIsPublic(event.target.value)
                                     }}
@@ -220,6 +224,19 @@ const StudySetList = () => {
                                     <option value={-1}>All access</option>
                                     <option value={1}>Public</option>
                                     <option value={0}>Private</option>
+                                </select>
+                                <select
+                                    className="form-select sets-select py-2 me-2"
+                                    aria-label="Default select example"
+                                    value={type || -1}
+                                    onChange={(event) => {
+                                        setType(event.target.value)
+                                    }}
+                                >
+                                    <option value={-1}>All type</option>
+                                    <option value={1}>Vocabulary</option>
+                                    <option value={2}>Kanji</option>
+                                    <option value={3}>Grammar</option>
                                 </select>
                                 <button
                                     className="btn btn-light p-2 me-2"
@@ -277,7 +294,10 @@ const StudySetList = () => {
                                     )}
                                     <button
                                         type="submit"
-                                        style={{border: "none", backgroundColor:"#fff"}}
+                                        style={{
+                                            border: 'none',
+                                            backgroundColor: '#fff',
+                                        }}
                                         disabled={loading}
                                         onClick={(event) => {
                                             event.preventDefault()
@@ -338,10 +358,7 @@ const StudySetList = () => {
                                                                         }{' '}
                                                                         terms
                                                                     </div>
-                                                                    <div
-                                                                        className="set-author col d-flex align-items-center"
-                                                                        href="#"
-                                                                    >
+                                                                    <div className="set-author col d-flex align-items-center">
                                                                         <div className="author-avatar">
                                                                             <img
                                                                                 src={
@@ -358,6 +375,69 @@ const StudySetList = () => {
                                                                                 userInfo?.username
                                                                             }
                                                                         </span>
+                                                                        {set?.author_status ===
+                                                                            'banned' && (
+                                                                            <OverlayTrigger
+                                                                                placement="bottom"
+                                                                                overlay={
+                                                                                    <Tooltip id="tooltip">
+                                                                                        This
+                                                                                        account
+                                                                                        is
+                                                                                        banned.
+                                                                                    </Tooltip>
+                                                                                }
+                                                                            >
+                                                                                <img
+                                                                                    className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                                                    src={
+                                                                                        banned
+                                                                                    }
+                                                                                />
+                                                                            </OverlayTrigger>
+                                                                        )}
+                                                                        {set?.author_status ===
+                                                                            'active' && (
+                                                                            <OverlayTrigger
+                                                                                placement="bottom"
+                                                                                overlay={
+                                                                                    <Tooltip id="tooltip">
+                                                                                        This
+                                                                                        account
+                                                                                        is
+                                                                                        verified.
+                                                                                    </Tooltip>
+                                                                                }
+                                                                            >
+                                                                                <img
+                                                                                    className="ms-1 author-avatarTag"
+                                                                                    src={
+                                                                                        verified
+                                                                                    }
+                                                                                />
+                                                                            </OverlayTrigger>
+                                                                        )}
+                                                                        {set?.author_status ===
+                                                                            'deleted' && (
+                                                                            <OverlayTrigger
+                                                                                placement="bottom"
+                                                                                overlay={
+                                                                                    <Tooltip id="tooltip">
+                                                                                        This
+                                                                                        account
+                                                                                        is
+                                                                                        deleted.
+                                                                                    </Tooltip>
+                                                                                }
+                                                                            >
+                                                                                <img
+                                                                                    className="ms-1 author-avatarTag"
+                                                                                    src={
+                                                                                        deleted
+                                                                                    }
+                                                                                />
+                                                                            </OverlayTrigger>
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                                 <div className="row">

@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import CommentService from '../../services/CommentService'
 
 import CardEditor from '../textEditor/CardEditor'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
+import banned from '../../assets/images/banned.png'
+import verified from '../../assets/images/verified.png'
+import deleted from '../../assets/images/deleted.png'
 import { OptionVerIcon } from '../icons'
 import './comment.css'
 
@@ -269,13 +273,58 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         src={comment?.user?.avatar || defaultAvatar}
                     />
                     <div className="w-100">
-                        <div className="d-flex align-items-center mb-2">
-                            <div className="comment_author me-2">
+                        <div className="d-flex align-items-center">
+                            <div className="comment_author">
                                 {comment.user.username}
                             </div>
-                            <div className="comment_createdDate">
-                                {comment.created_date}
-                            </div>
+                            {comment?.user?.status === 'banned' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={
+                                        <Tooltip id="tooltip">
+                                            This account is banned.
+                                        </Tooltip>
+                                    }
+                                >
+                                    <img
+                                        className="ms-1 author-avatarTag author-avatarTag--banned"
+                                        src={banned}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                            {comment?.user?.status === 'active' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={
+                                        <Tooltip id="tooltip">
+                                            This account is verified.
+                                        </Tooltip>
+                                    }
+                                >
+                                    <img
+                                        className="ms-1 author-avatarTag"
+                                        src={verified}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                            {comment?.user?.status === 'deleted' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={
+                                        <Tooltip id="tooltip">
+                                            This account is deleted.
+                                        </Tooltip>
+                                    }
+                                >
+                                    <img
+                                        className="ms-1 author-avatarTag"
+                                        src={deleted}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                        </div>
+                        <div className="comment_createdDate mb-2">
+                            {comment.created_date}
                         </div>
                         <div className="commentEditor mb-2">
                             <CardEditor
@@ -350,12 +399,57 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         />
                         <div className="ms-3">
                             <div className="d-flex align-items-center">
-                                <div className="comment_author me-2">
+                                <div className="comment_author">
                                     {comment.user.username}
                                 </div>
-                                <div className="comment_createdDate">
-                                    {comment.created_date}
-                                </div>
+                                {comment?.user?.status === 'banned' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is banned.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag author-avatarTag--banned"
+                                            src={banned}
+                                        />
+                                    </OverlayTrigger>
+                                )}
+                                {comment?.user?.status === 'active' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is verified.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag"
+                                            src={verified}
+                                        />
+                                    </OverlayTrigger>
+                                )}
+                                {comment?.user?.status === 'deleted' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is deleted.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag"
+                                            src={deleted}
+                                        />
+                                    </OverlayTrigger>
+                                )}
+                            </div>
+                            <div className="comment_createdDate">
+                                {comment.created_date}
                             </div>
                             <div
                                 className="comment_content"

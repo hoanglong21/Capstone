@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Modal from 'react-bootstrap/Modal'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import PostService from '../../../services/PostService'
 import AttachmentService from '../../../services/AttachmentService'
@@ -9,10 +10,16 @@ import {
     uploadFile,
 } from '../../../features/fileManagement'
 
+import CommentService from '../../../services/CommentService'
+
 import CardEditor from '../../../components/textEditor/CardEditor'
 import PostEditor from '../../../components/textEditor/PostEditor'
+import Comment from '../../../components/comment/Comment'
 
 import defaultAvatar from '../../../assets/images/default_avatar.png'
+import banned from '../../../assets/images/banned.png'
+import verified from '../../../assets/images/verified.png'
+import deleted from '../../../assets/images/deleted.png'
 import {
     DeleteIcon,
     MemberSolidIcon,
@@ -21,8 +28,6 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
-import CommentService from '../../../services/CommentService'
-import Comment from '../../../components/comment/Comment'
 
 const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [showUpdate, setShowUpdate] = useState(false)
@@ -263,8 +268,55 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                             />
                         </div>
                         <div className="ms-3">
-                            <div className="postAuthor">
-                                {post.user.username}
+                            <div className="d-flex align-items-center">
+                                <div className="postAuthor">
+                                    {post.user.username}
+                                </div>
+                                {post?.user?.status === 'banned' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is banned.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag author-avatarTag--banned"
+                                            src={banned}
+                                        />
+                                    </OverlayTrigger>
+                                )}
+                                {post?.user?.status === 'active' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is verified.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag"
+                                            src={verified}
+                                        />
+                                    </OverlayTrigger>
+                                )}
+                                {post?.user?.status === 'deleted' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is deleted.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag"
+                                            src={deleted}
+                                        />
+                                    </OverlayTrigger>
+                                )}
                             </div>
                             <div className="postCreatedDate">
                                 {post.created_date}

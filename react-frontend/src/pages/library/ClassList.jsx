@@ -2,10 +2,13 @@ import React, { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import ClassService from '../../services/ClassService'
 
 import Pagination from '../../components/Pagination'
+import CreateClass from '../class/CreateClass'
+import JoinClass from '../class/JoinClass'
 
 import {
     ArrowSmallDownIcon,
@@ -14,10 +17,11 @@ import {
     SearchIcon,
 } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
+import banned from '../../assets/images/banned.png'
+import verified from '../../assets/images/verified.png'
+import deleted from '../../assets/images/deleted.png'
 import '../../assets/styles/LibrarySearchList.css'
 import '../../assets/styles/Home.css'
-import CreateClass from '../class/CreateClass'
-import JoinClass from '../class/JoinClass'
 
 const ClassList = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -143,15 +147,17 @@ const ClassList = () => {
                         <h3>You haven't created or joined any classes</h3>
                         <p>Your classes will be shown here</p>
                         <div>
-                            {userInfo?.role === 'ROLE_TUTOR' && <button
-                                className="btn btn-outline-primary me-3"
-                                type="button"
-                                onClick={() => {
-                                    setShowCreateModal(true)
-                                }}
-                            >
-                                Create Class
-                            </button>}                            
+                            {userInfo?.role === 'ROLE_TUTOR' && (
+                                <button
+                                    className="btn btn-outline-primary me-3"
+                                    type="button"
+                                    onClick={() => {
+                                        setShowCreateModal(true)
+                                    }}
+                                >
+                                    Create Class
+                                </button>
+                            )}
                             <button
                                 className="btn btn-primary"
                                 type="button"
@@ -163,15 +169,15 @@ const ClassList = () => {
                             </button>
                         </div>
                         {/* Create class modal */}
-            <CreateClass
-                showCreateModal={showCreateModal}
-                setShowCreateModal={setShowCreateModal}
-            />
-            {/* Join class modal */}
-            <JoinClass
-                showJoinModal={showJoinModal}
-                setShowJoinModal={setShowJoinModal}
-            />
+                        <CreateClass
+                            showCreateModal={showCreateModal}
+                            setShowCreateModal={setShowCreateModal}
+                        />
+                        {/* Join class modal */}
+                        <JoinClass
+                            showJoinModal={showJoinModal}
+                            setShowJoinModal={setShowJoinModal}
+                        />
                     </div>
                 ) : (
                     <div>
@@ -265,10 +271,7 @@ const ClassList = () => {
                                                             }{' '}
                                                             sets
                                                         </div>
-                                                        <div
-                                                            className="set-author col d-flex "
-                                                            href="#"
-                                                        >
+                                                        <div className="set-author col d-flex align-items-center">
                                                             <div className="author-avatar">
                                                                 <img
                                                                     src={
@@ -285,6 +288,69 @@ const ClassList = () => {
                                                                     classroom?.author
                                                                 }
                                                             </span>
+                                                            {classroom?.authorstatus ===
+                                                                'banned' && (
+                                                                <OverlayTrigger
+                                                                    placement="bottom"
+                                                                    overlay={
+                                                                        <Tooltip id="tooltip">
+                                                                            This
+                                                                            account
+                                                                            is
+                                                                            banned.
+                                                                        </Tooltip>
+                                                                    }
+                                                                >
+                                                                    <img
+                                                                        className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                                        src={
+                                                                            banned
+                                                                        }
+                                                                    />
+                                                                </OverlayTrigger>
+                                                            )}
+                                                            {classroom?.authorstatus ===
+                                                                'active' && (
+                                                                <OverlayTrigger
+                                                                    placement="bottom"
+                                                                    overlay={
+                                                                        <Tooltip id="tooltip">
+                                                                            This
+                                                                            account
+                                                                            is
+                                                                            verified.
+                                                                        </Tooltip>
+                                                                    }
+                                                                >
+                                                                    <img
+                                                                        className="ms-1 author-avatarTag"
+                                                                        src={
+                                                                            verified
+                                                                        }
+                                                                    />
+                                                                </OverlayTrigger>
+                                                            )}
+                                                            {classroom?.authorstatus ===
+                                                                'deleted' && (
+                                                                <OverlayTrigger
+                                                                    placement="bottom"
+                                                                    overlay={
+                                                                        <Tooltip id="tooltip">
+                                                                            This
+                                                                            account
+                                                                            is
+                                                                            deleted.
+                                                                        </Tooltip>
+                                                                    }
+                                                                >
+                                                                    <img
+                                                                        className="ms-1 author-avatarTag"
+                                                                        src={
+                                                                            deleted
+                                                                        }
+                                                                    />
+                                                                </OverlayTrigger>
+                                                            )}
                                                         </div>
                                                     </div>
                                                     <div className="row">

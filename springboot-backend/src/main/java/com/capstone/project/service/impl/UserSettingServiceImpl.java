@@ -192,7 +192,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://www.nihongolevelup.com";
+            String URL = "https://nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -231,7 +231,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://www.nihongolevelup.com";
+            String URL = "https://nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -269,7 +269,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://www.nihongolevelup.com";
+            String URL = "https://nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -307,7 +307,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://www.nihongolevelup.com";
+            String URL = "https://nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -345,7 +345,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://www.nihongolevelup.com";
+            String URL = "https://nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
