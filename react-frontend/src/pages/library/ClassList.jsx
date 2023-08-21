@@ -183,18 +183,20 @@ const ClassList = () => {
                     <div>
                         <div className="row d-flex align-items-center mb-4">
                             <div className="studyset-col-5 d-flex align-items-center">
-                                <select
-                                    className="form-select sets-select py-2 me-2"
-                                    aria-label="Default select example"
-                                    value={type || 'all'}
-                                    onChange={(event) => {
-                                        setType(event.target.value)
-                                    }}
-                                >
-                                    <option value="all">All</option>
-                                    <option value="created">Created</option>
-                                    <option value="joined">Joined</option>
-                                </select>
+                                {userInfo?.role !== 'ROLE_LEARNER' && (
+                                    <select
+                                        className="form-select sets-select py-2 me-2"
+                                        aria-label="Default select example"
+                                        value={type || 'all'}
+                                        onChange={(event) => {
+                                            setType(event.target.value)
+                                        }}
+                                    >
+                                        <option value="all">All</option>
+                                        <option value="created">Created</option>
+                                        <option value="joined">Joined</option>
+                                    </select>
+                                )}
                                 <button
                                     className="btn btn-light p-2 me-2"
                                     onClick={() => {

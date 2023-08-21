@@ -138,7 +138,7 @@ public class ClassController {
     }
     }
 
-    @PreAuthorize("hasRole('ROLE_LEARNER')")
+    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     @PostMapping("/joinclass")
     public ResponseEntity<?> joinClass(@RequestParam String classCode, @RequestParam String username) {
         try {

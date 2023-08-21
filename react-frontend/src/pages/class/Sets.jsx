@@ -102,7 +102,7 @@ const Sets = () => {
         if (id && userInfo?.id) {
             fetchData()
         }
-    }, [search, page, type])
+    }, [search, page])
 
     useEffect(() => {
         const fetchData = async () => {
