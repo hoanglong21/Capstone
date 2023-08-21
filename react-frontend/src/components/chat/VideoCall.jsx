@@ -219,7 +219,6 @@ const VideoCall = () => {
             updates['/messages/' + newPostKey] = postData
             update(ref(database), updates)
             setIsCalling(true)
-
             
         } catch (err) {
             console.log("Try call again")
