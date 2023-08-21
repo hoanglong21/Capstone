@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import Toast from 'react-bootstrap/Toast'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
@@ -29,6 +29,9 @@ import {
     SendIcon,
     CloseIcon,
 } from '../../../components/icons'
+import banned from '../../../assets/images/banned.png'
+import verified from '../../../assets/images/verified.png'
+import deleted from '../../../assets/images/deleted.png'
 import './viewStudySet.css'
 
 const ViewStudySet = () => {
@@ -269,6 +272,16 @@ const ViewStudySet = () => {
         setLoadingComment(false)
     }
 
+    const tooltip = (
+        <Tooltip id="tooltip">
+            This account is{' '}
+            {studySet?.user?.status === 'active'
+                ? 'verified'
+                : studySet?.user?.status}
+            .
+        </Tooltip>
+    )
+
     return (
         <div className="container setPageContainer">
             <div className="setTitle">
@@ -318,24 +331,57 @@ const ViewStudySet = () => {
             {/* Author + Options */}
             <div className="setPageInformation d-flex justify-content-between">
                 <div className="d-flex align-items-center">
-                    <div className="setAuthorAvatar">
+                    <div className="setAuthorAvatarContainer">
                         <img
                             alt="avatarAuthor"
-                            className="w-100 h-100"
+                            className="setAuthorAvatar"
                             src={
                                 studySet?.user?.avatar
                                     ? studySet.user.avatar
                                     : defaultAvatar
                             }
                         />
+                        {studySet?.user?.status === 'banned' && (
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={tooltip}
+                            >
+                                <img
+                                    className="setAuthorAvatarTag setAuthorAvatarTag--banned"
+                                    src={banned}
+                                />
+                            </OverlayTrigger>
+                        )}
+                        {studySet?.user?.status === 'active' && (
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={tooltip}
+                            >
+                                <img
+                                    className="setAuthorAvatarTag"
+                                    src={verified}
+                                />
+                            </OverlayTrigger>
+                        )}
+                        {studySet?.user?.status === 'deleted' && (
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={tooltip}
+                            >
+                                <img
+                                    className="setAuthorAvatarTag"
+                                    src={deleted}
+                                />
+                            </OverlayTrigger>
+                        )}
                     </div>
                     <div className="setAuthorInfo ms-2">
                         <span className="setAuthorInfo_createdBy">
                             Created by
                         </span>
-                        <span className="setAuthorInfo_username">
+                        <div className="setAuthorInfo_username">
                             {studySet?.user?.username}
-                        </span>
+                        </div>
                     </div>
                 </div>
                 <div className="d-flex align-items-center">

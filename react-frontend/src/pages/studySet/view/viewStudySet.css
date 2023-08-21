@@ -47,11 +47,30 @@
     padding-bottom: 2rem;
 }
 
+.setAuthorAvatarContainer {
+    position: relative;
+    height: 48px;
+    width: 48px;
+}
+
 .setAuthorAvatar {
     border-radius: 50%;
     overflow: hidden;
     height: 48px;
     width: 48px;
+}
+
+.setAuthorAvatarTag {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+}
+
+.setAuthorAvatarTag--banned {
+    background-color: #fff;
+    border-radius: 50%;
 }
 
 .setAuthorInfo_createdBy {
