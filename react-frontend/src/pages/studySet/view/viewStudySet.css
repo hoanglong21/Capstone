@@ -54,6 +54,16 @@
     width: 48px;
 }
 
+.setAuthorAvatarTag {
+    width: 14px;
+    height: 14px;
+}
+
+.setAuthorAvatarTag--banned {
+    background-color: #fff;
+    border-radius: 50%;
+}
+
 .setAuthorInfo_createdBy {
     font-size: 0.625rem;
     color: #939bb4;

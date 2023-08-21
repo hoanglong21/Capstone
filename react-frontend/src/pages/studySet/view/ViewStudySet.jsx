@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import Toast from 'react-bootstrap/Toast'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
@@ -29,6 +29,9 @@ import {
     SendIcon,
     CloseIcon,
 } from '../../../components/icons'
+import banned from '../../../assets/images/banned.png'
+import verified from '../../../assets/images/verified.png'
+import deleted from '../../../assets/images/deleted.png'
 import './viewStudySet.css'
 
 const ViewStudySet = () => {
@@ -269,6 +272,16 @@ const ViewStudySet = () => {
         setLoadingComment(false)
     }
 
+    const tooltip = (
+        <Tooltip id="tooltip">
+            This account is{' '}
+            {studySet?.user?.status === 'active'
+                ? 'verified'
+                : studySet?.user?.status}
+            .
+        </Tooltip>
+    )
+
     return (
         <div className="container setPageContainer">
             <div className="setTitle">
@@ -318,24 +331,57 @@ const ViewStudySet = () => {
             {/* Author + Options */}
             <div className="setPageInformation d-flex justify-content-between">
                 <div className="d-flex align-items-center">
-                    <div className="setAuthorAvatar">
-                        <img
-                            alt="avatarAuthor"
-                            className="w-100 h-100"
-                            src={
-                                studySet?.user?.avatar
-                                    ? studySet.user.avatar
-                                    : defaultAvatar
-                            }
-                        />
-                    </div>
+                    <img
+                        alt="avatarAuthor"
+                        className="setAuthorAvatar"
+                        src={
+                            studySet?.user?.avatar
+                                ? studySet.user.avatar
+                                : defaultAvatar
+                        }
+                    />
                     <div className="setAuthorInfo ms-2">
                         <span className="setAuthorInfo_createdBy">
                             Created by
                         </span>
-                        <span className="setAuthorInfo_username">
-                            {studySet?.user?.username}
-                        </span>
+                        <div className="d-flex align-items-center">
+                            <div className="setAuthorInfo_username">
+                                {studySet?.user?.username}
+                            </div>
+                            {studySet?.user?.status === 'banned' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={tooltip}
+                                >
+                                    <img
+                                        className="ms-1 setAuthorAvatarTag setAuthorAvatarTag--banned"
+                                        src={banned}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                            {studySet?.user?.status === 'active' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={tooltip}
+                                >
+                                    <img
+                                        className="ms-1 setAuthorAvatarTag"
+                                        src={verified}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                            {studySet?.user?.status === 'deleted' && (
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    overlay={tooltip}
+                                >
+                                    <img
+                                        className="ms-1 setAuthorAvatarTag"
+                                        src={deleted}
+                                    />
+                                </OverlayTrigger>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className="d-flex align-items-center">

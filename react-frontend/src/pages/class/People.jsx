@@ -3,12 +3,17 @@ import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import ClassService from '../../services/ClassService'
 import ClassLearnerService from '../../services/ClassLearnerService'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import NotificationService from '../../services/NotificationService'
+
+import banned from '../../assets/images/banned.png'
+import verified from '../../assets/images/verified.png'
+import deleted from '../../assets/images/deleted.png'
 
 const People = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -172,6 +177,51 @@ const People = () => {
                                 <span className="people_username">
                                     {request?.user?.username}
                                 </span>
+                                {request?.user?.status === 'banned' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is banned.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag author-avatarTag--banned"
+                                            src={banned}
+                                        />
+                                    </OverlayTrigger>
+                                )}
+                                {request?.user?.status === 'active' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is verified.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag"
+                                            src={verified}
+                                        />
+                                    </OverlayTrigger>
+                                )}
+                                {request?.user?.status === 'deleted' && (
+                                    <OverlayTrigger
+                                        placement="bottom"
+                                        overlay={
+                                            <Tooltip id="tooltip">
+                                                This account is deleted.
+                                            </Tooltip>
+                                        }
+                                    >
+                                        <img
+                                            className="ms-1 author-avatarTag"
+                                            src={deleted}
+                                        />
+                                    </OverlayTrigger>
+                                )}
                             </div>
                             <div>
                                 <button
@@ -206,6 +256,51 @@ const People = () => {
                     <span className="people_username">
                         {classroom?.user?.username}
                     </span>
+                    {classroom?.user?.status === 'banned' && (
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                                <Tooltip id="tooltip">
+                                    This account is banned.
+                                </Tooltip>
+                            }
+                        >
+                            <img
+                                className="ms-1 author-avatarTag author-avatarTag--banned"
+                                src={banned}
+                            />
+                        </OverlayTrigger>
+                    )}
+                    {classroom?.user?.status === 'active' && (
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                                <Tooltip id="tooltip">
+                                    This account is verified.
+                                </Tooltip>
+                            }
+                        >
+                            <img
+                                className="ms-1 author-avatarTag"
+                                src={verified}
+                            />
+                        </OverlayTrigger>
+                    )}
+                    {classroom?.user?.status === 'deleted' && (
+                        <OverlayTrigger
+                            placement="bottom"
+                            overlay={
+                                <Tooltip id="tooltip">
+                                    This account is deleted.
+                                </Tooltip>
+                            }
+                        >
+                            <img
+                                className="ms-1 author-avatarTag"
+                                src={deleted}
+                            />
+                        </OverlayTrigger>
+                    )}
                 </div>
             </div>
             <div className="mt-5 people_section">
@@ -225,6 +320,51 @@ const People = () => {
                         <span className="people_username">
                             {learner?.user?.username}
                         </span>
+                        {learner?.user?.status === 'banned' && (
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={
+                                    <Tooltip id="tooltip">
+                                        This account is banned.
+                                    </Tooltip>
+                                }
+                            >
+                                <img
+                                    className="ms-1 author-avatarTag author-avatarTag--banned"
+                                    src={banned}
+                                />
+                            </OverlayTrigger>
+                        )}
+                        {learner?.user?.status === 'active' && (
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={
+                                    <Tooltip id="tooltip">
+                                        This account is verified.
+                                    </Tooltip>
+                                }
+                            >
+                                <img
+                                    className="ms-1 author-avatarTag"
+                                    src={verified}
+                                />
+                            </OverlayTrigger>
+                        )}
+                        {learner?.user?.status === 'deleted' && (
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={
+                                    <Tooltip id="tooltip">
+                                        This account is deleted.
+                                    </Tooltip>
+                                }
+                            >
+                                <img
+                                    className="ms-1 author-avatarTag"
+                                    src={deleted}
+                                />
+                            </OverlayTrigger>
+                        )}
                     </div>
                 ))}
             </div>
