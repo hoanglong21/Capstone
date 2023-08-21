@@ -33,5 +33,6 @@ public class StudySetResponse {
 
     private String author_firstname;
     private String author_lastname;
+    private String author_status;
 }
 

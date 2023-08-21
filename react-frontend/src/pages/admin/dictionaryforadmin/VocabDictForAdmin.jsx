@@ -137,158 +137,158 @@ const VocabDictForAdmin = () => {
     } else {
         return (
             <div className="mt-4 mb-5">
-                {word?.kanji ? (
-                    <div className="row">
-                        <div className="col-2 ">
-                            <div className="dictResultWordList">
-                                {vocabs.map((vocab, index) => (
-                                    <div
-                                        className={`dictResultWord ${
-                                            activeIndex === index
-                                                ? 'active'
-                                                : ''
-                                        }`}
-                                        key={index}
-                                        onClick={async () => {
-                                            setLoadingSelect(true)
-                                            setWord(vocab)
-                                            setActiveIndex(index)
-                                            setKanjiSvgs(
-                                                await getKanjiSvg(
-                                                    vocab.kanji[0]
-                                                )
-                                            )
-                                            setLoadingSelect(false)
-                                        }}
-                                    >
-                                        <div className="word">
-                                            <b>{vocab.kanji[0]}</b> [
-                                            {getDisplay(vocab.reading)}]
-                                        </div>
-                                        <i className="wordSense">
-                                            {getDisplay(
-                                                vocab.sense[0].definition
-                                            )}
-                                        </i>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="col-7">
-                            {loadingSelect ? (
-                                <div className="d-flex justify-content-center">
-                                    <div
-                                        className="spinner-border"
-                                        role="status"
-                                    >
-                                        <span className="visually-hidden">
-                                            Loading...
-                                        </span>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="word-detail h-100">
-                                    <div className="word-detail-overview d-flex flex-column align-items-center">
-                                        <span className="txtKanji">
-                                            {word?.kanji[0]}
-                                        </span>
-                                        <div className="d-flex">
-                                            <span className="txtFurigana">
-                                                {getDisplay(word?.reading)}
-                                            </span>
-                                            <span className="sound">
-                                                <TextToSpeech
-                                                    className="ms-1"
-                                                    text={word?.kanji[0]}
-                                                    language="ja"
-                                                    size="1.25rem"
-                                                />
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="word-detail-info">
-                                        {word?.sense?.map((item, index) => (
-                                            <div key={index}>
-                                                <div className="word-type">
-                                                    {getDisplay(item.type)}
-                                                </div>
-                                                <div className="word-meaning">
-                                                    -{' '}
-                                                    {getDisplay(
-                                                        item.definition
-                                                    )}
-                                                </div>
-                                                <ul className="word-examples">
-                                                    {item.example.map(
-                                                        (
-                                                            exampleItem,
-                                                            index
-                                                        ) => (
-                                                            <div key={index}>
-                                                                <div className="wordExampleJa">
-                                                                    {
-                                                                        exampleItem.exampleSentenceJapanese
-                                                                    }
-                                                                </div>
-                                                                <div className="wordExampleVi">
-                                                                    {
-                                                                        exampleItem.exampleSentenceVietnamese
-                                                                    }
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </ul>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        {!loadingSelect && (
-                            <div className="col-3">
+            {word?.kanji ? (
+                <div className="row">
+                    <div className="vocab-dict">
+                        <div className="dictResultWordList">
+                            {vocabs.map((vocab, index) => (
                                 <div
-                                    className="accordion accordion-flush"
-                                    id="accordionKanjiSvg"
+                                    className={`dictResultWord ${
+                                        activeIndex === index
+                                            ? 'active'
+                                            : ''
+                                    }`}
+                                    key={index}
+                                    onClick={async () => {
+                                        setLoadingSelect(true)
+                                        setWord(vocab)
+                                        setActiveIndex(index)
+                                        setKanjiSvgs(
+                                            await getKanjiSvg(
+                                                vocab.kanji[0]
+                                            )
+                                        )
+                                        setLoadingSelect(false)
+                                    }}
                                 >
-                                    {kanjiSvgs?.map((kanjiSvg, index) => (
-                                        <div
-                                            className="accordion-item"
-                                            key={index}
-                                        >
-                                            <h2 className="accordion-header">
-                                                <button
-                                                    className="accordion-button collapsed"
-                                                    type="button"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target={`#svgKanji${index}`}
-                                                    aria-expanded="false"
-                                                    aria-controls={`svgKanji${index}`}
-                                                >
-                                                    {kanjiSvg?.kanji}
-                                                </button>
-                                            </h2>
-                                            <div
-                                                id={`svgKanji${index}`}
-                                                className="accordion-collapse collapse"
-                                            >
-                                                <div
-                                                    className="svgKanji accordion-body d-flex justify-content-center"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: kanjiSvg?.svg,
-                                                    }}
-                                                ></div>
+                                    <div className="word">
+                                        <b>{vocab.kanji[0]}</b> [
+                                        {getDisplay(vocab.reading)}]
+                                    </div>
+                                    <i className="wordSense">
+                                        {getDisplay(
+                                            vocab.sense[0].definition
+                                        )}
+                                    </i>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="vocab-dict-col-7">
+                        {loadingSelect ? (
+                            <div className="d-flex justify-content-center">
+                                <div
+                                    className="spinner-border"
+                                    role="status"
+                                >
+                                    <span className="visually-hidden">
+                                        Loading...
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="word-detail h-100">
+                                <div className="word-detail-overview d-flex flex-column align-items-center">
+                                    <span className="txtKanji">
+                                        {word?.kanji[0]}
+                                    </span>
+                                    <div className="d-flex">
+                                        <span className="txtFurigana">
+                                            {getDisplay(word?.reading)}
+                                        </span>
+                                        <span className="sound">
+                                            <TextToSpeech
+                                                className="ms-1"
+                                                text={word?.kanji[0]}
+                                                language="ja"
+                                                size="1.25rem"
+                                            />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="word-detail-info">
+                                    {word?.sense?.map((item, index) => (
+                                        <div key={index}>
+                                            <div className="word-type">
+                                                {getDisplay(item.type)}
                                             </div>
+                                            <div className="word-meaning">
+                                                -{' '}
+                                                {getDisplay(
+                                                    item.definition
+                                                )}
+                                            </div>
+                                            <ul className="word-examples">
+                                                {item.example.map(
+                                                    (
+                                                        exampleItem,
+                                                        index
+                                                    ) => (
+                                                        <div key={index}>
+                                                            <div className="wordExampleJa">
+                                                                {
+                                                                    exampleItem.exampleSentenceJapanese
+                                                                }
+                                                            </div>
+                                                            <div className="wordExampleVi">
+                                                                {
+                                                                    exampleItem.exampleSentenceVietnamese
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                )}
+                                            </ul>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         )}
                     </div>
-                ) : (
-                    <p>No words matching {search} found</p>
-                )}
-            </div>
+                    {!loadingSelect && (
+                        <div className="vocab-dict-3">
+                            <div
+                                className="accordion accordion-flush"
+                                id="accordionKanjiSvg"
+                            >
+                                {kanjiSvgs?.map((kanjiSvg, index) => (
+                                    <div
+                                        className="accordion-item"
+                                        key={index}
+                                    >
+                                        <h2 className="accordion-header">
+                                            <button
+                                                className="accordion-button collapsed"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target={`#svgKanji${index}`}
+                                                aria-expanded="false"
+                                                aria-controls={`svgKanji${index}`}
+                                            >
+                                                {kanjiSvg?.kanji}
+                                            </button>
+                                        </h2>
+                                        <div
+                                            id={`svgKanji${index}`}
+                                            className="accordion-collapse collapse"
+                                        >
+                                            <div
+                                                className="svgKanji accordion-body d-flex justify-content-center"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: kanjiSvg?.svg,
+                                                }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <p className="noFound">No words matching {search} found</p>
+            )}
+        </div>
         )
     }
 }

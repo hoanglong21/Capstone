@@ -45,7 +45,7 @@ function ManageClass() {
     <div className="container-fluid">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="container">
             <h3 className="mt-3 mb-4 text-bold text-black">View Class</h3>

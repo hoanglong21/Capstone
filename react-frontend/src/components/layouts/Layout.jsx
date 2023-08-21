@@ -70,9 +70,15 @@ export default function Layout() {
 
     const rejectCall = async (message) => {
         setIsAccept(false)
-        const rootRef = ref(database, 'messages/')
-        const messageRef = child(rootRef, message.key) // Retrieve the Reference object for the message
-        remove(messageRef) // Remove the message from the database
+        var myWindow = window.open('', 'myWindow')
+        // Check if the window is already open
+        if (myWindow.location.href === 'about:blank') {
+            // If the window is not yet navigated to a page, navigate to the desired page
+            myWindow.location.href = '/video-call/' + message.message + '?accepted=false'
+        } else {
+            // If the window is already open and navigated to a page, focus it
+            myWindow.focus()
+        }
     }
 
     const answerCall = async (message) => {
@@ -81,7 +87,7 @@ export default function Layout() {
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = '/video-call/' + message.message
+            myWindow.location.href = '/video-call/' + message.message + '?accepted=true'
         } else {
             // If the window is already open and navigated to a page, focus it
             myWindow.focus()

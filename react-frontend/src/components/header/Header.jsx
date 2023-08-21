@@ -293,7 +293,7 @@ const Header = () => {
                         )}
                     </ul>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="landing-header">
                     {/* Add button */}
                     <div className="dropdown d-inline-flex">
                         <button
@@ -673,7 +673,7 @@ const Header = () => {
                             <Link to="/login">
                                 <button
                                     type="button"
-                                    className="btn btn-light me-2"
+                                    className="landing-btn btn btn-light me-2"
                                 >
                                     Login
                                 </button>
@@ -681,7 +681,7 @@ const Header = () => {
                             <Link to="register">
                                 <button
                                     type="button"
-                                    className="btn btn-warning"
+                                    className="landing-btn btn btn-warning"
                                 >
                                     Sign up
                                 </button>
