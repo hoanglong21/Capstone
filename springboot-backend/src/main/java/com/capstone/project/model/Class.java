@@ -26,7 +26,8 @@ import java.util.Set;
                         @ColumnResult(name = "member", type = Integer.class),
                         @ColumnResult(name = "studyset", type = Integer.class),
                         @ColumnResult(name = "avatar", type = String.class),
-                        @ColumnResult(name = "author", type = String.class)
+                        @ColumnResult(name = "author", type = String.class),
+                        @ColumnResult(name = "authorstatus", type = String.class)
                 }
         )
 )
