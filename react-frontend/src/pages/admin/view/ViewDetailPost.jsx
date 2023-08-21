@@ -23,7 +23,7 @@ function ViewDetailPost() {
     <div className="container-fluid">
       <div className="row">
         <SidebarforAdmin />
-        <div className="col-sm">
+        <div className="col-10">
           <HeaderAdmin />
           <div className="card mb-4">
             <div className="card-header fs-5 fw-bold text-uppercase">
