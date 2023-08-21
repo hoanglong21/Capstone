@@ -130,6 +130,17 @@ const VideoCall = () => {
         document.getElementById('webcamVideo').srcObject = localStream
         document.getElementById('remoteVideo').srcObject = remoteStream
         setLoadingSender(false)
+
+        // After run all
+        const accepted = searchParams.get('accepted');
+        console.log(accepted);
+        if(accepted == 'true') {
+            answerButtonClick();
+        } else if(accepted == 'false') {
+            hangupButtonClick();
+        } else {
+            callButtonClick();
+        }
     }
 
     let callButtonClick = async () => {
@@ -189,7 +200,7 @@ const VideoCall = () => {
         // A post entry.
         const postData = {
             sender: myUsername,
-            senderAvatar: userInfo.avatar,
+            senderAvatar: userInfo.avatar || '',
             receiver: receiverUsername,
             message: callDoc.id,
             video_call: true,
