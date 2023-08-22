@@ -6,7 +6,6 @@ import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.UserSettingService;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -107,10 +106,10 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
 
         Map<String, String> userSettingMap = new HashMap<>();
-        userSettingMap.put("study reminder", "false"); // == "false"
+        userSettingMap.put("study reminder", "07:00"); // == "false"
         userSettingMap.put("language", "en");
-        userSettingMap.put("assignment due date reminder", "false"); // == "false"
-        userSettingMap.put("test due date reminder", "false"); // == "false"
+        userSettingMap.put("assignment due date reminder", "24"); // == "false"
+        userSettingMap.put("test due date reminder", "24"); // == "false"
         userSettingMap.put("set added", "TRUE");
         userSettingMap.put("post added", "TRUE");
         userSettingMap.put("assignment assigned", "TRUE");
@@ -193,10 +192,8 @@ public class UserSettingServiceImpl implements UserSettingService {
             helper.setSubject(subject);
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
-            
-//            String URL = "https://nihongolevelup.com";
-            Dotenv dotenv = Dotenv.load();
-            String URL = dotenv.get("FRONTEND_HOST_URL");
+
+            String URL = "https://nihongolevelup.com";
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -368,26 +365,22 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
+    private Set<LocalTime> sentStudytime = new HashSet<>();
+
     @Scheduled(fixedRate = 10000)
     public void sendStudyReminderMails() {
         List<UserSetting> userSettings = userSettingRepository.findAll();
+
         for (UserSetting userSetting : userSettings) {
-            if (userSetting.getSetting().getId() == 1) {
-                String studyTimeString = userSetting.getValue();
-                if(studyTimeString.equalsIgnoreCase("false")) {
-                    continue;
-                }
-                try{
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-                    LocalTime studyTime = LocalTime.parse(studyTimeString, formatter).truncatedTo(ChronoUnit.MINUTES);
+            int userSettingId = userSetting.getId();
+            String studytime = userSetting.getValue();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            LocalTime studyTime = LocalTime.parse(studytime, formatter);
 
-                    LocalTime currentTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
-                    if(studyTime.equals(currentTime)) {
-                        sendMail(userSetting);
-                    }
-                } catch (Exception e) {
-
-                }
+            LocalTime currentTime = LocalTime.now();
+            if (userSetting.getSetting().getId() == 1 && !sentStudytime.contains(studyTime) && currentTime.isAfter(studyTime)) {
+                sendMail(userSetting);
+                sentStudytime.add(studyTime);
             }
         }
     }
@@ -397,7 +390,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         return currentLocalTime.isAfter(targetTime);
     }
 
-    private Set<LocalDateTime> sentDueDates = new HashSet<>();
+    private Set<LocalDateTime> sentAssignmentReminders = new HashSet<>();
 
     @Scheduled(fixedRate = 10000)
     public void sendAssignmentDueDateMails() throws ResourceNotFroundException {
@@ -429,8 +422,10 @@ public class UserSettingServiceImpl implements UserSettingService {
                             LocalDateTime reminderTime = dueDateTime.minusHours(hoursBeforeDueDate).truncatedTo(ChronoUnit.MINUTES);;
 
                             LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-                            if(reminderTime.equals(currentTime)) {
+                            boolean sentReminder = sentAssignmentReminders.contains(reminderTime);
+                            if(reminderTime.equals(currentTime)  && !sentReminder && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
                                 sendAssignmentDueDateMail(userSetting, assignment, classroom);
+                                sentAssignmentReminders.add(reminderTime);
                             }
                         } catch (Exception e) {
 
@@ -462,10 +457,10 @@ public class UserSettingServiceImpl implements UserSettingService {
                 for (Assignment assignment : validAssignments) {
                     String startdate = String.valueOf(assignment.getStart_date());
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                    LocalDateTime startdateTime = LocalDateTime.parse(startdate, formatter);
+                    LocalDateTime startdateTime = LocalDateTime.parse(startdate, formatter).truncatedTo(ChronoUnit.MINUTES);
 
-                    LocalDateTime currentTime = LocalDateTime.now();
-                    if (userSetting.getSetting().getId() == 7 && userSetting.getValue().equalsIgnoreCase("true") && !sentAssignStartDates.contains(startdateTime) && currentTime.isAfter(startdateTime) && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
+                    LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+                    if (userSetting.getSetting().getId() == 7 && userSetting.getValue().equalsIgnoreCase("true") && !sentAssignStartDates.contains(startdateTime) && currentTime.isEqual(startdateTime) && classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
                         sendAssignmentStartDateMail(userSetting, assignment, classroom);
                         sentAssignStartDates.add(startdateTime);
 
@@ -485,30 +480,35 @@ public class UserSettingServiceImpl implements UserSettingService {
             int userSettingId = userSetting.getId();
             List<ClassLearner> classLearners = classLearnerRepository.getClassLeanerByUserId(userSetting.getUser().getId());
             for (ClassLearner classLearner : classLearners) {
-                Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
-                List<Test> tests = testRepository.getTestByClassroomId(classroom.getId());
+                if (userSetting.getSetting().getId() == 4) {
+                    Class classroom = classService.getClassroomById(classLearner.getClassroom().getId());
+                    List<Test> tests = testRepository.getTestByClassroomId(classroom.getId());
 
-                List<Test> validTests = tests.stream()
-                        .filter(test -> test.getDue_date() != null)
-                        .collect(Collectors.toList());
+                    List<Test> validTests = tests.stream()
+                            .filter(test -> test.getDue_date() != null)
+                            .collect(Collectors.toList());
 
-                for (Test test : validTests) {
-                    String duedate = String.valueOf(test.getDue_date());
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                    LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
-
-                    try {
-                        long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
-
-                        LocalDateTime reminderTime = duedateTime.minusHours(hoursBeforeDueDate);
-
-                        LocalDateTime currentTime = LocalDateTime.now();
-                        if (userSetting.getSetting().getId() == 4 && !sentTestDueDates.contains(duedateTime) && currentTime.isAfter(reminderTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
-                            sendTestDueDateMail(userSetting, test, classroom);
-                            sentTestDueDates.add(duedateTime);
+                    for (Test test : validTests) {
+                        String duedate = String.valueOf(test.getDue_date());
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                        LocalDateTime duedateTime = LocalDateTime.parse(duedate, formatter);
+                        String getValue = userSetting.getValue();
+                        if (getValue.equalsIgnoreCase("false")) {
+                            continue;
                         }
-                    }catch (NumberFormatException e){
-                        e.printStackTrace();
+                        try {
+                            long hoursBeforeDueDate = Long.parseLong(userSetting.getValue());
+
+                            LocalDateTime reminderTime = duedateTime.minusHours(hoursBeforeDueDate).truncatedTo(ChronoUnit.MINUTES);
+
+                            LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+                            if (!sentTestDueDates.contains(duedateTime) && currentTime.isEqual(reminderTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
+                                sendTestDueDateMail(userSetting, test, classroom);
+                                sentTestDueDates.add(duedateTime);
+                            }
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -516,7 +516,6 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     private Set<LocalDateTime> sentTestStartDates = new HashSet<>();
-
     @Scheduled(fixedRate = 10000)
     public void sendTestStartDateMails() throws ResourceNotFroundException {
         List<UserSetting> userSettings = userSettingRepository.findAll();
@@ -535,10 +534,10 @@ public class UserSettingServiceImpl implements UserSettingService {
                 for (Test test : validTests) {
                     String startdate = String.valueOf(test.getStart_date());
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-                    LocalDateTime startdateTime = LocalDateTime.parse(startdate, formatter);
+                    LocalDateTime startdateTime = LocalDateTime.parse(startdate, formatter).truncatedTo(ChronoUnit.MINUTES);
 
-                    LocalDateTime currentTime = LocalDateTime.now();
-                    if (userSetting.getSetting().getId() == 8 & userSetting.getValue().equalsIgnoreCase("true") && !sentTestStartDates.contains(startdateTime) && currentTime.isAfter(startdateTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
+                    LocalDateTime currentTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
+                    if (userSetting.getSetting().getId() == 8 & userSetting.getValue().equalsIgnoreCase("true") && !sentTestStartDates.contains(startdateTime) && currentTime.isEqual(startdateTime) && classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
                         sendTestStartDateMail(userSetting, test, classroom);
                         sentTestStartDates.add(startdateTime);
 

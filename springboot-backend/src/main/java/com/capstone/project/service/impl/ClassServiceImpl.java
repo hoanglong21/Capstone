@@ -516,6 +516,7 @@ public class ClassServiceImpl implements ClassService {
         for (ClassLearner classLearner : classLearnerList) {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
+                notification.setTitle("New StudySet");
                 notification.setContent("A new studyset is added to class '" + classroom.getClass_name() + "'");
                 notification.setDatetime(date);
                 notification.set_read(false);

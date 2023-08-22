@@ -106,6 +106,7 @@ public class PostServiceImpl implements PostService {
         for (ClassLearner classLearner : classLearnerList) {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
+                notification.setTitle("New Post");
                 notification.setContent("A new post in class '" + classroom.getClass_name() + "'");
                 notification.setDatetime(date);
                 notification.set_read(false);
