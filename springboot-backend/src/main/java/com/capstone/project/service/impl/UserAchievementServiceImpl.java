@@ -28,6 +28,8 @@ public class UserAchievementServiceImpl implements UserAchievementService {
 
     private final EntityManager entityManager;
 
+    private UserRepository userRepository;
+
     public UserAchievementServiceImpl(UserAchievementRepository userAchievementRepository, EntityManager entityManager) {
         this.userAchievementRepository = userAchievementRepository;
         this.entityManager = entityManager;
@@ -63,6 +65,15 @@ public class UserAchievementServiceImpl implements UserAchievementService {
         response.put("streaks", userAchievementRepository.getUserAchievementByUserIdAndTypeId(id, 3));
         response.put("class", userAchievementRepository.getUserAchievementByUserIdAndTypeId(id, 4));
         return response;
+    }
+
+    @Override
+    public Map<String, Object> getUserAchievementByUsername(String username) throws ResourceNotFroundException {
+        User user = userRepository.findUserByUsername(username);
+        if(user==null) {
+            throw new ResourceNotFroundException("User not exist with username: " + username);
+        }
+        return getUserAchievementByUserId(user.getId());
     }
 
     @Override

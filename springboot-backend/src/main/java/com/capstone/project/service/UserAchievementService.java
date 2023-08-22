@@ -17,6 +17,8 @@ public interface UserAchievementService {
 
     Map<String, Object> getUserAchievementByUserId(int id);
 
+    Map<String, Object> getUserAchievementByUsername(String username) throws ResourceNotFroundException;
+
     Map<String, Object> filterUserAchievement(int userId, int achievementId, String fromDatetime, String toDatetime,
                                              String sortBy, String direction, int page, int size) throws ParseException;
 
