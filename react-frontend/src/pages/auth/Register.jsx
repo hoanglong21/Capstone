@@ -9,13 +9,15 @@ import { reset } from '../../features/auth/authSlice'
 import { ArrowLeftLongIcon } from '../../components/icons'
 import styles from '../../assets/styles/Form.module.css'
 import "./auth.css"
+import { useTranslation } from 'react-i18next'
 const Register = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const { t, i18n } = useTranslation()
 
     const { userToken, error, success, loading } = useSelector((state) => state.auth)
     const { register, handleSubmit } = useForm()
-
+    const { userLanguage } = useSelector((state) => state.user)
     const [emptyMess, setEmptyMess] = useState('')
 
     useEffect(() => {
@@ -26,6 +28,12 @@ const Register = () => {
     useEffect(() => {
         dispatch(reset())
     }, [])
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     useEffect(() => {
         const usernameEl = document.querySelector('#username')
@@ -139,9 +147,9 @@ const Register = () => {
                 <ArrowLeftLongIcon />
             </button>
             <div className="container auth me-5">
-            <h2 className='auth-header'>Get Started</h2>
+            <h2 className='auth-header'> {t('getStarted')}</h2>
             <h5 className="auth-header-h5 fw-normal" style={{ color: 'var(--text-light)' }}>
-                Create your account now
+            {t('Createyouraccountnow')}
             </h5>
             <form
                 id="registerForm"
@@ -168,16 +176,16 @@ const Register = () => {
                 {/* success message */}
                 {success && (
                     <div className="error alert alert-success" role="alert">
-                        Registered successfully. Please{' '}
+                         {t('registeredSuccessfullyPlease')}{' '}
                         <Link to="/login" className="link-success">
-                            Login
+                        {t('login')}
                         </Link>{' '}
-                        to continue.
+                        {t('toContinue')}.
                     </div>
                 )}
                 {/* username */}
                 <div className="form-group mb-4">
-                    <label className={styles.formLabel}>Username</label>
+                    <label className={styles.formLabel}> {t('username')}</label>
                     <input
                         placeholder="Type your username"
                         id="username"
@@ -189,7 +197,7 @@ const Register = () => {
                 </div>
                 {/* First name */}
                 <div className="form-group mb-4">
-                    <label className={styles.formLabel}>First Name</label>
+                    <label className={styles.formLabel}> {t('firstname')}</label>
                     <input
                         placeholder="Type your first name"
                         name="first_name"
@@ -201,7 +209,7 @@ const Register = () => {
                 </div>
                 {/* Last name */}
                 <div className="form-group mb-4">
-                    <label className={styles.formLabel}>Last Name</label>
+                    <label className={styles.formLabel}> {t('lastname')}</label>
                     <input
                         placeholder="Type your last name"
                         name="last_name"
@@ -213,7 +221,7 @@ const Register = () => {
                 </div>
                 {/* Email */}
                 <div className="form-group mb-4">
-                    <label className={styles.formLabel}>Email</label>
+                    <label className={styles.formLabel}> {t('email')}</label>
                     <input
                         placeholder="Type your email"
                         id="email"
@@ -226,7 +234,7 @@ const Register = () => {
                 </div>
                 {/* Password */}
                 <div className="form-group mb-4">
-                    <label className={styles.formLabel}>Password</label>
+                    <label className={styles.formLabel}> {t('password')}</label>
                     <input
                         type="password"
                         placeholder="Enter your password"
@@ -239,18 +247,18 @@ const Register = () => {
                     />
                     <div className="invalid-feedback">
                         <ul>
-                            Password must contain the following:
+                        {t('Passwordmustcontainthefollowing')}:
                             <li id="letter" className="invalid">
-                                A <b>lowercase</b> letter
+                            {t('A')} <b>{t('lowercase')}</b> {t('letter')}
                             </li>
                             <li id="capital" className="invalid">
-                                A <b>capital (uppercase)</b> letter
+                            {t('A')}<b>{t('uppercase')}</b>{t('letter')}
                             </li>
                             <li id="number" className="invalid">
-                                A <b>number</b>
+                            {t('A')} <b>{t('number')}</b>
                             </li>
                             <li id="length" className="invalid">
-                                Minimum <b>8 characters</b>
+                            {t('minimum')} <b>8 {t('character')}</b>
                             </li>
                         </ul>
                     </div>
@@ -258,7 +266,7 @@ const Register = () => {
                 {/* Role */}
                 <div className="form-group mb-4">
                     <label className={`d-block ${styles.formLabel}`}>
-                        Role
+                    {t('role')}
                     </label>
                     <div className="form-check form-check-inline me-5">
                         <input
@@ -272,7 +280,7 @@ const Register = () => {
                             required
                         />
                         <label className="form-check-label" htmlFor="learner">
-                            Learner
+                        {t('learner')}
                         </label>
                     </div>
                     <div className="form-check mb-4 form-check-inline">
@@ -287,7 +295,7 @@ const Register = () => {
                             required
                         />
                         <label className="form-check-label" htmlFor="tutor">
-                            Tutor
+                        {t('tutor')}
                         </label>
                     </div>
                 </div>
@@ -315,12 +323,12 @@ const Register = () => {
                 </div>
             </form>
             <div className="auth-forgot d-flex">
-                <p>Have an account?</p>
+                <p>{t('haveanaccount')}?</p>
                 <Link
                     to="/login"
                     className="link-primary text-decoration-none ms-2 me-5 fw-semibold"
                 >
-                    Login
+                    {t('login')}
                 </Link>
             </div>
             </div>
