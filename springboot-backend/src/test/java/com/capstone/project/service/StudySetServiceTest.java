@@ -11,10 +11,7 @@ import com.capstone.project.dto.FilterStudySetByClassResponse;
 import com.capstone.project.exception.DuplicateValueException;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
-import com.capstone.project.repository.CardRepository;
-import com.capstone.project.repository.ContentRepository;
-import com.capstone.project.repository.StudySetRepository;
-import com.capstone.project.repository.UserRepository;
+import com.capstone.project.repository.*;
 import com.capstone.project.service.impl.StudySetServiceImpl;
 import com.capstone.project.service.impl.UserServiceImpl;
 import jakarta.persistence.EntityManager;
@@ -54,6 +51,12 @@ public class StudySetServiceTest {
 
     @Mock
     private CardService cardService;
+
+    @Mock
+    private HistoryRepository historyRepository;
+
+    @Mock
+    private CommentRepository commentRepository;
 
     @Mock
     private EntityManager entityManager;
@@ -194,6 +197,8 @@ public class StudySetServiceTest {
         when(studySetRepository.findById(1)).thenReturn(Optional.of(studySet));
         when(cardRepository.getCardByStudySetId(1)).thenReturn(List.of(card));
         when(contentRepository.getContentByCardId(1)).thenReturn(List.of(content));
+        when(historyRepository.getHistoriesByStudySetId(1)).thenReturn(List.of());
+        when(commentRepository.getCommentByStudySetId(1)).thenReturn(List.of());
 
         try {
             studySetServiceImpl.deleteHardStudySet(1);
@@ -376,6 +381,8 @@ public class StudySetServiceTest {
 
         when(studySetRepository.findListIdToDelete()).thenReturn(listToDelete);
         when(studySetRepository.findById(anyInt())).thenReturn(Optional.ofNullable(sampleStudySet));
+        when(historyRepository.getHistoriesByStudySetId(1)).thenReturn(List.of());
+        when(commentRepository.getCommentByStudySetId(1)).thenReturn(List.of());
         doNothing().when(studySetRepository).delete(any(StudySet.class)); // Mocking delete operation
 
         // Act

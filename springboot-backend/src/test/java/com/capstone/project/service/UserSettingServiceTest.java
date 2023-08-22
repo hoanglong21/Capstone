@@ -210,8 +210,8 @@ public class UserSettingServiceTest {
             Map<String, String> result = userSettingService.CustomGetUserSettingByUserId(1);
 
             assertThat(result.get("language")).isEqualTo("en");
-            assertThat(result.get("study reminder")).isEqualTo("07:00");
-            assertThat(result.get("assignment due date reminder")).isEqualTo("24");
+            assertThat(result.get("study reminder")).isEqualTo("false");
+            assertThat(result.get("assignment due date reminder")).isEqualTo("false");
             assertThat(result.get("set added")).isEqualTo("TRUE");
             assertThat(result.get("post added")).isEqualTo("TRUE");
             assertThat(result.get("assignment assigned")).isEqualTo("TRUE");

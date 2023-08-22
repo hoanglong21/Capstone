@@ -23,35 +23,44 @@ public class UserSettingRepositoryTest {
     @Autowired
     private UserSettingRepository userSettingRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Order(1)
-    @ParameterizedTest(name = "index => userId={0}, settingId{1}, value{2}")
+    @ParameterizedTest(name = "index => userId={0}, settingId={1}, value={2}")
     @CsvSource({
-            "2, 2, ja",
-            "3,3, vi",
+            "4444, 2, ja",
+            "3333,3, vi",
     })
     public void testGetByUserId(int userId, int settingId, String value) {
+        User user = User.builder().username("test_stuff").email("teststuff@gmail.com").build();
+        userRepository.save(user);
+
         UserSetting userSetting = UserSetting.builder()
-                .user(User.builder().id(userId).build())
+                .user(user)
                 .setting(Setting.builder().id(settingId).build())
                 .value(value)
                 .build();
         userSettingRepository.save(userSetting);
 
-        List<UserSetting> userSettings = userSettingRepository.getByUserId(userId);
+        List<UserSetting> userSettings = userSettingRepository.getByUserId(user.getId());
         assertThat(userSettings.size()).isGreaterThan(0);
 
     }
 
     @Order(2)
-    @ParameterizedTest(name = "index => userId={0}, settingId{1}, value{2}")
+    @ParameterizedTest(name = "index => userId={0}, settingId={1}, value={2}")
     @CsvSource({
             "4, 2, ja",
             "3,3, vi",
     })
     public void testGetBySettingId(int userId, int settingId, String value) {
+        User user = User.builder().username("test_stuff").email("teststuff@gmail.com").build();
+        userRepository.save(user);
+
         UserSetting userSetting = UserSetting.builder()
-                .user(User.builder().id(userId).build())
+                .user(user)
                 .setting(Setting.builder().id(settingId).build())
                 .value(value)
                 .build();
@@ -63,19 +72,22 @@ public class UserSettingRepositoryTest {
     }
 
     @Order(3)
-    @ParameterizedTest(name = "{index} => userId={0}, settingId{1}, value{2}" )
+    @ParameterizedTest(name = "{index} => userId={0}, settingId={1}, value={2}" )
     @CsvSource({
             "3, 2, ja",
             "4,2, vi",
     })
     public void testGetUserSettingCustom(int userId,int settingId,String value)  {
+        User user = User.builder().username("test_stuff").email("teststuff@gmail.com").build();
+        userRepository.save(user);
+
         UserSetting userSetting = UserSetting.builder()
-                .user(User.builder().id(userId).build())
+                .user(user)
                 .setting(Setting.builder().id(settingId).build())
                 .value(value)
                 .build();
         userSettingRepository.save(userSetting);
-            UserSetting userSettings = userSettingRepository.getUserSettingCustom(userId,settingId);
+            UserSetting userSettings = userSettingRepository.getUserSettingCustom(user.getId(),settingId);
             assertThat(userSettings).isNotNull();
 
 
