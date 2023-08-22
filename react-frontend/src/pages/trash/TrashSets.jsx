@@ -143,7 +143,7 @@ const TrashSets = () => {
             setIsDelete(false)
             setToastMess('Permanently deleted')
             setShowToast(true)
-            fetchData(search ? search : '')
+            checkEmpty()
         }
     }, [isDelete])
 
@@ -153,7 +153,7 @@ const TrashSets = () => {
             await StudySetService.recoverStudySet(set.id)
             setToastMess('Restored')
             setShowToast(true)
-            fetchData(search ? search : '')
+            checkEmpty()
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

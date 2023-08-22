@@ -95,8 +95,6 @@ const TrashClasses = () => {
                     '',
                     '=1',
                     '',
-                    `=${userInfo.username}`,
-                    `=${userInfo.username}`,
                     '',
                     '',
                     '',
@@ -104,7 +102,9 @@ const TrashClasses = () => {
                     '',
                     '',
                     '',
-                    ''
+                    '',
+                    `=1`,
+                    '=10'
                 )
             ).data.list
             if (temp.length === 0) {
@@ -137,17 +137,17 @@ const TrashClasses = () => {
             setIsDelete(false)
             setToastMess('Permanently deleted')
             setShowToast(true)
-            fetchData(search ? search : '')
+            checkEmpty()
         }
     }, [isDelete])
 
-    const handleRestore = async (set) => {
+    const handleRestore = async (classroom) => {
         setLoading(true)
         try {
-            // await ClassService.recoverStudySet(set.id)
+            await ClassService.recoverClass(classroom.id)
             setToastMess('Restored')
             setShowToast(true)
-            fetchData(search ? search : '')
+            checkEmpty()
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)

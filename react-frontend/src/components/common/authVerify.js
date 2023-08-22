@@ -220,7 +220,7 @@ const AuthVerify = (props) => {
                         `userNotification_${user.username}`,
                         token,
                         null,
-                        0.08
+                        0.02
                     )
                     dispatch(getNumUnread(user.id))
                 } catch (error) {
