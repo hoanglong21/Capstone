@@ -20,7 +20,6 @@ import DeleteTest from './DeleteTest'
 const TestDetails = () => {
     const navigate = useNavigate()
 
-    const { id } = useParams()
     const { test_id } = useParams()
 
     const { userInfo } = useSelector((state) => state.user)
@@ -162,69 +161,73 @@ const TestDetails = () => {
                             >
                                 Do Test
                             </button>
-                            <div className="dropdown">
-                                <button
-                                    className="btn btn-outline-secondary icon-outline-secondary "
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    <OptionHorIcon />
-                                </button>
-                                <ul className="dropdown-menu">
-                                    {userInfo?.id ===
-                                        test?.classroom?.user?.id && (
-                                        <div>
-                                            <li>
-                                                <Link
-                                                    className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                                    type="button"
-                                                    to={`../../../edit-test/${test_id}`}
-                                                    relative="path"
-                                                >
-                                                    Edit
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <button
-                                                    className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setShowDeleteModal(true)
-                                                    }}
-                                                >
-                                                    Delete
-                                                </button>
-                                            </li>
-                                        </div>
-                                    )}
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={handleCopyLink}
-                                        >
-                                            Copy link
-                                        </button>
-                                    </li>
-                                    {userInfo?.id !==
-                                        test?.classroom?.user?.id && (
-                                        <div>
-                                            <li>
-                                                <hr className="dropdown-divider" />
-                                            </li>
-                                            <li>
-                                                <button
-                                                    className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                                    type="button"
-                                                >
-                                                    Report
-                                                </button>
-                                            </li>
-                                        </div>
-                                    )}
-                                </ul>
-                            </div>
+                            {!test?.classroom?._deleted && (
+                                <div className="dropdown">
+                                    <button
+                                        className="btn btn-outline-secondary icon-outline-secondary "
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <OptionHorIcon />
+                                    </button>
+                                    <ul className="dropdown-menu">
+                                        {userInfo?.id ===
+                                            test?.classroom?.user?.id && (
+                                            <div>
+                                                <li>
+                                                    <Link
+                                                        className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                                        type="button"
+                                                        to={`../../../edit-test/${test_id}`}
+                                                        relative="path"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setShowDeleteModal(
+                                                                true
+                                                            )
+                                                        }}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </li>
+                                            </div>
+                                        )}
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                                type="button"
+                                                onClick={handleCopyLink}
+                                            >
+                                                Copy link
+                                            </button>
+                                        </li>
+                                        {userInfo?.id !==
+                                            test?.classroom?.user?.id && (
+                                            <div>
+                                                <li>
+                                                    <hr className="dropdown-divider" />
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                                        type="button"
+                                                    >
+                                                        Report
+                                                    </button>
+                                                </li>
+                                            </div>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="my-2">{test?.description}</div>
@@ -268,38 +271,41 @@ const TestDetails = () => {
                     />
                 ))}
                 {/* add comment */}
-                <div className="d-flex">
-                    <img
-                        src={userInfo?.avatar || defaultAvatar}
-                        className="comment_img me-3"
-                    />
-                    <div className="commentEditor flex-fill">
-                        <CardEditor
-                            data={addComment}
-                            onChange={(event, editor) => {
-                                setAddComment(editor.getData())
-                            }}
+                {!test?.classroom?._deleted && (
+                    <div className="d-flex">
+                        <img
+                            src={userInfo?.avatar || defaultAvatar}
+                            className="comment_img me-3"
                         />
+                        <div className="commentEditor flex-fill">
+                            <CardEditor
+                                data={addComment}
+                                onChange={(event, editor) => {
+                                    setAddComment(editor.getData())
+                                }}
+                            />
+                        </div>
+                        <button
+                            className="comment_btn ms-1"
+                            onClick={handleAddComment}
+                            disabled={!addComment}
+                        >
+                            {loadingComment ? (
+                                <div
+                                    className="spinner-border spinner-border-sm text-secondary"
+                                    role="status"
+                                >
+                                    <span className="visually-hidden">
+                                        LoadingUpload...
+                                    </span>
+                                </div>
+                            ) : (
+                                <SendIcon size="20px" strokeWidth="1.8" />
+                            )}
+                        </button>
                     </div>
-                    <button
-                        className="comment_btn ms-1"
-                        onClick={handleAddComment}
-                        disabled={!addComment}
-                    >
-                        {loadingComment ? (
-                            <div
-                                className="spinner-border spinner-border-sm text-secondary"
-                                role="status"
-                            >
-                                <span className="visually-hidden">
-                                    LoadingUpload...
-                                </span>
-                            </div>
-                        ) : (
-                            <SendIcon size="20px" strokeWidth="1.8" />
-                        )}
-                    </button>
-                </div>
+                )}
+
                 {/* delete modal */}
                 <DeleteTest
                     test={test}

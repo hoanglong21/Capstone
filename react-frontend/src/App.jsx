@@ -77,7 +77,7 @@ import ManageTest from './pages/admin/manage/ManageTest'
 import ManageSubmission from './pages/admin/manage/ManageSubmission'
 import ViewDetailSubmission from './pages/admin/view/ViewDetailSubmission'
 import RegisterAdmin from './pages/admin/RegiserAdmin'
-import Achievements from './pages/library/Achievements'
+import Achievements from './pages/library/achievements/Achievements'
 import Statistics from './pages/library/Statistics'
 import ClassStatistics from './pages/class/ClassStatistics'
 import Learn from './pages/studySet/learn/Learn'
@@ -101,6 +101,9 @@ import AdminProtectedRoute from './pages/protectedRoute/AdminProrectedRoute'
 import Sets from './pages/class/Sets'
 import UseClas from './pages/help/UseClass'
 import VerifyAccount from './pages/auth/VerifyAccount'
+import Trash from './pages/trash/Trash'
+import TrashSets from './pages/trash/TrashSets'
+import TrashClasses from './pages/trash/TrashClasses'
 
 const App = () => {
     const { userToken } = useSelector((state) => state.auth)
@@ -182,108 +185,98 @@ const App = () => {
                             />
                             <Route path="users" element={<UsersForHome />} />
                         </Route>
-                        {/* Access deny */}
-                        <Route element={<ProtectedRoute />}>
-                            {/* Account settings */}
-                            <Route path="account" element={<AccountLayout />}>
-                                <Route index element={<Profile />} />
-                                <Route
-                                    path="notification"
-                                    element={<Notifications />}
-                                />
-                                <Route
-                                    path="change-password"
-                                    element={<ChangePassword />}
-                                />
-                                <Route
-                                    path="change-language"
-                                    element={<Language />}
-                                />
-                                <Route
-                                    path="delete-account"
-                                    element={<DeleteAccount />}
-                                />
-                            </Route>
-                            {/* Library */}
-                            <Route path="library" element={<LibraryLayout />}>
-                                <Route
-                                    path="achievements"
-                                    element={<Achievements />}
-                                />
-                                <Route path="sets" element={<StudySetList />} />
-                                <Route path="classes" element={<ClassList />} />
-                                <Route
-                                    path="statistics"
-                                    element={<Statistics />}
-                                />
-                            </Route>
-                            {/* Study Set */}
-                            <Route path="create-set" element={<CreateSet />} />
+                        {/* Account settings */}
+                        <Route path="account" element={<AccountLayout />}>
+                            <Route index element={<Profile />} />
                             <Route
-                                path="edit-set/:id"
-                                element={<CreateSet />}
+                                path="notification"
+                                element={<Notifications />}
                             />
-                            {/* Class */}
-                            <Route path="class/:id" element={<ClassLayout />}>
-                                <Route index element={<Stream />} />
-                                <Route path="sets" element={<Sets />} />
-                                <Route
-                                    path="assignments"
-                                    element={<AssignmentList />}
-                                />
-                                <Route
-                                    path="create-assignment"
-                                    element={<CreateAssignment />}
-                                />
-                                <Route
-                                    path="edit-assignment/:assign_id"
-                                    element={<CreateAssignment />}
-                                />
-                                <Route path="tests" element={<TestList />} />
-                                <Route
-                                    path="create-test"
-                                    element={<CreateTest />}
-                                />
-                                <Route
-                                    path="edit-test/:test_id"
-                                    element={<CreateTest />}
-                                />
-                                <Route path="people" element={<People />} />
-                                <Route
-                                    path="statistics"
-                                    element={<ClassStatistics />}
-                                />
-                            </Route>
-                            {/* Assignment */}
                             <Route
-                                path="class/:id/assignment/:assign_id"
-                                element={<ViewAssignment />}
-                            >
-                                <Route
-                                    path="details"
-                                    element={<Instructions />}
-                                />
-                                <Route
-                                    path="submissions"
-                                    element={<Submissions />}
-                                />
-                            </Route>
-                            {/* Test */}
-                            <Route
-                                path="class/:id/test/:test_id"
-                                element={<ViewTest />}
-                            >
-                                <Route
-                                    path="details"
-                                    element={<TestDetails />}
-                                />
-                                <Route path="results" element={<Results />} />
-                            </Route>
-                            {/* Feedback */}
-                            <Route
-                                path="help-center/send-feedback"
-                                element={<SendFeedback />}
+                                path="change-password"
+                                element={<ChangePassword />}
                             />
+                            <Route
+                                path="change-language"
+                                element={<Language />}
+                            />
+                            <Route
+                                path="delete-account"
+                                element={<DeleteAccount />}
+                            />
+                        </Route>
+                        {/* Library */}
+                        <Route path="library" element={<LibraryLayout />}>
+                            <Route
+                                path="achievements"
+                                element={<Achievements />}
+                            />
+                            <Route path="sets" element={<StudySetList />} />
+                            <Route path="classes" element={<ClassList />} />
+                            <Route path="statistics" element={<Statistics />} />
+                        </Route>
+                        {/* Study Set */}
+                        <Route path="create-set" element={<CreateSet />} />
+                        <Route path="edit-set/:id" element={<CreateSet />} />
+                        {/* Class */}
+                        <Route path="class/:id" element={<ClassLayout />}>
+                            <Route index element={<Stream />} />
+                            <Route path="sets" element={<Sets />} />
+                            <Route
+                                path="assignments"
+                                element={<AssignmentList />}
+                            />
+                            <Route
+                                path="create-assignment"
+                                element={<CreateAssignment />}
+                            />
+                            <Route
+                                path="edit-assignment/:assign_id"
+                                element={<CreateAssignment />}
+                            />
+                            <Route path="tests" element={<TestList />} />
+                            <Route
+                                path="create-test"
+                                element={<CreateTest />}
+                            />
+                            <Route
+                                path="edit-test/:test_id"
+                                element={<CreateTest />}
+                            />
+                            <Route path="people" element={<People />} />
+                            <Route
+                                path="statistics"
+                                element={<ClassStatistics />}
+                            />
+                        </Route>
+                        {/* Assignment */}
+                        <Route
+                            path="class/:id/assignment/:assign_id"
+                            element={<ViewAssignment />}
+                        >
+                            <Route path="details" element={<Instructions />} />
+                            <Route
+                                path="submissions"
+                                element={<Submissions />}
+                            />
+                        </Route>
+                        {/* Test */}
+                        <Route
+                            path="class/:id/test/:test_id"
+                            element={<ViewTest />}
+                        >
+                            <Route path="details" element={<TestDetails />} />
+                            <Route path="results" element={<Results />} />
+                        </Route>
+                        {/* Feedback */}
+                        <Route
+                            path="help-center/send-feedback"
+                            element={<SendFeedback />}
+                        />
+                        {/* Trash */}
+                        <Route path="trash" element={<Trash />}>
+                            <Route path="sets" element={<TrashSets />} />
+                            <Route path="classes" element={<TrashClasses />} />
                         </Route>
                     </Route>
                     {/* No header + footer */}

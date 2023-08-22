@@ -53,20 +53,28 @@ export default function Layout() {
     const [showGPT, setShowGPT] = useState(false)
 
     useEffect(() => {
-        const getData = ref(database, 'messages/')
+        if (userInfo?.id) {
+            const getData = ref(database, 'messages/')
 
-        onChildAdded(getData, (data) => {
-            let temp = { ...data.val(), key: data.key }
-            setMessages((messages) => [...messages, temp])
-        })
+            onChildAdded(getData, (data) => {
+                let temp = { ...data.val(), key: data.key }
+                if (
+                    temp?.video_call === true &&
+                    temp?.receiver === userInfo?.username
+                ) {
+                    setIsAccept(true)
+                }
+                setMessages((messages) => [...messages, temp])
+            })
 
-        onChildRemoved(getData, (data) => {
-            const deletedMessage = data.val()
-            setMessages((messages) =>
-                messages.filter((message) => message.key !== data.key)
-            )
-        })
-    }, [])
+            onChildRemoved(getData, (data) => {
+                const deletedMessage = data.val()
+                setMessages((messages) =>
+                    messages.filter((message) => message.key !== data.key)
+                )
+            })
+        }
+    }, [userInfo])
 
     // useEffect(() => {
     //     if (isAccept !== null) {

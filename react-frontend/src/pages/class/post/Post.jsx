@@ -323,42 +323,44 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="dropdown">
-                        <button
-                            className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <OptionVerIcon />
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li>
-                                <button
-                                    className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                    type="button"
-                                    onClick={() => {
-                                        setShowUpdate(true)
-                                    }}
-                                >
-                                    <span className="align-middle fw-medium">
-                                        Edit
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                    type="button"
-                                    onClick={() => setShowDeleteModal(true)}
-                                >
-                                    <span className="align-middle fw-medium">
-                                        Delete
-                                    </span>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                    {!post?.classroom?._deleted && (
+                        <div className="dropdown">
+                            <button
+                                className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <OptionVerIcon />
+                            </button>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <button
+                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                        type="button"
+                                        onClick={() => {
+                                            setShowUpdate(true)
+                                        }}
+                                    >
+                                        <span className="align-middle fw-medium">
+                                            Edit
+                                        </span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                        type="button"
+                                        onClick={() => setShowDeleteModal(true)}
+                                    >
+                                        <span className="align-middle fw-medium">
+                                            Delete
+                                        </span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    )}
                 </div>
                 <div className="card-body">
                     <div className="post__content">
@@ -518,38 +520,40 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                         </div>
                     )}
                     {/* add comment */}
-                    <div className="d-flex">
-                        <img
-                            src={userInfo?.avatar || defaultAvatar}
-                            className="comment_img me-3"
-                        />
-                        <div className="commentEditor flex-fill">
-                            <CardEditor
-                                data={addComment}
-                                onChange={(event, editor) => {
-                                    setAddComment(editor.getData())
-                                }}
+                    {!post?.classroom?._deleted && (
+                        <div className="d-flex">
+                            <img
+                                src={userInfo?.avatar || defaultAvatar}
+                                className="comment_img me-3"
                             />
+                            <div className="commentEditor flex-fill">
+                                <CardEditor
+                                    data={addComment}
+                                    onChange={(event, editor) => {
+                                        setAddComment(editor.getData())
+                                    }}
+                                />
+                            </div>
+                            <button
+                                className="comment_btn ms-1"
+                                onClick={handleAddComment}
+                                disabled={!addComment}
+                            >
+                                {loadingComment ? (
+                                    <div
+                                        className="spinner-border spinner-border-sm text-secondary"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            LoadingUpload...
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <SendIcon size="20px" strokeWidth="1.8" />
+                                )}
+                            </button>
                         </div>
-                        <button
-                            className="comment_btn ms-1"
-                            onClick={handleAddComment}
-                            disabled={!addComment}
-                        >
-                            {loadingComment ? (
-                                <div
-                                    className="spinner-border spinner-border-sm text-secondary"
-                                    role="status"
-                                >
-                                    <span className="visually-hidden">
-                                        LoadingUpload...
-                                    </span>
-                                </div>
-                            ) : (
-                                <SendIcon size="20px" strokeWidth="1.8" />
-                            )}
-                        </button>
-                    </div>
+                    )}
                 </div>
             </div>
             {/* Delete post modal */}

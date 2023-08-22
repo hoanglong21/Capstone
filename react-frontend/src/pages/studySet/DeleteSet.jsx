@@ -64,10 +64,10 @@ const DeleteSet = ({
                 <div className="setModalHeading mb-1">{studySet?.title}</div>
                 <p className="mb-1">
                     You are about to delete this set and all of its data. No one
-                    will be able to access this set ever again.
+                    can see this set anymore.
                 </p>
                 <p className="fw-semibold">
-                    Are you sure? This cannot be undone.
+                    Items in Trash will be permanently deleted after 30 days.
                 </p>
             </Modal.Body>
             <Modal.Footer className="px-4">
@@ -92,7 +92,7 @@ const DeleteSet = ({
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Yes, delete this set'
+                        'Move to trash'
                     )}
                 </button>
             </Modal.Footer>

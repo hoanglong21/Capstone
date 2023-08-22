@@ -16,7 +16,7 @@
     transition: all 0.15s;
 }
 
-.createAssign_btn:hover {
+.createAssign_btn:hover:not(:disabled) {
     background-color: #1a5cb6;
 }
 
@@ -309,6 +309,7 @@
 
 .submission_btn {
     color: rgb(25, 103, 210);
+    background-color: #fff;
     border: 1px solid rgb(218, 220, 224);
     font-size: 0.875rem;
     letter-spacing: 0.01;
@@ -452,31 +453,30 @@
     border-bottom: 0.125rem solid #e8eaed;
 }
 
-.submission-col-4{
+.submission-col-4 {
     flex: 0 0 auto;
     width: 33.33333333% !important;
 }
 
-.submission-col-8{
+.submission-col-8 {
     flex: 0 0 auto;
     width: 66.66666667% !important;
 }
 
 @media only screen and (max-width: 768px) {
-
     .assignInfo_number {
         font-size: 1.875rem;
     }
 
-    .assignInfo_title{
+    .assignInfo_title {
         font-size: 0.65rem;
     }
 
-    .submission-col-4{
+    .submission-col-4 {
         width: 100% !important;
     }
 
-    .submission-col-8{
+    .submission-col-8 {
         width: 100% !important;
         margin-top: 20px;
     }
@@ -489,7 +489,7 @@
         font-size: 1.1rem;
     }
 
-    .instruction-date{
+    .instruction-date {
         display: inline;
     }
 

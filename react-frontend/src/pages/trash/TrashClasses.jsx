@@ -1,22 +1,23 @@
 import { useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 
 import ClassService from '../../services/ClassService'
 
 import Pagination from '../../components/Pagination'
-import CreateClass from '../class/CreateClass'
-import JoinClass from '../class/JoinClass'
+import DeleteClass from './DeleteClass'
 
 import {
     ArrowSmallDownIcon,
     ArrowSmallUpIcon,
     ClassIcon,
     DeleteSolidIcon,
-    EditIcon,
     OptionVerIcon,
+    RestoreIcon,
     SearchIcon,
 } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
@@ -25,10 +26,8 @@ import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import '../../assets/styles/LibrarySearchList.css'
 import '../../assets/styles/Home.css'
-import DeleteClass from '../class/DeleteClass'
-import UpdateClass from '../class/UpdateClass'
 
-const ClassList = () => {
+const TrashClasses = () => {
     const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -47,16 +46,12 @@ const ClassList = () => {
     const [totalItems, setTotalItems] = useState(0)
     const [isDesc, setIsDesc] = useState(true)
 
-    const [updateClass, setUpdateClass] = useState({})
-    const [isUpdate, setIsUpdate] = useState(false)
-
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [isDelete, setIsDelete] = useState(false)
     const [deleteClass, setDeleteClass] = useState({})
 
-    const [showCreateModal, setShowCreateModal] = useState(false)
-    const [showJoinModal, setShowJoinModal] = useState(false)
-    const [showEditModal, setShowEditModal] = useState(false)
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showToast, setShowToast] = useState(false)
+    const [toastMess, setToastMess] = useState('')
 
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
@@ -65,7 +60,7 @@ const ClassList = () => {
             const temp = (
                 await ClassService.getFilterList(
                     '',
-                    '=0',
+                    '=1',
                     `${searchKey ? '=' + searchKey : ''}`,
                     `${type !== 'joined' ? `=${userInfo.username}` : ''}`,
                     `${type !== 'created' ? `=${userInfo.username}` : ''}`,
@@ -98,10 +93,7 @@ const ClassList = () => {
             const temp = (
                 await ClassService.getFilterList(
                     '',
-                    '=0',
-                    '',
-                    `=${userInfo.username}`,
-                    `=${userInfo.username}`,
+                    '=1',
                     '',
                     '',
                     '',
@@ -109,7 +101,10 @@ const ClassList = () => {
                     '',
                     '',
                     '',
-                    ''
+                    '',
+                    '',
+                    `=1`,
+                    '=10'
                 )
             ).data.list
             if (temp.length === 0) {
@@ -138,12 +133,30 @@ const ClassList = () => {
     }, [userInfo, search, type, page, isDesc])
 
     useEffect(() => {
-        if (userInfo?.username && (isDelete === true || isUpdate === true)) {
+        if (userInfo?.username && isDelete === true) {
             setIsDelete(false)
-            setIsUpdate(false)
-            fetchData(search ? search : '')
+            setToastMess('Permanently deleted')
+            setShowToast(true)
+            checkEmpty()
         }
-    }, [isDelete, isUpdate])
+    }, [isDelete])
+
+    const handleRestore = async (classroom) => {
+        setLoading(true)
+        try {
+            await ClassService.recoverClass(classroom.id)
+            setToastMess('Restored')
+            setShowToast(true)
+            checkEmpty()
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoading(false)
+    }
 
     if (loading) {
         return (
@@ -162,44 +175,8 @@ const ClassList = () => {
             <div className="container mt-4 mb-5">
                 {isEmpty ? (
                     <div className="setsEmpty d-flex flex-column align-items-center justify-content-center">
-                        <img
-                            src="https://www.gstatic.com/classroom/empty_states_home.svg"
-                            alt="No classes found in your library"
-                        />
-                        <h3>You haven't created or joined any classes</h3>
-                        <p>Your classes will be shown here</p>
-                        <div>
-                            {userInfo?.role === 'ROLE_TUTOR' && (
-                                <button
-                                    className="btn btn-outline-primary me-3"
-                                    type="button"
-                                    onClick={() => {
-                                        setShowCreateModal(true)
-                                    }}
-                                >
-                                    Create Class
-                                </button>
-                            )}
-                            <button
-                                className="btn btn-primary"
-                                type="button"
-                                onClick={() => {
-                                    setShowJoinModal(true)
-                                }}
-                            >
-                                Join Class
-                            </button>
-                        </div>
-                        {/* Create class modal */}
-                        <CreateClass
-                            showCreateModal={showCreateModal}
-                            setShowCreateModal={setShowCreateModal}
-                        />
-                        {/* Join class modal */}
-                        <JoinClass
-                            showJoinModal={showJoinModal}
-                            setShowJoinModal={setShowJoinModal}
-                        />
+                        <h3>No items</h3>
+                        <p>Only the deleted class is shown here.</p>
                     </div>
                 ) : (
                     <div>
@@ -422,19 +399,16 @@ const ClassList = () => {
                                                                 <button
                                                                     className="setPageTerm_btn dropdown-item d-flex align-items-center"
                                                                     onClick={() => {
-                                                                        setUpdateClass(
+                                                                        handleRestore(
                                                                             classroom
-                                                                        )
-                                                                        setShowEditModal(
-                                                                            true
                                                                         )
                                                                     }}
                                                                 >
-                                                                    <EditIcon
+                                                                    <RestoreIcon
                                                                         size="20px"
                                                                         className="me-2"
                                                                     />
-                                                                    Edit
+                                                                    Recover
                                                                 </button>
                                                             </li>
                                                             <li>
@@ -462,14 +436,6 @@ const ClassList = () => {
                                             </div>
                                         </div>
                                     ))}
-                                    {/* Update class Modal */}
-                                    <UpdateClass
-                                        classroom={updateClass}
-                                        showEditModal={showEditModal}
-                                        setShowEditModal={setShowEditModal}
-                                        isUpdate={isUpdate}
-                                        setIsUpdate={setIsUpdate}
-                                    />
                                     {/* Delete class modal */}
                                     <DeleteClass
                                         classroom={deleteClass}
@@ -478,6 +444,24 @@ const ClassList = () => {
                                         isDelete={isDelete}
                                         setIsDelete={setIsDelete}
                                     />
+                                    {/* Toast Mess */}
+                                    <ToastContainer
+                                        className="p-3"
+                                        position="bottom-start"
+                                        style={{ zIndex: 1 }}
+                                    >
+                                        <Toast
+                                            onClose={() => setShowToast(false)}
+                                            show={showToast}
+                                            bg="dark"
+                                            delay={3000}
+                                            autohide
+                                        >
+                                            <Toast.Body className="text-white">
+                                                {toastMess}
+                                            </Toast.Body>
+                                        </Toast>
+                                    </ToastContainer>
                                 </div>
                                 {/* Pagination */}
                                 <Pagination
@@ -497,4 +481,4 @@ const ClassList = () => {
         )
     }
 }
-export default ClassList
+export default TrashClasses

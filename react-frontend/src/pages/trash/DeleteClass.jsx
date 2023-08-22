@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/Modal'
 
 import ClassService from '../../services/ClassService'
 
-import './classLayout/classLayout.css'
+import '../class/classLayout/classLayout.css'
 
 const DeleteClass = ({
     classroom,
@@ -27,7 +27,7 @@ const DeleteClass = ({
     const handleSubmit = async () => {
         setLoading(true)
         try {
-            await ClassService.deleteClass(deleteClass.id)
+            await ClassService.deleteHardClass(deleteClass.id)
             if (isDelete === false) {
                 setIsDelete(true)
             } else {
@@ -57,16 +57,16 @@ const DeleteClass = ({
                     <h4 className="modal-title">Delete this class?</h4>
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className="py-3">
                 <div className="classDeleteModalHeading mb-3">
                     {deleteClass.class_name}
                 </div>
                 <p className="mb-1">
                     You are about to delete this class and all of its data. No
-                    one can access this class anymore.
+                    one will be able to access this set ever again.
                 </p>
                 <p className="fw-semibold">
-                    Items in Trash will be permanently deleted after 30 days.
+                    Are you sure? This cannot be undone.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -93,7 +93,7 @@ const DeleteClass = ({
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Move to trash'
+                        'Yes, delete this class'
                     )}
                 </button>
             </Modal.Footer>

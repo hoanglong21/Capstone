@@ -81,7 +81,6 @@ function AllForHome() {
                 )
             ).data.list
             setClasses(temp)
-            setLoadingClasses(false)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -89,6 +88,7 @@ function AllForHome() {
                 console.log(error.message)
             }
         }
+        setLoadingClasses(false)
     }
 
     const fetchUsersData = async (searchKey) => {

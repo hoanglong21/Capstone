@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal'
 import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
+import HistoryService from '../../services/HistoryService'
 
 const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
     const navigate = useNavigate()

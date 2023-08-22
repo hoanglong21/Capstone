@@ -131,72 +131,74 @@ const Instructions = () => {
                         {assignment?.title}{' '}
                         {assignment?._draft ? '(Draft)' : ''}
                     </div>
-                    <div className="dropdown align-self-start">
-                        <button
-                            className="btn btn-outline-secondary icon-outline-secondary "
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <OptionHorIcon />
-                        </button>
-                        <ul className="dropdown-menu">
-                            {userInfo?.id ===
-                                assignment?.classroom?.user?.id && (
-                                <div>
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={() => {
-                                                navigate(
-                                                    `/class/${assignment?.classroom?.id}/edit-assignment/${assign_id}`
-                                                )
-                                            }}
-                                        >
-                                            Edit
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={() => {
-                                                setShowDeleteModal(true)
-                                            }}
-                                        >
-                                            Delete
-                                        </button>
-                                    </li>
-                                </div>
-                            )}
-                            <li>
-                                <button
-                                    className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                    type="button"
-                                    onClick={handleCopyLink}
-                                >
-                                    Copy link
-                                </button>
-                            </li>
-                            {userInfo?.id !==
-                                assignment?.classroom?.user?.id && (
-                                <div>
-                                    <li>
-                                        <hr className="dropdown-divider" />
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item py-1 px-3 d-flex align-items-center"
-                                            type="button"
-                                        >
-                                            Report
-                                        </button>
-                                    </li>
-                                </div>
-                            )}
-                        </ul>
-                    </div>
+                    {!assignment?.classroom?._deleted && (
+                        <div className="dropdown align-self-start">
+                            <button
+                                className="btn btn-outline-secondary icon-outline-secondary "
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <OptionHorIcon />
+                            </button>
+                            <ul className="dropdown-menu">
+                                {userInfo?.id ===
+                                    assignment?.classroom?.user?.id && (
+                                    <div>
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                                type="button"
+                                                onClick={() => {
+                                                    navigate(
+                                                        `/class/${assignment?.classroom?.id}/edit-assignment/${assign_id}`
+                                                    )
+                                                }}
+                                            >
+                                                Edit
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowDeleteModal(true)
+                                                }}
+                                            >
+                                                Delete
+                                            </button>
+                                        </li>
+                                    </div>
+                                )}
+                                <li>
+                                    <button
+                                        className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                        type="button"
+                                        onClick={handleCopyLink}
+                                    >
+                                        Copy link
+                                    </button>
+                                </li>
+                                {userInfo?.id !==
+                                    assignment?.classroom?.user?.id && (
+                                    <div>
+                                        <li>
+                                            <hr className="dropdown-divider" />
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="dropdown-item py-1 px-3 d-flex align-items-center"
+                                                type="button"
+                                            >
+                                                Report
+                                            </button>
+                                        </li>
+                                    </div>
+                                )}
+                            </ul>
+                        </div>
+                    )}
                 </div>
                 <div className="d-flex mb-2 instruction_info">
                     <div>{assignment?.user?.username}</div>
@@ -283,38 +285,41 @@ const Instructions = () => {
                 />
             ))}
             {/* add comment */}
-            <div className="d-flex">
-                <img
-                    src={userInfo?.avatar || defaultAvatar}
-                    className="comment_img me-3"
-                />
-                <div className="commentEditor flex-fill">
-                    <CardEditor
-                        data={addComment}
-                        onChange={(event, editor) => {
-                            setAddComment(editor.getData())
-                        }}
+            {!assignment?.classroom?._deleted && (
+                <div className="d-flex">
+                    <img
+                        src={userInfo?.avatar || defaultAvatar}
+                        className="comment_img me-3"
                     />
+                    <div className="commentEditor flex-fill">
+                        <CardEditor
+                            data={addComment}
+                            onChange={(event, editor) => {
+                                setAddComment(editor.getData())
+                            }}
+                        />
+                    </div>
+                    <button
+                        className="comment_btn ms-1"
+                        onClick={handleAddComment}
+                        disabled={!addComment}
+                    >
+                        {loadingComment ? (
+                            <div
+                                className="spinner-border spinner-border-sm text-secondary"
+                                role="status"
+                            >
+                                <span className="visually-hidden">
+                                    LoadingUpload...
+                                </span>
+                            </div>
+                        ) : (
+                            <SendIcon size="20px" strokeWidth="1.8" />
+                        )}
+                    </button>
                 </div>
-                <button
-                    className="comment_btn ms-1"
-                    onClick={handleAddComment}
-                    disabled={!addComment}
-                >
-                    {loadingComment ? (
-                        <div
-                            className="spinner-border spinner-border-sm text-secondary"
-                            role="status"
-                        >
-                            <span className="visually-hidden">
-                                LoadingUpload...
-                            </span>
-                        </div>
-                    ) : (
-                        <SendIcon size="20px" strokeWidth="1.8" />
-                    )}
-                </button>
-            </div>
+            )}
+
             {/* delete modal */}
             <DeleteAssignment
                 assign={assignment}

@@ -3,7 +3,11 @@ import axios from 'axios'
 const API_BASE_URL = process.env.REACT_APP_HOST
 
 const createClassroom = (newClass) => {
-    return axios.post(API_BASE_URL + '/class', newClass)
+    return axios.post(API_BASE_URL + '/class', newClass, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const joinClass = (classCode, username) => {
@@ -12,16 +16,45 @@ const joinClass = (classCode, username) => {
             '/joinclass?classCode=' +
             classCode +
             '&username=' +
-            username
+            username,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+            },
+        }
     )
 }
 
 const updateClassroom = (classRequest, id) => {
-    return axios.put(API_BASE_URL + '/class/' + id, classRequest)
+    return axios.put(API_BASE_URL + '/class/' + id, classRequest, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const deleteClass = (id) => {
-    return axios.delete(API_BASE_URL + '/class/' + id)
+    return axios.delete(API_BASE_URL + '/class/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const deleteHardClass = (id) => {
+    return axios.delete(API_BASE_URL + '/deleteclass/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
+const recoverClass = (id) => {
+    return axios.delete(API_BASE_URL + '/recoverclass/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const getClassroomById = (id) => {
@@ -41,7 +74,11 @@ const getAssignmentNumber = (id) => {
 }
 
 const resetClassCode = (id) => {
-    return axios.post(API_BASE_URL + '/resetclasscode/' + id)
+    return axios.post(API_BASE_URL + '/resetclasscode/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const getFilterList = (
@@ -174,6 +211,8 @@ const ClassService = {
     getFilterClassStudySet,
     addStudySetToClass,
     unAssignStudySet,
+    deleteHardClass,
+    recoverClass,
 }
 
 export default ClassService

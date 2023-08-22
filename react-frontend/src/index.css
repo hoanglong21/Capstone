@@ -394,12 +394,15 @@ svg {
     word-break: break-all;
 }
 
-
-button{
+button {
     border: none;
-    background-color: #fff;
 }
+
+.btn-group > .btn-check:checked + .btn {
+    z-index: 0;
+}
+
 /* ignore error */
-/* iframe {
+iframe {
     display: none;
-} */
+}

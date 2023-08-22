@@ -14,6 +14,7 @@ import NotificationService from '../../services/NotificationService'
 import banned from '../../assets/images/banned.png'
 import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
+import HistoryService from '../../services/HistoryService'
 
 const People = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -119,6 +120,14 @@ const People = () => {
             })
             setMessToast(`${request.user.username} is now a member`)
             setShowToast(true)
+            HistoryService.createHistory({
+                historyType: { id: 8 },
+                user: {
+                    id: userInfo.id,
+                    username: userInfo.username,
+                },
+                classroom: { id: id },
+            })
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -226,6 +235,7 @@ const People = () => {
                             <div>
                                 <button
                                     className="people_btn people_btn--accept"
+                                    disabled={classroom?._deleted}
                                     onClick={() => handleAccept(request, index)}
                                 >
                                     Accept
@@ -233,6 +243,7 @@ const People = () => {
                                 <span className="people_btnDivider"></span>
                                 <button
                                     className="people_btn people_btn--decline"
+                                    disabled={classroom?._deleted}
                                     onClick={() =>
                                         handleDecline(request, index)
                                     }

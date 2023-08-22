@@ -16,7 +16,7 @@
     transition: all 0.15s;
 }
 
-.createTest_btn:hover {
+.createTest_btn:hover:not(:disabled) {
     background-color: #1a5cb6;
 }
 
@@ -332,8 +332,7 @@
     --bs-table-hover-bg: #fff;
 }
 
-
-.create-test_card{
+.create-test_card {
     padding-top: 1.5rem !important;
     padding-bottom: 1.5rem !important;
     padding-right: 3rem !important;
@@ -342,22 +341,22 @@
     margin-top: 1.5rem !important;
 }
 
-.create-test_card-body{
+.create-test_card-body {
     padding-right: 3rem !important;
     padding-left: 3rem !important;
 }
 
-.test-col-6{
+.test-col-6 {
     flex: 0 0 auto;
     width: 50% !important;
 }
 
 @media only screen and (max-width: 768px) {
-    .createTest_formLabel{
+    .createTest_formLabel {
         font-size: 14px;
     }
 
-    .create-test_card{
+    .create-test_card {
         padding-top: 0.5rem !important;
         padding-bottom: 0.5rem !important;
         padding-right: 0.5rem !important;
@@ -365,12 +364,12 @@
         margin-bottom: 0.5rem !important;
         margin-top: 0.5rem !important;
     }
-    
-    .create-test_card-body{
+
+    .create-test_card-body {
         padding-right: 0.5rem !important;
         padding-left: 0.5rem !important;
     }
-    
+
     .createTest_addQuesBtn {
         font-size: 0.75rem;
         font-weight: 600;
@@ -378,7 +377,7 @@
         letter-spacing: 0rem;
     }
 
-    .createTest_draftBtn{
+    .createTest_draftBtn {
         font-size: 0.75rem;
     }
 
@@ -386,11 +385,11 @@
         font-size: 0.75rem;
     }
 
-    .test-col-6{
+    .test-col-6 {
         width: 100% !important;
     }
 
-    .testList{
+    .testList {
         margin-top: 10px;
     }
 }
