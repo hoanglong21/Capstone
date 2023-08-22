@@ -4,6 +4,7 @@ com\capstone\project\service\impl\TranslateServiceImpl.class
 com\capstone\project\repository\AssignmentRepository.class
 com\capstone\project\service\DetectionService.class
 com\capstone\project\controller\FeedbackController.class
+com\capstone\project\dto\TestandClassLearnerDTO.class
 com\capstone\project\controller\DetectionController.class
 com\capstone\project\repository\CommentTypeRepository.class
 com\capstone\project\controller\AuthController.class
@@ -17,6 +18,7 @@ com\capstone\project\service\GrammarService.class
 com\capstone\project\controller\NotificationController.class
 com\capstone\project\dto\RegisterRequest.class
 com\capstone\project\service\OverviewStatisticService.class
+com\capstone\project\controller\QuestionTypeController.class
 com\capstone\project\controller\AttachmentController.class
 com\capstone\project\service\TestService.class
 com\capstone\project\model\Notification.class
@@ -50,10 +52,12 @@ com\capstone\project\service\impl\ClassStatisticServiceImpl.class
 com\capstone\project\model\Feedback$FeedbackBuilder.class
 com\capstone\project\service\SubmissionService.class
 com\capstone\project\controller\ProgressController.class
+com\capstone\project\dto\QuestionWrapper.class
 com\capstone\project\service\FeedbackService.class
 com\capstone\project\model\Progress.class
 com\capstone\project\model\Test$TestBuilder.class
 com\capstone\project\service\FieldService.class
+com\capstone\project\dto\FilterStudySetByClassResponse.class
 com\capstone\project\controller\TranslationController.class
 com\capstone\project\dto\QuestionRequest.class
 com\capstone\project\service\impl\FieldServiceImpl.class
@@ -164,6 +168,7 @@ com\capstone\project\util\CustomDateSerializationModule.class
 com\capstone\project\dto\UserRequest.class
 com\capstone\project\repository\UserAchievementRepository.class
 com\capstone\project\config\MyUserDetailsService.class
+com\capstone\project\dto\FilterStudySetByClassResponse$FilterStudySetByClassResponseBuilder.class
 com\capstone\project\config\CustomAccessDeniedHandler.class
 com\capstone\project\controller\AssignmentController.class
 com\capstone\project\config\GlobalExceptionHandler.class
@@ -197,6 +202,7 @@ com\capstone\project\startup\ApplicationStartup.class
 com\capstone\project\dto\UserUpdateRequest$UserUpdateRequestBuilder.class
 com\capstone\project\dto\CardWrapper.class
 com\capstone\project\repository\AttachmentRepository.class
+com\capstone\project\dto\UserFilterResponse.class
 com\capstone\project\service\ProgressService.class
 com\capstone\project\repository\AchievementRepository.class
 com\capstone\project\model\TestResult$TestResultBuilder.class

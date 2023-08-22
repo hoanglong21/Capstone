@@ -27,10 +27,8 @@ com\capstone\project\service\NotificationServiceTest.class
 com\capstone\project\service\OverviewStatisticServiceTest.class
 com\capstone\project\service\FeedbackServiceTest.class
 com\capstone\project\model\AttachmentTest.class
-com\capstone\project\controller\AuthControllerTest.class
 com\capstone\project\model\QuestionTest.class
 com\capstone\project\service\AchievementServiceTest.class
-com\capstone\project\controller\UserControllerTest.class
 com\capstone\project\service\ClassServiceTest.class
 com\capstone\project\model\SubmissionTest.class
 com\capstone\project\service\PostServiceTest.class
@@ -56,6 +54,7 @@ com\capstone\project\model\VocabularyTest.class
 com\capstone\project\repository\UserRepositoryTest.class
 com\capstone\project\repository\FieldRepositoryTest.class
 com\capstone\project\model\PostTest.class
+com\capstone\project\repository\ProgressRepositoryTest.class
 com\capstone\project\repository\UserAchievementRepositoryTest.class
 com\capstone\project\service\KanjiServiceTest.class
 com\capstone\project\model\ClassLearnerTest.class
@@ -80,6 +79,7 @@ com\capstone\project\repository\AnswerRepositoryTest.class
 com\capstone\project\service\CardServiceTest.class
 com\capstone\project\service\GrammarServiceTest.class
 com\capstone\project\service\FeedbackTypeServiceTest.class
+com\capstone\project\service\ProgressServiceTest.class
 com\capstone\project\service\CommentSerivceTest.class
 com\capstone\project\model\KanjiTest.class
 com\capstone\project\service\ContentServiceTest.class
