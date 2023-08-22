@@ -51,7 +51,7 @@ public class UserAchievementController {
         return ResponseEntity.ok(userAchievementService.getUserAchievementByUserId(id));
     }
 
-    @GetMapping("/userachievementsbyusername/{id}")
+    @GetMapping("/userachievementsbyusername/{username}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> getUserAchievementByUsername(@PathVariable("username") String username) {
         try {

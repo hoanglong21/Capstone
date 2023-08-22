@@ -14,13 +14,11 @@ import streak from '../../../assets/achievements/streak.svg'
 import setStudied from '../../../assets/achievements/badge-SetsStudied.svg'
 import member from '../../../assets/achievements/badge-Week.svg'
 import './achievement.css'
-import UserService from '../../../services/UserService'
 
 function Achievements() {
     const { name } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
-    const [user, setUser] = useState({})
     const [awards, setAwards] = useState([])
     const [streaks, setStreaks] = useState([])
     const [roundStudied, setRoundStudied] = useState([])
@@ -28,19 +26,23 @@ function Achievements() {
 
     useEffect(() => {
         const fetchData = async () => {
-            var tempUser = {}
-            if (userInfo.username != name) {
-                tempUser = (await UserService.getUser(name)).data
+            try {
+                const tempAchievements = (
+                    await UserAchievementService.getUserAchievementByUsername(
+                        name || userInfo.username
+                    )
+                ).data
+                setAwards(tempAchievements.study)
+                setStreaks(tempAchievements.streaks)
+                setRoundStudied(tempAchievements.lifetime)
+                setClasses(tempAchievements.class)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
             }
-            const tempAchievements = (
-                await UserAchievementService.getUserAchievementByUserId(
-                    tempUser?.id || userInfo.id
-                )
-            ).data
-            setAwards(tempAchievements.study)
-            setStreaks(tempAchievements.streaks)
-            setRoundStudied(tempAchievements.lifetime)
-            setClasses(tempAchievements.class)
         }
         if (userInfo?.id) {
             fetchData()
