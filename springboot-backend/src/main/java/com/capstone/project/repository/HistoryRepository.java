@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface HistoryRepository extends JpaRepository<History, Integer> {
     List<History> getHistoriesByStudySetId(int id);
+
+    List<History> getHistoriesByClassroomId(int id);
 }

@@ -250,7 +250,7 @@ public class ClassServiceImpl implements ClassService {
             }
             assignmentRepository.delete(assignment);
         }
-        List<History> historyList = historyRepository.getHistoriesByStudySetId(id);
+        List<History> historyList = historyRepository.getHistoriesByClassroomId(id);
         for(History history : historyList) {
             historyRepository.delete(history);
         }
