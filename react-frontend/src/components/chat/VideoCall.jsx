@@ -20,6 +20,7 @@ import { getUser } from '../../features/user/userAction'
 import { useState } from 'react'
 import { AnswerPhoneSolidIcon, DeclinePhoneSolidIcon } from '../icons'
 // import { AES, enc } from 'crypto-js';
+import './video.css'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM',
@@ -371,67 +372,79 @@ const VideoCall = () => {
 
     return (
         <div>
-            {loadingSender && (
-                <div className="d-flex justify-content-center mt-5">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">
-                            LoadingSender...
-                        </span>
+            <div class='c-video'>
+                <div class='c-webcam'>
+                    <div class='c-webcam-container'>
+                        <div class='c-webcam-inchat'>
+                            {loadingSender && (
+                                <div className="d-flex justify-content-center mt-5">
+                                    <div className="spinner-border" role="status">
+                                        <span className="visually-hidden">
+                                            LoadingSender...
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                            <video
+                                id="webcamVideo"
+                                className={loadingSender ? 'd-none' : ''}
+                                autoPlay
+                                playsInline
+                            ></video>
+                            </div>
+                        <div class='c-webcam__video-controls'>
+                            {(isCalling && !isWaiting) || call ? (
+                                <div className="d-flex justify-content-center mt-5">
+                                    {/* <button
+                                        id="answerButton"
+                                        className="chat_callModalBtn chat_callModalBtn--accept me-3"
+                                        onClick={answerButtonClick}
+                                    >
+                                        <AnswerPhoneSolidIcon />
+                                    </button> */}
+                                    <button
+                                        id="hangupButton"
+                                        className="chat_callModalBtn chat_callModalBtn--decline"
+                                        onClick={hangupButtonClick}
+                                    >
+                                        <DeclinePhoneSolidIcon />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="d-flex justify-content-center mt-5">
+                                    <button
+                                        id="callButton"
+                                        className="btn btn-outline-primary"
+                                        onClick={callButtonClick}
+                                        disabled={isWaiting}
+                                    >
+                                        {isWaiting
+                                            ? 'Waiting for answer...'
+                                            : `Create Call to ${searchParams.get('param')}`}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <div class='c-webcam__video'>
+                            {loadingReceiver && (
+                                <div className="d-flex justify-content-center mt-5">
+                                    <div className="spinner-border" role="status">
+                                        <span className="visually-hidden">
+                                            LoadingSender...
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                            <video
+                                id="remoteVideo"
+                                className={loadingReceiver ? 'd-none' : ''}
+                                autoPlay
+                                playsInline
+                            ></video>
+                        </div>
                     </div>
                 </div>
-            )}
-            <video
-                id="webcamVideo"
-                className={loadingSender ? 'd-none' : ''}
-                autoPlay
-                playsInline
-            ></video>
-            {loadingReceiver && (
-                <div className="d-flex justify-content-center mt-5">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">
-                            LoadingSender...
-                        </span>
-                    </div>
-                </div>
-            )}
-            <video
-                id="remoteVideo"
-                className={loadingReceiver ? 'd-none' : ''}
-                autoPlay
-                playsInline
-            ></video>
-            {(isCalling && !isWaiting) || call ? (
-                <div className="d-flex justify-content-center mt-5">
-                    {/* <button
-                        id="answerButton"
-                        className="chat_callModalBtn chat_callModalBtn--accept me-3"
-                        onClick={answerButtonClick}
-                    >
-                        <AnswerPhoneSolidIcon />
-                    </button> */}
-                    <button
-                        id="hangupButton"
-                        className="chat_callModalBtn chat_callModalBtn--decline"
-                        onClick={hangupButtonClick}
-                    >
-                        <DeclinePhoneSolidIcon />
-                    </button>
-                </div>
-            ) : (
-                <div className="d-flex justify-content-center mt-5">
-                    <button
-                        id="callButton"
-                        className="btn btn-outline-primary"
-                        onClick={callButtonClick}
-                        disabled={isWaiting}
-                    >
-                        {isWaiting
-                            ? 'Waiting for answer...'
-                            : `Create Call to ${searchParams.get('param')}`}
-                    </button>
-                </div>
-            )}
+            </div>            
         </div>
     )
 }
