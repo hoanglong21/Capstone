@@ -6,6 +6,7 @@ import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.ClassService;
 import com.capstone.project.service.UserSettingService;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -193,7 +194,8 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://nihongolevelup.com";
+            Dotenv dotenv = Dotenv.load();
+            String URL = dotenv.get("FRONTEND_HOST_URL");
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
