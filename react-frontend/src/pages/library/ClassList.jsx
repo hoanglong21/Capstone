@@ -245,6 +245,7 @@ const ClassList = () => {
                                         }
                                     ></input>
                                     <button
+                                        className="btn p-0"
                                         type="submit"
                                         disabled={loading}
                                         onClick={(event) => {
