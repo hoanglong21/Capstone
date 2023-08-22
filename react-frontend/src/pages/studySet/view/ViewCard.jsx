@@ -267,9 +267,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
             }}
         >
             <div className="row">
-                <div
-                    className="view-card-col-3 d-flex align-items-center"
-                >
+                <div className="view-card-col-3 d-flex align-items-center">
                     <div className="setPageTerm_termText">
                         <div
                             dangerouslySetInnerHTML={{
@@ -292,7 +290,10 @@ const ViewCard = ({ fullCard, userInfo }) => {
                         </div>
                     </div>
                 </div>
-                <div className="col-1" id={`editCardBtn${card?.id}`}>
+                <div
+                    className="col-1 d-flex flex-row-reverse"
+                    id={`editCardBtn${card?.id}`}
+                >
                     {showButton && (
                         <button
                             type="button dropdown-toggle"

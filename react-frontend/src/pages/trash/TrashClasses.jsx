@@ -52,7 +52,7 @@ const TrashClasses = () => {
 
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
-
+    
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
         try {
@@ -62,8 +62,8 @@ const TrashClasses = () => {
                     '',
                     '=1',
                     `${searchKey ? '=' + searchKey : ''}`,
-                    `${type !== 'joined' ? `=${userInfo.username}` : ''}`,
-                    `${type !== 'created' ? `=${userInfo.username}` : ''}`,
+                    `=${userInfo.username}`,
+                    '',
                     '',
                     '',
                     '',
@@ -95,7 +95,7 @@ const TrashClasses = () => {
                     '',
                     '=1',
                     '',
-                    '',
+                    `=${userInfo.username}`,
                     '',
                     '',
                     '',

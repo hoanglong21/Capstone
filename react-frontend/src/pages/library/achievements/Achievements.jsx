@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 import UserAchievementService from '../../../services/UserAchievement'
 
@@ -15,6 +16,7 @@ import member from '../../../assets/achievements/badge-Week.svg'
 import './achievement.css'
 
 function Achievements() {
+    const { name } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
     const [awards, setAwards] = useState([])
@@ -24,16 +26,23 @@ function Achievements() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const tempAchievements = (
-                await UserAchievementService.getUserAchievementByUserId(
-                    userInfo.id
-                )
-            ).data
-            console.log(tempAchievements)
-            setAwards(tempAchievements.study)
-            setStreaks(tempAchievements.streaks)
-            setRoundStudied(tempAchievements.lifetime)
-            setClasses(tempAchievements.class)
+            try {
+                const tempAchievements = (
+                    await UserAchievementService.getUserAchievementByUsername(
+                        name || userInfo.username
+                    )
+                ).data
+                setAwards(tempAchievements.study)
+                setStreaks(tempAchievements.streaks)
+                setRoundStudied(tempAchievements.lifetime)
+                setClasses(tempAchievements.class)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (userInfo?.id) {
             fetchData()
@@ -81,7 +90,10 @@ function Achievements() {
                                         case 2:
                                             // Committed learner
                                             return (
-                                                <div className="achievement-streak">
+                                                <div
+                                                    className="achievement-streak"
+                                                    key={index}
+                                                >
                                                     <div className="streak-ct">
                                                         <div className="streak-img">
                                                             <img
@@ -102,7 +114,10 @@ function Achievements() {
                                         case 3:
                                             // Night owl
                                             return (
-                                                <div className="achievement-streak">
+                                                <div
+                                                    className="achievement-streak"
+                                                    key={index}
+                                                >
                                                     <div className="streak-ct">
                                                         <div className="streak-img">
                                                             <img
@@ -121,7 +136,10 @@ function Achievements() {
                                         case 4:
                                             // Early bird
                                             return (
-                                                <div className="achievement-streak">
+                                                <div
+                                                    className="achievement-streak"
+                                                    key={index}
+                                                >
                                                     <div className="streak-ct">
                                                         <div className="streak-img">
                                                             <img
@@ -140,7 +158,10 @@ function Achievements() {
                                         case 5:
                                             // Test acer
                                             return (
-                                                <div className="achievement-streak">
+                                                <div
+                                                    className="achievement-streak"
+                                                    key={index}
+                                                >
                                                     <div className="streak-ct">
                                                         <div className="streak-img">
                                                             <img
@@ -161,7 +182,10 @@ function Achievements() {
                                         case 6:
                                             // Set builder
                                             return (
-                                                <div className="achievement-streak">
+                                                <div
+                                                    className="achievement-streak"
+                                                    key={index}
+                                                >
                                                     <div className="streak-ct">
                                                         <div className="streak-img">
                                                             <img
@@ -199,7 +223,10 @@ function Achievements() {
                                 </div>
                             ) : (
                                 streaks?.map((item, index) => (
-                                    <div className="achievement-streak">
+                                    <div
+                                        className="achievement-streak"
+                                        key={index}
+                                    >
                                         <div className="streak-ct">
                                             <div className="streak-img">
                                                 <img
@@ -234,7 +261,10 @@ function Achievements() {
                                 </div>
                             ) : (
                                 roundStudied?.map((item, index) => (
-                                    <div className="achievement-streak">
+                                    <div
+                                        className="achievement-streak"
+                                        key={index}
+                                    >
                                         <div className="streak-ct">
                                             <div className="streak-img">
                                                 <img
@@ -269,7 +299,10 @@ function Achievements() {
                                 </div>
                             ) : (
                                 classes?.map((item, index) => (
-                                    <div className="achievement-streak">
+                                    <div
+                                        className="achievement-streak"
+                                        key={index}
+                                    >
                                         <div className="streak-ct">
                                             <div className="streak-img">
                                                 <img

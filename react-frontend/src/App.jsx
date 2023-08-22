@@ -139,6 +139,13 @@ const App = () => {
                         <Route path="kanji" element={<KanjiDict />} />
                         <Route path="grammar" element={<GrammarDict />} />
                     </Route>
+                    {/* Library */}
+                    <Route path=":name" element={<LibraryLayout />}>
+                        <Route path="achievements" element={<Achievements />} />
+                        <Route path="sets" element={<StudySetList />} />
+                        <Route path="classes" element={<ClassList />} />
+                        <Route path="statistics" element={<Statistics />} />
+                    </Route>
                     {/* Password */}
                     <Route element={<OtherLayout />}>
                         <Route path="forgotten" element={<ForgotPassword />} />
@@ -204,16 +211,6 @@ const App = () => {
                                 path="delete-account"
                                 element={<DeleteAccount />}
                             />
-                        </Route>
-                        {/* Library */}
-                        <Route path="library" element={<LibraryLayout />}>
-                            <Route
-                                path="achievements"
-                                element={<Achievements />}
-                            />
-                            <Route path="sets" element={<StudySetList />} />
-                            <Route path="classes" element={<ClassList />} />
-                            <Route path="statistics" element={<Statistics />} />
                         </Route>
                         {/* Study Set */}
                         <Route path="create-set" element={<CreateSet />} />

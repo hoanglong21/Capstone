@@ -10,8 +10,17 @@ export const getUserAchievementByUserId = (id) => {
     })
 }
 
+export const getUserAchievementByUsername = (username) => {
+    return axios.get(API_BASE_URL + '/userachievementsbyusername/' + username, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 const UserAchievementService = {
     getUserAchievementByUserId,
+    getUserAchievementByUsername,
 }
 
 export default UserAchievementService

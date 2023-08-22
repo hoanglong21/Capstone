@@ -18,7 +18,6 @@ import '../../assets/styles/Home.css'
 const ClassesForHome = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const author = searchParams.get('author')
     const search = searchParams.get('search')
 
     const [classes, setClasses] = useState([])
@@ -32,8 +31,8 @@ const ClassesForHome = () => {
                 await ClassService.getFilterList(
                     '',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     '',
                     '',
@@ -79,7 +78,7 @@ const ClassesForHome = () => {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search, author, page])
+    }, [search, page])
 
     return (
         <div className="mt-4 mb-5">

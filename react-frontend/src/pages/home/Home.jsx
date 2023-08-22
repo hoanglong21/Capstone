@@ -83,7 +83,7 @@ function Home() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-grow-1">
+                    <div className="flex-grow-1 mt-3">
                         <div className="border-bottom bg-white p-2 pb-0">
                             <ul className="nav-home nav flex-grow-1 fw-semibold">
                                 <li>

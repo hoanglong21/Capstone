@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
@@ -34,6 +34,8 @@ const ClassList = () => {
 
     const search = searchParams.get('search')
 
+    const { name } = useParams()
+
     const { userInfo } = useSelector((state) => state.user)
 
     const [classes, setClasses] = useState([])
@@ -67,8 +69,14 @@ const ClassList = () => {
                     '',
                     '=0',
                     `${searchKey ? '=' + searchKey : ''}`,
-                    `${type !== 'joined' ? `=${userInfo.username}` : ''}`,
-                    `${type !== 'created' ? `=${userInfo.username}` : ''}`,
+                    `${
+                        type !== 'joined' ? `=${name || userInfo.username}` : ''
+                    }`,
+                    `${
+                        type !== 'created'
+                            ? `=${name || userInfo.username}`
+                            : ''
+                    }`,
                     '',
                     '',
                     '',
@@ -100,8 +108,8 @@ const ClassList = () => {
                     '',
                     '=0',
                     '',
-                    `=${userInfo.username}`,
-                    `=${userInfo.username}`,
+                    `=${name || userInfo.username}`,
+                    `=${name || userInfo.username}`,
                     '',
                     '',
                     '',
@@ -126,16 +134,16 @@ const ClassList = () => {
     }
 
     useEffect(() => {
-        if (userInfo.username) {
+        if (userInfo?.username) {
             checkEmpty()
         }
-    }, [userInfo])
+    }, [userInfo, name])
 
     useEffect(() => {
         if (userInfo?.username) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search, type, page, isDesc])
+    }, [userInfo, name, search, type, page, isDesc])
 
     useEffect(() => {
         if (userInfo?.username && (isDelete === true || isUpdate === true)) {
@@ -205,20 +213,25 @@ const ClassList = () => {
                     <div>
                         <div className="row d-flex align-items-center mb-4">
                             <div className="studyset-col-5 d-flex align-items-center">
-                                {userInfo?.role !== 'ROLE_LEARNER' && (
-                                    <select
-                                        className="form-select sets-select py-2 me-2"
-                                        aria-label="Default select example"
-                                        value={type || 'all'}
-                                        onChange={(event) => {
-                                            setType(event.target.value)
-                                        }}
-                                    >
-                                        <option value="all">All</option>
-                                        <option value="created">Created</option>
-                                        <option value="joined">Joined</option>
-                                    </select>
-                                )}
+                                {userInfo?.role !== 'ROLE_LEARNER' &&
+                                    name == userInfo?.username && (
+                                        <select
+                                            className="form-select sets-select py-2 me-2"
+                                            aria-label="Default select example"
+                                            value={type || 'all'}
+                                            onChange={(event) => {
+                                                setType(event.target.value)
+                                            }}
+                                        >
+                                            <option value="all">All</option>
+                                            <option value="created">
+                                                Created
+                                            </option>
+                                            <option value="joined">
+                                                Joined
+                                            </option>
+                                        </select>
+                                    )}
                                 <button
                                     className="btn btn-light p-2 me-2"
                                     onClick={() => {
@@ -408,7 +421,7 @@ const ClassList = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="col-1">
+                                                    <div className="col-1 d-flex flex-row-reverse">
                                                         <button
                                                             type="button dropdown-toggle"
                                                             className="btn btn-customLight"
