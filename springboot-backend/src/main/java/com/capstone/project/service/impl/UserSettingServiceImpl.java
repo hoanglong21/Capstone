@@ -235,7 +235,9 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://nihongolevelup.com";
+//            String URL = "https://nihongolevelup.com";
+            Dotenv dotenv = Dotenv.load();
+            String URL = dotenv.get("FRONTEND_HOST_URL");
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -273,7 +275,9 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://nihongolevelup.com";
+//            String URL = "https://nihongolevelup.com";
+            Dotenv dotenv = Dotenv.load();
+            String URL = dotenv.get("FRONTEND_HOST_URL");
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -311,7 +315,9 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://nihongolevelup.com";
+//            String URL = "https://nihongolevelup.com";
+            Dotenv dotenv = Dotenv.load();
+            String URL = dotenv.get("FRONTEND_HOST_URL");
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
@@ -349,7 +355,9 @@ public class UserSettingServiceImpl implements UserSettingService {
 
             content = content.replace("[[name]]", userSetting.getUser().getUsername());
 
-            String URL = "https://nihongolevelup.com";
+//            String URL = "https://nihongolevelup.com";
+            Dotenv dotenv = Dotenv.load();
+            String URL = dotenv.get("FRONTEND_HOST_URL");
             content = content.replace("[[URL]]", URL);
 
             helper.setText(content, true);
