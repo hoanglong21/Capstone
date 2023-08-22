@@ -421,13 +421,10 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setStatus("enrolled");
         classLearnerRepository.save(classLearner);
 
-        HistoryType historyType = new HistoryType();
-        historyType.setId(8);
-
         History history = new History();
+        history.setHistoryType(HistoryType.builder().id(8).build());
         history.setClassroom(classroom);
         history.setDatetime(new Date());
-        history.setHistoryType(historyType);
         history.setUser(classroom.getUser());
         historyRepository.save(history);
 

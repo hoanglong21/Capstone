@@ -77,7 +77,7 @@ const TutorSubmission = ({ assignment }) => {
                 setNumSubmit(tempCountSubmit.submitted)
                 setNumNotSubmit(tempCountSubmit.notsubmitted)
                 // submission
-                if (tempLearners.length > 0) {
+                if (tempLearners.totalItems > 0) {
                     var tempSubmission = (
                         await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
                             tempLearners[0].id,
@@ -484,8 +484,8 @@ const TutorSubmission = ({ assignment }) => {
                                                 className="submission_inputGrade"
                                                 value={submission?.mark || ''}
                                                 disabled={
-                                                    submission?.assignment
-                                                        ?.classroom?._deleted
+                                                    assignment?.classroom
+                                                        ?._deleted
                                                 }
                                                 onChange={(event) => {
                                                     setSubmission({
@@ -570,8 +570,7 @@ const TutorSubmission = ({ assignment }) => {
                                         />
                                     ))}
                                     {/* add comment */}
-                                    {!submission?.assignment?.classroom
-                                        ?._deleted && (
+                                    {!assignment?.classroom?._deleted && (
                                         <div className="d-flex">
                                             <img
                                                 src={
