@@ -47,7 +47,7 @@ export default function Layout() {
     const { userInfo } = useSelector((state) => state.user)
 
     const [messages, setMessages] = useState([])
-    const [isAccept, setIsAccept] = useState(false)
+    const [isAccept, setIsAccept] = useState(null)
     const [showNew, setShowNew] = useState(false)
     const [showChat, setShowChat] = useState(false)
     const [showGPT, setShowGPT] = useState(false)
@@ -75,6 +75,14 @@ export default function Layout() {
             })
         }
     }, [userInfo])
+
+    // useEffect(() => {
+    //     if (isAccept !== null) {
+    //         setTimeout(() => {                
+    //             setIsAccept(null)
+    //         }, 50000);
+    //     }
+    // }, [isAccept])
 
     const rejectCall = async (message) => {
         setIsAccept(false)
@@ -138,7 +146,7 @@ export default function Layout() {
             <Footer />
             {/* video call modal */}
             {userToken &&
-                !isAccept &&
+                isAccept === null &&
                 messages
                     ?.filter(
                         (message) =>

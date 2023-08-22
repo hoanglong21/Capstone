@@ -8,6 +8,7 @@ import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.CardService;
+import com.capstone.project.service.CommentService;
 import com.capstone.project.service.StudySetService;
 import com.capstone.project.service.UserService;
 import jakarta.persistence.EntityManager;
@@ -37,9 +38,11 @@ public class StudySetServiceImpl implements StudySetService {
     @PersistenceContext
     private EntityManager em;
     private final UserRepository userRepository;
+    private final HistoryRepository historyRepository;
+    private final CommentRepository commentRepository;
     @Autowired
     public StudySetServiceImpl(StudySetRepository studySetRepository, CardRepository cardRepository, ContentRepository contentRepository, CardService cardService,
-                               UserRepository userRepository, UserService userService, ProgressRepository progressRepository, EntityManager em, JdbcTemplate jdbcTemplate) {
+                               UserRepository userRepository, UserService userService, ProgressRepository progressRepository, EntityManager em, JdbcTemplate jdbcTemplate, HistoryRepository historyRepository, CommentRepository commentRepository) {
         this.studySetRepository = studySetRepository;
         this.cardRepository = cardRepository;
         this.contentRepository = contentRepository;
@@ -49,6 +52,8 @@ public class StudySetServiceImpl implements StudySetService {
         this.progressRepository = progressRepository;
         this.em = em;
         this.jdbcTemplate = jdbcTemplate;
+        this.historyRepository = historyRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -107,6 +112,14 @@ public class StudySetServiceImpl implements StudySetService {
                 contentRepository.delete(content);
             }
             cardRepository.delete(card);
+        }
+        List<History> historyList = historyRepository.getHistoriesByStudySetId(id);
+        for(History history : historyList) {
+            historyRepository.delete(history);
+        }
+        List<Comment> commentList = commentRepository.getCommentByStudySetId(id);
+        for(Comment comment : commentList) {
+            commentRepository.delete(comment);
         }
         studySetRepository.delete(studySet);
         return true;

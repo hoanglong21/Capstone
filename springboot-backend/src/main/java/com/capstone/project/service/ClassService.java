@@ -19,6 +19,8 @@ public interface ClassService {
     Boolean deleteClass( int id) throws ResourceNotFroundException;
     Boolean deleteHardClass( int id) throws ResourceNotFroundException;
 
+    Boolean recoverClass( int id) throws ResourceNotFroundException;
+
     Map<String, Object> getFilterClass(int classid, Boolean isDeleted, String search, String author,String learner, String fromDeleted, String toDeleted,
                                        String fromCreated, String toCreated, String sortBy, String direction, int page, int size) throws ResourceNotFroundException;
 

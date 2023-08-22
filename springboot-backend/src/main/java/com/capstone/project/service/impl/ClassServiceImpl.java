@@ -49,6 +49,8 @@ public class ClassServiceImpl implements ClassService {
     private final ClassLearnerRepository classLearnerRepository;
     private final HistoryRepository historyRepository;
 
+    private final HistoryRepository historyRepository;
+
     private final UserService userService;
 
     @Autowired
@@ -74,6 +76,7 @@ public class ClassServiceImpl implements ClassService {
         this.userService = userService;
         this.historyRepository = historyRepository;
         this.em = em;
+        this.historyRepository = historyRepository;
     }
 
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
@@ -182,7 +185,6 @@ public class ClassServiceImpl implements ClassService {
                 notificationRepository.save(notification);
             }
         }
-
     }
 
     @Override
@@ -250,8 +252,40 @@ public class ClassServiceImpl implements ClassService {
             }
             assignmentRepository.delete(assignment);
         }
+        List<History> historyList = historyRepository.getHistoriesByStudySetId(id);
+        for(History history : historyList) {
+            historyRepository.delete(history);
+        }
         classRepository.delete(classroom);
         return true;
+    }
+
+    @Override
+    public Boolean recoverClass(int id) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
+        classroom.set_deleted(false);
+        classroom.setDeleted_date(null);
+        classRepository.save(classroom);
+        notificationForRecoveredClass(classroom);
+        return true;
+    }
+
+    private void notificationForRecoveredClass(Class classroom) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for(ClassLearner classLearner : classLearnerList){
+            if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setContent("Your Class " + classroom.getClass_name() + "' has been recovered.");
+                notification.set_read(false);
+                notification.setUser(classLearner.getUser());
+                notification.setDatetime(date);
+
+                notificationRepository.save(notification);
+            }
+        }
     }
 
     @Override
@@ -493,6 +527,7 @@ public class ClassServiceImpl implements ClassService {
         for (ClassLearner classLearner : classLearnerList) {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
+                notification.setTitle("New StudySet");
                 notification.setContent("A new studyset is added to class '" + classroom.getClass_name() + "'");
                 notification.setDatetime(date);
                 notification.set_read(false);

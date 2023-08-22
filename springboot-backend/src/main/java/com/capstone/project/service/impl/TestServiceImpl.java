@@ -31,6 +31,7 @@ public class TestServiceImpl  implements TestService {
     private final JavaMailSender mailSender;
 
     private final ClassLearnerRepository classLearnerRepository;
+    private final NotificationRepository notificationRepository;
     private final ClassRepository classRepository;
 
     private final UserSettingRepository userSettingRepository;
@@ -47,10 +48,11 @@ public class TestServiceImpl  implements TestService {
 
 
     @Autowired
-    public TestServiceImpl(JavaMailSender mailSender,EntityManager em, ClassLearnerRepository classLearnerRepository, ClassRepository classRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
+    public TestServiceImpl(JavaMailSender mailSender, EntityManager em, ClassLearnerRepository classLearnerRepository, NotificationRepository notificationRepository, ClassRepository classRepository, UserSettingRepository userSettingRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, CommentRepository commentRepository, UserService userService, UserRepository userRepository) {
         this.mailSender = mailSender;
         this.em = em;
         this.classLearnerRepository = classLearnerRepository;
+        this.notificationRepository = notificationRepository;
         this.classRepository = classRepository;
         this.userSettingRepository = userSettingRepository;
         this.testRepository = testRepository;
@@ -90,8 +92,32 @@ public class TestServiceImpl  implements TestService {
 //                }
 //            }
 //        }
-
+        Class classroom = classRepository.findClassById(savedTest.getClassroom().getId());
+        notificationTestCreated(classroom);
         return savedTest;
+    }
+
+    public void notificationTestCreated(Class classroom) {
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for (ClassLearner classLearner : classLearnerList) {
+            List<Test> testList = testRepository.getTestByClassroomId(classLearner.getClassroom().getId());
+            for(Test test : testList) {
+                if (classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
+                    Notification notification = new Notification();
+                    notification.setTitle("New Test");
+                    notification.setContent("A new test is added to class '" + classroom.getClass_name() + "'");
+                    notification.setDatetime(date);
+                    notification.set_read(false);
+                    notification.setUser(classLearner.getUser());
+
+                    notificationRepository.save(notification);
+                }
+            }
+        }
     }
 
     public void sendTestCreatedEmail(ClassLearner classLearner, Test test) {
