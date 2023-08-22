@@ -483,6 +483,10 @@ const TutorSubmission = ({ assignment }) => {
                                                 type="number"
                                                 className="submission_inputGrade"
                                                 value={submission?.mark || ''}
+                                                disabled={
+                                                    submission?.assignment
+                                                        ?.classroom?._deleted
+                                                }
                                                 onChange={(event) => {
                                                     setSubmission({
                                                         ...submission,
@@ -566,47 +570,53 @@ const TutorSubmission = ({ assignment }) => {
                                         />
                                     ))}
                                     {/* add comment */}
-                                    <div className="d-flex">
-                                        <img
-                                            src={
-                                                userInfo?.avatar ||
-                                                defaultAvatar
-                                            }
-                                            className="comment_img me-3"
-                                            alt=""
-                                        />
-                                        <div className="commentEditor flex-fill">
-                                            <CardEditor
-                                                data={addComment}
-                                                onChange={(event, editor) => {
-                                                    setAddComment(
-                                                        editor.getData()
-                                                    )
-                                                }}
+                                    {!submission?.assignment?.classroom
+                                        ?._deleted && (
+                                        <div className="d-flex">
+                                            <img
+                                                src={
+                                                    userInfo?.avatar ||
+                                                    defaultAvatar
+                                                }
+                                                className="comment_img me-3"
+                                                alt=""
                                             />
-                                        </div>
-                                        <button
-                                            className="comment_btn ms-1"
-                                            onClick={handleAddComment}
-                                            disabled={!addComment}
-                                        >
-                                            {loadingComment ? (
-                                                <div
-                                                    className="spinner-border spinner-border-sm text-secondary"
-                                                    role="status"
-                                                >
-                                                    <span className="visually-hidden">
-                                                        LoadingUpload...
-                                                    </span>
-                                                </div>
-                                            ) : (
-                                                <SendIcon
-                                                    size="20px"
-                                                    strokeWidth="1.8"
+                                            <div className="commentEditor flex-fill">
+                                                <CardEditor
+                                                    data={addComment}
+                                                    onChange={(
+                                                        event,
+                                                        editor
+                                                    ) => {
+                                                        setAddComment(
+                                                            editor.getData()
+                                                        )
+                                                    }}
                                                 />
-                                            )}
-                                        </button>
-                                    </div>
+                                            </div>
+                                            <button
+                                                className="comment_btn ms-1"
+                                                onClick={handleAddComment}
+                                                disabled={!addComment}
+                                            >
+                                                {loadingComment ? (
+                                                    <div
+                                                        className="spinner-border spinner-border-sm text-secondary"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            LoadingUpload...
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <SendIcon
+                                                        size="20px"
+                                                        strokeWidth="1.8"
+                                                    />
+                                                )}
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

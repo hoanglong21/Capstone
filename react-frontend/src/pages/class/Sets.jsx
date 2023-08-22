@@ -165,6 +165,7 @@ const Sets = () => {
                                 </p>
                                 <button
                                     className="btn btn-info"
+                                    disabled={classroom?._deleted}
                                     onClick={() => {
                                         setShowAssignModal(true)
                                     }}

@@ -459,46 +459,47 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                             ></div>
                         </div>
                     </div>
-                    {userInfo?.id === comment?.user?.id && (
-                        <div id={`comment${comment.id}`} className="d-none">
-                            <button
-                                className="btn btn-light p-2 rounded-circle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <OptionVerIcon />
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <button
-                                        className="dropdown-item d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => {
-                                            setIsEdit(true)
-                                        }}
-                                    >
-                                        <span className="align-middle">
-                                            Edit
-                                        </span>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        className="dropdown-item d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => {
-                                            setShowDeleteModal(true)
-                                        }}
-                                    >
-                                        <span className="align-middle">
-                                            Delete
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    )}
+                    {userInfo?.id === comment?.user?.id &&
+                        !comment?.classroom?._deleted && (
+                            <div id={`comment${comment.id}`} className="d-none">
+                                <button
+                                    className="btn btn-light p-2 rounded-circle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <OptionVerIcon />
+                                </button>
+                                <ul className="dropdown-menu">
+                                    <li>
+                                        <button
+                                            className="dropdown-item d-flex align-items-center"
+                                            type="button"
+                                            onClick={() => {
+                                                setIsEdit(true)
+                                            }}
+                                        >
+                                            <span className="align-middle">
+                                                Edit
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item d-flex align-items-center"
+                                            type="button"
+                                            onClick={() => {
+                                                setShowDeleteModal(true)
+                                            }}
+                                        >
+                                            <span className="align-middle">
+                                                Delete
+                                            </span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
                 </div>
             )}
             {/* Delete comment modal */}

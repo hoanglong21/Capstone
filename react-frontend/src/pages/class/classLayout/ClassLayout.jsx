@@ -82,6 +82,16 @@ const ClassLayout = () => {
         }
     }, [userInfo, id])
 
+    useEffect(() => {
+        if (
+            classroom?.id &&
+            classroom?._deleted &&
+            userInfo?.id !== classroom?.user?.id
+        ) {
+            navigate('/')
+        }
+    }, [classroom])
+
     const handleRequest = async () => {
         try {
             ClassLearnerService.createClassLeaner({
@@ -177,13 +187,14 @@ const ClassLayout = () => {
                                 />
                                 <h1 className="mainClass_title m-0 ms-3">
                                     {classroom.class_name}
+                                    {classroom._deleted && ' (Deleted)'}
                                 </h1>
                             </div>
                             {!hasAccess && (
                                 <p className="mt-1">{classroom.description}</p>
                             )}
                         </div>
-                        {hasAccess ? (
+                        {hasAccess && !classroom?._deleted ? (
                             <div className="dropdown align-self-start">
                                 <button
                                     className="btn btn-outline-secondary icon-outline-secondary "
@@ -293,6 +304,8 @@ const ClassLayout = () => {
                                     )}
                                 </ul>
                             </div>
+                        ) : classroom?._deleted ? (
+                            ''
                         ) : (
                             <div>
                                 {isWaiting ? (

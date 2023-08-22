@@ -396,7 +396,6 @@ svg {
 
 button {
     border: none;
-    background-color: #fff;
 }
 
 .btn-group > .btn-check:checked + .btn {

@@ -235,6 +235,7 @@ const People = () => {
                             <div>
                                 <button
                                     className="people_btn people_btn--accept"
+                                    disabled={classroom?._deleted}
                                     onClick={() => handleAccept(request, index)}
                                 >
                                     Accept
@@ -242,6 +243,7 @@ const People = () => {
                                 <span className="people_btnDivider"></span>
                                 <button
                                     className="people_btn people_btn--decline"
+                                    disabled={classroom?._deleted}
                                     onClick={() =>
                                         handleDecline(request, index)
                                     }
