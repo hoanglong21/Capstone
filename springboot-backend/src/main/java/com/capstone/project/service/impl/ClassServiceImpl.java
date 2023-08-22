@@ -48,9 +48,6 @@ public class ClassServiceImpl implements ClassService {
     private final StudySetService studySetService;
     private final ClassLearnerRepository classLearnerRepository;
     private final HistoryRepository historyRepository;
-
-    private final HistoryRepository historyRepository;
-
     private final UserService userService;
 
     @Autowired
@@ -76,7 +73,6 @@ public class ClassServiceImpl implements ClassService {
         this.userService = userService;
         this.historyRepository = historyRepository;
         this.em = em;
-        this.historyRepository = historyRepository;
     }
 
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {

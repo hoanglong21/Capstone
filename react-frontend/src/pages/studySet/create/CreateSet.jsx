@@ -42,6 +42,12 @@ const CreateSet = () => {
         return ''
     }
 
+    useEffect(() => {
+        if (id && studySet._deleted) {
+            navigate('')
+        }
+    }, [studySet])
+
     // draft can go to edit, back to create
     useEffect(() => {
         if (id && studySet._draft) {
