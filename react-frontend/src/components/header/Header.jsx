@@ -331,9 +331,9 @@ const Header = () => {
                                     data-bs-toggle="dropdown"
                                     aria-expanded="true"
                                 >
-                                    <span className="align-middle fw-semibold">
-                                        Study Set
-                                    </span>
+                                <span className="align-middle fw-semibold">
+                                    {t('studySet')}
+                                </span>
                                 </a>
                                 <ul
                                     className="submenu dropdown-menu dropdown-submenu dropdown-submenu-left header-dropdown"
@@ -344,7 +344,7 @@ const Header = () => {
                                             className="dropdown-item"
                                             onClick={() => handleAddStudySet(1)}
                                         >
-                                            Vocabulary
+                                            {t('vocabulary')}
                                         </button>
                                     </li>
                                     <li>
@@ -352,7 +352,7 @@ const Header = () => {
                                             className="dropdown-item"
                                             onClick={() => handleAddStudySet(2)}
                                         >
-                                            Kanji
+                                            {t('kanji')}
                                         </button>
                                     </li>
                                     <li>
@@ -360,7 +360,7 @@ const Header = () => {
                                             className="dropdown-item"
                                             onClick={() => handleAddStudySet(3)}
                                         >
-                                            Grammar
+                                            {t('grammar')}
                                         </button>
                                     </li>
                                 </ul>
@@ -374,7 +374,7 @@ const Header = () => {
                                         onClick={handleAddClass}
                                     >
                                         <span className="align-middle fw-semibold">
-                                            Class
+                                        {t('class')}
                                         </span>
                                     </button>
                                 </li>
@@ -386,7 +386,7 @@ const Header = () => {
                                     onClick={handleJoinClass}
                                 >
                                     <span className="align-middle fw-semibold">
-                                        Join Class
+                                    {t('joinClass')}
                                     </span>
                                 </button>
                             </li>
@@ -416,7 +416,7 @@ const Header = () => {
                                             }}
                                         >
                                             <span className="visually-hidden">
-                                                New alerts
+                                            {t('newAlerts')}
                                             </span>
                                         </span>
                                     )}
@@ -433,14 +433,13 @@ const Header = () => {
                                                 className="notifyEmpty"
                                             />
                                             <span className="notifyFilter_heading mt-2">
-                                                No Notifications Yet
+                                            {t('NoNotificationsYet')}
                                             </span>
                                             <span className="notifyFilter_subtext mt-1">
-                                                You have no notification right
-                                                now
+                                            {t('Youhavenonotificationrightnow')}
                                             </span>
                                             <span className="notifyFilter_subtext mt-1 mb-2">
-                                                Come back later
+                                            {t('comebacklater')}
                                             </span>
                                         </li>
                                     ) : (
@@ -459,7 +458,7 @@ const Header = () => {
                                                         }
                                                     }}
                                                 >
-                                                    All
+                                                   {t('all')}
                                                 </button>
                                                 <button
                                                     className={`notifyFilter_btn ${
@@ -474,18 +473,18 @@ const Header = () => {
                                                         }
                                                     }}
                                                 >
-                                                    Unread
+                                                    {t('unread')}
                                                 </button>
                                             </li>
                                             <li className="d-flex align-items-center mb-1">
                                                 <span className="notifyFilter_heading flex-fill">
-                                                    Earlier
+                                                {t('earlier')}
                                                 </span>
                                                 <a
                                                     className="notifyFilter_link"
                                                     onClick={handleMarkAllRead}
                                                 >
-                                                    Mark all as read
+                                                    {t('markallasread')}
                                                 </a>
                                             </li>
                                             {/* Pagination */}
@@ -534,8 +533,7 @@ const Header = () => {
                                                                         false && (
                                                                         <span className="badge text-bg-primary p-1 rounded-circle">
                                                                             <span className="visually-hidden">
-                                                                                New
-                                                                                alerts
+                                                                            {t('newAlerts')}
                                                                             </span>
                                                                         </span>
                                                                     )}
@@ -625,7 +623,7 @@ const Header = () => {
                                                 strokeWidth="1.65"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Achievements
+                                            {t('achievements')}
                                             </span>
                                         </button>
                                     </li>
@@ -642,7 +640,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Settings
+                                            {t('settings')}
                                             </span>
                                         </button>
                                     </li>
@@ -659,7 +657,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Recycle Bin
+                                            {t('recycleBin')}
                                             </span>
                                         </button>
                                     </li>
@@ -676,7 +674,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Help Center
+                                            {t('helpcenter')}
                                             </span>
                                         </button>
                                     </li>
@@ -694,7 +692,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Logout
+                                            {t('logout')}
                                             </span>
                                         </button>
                                     </li>
@@ -708,7 +706,7 @@ const Header = () => {
                                     type="button"
                                     className="landing-btn btn btn-light me-2"
                                 >
-                                    Login
+                                    {t('login')}
                                 </button>
                             </Link>
                             <Link to="register">
@@ -716,7 +714,7 @@ const Header = () => {
                                     type="button"
                                     className="landing-btn btn btn-warning"
                                 >
-                                    Sign up
+                                    {t('signup')}
                                 </button>
                             </Link>
                         </>
@@ -735,7 +733,7 @@ const Header = () => {
                     delay={3000}
                     autohide
                 >
-                    <Toast.Body>You have been logged out</Toast.Body>
+                    <Toast.Body>{t('Youhavebeenloggedout')}</Toast.Body>
                 </Toast>
             </ToastContainer>
             {/* Create class modal */}
