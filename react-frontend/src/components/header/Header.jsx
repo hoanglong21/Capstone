@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
 import { useState, useEffect } from 'react'
@@ -302,7 +302,7 @@ const Header = () => {
                                 >
                                     <LibraryIcon className="mx-2" />
                                     <span className="align-middle">
-                                        Discovery
+                                        {t('discovery')}
                                     </span>
                                 </NavLink>
                             </li>
