@@ -107,10 +107,10 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
 
         Map<String, String> userSettingMap = new HashMap<>();
-        userSettingMap.put("study reminder", "07:00"); // == "false"
+        userSettingMap.put("study reminder", "false"); // == "false"
         userSettingMap.put("language", "en");
-        userSettingMap.put("assignment due date reminder", "24"); // == "false"
-        userSettingMap.put("test due date reminder", "24"); // == "false"
+        userSettingMap.put("assignment due date reminder", "false"); // == "false"
+        userSettingMap.put("test due date reminder", "false"); // == "false"
         userSettingMap.put("set added", "TRUE");
         userSettingMap.put("post added", "TRUE");
         userSettingMap.put("assignment assigned", "TRUE");
@@ -367,22 +367,26 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
-    private Set<LocalTime> sentStudytime = new HashSet<>();
-
     @Scheduled(fixedRate = 10000)
     public void sendStudyReminderMails() {
         List<UserSetting> userSettings = userSettingRepository.findAll();
-
         for (UserSetting userSetting : userSettings) {
-            int userSettingId = userSetting.getId();
-            String studytime = userSetting.getValue();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            LocalTime studyTime = LocalTime.parse(studytime, formatter);
+            if (userSetting.getSetting().getId() == 1) {
+                String studyTimeString = userSetting.getValue();
+                if(studyTimeString.equalsIgnoreCase("false")) {
+                    continue;
+                }
+                try{
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                    LocalTime studyTime = LocalTime.parse(studyTimeString, formatter).truncatedTo(ChronoUnit.MINUTES);
 
-            LocalTime currentTime = LocalTime.now();
-            if (userSetting.getSetting().getId() == 1 && !sentStudytime.contains(studyTime) && currentTime.isAfter(studyTime)) {
-                sendMail(userSetting);
-                sentStudytime.add(studyTime);
+                    LocalTime currentTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+                    if(studyTime.equals(currentTime)) {
+                        sendMail(userSetting);
+                    }
+                } catch (Exception e) {
+
+                }
             }
         }
     }
