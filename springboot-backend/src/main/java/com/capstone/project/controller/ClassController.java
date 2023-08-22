@@ -114,6 +114,16 @@ public class ClassController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_TUTOR')")
+    @DeleteMapping("/recoverclass/{id}")
+    public ResponseEntity<?> recoverClass(@PathVariable int id) {
+        try {
+            return ResponseEntity.ok(classService.recoverClass(id));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
 //    @PreAuthorize("hasRole('ROLE_TUTOR') or hasRole('ROLE_LEARNER')" )
     @GetMapping("/filterclass")
