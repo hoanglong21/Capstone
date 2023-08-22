@@ -1,8 +1,45 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useState, useEffect } from 'react'
+
+import UserSettingService from '../../services/UserSettingService'
+import { changeLanguage } from '../../features/user/userSlice'
+
 import './Footer.css'
 
 const Footer = () => {
+    const dispatch = useDispatch()
+    const { t, i18n } = useTranslation()
+
     const { userToken } = useSelector((state) => state.auth)
+    const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
+
+    const [language, setLanguage] = useState('en')
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLanguage(userLanguage)
+            i18n.changeLanguage(language)
+        }
+        if (userInfo?.id) {
+            fetchData()
+        }
+    }, [userInfo, userLanguage])
+
+    const handleSubmit = async (value) => {
+        try {
+            await UserSettingService.updateCustomSettings(userInfo.id, 2, value)
+            dispatch(changeLanguage(value))
+            i18n.changeLanguage(value)
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+    }
 
     return (
         <footer>
@@ -17,10 +54,17 @@ const Footer = () => {
                         </a>
                     </div>
                     <div>
-                        <select className="footer-select" name="" id="">
-                            <option value="">English</option>
-                            <option value="">Tiếng Việt</option>
-                            <option value="">日本語</option>
+                        <select
+                            className="footer-select"
+                            value={language || 'en'}
+                            onChange={(event) => {
+                                setLanguage(event.target.value)
+                                handleSubmit(event.target.value)
+                            }}
+                        >
+                            <option value="en">English</option>
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="ja">日本語</option>
                         </select>
                     </div>
                 </div>

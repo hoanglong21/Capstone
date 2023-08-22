@@ -1,16 +1,20 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
 import { useState, useEffect } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { useTranslation } from 'react-i18next'
 
 import { logout as authLogout } from '../../features/auth/authSlice'
 import { logout as userLogout } from '../../features/user/userSlice'
 import { getUser } from '../../features/user/userAction'
+import { getNumUnread } from '../../features/notify/notifyAction'
 import NotificationService from '../../services/NotificationService'
+import AuthService from '../../services/AuthService'
 
 import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/class/JoinClass'
+import Pagination from '../Pagination'
 
 import logo from '../../assets/images/logo-2.png'
 import defaultAvatar from '../../assets/images/default_avatar.png'
@@ -29,16 +33,15 @@ import {
     DeleteIcon,
 } from '../icons'
 import './Header.css'
-import AuthService from '../../services/AuthService'
-import { getNumUnread } from '../../features/notify/notifyAction'
-import Pagination from '../Pagination'
 
 const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { t, i18n } = useTranslation()
 
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
     const { numUnread } = useSelector((state) => state.notify)
 
     const [showLogoutMess, setShowLogoutMess] = useState(false)
@@ -64,6 +67,12 @@ const Header = () => {
             dispatch(getUser(userToken))
         }
     }, [userToken])
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     // check notification empty
     useEffect(() => {
@@ -230,7 +239,9 @@ const Header = () => {
                                 }
                             >
                                 <HomeIcon className="mx-2" />
-                                <span className="align-middle">Home</span>
+                                <span className="align-middle">
+                                    {t('home')}
+                                </span>
                             </NavLink>
                         </li>
                         <li className="nav-item">
@@ -243,7 +254,9 @@ const Header = () => {
                                 }
                             >
                                 <DictIcon className="mx-2" />
-                                <span className="align-middle">Dictionary</span>
+                                <span className="align-middle">
+                                    {t('dictionary')}
+                                </span>
                             </NavLink>
                         </li>
                         <li className="nav-item">
@@ -256,7 +269,9 @@ const Header = () => {
                                 }
                             >
                                 <TranslateIcon className="mx-2" />
-                                <span className="align-middle">Translate</span>
+                                <span className="align-middle">
+                                    {t('translate')}
+                                </span>
                             </NavLink>
                         </li>
                         {userToken ? (
@@ -271,7 +286,7 @@ const Header = () => {
                                 >
                                     <LibraryIcon className="mx-2" />
                                     <span className="align-middle">
-                                        Your Library
+                                        {t('library')}
                                     </span>
                                 </NavLink>
                             </li>
