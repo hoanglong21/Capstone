@@ -261,6 +261,8 @@
 }
 
 .people_username {
+    color: var(--text-primary);
+    text-decoration: none;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

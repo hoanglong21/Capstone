@@ -46,10 +46,10 @@ const Footer = () => {
             {userToken ? (
                 <div className="footer border-top p-3 px-4 d-flex justify-content-between">
                     <div className="d-flex column-gap-3">
-                        <a className="footer-link" href="privacy">
+                        <a className="footer-link" href="/privacy">
                             Privacy
                         </a>
-                        <a className="footer-link" href="term">
+                        <a className="footer-link" href="/term">
                             Terms
                         </a>
                     </div>

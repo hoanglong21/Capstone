@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
@@ -183,9 +183,12 @@ const People = () => {
                                     className="people_avatar"
                                     src={request?.user?.avatar || defaultAvatar}
                                 />
-                                <span className="people_username">
+                                <Link
+                                    to={`/${request?.user?.username}/sets`}
+                                    className="people_username"
+                                >
                                     {request?.user?.username}
-                                </span>
+                                </Link>
                                 {request?.user?.status === 'banned' && (
                                     <OverlayTrigger
                                         placement="bottom"
@@ -264,9 +267,12 @@ const People = () => {
                         className="people_avatar"
                         src={classroom?.user?.avatar || defaultAvatar}
                     />
-                    <span className="people_username">
+                    <Link
+                        to={`/${classroom?.user?.username}/sets`}
+                        className="people_username"
+                    >
                         {classroom?.user?.username}
-                    </span>
+                    </Link>
                     {classroom?.user?.status === 'banned' && (
                         <OverlayTrigger
                             placement="bottom"
@@ -328,9 +334,12 @@ const People = () => {
                             className="people_avatar"
                             src={learner?.user?.avatar || defaultAvatar}
                         />
-                        <span className="people_username">
+                        <Link
+                            to={`/${learner?.user?.username}/sets`}
+                            className="people_username"
+                        >
                             {learner?.user?.username}
-                        </span>
+                        </Link>
                         {learner?.user?.status === 'banned' && (
                             <OverlayTrigger
                                 placement="bottom"

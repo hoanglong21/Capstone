@@ -17,7 +17,6 @@ function SetsForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
-    const author = searchParams.get('author')
 
     const [type, setType] = useState(-1)
     const [sets, setSets] = useState([])
@@ -32,8 +31,8 @@ function SetsForHome() {
                     '=0',
                     '=1',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     `${type == -1 ? '' : `=${type}`}`,
                     '',
@@ -80,7 +79,7 @@ function SetsForHome() {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search, author, page, type])
+    }, [search, page, type])
 
     return (
         <div className="mt-4 mb-5">

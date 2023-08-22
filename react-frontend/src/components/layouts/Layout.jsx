@@ -58,12 +58,6 @@ export default function Layout() {
 
             onChildAdded(getData, (data) => {
                 let temp = { ...data.val(), key: data.key }
-                if (
-                    temp?.video_call === true &&
-                    temp?.receiver === userInfo?.username
-                ) {
-                    setIsAccept(true)
-                }
                 setMessages((messages) => [...messages, temp])
             })
 
@@ -76,22 +70,18 @@ export default function Layout() {
         }
     }, [userInfo])
 
-    // useEffect(() => {
-    //     if (isAccept !== null) {
-    //         setTimeout(() => {                
-    //             setIsAccept(null)
-    //         }, 50000);
-    //     }
-    // }, [isAccept])
-
     const rejectCall = async (message) => {
         setIsAccept(false)
         var myWindow = window.open('', 'myWindow')
-        var newURL = window.location.origin + '/video-call/' + message.message + '?accepted=false';
+        var newURL =
+            window.location.origin +
+            '/video-call/' +
+            message.message +
+            '?accepted=false'
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = newURL;
+            myWindow.location.href = newURL
         } else {
             // If the window is already open and navigated to a page, focus it
             myWindow.focus()
@@ -101,11 +91,15 @@ export default function Layout() {
     const answerCall = async (message) => {
         setIsAccept(true)
         var myWindow = window.open('', 'myWindow')
-        var newURL = window.location.origin + '/video-call/' + message.message + '?accepted=true';
+        var newURL =
+            window.location.origin +
+            '/video-call/' +
+            message.message +
+            '?accepted=true'
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = newURL;
+            myWindow.location.href = newURL
         } else {
             // If the window is already open and navigated to a page, focus it
             myWindow.focus()

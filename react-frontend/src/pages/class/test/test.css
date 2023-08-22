@@ -99,6 +99,7 @@
     border-bottom: 5px solid var(--card-button-border);
     text-decoration: none;
     text-transform: uppercase;
+    background-color: transparent;
 }
 
 .createTest_cancelBtn:hover {
