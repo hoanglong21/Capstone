@@ -41,6 +41,14 @@ const deleteClass = (id) => {
     })
 }
 
+const deleteHardClass = (id) => {
+    return axios.delete(API_BASE_URL + '/deleteclass/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 const getClassroomById = (id) => {
     return axios.get(API_BASE_URL + '/class/' + id)
 }
@@ -195,6 +203,7 @@ const ClassService = {
     getFilterClassStudySet,
     addStudySetToClass,
     unAssignStudySet,
+    deleteHardClass,
 }
 
 export default ClassService

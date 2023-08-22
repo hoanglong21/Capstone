@@ -11,10 +11,19 @@ const UpdateClass = ({
     stateChanger,
     showEditModal,
     setShowEditModal,
+    isUpdate,
+    setIsUpdate,
 }) => {
     const [updateClass, setUpdateClass] = useState({})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
 
     useEffect(() => {
         if (showEditModal === false) {
@@ -31,7 +40,15 @@ const UpdateClass = ({
 
     useEffect(() => {
         if (classroom.class_name) {
-            setUpdateClass({ ...classroom })
+            const tempClass = { ...classroom }
+            tempClass.created_date = toBEDate(tempClass.created_date)
+            tempClass.deleted_date = toBEDate(tempClass.deleted_date)
+            if (tempClass?.user) {
+                tempClass.user.created_date = toBEDate(
+                    tempClass.user.created_date
+                )
+            }
+            setUpdateClass({ ...tempClass })
         }
     }, [classroom])
 
@@ -65,7 +82,12 @@ const UpdateClass = ({
                     )
                 ).data
                 setUpdateClass(temp)
-                stateChanger(temp)
+                if (stateChanger) {
+                    stateChanger(temp)
+                }
+                if (isUpdate === false) {
+                    setIsUpdate(true)
+                }
                 setShowEditModal(false)
             } catch (error) {
                 if (error.response && error.response.data) {

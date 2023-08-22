@@ -2,16 +2,13 @@ import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 import './trash.css'
 
 const Trash = () => {
-    const [searchParams, setSearchParams] = useSearchParams()
-
-    const search = searchParams.get('search')
-
     return (
         <div className="flex-grow-1">
-            <div className="trash_header">
+            <div className="trash_container">
                 <h3>Trash</h3>
-                <div className="mainClass_navbar mt-4">
-                    <ul className="nav mainClass-navLink">
+                <p>Items in Trash will be permanently deleted after 30 days.</p>
+                <div className="mainClass_navbar mt-3">
+                    <ul className="nav">
                         <li>
                             <NavLink
                                 to="sets"
@@ -39,8 +36,6 @@ const Trash = () => {
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div className="library-layout p-2">
                 <Outlet />
             </div>
         </div>

@@ -1,3 +1,10 @@
-.trash_header {
-    padding: 1rem 3rem 0;
+.trash_container {
+    max-width: 80rem;
+    padding: 2rem 4rem 2.5rem;
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+
+.trash_container .mainClass_navlink {
+    font-size: 1rem;
 }

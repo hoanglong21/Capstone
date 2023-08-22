@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 
-import ClassService from '../../services/ClassService'
+import StudySetService from '../../services/StudySetService'
 
-import './classLayout/classLayout.css'
-
-const DeleteClass = ({
-    classroom,
+const DeleteSet = ({
+    studySet,
     showDeleteModal,
     setShowDeleteModal,
     isDelete,
@@ -15,25 +13,24 @@ const DeleteClass = ({
 }) => {
     let navigate = useNavigate()
 
-    const [deleteClass, setDeleteClass] = useState({})
+    const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        if (classroom.class_name) {
-            setDeleteClass({ ...classroom })
-        }
-    }, [classroom])
-
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        // clear validation
+        setError('')
         setLoading(true)
         try {
-            await ClassService.deleteClass(deleteClass.id)
+            await StudySetService.deleteHardStudySet(studySet.id)
+            setShowDeleteModal(false)
             if (isDelete === false) {
                 setIsDelete(true)
             } else {
                 navigate('/')
             }
-            setShowDeleteModal(false)
+            // clear validation
+            setError('')
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -46,41 +43,43 @@ const DeleteClass = ({
 
     return (
         <Modal
-            className="classDeleteModal"
+            id="deleteSetModal"
             show={showDeleteModal}
             onHide={() => {
                 setShowDeleteModal(false)
             }}
         >
-            <Modal.Header closeButton>
-                <Modal.Title className="px-3">
-                    <h4 className="modal-title">Delete this class?</h4>
+            <Modal.Header closeButton className="border-0 px-4">
+                <Modal.Title className="setModalTitle">
+                    Delete this set?
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                <div className="classDeleteModalHeading mb-3">
-                    {deleteClass.class_name}
-                </div>
+            <Modal.Body className="px-4">
+                {/* error message */}
+                {error && (
+                    <div className="alert alert-danger" role="alert">
+                        {error}
+                    </div>
+                )}
+                <div className="setModalHeading mb-1">{studySet?.title}</div>
                 <p className="mb-1">
-                    You are about to delete this class and all of its data. No
-                    one can access this class anymore.
+                    You are about to delete this set and all of its data. No one
+                    will be able to access this set ever again.
                 </p>
                 <p className="fw-semibold">
-                    Items in Trash will be permanently deleted after 30 days.
+                    Are you sure? This cannot be undone.
                 </p>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className="px-4">
                 <button
                     type="button"
                     className="btn btn-secondary classModalBtn me-3"
-                    onClick={() => {
-                        setShowDeleteModal(false)
-                    }}
+                    data-bs-dismiss="modal"
                 >
                     Close
                 </button>
                 <button
-                    className="btn btn-danger classDeleteModalBtn"
+                    className="btn btn-danger classModalBtn"
                     onClick={handleSubmit}
                     disabled={loading}
                 >
@@ -93,7 +92,7 @@ const DeleteClass = ({
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Move to trash'
+                        'Yes, delete this set'
                     )}
                 </button>
             </Modal.Footer>
@@ -101,4 +100,4 @@ const DeleteClass = ({
     )
 }
 
-export default DeleteClass
+export default DeleteSet
