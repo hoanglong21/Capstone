@@ -26,9 +26,9 @@ public class Achievement {
     @Column(columnDefinition="TEXT")
     private String description;
 
-    private Integer value;
+    private int value;
 
-    public Achievement(int typeId, String name, String description, Integer value) {
+    public Achievement(int typeId, String name, String description, int value) {
         AchievementType achievementType = new AchievementType();
         achievementType.setId(typeId);
         this.achievementType = achievementType;
