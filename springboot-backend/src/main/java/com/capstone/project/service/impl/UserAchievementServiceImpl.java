@@ -28,11 +28,12 @@ public class UserAchievementServiceImpl implements UserAchievementService {
 
     private final EntityManager entityManager;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserAchievementServiceImpl(UserAchievementRepository userAchievementRepository, EntityManager entityManager) {
+    public UserAchievementServiceImpl(UserAchievementRepository userAchievementRepository, EntityManager entityManager, UserRepository userRepository) {
         this.userAchievementRepository = userAchievementRepository;
         this.entityManager = entityManager;
+        this.userRepository = userRepository;
     }
 
     @Override
