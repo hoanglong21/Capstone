@@ -1,5 +1,6 @@
 package com.capstone.project.service;
 
+import com.capstone.project.dto.CommentDTO;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.model.Class;

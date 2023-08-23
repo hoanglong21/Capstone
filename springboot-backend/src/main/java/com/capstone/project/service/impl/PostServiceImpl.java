@@ -174,17 +174,25 @@ public class PostServiceImpl implements PostService {
     public Boolean deletePost(int id) throws ResourceNotFroundException {
         Post post = postRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Post not exist with id: " + id));
-        for(Comment commentroot : commentRepository.getCommentByPostId(post.getId())){
-            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                commentRepository.delete(comment);
-            }
-            commentRepository.delete(commentroot);
+        for(Comment commentpost : commentRepository.getCommentByPostId(post.getId())){
+            deleteCommentAndChildren(commentpost);
         }
+
         for(Attachment attachment : attachmentRepository.getAttachmentByPostId(post.getId())){
             attachmentRepository.delete(attachment);
         }
         postRepository.delete(post);
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override

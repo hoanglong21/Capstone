@@ -189,11 +189,8 @@ public class ClassServiceImpl implements ClassService {
         Class classroom = classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
         for(Post post : postRepository.getPostByClassroomId(classroom.getId())){
-            for(Comment commentroot : commentRepository.getCommentByPostId(post.getId())){
-                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                    commentRepository.delete(comment);
-                }
-                commentRepository.delete(commentroot);
+            for(Comment commentpost : commentRepository.getCommentByPostId(post.getId())){
+                deleteCommentAndChildren(commentpost);
             }
             for(Attachment attachment : attachmentRepository.getAttachmentByPostId(post.getId())){
                 attachmentRepository.delete(attachment);
@@ -218,10 +215,7 @@ public class ClassServiceImpl implements ClassService {
             }
 
             for(Comment commentroot : commentRepository.getCommentByTestId(test.getId())){
-                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                    commentRepository.delete(comment);
-                }
-                commentRepository.delete(commentroot);
+                deleteCommentAndChildren(commentroot);
             }
             testRepository.delete(test);
         }
@@ -231,10 +225,7 @@ public class ClassServiceImpl implements ClassService {
                     attachmentRepository.delete(attachment);
                 }
                 for(Comment commentroot : commentRepository.getCommentBySubmissionId(submission.getId())){
-                    for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                        commentRepository.delete(comment);
-                    }
-                    commentRepository.delete(commentroot);
+                    deleteCommentAndChildren(commentroot);
                 }
                 submissionRepository.delete(submission);
             }
@@ -242,15 +233,22 @@ public class ClassServiceImpl implements ClassService {
                 attachmentRepository.delete(attachment);
             }
             for(Comment commentroot : commentRepository.getCommentByAssignmentId(assignment.getId())){
-                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                    commentRepository.delete(comment);
-                }
-                commentRepository.delete(commentroot);
+                deleteCommentAndChildren(commentroot);
             }
             assignmentRepository.delete(assignment);
         }
         classRepository.delete(classroom);
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override

@@ -1,4 +1,5 @@
 package com.capstone.project.service;
+import com.capstone.project.dto.CommentDTO;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.Comment;
 
@@ -15,6 +16,13 @@ public interface CommentService {
     List<Comment> getAllCommentByTestId(int id);
     List<Comment> getAllCommentByAssignmentId(int id);
     List<Comment> getAllCommentBySubmisionId(int id);
+
+    List<CommentDTO> getAllCommentDTOByPostId(int id);
+    List<CommentDTO> getAllCommentDTOByRootId(int id);
+    List<CommentDTO> getAllCommentDTOByStudySetId(int id);
+    List<CommentDTO> getAllCommentDTOByTestId(int id);
+    List<CommentDTO> getAllCommentDTOByAssignmentId(int id);
+    List<CommentDTO> getAllCommentDTOBySubmisionId(int id);
 
     Comment getCommentById(int id) throws ResourceNotFroundException;
 

@@ -119,10 +119,20 @@ public class StudySetServiceImpl implements StudySetService {
         }
         List<Comment> commentList = commentRepository.getCommentByStudySetId(id);
         for(Comment comment : commentList) {
-            commentRepository.delete(comment);
+            deleteCommentAndChildren(comment);
         }
         studySetRepository.delete(studySet);
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override
