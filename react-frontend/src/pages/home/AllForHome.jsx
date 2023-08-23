@@ -160,7 +160,7 @@ function AllForHome() {
                     <h4 className="sets-heading"> {t('studySet')}</h4>
                     <Link
                         to={{
-                            pathname: '/sets',
+                            pathname: 'sets',
                             search: `?${searchParams.toString()}`,
                         }}
                         className="sets-link link-primary"
@@ -283,7 +283,7 @@ function AllForHome() {
                     <h4 className="sets-heading">{t('class')}</h4>
                     <Link
                         to={{
-                            pathname: '/classes',
+                            pathname: 'classes',
                             search: `?${searchParams.toString()}`,
                         }}
                         className="sets-link link-primary"
@@ -411,7 +411,7 @@ function AllForHome() {
                     <h4 className="sets-heading">{t('user')}</h4>
                     <Link
                         to={{
-                            pathname: '/users',
+                            pathname: 'users',
                             search: `?${searchParams.toString()}`,
                         }}
                         className="sets-link link-primary"
