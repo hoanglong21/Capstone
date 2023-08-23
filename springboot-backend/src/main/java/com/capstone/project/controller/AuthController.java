@@ -71,7 +71,10 @@ public class AuthController {
 
             // Check if the user is banned
             if ("banned".equalsIgnoreCase(user.getStatus())) {
-                return ResponseEntity.badRequest().body("Your account is banned. Please contact the administrator.");
+                return ResponseEntity.badRequest().body("Your account was banned. Please contact the administrator.");
+            }
+            if ("deleted".equalsIgnoreCase(user.getStatus())) {
+                return ResponseEntity.badRequest().body("Your account was deleted. Please contact the administrator.");
             }
 
             if (authentication.isAuthenticated()) {
