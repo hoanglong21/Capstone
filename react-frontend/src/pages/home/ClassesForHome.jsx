@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-
+import { useSelector } from 'react-redux'
 import ClassService from '../../services/ClassService'
-
+import { useTranslation } from 'react-i18next'
 import Pagination from '../../components/Pagination'
 
 import { ClassIcon } from '../../components/icons'
@@ -18,7 +18,6 @@ import '../../assets/styles/Home.css'
 const ClassesForHome = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const author = searchParams.get('author')
     const search = searchParams.get('search')
 
     const [classes, setClasses] = useState([])
@@ -32,8 +31,8 @@ const ClassesForHome = () => {
                 await ClassService.getFilterList(
                     '',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     '',
                     '',
@@ -55,6 +54,15 @@ const ClassesForHome = () => {
             }
         }
     }
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     useEffect(() => {
         if (loading === true && document.getElementById('searchHomeBtn')) {
@@ -79,7 +87,7 @@ const ClassesForHome = () => {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search, author, page])
+    }, [search, page])
 
     return (
         <div className="mt-4 mb-5">
@@ -94,7 +102,7 @@ const ClassesForHome = () => {
                     <div className="sets-list mb-4">
                         {classes?.length === 0 && (
                             <p className="noFound">
-                                No classes matching {search} found
+                                {t('noClass')} {search} {t('found')}
                             </p>
                         )}
                         {classes?.map((classroom) => (
@@ -102,10 +110,10 @@ const ClassesForHome = () => {
                                 <Link to={`/class/${classroom.id}`}>
                                     <div className="set-body row mb-2">
                                         <div className="class-home term-count">
-                                            {classroom?.member} member
+                                            {classroom?.member} {t('member')}
                                         </div>
                                         <div className="class-home term-count">
-                                            {classroom?.studyset} sets
+                                            {classroom?.studyset} {t('set')}
                                         </div>
                                         <div className="set-author col d-flex align-items-center">
                                             <div className="author-avatar">
@@ -128,8 +136,7 @@ const ClassesForHome = () => {
                                                     placement="bottom"
                                                     overlay={
                                                         <Tooltip id="tooltip">
-                                                            This account is
-                                                            banned.
+                                                            {t('msg9')}.
                                                         </Tooltip>
                                                     }
                                                 >
@@ -145,8 +152,7 @@ const ClassesForHome = () => {
                                                     placement="bottom"
                                                     overlay={
                                                         <Tooltip id="tooltip">
-                                                            This account is
-                                                            verified.
+                                                            {t('msg8')}.
                                                         </Tooltip>
                                                     }
                                                 >
@@ -162,8 +168,7 @@ const ClassesForHome = () => {
                                                     placement="bottom"
                                                     overlay={
                                                         <Tooltip id="tooltip">
-                                                            This account is
-                                                            deleted.
+                                                            {t('msg7')}.
                                                         </Tooltip>
                                                     }
                                                 >

@@ -20,6 +20,7 @@ import { getUser } from '../../features/user/userAction'
 import { useState } from 'react'
 import { AnswerPhoneSolidIcon, DeclinePhoneSolidIcon } from '../icons'
 // import { AES, enc } from 'crypto-js';
+import './video.css'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM',
@@ -96,7 +97,7 @@ const VideoCall = () => {
             } else {
                 let decode = jwt_decode(string)
                 myUsername = decode.sub
-            }            
+            }
             webcamButtonClick()
         }
     }, [userInfo])
@@ -134,56 +135,58 @@ const VideoCall = () => {
         setLoadingSender(false)
 
         // After run all
-        const accepted = searchParams.get('accepted');
-        if(accepted == 'true') {
-            answerButtonClick();
-        } else if(accepted == 'false') {
-            answerButtonClick();
+        const accepted = searchParams.get('accepted')
+        if (accepted == 'true') {
+            answerButtonClick()
+        } else if (accepted == 'false') {
+            answerButtonClick()
         } else {
-            callButtonClick();
+            callButtonClick()
         }
     }
 
     let callButtonClick = async () => {
-        try{
+        try {
             setIsCalling(true)
             setIsWaiting(true)
             // Reference Firestore collections for signaling
             const callDoc = firestore.collection('calls').doc()
-    
+
             const offerCandidates = callDoc.collection('offerCandidates')
             const answerCandidates = callDoc.collection('answerCandidates')
-    
+
             setCallId(callDoc.id)
             // Get candidates for caller, save to db
             pc.onicecandidate = (event) => {
                 event.candidate && offerCandidates.add(event.candidate.toJSON())
             }
-    
+
             // Create offer
             const offerDescription = await pc.createOffer()
             try {
                 await pc.setLocalDescription(offerDescription)
             } catch (error) {
-                console.error('Error setting local description:', error);
-            }           
-    
+                console.error('Error setting local description:', error)
+            }
+
             const offer = {
                 sdp: offerDescription.sdp,
                 type: offerDescription.type,
             }
-    
+
             await callDoc.set({ offer })
-    
+
             // Listen for remote answer
             callDoc.onSnapshot((snapshot) => {
                 const data = snapshot.data()
                 if (!pc.currentRemoteDescription && data?.answer) {
-                    const answerDescription = new RTCSessionDescription(data.answer)
+                    const answerDescription = new RTCSessionDescription(
+                        data.answer
+                    )
                     pc.setRemoteDescription(answerDescription)
                 }
             })
-    
+
             // When answered, add candidate to peer connection
             answerCandidates.onSnapshot((snapshot) => {
                 snapshot.docChanges().forEach((change) => {
@@ -193,7 +196,7 @@ const VideoCall = () => {
                     }
                 })
             })
-    
+
             // for short
             const paramValue = searchParams.get('param')
             // const key = "6A576E5A7234753778217A25432A462D4A614E645267556B5870327335763879"; //256-bit && hex
@@ -201,7 +204,7 @@ const VideoCall = () => {
             var message = call
             // var receiverUsername = AES.decrypt(param, key).toString(enc.Utf8);
             var receiverUsername = paramValue
-    
+
             // save in database
             // A post entry.
             const postData = {
@@ -211,60 +214,64 @@ const VideoCall = () => {
                 message: callDoc.id,
                 video_call: true,
             }
-    
+
             // Get a key for a new Post.
             newPostKey = push(child(ref(database), 'messages')).key
-    
+
             const updates = {}
             updates['/messages/' + newPostKey] = postData
             update(ref(database), updates)
             setIsCalling(true)
-            
         } catch (err) {
-            console.log("Try call again")
+            console.log('Try call again')
         }
-        
     }
 
     let answerButtonClick = async () => {
         try {
-            if (!pc || pc.connectionState === 'closed' || pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
+            if (
+                !pc ||
+                pc.connectionState === 'closed' ||
+                pc.connectionState === 'failed' ||
+                pc.connectionState === 'disconnected'
+            ) {
                 // The pc (RTCPeerConnection) is not in a valid state.
                 // You can log a message or handle this case accordingly.
-                console.error('RTCPeerConnection is not in a valid state.');
-                return;
+                console.error('RTCPeerConnection is not in a valid state.')
+                return
             }
             setLoadingReceiver(true)
             const callId = call
             const callDoc = firestore.collection('calls').doc(callId)
             const answerCandidates = callDoc.collection('answerCandidates')
             const offerCandidates = callDoc.collection('offerCandidates')
-    
+
             pc.onicecandidate = (event) => {
-                event.candidate && answerCandidates.add(event.candidate.toJSON())
+                event.candidate &&
+                    answerCandidates.add(event.candidate.toJSON())
             }
-    
+
             const callData = (await callDoc.get()).data()
-    
+
             const offerDescription = callData.offer
             await pc.setRemoteDescription(
                 new RTCSessionDescription(offerDescription)
             )
-    
+
             const answerDescription = await pc.createAnswer()
             try {
                 await pc.setLocalDescription(answerDescription)
             } catch (error) {
-                console.error('Error setting local description:', error);
+                console.error('Error setting local description:', error)
             }
-            
+
             const answer = {
                 type: answerDescription.type,
                 sdp: answerDescription.sdp,
             }
-    
+
             await callDoc.update({ answer })
-    
+
             offerCandidates.onSnapshot((snapshot) => {
                 snapshot.docChanges().forEach((change) => {
                     // console.log(change);
@@ -275,12 +282,12 @@ const VideoCall = () => {
                 })
             })
             setLoadingReceiver(false)
-            const accepted = searchParams.get('accepted');
-            if(accepted == 'false') {
-                setTimeout(hangupButtonClick, 1);
+            const accepted = searchParams.get('accepted')
+            if (accepted == 'false') {
+                setTimeout(hangupButtonClick, 1)
             }
         } catch (err) {
-            console.log("Try answer again")
+            console.log('Try answer again')
         }
     }
 
@@ -332,11 +339,11 @@ const VideoCall = () => {
         // setTimeout(() => {
         //     console.log(pc.iceConnectionState) // "disconnected"
         // }, 5000) // Wait for 5 seconds for the state to change
-        const accepted = searchParams.get('accepted');
-        if(accepted == 'false') {
-            window.close();
-            return;
-        } 
+        const accepted = searchParams.get('accepted')
+        if (accepted == 'false') {
+            window.close()
+            return
+        }
         alert('Call has disconnected, turn off')
         window.close()
     }
@@ -370,68 +377,81 @@ const VideoCall = () => {
     }
 
     return (
-        <div>
-            {loadingSender && (
-                <div className="d-flex justify-content-center mt-5">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">
-                            LoadingSender...
-                        </span>
+        <div className="videoCallContainer">
+            <div class="c-video">
+                <div class="c-webcam">
+                    <div class="c-webcam-container">
+                        <div class="c-webcam-inchat">
+                            {loadingSender && (
+                                <div className="d-flex justify-content-center mt-5">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            LoadingSender...
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                            <video
+                                id="webcamVideo"
+                                className={loadingSender ? 'd-none' : ''}
+                                autoPlay
+                                playsInline
+                            ></video>
+                        </div>
+                        <div class="c-webcam__video-controls">
+                            {(isCalling && !isWaiting) || call ? (
+                                <div className="d-flex justify-content-center mt-5">
+                                    <button
+                                        id="hangupButton"
+                                        className="chat_callModalBtn chat_callModalBtn--decline"
+                                        onClick={hangupButtonClick}
+                                    >
+                                        <DeclinePhoneSolidIcon />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="d-flex justify-content-center mt-5">
+                                    <button
+                                        id="callButton"
+                                        className="btn btn-outline-primary"
+                                        onClick={callButtonClick}
+                                        disabled={isWaiting}
+                                    >
+                                        {isWaiting
+                                            ? 'Waiting for answer...'
+                                            : `Create Call to ${searchParams.get(
+                                                  'param'
+                                              )}`}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                        <div class="c-webcam__video">
+                            {loadingReceiver && (
+                                <div className="d-flex justify-content-center mt-5">
+                                    <div
+                                        className="spinner-border"
+                                        role="status"
+                                    >
+                                        <span className="visually-hidden">
+                                            LoadingSender...
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                            <video
+                                id="remoteVideo"
+                                className={loadingReceiver ? 'd-none' : ''}
+                                autoPlay
+                                playsInline
+                            ></video>
+                        </div>
                     </div>
                 </div>
-            )}
-            <video
-                id="webcamVideo"
-                className={loadingSender ? 'd-none' : ''}
-                autoPlay
-                playsInline
-            ></video>
-            {loadingReceiver && (
-                <div className="d-flex justify-content-center mt-5">
-                    <div className="spinner-border" role="status">
-                        <span className="visually-hidden">
-                            LoadingSender...
-                        </span>
-                    </div>
-                </div>
-            )}
-            <video
-                id="remoteVideo"
-                className={loadingReceiver ? 'd-none' : ''}
-                autoPlay
-                playsInline
-            ></video>
-            {(isCalling && !isWaiting) || call ? (
-                <div className="d-flex justify-content-center mt-5">
-                    {/* <button
-                        id="answerButton"
-                        className="chat_callModalBtn chat_callModalBtn--accept me-3"
-                        onClick={answerButtonClick}
-                    >
-                        <AnswerPhoneSolidIcon />
-                    </button> */}
-                    <button
-                        id="hangupButton"
-                        className="chat_callModalBtn chat_callModalBtn--decline"
-                        onClick={hangupButtonClick}
-                    >
-                        <DeclinePhoneSolidIcon />
-                    </button>
-                </div>
-            ) : (
-                <div className="d-flex justify-content-center mt-5">
-                    <button
-                        id="callButton"
-                        className="btn btn-outline-primary"
-                        onClick={callButtonClick}
-                        disabled={isWaiting}
-                    >
-                        {isWaiting
-                            ? 'Waiting for answer...'
-                            : `Create Call to ${searchParams.get('param')}`}
-                    </button>
-                </div>
-            )}
+            </div>
         </div>
     )
 }

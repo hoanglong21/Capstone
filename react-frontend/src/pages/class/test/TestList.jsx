@@ -8,7 +8,6 @@ import TestService from '../../../services/TestService'
 import DeleteTest from './DeleteTest'
 
 import {
-    AccountIcon,
     AddIcon,
     ArrowSmallDownIcon,
     ArrowSmallUpIcon,
@@ -249,6 +248,7 @@ const TestList = () => {
                             {userInfo?.id === classroom?.user?.id && (
                                 <button
                                     className="createTest_btn"
+                                    disabled={classroom?._deleted}
                                     onClick={() => {
                                         navigate('../create-test')
                                     }}
@@ -435,32 +435,35 @@ const TestList = () => {
                                                 )}
                                             </div>
                                             {userInfo?.id ===
-                                                classroom?.user?.id && (
-                                                <div className="mt-5 d-flex justify-content-between">
-                                                    <button
-                                                        className="editTest_btn"
-                                                        onClick={() => {
-                                                            navigate(
-                                                                `../edit-test/${test?.id}`
-                                                            )
-                                                        }}
-                                                    >
-                                                        Edit test
-                                                    </button>
-                                                    <button
-                                                        className="deleteTest_btn"
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setDeleteTest(test)
-                                                            setShowDeleteModal(
-                                                                true
-                                                            )
-                                                        }}
-                                                    >
-                                                        Delete test
-                                                    </button>
-                                                </div>
-                                            )}
+                                                classroom?.user?.id &&
+                                                !classroom?._deleted && (
+                                                    <div className="mt-5 d-flex justify-content-between">
+                                                        <button
+                                                            className="editTest_btn"
+                                                            onClick={() => {
+                                                                navigate(
+                                                                    `../edit-test/${test?.id}`
+                                                                )
+                                                            }}
+                                                        >
+                                                            Edit test
+                                                        </button>
+                                                        <button
+                                                            className="deleteTest_btn"
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setDeleteTest(
+                                                                    test
+                                                                )
+                                                                setShowDeleteModal(
+                                                                    true
+                                                                )
+                                                            }}
+                                                        >
+                                                            Delete test
+                                                        </button>
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                 </div>

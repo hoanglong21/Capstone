@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-
+import { useTranslation } from 'react-i18next'
 import StudySetService from '../../services/StudySetService'
 import ClassService from '../../services/ClassService'
 import UserService from '../../services/UserService'
-
+import { useSelector } from 'react-redux'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import banned from '../../assets/images/banned.png'
 import verified from '../../assets/images/verified.png'
@@ -16,7 +16,6 @@ function AllForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
-    const author = searchParams.get('author')
 
     const [sets, setSets] = useState([])
     const [classes, setClasses] = useState([])
@@ -26,7 +25,9 @@ function AllForHome() {
     const [loadingSets, setLoadingSets] = useState(true)
     const [loadingClasses, setLoadingClasses] = useState(true)
     const [loadingUsers, setLoadingUsers] = useState(true)
-
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
     const fetchSetsData = async (searchKey) => {
         setLoadingSets(true)
         try {
@@ -35,8 +36,8 @@ function AllForHome() {
                     '=0',
                     '=1',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     '',
                     '',
@@ -67,8 +68,8 @@ function AllForHome() {
                 await ClassService.getFilterList(
                     '',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     '',
                     '',
@@ -81,7 +82,6 @@ function AllForHome() {
                 )
             ).data.list
             setClasses(temp)
-            setLoadingClasses(false)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -89,6 +89,7 @@ function AllForHome() {
                 console.log(error.message)
             }
         }
+        setLoadingClasses(false)
     }
 
     const fetchUsersData = async (searchKey) => {
@@ -97,7 +98,7 @@ function AllForHome() {
             const temp = (
                 await UserService.filterUserCommon(
                     '',
-                    `${searchKey || author ? `=${searchKey || author}` : ''}`,
+                    `${searchKey ? `=${searchKey}` : ''}`,
                     '',
                     '',
                     '=tutor,learner',
@@ -124,7 +125,7 @@ function AllForHome() {
         fetchClassesData(search ? search : '')
         fetchUsersData(search ? search : '')
         setLoading(false)
-    }, [search, author])
+    }, [search])
 
     useEffect(() => {
         if (loading === true && document.getElementById('searchHomeBtn')) {
@@ -145,20 +146,26 @@ function AllForHome() {
         }
     }, [loading])
 
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     return (
         <div className="mt-4 mb-5">
             {/* Sets */}
             <div className="mb-5">
                 <div className="d-flex justify-content-between mb-3">
-                    <h4 className="sets-heading">Study sets</h4>
+                    <h4 className="sets-heading"> {t('studySet')}</h4>
                     <Link
                         to={{
-                            pathname: '/sets',
+                            pathname: 'sets',
                             search: `?${searchParams.toString()}`,
                         }}
                         className="sets-link link-primary"
                     >
-                        View all
+                        {t('viewall')}
                     </Link>
                 </div>
                 {loadingSets ? (
@@ -171,7 +178,7 @@ function AllForHome() {
                     <div className="sets-list row g-3">
                         {sets.length === 0 && (
                             <p className="noFound">
-                                No sets matching {search} found
+                                 {t('noSet')} {search} {t('found')}
                             </p>
                         )}
                         {sets.map((set) => (
@@ -188,7 +195,7 @@ function AllForHome() {
                                                     : set?.title}
                                             </div>
                                             <div className="term-count mb-2">
-                                                {set?.count} terms
+                                                {set?.count} {t('term')}
                                             </div>
                                             <p
                                                 className="set-description m-0 mb-2"
@@ -218,8 +225,7 @@ function AllForHome() {
                                                             placement="bottom"
                                                             overlay={
                                                                 <Tooltip id="tooltip">
-                                                                    This account
-                                                                    is banned.
+                                                                     {t('msg9')}.
                                                                 </Tooltip>
                                                             }
                                                         >
@@ -235,8 +241,7 @@ function AllForHome() {
                                                             placement="bottom"
                                                             overlay={
                                                                 <Tooltip id="tooltip">
-                                                                    This account
-                                                                    is verified.
+                                                                     {t('msg8')}.
                                                                 </Tooltip>
                                                             }
                                                         >
@@ -252,8 +257,7 @@ function AllForHome() {
                                                             placement="bottom"
                                                             overlay={
                                                                 <Tooltip id="tooltip">
-                                                                    This account
-                                                                    is deleted.
+                                                                     {t('msg7')}.
                                                                 </Tooltip>
                                                             }
                                                         >
@@ -276,15 +280,15 @@ function AllForHome() {
             {/* Classes */}
             <div className="mb-5">
                 <div className="d-flex justify-content-between mb-3">
-                    <h4 className="sets-heading">Classes</h4>
+                    <h4 className="sets-heading">{t('class')}</h4>
                     <Link
                         to={{
-                            pathname: '/classes',
+                            pathname: 'classes',
                             search: `?${searchParams.toString()}`,
                         }}
                         className="sets-link link-primary"
                     >
-                        View all
+                        {t('viewall')}
                     </Link>
                 </div>
                 {loadingClasses ? (
@@ -297,7 +301,7 @@ function AllForHome() {
                     <div className="sets-list row g-3">
                         {classes?.length === 0 && (
                             <p className="noFound">
-                                No classes matching {search} found
+                                {t('noClass')} {search} {t('found')}
                             </p>
                         )}
                         {classes?.map((classroom) => (
@@ -344,8 +348,7 @@ function AllForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                This account is
-                                                                banned.
+                                                                 {t('msg9')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -361,8 +364,7 @@ function AllForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                This account is
-                                                                verified.
+                                                                 {t('msg8')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -378,8 +380,7 @@ function AllForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                This account is
-                                                                deleted.
+                                                                 {t('msg7')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -391,10 +392,10 @@ function AllForHome() {
                                                 )}
                                             </div>
                                             <div className="term-count">
-                                                {classroom?.member} member
+                                                {classroom?.member} {t('member')}
                                             </div>
                                             <div className="term-count">
-                                                {classroom?.studyset} sets
+                                                {classroom?.studyset} {t('set')}
                                             </div>
                                         </div>
                                     </Link>
@@ -407,15 +408,15 @@ function AllForHome() {
             {/* Users */}
             <div className="mb-5">
                 <div className="d-flex justify-content-between mb-3">
-                    <h4 className="sets-heading">Users</h4>
+                    <h4 className="sets-heading">{t('user')}</h4>
                     <Link
                         to={{
-                            pathname: '/users',
+                            pathname: 'users',
                             search: `?${searchParams.toString()}`,
                         }}
                         className="sets-link link-primary"
                     >
-                        View all
+                        {t('viewall')}
                     </Link>
                 </div>
                 {loadingUsers ? (
@@ -428,7 +429,7 @@ function AllForHome() {
                     <div className="sets-list row g-3">
                         {users.length === 0 && (
                             <p className="noFound">
-                                No users matching {search} found
+                             {t('noUser')} {search} {t('found')}
                             </p>
                         )}
                         {users.map((user) => (
@@ -437,12 +438,7 @@ function AllForHome() {
                                 key={user?.id}
                             >
                                 <div className="set-item h-100">
-                                    <Link
-                                        to={{
-                                            pathname: '',
-                                            search: `?author=${user?.username}`,
-                                        }}
-                                    >
+                                    <Link to={`/${user?.username}/sets`}>
                                         <div className="set-body">
                                             <div className="d-flex align-items-center">
                                                 <img
@@ -465,10 +461,7 @@ function AllForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        This
-                                                                        account
-                                                                        is
-                                                                        banned.
+                                                                        {t('msg9')}.
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -484,10 +477,7 @@ function AllForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        This
-                                                                        account
-                                                                        is
-                                                                        verified.
+                                                                        {t('msg8')}.
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -505,10 +495,7 @@ function AllForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        This
-                                                                        account
-                                                                        is
-                                                                        deleted.
+                                                                        {t('msg7')}.
                                                                     </Tooltip>
                                                                 }
                                                             >

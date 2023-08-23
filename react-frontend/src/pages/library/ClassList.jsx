@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
@@ -14,6 +14,9 @@ import {
     ArrowSmallDownIcon,
     ArrowSmallUpIcon,
     ClassIcon,
+    DeleteSolidIcon,
+    EditIcon,
+    OptionVerIcon,
     SearchIcon,
 } from '../../components/icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
@@ -22,11 +25,16 @@ import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import '../../assets/styles/LibrarySearchList.css'
 import '../../assets/styles/Home.css'
+import DeleteClass from '../class/DeleteClass'
+import UpdateClass from '../class/UpdateClass'
 
 const ClassList = () => {
+    const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
+
+    const { name } = useParams()
 
     const { userInfo } = useSelector((state) => state.user)
 
@@ -41,8 +49,16 @@ const ClassList = () => {
     const [totalItems, setTotalItems] = useState(0)
     const [isDesc, setIsDesc] = useState(true)
 
+    const [updateClass, setUpdateClass] = useState({})
+    const [isUpdate, setIsUpdate] = useState(false)
+
+    const [isDelete, setIsDelete] = useState(false)
+    const [deleteClass, setDeleteClass] = useState({})
+
     const [showCreateModal, setShowCreateModal] = useState(false)
     const [showJoinModal, setShowJoinModal] = useState(false)
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     const fetchData = async (searchKey) => {
         setLoadingSearch(true)
@@ -53,8 +69,14 @@ const ClassList = () => {
                     '',
                     '=0',
                     `${searchKey ? '=' + searchKey : ''}`,
-                    `${type !== 'joined' ? `=${userInfo.username}` : ''}`,
-                    `${type !== 'created' ? `=${userInfo.username}` : ''}`,
+                    `${
+                        type !== 'joined' ? `=${name || userInfo.username}` : ''
+                    }`,
+                    `${
+                        type !== 'created'
+                            ? `=${name || userInfo.username}`
+                            : ''
+                    }`,
                     '',
                     '',
                     '',
@@ -84,10 +106,10 @@ const ClassList = () => {
             const temp = (
                 await ClassService.getFilterList(
                     '',
+                    '=0',
                     '',
-                    '',
-                    `=${userInfo.username}`,
-                    `=${userInfo.username}`,
+                    `=${name || userInfo.username}`,
+                    `=${name || userInfo.username}`,
                     '',
                     '',
                     '',
@@ -112,16 +134,20 @@ const ClassList = () => {
     }
 
     useEffect(() => {
-        if (userInfo.username) {
-            checkEmpty()
-        }
-    }, [userInfo])
+        checkEmpty()
+    }, [userInfo, name])
 
     useEffect(() => {
-        if (userInfo?.username) {
+        fetchData(search ? search : '')
+    }, [userInfo, name, search, type, page, isDesc])
+
+    useEffect(() => {
+        if (userInfo?.username && (isDelete === true || isUpdate === true)) {
+            setIsDelete(false)
+            setIsUpdate(false)
             fetchData(search ? search : '')
         }
-    }, [userInfo, search, type, page, isDesc])
+    }, [isDelete, isUpdate])
 
     if (loading) {
         return (
@@ -183,18 +209,25 @@ const ClassList = () => {
                     <div>
                         <div className="row d-flex align-items-center mb-4">
                             <div className="studyset-col-5 d-flex align-items-center">
-                                <select
-                                    className="form-select sets-select py-2 me-2"
-                                    aria-label="Default select example"
-                                    value={type || 'all'}
-                                    onChange={(event) => {
-                                        setType(event.target.value)
-                                    }}
-                                >
-                                    <option value="all">All</option>
-                                    <option value="created">Created</option>
-                                    <option value="joined">Joined</option>
-                                </select>
+                                {userInfo?.role !== 'ROLE_LEARNER' &&
+                                    name == userInfo?.username && (
+                                        <select
+                                            className="form-select sets-select py-2 me-2"
+                                            aria-label="Default select example"
+                                            value={type || 'all'}
+                                            onChange={(event) => {
+                                                setType(event.target.value)
+                                            }}
+                                        >
+                                            <option value="all">All</option>
+                                            <option value="created">
+                                                Created
+                                            </option>
+                                            <option value="joined">
+                                                Joined
+                                            </option>
+                                        </select>
+                                    )}
                                 <button
                                     className="btn btn-light p-2 me-2"
                                     onClick={() => {
@@ -221,6 +254,7 @@ const ClassList = () => {
                                         }
                                     ></input>
                                     <button
+                                        className="btn p-0"
                                         type="submit"
                                         disabled={loading}
                                         onClick={(event) => {
@@ -257,127 +291,205 @@ const ClassList = () => {
                                     {classes?.map((classroom) => (
                                         <div key={classroom.id}>
                                             <div className="set-item mb-3">
-                                                <Link
-                                                    to={`/class/${classroom.id}`}
-                                                >
-                                                    <div className="set-body row mb-2">
-                                                        <div className="class-home term-count">
-                                                            {classroom?.member}{' '}
-                                                            member
-                                                        </div>
-                                                        <div className="class-home term-count">
-                                                            {
-                                                                classroom?.studyset
-                                                            }{' '}
-                                                            sets
-                                                        </div>
-                                                        <div className="set-author col d-flex align-items-center">
-                                                            <div className="author-avatar">
-                                                                <img
-                                                                    src={
-                                                                        classroom?.avatar
-                                                                            ? classroom?.avatar
-                                                                            : defaultAvatar
-                                                                    }
-                                                                    alt="author avatar"
-                                                                    className="w-100 h-100"
-                                                                />
+                                                <div className="row">
+                                                    <div
+                                                        className="col-11"
+                                                        onClick={() => {
+                                                            navigate(
+                                                                `/class/${classroom.id}`
+                                                            )
+                                                        }}
+                                                    >
+                                                        <div className="set-body row mb-2">
+                                                            <div className="class-home term-count">
+                                                                {
+                                                                    classroom?.member
+                                                                }{' '}
+                                                                member
                                                             </div>
-                                                            <span className="author-username ms-2">
+                                                            <div className="class-home term-count">
                                                                 {
-                                                                    classroom?.author
+                                                                    classroom?.studyset
+                                                                }{' '}
+                                                                sets
+                                                            </div>
+                                                            <div className="set-author col d-flex align-items-center">
+                                                                <div className="author-avatar">
+                                                                    <img
+                                                                        src={
+                                                                            classroom?.avatar
+                                                                                ? classroom?.avatar
+                                                                                : defaultAvatar
+                                                                        }
+                                                                        alt="author avatar"
+                                                                        className="w-100 h-100"
+                                                                    />
+                                                                </div>
+                                                                <span className="author-username ms-2">
+                                                                    {
+                                                                        classroom?.author
+                                                                    }
+                                                                </span>
+                                                                {classroom?.authorstatus ===
+                                                                    'banned' && (
+                                                                    <OverlayTrigger
+                                                                        placement="bottom"
+                                                                        overlay={
+                                                                            <Tooltip id="tooltip">
+                                                                                This
+                                                                                account
+                                                                                is
+                                                                                banned.
+                                                                            </Tooltip>
+                                                                        }
+                                                                    >
+                                                                        <img
+                                                                            className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                                            src={
+                                                                                banned
+                                                                            }
+                                                                        />
+                                                                    </OverlayTrigger>
+                                                                )}
+                                                                {classroom?.authorstatus ===
+                                                                    'active' && (
+                                                                    <OverlayTrigger
+                                                                        placement="bottom"
+                                                                        overlay={
+                                                                            <Tooltip id="tooltip">
+                                                                                This
+                                                                                account
+                                                                                is
+                                                                                verified.
+                                                                            </Tooltip>
+                                                                        }
+                                                                    >
+                                                                        <img
+                                                                            className="ms-1 author-avatarTag"
+                                                                            src={
+                                                                                verified
+                                                                            }
+                                                                        />
+                                                                    </OverlayTrigger>
+                                                                )}
+                                                                {classroom?.authorstatus ===
+                                                                    'deleted' && (
+                                                                    <OverlayTrigger
+                                                                        placement="bottom"
+                                                                        overlay={
+                                                                            <Tooltip id="tooltip">
+                                                                                This
+                                                                                account
+                                                                                is
+                                                                                deleted.
+                                                                            </Tooltip>
+                                                                        }
+                                                                    >
+                                                                        <img
+                                                                            className="ms-1 author-avatarTag"
+                                                                            src={
+                                                                                deleted
+                                                                            }
+                                                                        />
+                                                                    </OverlayTrigger>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="row">
+                                                            <div className="class-title set-title d-flex align-items-center">
+                                                                <ClassIcon className="me-2" />
+                                                                {
+                                                                    classroom?.class_name
                                                                 }
-                                                            </span>
-                                                            {classroom?.authorstatus ===
-                                                                'banned' && (
-                                                                <OverlayTrigger
-                                                                    placement="bottom"
-                                                                    overlay={
-                                                                        <Tooltip id="tooltip">
-                                                                            This
-                                                                            account
-                                                                            is
-                                                                            banned.
-                                                                        </Tooltip>
-                                                                    }
+                                                            </div>
+                                                            <div className="col d-flex align-items-center">
+                                                                <p
+                                                                    className="set-description m-0"
+                                                                    style={{
+                                                                        whiteSpace:
+                                                                            'pre-wrap',
+                                                                    }}
                                                                 >
-                                                                    <img
-                                                                        className="ms-1 author-avatarTag author-avatarTag--banned"
-                                                                        src={
-                                                                            banned
-                                                                        }
-                                                                    />
-                                                                </OverlayTrigger>
-                                                            )}
-                                                            {classroom?.authorstatus ===
-                                                                'active' && (
-                                                                <OverlayTrigger
-                                                                    placement="bottom"
-                                                                    overlay={
-                                                                        <Tooltip id="tooltip">
-                                                                            This
-                                                                            account
-                                                                            is
-                                                                            verified.
-                                                                        </Tooltip>
+                                                                    {
+                                                                        classroom?.description
                                                                     }
-                                                                >
-                                                                    <img
-                                                                        className="ms-1 author-avatarTag"
-                                                                        src={
-                                                                            verified
-                                                                        }
-                                                                    />
-                                                                </OverlayTrigger>
-                                                            )}
-                                                            {classroom?.authorstatus ===
-                                                                'deleted' && (
-                                                                <OverlayTrigger
-                                                                    placement="bottom"
-                                                                    overlay={
-                                                                        <Tooltip id="tooltip">
-                                                                            This
-                                                                            account
-                                                                            is
-                                                                            deleted.
-                                                                        </Tooltip>
-                                                                    }
-                                                                >
-                                                                    <img
-                                                                        className="ms-1 author-avatarTag"
-                                                                        src={
-                                                                            deleted
-                                                                        }
-                                                                    />
-                                                                </OverlayTrigger>
-                                                            )}
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="class-title set-title d-flex align-items-center">
-                                                            <ClassIcon className="me-2" />
-                                                            {
-                                                                classroom?.class_name
-                                                            }
-                                                        </div>
-                                                        <div className="col d-flex align-items-center">
-                                                            <p
-                                                                className="set-description m-0"
-                                                                style={{
-                                                                    whiteSpace:
-                                                                        'pre-wrap',
-                                                                }}
+                                                    {name ===
+                                                        userInfo?.username && (
+                                                        <div className="col-1 d-flex flex-row-reverse">
+                                                            <button
+                                                                type="button dropdown-toggle"
+                                                                className="btn btn-customLight"
+                                                                data-bs-toggle="dropdown"
+                                                                aria-expanded="false"
                                                             >
-                                                                {
-                                                                    classroom?.description
-                                                                }
-                                                            </p>
+                                                                <OptionVerIcon />
+                                                            </button>
+                                                            <ul className="dropdown-menu">
+                                                                <li>
+                                                                    <button
+                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                        onClick={() => {
+                                                                            setUpdateClass(
+                                                                                classroom
+                                                                            )
+                                                                            setShowEditModal(
+                                                                                true
+                                                                            )
+                                                                        }}
+                                                                    >
+                                                                        <EditIcon
+                                                                            size="20px"
+                                                                            className="me-2"
+                                                                        />
+                                                                        Edit
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button
+                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                        onClick={() => {
+                                                                            setDeleteClass(
+                                                                                classroom
+                                                                            )
+                                                                            setShowDeleteModal(
+                                                                                true
+                                                                            )
+                                                                        }}
+                                                                    >
+                                                                        <DeleteSolidIcon
+                                                                            size="20px"
+                                                                            className="me-2"
+                                                                        />
+                                                                        Delete
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
                                                         </div>
-                                                    </div>
-                                                </Link>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
+                                    {/* Update class Modal */}
+                                    <UpdateClass
+                                        classroom={updateClass}
+                                        showEditModal={showEditModal}
+                                        setShowEditModal={setShowEditModal}
+                                        isUpdate={isUpdate}
+                                        setIsUpdate={setIsUpdate}
+                                    />
+                                    {/* Delete class modal */}
+                                    <DeleteClass
+                                        classroom={deleteClass}
+                                        showDeleteModal={showDeleteModal}
+                                        setShowDeleteModal={setShowDeleteModal}
+                                        isDelete={isDelete}
+                                        setIsDelete={setIsDelete}
+                                    />
                                 </div>
                                 {/* Pagination */}
                                 <Pagination

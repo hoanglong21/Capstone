@@ -4,16 +4,18 @@ import { useSelector } from 'react-redux'
 import FormStyles from '../../assets/styles/Form.module.css'
 import UserService from '../../services/UserService'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const ForgotPassword = () => {
     const { userInfo } = useSelector((state) => state.user)
-
+    const { t, i18n } = useTranslation()
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
-
+    const { userToken } = useSelector((state) => state.auth)
+    const { userLanguage } = useSelector((state) => state.user)
     useEffect(() => {
         const fetchData = () => {
             setUsername(userInfo.username)
@@ -23,6 +25,12 @@ const ForgotPassword = () => {
             fetchData()
         }
     }, [userInfo])
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     const handleForgot = async (event) => {
         event.preventDefault()
@@ -76,11 +84,9 @@ const ForgotPassword = () => {
         if (!userInfo.username) {
             return (
                 <div className="container">
-                    <h2>Forgot Password</h2>
+                    <h2>{t('forgotPassword')}</h2>
                     <p className="m-0 forgot-p">
-                        Enter your username or the email address you signed up
-                        with. We'll email you a link to log in and reset your
-                        password.
+                    {t('messageForgot')}
                     </p>
                     <form className="form needs-validation mt-4" noValidate>
                         {/* error message */}
@@ -129,9 +135,9 @@ const ForgotPassword = () => {
         } else {
             return (
                 <div className="container">
-                    <h2>Reset your password</h2>
+                    <h2>{t('reset')}</h2>
                     <p className="m-0">
-                        Request a link to reset your password below.
+                    {t('msg2')}.
                     </p>
                     <button
                         className={`btn btn-primary ${FormStyles.btn} mt-4`}
@@ -158,17 +164,16 @@ const ForgotPassword = () => {
     } else {
         return (
             <div className="container">
-                <h2>Check your email!</h2>
-                <p>We've sent an email to {hideEmail(email)}</p>
+                <h2> {t('msg3')}!</h2>
+                <p>{t('msg4')} {hideEmail(email)}</p>
                 <p>
-                    Please check your spam folder if you don't see the email in
-                    your inbox.
+                {t('msg5')}
                 </p>
                 <a
                     className="link-offset-2 link-underline link-underline-opacity-0"
                     href="#"
                 >
-                    Need more help?
+                   {t('needMoreHelp')}?
                 </a>
             </div>
         )

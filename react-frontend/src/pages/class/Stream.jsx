@@ -294,48 +294,52 @@ const Stream = () => {
                             <div className="card-body">
                                 <div className="card-title mainClass_sectionTitle d-flex justify-content-between align-items-center">
                                     <span>Class code</span>
-                                    <div className="dropdown">
-                                        <button
-                                            className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
-                                            type="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                        >
-                                            <OptionVerIcon />
-                                        </button>
-                                        <ul className="dropdown-menu">
-                                            <li>
-                                                <button
-                                                    className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                                    type="button"
-                                                    onClick={handleCopyCode}
-                                                >
-                                                    <CopyIcon
-                                                        className="me-3"
-                                                        size="1.3rem"
-                                                    />
-                                                    <span className="align-middle fw-medium">
-                                                        Copy class code
-                                                    </span>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button
-                                                    className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                                    type="button"
-                                                    onClick={handleResetCode}
-                                                >
-                                                    <ResetIcon
-                                                        className="me-3"
-                                                        size="1.3rem"
-                                                    />
-                                                    <span className="align-middle fw-medium">
-                                                        Reset class code
-                                                    </span>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    {!classroom?._deleted && (
+                                        <div className="dropdown">
+                                            <button
+                                                className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <OptionVerIcon />
+                                            </button>
+                                            <ul className="dropdown-menu">
+                                                <li>
+                                                    <button
+                                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                                        type="button"
+                                                        onClick={handleCopyCode}
+                                                    >
+                                                        <CopyIcon
+                                                            className="me-3"
+                                                            size="1.3rem"
+                                                        />
+                                                        <span className="align-middle fw-medium">
+                                                            Copy class code
+                                                        </span>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button
+                                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                                        type="button"
+                                                        onClick={
+                                                            handleResetCode
+                                                        }
+                                                    >
+                                                        <ResetIcon
+                                                            className="me-3"
+                                                            size="1.3rem"
+                                                        />
+                                                        <span className="align-middle fw-medium">
+                                                            Reset class code
+                                                        </span>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="classCode_value">
                                     {classroom?.classcode}
@@ -391,130 +395,138 @@ const Stream = () => {
                 {/* Main */}
                 <div className="stream-col-9">
                     {/* Add post */}
-                    <div className="card mainClass_postAddContainer mb-4">
-                        {showInput ? (
-                            <div>
-                                <div className="createAssign_formGroup form-floating mb-4">
-                                    <PostEditor
-                                        onChange={(event, editor) => {
-                                            if (addPost?.user?.id) {
-                                                setAddPost({
-                                                    ...addPost,
-                                                    content: editor.getData(),
-                                                })
-                                            }
-                                        }}
-                                    />
-                                    <label className="createAssign_formLabel createAssign_editorLabel">
-                                        Announce something to your class
-                                    </label>
-                                </div>
-                                <div className="mainClass_filesUpload mt-3">
-                                    {uploadFiles.map((file, index) => (
-                                        <div className="card mb-2" key={index}>
-                                            <div className="card-body d-flex justify-content-between">
-                                                <a
-                                                    className="text-decoration-none w-100"
-                                                    href={file.file_url}
-                                                    target="_blank"
-                                                >
-                                                    <div className="fileUploadName">
-                                                        {file.file_name}
-                                                    </div>
-                                                    <div className="fileUploadType">
-                                                        {file.file_type}
-                                                    </div>
-                                                </a>
-                                                <button
-                                                    className="btn fileUploadDelButton"
-                                                    onClick={() =>
-                                                        handleDeleteFile(index)
-                                                    }
-                                                >
-                                                    <DeleteIcon />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between mt-4">
-                                    <input
-                                        type="file"
-                                        id="uploadPostFile"
-                                        className="postUpload"
-                                        onClick={(event) => {
-                                            event.target.value = null
-                                        }}
-                                        onChange={handleUploadFile}
-                                    />
-                                    <button
-                                        type="btn"
-                                        disabled={loadingUploadFile}
-                                    >
-                                        <label
-                                            htmlFor="uploadPostFile"
-                                            className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
-                                        >
-                                            {loadingUploadFile ? (
-                                                <div
-                                                    className="spinner-border spinner-border-sm text-secondary"
-                                                    role="status"
-                                                >
-                                                    <span className="visually-hidden">
-                                                        LoadingUpload...
-                                                    </span>
-                                                </div>
-                                            ) : (
-                                                <UploadIcon strokeWidth="2" />
-                                            )}
+                    {!classroom?._deleted && (
+                        <div className="card mainClass_postAddContainer mb-4">
+                            {showInput ? (
+                                <div>
+                                    <div className="createAssign_formGroup form-floating mb-4">
+                                        <PostEditor
+                                            onChange={(event, editor) => {
+                                                if (addPost?.user?.id) {
+                                                    setAddPost({
+                                                        ...addPost,
+                                                        content:
+                                                            editor.getData(),
+                                                    })
+                                                }
+                                            }}
+                                        />
+                                        <label className="createAssign_formLabel createAssign_editorLabel">
+                                            Announce something to your class
                                         </label>
-                                    </button>
-                                    <div className="d-flex align-items-center">
+                                    </div>
+                                    <div className="mainClass_filesUpload mt-3">
+                                        {uploadFiles.map((file, index) => (
+                                            <div
+                                                className="card mb-2"
+                                                key={index}
+                                            >
+                                                <div className="card-body d-flex justify-content-between">
+                                                    <a
+                                                        className="text-decoration-none w-100"
+                                                        href={file.file_url}
+                                                        target="_blank"
+                                                    >
+                                                        <div className="fileUploadName">
+                                                            {file.file_name}
+                                                        </div>
+                                                        <div className="fileUploadType">
+                                                            {file.file_type}
+                                                        </div>
+                                                    </a>
+                                                    <button
+                                                        className="btn fileUploadDelButton"
+                                                        onClick={() =>
+                                                            handleDeleteFile(
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <DeleteIcon />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="d-flex align-items-center justify-content-between mt-4">
+                                        <input
+                                            type="file"
+                                            id="uploadPostFile"
+                                            className="postUpload"
+                                            onClick={(event) => {
+                                                event.target.value = null
+                                            }}
+                                            onChange={handleUploadFile}
+                                        />
                                         <button
-                                            onClick={handleCancelAddPost}
-                                            className="btn btn-light mx-2"
+                                            type="btn"
+                                            disabled={loadingUploadFile}
                                         >
-                                            Cancel
+                                            <label
+                                                htmlFor="uploadPostFile"
+                                                className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
+                                            >
+                                                {loadingUploadFile ? (
+                                                    <div
+                                                        className="spinner-border spinner-border-sm text-secondary"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            LoadingUpload...
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <UploadIcon strokeWidth="2" />
+                                                )}
+                                            </label>
                                         </button>
-                                        <button
-                                            onClick={handleAddPost}
-                                            className="btn btn-primary"
-                                            disabled={
-                                                !addPost?.content ||
-                                                loadingAddPost
-                                            }
-                                        >
-                                            {loadingAddPost
-                                                ? 'Posting...'
-                                                : 'Post'}
-                                        </button>
+                                        <div className="d-flex align-items-center">
+                                            <button
+                                                onClick={handleCancelAddPost}
+                                                className="btn btn-light mx-2"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleAddPost}
+                                                className="btn btn-primary"
+                                                disabled={
+                                                    !addPost?.content ||
+                                                    loadingAddPost
+                                                }
+                                            >
+                                                {loadingAddPost
+                                                    ? 'Posting...'
+                                                    : 'Post'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <div
-                                className="mainClass_postAddWrapper d-flex align-items-center"
-                                onClick={() => {
-                                    setShowInput(true)
-                                }}
-                            >
-                                <div className="maiClass_postAddAuthor">
-                                    <img
-                                        src={
-                                            userInfo.avatar
-                                                ? userInfo.avatar
-                                                : defaultAvatar
-                                        }
-                                        className="w-100 h-100"
-                                        alt="author avatar"
-                                    />
+                            ) : (
+                                <div
+                                    className="mainClass_postAddWrapper d-flex align-items-center"
+                                    onClick={() => {
+                                        setShowInput(true)
+                                    }}
+                                >
+                                    <div className="maiClass_postAddAuthor">
+                                        <img
+                                            src={
+                                                userInfo.avatar
+                                                    ? userInfo.avatar
+                                                    : defaultAvatar
+                                            }
+                                            className="w-100 h-100"
+                                            alt="author avatar"
+                                        />
+                                    </div>
+                                    <span className="ms-4">
+                                        Announce something to your class
+                                    </span>
                                 </div>
-                                <span className="ms-4">
-                                    Announce something to your class
-                                </span>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    )}
                     {/* Empty */}
                     {posts?.length === 0 ? (
                         <div className="card emptyPosts_container">

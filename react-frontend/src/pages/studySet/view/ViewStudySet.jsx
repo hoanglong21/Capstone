@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import Modal from 'react-bootstrap/Modal'
 
 import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
 import CommentService from '../../../services/CommentService'
 
+import Report from '../../../components/report/Report'
 import ViewCard from './ViewCard'
 import DeleteSet from '../DeleteSet'
 import Pagination from '../../../components/Pagination'
@@ -28,6 +30,7 @@ import {
     CommentSolidIcon,
     SendIcon,
     CloseIcon,
+    ReportIcon,
 } from '../../../components/icons'
 import banned from '../../../assets/images/banned.png'
 import verified from '../../../assets/images/verified.png'
@@ -73,6 +76,8 @@ const ViewStudySet = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showCommentModal, setShowCommentModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
+    const [showReportModal, setShowReportModal] = useState(false)
+    const [showWarningModal, setShowWarningModal] = useState(false)
 
     // ignore error
     useEffect(() => {
@@ -99,7 +104,7 @@ const ViewStudySet = () => {
             try {
                 const tempCards = (
                     await CardService.getFilterCard(
-                        `=${userInfo.id}`,
+                        `=${userInfo?.id || studySet?.user?.id}`,
                         `=${studySet.id}`,
                         `=${
                             filterProgress === 'All progress'
@@ -123,7 +128,7 @@ const ViewStudySet = () => {
             }
             setLoadingFilter(false)
         }
-        if (studySet?.id && userInfo?.id) {
+        if (studySet?.id) {
             search()
         }
     }, [studySet, userInfo, filterStar, filterProgress, page])
@@ -135,59 +140,10 @@ const ViewStudySet = () => {
                 const tempStudySet = (await StudySetService.getStudySetById(id))
                     .data
                 setStudySet(tempStudySet)
-                // number
-                const tempCounts = (
-                    await StudySetService.countCardInSet(userInfo.id, id)
-                ).data
-                setNumNot(tempCounts['Not studied'])
-                setNumStill(tempCounts['Still learning'])
-                setNumMaster(tempCounts['Mastered'])
-                setNumNotStar(tempCounts['Not studied star'])
-                setNumStillStar(tempCounts['Still learning star'])
-                setNumMasterStar(tempCounts['Mastered star'])
-                const tempNumCards =
-                    tempCounts['Not studied'] +
-                    tempCounts['Still learning'] +
-                    tempCounts['Mastered']
-                setNumCards(tempNumCards)
-                const tempNumStars =
-                    tempCounts['Not studied star'] +
-                    tempCounts['Still learning star'] +
-                    tempCounts['Mastered star']
-                setNumStars(tempNumStars)
-                // num progress
-                const tempNumNotProgress =
-                    (tempCounts['Not studied'] / tempNumCards) * 360
-                setNumNotProgressLeft(
-                    tempNumNotProgress > 180 ? 180 : tempNumNotProgress
-                )
-                setNumNotProgressRight(
-                    tempNumNotProgress > 180 ? tempNumNotProgress - 180 : 0
-                )
-                const tempNumStillProgress =
-                    (tempCounts['Still learning'] / tempNumCards) * 360
-                setNumStillProgressLeft(
-                    tempNumStillProgress > 180 ? 180 : tempNumStillProgress
-                )
-                setNumStillProgressRight(
-                    tempNumStillProgress > 180 ? tempNumStillProgress - 180 : 0
-                )
-                const tempNumMasteredProgress =
-                    (tempCounts['Mastered'] / tempNumCards) * 360
-                setNumMasterProgressLeft(
-                    tempNumMasteredProgress > 180
-                        ? 180
-                        : tempNumMasteredProgress
-                )
-                setNumMasterProgressRight(
-                    tempNumMasteredProgress > 180
-                        ? tempNumMasteredProgress - 180
-                        : 0
-                )
                 // cards
                 const tempCards = (
                     await CardService.getFilterCard(
-                        `=${userInfo.id}`,
+                        `=${userInfo?.id || tempStudySet?.user?.id}`,
                         `=${tempStudySet.id}`,
                         '=not studied,still learning,mastered',
                         '=0',
@@ -196,8 +152,10 @@ const ViewStudySet = () => {
                         '=1',
                         '=10'
                     )
-                ).data.list
-                setCards(tempCards)
+                ).data
+                setCards(tempCards.list)
+                const tempNumCards = tempCards.totalItems
+                setNumCards(tempNumCards)
                 // comments
                 const tempComments = (
                     await CommentService.getAllCommentByStudysetId(
@@ -205,6 +163,54 @@ const ViewStudySet = () => {
                     )
                 ).data
                 setComments(tempComments)
+                if (userInfo?.id) {
+                    // number
+                    const tempCounts = (
+                        await StudySetService.countCardInSet(userInfo.id, id)
+                    ).data
+                    setNumNot(tempCounts['Not studied'])
+                    setNumStill(tempCounts['Still learning'])
+                    setNumMaster(tempCounts['Mastered'])
+                    setNumNotStar(tempCounts['Not studied star'])
+                    setNumStillStar(tempCounts['Still learning star'])
+                    setNumMasterStar(tempCounts['Mastered star'])
+                    const tempNumStars =
+                        tempCounts['Not studied star'] +
+                        tempCounts['Still learning star'] +
+                        tempCounts['Mastered star']
+                    setNumStars(tempNumStars)
+                    // num progress
+                    const tempNumNotProgress =
+                        (tempCounts['Not studied'] / tempNumCards) * 360
+                    setNumNotProgressLeft(
+                        tempNumNotProgress > 180 ? 180 : tempNumNotProgress
+                    )
+                    setNumNotProgressRight(
+                        tempNumNotProgress > 180 ? tempNumNotProgress - 180 : 0
+                    )
+                    const tempNumStillProgress =
+                        (tempCounts['Still learning'] / tempNumCards) * 360
+                    setNumStillProgressLeft(
+                        tempNumStillProgress > 180 ? 180 : tempNumStillProgress
+                    )
+                    setNumStillProgressRight(
+                        tempNumStillProgress > 180
+                            ? tempNumStillProgress - 180
+                            : 0
+                    )
+                    const tempNumMasteredProgress =
+                        (tempCounts['Mastered'] / tempNumCards) * 360
+                    setNumMasterProgressLeft(
+                        tempNumMasteredProgress > 180
+                            ? 180
+                            : tempNumMasteredProgress
+                    )
+                    setNumMasterProgressRight(
+                        tempNumMasteredProgress > 180
+                            ? tempNumMasteredProgress - 180
+                            : 0
+                    )
+                }
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -213,7 +219,7 @@ const ViewStudySet = () => {
                 }
             }
         }
-        if (id && userInfo?.id) {
+        if (id) {
             fetchData()
         }
     }, [id, userInfo])
@@ -288,26 +294,39 @@ const ViewStudySet = () => {
                 <h2>
                     {studySet?.title}
                     {studySet?._draft && ' (Draft)'}
+                    {studySet?._deleted && ' (Deleted)'}
                 </h2>
             </div>
             {/* Modes */}
             <div className="row mb-4">
                 <div className="studyset-col-4">
-                    <Link
-                        to={`/flashcards/${studySet.id}`}
-                        className="studyModesItem d-flex align-items-center justify-content-center"
+                    <button
+                        className="studyModesItem d-flex align-items-center justify-content-center w-100"
+                        onClick={() => {
+                            if (userInfo?.id) {
+                                navigate(`/flashcards/${studySet.id}`)
+                            } else {
+                                setShowWarningModal(true)
+                            }
+                        }}
                     >
                         <StudySetSolidIcon
                             className="StudyModesIcon"
                             size="2rem"
                         />
                         <span className="studyModesItemName">Flashcards</span>
-                    </Link>
+                    </button>
                 </div>
                 <div className="studyset-col-4">
-                    <Link
-                        to={`/learn/${studySet.id}`}
-                        className="studyModesItem d-flex align-items-center justify-content-center"
+                    <button
+                        className="studyModesItem d-flex align-items-center justify-content-center w-100"
+                        onClick={() => {
+                            if (userInfo?.id) {
+                                navigate(`/learn/${studySet.id}`)
+                            } else {
+                                setShowWarningModal(true)
+                            }
+                        }}
                     >
                         <LearnSolidIcon
                             className="StudyModesIcon"
@@ -316,19 +335,25 @@ const ViewStudySet = () => {
                         <span className="studyModesItemName" href="/learn">
                             Learn
                         </span>
-                    </Link>
+                    </button>
                 </div>
                 <div className="studyset-col-4">
-                    <Link
-                        to={`/quiz/${studySet.id}`}
-                        className="studyModesItem d-flex align-items-center justify-content-center"
+                    <button
+                        className="studyModesItem d-flex align-items-center justify-content-center w-100"
+                        onClick={() => {
+                            if (userInfo?.id) {
+                                navigate(`/quiz/${studySet.id}`)
+                            } else {
+                                setShowWarningModal(true)
+                            }
+                        }}
                     >
                         <TestSolidIcon className="StudyModesIcon" size="2rem" />
                         <span className="studyModesItemName">Quiz</span>
-                    </Link>
+                    </button>
                 </div>
             </div>
-            {/* Author + Options */}
+            {/* Author + comments + Options */}
             <div className="setPageInformation d-flex justify-content-between">
                 <div className="d-flex align-items-center">
                     <img
@@ -345,9 +370,12 @@ const ViewStudySet = () => {
                             Created by
                         </span>
                         <div className="d-flex align-items-center">
-                            <div className="setAuthorInfo_username">
+                            <Link
+                                to={`/${studySet?.user?.username}/sets`}
+                                className="setAuthorInfo_username"
+                            >
                                 {studySet?.user?.username}
-                            </div>
+                            </Link>
                             {studySet?.user?.status === 'banned' && (
                                 <OverlayTrigger
                                     placement="bottom"
@@ -398,9 +426,11 @@ const ViewStudySet = () => {
                                 : `${comments?.length} class comment`}
                         </span>
                     </button>
-                    {userInfo?.id === studySet?.user?.id && (
+                    {userInfo?.id === studySet?.user?.id &&
+                    !studySet?._deleted ? (
                         <div className="dropdown setPageOptions d-flex align-items-center justify-content-center">
                             <button
+                                className="btn"
                                 type="button dropdown-toggle"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
@@ -477,8 +507,27 @@ const ViewStudySet = () => {
                                 </li>
                             </ul>
                         </div>
+                    ) : studySet?._deleted ? (
+                        ''
+                    ) : (
+                        userInfo?.id && (
+                            <button
+                                className="btn btn-outline-secondary icon-outline-secondary"
+                                type="button"
+                                onClick={() => {
+                                    setShowReportModal(true)
+                                }}
+                            >
+                                <ReportIcon size="1.3rem" strokeWidth="2" />
+                            </button>
+                        )
                     )}
                 </div>
+            </div>
+            {/* Description */}
+            <div className="setPageTermsHeader mb-3">
+                <div className="setPageTermsHeading mb-1">Description</div>
+                <div>{studySet?.description || '...'}</div>
             </div>
             {/* Progress */}
             {userToken && (
@@ -634,136 +683,138 @@ const ViewStudySet = () => {
             )}
             {/* Details */}
             <div className="setPageTermsHeader d-flex align-items-center justify-content-between">
-                <span className="setPageTermsHeading">
+                <div className="setPageTermsHeading mb-2">
                     Terms in this set ({numCards})
-                </span>
-                <div className="d-flex align-items-center">
-                    <div
-                        className="btn-group me-2"
-                        role="group"
-                        aria-label="Basic radio toggle button group"
-                    >
-                        <input
-                            type="radio"
-                            className="btn-check"
-                            name="filterStar"
-                            id="allType"
-                            checked={filterStar === 0}
-                            disabled={numCards === 0}
-                            onChange={() => {
-                                setFilterStar(0)
-                            }}
-                        />
-                        <label
-                            className="btn btn-outline-secondary btn-sm"
-                            htmlFor="allType"
-                        >
-                            All
-                        </label>
-                        <input
-                            type="radio"
-                            className="btn-check"
-                            name="filterStar"
-                            id="starType"
-                            checked={filterStar === 1}
-                            disabled={numStars === 0}
-                            onChange={() => {
-                                setFilterStar(1)
-                            }}
-                        />
-                        <label
-                            className="btn btn-outline-secondary btn-sm d-flex align-items-center"
-                            htmlFor="starType"
-                        >
-                            <StarSolidIcon size="1rem" />
-                            <span className="ms-1">{numStars}</span>
-                        </label>
-                    </div>
-                    <div className="dropdown setPageTermsHeader_controls">
-                        <button
-                            type="button dropdown-toggle"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            disabled={loadingFilter}
-                        >
-                            <span>{filterProgress}</span>
-                            <ArrowDownIcon
-                                className="ms-2"
-                                size="1rem"
-                                strokeWidth="2"
-                            />
-                        </button>
-                        <ul className="dropdown-menu dropdown-menu-end p-2">
-                            <li>
-                                <button
-                                    className="dropdown-item"
-                                    type="button"
-                                    onClick={() => {
-                                        setFilterProgress('All progress')
-                                    }}
-                                >
-                                    <span className="setPageTermHeader_dropdown">
-                                        All progress
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item"
-                                    type="button"
-                                    onClick={() => {
-                                        setFilterProgress('Not studied')
-                                    }}
-                                    disabled={
-                                        filterStar
-                                            ? numNotStar === 0
-                                            : numNot === 0
-                                    }
-                                >
-                                    <span className="setPageTermHeader_dropdown">
-                                        Not studied
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item"
-                                    type="button"
-                                    onClick={() => {
-                                        setFilterProgress('Still learning')
-                                    }}
-                                    disabled={
-                                        filterStar
-                                            ? numStillStar === 0
-                                            : numStill === 0
-                                    }
-                                >
-                                    <span className="setPageTermHeader_dropdown">
-                                        Still learning
-                                    </span>
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    className="dropdown-item"
-                                    type="button"
-                                    onClick={() => {
-                                        setFilterProgress('Mastered')
-                                    }}
-                                    disabled={
-                                        filterStar
-                                            ? numMasterStar === 0
-                                            : numMaster === 0
-                                    }
-                                >
-                                    <span className="setPageTermHeader_dropdown">
-                                        Mastered
-                                    </span>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
+                {userInfo?.id && (
+                    <div className="d-flex align-items-center">
+                        <div
+                            className="btn-group me-2"
+                            role="group"
+                            aria-label="Basic radio toggle button group"
+                        >
+                            <input
+                                type="radio"
+                                className="btn-check"
+                                name="filterStar"
+                                id="allType"
+                                checked={filterStar === 0}
+                                disabled={numCards === 0}
+                                onChange={() => {
+                                    setFilterStar(0)
+                                }}
+                            />
+                            <label
+                                className="btn btn-outline-secondary btn-sm"
+                                htmlFor="allType"
+                            >
+                                All
+                            </label>
+                            <input
+                                type="radio"
+                                className="btn-check"
+                                name="filterStar"
+                                id="starType"
+                                checked={filterStar === 1}
+                                disabled={numStars === 0}
+                                onChange={() => {
+                                    setFilterStar(1)
+                                }}
+                            />
+                            <label
+                                className="btn btn-outline-secondary btn-sm d-flex align-items-center"
+                                htmlFor="starType"
+                            >
+                                <StarSolidIcon size="1rem" />
+                                <span className="ms-1">{numStars}</span>
+                            </label>
+                        </div>
+                        <div className="dropdown setPageTermsHeader_controls">
+                            <button
+                                type="button dropdown-toggle"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                disabled={loadingFilter}
+                            >
+                                <span>{filterProgress}</span>
+                                <ArrowDownIcon
+                                    className="ms-2"
+                                    size="1rem"
+                                    strokeWidth="2"
+                                />
+                            </button>
+                            <ul className="dropdown-menu dropdown-menu-end p-2">
+                                <li>
+                                    <button
+                                        className="dropdown-item"
+                                        type="button"
+                                        onClick={() => {
+                                            setFilterProgress('All progress')
+                                        }}
+                                    >
+                                        <span className="setPageTermHeader_dropdown">
+                                            All progress
+                                        </span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="dropdown-item"
+                                        type="button"
+                                        onClick={() => {
+                                            setFilterProgress('Not studied')
+                                        }}
+                                        disabled={
+                                            filterStar
+                                                ? numNotStar === 0
+                                                : numNot === 0
+                                        }
+                                    >
+                                        <span className="setPageTermHeader_dropdown">
+                                            Not studied
+                                        </span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="dropdown-item"
+                                        type="button"
+                                        onClick={() => {
+                                            setFilterProgress('Still learning')
+                                        }}
+                                        disabled={
+                                            filterStar
+                                                ? numStillStar === 0
+                                                : numStill === 0
+                                        }
+                                    >
+                                        <span className="setPageTermHeader_dropdown">
+                                            Still learning
+                                        </span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="dropdown-item"
+                                        type="button"
+                                        onClick={() => {
+                                            setFilterProgress('Mastered')
+                                        }}
+                                        disabled={
+                                            filterStar
+                                                ? numMasterStar === 0
+                                                : numMaster === 0
+                                        }
+                                    >
+                                        <span className="setPageTermHeader_dropdown">
+                                            Mastered
+                                        </span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                )}
             </div>
             {/* Terms */}
             {loadingFilter ? (
@@ -782,15 +833,30 @@ const ViewStudySet = () => {
                         />
                     ))}
                     {/* Pagination */}
-                    <Pagination
-                        className="mb-5"
-                        currentPage={page}
-                        totalCount={numCards}
-                        pageSize={10}
-                        onPageChange={(page) => {
-                            setPage(page)
-                        }}
-                    />
+                    {userInfo?.id ? (
+                        <Pagination
+                            className="mb-5"
+                            currentPage={page}
+                            totalCount={numCards}
+                            pageSize={10}
+                            onPageChange={(page) => {
+                                setPage(page)
+                            }}
+                        />
+                    ) : (
+                        cards.length > 5 && (
+                            <div className="d-flex justify-content-center">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        setShowWarningModal(true)
+                                    }}
+                                >
+                                    View more
+                                </button>
+                            </div>
+                        )
+                    )}
                 </div>
             )}
             {/* delete set modal */}
@@ -799,11 +865,12 @@ const ViewStudySet = () => {
                 showDeleteModal={showDeleteModal}
                 setShowDeleteModal={setShowDeleteModal}
             />
+            {/* comment modal */}
             {showCommentModal && (
                 <div className="setPage_editCardModal setPage_noteModal">
                     <div className="modal-content d-flex">
                         <button
-                            className="close p-0 mb-3 text-end"
+                            className="btn close p-0 mb-3 text-end"
                             onClick={() => {
                                 setShowCommentModal(false)
                             }}
@@ -811,53 +878,59 @@ const ViewStudySet = () => {
                             <CloseIcon size="1.875rem" />
                         </button>
                         {/* add comment */}
-                        <div className="d-flex mb-3">
-                            <img
-                                src={userInfo?.avatar || defaultAvatar}
-                                className="comment_img me-3"
-                            />
-                            <div className="commentEditor flex-fill">
-                                <CardEditor
-                                    data={addComment}
-                                    onChange={(event, editor) => {
-                                        setAddComment(editor.getData())
-                                    }}
+                        {userInfo?.id && (
+                            <div className="d-flex mb-3">
+                                <img
+                                    src={userInfo?.avatar || defaultAvatar}
+                                    className="comment_img me-3"
                                 />
+                                <div className="commentEditor flex-fill">
+                                    <CardEditor
+                                        data={addComment}
+                                        onChange={(event, editor) => {
+                                            setAddComment(editor.getData())
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <button
+                                        className="comment_btn ms-1"
+                                        onClick={handleAddComment}
+                                        disabled={!addComment}
+                                    >
+                                        {loadingComment ? (
+                                            <div
+                                                className="spinner-border spinner-border-sm text-secondary"
+                                                role="status"
+                                            >
+                                                <span className="visually-hidden">
+                                                    LoadingUpload...
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <SendIcon
+                                                size="20px"
+                                                strokeWidth="1.8"
+                                            />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
-                            <div>
-                                <button
-                                    className="comment_btn ms-1"
-                                    onClick={handleAddComment}
-                                    disabled={!addComment}
-                                >
-                                    {loadingComment ? (
-                                        <div
-                                            className="spinner-border spinner-border-sm text-secondary"
-                                            role="status"
-                                        >
-                                            <span className="visually-hidden">
-                                                LoadingUpload...
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <SendIcon
-                                            size="20px"
-                                            strokeWidth="1.8"
-                                        />
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                        {comments.map((comment, index) => (
-                            <Comment
-                                key={comment.id}
-                                index={index}
-                                comments={comments}
-                                setComments={setComments}
-                                comment={comment}
-                                userInfo={userInfo}
-                            />
-                        ))}
+                        )}
+                        {comments?.length === 0 ? (
+                            <div>No comments</div>
+                        ) : (
+                            comments.map((comment, index) => (
+                                <Comment
+                                    key={comment.id}
+                                    index={index}
+                                    comments={comments}
+                                    setComments={setComments}
+                                    comment={comment}
+                                    userInfo={userInfo}
+                                />
+                            ))
+                        )}
                     </div>
                 </div>
             )}
@@ -868,6 +941,47 @@ const ViewStudySet = () => {
                 studySet={studySet}
                 userInfo={userInfo}
             />
+            {/* report modal */}
+            <Report
+                showReportModal={showReportModal}
+                setShowReportModal={setShowReportModal}
+                userInfo={userInfo}
+                destination={`studySet/${id}`}
+            />
+            {/* warning modal */}
+            <Modal
+                className="mt-5"
+                show={showWarningModal}
+                onHide={() => {
+                    setShowWarningModal(false)
+                }}
+            >
+                <Modal.Header className="border-0" closeButton>
+                    <Modal.Title>Login Required</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    In order to use this feature, you need to login. Would you
+                    like to login now or later?
+                </Modal.Body>
+                <Modal.Footer className="border-0">
+                    <button
+                        className="btn btn-light"
+                        onClick={() => {
+                            setShowWarningModal(false)
+                        }}
+                    >
+                        Later
+                    </button>
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => {
+                            navigate('/login')
+                        }}
+                    >
+                        Log in now
+                    </button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 }

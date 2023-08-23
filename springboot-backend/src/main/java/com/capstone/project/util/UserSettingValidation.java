@@ -29,7 +29,7 @@ public class UserSettingValidation {
         Set<String> validLanguages = new HashSet<>();
         validLanguages.add("en");
         validLanguages.add("vi");
-        validLanguages.add("jp");
+        validLanguages.add("ja");
 
         return validLanguages.contains(language);
     }

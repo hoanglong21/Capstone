@@ -1,3 +1,40 @@
+.searchAuthor_container {
+    margin-right: 4rem !important;
+    margin-left: 4rem !important;
+}
+
+.searchAuthor_avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.searchAuthor_name {
+    font-size: 1.5rem;
+    letter-spacing: normal;
+    line-height: 1.3333333333333333;
+    font-weight: 700;
+}
+
+.searchAuthor_role {
+    font-size: 1rem;
+    letter-spacing: normal;
+    line-height: 1.5;
+    color: #939bb4;
+    font-weight: 600;
+}
+
+.searchAuthor_tag {
+    width: 16px;
+    height: 16px;
+}
+
+.searchAuthor_tag--banned {
+    background-color: #fff;
+    border-radius: 50%;
+}
+
 .sets-heading {
     font-size: 1.25rem;
     letter-spacing: normal;
@@ -161,7 +198,7 @@
     width: 58.33333333% !important;
 }
 
-.studyset-col-11{
+.studyset-col-11 {
     flex: 0 0 auto;
     width: 91.66666667% !important;
 }
@@ -185,17 +222,17 @@
         margin-bottom: 10px;
     }
 
-    .studyset-col-11{
+    .studyset-col-11 {
         flex: 0 0 auto;
         width: 85% !important;
     }
-    
+
     .studyset-col-1 {
         flex: 0 0 auto;
         width: 8.33333333%;
     }
 
-    .studyset-roww{
+    .studyset-roww {
         flex-wrap: nowrap !important;
     }
 }

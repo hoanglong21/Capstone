@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import banner from '../../assets/images/home.jpg'
 import '../../assets/styles/Home.css'
+import { useTranslation } from 'react-i18next'
 
 function Home() {
     const { userToken } = useSelector((state) => state.auth)
@@ -15,10 +16,18 @@ function Home() {
     const [searchKey, setSearchKey] = useState(search)
 
     const [path, setPath] = useState('')
+    const { userLanguage } = useSelector((state) => state.user)
 
+    const { t, i18n } = useTranslation()
     useEffect(() => {
         userToken ? setPath('/') : setPath('/discovery/')
     }, [userToken])
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     return (
         <div>
@@ -56,7 +65,7 @@ function Home() {
                                             })
                                         }}
                                     >
-                                        Search
+                                        {t('search')}
                                     </button>
                                     {(search || author) && (
                                         <button
@@ -76,14 +85,14 @@ function Home() {
                                                 setSearchParams(searchParams)
                                             }}
                                         >
-                                            Clear
+                                            {t('clear')}
                                         </button>
                                     )}
                                 </form>
                             </div>
                         </div>
                     </div>
-                    <div className="flex-grow-1">
+                    <div className="flex-grow-1 mt-3">
                         <div className="border-bottom bg-white p-2 pb-0">
                             <ul className="nav-home nav flex-grow-1 fw-semibold">
                                 <li>
@@ -99,7 +108,7 @@ function Home() {
                                         }
                                     >
                                         <span className="align-middle">
-                                            All
+                                        {t('all')}
                                         </span>
                                     </NavLink>
                                 </li>
@@ -116,7 +125,7 @@ function Home() {
                                         }
                                     >
                                         <span className="align-middle">
-                                            Study Sets
+                                        {t('studySet')}
                                         </span>
                                     </NavLink>
                                 </li>
@@ -133,7 +142,7 @@ function Home() {
                                         }
                                     >
                                         <span className="align-middle">
-                                            Classes
+                                        {t('class')}
                                         </span>
                                     </NavLink>
                                 </li>
@@ -150,7 +159,7 @@ function Home() {
                                         }
                                     >
                                         <span className="align-middle">
-                                            Users
+                                        {t('user')}
                                         </span>
                                     </NavLink>
                                 </li>

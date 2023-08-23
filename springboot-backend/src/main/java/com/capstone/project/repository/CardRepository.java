@@ -32,4 +32,10 @@ public interface CardRepository extends JpaRepository<Card, Integer> {
             " CASE WHEN :direction = 'asc' THEN :sortBy END ASC, " +
             " CASE WHEN :direction = 'desc' THEN :sortBy END DESC", nativeQuery = true)
     List<Card> getCardInSetWithCondition(int studySetId, int userId, String[] status, boolean star, String sortBy, String direction);
+
+    @Query(value = "WITH filterProgress AS (SELECT * FROM progress WHERE user_id = :userId) " +
+            "SELECT c.* FROM filterProgress p " +
+            "RIGHT JOIN card c ON p.card_id = c.id " +
+            "WHERE COALESCE(p.user_id, :userId) = :userId AND COALESCE(p.total_wrong, 0) >= 5 AND c.studyset_id = :studysetId", nativeQuery = true)
+    List<Card> findHardCardByProgress(@Param("userId") int userId, @Param("studysetId") int studySetId);
 }

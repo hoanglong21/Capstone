@@ -51,6 +51,16 @@ public class UserAchievementController {
         return ResponseEntity.ok(userAchievementService.getUserAchievementByUserId(id));
     }
 
+    @GetMapping("/userachievementsbyusername/{username}")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+    public ResponseEntity<?> getUserAchievementByUsername(@PathVariable("username") String username) {
+        try {
+            return ResponseEntity.ok(userAchievementService.getUserAchievementByUsername(username));
+        } catch (ResourceNotFroundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/filteruserachievement")
     @PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     public ResponseEntity<?> filterUserAchievement(@RequestParam(value = "userid", required = false, defaultValue = "0") int userId,

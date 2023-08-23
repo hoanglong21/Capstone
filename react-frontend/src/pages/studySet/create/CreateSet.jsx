@@ -16,6 +16,7 @@ import styles from '../../../assets/styles/Form.module.css'
 import CardStyles from '../../../assets/styles/Card.module.css'
 import '../../../assets/styles/stickyHeader.css'
 import ClassService from '../../../services/ClassService'
+import HistoryService from '../../../services/HistoryService'
 
 const CreateSet = () => {
     const navigate = useNavigate()
@@ -40,6 +41,12 @@ const CreateSet = () => {
         }
         return ''
     }
+
+    useEffect(() => {
+        if (id && studySet._deleted) {
+            navigate('')
+        }
+    }, [studySet])
 
     // draft can go to edit, back to create
     useEffect(() => {
@@ -238,6 +245,16 @@ const CreateSet = () => {
                     form.classList.remove('was-validated')
                     titleEl.classList.remove('is-invalid')
                     setError('')
+                    if (studySet?._draft === false) {
+                        HistoryService.createHistory({
+                            historyType: { id: 4 },
+                            user: {
+                                id: userInfo.id,
+                                username: userInfo.username,
+                            },
+                            studySet: { id: studySet.id },
+                        })
+                    }
                 } else {
                     setError(
                         `<p class="mb-0">Your card can not be empty. Please review your set.</p>
@@ -360,7 +377,6 @@ const CreateSet = () => {
 
     return (
         <div>
-            {console.log(studySet)}
             <form className="mt-2 needs-validation" noValidate>
                 {/* Heading */}
                 <div

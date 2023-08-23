@@ -12,6 +12,7 @@ import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import { OptionVerIcon } from '../icons'
 import './comment.css'
+import { Link } from 'react-router-dom'
 
 const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [isEdit, setIsEdit] = useState(false)
@@ -399,9 +400,12 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         />
                         <div className="ms-3">
                             <div className="d-flex align-items-center">
-                                <div className="comment_author">
+                                <Link
+                                    to={`/${comment.user.username}/sets`}
+                                    className="comment_author"
+                                >
                                     {comment.user.username}
-                                </div>
+                                </Link>
                                 {comment?.user?.status === 'banned' && (
                                     <OverlayTrigger
                                         placement="bottom"
@@ -459,46 +463,47 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                             ></div>
                         </div>
                     </div>
-                    {userInfo?.id === comment?.user?.id && (
-                        <div id={`comment${comment.id}`} className="d-none">
-                            <button
-                                className="btn btn-light p-2 rounded-circle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <OptionVerIcon />
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <button
-                                        className="dropdown-item d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => {
-                                            setIsEdit(true)
-                                        }}
-                                    >
-                                        <span className="align-middle">
-                                            Edit
-                                        </span>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        className="dropdown-item d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => {
-                                            setShowDeleteModal(true)
-                                        }}
-                                    >
-                                        <span className="align-middle">
-                                            Delete
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    )}
+                    {userInfo?.id === comment?.user?.id &&
+                        !comment?.classroom?._deleted && (
+                            <div id={`comment${comment.id}`} className="d-none">
+                                <button
+                                    className="btn btn-light p-2 rounded-circle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <OptionVerIcon />
+                                </button>
+                                <ul className="dropdown-menu">
+                                    <li>
+                                        <button
+                                            className="dropdown-item d-flex align-items-center"
+                                            type="button"
+                                            onClick={() => {
+                                                setIsEdit(true)
+                                            }}
+                                        >
+                                            <span className="align-middle">
+                                                Edit
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item d-flex align-items-center"
+                                            type="button"
+                                            onClick={() => {
+                                                setShowDeleteModal(true)
+                                            }}
+                                        >
+                                            <span className="align-middle">
+                                                Delete
+                                            </span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
                 </div>
             )}
             {/* Delete comment modal */}

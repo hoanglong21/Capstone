@@ -54,6 +54,7 @@ const getFilterListByClass = (
     authorId,
     search,
     classId,
+    categoryId,
     assigned,
     sortBy,
     direction,
@@ -68,6 +69,8 @@ const getFilterListByClass = (
             search +
             '&class_id' +
             classId +
+            '&category_id' +
+            categoryId +
             '&assigned' +
             assigned +
             '&sortby' +
@@ -180,6 +183,14 @@ const getLearningStudySetId = (
     )
 }
 
+const recoverStudySet = (id) => {
+    return axios.get(API_BASE_URL + '/recoverstudysets/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
+}
+
 const StudySetService = {
     createStudySet,
     updateStudySet,
@@ -193,6 +204,7 @@ const StudySetService = {
     getLearningStudySetId,
     getFilterListByClass,
     deleteHardStudySet,
+    recoverStudySet,
 }
 
 export default StudySetService

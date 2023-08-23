@@ -8,15 +8,19 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 
 import ClassService from '../../../services/ClassService'
 import ClassLearnerService from '../../../services/ClassLearnerService'
+import NotificationService from '../../../services/NotificationService'
 
 import UpdateClass from '../UpdateClass'
 import DeleteClass from '../DeleteClass'
+import AssignSets from '../AssignSets'
+import Report from '../../../components/report/Report'
 
 import {
     AddCircleIcon,
     ClassIcon,
     DeleteIcon,
     EditIcon,
+    MemberSolidIcon,
     OptionHorIcon,
     ReportIcon,
     StudySetIcon,
@@ -24,8 +28,6 @@ import {
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import './classLayout.css'
-import AssignSets from '../AssignSets'
-import NotificationService from '../../../services/NotificationService'
 
 const ClassLayout = () => {
     const navigate = useNavigate()
@@ -44,6 +46,7 @@ const ClassLayout = () => {
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
+    const [showReportModal, setShowReportModal] = useState(false)
 
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
@@ -53,20 +56,48 @@ const ClassLayout = () => {
         const fetchData = async () => {
             setLoading(true)
             try {
-                const tempClass = (await ClassService.getClassroomById(id)).data
-                setClassroom(tempClass)
-                const tempHasAccess = (
-                    await ClassService.checkUserClass(id, userInfo.id)
-                ).data
-                setHasAccess(tempHasAccess)
-                if (!tempHasAccess) {
-                    const tempIsWaiting = (
-                        await ClassService.checkUserClassWaiting(
-                            id,
-                            userInfo.id
-                        )
+                var isFilter = false
+                if (userInfo?.id) {
+                    const tempHasAccess = (
+                        await ClassService.checkUserClass(id, userInfo.id)
                     ).data
-                    setIsWaiting(tempIsWaiting)
+                    setHasAccess(tempHasAccess)
+                    if (tempHasAccess) {
+                        isFilter = true
+                    } else {
+                        const tempIsWaiting = (
+                            await ClassService.checkUserClassWaiting(
+                                id,
+                                userInfo.id
+                            )
+                        ).data
+                        setIsWaiting(tempIsWaiting)
+                    }
+                }
+                if (isFilter) {
+                    const tempClass = (await ClassService.getClassroomById(id))
+                        .data
+                    setClassroom(tempClass)
+                } else {
+                    const tempClass = (
+                        await ClassService.getFilterList(
+                            `=${id}`,
+                            '=0',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '=1',
+                            '=1'
+                        )
+                    ).data.list[0]
+                    console.log(tempClass)
+                    setClassroom(tempClass)
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -77,10 +108,19 @@ const ClassLayout = () => {
             }
             setLoading(false)
         }
-        if (userInfo.username) {
-            fetchData()
-        }
+        fetchData()
     }, [userInfo, id])
+
+    useEffect(() => {
+        if (
+            userInfo?.id &&
+            classroom?.id &&
+            classroom?._deleted &&
+            userInfo?.id !== classroom?.user?.id
+        ) {
+            navigate('/')
+        }
+    }, [classroom])
 
     const handleRequest = async () => {
         try {
@@ -177,16 +217,17 @@ const ClassLayout = () => {
                                 />
                                 <h1 className="mainClass_title m-0 ms-3">
                                     {classroom.class_name}
+                                    {classroom._deleted && ' (Deleted)'}
                                 </h1>
                             </div>
                             {!hasAccess && (
                                 <p className="mt-1">{classroom.description}</p>
                             )}
                         </div>
-                        {hasAccess ? (
+                        {hasAccess && !classroom?._deleted ? (
                             <div className="dropdown align-self-start">
                                 <button
-                                    className="btn btn-outline-secondary icon-outline-secondary "
+                                    className="btn btn-outline-secondary icon-outline-secondary"
                                     type="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
@@ -236,6 +277,9 @@ const ClassLayout = () => {
                                             <button
                                                 className="dropdown-item py-2 px-3 d-flex align-items-center"
                                                 type="button"
+                                                onClick={() => {
+                                                    setShowReportModal(true)
+                                                }}
                                             >
                                                 <ReportIcon
                                                     className="me-3"
@@ -248,7 +292,6 @@ const ClassLayout = () => {
                                             </button>
                                         </li>
                                     )}
-
                                     <li>
                                         <hr className="dropdown-divider" />
                                     </li>
@@ -293,6 +336,8 @@ const ClassLayout = () => {
                                     )}
                                 </ul>
                             </div>
+                        ) : classroom?._deleted ? (
+                            ''
                         ) : (
                             <div>
                                 {isWaiting ? (
@@ -442,20 +487,23 @@ const ClassLayout = () => {
                                 </h6>
                                 <div className="d-flex align-items-center mt-2">
                                     <img
-                                        src={
-                                            classroom?.user?.avatar ||
-                                            defaultAvatar
-                                        }
+                                        src={classroom?.avatar || defaultAvatar}
                                         className="mainClass_authorAvatar"
                                     />
                                     <div className="ms-3">
-                                        {classroom?.user?.username}
+                                        {classroom?.author}
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center mt-2">
                                     <StudySetIcon size="20px" />
                                     <div className="ms-3">
-                                        {classroom?.studySets?.length} sets
+                                        {classroom?.studyset} sets
+                                    </div>
+                                </div>
+                                <div className="d-flex align-items-center mt-2">
+                                    <MemberSolidIcon size="20px" />
+                                    <div className="ms-3">
+                                        {classroom?.member} sets
                                     </div>
                                 </div>
                             </div>
@@ -557,6 +605,13 @@ const ClassLayout = () => {
                         </Toast.Body>
                     </Toast>
                 </ToastContainer>
+                {/* report modal */}
+                <Report
+                    showReportModal={showReportModal}
+                    setShowReportModal={setShowReportModal}
+                    userInfo={userInfo}
+                    destination={`class/${id}`}
+                />
             </div>
         )
     }

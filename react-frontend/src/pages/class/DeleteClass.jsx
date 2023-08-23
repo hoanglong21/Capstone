@@ -6,7 +6,13 @@ import ClassService from '../../services/ClassService'
 
 import './classLayout/classLayout.css'
 
-const DeleteClass = ({ classroom, showDeleteModal, setShowDeleteModal }) => {
+const DeleteClass = ({
+    classroom,
+    showDeleteModal,
+    setShowDeleteModal,
+    isDelete,
+    setIsDelete,
+}) => {
     let navigate = useNavigate()
 
     const [deleteClass, setDeleteClass] = useState({})
@@ -22,8 +28,12 @@ const DeleteClass = ({ classroom, showDeleteModal, setShowDeleteModal }) => {
         setLoading(true)
         try {
             await ClassService.deleteClass(deleteClass.id)
+            if (isDelete === false) {
+                setIsDelete(true)
+            } else {
+                navigate('/')
+            }
             setShowDeleteModal(false)
-            navigate('/')
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -48,12 +58,15 @@ const DeleteClass = ({ classroom, showDeleteModal, setShowDeleteModal }) => {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <div className="classDeleteModalHeading mb-4">
+                <div className="classDeleteModalHeading mb-3">
                     {deleteClass.class_name}
                 </div>
-                <p>You are about to delete this class.</p>
+                <p className="mb-1">
+                    You are about to delete this class and all of its data. No
+                    one can access this class anymore.
+                </p>
                 <p className="fw-semibold">
-                    Are you sure? This cannot be undone.
+                    Items in Trash will be permanently deleted after 30 days.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -80,7 +93,7 @@ const DeleteClass = ({ classroom, showDeleteModal, setShowDeleteModal }) => {
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Yes, delete this class'
+                        'Move to trash'
                     )}
                 </button>
             </Modal.Footer>

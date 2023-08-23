@@ -3,14 +3,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import Toast from 'react-bootstrap/Toast'
 import { useState, useEffect } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { useTranslation } from 'react-i18next'
 
 import { logout as authLogout } from '../../features/auth/authSlice'
 import { logout as userLogout } from '../../features/user/userSlice'
 import { getUser } from '../../features/user/userAction'
+import { getNumUnread } from '../../features/notify/notifyAction'
 import NotificationService from '../../services/NotificationService'
+import AuthService from '../../services/AuthService'
 
 import CreateClass from '../../pages/class/CreateClass'
 import JoinClass from '../../pages/class/JoinClass'
+import Pagination from '../Pagination'
 
 import logo from '../../assets/images/logo-2.png'
 import defaultAvatar from '../../assets/images/default_avatar.png'
@@ -26,18 +30,18 @@ import {
     LibraryIcon,
     SettingIcon,
     AchievementIcon,
+    DeleteIcon,
 } from '../icons'
 import './Header.css'
-import AuthService from '../../services/AuthService'
-import { getNumUnread } from '../../features/notify/notifyAction'
-import Pagination from '../Pagination'
 
 const Header = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { t, i18n } = useTranslation()
 
     const { userToken } = useSelector((state) => state.auth)
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
     const { numUnread } = useSelector((state) => state.notify)
 
     const [showLogoutMess, setShowLogoutMess] = useState(false)
@@ -63,6 +67,12 @@ const Header = () => {
             dispatch(getUser(userToken))
         }
     }, [userToken])
+
+    useEffect(() => {
+        if (userInfo?.id) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     // check notification empty
     useEffect(() => {
@@ -229,7 +239,9 @@ const Header = () => {
                                 }
                             >
                                 <HomeIcon className="mx-2" />
-                                <span className="align-middle">Home</span>
+                                <span className="align-middle">
+                                    {t('home')}
+                                </span>
                             </NavLink>
                         </li>
                         <li className="nav-item">
@@ -242,7 +254,9 @@ const Header = () => {
                                 }
                             >
                                 <DictIcon className="mx-2" />
-                                <span className="align-middle">Dictionary</span>
+                                <span className="align-middle">
+                                    {t('dictionary')}
+                                </span>
                             </NavLink>
                         </li>
                         <li className="nav-item">
@@ -255,13 +269,15 @@ const Header = () => {
                                 }
                             >
                                 <TranslateIcon className="mx-2" />
-                                <span className="align-middle">Translate</span>
+                                <span className="align-middle">
+                                    {t('translate')}
+                                </span>
                             </NavLink>
                         </li>
                         {userToken ? (
                             <li className="nav-item">
                                 <NavLink
-                                    to="/library/sets"
+                                    to={`/${userInfo?.username}/sets`}
                                     className={
                                         'nav-link px-3 ' +
                                         (({ isActive }) =>
@@ -270,7 +286,7 @@ const Header = () => {
                                 >
                                     <LibraryIcon className="mx-2" />
                                     <span className="align-middle">
-                                        Your Library
+                                        {t('library')}
                                     </span>
                                 </NavLink>
                             </li>
@@ -286,7 +302,7 @@ const Header = () => {
                                 >
                                     <LibraryIcon className="mx-2" />
                                     <span className="align-middle">
-                                        Discovery
+                                        {t('discovery')}
                                     </span>
                                 </NavLink>
                             </li>
@@ -316,7 +332,7 @@ const Header = () => {
                                     aria-expanded="true"
                                 >
                                     <span className="align-middle fw-semibold">
-                                        Study Set
+                                        {t('studySet')}
                                     </span>
                                 </a>
                                 <ul
@@ -328,7 +344,7 @@ const Header = () => {
                                             className="dropdown-item"
                                             onClick={() => handleAddStudySet(1)}
                                         >
-                                            Vocabulary
+                                            {t('vocabulary')}
                                         </button>
                                     </li>
                                     <li>
@@ -336,7 +352,7 @@ const Header = () => {
                                             className="dropdown-item"
                                             onClick={() => handleAddStudySet(2)}
                                         >
-                                            Kanji
+                                            {t('kanji')}
                                         </button>
                                     </li>
                                     <li>
@@ -344,7 +360,7 @@ const Header = () => {
                                             className="dropdown-item"
                                             onClick={() => handleAddStudySet(3)}
                                         >
-                                            Grammar
+                                            {t('grammar')}
                                         </button>
                                     </li>
                                 </ul>
@@ -358,7 +374,7 @@ const Header = () => {
                                         onClick={handleAddClass}
                                     >
                                         <span className="align-middle fw-semibold">
-                                            Class
+                                            {t('class')}
                                         </span>
                                     </button>
                                 </li>
@@ -370,7 +386,7 @@ const Header = () => {
                                     onClick={handleJoinClass}
                                 >
                                     <span className="align-middle fw-semibold">
-                                        Join Class
+                                        {t('joinClass')}
                                     </span>
                                 </button>
                             </li>
@@ -400,7 +416,7 @@ const Header = () => {
                                             }}
                                         >
                                             <span className="visually-hidden">
-                                                New alerts
+                                                {t('newAlerts')}
                                             </span>
                                         </span>
                                     )}
@@ -417,14 +433,15 @@ const Header = () => {
                                                 className="notifyEmpty"
                                             />
                                             <span className="notifyFilter_heading mt-2">
-                                                No Notifications Yet
+                                                {t('NoNotificationsYet')}
                                             </span>
                                             <span className="notifyFilter_subtext mt-1">
-                                                You have no notification right
-                                                now
+                                                {t(
+                                                    'Youhavenonotificationrightnow'
+                                                )}
                                             </span>
                                             <span className="notifyFilter_subtext mt-1 mb-2">
-                                                Come back later
+                                                {t('comebacklater')}
                                             </span>
                                         </li>
                                     ) : (
@@ -443,7 +460,7 @@ const Header = () => {
                                                         }
                                                     }}
                                                 >
-                                                    All
+                                                    {t('all')}
                                                 </button>
                                                 <button
                                                     className={`notifyFilter_btn ${
@@ -458,18 +475,18 @@ const Header = () => {
                                                         }
                                                     }}
                                                 >
-                                                    Unread
+                                                    {t('unread')}
                                                 </button>
                                             </li>
                                             <li className="d-flex align-items-center mb-1">
                                                 <span className="notifyFilter_heading flex-fill">
-                                                    Earlier
+                                                    {t('earlier')}
                                                 </span>
                                                 <a
                                                     className="notifyFilter_link"
                                                     onClick={handleMarkAllRead}
                                                 >
-                                                    Mark all as read
+                                                    {t('markallasread')}
                                                 </a>
                                             </li>
                                             {/* Pagination */}
@@ -498,7 +515,7 @@ const Header = () => {
                                                             )
                                                         }}
                                                     >
-                                                        <div className="d-flex flex-column">
+                                                        <div className="w-100 d-flex flex-column">
                                                             <div className="row mb-1">
                                                                 <div className="col-11">
                                                                     <h4
@@ -518,8 +535,9 @@ const Header = () => {
                                                                         false && (
                                                                         <span className="badge text-bg-primary p-1 rounded-circle">
                                                                             <span className="visually-hidden">
-                                                                                New
-                                                                                alerts
+                                                                                {t(
+                                                                                    'newAlerts'
+                                                                                )}
                                                                             </span>
                                                                         </span>
                                                                     )}
@@ -600,7 +618,7 @@ const Header = () => {
                                             type="button"
                                             onClick={() => {
                                                 navigate(
-                                                    '/library/achievements'
+                                                    `/${userInfo?.username}/achievements`
                                                 )
                                             }}
                                         >
@@ -609,7 +627,7 @@ const Header = () => {
                                                 strokeWidth="1.65"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Achievements
+                                                {t('achievements')}
                                             </span>
                                         </button>
                                     </li>
@@ -626,7 +644,24 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Settings
+                                                {t('settings')}
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 px-3"
+                                            type="button"
+                                            onClick={() => {
+                                                navigate('/trash/sets')
+                                            }}
+                                        >
+                                            <DeleteIcon
+                                                className="me-3"
+                                                strokeWidth="2"
+                                            />
+                                            <span className="align-middle fw-semibold">
+                                                {t('recycleBin')}
                                             </span>
                                         </button>
                                     </li>
@@ -643,7 +678,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Help Center
+                                                {t('helpcenter')}
                                             </span>
                                         </button>
                                     </li>
@@ -661,7 +696,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Logout
+                                                {t('logout')}
                                             </span>
                                         </button>
                                     </li>
@@ -670,22 +705,24 @@ const Header = () => {
                         </div>
                     ) : (
                         <>
-                            <Link to="/login">
-                                <button
-                                    type="button"
-                                    className="landing-btn btn btn-light me-2"
-                                >
-                                    Login
-                                </button>
-                            </Link>
-                            <Link to="register">
-                                <button
-                                    type="button"
-                                    className="landing-btn btn btn-warning"
-                                >
-                                    Sign up
-                                </button>
-                            </Link>
+                            <button
+                                type="button"
+                                className="landing-btn btn btn-light me-2"
+                                onClick={() => {
+                                    navigate('/login')
+                                }}
+                            >
+                                {t('login')}
+                            </button>
+                            <button
+                                type="button"
+                                className="landing-btn btn btn-warning"
+                                onClick={() => {
+                                    navigate('/register')
+                                }}
+                            >
+                                {t('signup')}
+                            </button>
                         </>
                     )}
                 </div>
@@ -702,7 +739,7 @@ const Header = () => {
                     delay={3000}
                     autohide
                 >
-                    <Toast.Body>You have been logged out</Toast.Body>
+                    <Toast.Body>{t('Youhavebeenloggedout')}</Toast.Body>
                 </Toast>
             </ToastContainer>
             {/* Create class modal */}

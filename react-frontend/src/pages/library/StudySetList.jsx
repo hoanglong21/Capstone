@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import StudySetService from '../../services/StudySetService'
@@ -31,6 +31,7 @@ const StudySetList = () => {
 
     const search = searchParams.get('search')
 
+    const { name } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
     const [sets, setSets] = useState([])
@@ -58,9 +59,11 @@ const StudySetList = () => {
                 await StudySetService.getFilterList(
                     '=0',
                     `${isPublic == -1 ? '' : isPublic == 1 ? '=1' : '=0'}`,
-                    `${isDraft ? '=1' : ''}`,
+                    `${
+                        name !== userInfo?.username ? '=0' : isDraft ? '=1' : ''
+                    }`,
                     `${searchKey ? '=' + searchKey : ''}`,
-                    `=${userInfo.username}`,
+                    `=${name || userInfo.username}`,
                     '',
                     `${type == -1 ? '' : `=${type}`}`,
                     '',
@@ -93,9 +96,9 @@ const StudySetList = () => {
                 await StudySetService.getFilterList(
                     '=0',
                     '',
+                    `${name === userInfo?.username ? '' : '=0'}`,
                     '',
-                    '',
-                    `=${userInfo.username}`,
+                    `=${name || userInfo?.username}`,
                     '',
                     '',
                     '',
@@ -122,16 +125,14 @@ const StudySetList = () => {
     }
 
     useEffect(() => {
-        if (userInfo.username) {
-            checkEmpty()
-        }
-    }, [userInfo])
+        checkEmpty()
+    }, [userInfo, name])
 
     useEffect(() => {
-        if (userInfo.username) {
+        if (isEmpty === false) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search, page, isDesc, isPublic, isDraft, type])
+    }, [userInfo, name, search, page, isDesc, isPublic, isDraft, type, isEmpty])
 
     useEffect(() => {
         if (isDelete === true) {
@@ -213,18 +214,20 @@ const StudySetList = () => {
                     <div>
                         <div className="row d-flex align-items-center mb-4">
                             <div className="studyset-col-5 d-flex align-items-center">
-                                <select
-                                    className="form-select sets-select py-2 me-2"
-                                    aria-label="Default select example"
-                                    value={isPublic || -1}
-                                    onChange={(event) => {
-                                        setIsPublic(event.target.value)
-                                    }}
-                                >
-                                    <option value={-1}>All access</option>
-                                    <option value={1}>Public</option>
-                                    <option value={0}>Private</option>
-                                </select>
+                                {name === userInfo?.username && (
+                                    <select
+                                        className="form-select sets-select py-2 me-2"
+                                        aria-label="Default select example"
+                                        value={isPublic || -1}
+                                        onChange={(event) => {
+                                            setIsPublic(event.target.value)
+                                        }}
+                                    >
+                                        <option value={-1}>All access</option>
+                                        <option value={1}>Public</option>
+                                        <option value={0}>Private</option>
+                                    </select>
+                                )}
                                 <select
                                     className="form-select sets-select py-2 me-2"
                                     aria-label="Default select example"
@@ -250,19 +253,21 @@ const StudySetList = () => {
                                         <ArrowSmallUpIcon />
                                     )}
                                 </button>
-                                <button
-                                    className="btn btn-light p-2 d-flex align-items-center"
-                                    onClick={() => {
-                                        setIsDraft(!isDraft)
-                                    }}
-                                >
-                                    <span className="me-1">Only draft</span>
-                                    {isDraft ? (
-                                        <CheckIcon size="1.1rem" />
-                                    ) : (
-                                        <CloseIcon size="1.1rem" />
-                                    )}
-                                </button>
+                                {name === userInfo?.username && (
+                                    <button
+                                        className="btn btn-light p-2 d-flex align-items-center"
+                                        onClick={() => {
+                                            setIsDraft(!isDraft)
+                                        }}
+                                    >
+                                        <span className="me-1">Only draft</span>
+                                        {isDraft ? (
+                                            <CheckIcon size="1.1rem" />
+                                        ) : (
+                                            <CloseIcon size="1.1rem" />
+                                        )}
+                                    </button>
+                                )}
                             </div>
                             <div className="studyset-col-7">
                                 <form className="sets-search d-flex align-items-center mb-0">
@@ -362,8 +367,8 @@ const StudySetList = () => {
                                                                         <div className="author-avatar">
                                                                             <img
                                                                                 src={
-                                                                                    userInfo?.avatar
-                                                                                        ? userInfo?.avatar
+                                                                                    set?.avatar
+                                                                                        ? set?.avatar
                                                                                         : defaultAvatar
                                                                                 }
                                                                                 alt="author avatar"
@@ -372,7 +377,7 @@ const StudySetList = () => {
                                                                         </div>
                                                                         <span className="author-username ms-2">
                                                                             {
-                                                                                userInfo?.username
+                                                                                set?.author
                                                                             }
                                                                         </span>
                                                                         {set?.author_status ===
@@ -462,53 +467,56 @@ const StudySetList = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="studyset-col-1">
-                                                            <button
-                                                                type="button dropdown-toggle"
-                                                                className="btn btn-customLight"
-                                                                data-bs-toggle="dropdown"
-                                                                aria-expanded="false"
-                                                            >
-                                                                <OptionVerIcon />
-                                                            </button>
-                                                            <ul className="dropdown-menu">
-                                                                <li>
-                                                                    <button
-                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
-                                                                        onClick={() => {
-                                                                            navigate(
-                                                                                `/edit-set/${set?.id}`
-                                                                            )
-                                                                        }}
-                                                                    >
-                                                                        <EditIcon
-                                                                            size="20px"
-                                                                            className="me-2"
-                                                                        />
-                                                                        Edit
-                                                                    </button>
-                                                                </li>
-                                                                <li>
-                                                                    <button
-                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
-                                                                        onClick={() => {
-                                                                            setDeleteSet(
-                                                                                set
-                                                                            )
-                                                                            setShowDeleteModal(
-                                                                                true
-                                                                            )
-                                                                        }}
-                                                                    >
-                                                                        <DeleteSolidIcon
-                                                                            size="20px"
-                                                                            className="me-2"
-                                                                        />
-                                                                        Delete
-                                                                    </button>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                                        {name ==
+                                                            userInfo?.username && (
+                                                            <div className="studyset-col-1 d-flex flex-row-reverse">
+                                                                <button
+                                                                    type="button dropdown-toggle"
+                                                                    className="btn btn-customLight"
+                                                                    data-bs-toggle="dropdown"
+                                                                    aria-expanded="false"
+                                                                >
+                                                                    <OptionVerIcon />
+                                                                </button>
+                                                                <ul className="dropdown-menu">
+                                                                    <li>
+                                                                        <button
+                                                                            className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                            onClick={() => {
+                                                                                navigate(
+                                                                                    `/edit-set/${set?.id}`
+                                                                                )
+                                                                            }}
+                                                                        >
+                                                                            <EditIcon
+                                                                                size="20px"
+                                                                                className="me-2"
+                                                                            />
+                                                                            Edit
+                                                                        </button>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button
+                                                                            className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                            onClick={() => {
+                                                                                setDeleteSet(
+                                                                                    set
+                                                                                )
+                                                                                setShowDeleteModal(
+                                                                                    true
+                                                                                )
+                                                                            }}
+                                                                        >
+                                                                            <DeleteSolidIcon
+                                                                                size="20px"
+                                                                                className="me-2"
+                                                                            />
+                                                                            Delete
+                                                                        </button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))}

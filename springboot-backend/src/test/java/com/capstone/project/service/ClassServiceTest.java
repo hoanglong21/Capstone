@@ -37,6 +37,9 @@ public class ClassServiceTest {
     private UserService userService;
 
     @Mock
+    private HistoryRepository historyRepository;
+
+    @Mock
     private ClassLearnerRepository classLearnerRepository;
     @Mock
     private ClassService classService;
@@ -276,6 +279,7 @@ public class ClassServiceTest {
         when(testlearnerRepository.getTestLearnerByTestId(1)).thenReturn(List.of(testLearner));
         when(testresultRepository.getTestResultBytestLearnerId(1)).thenReturn(List.of(testResult));
         when(commentRepository.getCommentByTestId(1)).thenReturn(List.of(comment));
+        when(historyRepository.getHistoriesByStudySetId(1)).thenReturn(List.of());
         try {
             classServiceImpl.deleteHardClass(1);
         } catch (ResourceNotFroundException e) {

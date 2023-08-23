@@ -4,14 +4,15 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { getUser } from '../../features/user/userAction'
 import UserService from '../../services/UserService'
+import { useTranslation } from 'react-i18next'
 
 const VerifyAccount = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-
+    const { t, i18n } = useTranslation()
     const { userToken } = useSelector((state) => state.auth)
     const [loading, setLoading] = useState(true)
-
+    const { userLanguage } = useSelector((state) => state.user)
     const [searchParams] = useSearchParams()
 
     useEffect(() => {
@@ -20,6 +21,12 @@ const VerifyAccount = () => {
             navigate('/')
         }
     }, [])
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,10 +61,9 @@ const VerifyAccount = () => {
     } else {
         return (
             <div>
-                <h1>Verification Success</h1>
+                <h1>{t('verify')}</h1>
                 <p>
-                    Thank you, your account has been verified. Your account is
-                    now active.
+                {t('msg6')}.
                 </p>
                 <div>
                     <button
@@ -66,7 +72,7 @@ const VerifyAccount = () => {
                             navigate('/')
                         }}
                     >
-                        Go to home
+                        {t('goToHome')}
                     </button>
                 </div>
             </div>

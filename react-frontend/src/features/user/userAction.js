@@ -2,11 +2,14 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import jwtDecode from 'jwt-decode'
 
 import UserService from '../../services/UserService'
+import UserSettingService from '../../services/UserSettingService'
 
 export const getUser = createAsyncThunk('user/getUser', async (userToken) => {
     const username = jwtDecode(userToken).sub
-    const response = await UserService.getUser(username)
-    return response.data
+    const tempUser = (await UserService.getUser(username)).data
+    const tempLanguage = (await UserSettingService.customSettings(tempUser.id))
+        .data.language
+    return { user: tempUser, language: tempLanguage }
 })
 
 export const updateUser = createAsyncThunk(

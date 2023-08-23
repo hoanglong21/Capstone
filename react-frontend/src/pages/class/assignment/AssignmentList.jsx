@@ -275,6 +275,7 @@ function AssignmentList() {
                             <div>
                                 <button
                                     className="createAssign_btn"
+                                    disabled={classroom?._deleted}
                                     onClick={() => {
                                         navigate('../create-assignment')
                                     }}
@@ -491,34 +492,35 @@ function AssignmentList() {
                                                 )}
                                             </div>
                                             {userInfo?.id ===
-                                                assign?.user?.id && (
-                                                <div className="mt-5 d-flex justify-content-between">
-                                                    <button
-                                                        className="editAssign_btn"
-                                                        onClick={() => {
-                                                            navigate(
-                                                                `../edit-assignment/${assign?.id}`
-                                                            )
-                                                        }}
-                                                    >
-                                                        Edit assignment
-                                                    </button>
-                                                    <button
-                                                        className="deleteAssign_btn"
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setDeleteAssign(
-                                                                assign
-                                                            )
-                                                            setShowDeleteModal(
-                                                                true
-                                                            )
-                                                        }}
-                                                    >
-                                                        Delete assignment
-                                                    </button>
-                                                </div>
-                                            )}
+                                                assign?.user?.id &&
+                                                !classroom?._deleted && (
+                                                    <div className="mt-5 d-flex justify-content-between">
+                                                        <button
+                                                            className="editAssign_btn"
+                                                            onClick={() => {
+                                                                navigate(
+                                                                    `../edit-assignment/${assign?.id}`
+                                                                )
+                                                            }}
+                                                        >
+                                                            Edit assignment
+                                                        </button>
+                                                        <button
+                                                            className="deleteAssign_btn"
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setDeleteAssign(
+                                                                    assign
+                                                                )
+                                                                setShowDeleteModal(
+                                                                    true
+                                                                )
+                                                            }}
+                                                        >
+                                                            Delete assignment
+                                                        </button>
+                                                    </div>
+                                                )}
                                         </div>
                                     </div>
                                 </div>

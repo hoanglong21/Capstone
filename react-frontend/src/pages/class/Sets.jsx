@@ -48,6 +48,7 @@ const Sets = () => {
                         `=${tempClass?.user?.id}`,
                         `${search ? `=${search}` : ''}`,
                         `=${id}`,
+                        '',
                         '=1',
                         '',
                         '',
@@ -82,6 +83,7 @@ const Sets = () => {
                         `=${userInfo?.id}`,
                         `${search ? `=${search}` : ''}`,
                         `=${id}`,
+                        `${type == -1 ? '' : `=${type}`}`,
                         '=1',
                         '',
                         '',
@@ -113,6 +115,7 @@ const Sets = () => {
                         `=${userInfo?.id}`,
                         `${search ? `=${search}` : ''}`,
                         `=${id}`,
+                        `${type == -1 ? '' : `=${type}`}`,
                         '=1',
                         '',
                         '',
@@ -162,6 +165,7 @@ const Sets = () => {
                                 </p>
                                 <button
                                     className="btn btn-info"
+                                    disabled={classroom?._deleted}
                                     onClick={() => {
                                         setShowAssignModal(true)
                                     }}
@@ -230,7 +234,7 @@ const Sets = () => {
                                 <SearchIcon />
                             </button>
                         </form>
-                        {search ? (
+                        {sets?.length === 0 ? (
                             <div>No matching found.</div>
                         ) : (
                             <div>

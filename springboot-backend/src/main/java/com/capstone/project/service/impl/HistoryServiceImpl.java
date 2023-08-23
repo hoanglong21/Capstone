@@ -272,7 +272,7 @@ public class HistoryServiceImpl implements HistoryService {
                 notificationService.createNotification(Notification.builder()
                         .title("Unlock " + achievement.getName() + " achievement")
                         .user(user)
-                        .url("/library/achievements")
+                        .url("/" + user.getUsername() + "/achievements")
                         .content(achievement.getDescription())
                         .build());
             }

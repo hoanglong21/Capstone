@@ -351,13 +351,26 @@ const Learn = () => {
 
     // congratulation animation
     useEffect(() => {
-        if (isFinish) {
-            document
-                .querySelector('#learnAnimation .confetti-container')
-                ?.remove()
-            window.confettiful = new Confettiful(
-                document.getElementById('learnAnimation')
-            )
+        if (isFinish === true) {
+            try {
+                document
+                    .querySelector('#learnAnimation .confetti-container')
+                    ?.remove()
+                window.confettiful = new Confettiful(
+                    document.getElementById('learnAnimation')
+                )
+                HistoryService.createHistory({
+                    historyType: { id: 5 },
+                    user: { id: userInfo.id, username: userInfo.username },
+                    studySet: { id: id },
+                })
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
     }, [isFinish])
 
@@ -375,7 +388,7 @@ const Learn = () => {
     }
 
     const handleCreateLearn = async () => {
-       document.querySelector('#learnAnimation .confetti-container')?.remove()
+        document.querySelector('#learnAnimation .confetti-container')?.remove()
         if (document.getElementById('learnOptionModal')) {
             document.getElementById('learnOptionModal').scrollTop = 0
         }

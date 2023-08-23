@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-
+import { useSelector } from 'react-redux'
 import StudySetService from '../../services/StudySetService'
-
+import { useTranslation } from 'react-i18next'
 import Pagination from '../../components/Pagination'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
@@ -17,13 +17,22 @@ function SetsForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
-    const author = searchParams.get('author')
 
     const [type, setType] = useState(-1)
     const [sets, setSets] = useState([])
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(1)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
 
     const fetchData = async (searchKey) => {
         try {
@@ -32,8 +41,8 @@ function SetsForHome() {
                     '=0',
                     '=1',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     `${type == -1 ? '' : `=${type}`}`,
                     '',
@@ -80,7 +89,7 @@ function SetsForHome() {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search, author, page, type])
+    }, [search, page, type])
 
     return (
         <div className="mt-4 mb-5">
@@ -100,15 +109,15 @@ function SetsForHome() {
                             setType(event.target.value)
                         }}
                     >
-                        <option value={-1}>All type</option>
-                        <option value={1}>Vocabulary</option>
-                        <option value={2}>Kanji</option>
-                        <option value={3}>Grammar</option>
+                        <option value={-1}>{t('allType')}</option>
+                        <option value={1}>{t('vocabulary')}</option>
+                        <option value={2}>{t('kanji')}</option>
+                        <option value={3}>{t('grammar')}</option>
                     </select>
                     <div className="sets-list mb-4">
                         {sets?.length === 0 && (
                             <p className="noFound">
-                                No sets matching {search} found
+                                {t('noSet')} {search} {t('found')}
                             </p>
                         )}
                         {sets?.map((set) => (
@@ -116,7 +125,7 @@ function SetsForHome() {
                                 <Link to={`/set/${set.id}`}>
                                     <div className="set-body row mb-2">
                                         <div className="term-count col-3">
-                                            {set?.count} terms
+                                            {set?.count} {t('term')}
                                         </div>
                                         <div
                                             className="set-author col d-flex "
@@ -143,8 +152,7 @@ function SetsForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                This account is
-                                                                banned.
+                                                                {t('msg9')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -160,8 +168,7 @@ function SetsForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                This account is
-                                                                verified.
+                                                               {t('msg8')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -177,8 +184,7 @@ function SetsForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                This account is
-                                                                deleted.
+                                                                {t('msg7')}.
                                                             </Tooltip>
                                                         }
                                                     >
