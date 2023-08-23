@@ -1,9 +1,9 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-
+import { useTranslation } from 'react-i18next'
 import UserService from '../../services/UserService'
-
+import { useSelector } from 'react-redux'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import banned from '../../assets/images/banned.png'
 import verified from '../../assets/images/verified.png'
@@ -21,7 +21,15 @@ function UsersForHome() {
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(1)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
     const fetchData = async (searchKey) => {
         try {
             const temp = (
@@ -86,7 +94,7 @@ function UsersForHome() {
                     <div className="sets-list mb-4 row g-3">
                         {users?.length === 0 && (
                             <p className="noFound">
-                                No users matching {search} found
+                                {t('noUser')} {search} {t('found')}
                             </p>
                         )}
                         {users?.map((user) => (
@@ -123,10 +131,7 @@ function UsersForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        This
-                                                                        account
-                                                                        is
-                                                                        banned.
+                                                                        {t('msg9')}.
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -142,10 +147,7 @@ function UsersForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        This
-                                                                        account
-                                                                        is
-                                                                        verified.
+                                                                        {t('msg8')}.
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -163,10 +165,7 @@ function UsersForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        This
-                                                                        account
-                                                                        is
-                                                                        deleted.
+                                                                        {t('msg7')}.
                                                                     </Tooltip>
                                                                 }
                                                             >

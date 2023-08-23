@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import StudySetService from '../../services/StudySetService'
-import useTranslation from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import Pagination from '../../components/Pagination'
 
 import defaultAvatar from '../../assets/images/default_avatar.png'
