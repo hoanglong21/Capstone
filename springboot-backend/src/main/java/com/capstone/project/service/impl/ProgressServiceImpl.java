@@ -81,15 +81,16 @@ public class ProgressServiceImpl implements ProgressService {
             progress.setRight(progress.getRight()+1);
         } else if(score<0) {
             progress.setWrong(progress.getWrong()+1);
+            progress.setRight(0);
             progress.setTotal_wrong(progress.getTotal_wrong()+1);
         }
 
         if (progress.getRight()==0 && progress.getWrong()==0) {
             progress.setStatus("not studied");
-        } else if(progress.getRight()>0 || progress.getWrong()>0) {
-            progress.setStatus("still learning");
         } else if(progress.getRight()>=2) {
             progress.setStatus("mastered");
+        } else if(progress.getRight()>0 || progress.getWrong()>0) {
+            progress.setStatus("still learning");
         }
         return progressRepository.save(progress);
     }
