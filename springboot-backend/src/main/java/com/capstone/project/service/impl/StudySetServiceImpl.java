@@ -274,7 +274,21 @@ public class StudySetServiceImpl implements StudySetService {
         if(progressType.length==0) {
             throw new Exception("Progress must have at least 1 status");
         }
-        List<Card> cardList = cardRepository.findCardByProgress(userId, progressType, studySetId);
+        boolean isHard = false;
+        for(String progress : progressType) {
+            if(progress.equalsIgnoreCase("hard")) {
+                isHard = true;
+                break;
+            }
+        }
+
+        List<Card> cardList;
+        if(isHard) {
+            cardList = cardRepository.findHardCardByProgress(userId, studySetId);
+        } else {
+            cardList = cardRepository.findCardByProgress(userId, progressType, studySetId);
+        }
+
         return getLearningMethod(cardList, questionType, cardList.size(), isRandom, userId, star);
     }
 
