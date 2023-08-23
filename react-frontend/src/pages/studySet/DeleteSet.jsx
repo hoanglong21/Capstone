@@ -74,7 +74,9 @@ const DeleteSet = ({
                 <button
                     type="button"
                     className="btn btn-secondary classModalBtn me-3"
-                    data-bs-dismiss="modal"
+                    onClick={() => {
+                        setShowDeleteModal(false)
+                    }}
                 >
                     Close
                 </button>

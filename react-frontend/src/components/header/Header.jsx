@@ -705,22 +705,24 @@ const Header = () => {
                         </div>
                     ) : (
                         <>
-                            <Link to="/login">
-                                <button
-                                    type="button"
-                                    className="landing-btn btn btn-light me-2"
-                                >
-                                    {t('login')}
-                                </button>
-                            </Link>
-                            <Link to="register">
-                                <button
-                                    type="button"
-                                    className="landing-btn btn btn-warning"
-                                >
-                                    {t('signup')}
-                                </button>
-                            </Link>
+                            <button
+                                type="button"
+                                className="landing-btn btn btn-light me-2"
+                                onClick={() => {
+                                    navigate('/login')
+                                }}
+                            >
+                                {t('login')}
+                            </button>
+                            <button
+                                type="button"
+                                className="landing-btn btn btn-warning"
+                                onClick={() => {
+                                    navigate('/register')
+                                }}
+                            >
+                                {t('signup')}
+                            </button>
                         </>
                     )}
                 </div>

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 
 import DictionaryService from '../../services/DictionaryService'
 import GrammarDetail from './GrammarDetail'
+import Pagination from '../../components/Pagination'
 
 const GrammarDict = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -12,6 +13,8 @@ const GrammarDict = () => {
     const [grammar, setGrammar] = useState({})
     const [loading, setLoading] = useState(true)
     const [showGrammarDetail, setShowGrammarDetail] = useState(false)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     useEffect(() => {
         if (loading === true && document.getElementById('searchDictBtn')) {
@@ -49,12 +52,13 @@ const GrammarDict = () => {
         try {
             const temp = (
                 await DictionaryService.getGrammar(
-                    '=1',
+                    `=${page}`,
                     '=40',
                     `${searchKey ? '=' + searchKey : ''}`
                 )
-            ).data.list
-            setGrammars(temp)
+            ).data
+            setGrammars(temp.list)
+            setTotalItems(temp.totalItems)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
@@ -67,7 +71,7 @@ const GrammarDict = () => {
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
     if (loading) {
         return (
@@ -110,6 +114,16 @@ const GrammarDict = () => {
                             </div>
                         </div>
                     ))}
+                    {/* Pagination */}
+                    <Pagination
+                        className="mt-5"
+                        currentPage={page}
+                        totalCount={totalItems}
+                        pageSize={40}
+                        onPageChange={(page) => {
+                            setPage(page)
+                        }}
+                    />
                 </div>
                 {/* Grammar modal */}
                 {showGrammarDetail && (
