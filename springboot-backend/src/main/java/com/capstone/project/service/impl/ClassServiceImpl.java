@@ -172,6 +172,7 @@ public class ClassServiceImpl implements ClassService {
         for(ClassLearner classLearner : classLearnerList){
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
+                notification.setTitle("Class Deleted");
                 notification.setContent("Your Class " + classroom.getClass_name() + "' has been deleted.");
                 notification.set_read(false);
                 notification.setUser(classLearner.getUser());
@@ -253,6 +254,35 @@ public class ClassServiceImpl implements ClassService {
     }
 
     @Override
+    public Boolean recoverClass(int id) throws ResourceNotFroundException {
+        Class classroom = classRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
+        classroom.set_deleted(false);
+        classroom.setDeleted_date(null);
+        classRepository.save(classroom);
+        notificationForRecoveredClass(classroom);
+        return true;
+    }
+
+    private void notificationForRecoveredClass(Class classroom) {
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for(ClassLearner classLearner : classLearnerList){
+            if(classLearner.getStatus().equals("enrolled")) {
+                Notification notification = new Notification();
+                notification.setTitle("Class Recovered");
+                notification.setContent("Your Class " + classroom.getClass_name() + "' has been recovered.");
+                notification.set_read(false);
+                notification.setUser(classLearner.getUser());
+                notification.setDatetime(date);
+
+                notificationRepository.save(notification);
+            }
+        }
+    }
+
+    @Override
     public Map<String, Object> getFilterClass(int classid,Boolean isDeleted, String search, String author,String learner, String fromDeleted, String toDeleted,
                                               String fromCreated, String toCreated,String sortBy,String direction, int page, int size) throws ResourceNotFroundException {
         int offset = (page - 1) * size;
@@ -285,17 +315,19 @@ public class ClassServiceImpl implements ClassService {
 
         boolean checkAuthorNull = author == null || author.isEmpty();
         boolean checkLearnerNull = learner == null || learner.isEmpty();
-        if (!checkAuthorNull && !checkLearnerNull) {
-            query += " AND u.username = :authorname OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner)";
+        if (!checkAuthorNull && !checkLearnerNull && isDeleted != null) {
+            query += " AND u.username = :authorname AND c.is_deleted = :isDeleted OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner  AND cl.status = 'enrolled' AND c.is_deleted = :isDeleted)";
             parameters.put("authorname", author);
             parameters.put("learner", learner);
+            parameters.put("isDeleted", isDeleted);
         }
-        if (!checkAuthorNull && checkLearnerNull) {
-            query += " AND u.username = :authorname";
+        if (!checkAuthorNull && checkLearnerNull && isDeleted != null) {
+            query += " AND u.username = :authorname AND c.is_deleted = :isDeleted";
             parameters.put("authorname", author);
+            parameters.put("isDeleted", isDeleted);
         }
         if (checkAuthorNull && !checkLearnerNull) {
-            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner)";
+            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner AND cl.status = 'enrolled')";
             parameters.put("learner", learner);
         }
 
