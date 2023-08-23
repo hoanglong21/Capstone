@@ -3,7 +3,7 @@ import { getUser, updateUser } from './userAction'
 
 const initialState = {
     userInfo: {},
-    userLanguage: 'en',
+    userLanguage: '',
     error: null,
     success: null,
 }

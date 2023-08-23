@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
 import StudySetService from '../../services/StudySetService'
@@ -31,6 +31,7 @@ const StudySetList = () => {
 
     const search = searchParams.get('search')
 
+    const { name } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
     const [sets, setSets] = useState([])
@@ -60,7 +61,7 @@ const StudySetList = () => {
                     `${isPublic == -1 ? '' : isPublic == 1 ? '=1' : '=0'}`,
                     `${isDraft ? '=1' : ''}`,
                     `${searchKey ? '=' + searchKey : ''}`,
-                    `=${userInfo.username}`,
+                    `=${name || userInfo.username}`,
                     '',
                     `${type == -1 ? '' : `=${type}`}`,
                     '',
@@ -95,7 +96,7 @@ const StudySetList = () => {
                     '',
                     '',
                     '',
-                    `=${userInfo.username}`,
+                    `=${name || userInfo.username}`,
                     '',
                     '',
                     '',
@@ -122,16 +123,16 @@ const StudySetList = () => {
     }
 
     useEffect(() => {
-        if (userInfo.username) {
+        if (userInfo?.username) {
             checkEmpty()
         }
-    }, [userInfo])
+    }, [userInfo, name])
 
     useEffect(() => {
-        if (userInfo.username) {
+        if (userInfo?.username) {
             fetchData(search ? search : '')
         }
-    }, [userInfo, search, page, isDesc, isPublic, isDraft, type])
+    }, [userInfo, name, search, page, isDesc, isPublic, isDraft, type])
 
     useEffect(() => {
         if (isDelete === true) {
@@ -362,8 +363,8 @@ const StudySetList = () => {
                                                                         <div className="author-avatar">
                                                                             <img
                                                                                 src={
-                                                                                    userInfo?.avatar
-                                                                                        ? userInfo?.avatar
+                                                                                    set?.avatar
+                                                                                        ? set?.avatar
                                                                                         : defaultAvatar
                                                                                 }
                                                                                 alt="author avatar"
@@ -372,7 +373,7 @@ const StudySetList = () => {
                                                                         </div>
                                                                         <span className="author-username ms-2">
                                                                             {
-                                                                                userInfo?.username
+                                                                                set?.author
                                                                             }
                                                                         </span>
                                                                         {set?.author_status ===
@@ -462,53 +463,56 @@ const StudySetList = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="studyset-col-1">
-                                                            <button
-                                                                type="button dropdown-toggle"
-                                                                className="btn btn-customLight"
-                                                                data-bs-toggle="dropdown"
-                                                                aria-expanded="false"
-                                                            >
-                                                                <OptionVerIcon />
-                                                            </button>
-                                                            <ul className="dropdown-menu">
-                                                                <li>
-                                                                    <button
-                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
-                                                                        onClick={() => {
-                                                                            navigate(
-                                                                                `/edit-set/${set?.id}`
-                                                                            )
-                                                                        }}
-                                                                    >
-                                                                        <EditIcon
-                                                                            size="20px"
-                                                                            className="me-2"
-                                                                        />
-                                                                        Edit
-                                                                    </button>
-                                                                </li>
-                                                                <li>
-                                                                    <button
-                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
-                                                                        onClick={() => {
-                                                                            setDeleteSet(
-                                                                                set
-                                                                            )
-                                                                            setShowDeleteModal(
-                                                                                true
-                                                                            )
-                                                                        }}
-                                                                    >
-                                                                        <DeleteSolidIcon
-                                                                            size="20px"
-                                                                            className="me-2"
-                                                                        />
-                                                                        Delete
-                                                                    </button>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                                        {name ==
+                                                            userInfo?.username && (
+                                                            <div className="studyset-col-1 d-flex flex-row-reverse">
+                                                                <button
+                                                                    type="button dropdown-toggle"
+                                                                    className="btn btn-customLight"
+                                                                    data-bs-toggle="dropdown"
+                                                                    aria-expanded="false"
+                                                                >
+                                                                    <OptionVerIcon />
+                                                                </button>
+                                                                <ul className="dropdown-menu">
+                                                                    <li>
+                                                                        <button
+                                                                            className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                            onClick={() => {
+                                                                                navigate(
+                                                                                    `/edit-set/${set?.id}`
+                                                                                )
+                                                                            }}
+                                                                        >
+                                                                            <EditIcon
+                                                                                size="20px"
+                                                                                className="me-2"
+                                                                            />
+                                                                            Edit
+                                                                        </button>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button
+                                                                            className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                            onClick={() => {
+                                                                                setDeleteSet(
+                                                                                    set
+                                                                                )
+                                                                                setShowDeleteModal(
+                                                                                    true
+                                                                                )
+                                                                            }}
+                                                                        >
+                                                                            <DeleteSolidIcon
+                                                                                size="20px"
+                                                                                className="me-2"
+                                                                            />
+                                                                            Delete
+                                                                        </button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))}

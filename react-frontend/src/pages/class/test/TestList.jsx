@@ -248,7 +248,7 @@ const TestList = () => {
                             {userInfo?.id === classroom?.user?.id && (
                                 <button
                                     className="createTest_btn"
-                                    disabled={!classroom?._deleted}
+                                    disabled={classroom?._deleted}
                                     onClick={() => {
                                         navigate('../create-test')
                                     }}

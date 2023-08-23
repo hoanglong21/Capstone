@@ -7,6 +7,7 @@ import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
 import CommentService from '../../../services/CommentService'
 
+import Report from '../../../components/report/Report'
 import ViewCard from './ViewCard'
 import DeleteSet from '../DeleteSet'
 import Pagination from '../../../components/Pagination'
@@ -28,6 +29,7 @@ import {
     CommentSolidIcon,
     SendIcon,
     CloseIcon,
+    ReportIcon,
 } from '../../../components/icons'
 import banned from '../../../assets/images/banned.png'
 import verified from '../../../assets/images/verified.png'
@@ -73,6 +75,7 @@ const ViewStudySet = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showCommentModal, setShowCommentModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
+    const [showReportModal, setShowReportModal] = useState(false)
 
     // ignore error
     useEffect(() => {
@@ -346,9 +349,12 @@ const ViewStudySet = () => {
                             Created by
                         </span>
                         <div className="d-flex align-items-center">
-                            <div className="setAuthorInfo_username">
+                            <Link
+                                to={`/${studySet?.user?.username}/sets`}
+                                className="setAuthorInfo_username"
+                            >
                                 {studySet?.user?.username}
-                            </div>
+                            </Link>
                             {studySet?.user?.status === 'banned' && (
                                 <OverlayTrigger
                                     placement="bottom"
@@ -400,41 +406,18 @@ const ViewStudySet = () => {
                         </span>
                     </button>
                     {userInfo?.id === studySet?.user?.id &&
-                        !studySet?._deleted && (
-                            <div className="dropdown setPageOptions d-flex align-items-center justify-content-center">
-                                <button
-                                    className="btn"
-                                    type="button dropdown-toggle"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    <OptionHorIcon />
-                                </button>
-                                <ul className="dropdown-menu">
-                                    {userInfo?.role === 'ROLE_TUTOR' && (
-                                        <li>
-                                            <button
-                                                className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                                type="button"
-                                                onClick={() => {
-                                                    if (!userToken) {
-                                                        navigate('/login')
-                                                    } else {
-                                                        setShowAssignModal(true)
-                                                    }
-                                                }}
-                                            >
-                                                <AddCircleIcon
-                                                    className="me-3"
-                                                    size="1.3rem"
-                                                    strokeWidth="2"
-                                                />
-                                                <span className="align-middle fw-semibold">
-                                                    Add to a class
-                                                </span>
-                                            </button>
-                                        </li>
-                                    )}
+                    !studySet?._deleted ? (
+                        <div className="dropdown setPageOptions d-flex align-items-center justify-content-center">
+                            <button
+                                className="btn"
+                                type="button dropdown-toggle"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <OptionHorIcon />
+                            </button>
+                            <ul className="dropdown-menu">
+                                {userInfo?.role === 'ROLE_TUTOR' && (
                                     <li>
                                         <button
                                             className="dropdown-item py-2 px-3 d-flex align-items-center"
@@ -443,44 +426,79 @@ const ViewStudySet = () => {
                                                 if (!userToken) {
                                                     navigate('/login')
                                                 } else {
-                                                    navigate(`/edit-set/${id}`)
+                                                    setShowAssignModal(true)
                                                 }
                                             }}
                                         >
-                                            <EditIcon
-                                                className="me-3"
-                                                size="1.3rem"
-                                            />
-                                            <span className="align-middle fw-semibold">
-                                                Edit
-                                            </span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
-                                            type="button"
-                                            onClick={() => {
-                                                if (!userToken) {
-                                                    navigate('/login')
-                                                } else {
-                                                    setShowDeleteModal(true)
-                                                }
-                                            }}
-                                        >
-                                            <DeleteIcon
+                                            <AddCircleIcon
                                                 className="me-3"
                                                 size="1.3rem"
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Delete
+                                                Add to a class
                                             </span>
                                         </button>
                                     </li>
-                                </ul>
-                            </div>
-                        )}
+                                )}
+                                <li>
+                                    <button
+                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                        type="button"
+                                        onClick={() => {
+                                            if (!userToken) {
+                                                navigate('/login')
+                                            } else {
+                                                navigate(`/edit-set/${id}`)
+                                            }
+                                        }}
+                                    >
+                                        <EditIcon
+                                            className="me-3"
+                                            size="1.3rem"
+                                        />
+                                        <span className="align-middle fw-semibold">
+                                            Edit
+                                        </span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        className="dropdown-item btn-del py-2 px-3 d-flex align-items-center"
+                                        type="button"
+                                        onClick={() => {
+                                            if (!userToken) {
+                                                navigate('/login')
+                                            } else {
+                                                setShowDeleteModal(true)
+                                            }
+                                        }}
+                                    >
+                                        <DeleteIcon
+                                            className="me-3"
+                                            size="1.3rem"
+                                            strokeWidth="2"
+                                        />
+                                        <span className="align-middle fw-semibold">
+                                            Delete
+                                        </span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    ) : studySet?._deleted ? (
+                        ''
+                    ) : (
+                        <button
+                            className="btn btn-outline-secondary icon-outline-secondary"
+                            type="button"
+                            onClick={() => {
+                                setShowReportModal(true)
+                            }}
+                        >
+                            <ReportIcon size="1.3rem" strokeWidth="2" />
+                        </button>
+                    )}
                 </div>
             </div>
             {/* Progress */}
@@ -870,6 +888,13 @@ const ViewStudySet = () => {
                 setShowAssignModal={setShowAssignModal}
                 studySet={studySet}
                 userInfo={userInfo}
+            />
+            {/* report modal */}
+            <Report
+                showReportModal={showReportModal}
+                setShowReportModal={setShowReportModal}
+                userInfo={userInfo}
+                destination={`studySet/${id}`}
             />
         </div>
     )

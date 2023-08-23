@@ -3,10 +3,10 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import FeedbackTypeService from '../../../services/FeedbackTypeService'
+import FeedbackService from '../../../services/FeedbackService'
 
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './SendFeedback.css'
-import FeedbackService from '../../../services/FeedbackService'
 
 const SendFeedback = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -48,7 +48,7 @@ const SendFeedback = () => {
     const handleSubmit = async (event) => {
         event.preventDefault()
         setLoading(true)
-        var form = document.querySelector('.needs-validation')
+        var form = document.getElementById('sendFeedbackForm')
         const titleEl = document.getElementById('title')
         const contentEl = document.getElementById('content')
         // clear validation
@@ -90,6 +90,7 @@ const SendFeedback = () => {
             <h1 className="feedback_heading">Contact Us</h1>
             <h4 className="feedback_message">We'd love to hear from you!</h4>
             <form
+                id="sendFeedbackForm"
                 className="needs-validation mt-4 mx-auto formFeedback"
                 noValidate
             >

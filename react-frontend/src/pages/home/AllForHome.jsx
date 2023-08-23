@@ -16,7 +16,6 @@ function AllForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
-    const author = searchParams.get('author')
 
     const [sets, setSets] = useState([])
     const [classes, setClasses] = useState([])
@@ -37,8 +36,8 @@ function AllForHome() {
                     '=0',
                     '=1',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     '',
                     '',
@@ -69,8 +68,8 @@ function AllForHome() {
                 await ClassService.getFilterList(
                     '',
                     '=0',
-                    `${!author && searchKey ? '=' + searchKey : ''}`,
-                    `${author ? `=${author}` : ''}`,
+                    `${searchKey ? '=' + searchKey : ''}`,
+                    '',
                     '',
                     '',
                     '',
@@ -99,7 +98,7 @@ function AllForHome() {
             const temp = (
                 await UserService.filterUserCommon(
                     '',
-                    `${searchKey || author ? `=${searchKey || author}` : ''}`,
+                    `${searchKey ? `=${searchKey}` : ''}`,
                     '',
                     '',
                     '=tutor,learner',
@@ -126,7 +125,7 @@ function AllForHome() {
         fetchClassesData(search ? search : '')
         fetchUsersData(search ? search : '')
         setLoading(false)
-    }, [search, author])
+    }, [search])
 
     useEffect(() => {
         if (loading === true && document.getElementById('searchHomeBtn')) {
@@ -439,12 +438,7 @@ function AllForHome() {
                                 key={user?.id}
                             >
                                 <div className="set-item h-100">
-                                    <Link
-                                        to={{
-                                            pathname: '',
-                                            search: `?author=${user?.username}`,
-                                        }}
-                                    >
+                                    <Link to={`/${user?.username}/sets`}>
                                         <div className="set-body">
                                             <div className="d-flex align-items-center">
                                                 <img

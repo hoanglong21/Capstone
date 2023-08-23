@@ -69,7 +69,7 @@ const Header = () => {
     }, [userToken])
 
     useEffect(() => {
-        if (userToken) {
+        if (userInfo?.id) {
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
@@ -277,7 +277,7 @@ const Header = () => {
                         {userToken ? (
                             <li className="nav-item">
                                 <NavLink
-                                    to="/library/sets"
+                                    to={`/${userInfo?.username}/sets`}
                                     className={
                                         'nav-link px-3 ' +
                                         (({ isActive }) =>
@@ -513,7 +513,7 @@ const Header = () => {
                                                             )
                                                         }}
                                                     >
-                                                        <div className="d-flex flex-column">
+                                                        <div className="w-100 d-flex flex-column">
                                                             <div className="row mb-1">
                                                                 <div className="col-11">
                                                                     <h4

@@ -1,7 +1,6 @@
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\AssignmentServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\UserSettingRepositoryTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\ClassLearnerRepositoryTest.java
-D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\controller\UserControllerTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\CommentRepositoryTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\AttachmentTypeServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\UserAchievementRepositoryTest.java
@@ -41,6 +40,7 @@ D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capsto
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\model\CommentTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\StudySetServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\model\SubmissionTest.java
+D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\ProgressServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\model\ClassLearnerTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\ProjectApplicationTests.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\model\SenseTest.java
@@ -65,7 +65,6 @@ D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capsto
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\AttachmentRepositoryTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\FeedbackServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\CardRepositoryTest.java
-D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\controller\AuthControllerTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\FieldRepositoryTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\TestServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\model\CardTest.java
@@ -87,6 +86,7 @@ D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capsto
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\model\HistoryTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\model\ExampleTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\ClassLearnerServiceTest.java
+D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\repository\ProgressRepositoryTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\FeedbackTypeServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\SubmissionServiceTest.java
 D:\VSCODE Begin\Capstone\Do\Capstone\springboot-backend\src\test\java\com\capstone\project\service\SettingServiceTest.java

@@ -12,6 +12,7 @@ import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import { OptionVerIcon } from '../icons'
 import './comment.css'
+import { Link } from 'react-router-dom'
 
 const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [isEdit, setIsEdit] = useState(false)
@@ -399,9 +400,12 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         />
                         <div className="ms-3">
                             <div className="d-flex align-items-center">
-                                <div className="comment_author">
+                                <Link
+                                    to={`/${comment.user.username}/sets`}
+                                    className="comment_author"
+                                >
                                     {comment.user.username}
-                                </div>
+                                </Link>
                                 {comment?.user?.status === 'banned' && (
                                     <OverlayTrigger
                                         placement="bottom"

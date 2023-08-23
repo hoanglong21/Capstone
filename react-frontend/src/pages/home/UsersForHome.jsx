@@ -15,7 +15,6 @@ function UsersForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
-    const author = searchParams.get('author')
 
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
@@ -35,7 +34,7 @@ function UsersForHome() {
             const temp = (
                 await UserService.filterUserCommon(
                     '',
-                    `${searchKey || author ? `=${searchKey || author}` : ''}`,
+                    `${searchKey ? `=${searchKey}` : ''}`,
                     '',
                     '',
                     '=tutor,learner',
@@ -79,7 +78,7 @@ function UsersForHome() {
         setLoading(true)
         fetchData(search ? search : '')
         setLoading(false)
-    }, [search, author, page])
+    }, [search, page])
 
     return (
         <div className="mt-4 mb-5">
@@ -103,12 +102,7 @@ function UsersForHome() {
                                 key={user?.id}
                             >
                                 <div className="set-item h-100">
-                                    <Link
-                                        to={{
-                                            pathname: '/',
-                                            search: `?author=${user?.username}`,
-                                        }}
-                                    >
+                                    <Link to={`/${user?.username}/sets`}>
                                         <div className="set-body">
                                             <div className="d-flex align-items-center">
                                                 <img

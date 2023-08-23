@@ -593,27 +593,29 @@ const TutorSubmission = ({ assignment }) => {
                                                     }}
                                                 />
                                             </div>
-                                            <button
-                                                className="comment_btn ms-1"
-                                                onClick={handleAddComment}
-                                                disabled={!addComment}
-                                            >
-                                                {loadingComment ? (
-                                                    <div
-                                                        className="spinner-border spinner-border-sm text-secondary"
-                                                        role="status"
-                                                    >
-                                                        <span className="visually-hidden">
-                                                            LoadingUpload...
-                                                        </span>
-                                                    </div>
-                                                ) : (
-                                                    <SendIcon
-                                                        size="20px"
-                                                        strokeWidth="1.8"
-                                                    />
-                                                )}
-                                            </button>
+                                            <div>
+                                                <button
+                                                    className="comment_btn ms-1"
+                                                    onClick={handleAddComment}
+                                                    disabled={!addComment}
+                                                >
+                                                    {loadingComment ? (
+                                                        <div
+                                                            className="spinner-border spinner-border-sm text-secondary"
+                                                            role="status"
+                                                        >
+                                                            <span className="visually-hidden">
+                                                                LoadingUpload...
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <SendIcon
+                                                            size="20px"
+                                                            strokeWidth="1.8"
+                                                        />
+                                                    )}
+                                                </button>
+                                            </div>
                                         </div>
                                     )}
                                 </div>

@@ -3,15 +3,27 @@ import axios from 'axios'
 const API_BASE_URL = process.env.REACT_APP_HOST
 
 const createPost = (post) => {
-    return axios.post(API_BASE_URL + '/post', post)
+    return axios.post(API_BASE_URL + '/post', post, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const updatePost = (id, post) => {
-    return axios.put(API_BASE_URL + '/post/' + id, post)
+    return axios.put(API_BASE_URL + '/post/' + id, post, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const deletePost = (id) => {
-    return axios.delete(API_BASE_URL + '/post/' + id)
+    return axios.delete(API_BASE_URL + '/post/' + id, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+        },
+    })
 }
 
 const getAllPostByClassId = (id) => {

@@ -28,6 +28,7 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
+import { Link } from 'react-router-dom'
 
 const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [showUpdate, setShowUpdate] = useState(false)
@@ -264,14 +265,16 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         : defaultAvatar
                                 }
                                 className="w-100 h-100"
-                                alt=""
                             />
                         </div>
                         <div className="ms-3">
                             <div className="d-flex align-items-center">
-                                <div className="postAuthor">
+                                <Link
+                                    to={`/${post.user.username}/sets`}
+                                    className="postAuthor"
+                                >
                                     {post.user.username}
-                                </div>
+                                </Link>
                                 {post?.user?.status === 'banned' && (
                                     <OverlayTrigger
                                         placement="bottom"
@@ -534,24 +537,29 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                     }}
                                 />
                             </div>
-                            <button
-                                className="comment_btn ms-1"
-                                onClick={handleAddComment}
-                                disabled={!addComment}
-                            >
-                                {loadingComment ? (
-                                    <div
-                                        className="spinner-border spinner-border-sm text-secondary"
-                                        role="status"
-                                    >
-                                        <span className="visually-hidden">
-                                            LoadingUpload...
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <SendIcon size="20px" strokeWidth="1.8" />
-                                )}
-                            </button>
+                            <div>
+                                <button
+                                    className="comment_btn ms-1"
+                                    onClick={handleAddComment}
+                                    disabled={!addComment}
+                                >
+                                    {loadingComment ? (
+                                        <div
+                                            className="spinner-border spinner-border-sm text-secondary"
+                                            role="status"
+                                        >
+                                            <span className="visually-hidden">
+                                                LoadingUpload...
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <SendIcon
+                                            size="20px"
+                                            strokeWidth="1.8"
+                                        />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
