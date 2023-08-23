@@ -174,6 +174,8 @@ const App = () => {
                         <Route path="classes" element={<ClassesForHome />} />
                         <Route path="users" element={<UsersForHome />} />
                     </Route>
+                    {/* Class */}
+                    <Route path="class/:id" element={<ClassLayout />} />
                 </Route>
                 {/* user */}
                 <Route element={<UserProtectedRoute />}>
@@ -216,33 +218,39 @@ const App = () => {
                         <Route path="create-set" element={<CreateSet />} />
                         <Route path="edit-set/:id" element={<CreateSet />} />
                         {/* Class */}
-                        <Route path="class/:id" element={<ClassLayout />}>
-                            <Route index element={<Stream />} />
-                            <Route path="sets" element={<Sets />} />
+                        <Route element={<ClassLayout />}>
+                            <Route path="class/:id" element={<Stream />} />
+                            <Route path="class/:id/sets" element={<Sets />} />
                             <Route
-                                path="assignments"
+                                path="class/:id/assignments"
                                 element={<AssignmentList />}
                             />
                             <Route
-                                path="create-assignment"
+                                path="class/:id/create-assignment"
                                 element={<CreateAssignment />}
                             />
                             <Route
-                                path="edit-assignment/:assign_id"
+                                path="class/:id/edit-assignment/:assign_id"
                                 element={<CreateAssignment />}
                             />
-                            <Route path="tests" element={<TestList />} />
                             <Route
-                                path="create-test"
+                                path="class/:id/tests"
+                                element={<TestList />}
+                            />
+                            <Route
+                                path="class/:id/create-test"
                                 element={<CreateTest />}
                             />
                             <Route
-                                path="edit-test/:test_id"
+                                path="class/:id/edit-test/:test_id"
                                 element={<CreateTest />}
                             />
-                            <Route path="people" element={<People />} />
                             <Route
-                                path="statistics"
+                                path="class/:id/people"
+                                element={<People />}
+                            />
+                            <Route
+                                path="class/:id/statistics"
                                 element={<ClassStatistics />}
                             />
                         </Route>

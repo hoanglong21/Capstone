@@ -134,15 +134,11 @@ const ClassList = () => {
     }
 
     useEffect(() => {
-        if (userInfo?.username) {
-            checkEmpty()
-        }
+        checkEmpty()
     }, [userInfo, name])
 
     useEffect(() => {
-        if (userInfo?.username) {
-            fetchData(search ? search : '')
-        }
+        fetchData(search ? search : '')
     }, [userInfo, name, search, type, page, isDesc])
 
     useEffect(() => {
@@ -421,56 +417,59 @@ const ClassList = () => {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="col-1 d-flex flex-row-reverse">
-                                                        <button
-                                                            type="button dropdown-toggle"
-                                                            className="btn btn-customLight"
-                                                            data-bs-toggle="dropdown"
-                                                            aria-expanded="false"
-                                                        >
-                                                            <OptionVerIcon />
-                                                        </button>
-                                                        <ul className="dropdown-menu">
-                                                            <li>
-                                                                <button
-                                                                    className="setPageTerm_btn dropdown-item d-flex align-items-center"
-                                                                    onClick={() => {
-                                                                        setUpdateClass(
-                                                                            classroom
-                                                                        )
-                                                                        setShowEditModal(
-                                                                            true
-                                                                        )
-                                                                    }}
-                                                                >
-                                                                    <EditIcon
-                                                                        size="20px"
-                                                                        className="me-2"
-                                                                    />
-                                                                    Edit
-                                                                </button>
-                                                            </li>
-                                                            <li>
-                                                                <button
-                                                                    className="setPageTerm_btn dropdown-item d-flex align-items-center"
-                                                                    onClick={() => {
-                                                                        setDeleteClass(
-                                                                            classroom
-                                                                        )
-                                                                        setShowDeleteModal(
-                                                                            true
-                                                                        )
-                                                                    }}
-                                                                >
-                                                                    <DeleteSolidIcon
-                                                                        size="20px"
-                                                                        className="me-2"
-                                                                    />
-                                                                    Delete
-                                                                </button>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                    {name ===
+                                                        userInfo?.username && (
+                                                        <div className="col-1 d-flex flex-row-reverse">
+                                                            <button
+                                                                type="button dropdown-toggle"
+                                                                className="btn btn-customLight"
+                                                                data-bs-toggle="dropdown"
+                                                                aria-expanded="false"
+                                                            >
+                                                                <OptionVerIcon />
+                                                            </button>
+                                                            <ul className="dropdown-menu">
+                                                                <li>
+                                                                    <button
+                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                        onClick={() => {
+                                                                            setUpdateClass(
+                                                                                classroom
+                                                                            )
+                                                                            setShowEditModal(
+                                                                                true
+                                                                            )
+                                                                        }}
+                                                                    >
+                                                                        <EditIcon
+                                                                            size="20px"
+                                                                            className="me-2"
+                                                                        />
+                                                                        Edit
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button
+                                                                        className="setPageTerm_btn dropdown-item d-flex align-items-center"
+                                                                        onClick={() => {
+                                                                            setDeleteClass(
+                                                                                classroom
+                                                                            )
+                                                                            setShowDeleteModal(
+                                                                                true
+                                                                            )
+                                                                        }}
+                                                                    >
+                                                                        <DeleteSolidIcon
+                                                                            size="20px"
+                                                                            className="me-2"
+                                                                        />
+                                                                        Delete
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>

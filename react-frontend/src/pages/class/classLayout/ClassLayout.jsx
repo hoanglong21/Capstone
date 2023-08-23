@@ -20,6 +20,7 @@ import {
     ClassIcon,
     DeleteIcon,
     EditIcon,
+    MemberSolidIcon,
     OptionHorIcon,
     ReportIcon,
     StudySetIcon,
@@ -55,20 +56,48 @@ const ClassLayout = () => {
         const fetchData = async () => {
             setLoading(true)
             try {
-                const tempClass = (await ClassService.getClassroomById(id)).data
-                setClassroom(tempClass)
-                const tempHasAccess = (
-                    await ClassService.checkUserClass(id, userInfo.id)
-                ).data
-                setHasAccess(tempHasAccess)
-                if (!tempHasAccess) {
-                    const tempIsWaiting = (
-                        await ClassService.checkUserClassWaiting(
-                            id,
-                            userInfo.id
-                        )
+                var isFilter = false
+                if (userInfo?.id) {
+                    const tempHasAccess = (
+                        await ClassService.checkUserClass(id, userInfo.id)
                     ).data
-                    setIsWaiting(tempIsWaiting)
+                    setHasAccess(tempHasAccess)
+                    if (tempHasAccess) {
+                        isFilter = true
+                    } else {
+                        const tempIsWaiting = (
+                            await ClassService.checkUserClassWaiting(
+                                id,
+                                userInfo.id
+                            )
+                        ).data
+                        setIsWaiting(tempIsWaiting)
+                    }
+                }
+                if (isFilter) {
+                    const tempClass = (await ClassService.getClassroomById(id))
+                        .data
+                    setClassroom(tempClass)
+                } else {
+                    const tempClass = (
+                        await ClassService.getFilterList(
+                            `=${id}`,
+                            '=0',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '=1',
+                            '=1'
+                        )
+                    ).data.list[0]
+                    console.log(tempClass)
+                    setClassroom(tempClass)
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -79,13 +108,12 @@ const ClassLayout = () => {
             }
             setLoading(false)
         }
-        if (userInfo.username) {
-            fetchData()
-        }
+        fetchData()
     }, [userInfo, id])
 
     useEffect(() => {
         if (
+            userInfo?.id &&
             classroom?.id &&
             classroom?._deleted &&
             userInfo?.id !== classroom?.user?.id
@@ -459,20 +487,23 @@ const ClassLayout = () => {
                                 </h6>
                                 <div className="d-flex align-items-center mt-2">
                                     <img
-                                        src={
-                                            classroom?.user?.avatar ||
-                                            defaultAvatar
-                                        }
+                                        src={classroom?.avatar || defaultAvatar}
                                         className="mainClass_authorAvatar"
                                     />
                                     <div className="ms-3">
-                                        {classroom?.user?.username}
+                                        {classroom?.author}
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center mt-2">
                                     <StudySetIcon size="20px" />
                                     <div className="ms-3">
-                                        {classroom?.studySets?.length} sets
+                                        {classroom?.studyset} sets
+                                    </div>
+                                </div>
+                                <div className="d-flex align-items-center mt-2">
+                                    <MemberSolidIcon size="20px" />
+                                    <div className="ms-3">
+                                        {classroom?.member} sets
                                     </div>
                                 </div>
                             </div>
