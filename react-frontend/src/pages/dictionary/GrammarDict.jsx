@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import DictionaryService from '../../services/DictionaryService'
 import GrammarDetail from './GrammarDetail'
 
@@ -13,6 +14,17 @@ const GrammarDict = () => {
     const [loading, setLoading] = useState(true)
     const [showGrammarDetail, setShowGrammarDetail] = useState(false)
 
+    const { userToken } = useSelector((state) => state.auth);
+    const { userLanguage } = useSelector((state) => state.user);
+
+    const { t, i18n } = useTranslation();
+
+    useEffect(() => {
+        if (userToken) {
+        i18n.changeLanguage(userLanguage);
+        }
+    }, [userLanguage]);
+    
     useEffect(() => {
         if (loading === true && document.getElementById('searchDictBtn')) {
             document.getElementById('searchDictBtn').disabled = true
@@ -87,7 +99,7 @@ const GrammarDict = () => {
                 <div className="row mt-4 mb-5">
                     {grammars.length == 0 && (
                         <p className="noFound">
-                            No grammars matching {search} found
+                            {t('noGram')} {search} {t('found')}
                         </p>
                     )}
                     {grammars.map((grammarInfo, index) => (

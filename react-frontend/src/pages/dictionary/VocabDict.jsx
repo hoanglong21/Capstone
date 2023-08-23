@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import DictionaryService from '../../services/DictionaryService'
 import TextToSpeech from '../../components/InputModel/TextToSpeech'
 import './dictionary.css'
@@ -8,7 +9,7 @@ import './dictionary.css'
 const VocabDict = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
-
+    const { userToken } = useSelector((state) => state.auth);
     const [vocabs, setVocabs] = useState([])
     const [word, setWord] = useState({})
     const [activeIndex, setActiveIndex] = useState(0)
@@ -87,6 +88,15 @@ const VocabDict = () => {
         }
         return script
     }
+    const { userLanguage } = useSelector((state) => state.user);
+
+    const { t, i18n } = useTranslation();
+
+    useEffect(() => {
+        if (userToken) {
+        i18n.changeLanguage(userLanguage);
+        }
+    }, [userLanguage]);
 
     useEffect(() => {
         if (loading === true && document.getElementById('searchDictBtn')) {
@@ -298,7 +308,7 @@ const VocabDict = () => {
                         )}
                     </div>
                 ) : (
-                    <p className="noFound">No words matching {search} found</p>
+                    <p className="noFound">{t('noWord')} {search} {t('found')}</p>
                 )}
             </div>
         )
