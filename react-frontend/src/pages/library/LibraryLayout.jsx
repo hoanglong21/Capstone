@@ -25,14 +25,12 @@ const LibraryLayout = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (name != userInfo.username) {
+            if (userInfo?.id || name != userInfo.username) {
                 const tempUser = (await UserService.getUser(name)).data
                 setUser(tempUser)
             }
         }
-        if (userInfo?.id) {
-            fetchData()
-        }
+        fetchData()
     }, [name, userInfo])
 
     return (

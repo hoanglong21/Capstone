@@ -331,9 +331,9 @@ const Header = () => {
                                     data-bs-toggle="dropdown"
                                     aria-expanded="true"
                                 >
-                                <span className="align-middle fw-semibold">
-                                    {t('studySet')}
-                                </span>
+                                    <span className="align-middle fw-semibold">
+                                        {t('studySet')}
+                                    </span>
                                 </a>
                                 <ul
                                     className="submenu dropdown-menu dropdown-submenu dropdown-submenu-left header-dropdown"
@@ -374,7 +374,7 @@ const Header = () => {
                                         onClick={handleAddClass}
                                     >
                                         <span className="align-middle fw-semibold">
-                                        {t('class')}
+                                            {t('class')}
                                         </span>
                                     </button>
                                 </li>
@@ -386,7 +386,7 @@ const Header = () => {
                                     onClick={handleJoinClass}
                                 >
                                     <span className="align-middle fw-semibold">
-                                    {t('joinClass')}
+                                        {t('joinClass')}
                                     </span>
                                 </button>
                             </li>
@@ -416,7 +416,7 @@ const Header = () => {
                                             }}
                                         >
                                             <span className="visually-hidden">
-                                            {t('newAlerts')}
+                                                {t('newAlerts')}
                                             </span>
                                         </span>
                                     )}
@@ -433,13 +433,15 @@ const Header = () => {
                                                 className="notifyEmpty"
                                             />
                                             <span className="notifyFilter_heading mt-2">
-                                            {t('NoNotificationsYet')}
+                                                {t('NoNotificationsYet')}
                                             </span>
                                             <span className="notifyFilter_subtext mt-1">
-                                            {t('Youhavenonotificationrightnow')}
+                                                {t(
+                                                    'Youhavenonotificationrightnow'
+                                                )}
                                             </span>
                                             <span className="notifyFilter_subtext mt-1 mb-2">
-                                            {t('comebacklater')}
+                                                {t('comebacklater')}
                                             </span>
                                         </li>
                                     ) : (
@@ -458,7 +460,7 @@ const Header = () => {
                                                         }
                                                     }}
                                                 >
-                                                   {t('all')}
+                                                    {t('all')}
                                                 </button>
                                                 <button
                                                     className={`notifyFilter_btn ${
@@ -478,7 +480,7 @@ const Header = () => {
                                             </li>
                                             <li className="d-flex align-items-center mb-1">
                                                 <span className="notifyFilter_heading flex-fill">
-                                                {t('earlier')}
+                                                    {t('earlier')}
                                                 </span>
                                                 <a
                                                     className="notifyFilter_link"
@@ -533,7 +535,9 @@ const Header = () => {
                                                                         false && (
                                                                         <span className="badge text-bg-primary p-1 rounded-circle">
                                                                             <span className="visually-hidden">
-                                                                            {t('newAlerts')}
+                                                                                {t(
+                                                                                    'newAlerts'
+                                                                                )}
                                                                             </span>
                                                                         </span>
                                                                     )}
@@ -614,7 +618,7 @@ const Header = () => {
                                             type="button"
                                             onClick={() => {
                                                 navigate(
-                                                    '/library/achievements'
+                                                    `/${userInfo?.username}/achievements`
                                                 )
                                             }}
                                         >
@@ -623,7 +627,7 @@ const Header = () => {
                                                 strokeWidth="1.65"
                                             />
                                             <span className="align-middle fw-semibold">
-                                            {t('achievements')}
+                                                {t('achievements')}
                                             </span>
                                         </button>
                                     </li>
@@ -640,7 +644,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                            {t('settings')}
+                                                {t('settings')}
                                             </span>
                                         </button>
                                     </li>
@@ -657,7 +661,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                            {t('recycleBin')}
+                                                {t('recycleBin')}
                                             </span>
                                         </button>
                                     </li>
@@ -674,7 +678,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                            {t('helpcenter')}
+                                                {t('helpcenter')}
                                             </span>
                                         </button>
                                     </li>
@@ -692,7 +696,7 @@ const Header = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                            {t('logout')}
+                                                {t('logout')}
                                             </span>
                                         </button>
                                     </li>

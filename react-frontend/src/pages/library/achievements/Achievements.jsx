@@ -44,9 +44,7 @@ function Achievements() {
                 }
             }
         }
-        if (userInfo?.id) {
-            fetchData()
-        }
+        fetchData()
     }, [userInfo])
 
     return (
