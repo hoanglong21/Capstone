@@ -822,7 +822,7 @@ const Learn = () => {
                                         className="learnFinish_btn learnFinish_btn--primary"
                                         onClick={handleCreateLearn}
                                     >
-                                        {t('msg21')}
+                                        {t('sagain')}
                                     </button>
                                 </div>
                             </div>
