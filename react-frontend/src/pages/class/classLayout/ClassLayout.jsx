@@ -47,6 +47,7 @@ const ClassLayout = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
     const [showReportModal, setShowReportModal] = useState(false)
+    const [showWarningModal, setShowWarningModal] = useState(false)
 
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
@@ -96,7 +97,6 @@ const ClassLayout = () => {
                             '=1'
                         )
                     ).data.list[0]
-                    console.log(tempClass)
                     setClassroom(tempClass)
                 }
             } catch (error) {
@@ -352,7 +352,13 @@ const ClassLayout = () => {
                                     <button
                                         className="btn btn-outline-primary rounded"
                                         type="button"
-                                        onClick={handleRequest}
+                                        onClick={() => {
+                                            if (userInfo?.id) {
+                                                handleRequest()
+                                            } else {
+                                                setShowWarningModal(true)
+                                            }
+                                        }}
                                     >
                                         Request to join class
                                     </button>
@@ -366,7 +372,7 @@ const ClassLayout = () => {
                                 <ul className="nav mainClass-navLink">
                                     <li>
                                         <NavLink
-                                            to=""
+                                            to={`/class/${id}`}
                                             end
                                             className={
                                                 'mainClass_navlink ' +
@@ -381,7 +387,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="sets"
+                                            to={`/class/${id}/sets`}
                                             end
                                             className={
                                                 'mainClass_navlink ' +
@@ -396,7 +402,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="assignments"
+                                            to={`/class/${id}/assignments`}
                                             className={
                                                 'mainClass_navlink ' +
                                                 (({ isActive }) =>
@@ -410,7 +416,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="tests"
+                                            to={`/class/${id}/tests`}
                                             className={
                                                 'mainClass_navlink ' +
                                                 (({ isActive }) =>
@@ -424,7 +430,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="people"
+                                            to={`/class/${id}/people`}
                                             className={
                                                 'mainClass_navlink ' +
                                                 (({ isActive }) =>
@@ -439,7 +445,7 @@ const ClassLayout = () => {
                                     {userInfo?.id === classroom?.user?.id && (
                                         <li>
                                             <NavLink
-                                                to="statistics"
+                                                to={`/class/${id}/statistics`}
                                                 className={
                                                     'mainClass_navlink ' +
                                                     (({ isActive }) =>
@@ -612,6 +618,40 @@ const ClassLayout = () => {
                     userInfo={userInfo}
                     destination={`class/${id}`}
                 />
+                {/* warning modal */}
+                <Modal
+                    className="mt-5"
+                    show={showWarningModal}
+                    onHide={() => {
+                        setShowWarningModal(false)
+                    }}
+                >
+                    <Modal.Header className="border-0" closeButton>
+                        <Modal.Title>Login Required</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        In order to use this feature, you need to login. Would
+                        you like to login now or later?
+                    </Modal.Body>
+                    <Modal.Footer className="border-0">
+                        <button
+                            className="btn btn-light"
+                            onClick={() => {
+                                setShowWarningModal(false)
+                            }}
+                        >
+                            Later
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                                navigate('/login')
+                            }}
+                        >
+                            Log in now
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }

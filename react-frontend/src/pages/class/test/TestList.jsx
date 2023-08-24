@@ -250,7 +250,7 @@ const TestList = () => {
                                     className="createTest_btn"
                                     disabled={classroom?._deleted}
                                     onClick={() => {
-                                        navigate('../create-test')
+                                        navigate(`/class/${id}/create-test`)
                                     }}
                                 >
                                     <AddIcon
@@ -398,7 +398,7 @@ const TestList = () => {
                                                     className="viewTest_btn"
                                                     onClick={() =>
                                                         navigate(
-                                                            `../test/${test?.id}/details`
+                                                            `/class/${id}/test/${test?.id}/details`
                                                         )
                                                     }
                                                 >
@@ -442,7 +442,7 @@ const TestList = () => {
                                                             className="editTest_btn"
                                                             onClick={() => {
                                                                 navigate(
-                                                                    `../edit-test/${test?.id}`
+                                                                    `/class/${id}/edit-test/${test?.id}`
                                                                 )
                                                             }}
                                                         >

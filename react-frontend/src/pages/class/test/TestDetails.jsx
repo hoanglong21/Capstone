@@ -235,10 +235,19 @@ const TestDetails = () => {
                         <div>
                             Maximum number of attempts: {test?.num_attemps}
                         </div>
-                        {userInfo?.id !== test?.classroom?.user?.id && (
+                        {userInfo?.id !== test?.classroom?.user?.id ? (
                             <div>Number of attempts: {numAttempt || 0}</div>
+                        ) : (
+                            <div>
+                                Duration: {test?.duration || 'No duration'}
+                            </div>
                         )}
                     </div>
+                    {userInfo?.id !== test?.classroom?.user?.id && (
+                        <div className="mb-2 instruction_date">
+                            Duration: {test?.duration || 'No duration'}
+                        </div>
+                    )}
                     <div className="d-flex justify-content-between mb-3 instruction_date">
                         <div>
                             {test?.start_date

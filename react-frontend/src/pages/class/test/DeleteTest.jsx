@@ -27,9 +27,7 @@ const DeleteTest = ({
                 setIsDelete(true)
             }
             setShowDeleteModal(false)
-            if (
-                location.pathname.includes(`/test/${test?.id}/details`)
-            ) {
+            if (location.pathname.includes(`/test/${test?.id}/details`)) {
                 navigate(`/class/${classroom.id}/tests`)
             }
             await deleteFolder(
@@ -66,7 +64,9 @@ const DeleteTest = ({
                 <button
                     type="button"
                     className="btn btn-secondary me-3"
-                    data-bs-dismiss="modal"
+                    onClick={() => {
+                        setShowDeleteModal(false)
+                    }}
                 >
                     Cancel
                 </button>

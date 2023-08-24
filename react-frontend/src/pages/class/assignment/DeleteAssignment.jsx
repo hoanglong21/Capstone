@@ -62,7 +62,9 @@ const DeleteAssignment = ({
                 <button
                     type="button"
                     className="btn btn-secondary me-3"
-                    data-bs-dismiss="modal"
+                    onClick={() => {
+                        setShowDeleteModal(false)
+                    }}
                 >
                     Close
                 </button>
