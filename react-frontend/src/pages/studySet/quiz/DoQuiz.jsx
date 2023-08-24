@@ -595,7 +595,7 @@ const DoQuiz = () => {
         <div className="quizOptions d-flex">
           {isEnd ? (
             <button className="quizOptions_btn" onClick={handleCreateQuiz}>
-              Take a new test
+              {t('take')}
             </button>
           ) : isAllow ? (
             <button
@@ -604,7 +604,7 @@ const DoQuiz = () => {
                 setShowOptionModal(true);
               }}
             >
-              Options
+              {t('option')}
             </button>
           ) : (
             ""
@@ -698,7 +698,7 @@ const DoQuiz = () => {
                     className="offcanvas-title"
                     id="offcanvasQuestionsListLabel"
                   >
-                    Questions List
+                    {t('qlist')}
                   </h5>
                   <button
                     type="button"
@@ -800,14 +800,14 @@ const DoQuiz = () => {
           {/* Submit */}
           <div className="quizSubmit_container d-flex flex-column align-items-center justify-content-center">
             <img src={finishQuizImg} alt="finish quiz image" />
-            <h3>All done! Ready to submit?</h3>
+            <h3>{t('msg30')}?</h3>
             <div>
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={handleCheckSubmit}
               >
-                Submit Quiz
+                {t('submit')}
               </button>
             </div>
           </div>
@@ -822,11 +822,10 @@ const DoQuiz = () => {
             <div className="modal-content">
               <div className="modal-body text-center">
                 <h2 className="modal-title mb-2">
-                  You haven't answered all the questions.
+                {t('msg28')}.
                 </h2>
                 <p className="modal-text">
-                  Would you like to review the skipped questions or submit the
-                  quiz now?
+                {t('msg29')}?
                 </p>
               </div>
               <div className="modal-footer border border-0">
@@ -834,10 +833,10 @@ const DoQuiz = () => {
                   className="btn btn-light me-3"
                   href={`#question${skipAnswer}`}
                 >
-                  Review skipped questions
+                  {t('msg27')}
                 </a>
                 <button className="btn btn-primary" onClick={handleSubmit}>
-                  Submit quiz
+                {t('submit')}
                 </button>
               </div>
             </div>
@@ -845,7 +844,7 @@ const DoQuiz = () => {
         </div>
       ) : (
         <div className="mt-5 text-center">
-          <h4>You must have at least 2 cards to do quiz</h4>
+          <h4>{t('msg26')}</h4>
         </div>
       )}
 
@@ -861,7 +860,7 @@ const DoQuiz = () => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <h3 className="modal-title">Options</h3>
+            <h3 className="modal-title">{t('option')}</h3>
             <button
               type="button"
               className="btn-close"
@@ -879,7 +878,7 @@ const DoQuiz = () => {
               <div className="col-6">
                 {/* num ques */}
                 <div className="quizOptionBlock mb-4">
-                  <legend>QUESTION LIMIT</legend>
+                  <legend>{t('qlimit')}</legend>
                   <div className="mb-2 d-flex align-items-center">
                     <input
                       className="form-control"
@@ -891,17 +890,17 @@ const DoQuiz = () => {
                       }}
                     />
                     <p className="form-check-label m-0">
-                      of{" "}
+                    {t('of')}{" "}
                       {optionIsStar
                         ? numNotStar + numStillStar + numMasterStar
                         : numNot + numStill + numMaster}{" "}
-                      questions
+                      {t('question')}
                     </p>
                   </div>
                 </div>
                 {/* types */}
                 <div className="quizOptionBlock">
-                  <legend>QUESTION TYPES</legend>
+                  <legend>{t('qtypes')}</legend>
                   <div className="mb-2">
                     <input
                       id="written"
@@ -912,7 +911,7 @@ const DoQuiz = () => {
                       onChange={handleChangeQuestionType}
                     />
                     <label className="form-check-label" htmlFor="written">
-                      Written
+                    {t('written')}
                     </label>
                   </div>
                   <div className="mb-2">
@@ -928,7 +927,7 @@ const DoQuiz = () => {
                       className="form-check-label"
                       htmlFor="mupltipleChoice"
                     >
-                      Multiple choice
+                     {t('mc')}
                     </label>
                   </div>
                   <div>
@@ -941,7 +940,7 @@ const DoQuiz = () => {
                       onChange={handleChangeQuestionType}
                     />
                     <label className="form-check-label" htmlFor="trueFalse">
-                      True/False
+                    {t('tf')}
                     </label>
                   </div>
                 </div>
@@ -949,7 +948,7 @@ const DoQuiz = () => {
               <div className="col-6">
                 {/* star */}
                 <div className="quizOptionBlock">
-                  <legend>STAR</legend>
+                  <legend>{t('star')}</legend>
                   <div className="mb-2">
                     <input
                       id="isStar"
@@ -962,13 +961,13 @@ const DoQuiz = () => {
                       disabled={numNotStar + numStillStar + numMasterStar == 0}
                     />
                     <label className="form-check-label" htmlFor="isStar">
-                      Study starred terms only
+                    {t('studyStarred')}
                     </label>
                   </div>
                 </div>
                 {/* picture */}
                 <div className="quizOptionBlock">
-                  <legend>PICTURE</legend>
+                  <legend>{t('picture')}</legend>
                   <div className="mb-2">
                     <input
                       className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -980,13 +979,13 @@ const DoQuiz = () => {
                       }}
                     />
                     <label className="form-check-label" htmlFor="showPicture">
-                      Show picture
+                    {t('show')} {t('picture')}
                     </label>
                   </div>
                 </div>
                 {/* audio */}
                 <div className="quizOptionBlock">
-                  <legend>AUDIO</legend>
+                  <legend>{t('audio')}</legend>
                   <div className="mb-2">
                     <input
                       className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -998,7 +997,7 @@ const DoQuiz = () => {
                       }}
                     />
                     <label className="form-check-label" htmlFor="showAudio">
-                      Show audio
+                    {t('show')} {t('audio')}
                     </label>
                   </div>
                 </div>
@@ -1018,7 +1017,7 @@ const DoQuiz = () => {
                   role="tab"
                   aria-controls="listWritten"
                 >
-                  Written
+                  {t('written')}
                 </a>
               </li>
               <li className="nav-item">
@@ -1032,7 +1031,7 @@ const DoQuiz = () => {
                   role="tab"
                   aria-controls="listMultiple"
                 >
-                  Multiple choice
+                 {t('mc')}
                 </a>
               </li>
               <li className="nav-item">
@@ -1046,7 +1045,7 @@ const DoQuiz = () => {
                   role="tab"
                   aria-controls="listTrueFalse"
                 >
-                  True/False
+                  {t('tf')}
                 </a>
               </li>
             </ul>
@@ -1063,7 +1062,7 @@ const DoQuiz = () => {
                 <div className="row">
                   <div className="col-6">
                     <div className="quizOptionBlock mb-4">
-                      <legend>PROMPT WITH</legend>
+                      <legend>{t('prw')}</legend>
                       {fields?.map((field, index) => (
                         <div className="mb-2" key={index}>
                           {type === 1 ? (
@@ -1124,7 +1123,7 @@ const DoQuiz = () => {
                   </div>
                   <div className="col-6">
                     <div className="quizOptionBlock">
-                      <legend>ANSWER WITH</legend>
+                      <legend>{t('anws')}</legend>
                       {fields?.map((field, index) => (
                         <div className="mb-2" key={index}>
                           <input
@@ -1165,7 +1164,7 @@ const DoQuiz = () => {
                 <div className="row">
                   <div className="col-6">
                     <div className="quizOptionBlock mb-4">
-                      <legend>PROMPT WITH</legend>
+                      <legend>{t('prw')}</legend>
                       {fields?.map((field, index) => (
                         <div className="mb-2" key={index}>
                           {type === 1 ? (
@@ -1226,7 +1225,7 @@ const DoQuiz = () => {
                   </div>
                   <div className="col-6">
                     <div className="quizOptionBlock">
-                      <legend>ANSWER WITH</legend>
+                      <legend>{t('anws')}</legend>
                       {fields?.map((field, index) => (
                         <div className="mb-2" key={index}>
                           {type === 1 ? (
@@ -1299,7 +1298,7 @@ const DoQuiz = () => {
                 <div className="row">
                   <div className="col-6">
                     <div className="quizOptionBlock mb-4">
-                      <legend>PROMPT WITH</legend>
+                      <legend>{t('prw')}</legend>
                       {fields?.map((field, index) => (
                         <div className="mb-2" key={index}>
                           {type === 1 ? (
@@ -1360,7 +1359,7 @@ const DoQuiz = () => {
                   </div>
                   <div className="col-6">
                     <div className="quizOptionBlock">
-                      <legend>ANSWER WITH</legend>
+                      <legend>{t('anws')}</legend>
                       {fields?.map((field, index) => (
                         <div className="mb-2" key={index}>
                           {type === 1 ? (
@@ -1429,7 +1428,7 @@ const DoQuiz = () => {
               className="btn btn-secondary classModalBtn me-3"
               onClick={handleCancelCreateQuiz}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               className="btn btn-primary classModalBtn"

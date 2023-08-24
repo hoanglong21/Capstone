@@ -199,7 +199,7 @@ const VocabCard = ({
                         )}
                     </div>
                     {/* answer */}
-                    <div className="quizQues_label my-4">Your answer</div>
+                    <div className="quizQues_label my-4">{t('yanswer')}</div>
                     <form className="d-flex">
                         <input
                             id={`quizQuesInput${quesIndex}`}
@@ -223,13 +223,13 @@ const VocabCard = ({
                             onClick={handleAnswerWritten}
                             disabled={isCurrentCorrect !== null}
                         >
-                            Answer
+                            {t('answer')}
                         </button>
                     </form>
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                                Correct answer
+                            {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 <div className="row">
@@ -357,7 +357,7 @@ const VocabCard = ({
                         </div>
                     )}
                     {/* answer */}
-                    <div className="quizQues_label my-4">Choose the answer</div>
+                    <div className="quizQues_label my-4">{t('choose')}</div>
                     <div className="row">
                         {ques.answers.map((ans, ansIndex) => (
                             <div
@@ -576,7 +576,7 @@ const VocabCard = ({
                         )}
                     </div>
                     {/* answer */}
-                    <div className="quizQues_label my-4">Choose the answer</div>
+                    <div className="quizQues_label my-4">{t('choose')}</div>
                     <div className="row">
                         <div className="col-6">
                             <div
@@ -592,7 +592,7 @@ const VocabCard = ({
                                 disabled={isCurrentCorrect !== null}
                                 onClick={() => handleAnswerTrueFalse(true)}
                             >
-                                True
+                                {t('true')}
                             </div>
                         </div>
                         <div className="col-6">
@@ -609,14 +609,14 @@ const VocabCard = ({
                                 disabled={isCurrentCorrect !== null}
                                 onClick={() => handleAnswerTrueFalse(false)}
                             >
-                                False
+                                {t('false')}
                             </div>
                         </div>
                     </div>
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                                Correct answer
+                            {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 <div className="row">
@@ -649,7 +649,7 @@ const VocabCard = ({
                                     <div className="col-12 col-md-6 mt-2 mt-md-0">
                                         <div className="learnExampleSection">
                                             <div className="learnExample_label">
-                                            {t('exmple')}
+                                            {t('example')}
                                             </div>
                                             <div
                                                 dangerouslySetInnerHTML={{

@@ -770,7 +770,7 @@ const Flashcard = () => {
               className="quizOptions_btn"
               onClick={handleCreateFlashCards}
             >
-              Study again 
+              {t('sagain')}
             </button>
           ) : (
             <button
@@ -779,7 +779,7 @@ const Flashcard = () => {
                 setShowOptionModal(true);
               }}
             >
-              Options
+              {t('option')}
             </button>
           )}
           <button
@@ -813,7 +813,7 @@ const Flashcard = () => {
         <div id="flashcardAnimation">
           <div className="flashcardEnd mx-auto p-5">
             <div>
-              <h2>Way to go! You’ve reviewed all the cards.</h2>
+              <h2>{t('msg31')}.</h2>
               <img src={illustration} alt="congratulation img" />
             </div>
             <div className="d-flex justify-content-between mt-5">
@@ -822,13 +822,13 @@ const Flashcard = () => {
                 onClick={() => handleEndReset(cards.length - 1)}
               >
                 <ArrowLeftIcon size="1rem" />
-                <span className="ms-2">Back to the last card</span>
+                <span className="ms-2">{t('msg32')}</span>
               </button>
               <button
                 className="flashcardEnd_btn"
                 onClick={() => handleEndReset(0)}
               >
-                <span className="me-2">Learning again</span>
+                <span className="me-2">{t('msg33')}</span>
                 <ArrowRightIcon size="1rem" />
               </button>
             </div>
@@ -902,7 +902,7 @@ const Flashcard = () => {
                     className="btn btn-secondary me-3"
                     onClick={handleCancelProgressModal}
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     className="btn btn-primary"
@@ -966,7 +966,7 @@ const Flashcard = () => {
                       ) : (
                         <div className="d-flex flex-column align-items-center">
                           <ImageIcon className="icon-warning" size="2.5rem" />
-                          <div>Add picture</div>
+                          <div>{t('add')} {t('picture')}</div>
                         </div>
                       )}
                     </label>
@@ -977,7 +977,7 @@ const Flashcard = () => {
                     className="btn btn-secondary me-3"
                     onClick={handleCancelProgressModal}
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     className="btn btn-primary"
@@ -1041,7 +1041,7 @@ const Flashcard = () => {
                       ) : (
                         <div className="d-flex flex-column align-items-center">
                           <MicIcon className="icon-warning" size="1.75rem" />
-                          <div>Add audio</div>
+                          <div>{t('add')} {t('audio')}</div>
                         </div>
                       )}
                     </label>
@@ -1052,7 +1052,7 @@ const Flashcard = () => {
                     className="btn btn-secondary me-3"
                     onClick={handleCancelProgressModal}
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     className="btn btn-primary"
@@ -1132,7 +1132,7 @@ const Flashcard = () => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <h3 className="modal-title">Options</h3>
+            <h3 className="modal-title">{t('option')}</h3>
             <button
               type="button"
               className="btn-close"
@@ -1150,7 +1150,7 @@ const Flashcard = () => {
               <div className="col-6">
                 {/* status */}
                 <div className="quizOptionBlock">
-                  <legend>PROGRESS STATUS</legend>
+                  <legend>{t('pst')}</legend>
                   <div className="mb-2">
                     <input
                       className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -1164,7 +1164,7 @@ const Flashcard = () => {
                       disabled={optionIsStar ? numNotStar == 0 : numNot == 0}
                     />
                     <label className="form-check-label" htmlFor="notStudied">
-                      Not studied
+                    {t('nstudied')}
                     </label>
                   </div>
                   <div className="mb-2">
@@ -1182,7 +1182,7 @@ const Flashcard = () => {
                       }
                     />
                     <label className="form-check-label" htmlFor="stillLearning">
-                      Still learning
+                    {t('still')}
                     </label>
                   </div>
                   <div>
@@ -1198,7 +1198,7 @@ const Flashcard = () => {
                       }
                     />
                     <label className="form-check-label" htmlFor="mastered">
-                      Mastered
+                    {t('master')}
                     </label>
                   </div>
                 </div>
@@ -1206,7 +1206,7 @@ const Flashcard = () => {
               <div className="col-6">
                 {/* star */}
                 <div className="quizOptionBlock">
-                  <legend>STAR</legend>
+                  <legend>{t('star')}</legend>
                   <div className="mb-2">
                     <input
                       className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -1219,7 +1219,7 @@ const Flashcard = () => {
                       disabled={numNotStar + numStillStar + numMasterStar == 0}
                     />
                     <label className="form-check-label" htmlFor="isStar">
-                      Study starred terms only
+                    {t('studyStarred')}
                     </label>
                   </div>
                 </div>
@@ -1232,7 +1232,7 @@ const Flashcard = () => {
               className="btn btn-secondary classModalBtn me-3"
               onClick={handleCancelCreateFlashcards}
             >
-              Cancel
+              {t('cancel')}
             </button>
             <button
               className="btn btn-primary classModalBtn"
@@ -1268,7 +1268,7 @@ const Flashcard = () => {
           <Toast.Body className="d-flex flex-column p-3">
             <div className="d-flex justify-content-between">
               <span className="me-auto">
-                Auto-play cards is {isAuto ? "on" : "off"}.
+              {t('msg34')} {isAuto ? "on" : "off"}.
               </span>
               <button
                 id="autoPlayToastClose"

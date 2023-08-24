@@ -214,7 +214,7 @@ const KanjiCard = ({
                         )}
                     </div>
                     {/* answer */}
-                    <div className="quizQues_label my-4">Your answer</div>
+                    <div className="quizQues_label my-4">{t('yanswer')}</div>
                     <form className="d-flex">
                         <input
                             id={`quizQuesInput${quesIndex}`}
@@ -237,13 +237,13 @@ const KanjiCard = ({
                             onClick={handleAnswerWritten}
                             disabled={isCurrentCorrect !== null}
                         >
-                            Answer
+                            {t('answer')}
                         </button>
                     </form>
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                                Correct answer
+                            {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct">
                                 <div
@@ -377,7 +377,7 @@ const KanjiCard = ({
                         </div>
                     )}
                     {/* answer */}
-                    <div className="quizQues_label my-4">Choose the answer</div>
+                    <div className="quizQues_label my-4">{t('choose')}</div>
                     <div className="row">
                         {ques.answers.map((ans, ansIndex) => (
                             <div key={ansIndex} className="col-12 mb-3">
@@ -635,7 +635,7 @@ const KanjiCard = ({
                         )}
                     </div>
                     {/* answer */}
-                    <div className="quizQues_label my-4">Choose the answer</div>
+                    <div className="quizQues_label my-4">{t('choose')}</div>
                     <div className="row">
                         <div className="col-6">
                             <div
@@ -651,7 +651,7 @@ const KanjiCard = ({
                                 disabled={isCurrentCorrect !== null}
                                 onClick={() => handleAnswerTrueFalse(true)}
                             >
-                                True
+                                {t('true')}
                             </div>
                         </div>
                         <div className="col-6">
@@ -668,14 +668,14 @@ const KanjiCard = ({
                                 disabled={isCurrentCorrect !== null}
                                 onClick={() => handleAnswerTrueFalse(false)}
                             >
-                                False
+                                {t('false')}
                             </div>
                         </div>
                     </div>
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                                Correct answer
+                            {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 {ques.question.content.map(
