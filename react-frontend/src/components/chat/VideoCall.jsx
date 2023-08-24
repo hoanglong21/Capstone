@@ -110,50 +110,56 @@ const VideoCall = () => {
         const getData = ref(database, 'messages/')
 
         onChildRemoved(getData, (data) => {
-            alert('Sorry, the person you called is unavailable, turn off')
-            if(alert) {
+            // alert('Sorry, the person you called is unavailable, turn off')
+            // if(alert) {
                 window.close()
-            }
+            // }
         })
     }, [])
 
     let webcamButtonClick = async () => {
-        setLoadingSender(true)
-        localStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true,
-        })
-        remoteStream = new MediaStream()
-
-        // Push tracks from local stream to peer connection
-        localStream.getTracks().forEach((track) => {
-            pc.addTrack(track, localStream)
-        })
-
-        // Pull tracks from remote stream, add to video stream
-        pc.ontrack = (event) => {
-            //Add a bit - if
-            if (remoteStream != null) {
-                setIsWaiting(false)
-                event.streams[0].getTracks().forEach((track) => {
-                    remoteStream.addTrack(track)
-                })
+        try {
+            setLoadingSender(true)
+            localStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true,
+            })
+            remoteStream = new MediaStream()
+    
+            // Push tracks from local stream to peer connection
+            localStream.getTracks().forEach((track) => {
+                pc.addTrack(track, localStream)
+            })
+    
+            // Pull tracks from remote stream, add to video stream
+            pc.ontrack = (event) => {
+                //Add a bit - if
+                if (remoteStream != null) {
+                    setIsWaiting(false)
+                    event.streams[0].getTracks().forEach((track) => {
+                        remoteStream.addTrack(track)
+                    })
+                }
             }
+    
+            document.getElementById('webcamVideo').srcObject = localStream
+            document.getElementById('remoteVideo').srcObject = remoteStream
+            setLoadingSender(false)
+    
+            // After run all
+            const accepted = searchParams.get('accepted')
+            if (accepted == 'true') {
+                answerButtonClick()
+            } else if (accepted == 'false') {
+                answerButtonClick()
+            } else {
+                callButtonClick()
+            }
+        } catch (err) {
+            alert("Please allow your device")
+            window.close()
         }
-
-        document.getElementById('webcamVideo').srcObject = localStream
-        document.getElementById('remoteVideo').srcObject = remoteStream
-        setLoadingSender(false)
-
-        // After run all
-        const accepted = searchParams.get('accepted')
-        if (accepted == 'true') {
-            answerButtonClick()
-        } else if (accepted == 'false') {
-            answerButtonClick()
-        } else {
-            callButtonClick()
-        }
+        
     }
 
     let callButtonClick = async () => {
@@ -303,8 +309,15 @@ const VideoCall = () => {
     }
 
     let hangupButtonClick = () => {
-        const paramValue = searchParams.get('param')
-        deleteMessage(paramValue)
+        try {
+            const paramValue = searchParams.get('video')
+            if(paramValue!=null) {
+                deleteMessage(paramValue)
+            }
+        } catch(err) {
+            
+        }
+        
         // console.log("hangup")
         //  const videoEndMessage = document.getElementById('videoEndMessage');
         //   videoEndMessage.style.display = 'block';
