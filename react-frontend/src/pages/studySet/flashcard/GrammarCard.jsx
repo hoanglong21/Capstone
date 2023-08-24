@@ -8,6 +8,8 @@ import {
     MicIconSolid,
     StarSolidIcon,
 } from '../../../components/icons'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const GrammarCard = ({
     userInfo,
@@ -31,7 +33,15 @@ const GrammarCard = ({
     const [explanation, setExplanation] = useState(null)
     const [note, setNote] = useState(null)
     const [structure, setStructure] = useState(null)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -239,7 +249,7 @@ const GrammarCard = ({
                             {structure && (
                                 <div className="col-12 col-xl-6 mb-3">
                                     <div className="flashCardField_label mb-2">
-                                        Structure
+                                    {t('structure')}
                                     </div>
                                     <div
                                         className="flashCardField_content"
@@ -252,7 +262,7 @@ const GrammarCard = ({
                             {jlptLevel && (
                                 <div className="col-12 col-xl mb-3">
                                     <div className="flashCardField_label mb-2">
-                                        JLPT Level
+                                    {t('level')}
                                     </div>
                                     <div
                                         className="flashCardField_content"
@@ -265,7 +275,7 @@ const GrammarCard = ({
                             {meaning && (
                                 <div className="col-12 col-xl-6 mb-3">
                                     <div className="flashCardField_label mb-2">
-                                        Meaning
+                                    {t('meaning')}
                                     </div>
                                     <div
                                         className="flashCardField_content"
@@ -278,7 +288,7 @@ const GrammarCard = ({
                             {example && (
                                 <div className="col-12 col-xl-6 mb-3">
                                     <div className="flashCardField_label mb-2">
-                                        Example
+                                    {t('example')}
                                     </div>
                                     <div
                                         className="flashCardField_content"
@@ -291,7 +301,7 @@ const GrammarCard = ({
                             {explanation && (
                                 <div className="col-12 col-xl-6 mb-3">
                                     <div className="flashCardField_label mb-2">
-                                        Explanation
+                                    {t('explanation')}
                                     </div>
                                     <div
                                         className="flashCardField_content"
@@ -305,7 +315,7 @@ const GrammarCard = ({
                             {note && (
                                 <div className="col-12 col-xl mb-3">
                                     <div className="flashCardField_label mb-2">
-                                        Note
+                                    {t('note')}
                                     </div>
                                     <div
                                         className="flashCardField_content"
@@ -358,7 +368,7 @@ const GrammarCard = ({
                                         aria-expanded="false"
                                         aria-controls="progressNote"
                                     >
-                                        <span>Note</span>
+                                        <span>{t('note')}</span>
                                     </button>
                                 </h2>
                                 <div

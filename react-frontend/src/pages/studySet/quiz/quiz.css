@@ -27,6 +27,8 @@
     letter-spacing: normal;
     line-height: 1.5;
     font-weight: 600;
+    padding: 0.5rem;
+    border-radius: 5px;
 }
 
 .quizMode:hover {
