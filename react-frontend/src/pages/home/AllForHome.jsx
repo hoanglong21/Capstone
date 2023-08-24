@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+
 import StudySetService from '../../services/StudySetService'
 import ClassService from '../../services/ClassService'
 import UserService from '../../services/UserService'
-import { useSelector } from 'react-redux'
+
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import banned from '../../assets/images/banned.png'
 import verified from '../../assets/images/verified.png'
@@ -16,7 +18,9 @@ function AllForHome() {
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
-
+    
+    const { t, i18n } = useTranslation()
+    
     const [sets, setSets] = useState([])
     const [classes, setClasses] = useState([])
     const [users, setUsers] = useState([])
@@ -27,7 +31,7 @@ function AllForHome() {
     const [loadingUsers, setLoadingUsers] = useState(true)
     const { userLanguage } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
+
     const fetchSetsData = async (searchKey) => {
         setLoadingSets(true)
         try {

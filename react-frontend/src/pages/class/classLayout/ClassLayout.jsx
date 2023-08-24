@@ -5,6 +5,8 @@ import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 
 import ClassService from '../../../services/ClassService'
 import ClassLearnerService from '../../../services/ClassLearnerService'
@@ -14,6 +16,10 @@ import UpdateClass from '../UpdateClass'
 import DeleteClass from '../DeleteClass'
 import AssignSets from '../AssignSets'
 import Report from '../../../components/report/Report'
+
+import banned from '../../../assets/images/banned.png'
+import verified from '../../../assets/images/verified.png'
+import deleted from '../../../assets/images/deleted.png'
 
 import {
     AddCircleIcon,
@@ -31,6 +37,8 @@ import './classLayout.css'
 
 const ClassLayout = () => {
     const navigate = useNavigate()
+
+    const { t, i18n } = useTranslation()
 
     const { userInfo } = useSelector((state) => state.user)
 
@@ -336,7 +344,9 @@ const ClassLayout = () => {
                                     )}
                                 </ul>
                             </div>
-                        ) : classroom?._deleted ? (
+                        ) : classroom?._deleted ||
+                          classroom?.authorstatus === 'banned' ||
+                          classroom?.authorstatus === 'deleted' ? (
                             ''
                         ) : (
                             <div>
@@ -468,7 +478,18 @@ const ClassLayout = () => {
                         </div>
                     ) : (
                         <div className="row request-mt-5">
-                            {isWaiting ? (
+                            {classroom?.authorstatus === 'banned' ||
+                            classroom?.authorstatus === 'deleted' ? (
+                                <div className="request-col-8 text-center">
+                                    <h3 className="mainClass_infoTitle">
+                                        Sorry you cannot join this class.
+                                    </h3>
+                                    <p>
+                                        The tutor of this class has been{' '}
+                                        {classroom.authorstatus}.
+                                    </p>
+                                </div>
+                            ) : isWaiting ? (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
                                         Your request to join this class has been
@@ -499,6 +520,51 @@ const ClassLayout = () => {
                                     <div className="ms-3">
                                         {classroom?.author}
                                     </div>
+                                    {classroom?.authorstatus === 'banned' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg9')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                src={banned}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
+                                    {classroom?.authorstatus === 'active' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg8')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag"
+                                                src={verified}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
+                                    {classroom?.authorstatus === 'deleted' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg7')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag"
+                                                src={deleted}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
                                 </div>
                                 <div className="d-flex align-items-center mt-2">
                                     <StudySetIcon size="20px" />
