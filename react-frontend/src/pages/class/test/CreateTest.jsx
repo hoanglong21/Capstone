@@ -303,15 +303,20 @@ const CreateTest = () => {
             )
             return
         }
-        if (new Date(test.created_date) > new Date(test.due_date)) {
-            setError(
-                `Due date must be after ${test.created_date.replace('T', ' ')}`
-            )
-            return
-        }
-        if (new Date(test.start_date) > new Date(test.due_date)) {
-            setError('Due date must be after start date')
-            return
+        if (test.due_date) {
+            if (new Date(test.created_date) > new Date(test.due_date)) {
+                setError(
+                    `Due date must be after ${test.created_date.replace(
+                        'T',
+                        ' '
+                    )}`
+                )
+                return
+            }
+            if (new Date(test.start_date) > new Date(test.due_date)) {
+                setError('Due date must be after start date')
+                return
+            }
         }
         setSaving(true)
         try {

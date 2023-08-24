@@ -205,18 +205,25 @@ function CreateAssignment() {
             )
             return
         }
-        if (new Date(assignment.created_date) > new Date(assignment.due_date)) {
-            setError(
-                `Due date must be after ${assignment.created_date.replace(
-                    'T',
-                    ' '
-                )}`
-            )
-            return
-        }
-        if (new Date(assignment.start_date) > new Date(assignment.due_date)) {
-            setError('Due date must be after start date')
-            return
+        if (assignment?.due_date) {
+            if (
+                new Date(assignment.created_date) >
+                new Date(assignment.due_date)
+            ) {
+                setError(
+                    `Due date must be after ${assignment.created_date.replace(
+                        'T',
+                        ' '
+                    )}`
+                )
+                return
+            }
+            if (
+                new Date(assignment.start_date) > new Date(assignment.due_date)
+            ) {
+                setError('Due date must be after start date')
+                return
+            }
         }
         setSaving(true)
         try {
@@ -421,7 +428,7 @@ function CreateAssignment() {
                         className="postUpload"
                         onChange={handleUploadFile}
                     />
-                    <button disabled={loadingUploadFile}>
+                    <button className="btn p-0" disabled={loadingUploadFile}>
                         <label
                             htmlFor="uploadPostFile"
                             className="postUploadButton p-2 rounded-circle d-flex align-items-center justify-content-center"
