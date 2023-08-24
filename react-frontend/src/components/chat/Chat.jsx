@@ -161,6 +161,10 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
     // TODO when done add to backend all of key
     function openVideoChat() {
         const myParameter = receiverUser.username
+        if(isUsernameMatch(myParameter)) {
+            alert(myParameter + " in another call. Try later.")
+            return;
+        }
         // const url = 'http://localhost:3000/videochat?param=' + AES.encrypt(myParameter, key).toString();
         const url =
             `${process.env.REACT_APP_HOST_FRONTEND}/video-call?param=` +
@@ -176,6 +180,12 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
             myWindow.focus()
         }
     }
+
+    const isUsernameMatch = (input) => {
+        return messages.some((message) => {
+          return message.sender === input || message.receiver === input;
+        });
+      };
 
     const handleSelect = (user) => {
         setShowNew(false)
