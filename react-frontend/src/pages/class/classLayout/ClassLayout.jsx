@@ -59,6 +59,8 @@ const ClassLayout = () => {
 
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
 
     // fetch data
     useEffect(() => {
@@ -133,6 +135,12 @@ const ClassLayout = () => {
             navigate('/')
         }
     }, [classroom])
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     const handleRequest = async () => {
         try {
@@ -609,19 +617,15 @@ const ClassLayout = () => {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title className="px-3">
-                            <h4 className="modal-title">
-                                Unenroll from this class?
-                            </h4>
+                            <h4 className="modal-title">{t('unroll')}?</h4>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body className="p-4">
                         <div className="classUnenrollModalHeading mb-3">
                             {classroom?.class_name}
                         </div>
-                        <p>You are about to unenroll from this class.</p>
-                        <p className="fw-semibold">
-                            Are you sure? This cannot be undone.
-                        </p>
+                        <p>{t('msg67')}.</p>
+                        <p className="fw-semibold">{t('msg68')}.</p>
                     </Modal.Body>
                     <Modal.Footer>
                         <button
@@ -631,7 +635,7 @@ const ClassLayout = () => {
                                 setShowUnenrollModal(false)
                             }}
                         >
-                            Close
+                            {t('close')}
                         </button>
                         <button
                             className="btn btn-danger classUnenrollModalBtn"
@@ -697,12 +701,9 @@ const ClassLayout = () => {
                     }}
                 >
                     <Modal.Header className="border-0" closeButton>
-                        <Modal.Title>Login Required</Modal.Title>
+                        <Modal.Title>{t('msg35')}</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
-                        In order to use this feature, you need to login. Would
-                        you like to login now or later?
-                    </Modal.Body>
+                    <Modal.Body>{t('msg36')}?</Modal.Body>
                     <Modal.Footer className="border-0">
                         <button
                             className="btn btn-light"
@@ -710,7 +711,7 @@ const ClassLayout = () => {
                                 setShowWarningModal(false)
                             }}
                         >
-                            Later
+                            {t('later')}
                         </button>
                         <button
                             className="btn btn-primary"
@@ -718,7 +719,7 @@ const ClassLayout = () => {
                                 navigate('/login')
                             }}
                         >
-                            Log in now
+                            {t('msg37')}
                         </button>
                     </Modal.Footer>
                 </Modal>

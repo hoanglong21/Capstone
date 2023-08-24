@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ClassService from "../../services/ClassService";
 import ReactApexChart from "react-apexcharts";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 function ClassStatistics() {
   const { id } = useParams();
@@ -173,6 +175,16 @@ function ClassStatistics() {
       data: postGrowth,
     },
   ];
+
+  const { userLanguage } = useSelector((state) => state.user);
+  const { userToken } = useSelector((state) => state.auth);
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
   
   return (
     <div>
@@ -183,7 +195,7 @@ function ClassStatistics() {
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
                           <div className="fw-bold text-white text-uppercase mb-1">
-                            Member's Joined
+                          {t('memJoin')}
                           </div>
                           <div className="h5 mb-0 fw-bold text-white">
                             {classLearnerJoined}
@@ -202,7 +214,7 @@ function ClassStatistics() {
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
                           <div className="fw-bold text-white text-uppercase mb-1">
-                            Number of assignments
+                          {t('numAss')}
                           </div>
                           <div className="h5 mb-0 fw-bold text-white">
                             {classAssignment}
@@ -221,7 +233,7 @@ function ClassStatistics() {
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
                           <div className="fw-bold text-white text-uppercase mb-1">
-                            Number of tests
+                            {t('numTest')}
                           </div>
                           <div className="h5 mb-0 fw-bold text-white">
                             {classTest}
@@ -240,7 +252,7 @@ function ClassStatistics() {
                   <div className="card shadow mb-4">
                     <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                       <h6 className="m-0 fw-bold text-uppercase text-primary">
-                        number of posts per week
+                      {t('numPost')}
                       </h6>
                     </div>
                     <div className="card-body">
@@ -257,7 +269,7 @@ function ClassStatistics() {
                   <div className="card shadow mb-4">
                     <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                       <h6 className="m-0 fw-bold text-uppercase text-primary">
-                        number of learners join class by month
+                      {t('numLearner')}
                       </h6>
                     </div>
                     <div className="card-body">

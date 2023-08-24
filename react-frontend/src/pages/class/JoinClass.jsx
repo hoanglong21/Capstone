@@ -7,6 +7,7 @@ import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import HistoryService from '../../services/HistoryService'
+import { useTranslation } from 'react-i18next'
 
 const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
     const navigate = useNavigate()
@@ -16,7 +17,16 @@ const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
     const [classCode, setClassCode] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
+    
     useEffect(() => {
         if (showJoinModal === false) {
             setClassCode('')
@@ -74,7 +84,7 @@ const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
             <Modal.Header closeButton>
                 <Modal.Title>
                     <h4 className="modal-title editClassModalTitle">
-                        Join class
+                    {t('joinClass')}
                     </h4>
                 </Modal.Title>
             </Modal.Header>
@@ -104,7 +114,7 @@ const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
                             }}
                             required
                         />
-                        <label htmlFor="classCode">Class code</label>
+                        <label htmlFor="classCode">{t('classCode')}</label>
                     </div>
                 </form>
             </Modal.Body>
