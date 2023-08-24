@@ -14,16 +14,26 @@ import streak from '../../../assets/achievements/streak.svg'
 import setStudied from '../../../assets/achievements/badge-SetsStudied.svg'
 import member from '../../../assets/achievements/badge-Week.svg'
 import './achievement.css'
+import { useTranslation } from 'react-i18next'
 
 function Achievements() {
     const { name } = useParams()
     const { userInfo } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth);
 
     const [awards, setAwards] = useState([])
     const [streaks, setStreaks] = useState([])
     const [roundStudied, setRoundStudied] = useState([])
     const [classes, setClasses] = useState([])
+    const { userLanguage } = useSelector((state) => state.user);
 
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -51,12 +61,12 @@ function Achievements() {
         <div className="my-5">
             <div className="row gx-3 mb-5">
                 <div className="col-xl-12 col-lg-12">
-                    <h4 className="achievement_title mb-3">Studying</h4>
+                    <h4 className="achievement_title mb-3">{t('studying')}</h4>
                     <div className="card achievement_section">
                         <div className="card-body achievement">
                             {awards?.length === 0 ? (
                                 <div className="empty">
-                                    You don't have any achievements yet.
+                                    {t('anyAchieve')}.
                                 </div>
                             ) : (
                                 awards?.map((item, index) => {
@@ -78,7 +88,7 @@ function Achievements() {
                                                                 className="img1"
                                                             />
                                                         </div>
-                                                        Active learner
+                                                        {t('activeLearner')}
                                                         <span className="streak-date">
                                                             24 tháng 3, 2023
                                                         </span>
@@ -102,7 +112,7 @@ function Achievements() {
                                                                 className="img1"
                                                             />
                                                         </div>
-                                                        Committed learner
+                                                        {t('commitLearner')}
                                                         <span className="streak-date">
                                                             24 tháng 3, 2023
                                                         </span>
@@ -124,7 +134,7 @@ function Achievements() {
                                                                 className="img1"
                                                             />
                                                         </div>
-                                                        Night owl
+                                                        {t('owl')}
                                                         <span className="streak-date">
                                                             24 tháng 3, 2023
                                                         </span>
@@ -146,7 +156,7 @@ function Achievements() {
                                                                 className="img1"
                                                             />
                                                         </div>
-                                                        Early bird
+                                                        {t('bird')}
                                                         <span className="streak-date">
                                                             24 tháng 3, 2023
                                                         </span>
@@ -170,7 +180,7 @@ function Achievements() {
                                                                 className="img1"
                                                             />
                                                         </div>
-                                                        Test acer
+                                                        {t('testAcer')}
                                                         <span className="streak-date">
                                                             24 tháng 3, 2023
                                                         </span>
@@ -194,7 +204,7 @@ function Achievements() {
                                                                 className="img1"
                                                             />
                                                         </div>
-                                                        Set builder
+                                                        {t('builder')}
                                                         <span className="streak-date">
                                                             24 tháng 3, 2023
                                                         </span>
@@ -212,12 +222,12 @@ function Achievements() {
             </div>
             <div className="row gx-3 mb-5">
                 <div className="col-xl-12 col-lg-12">
-                    <h4 className="achievement_title mb-3">Streaks</h4>
+                    <h4 className="achievement_title mb-3">{t('streaks')}</h4>
                     <div className="card achievement_section">
                         <div className="card-body achievement">
                             {streaks?.length === 0 ? (
                                 <div className="empty">
-                                    You don't have any achievements yet.
+                                    {t('anyAchieve')}.
                                 </div>
                             ) : (
                                 streaks?.map((item, index) => (
@@ -250,12 +260,12 @@ function Achievements() {
             </div>
             <div className="row gx-3 mb-5">
                 <div className="col-xl-12 col-lg-12">
-                    <h4 className="achievement_title mb-3">Rounds studied</h4>
+                    <h4 className="achievement_title mb-3">{t('round')}</h4>
                     <div className="card achievement_section">
                         <div className="card-body achievement">
                             {roundStudied?.length === 0 ? (
                                 <div className="empty">
-                                    You don't have any achievements yet.
+                                    {t('anyAchieve')}.
                                 </div>
                             ) : (
                                 roundStudied?.map((item, index) => (
@@ -288,12 +298,12 @@ function Achievements() {
             </div>
             <div className="row gx-3 mb-5">
                 <div className="col-xl-12 col-lg-12">
-                    <h4 className="achievement_title mb-3">Member</h4>
+                    <h4 className="achievement_title mb-3">{t('member')}</h4>
                     <div className="card achievement_section mb-5">
                         <div className="card-body achievement">
                             {classes?.length === 0 ? (
                                 <div className="empty">
-                                    You don't have any achievements yet.
+                                    {t('anyAchieve')}.
                                 </div>
                             ) : (
                                 classes?.map((item, index) => (
