@@ -291,15 +291,15 @@ const AssignToClass = ({
                 ) : assignClass.length > 0 || notAssignClass.length > 0 ? (
                   <div>{t('msg14')}.</div>
                 ) : (
-                  <div>You don't have any class to assign.</div>
+                  <div>{t('msg15')}.</div>
                 )}
               </Tab>
             </Tabs>
           </div>
         ) : (
           <div>
-            <h5>This is a private study set</h5>
-            <p>Change this set to public so it's assignable to the class.</p>
+            <h5>{t('msg16')}</h5>
+            <p>{t('msg17')}.</p>
           </div>
         )}
       </Modal.Body>
