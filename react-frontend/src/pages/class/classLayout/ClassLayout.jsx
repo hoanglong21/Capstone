@@ -97,7 +97,6 @@ const ClassLayout = () => {
                             '=1'
                         )
                     ).data.list[0]
-                    console.log(tempClass)
                     setClassroom(tempClass)
                 }
             } catch (error) {
@@ -373,7 +372,7 @@ const ClassLayout = () => {
                                 <ul className="nav mainClass-navLink">
                                     <li>
                                         <NavLink
-                                            to=""
+                                            to={`/class/${id}`}
                                             end
                                             className={
                                                 'mainClass_navlink ' +
@@ -388,7 +387,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="sets"
+                                            to={`/class/${id}/sets`}
                                             end
                                             className={
                                                 'mainClass_navlink ' +
@@ -403,7 +402,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="assignments"
+                                            to={`/class/${id}/assignments`}
                                             className={
                                                 'mainClass_navlink ' +
                                                 (({ isActive }) =>
@@ -417,7 +416,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="tests"
+                                            to={`/class/${id}/tests`}
                                             className={
                                                 'mainClass_navlink ' +
                                                 (({ isActive }) =>
@@ -431,7 +430,7 @@ const ClassLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="people"
+                                            to={`/class/${id}/people`}
                                             className={
                                                 'mainClass_navlink ' +
                                                 (({ isActive }) =>
@@ -446,7 +445,7 @@ const ClassLayout = () => {
                                     {userInfo?.id === classroom?.user?.id && (
                                         <li>
                                             <NavLink
-                                                to="statistics"
+                                                to={`/class/${id}/statistics`}
                                                 className={
                                                     'mainClass_navlink ' +
                                                     (({ isActive }) =>

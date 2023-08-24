@@ -175,7 +175,9 @@ const App = () => {
                         <Route path="users" element={<UsersForHome />} />
                     </Route>
                     {/* Class */}
-                    <Route path="class/:id" element={<ClassLayout />} />
+                    <Route path="class/:id" element={<ClassLayout />}>
+                        <Route index element={<Stream />} />
+                    </Route>
                 </Route>
                 {/* No header + footer */}
                 {/* Auth */}
@@ -225,7 +227,6 @@ const App = () => {
                         <Route path="edit-set/:id" element={<CreateSet />} />
                         {/* Class */}
                         <Route element={<ClassLayout />}>
-                            <Route path="class/:id" element={<Stream />} />
                             <Route path="class/:id/sets" element={<Sets />} />
                             <Route
                                 path="class/:id/assignments"

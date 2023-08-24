@@ -148,6 +148,7 @@ const Stream = () => {
                 }
             }
         }
+        console.log(userInfo)
         if (userInfo?.id) {
             setLoading(true)
             fetchData()
