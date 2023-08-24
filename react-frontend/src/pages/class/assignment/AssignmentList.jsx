@@ -8,7 +8,6 @@ import ClassService from '../../../services/ClassService'
 import DeleteAssignment from './DeleteAssignment'
 
 import {
-    AccountIcon,
     AddIcon,
     ArrowSmallDownIcon,
     ArrowSmallUpIcon,
