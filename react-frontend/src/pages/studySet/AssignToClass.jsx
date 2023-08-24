@@ -167,7 +167,7 @@ const AssignToClass = ({
     >
       <Modal.Header closeButton className="border-0 pt-4 pb-3 ps-5 pe-4">
         <Modal.Title id="example-modal-sizes-title-lg">
-          Add to a class
+        {t('addClass')}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="px-5">
@@ -247,11 +247,11 @@ const AssignToClass = ({
                     />
                   </div>
                 ) : search ? (
-                  <div>No matching found.</div>
+                  <div>{t('noMatch')}.</div>
                 ) : assignClass.length > 0 || notAssignClass.length > 0 ? (
-                  <div>This set has not been assigned to any class.</div>
+                  <div>{t('msg12')}.</div>
                 ) : (
-                  <div>You don't have any class to unassign.</div>
+                  <div>{t('msg13')}.</div>
                 )}
               </Tab>
               <Tab eventKey="notAssigned" title="Not assigned">
@@ -287,9 +287,9 @@ const AssignToClass = ({
                     />
                   </div>
                 ) : search ? (
-                  <div>No matching found.</div>
+                  <div>{t('noMatch')}.</div>
                 ) : assignClass.length > 0 || notAssignClass.length > 0 ? (
-                  <div>This set has been assigned to all your classes.</div>
+                  <div>{t('msg14')}.</div>
                 ) : (
                   <div>You don't have any class to assign.</div>
                 )}
