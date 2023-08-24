@@ -8,6 +8,8 @@ import {
     MicIconSolid,
     StarSolidIcon,
 } from '../../../components/icons'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const VocabCard = ({
     userInfo,
@@ -25,7 +27,16 @@ const VocabCard = ({
     const [card, setCard] = useState({})
     const [contents, setContents] = useState([])
     const [progress, setProgress] = useState({})
+    
+  const { userLanguage } = useSelector((state) => state.user);
+  const { userToken } = useSelector((state) => state.auth);
+  const { t, i18n } = useTranslation();
 
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -268,7 +279,7 @@ const VocabCard = ({
                                         aria-expanded="false"
                                         aria-controls="progressNote"
                                     >
-                                        <span>Note</span>
+                                        <span>{t('note')}</span>
                                     </button>
                                 </h2>
                                 <div

@@ -14,6 +14,8 @@ import {
 import NoteEditor from '../../../components/textEditor/NoteEditor'
 import ProgressService from '../../../services/ProgressService'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const ViewCard = ({ fullCard, userInfo }) => {
     const [card, setCard] = useState({})
@@ -33,6 +35,15 @@ const ViewCard = ({ fullCard, userInfo }) => {
 
     const [showButton, setShowButton] = useState(false)
     const [loading, setLoading] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { userToken } = useSelector((state) => state.auth);
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -249,7 +260,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
 
     return (
         <div
-            className="setPageTerm mb-3"
+            className="setPageTerm pe-1 mb-3"
             onMouseEnter={() => {
                 setShowButton(true)
             }}
@@ -286,7 +297,9 @@ const ViewCard = ({ fullCard, userInfo }) => {
                             ></div>
                         </div>
                         <div className="setPageTerm_imageWrap d-flex align-items-center">
-                            {card.picture && <img src={card?.picture} />}
+                            {(card?.picture || progress?.picture) && (
+                                <img src={card?.picture || progress?.picture} />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -314,7 +327,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                 onClick={handleChangeStar}
                             >
                                 <StarSolidIcon size="20px" className="me-2" />
-                                Star
+                                {t('star')}
                             </button>
                         </li>
                         {/* picture */}
@@ -326,7 +339,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                 }}
                             >
                                 <ImageSolidIcon size="20px" className="me-2" />
-                                Picture
+                                {t('picture')}
                             </button>
                         </li>
                         {/* audio */}
@@ -338,7 +351,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                 }}
                             >
                                 <MicIconSolid size="20px" className="me-2" />
-                                Audio
+                                {t('audio')}
                             </button>
                         </li>
                         {/* note */}
@@ -350,7 +363,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                 }}
                             >
                                 <NoteSolidIcon size="20px" className="me-2" />
-                                Note
+                                {t('note')}
                             </button>
                         </li>
                     </ul>
@@ -359,7 +372,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                         <div className="setPage_editCardModal setPage_noteModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancel}
                                 >
                                     <CloseIcon size="1.875rem" />
@@ -377,7 +390,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                         className="btn btn-secondary me-3"
                                         onClick={handleCancel}
                                     >
-                                        Cancel
+                                        {t('cancel')}
                                     </button>
                                     <button
                                         className="btn btn-primary"
@@ -395,7 +408,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                         <div className="setPage_editCardModal setPage_pictureModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancel}
                                 >
                                     <CloseIcon size="1.875rem" />
@@ -448,7 +461,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                                         className="icon-warning"
                                                         size="2.5rem"
                                                     />
-                                                    <div>Add picture</div>
+                                                    <div>{t('add')} {t('picture')}</div>
                                                 </div>
                                             )}
                                         </label>
@@ -459,7 +472,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                         className="btn btn-secondary me-3"
                                         onClick={handleCancel}
                                     >
-                                        Cancel
+                                        {t('cancel')}
                                     </button>
                                     <button
                                         className="btn btn-primary"
@@ -474,7 +487,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                     )}
                     {/* audio modal */}
                     {showAudio && (
-                        <div className="setPage_editCardModal setPage_audioModal">
+                        <div className="btn setPage_editCardModal setPage_audioModal">
                             <div className="modal-content d-flex">
                                 <button
                                     className="close p-0 mb-3 text-end"
@@ -533,7 +546,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                                         className="icon-warning"
                                                         size="1.75rem"
                                                     />
-                                                    <div>Add audio</div>
+                                                    <div>{t('add')} {t('audio')}</div>
                                                 </div>
                                             )}
                                         </label>
@@ -544,7 +557,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                         className="btn btn-secondary me-3"
                                         onClick={handleCancel}
                                     >
-                                        Cancel
+                                        {t('cancel')}
                                     </button>
                                     <button
                                         className="btn btn-primary"

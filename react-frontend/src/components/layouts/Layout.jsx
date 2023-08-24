@@ -52,50 +52,80 @@ export default function Layout() {
     const [showChat, setShowChat] = useState(false)
     const [showGPT, setShowGPT] = useState(false)
 
+    // useEffect(() => {
+    //     if (userInfo?.id) {
+    //         const getData = ref(database, 'messages/')
+
+    //         onChildAdded(getData, (data) => {
+    //             let temp = { ...data.val(), key: data.key }
+    //             setMessages((messages) => [...messages, temp])
+    //         })
+
+    //         onChildRemoved(getData, (data) => {
+    //             const deletedMessage = data.val()
+    //             setMessages((messages) =>
+    //                 messages.filter((message) => message.key !== data.key)
+    //             )
+    //         })
+    //     }
+    // }, [userInfo])
+
     useEffect(() => {
-        if (userInfo?.id) {
-            const getData = ref(database, 'messages/')
+        const getData = ref(database, 'messages/')
 
-            onChildAdded(getData, (data) => {
-                let temp = { ...data.val(), key: data.key }
-                setMessages((messages) => [...messages, temp])
-            })
+        onChildAdded(getData, (data) => {
+            let temp = { ...data.val(), key: data.key }
+            setMessages((messages) => [...messages, temp])
+        })
 
-            onChildRemoved(getData, (data) => {
-                const deletedMessage = data.val()
-                setMessages((messages) =>
-                    messages.filter((message) => message.key !== data.key)
-                )
-            })
-        }
-    }, [userInfo])
+        onChildRemoved(getData, (data) => {
+            const deletedMessage = data.val()
+            console.log(deletedMessage);
+
+            if(deletedMessage.message == sessionStorage.getItem("callId")) {
+                sessionStorage.removeItem("callId");
+                setIsAccept(null)
+            }
+            setMessages((messages) =>
+                messages.filter((message) => message.key !== data.key)
+            )
+        })
+    }, [])
 
     const rejectCall = async (message) => {
-        setIsAccept(false)
-        var myWindow = window.open('', 'myWindow')
-        var newURL =
-            window.location.origin +
-            '/video-call/' +
-            message.message +
-            '?accepted=false'
-        // Check if the window is already open
-        if (myWindow.location.href === 'about:blank') {
-            // If the window is not yet navigated to a page, navigate to the desired page
-            myWindow.location.href = newURL
-        } else {
-            // If the window is already open and navigated to a page, focus it
-            myWindow.focus()
-        }
+        // setIsAccept(false)
+        // sessionStorage.setItem("callId", message.message)
+        // var myWindow = window.open('', 'myWindow')
+        // var newURL =
+        //     window.location.origin +
+        //     '/video-call/' +
+        //     message.message +
+        //     '?accepted=false'
+        // // Check if the window is already open
+        // if (myWindow.location.href === 'about:blank') {
+        //     // If the window is not yet navigated to a page, navigate to the desired page
+        //     myWindow.location.href = newURL
+        // } else {
+        //     // If the window is already open and navigated to a page, focus it
+        //     myWindow.focus()
+        // }
+        deleteMessage(message.key)
+        setIsAccept(null)
     }
 
     const answerCall = async (message) => {
         setIsAccept(true)
+        // if (sessionStorage.getItem("callId")) {
+        //     alert("You are in another call")
+        //     return
+        // }
+        sessionStorage.setItem("callId", message.message)
         var myWindow = window.open('', 'myWindow')
         var newURL =
             window.location.origin +
             '/video-call/' +
             message.message +
-            '?accepted=true'
+            '?accepted=true&video=' + message.key
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page
@@ -105,6 +135,17 @@ export default function Layout() {
             myWindow.focus()
         }
     }
+
+    const deleteMessage = (messageId) => {
+        // console.log(self);
+        // var messageId = self.getAttribute("data-id");
+
+        const rootRef = ref(database, 'messages/')
+        const messageRef = child(rootRef, messageId) // Retrieve the Reference object for the message
+        remove(messageRef) // Remove the message from the database
+        // rootRef.child(messageId).remove();
+    }
+    
 
     return (
         <div className="d-flex flex-column h-100">
@@ -139,8 +180,7 @@ export default function Layout() {
             </div>
             <Footer />
             {/* video call modal */}
-            {userToken &&
-                isAccept === null &&
+            {userToken && isAccept === null &&
                 messages
                     ?.filter(
                         (message) =>

@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 
 import StudySetService from '../../services/StudySetService'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const DeleteSet = ({
     studySet,
@@ -15,7 +18,16 @@ const DeleteSet = ({
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
+  
     const handleSubmit = async (e) => {
         e.preventDefault()
         // clear validation
@@ -51,7 +63,7 @@ const DeleteSet = ({
         >
             <Modal.Header closeButton className="border-0 px-4">
                 <Modal.Title className="setModalTitle">
-                    Delete this set?
+                {t('deleteSet')}?
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-4">
@@ -63,11 +75,10 @@ const DeleteSet = ({
                 )}
                 <div className="setModalHeading mb-1">{studySet?.title}</div>
                 <p className="mb-1">
-                    You are about to delete this set and all of its data. No one
-                    will be able to access this set ever again.
+                {t('msg40')}.
                 </p>
                 <p className="fw-semibold">
-                    Are you sure? This cannot be undone.
+                {t('msg39')}.
                 </p>
             </Modal.Body>
             <Modal.Footer className="px-4">
@@ -76,7 +87,7 @@ const DeleteSet = ({
                     className="btn btn-secondary classModalBtn me-3"
                     data-bs-dismiss="modal"
                 >
-                    Close
+                    {t('close')}
                 </button>
                 <button
                     className="btn btn-danger classModalBtn"

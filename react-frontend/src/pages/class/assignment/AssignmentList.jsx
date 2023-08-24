@@ -8,7 +8,6 @@ import ClassService from '../../../services/ClassService'
 import DeleteAssignment from './DeleteAssignment'
 
 import {
-    AccountIcon,
     AddIcon,
     ArrowSmallDownIcon,
     ArrowSmallUpIcon,
@@ -277,7 +276,9 @@ function AssignmentList() {
                                     className="createAssign_btn"
                                     disabled={classroom?._deleted}
                                     onClick={() => {
-                                        navigate('../create-assignment')
+                                        navigate(
+                                            `/class/${id}/create-assignment`
+                                        )
                                     }}
                                 >
                                     <AddIcon
@@ -455,7 +456,7 @@ function AssignmentList() {
                                                     className="viewAssign_btn"
                                                     onClick={() =>
                                                         navigate(
-                                                            `../assignment/${assign.id}/details`
+                                                            `/class/${id}/assignment/${assign.id}/details`
                                                         )
                                                     }
                                                 >
@@ -499,7 +500,7 @@ function AssignmentList() {
                                                             className="editAssign_btn"
                                                             onClick={() => {
                                                                 navigate(
-                                                                    `../edit-assignment/${assign?.id}`
+                                                                    `/class/${id}/edit-assignment/${assign?.id}`
                                                                 )
                                                             }}
                                                         >
