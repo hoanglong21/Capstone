@@ -5,6 +5,8 @@ import Modal from 'react-bootstrap/Modal'
 import ClassService from '../../services/ClassService'
 
 import './classLayout/classLayout.css'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const DeleteClass = ({
     classroom,
@@ -43,6 +45,15 @@ const DeleteClass = ({
         }
         setLoading(false)
     }
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     return (
         <Modal
@@ -54,7 +65,7 @@ const DeleteClass = ({
         >
             <Modal.Header closeButton>
                 <Modal.Title className="px-3">
-                    <h4 className="modal-title">Delete this class?</h4>
+                    <h4 className="modal-title">{t('deleteClass')}?</h4>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -62,11 +73,10 @@ const DeleteClass = ({
                     {deleteClass.class_name}
                 </div>
                 <p className="mb-1">
-                    You are about to delete this class and all of its data. No
-                    one can access this class anymore.
+                {t('msg69')}.
                 </p>
                 <p className="fw-semibold">
-                    Items in Trash will be permanently deleted after 30 days.
+                {t('msg41')}.
                 </p>
             </Modal.Body>
             <Modal.Footer>
@@ -77,7 +87,7 @@ const DeleteClass = ({
                         setShowDeleteModal(false)
                     }}
                 >
-                    Close
+                    {t('close')}
                 </button>
                 <button
                     className="btn btn-danger classDeleteModalBtn"
