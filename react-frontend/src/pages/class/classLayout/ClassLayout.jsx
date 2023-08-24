@@ -116,7 +116,11 @@ const ClassLayout = () => {
             }
             setLoading(false)
         }
-        fetchData()
+        if (userInfo?.role === 'ROLE_ADMIN') {
+            navigate('/dashboard')
+        } else {
+            fetchData()
+        }
     }, [userInfo, id])
 
     useEffect(() => {
@@ -141,7 +145,7 @@ const ClassLayout = () => {
             })
             NotificationService.createNotification({
                 title: 'Request to join class',
-                content: `You have a request to join class ${classroom.class_name} from ${userInfo?.username}`,
+                content: `You have a request to join class ${classroom?.class_name} from ${userInfo?.username}`,
                 user: {
                     id: classroom.user.id,
                     username: classroom.user.username,
@@ -224,12 +228,12 @@ const ClassLayout = () => {
                                     strokeWidth="2"
                                 />
                                 <h1 className="mainClass_title m-0 ms-3">
-                                    {classroom.class_name}
-                                    {classroom._deleted && ' (Deleted)'}
+                                    {classroom?.class_name}
+                                    {classroom?._deleted && ' (Deleted)'}
                                 </h1>
                             </div>
                             {!hasAccess && (
-                                <p className="mt-1">{classroom.description}</p>
+                                <p className="mt-1">{classroom?.description}</p>
                             )}
                         </div>
                         {hasAccess && !classroom?._deleted ? (

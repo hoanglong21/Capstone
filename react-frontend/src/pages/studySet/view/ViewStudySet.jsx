@@ -79,14 +79,14 @@ const ViewStudySet = () => {
     const [showAssignModal, setShowAssignModal] = useState(false)
     const [showReportModal, setShowReportModal] = useState(false)
     const [showWarningModal, setShowWarningModal] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-  const { t, i18n } = useTranslation();
+    const { userLanguage } = useSelector((state) => state.user)
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
@@ -227,7 +227,9 @@ const ViewStudySet = () => {
                 }
             }
         }
-        if (id) {
+        if (userInfo?.role === 'ROLE_ADMIN') {
+            navigate('/dashboard')
+        } else if (id) {
             fetchData()
         }
     }, [id, userInfo])
@@ -323,7 +325,9 @@ const ViewStudySet = () => {
                             className="StudyModesIcon"
                             size="2rem"
                         />
-                        <span className="studyModesItemName">{t('flashcard')}</span>
+                        <span className="studyModesItemName">
+                            {t('flashcard')}
+                        </span>
                     </button>
                 </div>
                 <div className="studyset-col-4">
@@ -342,7 +346,7 @@ const ViewStudySet = () => {
                             size="2rem"
                         />
                         <span className="studyModesItemName" href="/learn">
-                        {t('learn')}
+                            {t('learn')}
                         </span>
                     </button>
                 </div>
@@ -466,7 +470,7 @@ const ViewStudySet = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                            {t('addClass')}
+                                                {t('addClass')}
                                             </span>
                                         </button>
                                     </li>
@@ -488,7 +492,7 @@ const ViewStudySet = () => {
                                             size="1.3rem"
                                         />
                                         <span className="align-middle fw-semibold">
-                                        {t('edit')}
+                                            {t('edit')}
                                         </span>
                                     </button>
                                 </li>
@@ -510,7 +514,7 @@ const ViewStudySet = () => {
                                             strokeWidth="2"
                                         />
                                         <span className="align-middle fw-semibold">
-                                        {t('delete')}
+                                            {t('delete')}
                                         </span>
                                     </button>
                                 </li>
@@ -535,15 +539,15 @@ const ViewStudySet = () => {
             </div>
             {/* Description */}
             <div className="setPageTermsHeader mb-3">
-                <div className="setPageTermsHeading mb-1">{t('description')}</div>
+                <div className="setPageTermsHeading mb-1">
+                    {t('description')}
+                </div>
                 <div>{studySet?.description || '...'}</div>
             </div>
             {/* Progress */}
             {userToken && (
                 <div className="setPageProgress mb-4">
-                    <div className="setPageTermsHeading mb-3">
-                    {t('ypro')}
-                    </div>
+                    <div className="setPageTermsHeading mb-3">{t('ypro')}</div>
                     <div className="row">
                         {/* not studied */}
                         <div className="col-12 col-sm-4 mb-2 mb-sm-0">
@@ -581,11 +585,11 @@ const ViewStudySet = () => {
                                                 </div>
                                             </div>
                                             <h5 className="setPageProgressLabel m-0 ms-3 ms-sm-0 ms-lg-3">
-                                            {t('nstudied')}
+                                                {t('nstudied')}
                                             </h5>
                                         </div>
                                         <span className="setPageProgressLink">
-                                        {t('study')}
+                                            {t('study')}
                                         </span>
                                     </div>
                                 </div>
@@ -629,11 +633,11 @@ const ViewStudySet = () => {
                                                 </div>
                                             </div>
                                             <h5 className="setPageProgressLabel m-0 ms-3 ms-sm-0 ms-lg-3">
-                                            {t('still')}
+                                                {t('still')}
                                             </h5>
                                         </div>
                                         <span className="setPageProgressLink">
-                                        {t('study')}
+                                            {t('study')}
                                         </span>
                                     </div>
                                 </div>
@@ -677,11 +681,11 @@ const ViewStudySet = () => {
                                                 </div>
                                             </div>
                                             <h5 className="setPageProgressLabel m-0 ms-3 ms-sm-0 ms-lg-3">
-                                            {t('master')}
+                                                {t('master')}
                                             </h5>
                                         </div>
                                         <span className="setPageProgressLink">
-                                        {t('study')}
+                                            {t('study')}
                                         </span>
                                     </div>
                                 </div>
@@ -693,7 +697,7 @@ const ViewStudySet = () => {
             {/* Details */}
             <div className="setPageTermsHeader d-flex align-items-center justify-content-between">
                 <div className="setPageTermsHeading mb-2">
-                {t('termin')} ({numCards})
+                    {t('termin')} ({numCards})
                 </div>
                 {userInfo?.id && (
                     <div className="d-flex align-items-center">
@@ -763,7 +767,7 @@ const ViewStudySet = () => {
                                         }}
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                        {t('allpro')}
+                                            {t('allpro')}
                                         </span>
                                     </button>
                                 </li>
@@ -781,7 +785,7 @@ const ViewStudySet = () => {
                                         }
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                        {t('nstudied')}
+                                            {t('nstudied')}
                                         </span>
                                     </button>
                                 </li>
@@ -799,7 +803,7 @@ const ViewStudySet = () => {
                                         }
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                        {t('still')}
+                                            {t('still')}
                                         </span>
                                     </button>
                                 </li>
@@ -817,7 +821,7 @@ const ViewStudySet = () => {
                                         }
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                        {t('master')}
+                                            {t('master')}
                                         </span>
                                     </button>
                                 </li>
@@ -969,9 +973,7 @@ const ViewStudySet = () => {
                 <Modal.Header className="border-0" closeButton>
                     <Modal.Title>{t('msg35')}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                {t('msg36')}?
-                </Modal.Body>
+                <Modal.Body>{t('msg36')}?</Modal.Body>
                 <Modal.Footer className="border-0">
                     <button
                         className="btn btn-light"
