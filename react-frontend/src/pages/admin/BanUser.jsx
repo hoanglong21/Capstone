@@ -1,93 +1,84 @@
-import React, { useState, useEffect } from "react";
-import UserService from "../../services/UserService";
-import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react'
+import { toast } from 'react-toastify'
+import Modal from 'react-bootstrap/Modal'
 
-const BanUser = ({ user }) => {
-  let navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [banUser, setBanUser] = useState({});
-  // const [success, setSuccess] = useState(false)
-  // const [isButtonDisabled, setButtonDisabled] = useState(false);
-  useEffect(() => {
-    if (user.username) {
-      setBanUser({ ...user });
+import UserService from '../../services/UserService'
+
+import 'react-toastify/dist/ReactToastify.css'
+
+const BanUser = ({
+    user,
+    users,
+    setUsers,
+    index,
+    showBanModal,
+    setShowBanModal,
+}) => {
+    const [error, setError] = useState('')
+
+    const handleBan = async (e) => {
+        e.preventDefault()
+        setError('')
+        try {
+            await UserService.banUser(user.username)
+            toast.success(`Banned ${user.username} successfully!`, {
+                position: toast.POSITION.TOP_RIGHT,
+            })
+            var tempUsers = [...users]
+            tempUsers[index] = { ...user, status: 'banned' }
+            setUsers(tempUsers)
+            setShowBanModal(false)
+            setError('')
+        } catch (error) {
+            if (error.response && error.response.data) {
+                setError(error.response.data)
+            } else {
+                setError(error.message)
+            }
+        }
     }
-  }, [user]);
 
-  const handleBan = async (e) => {
-    e.preventDefault()
-    setError('')
-    try {
-      await UserService.banUser(banUser.username)
-      document.getElementById('closeUserModal').click()
-      toast.success('Banned successfully !', {
-        position: toast.POSITION.TOP_RIGHT
-      });
-      window.location.reload()
-      navigate('/manageusers')
-      setError("")
-    } catch (error) {
-      if (error.response && error.response.data) {
-        setError(error.response.data);
-      } else {
-        setError(error.message);
-      }
-    }
-  };
-
-  return (
-    <div className="modal fade" tabindex="-1" id={`banModal${user?.username}`}>
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">BAN USER</h5>
-            <button
-              id="closeUserModal"
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              onClick={() => {
-                document.getElementById('username')
-                setBanUser({})
-                setError('')
+    return (
+        <Modal
+            show={showBanModal}
+            onHide={() => {
+                setShowBanModal(false)
             }}
-            ></button>
-          </div>
-          <div class="modal-body">
-            {error && (
-              <div className="alert alert-danger" role="alert">
-                {error}
-              </div>
-            )}
-            {/* {success && (
-                    <div className="alert alert-success" role="alert">
-                       You banned {banUser.username} successfully!
+        >
+            <Modal.Header closeButton>
+                <Modal.Title>BAN USER</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {error && (
+                    <div className="alert alert-danger" role="alert">
+                        {error}
                     </div>
-                )} */}
-            <p>
-              Are you sure ban <strong>{banUser.username}</strong> ?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
-              Cancel
-            </button>
-            <button type="button" class="btn btn-danger" onClick={handleBan}>
-            Ban
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+                )}
+                <p>
+                    Are you sure you want to ban{' '}
+                    <strong>{user.username}</strong> ?
+                </p>
+            </Modal.Body>
+            <Modal.Footer>
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    onClick={() => {
+                        setShowBanModal(false)
+                    }}
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    onClick={handleBan}
+                >
+                    Ban
+                </button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
 
-export default BanUser;
+export default BanUser

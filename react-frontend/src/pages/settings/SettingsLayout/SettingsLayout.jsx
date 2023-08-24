@@ -16,15 +16,15 @@ const AccountLayout = () => {
 
     const [showVerifyModal, setShowVerifyModal] = useState(false)
     const [loading, setLoading] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     const sendVerifyAcc = async () => {
         setLoading(true)
@@ -51,12 +51,8 @@ const AccountLayout = () => {
                 >
                     <WarningSolidIcon size="3rem" />
                     <div className="flex-fill d-flex flex-column ms-2">
-                        <h6 className="alert-heading mb-0">
-                        {t('accVer')}!
-                        </h6>
-                        <div>
-                        {t('msg59')}.
-                        </div>
+                        <h6 className="alert-heading mb-0">{t('accVer')}!</h6>
+                        <div>{t('msg59')}.</div>
                     </div>
                     <button
                         className="btn btn-warning mt-1"
@@ -80,7 +76,7 @@ const AccountLayout = () => {
                                 </div>
                             </div>
                         ) : (
-                            'Verify now'
+                            t('verifyNow')
                         )}
                     </button>
                 </div>
@@ -155,7 +151,7 @@ const AccountLayout = () => {
                         <img src={verifyAcc} className="verifyAcc_img" />
                     </div>
                     <p className="mt-3 mb-1">
-                    {t('msg62')} {userInfo?.email} {t('msg63')}.
+                        {t('msg62')} {userInfo?.email} {t('msg63')}.
                     </p>
                     <p className="mt-1">
                         <a

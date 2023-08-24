@@ -41,10 +41,38 @@ const AuthVerify = (props) => {
 
     useEffect(() => {
         const check = async () => {
+            const temp = localStorage.getItem('userToken')
+            if (temp != token) {
+                setToken(temp)
+            }
+            if (token) {
+                // logout if token expired
+                const decodedJwt = jwtDecode(token)
+                if (decodedJwt.exp * 1000 < Date.now()) {
+                    props.logOut()
+                    navigate('/')
+                    window.location.reload()
+                }
+            }
+        }
+        check()
+    }, [location, props])
+
+    useEffect(() => {
+        const check = async () => {
             const username = jwtDecode(token).sub
             const tempUser = (await UserService.getUser(username)).data
-            setUser(tempUser)
-            dispatch(getNumUnread(tempUser.id))
+            if (
+                tempUser?.status === 'banned' ||
+                tempUser?.status === 'deleted'
+            ) {
+                props.logOut()
+                navigate('/')
+                window.location.reload()
+            } else {
+                setUser(tempUser)
+                dispatch(getNumUnread(tempUser.id))
+            }
         }
         if (token) {
             check()
@@ -237,25 +265,6 @@ const AuthVerify = (props) => {
             getNotification()
         }
     }, [user, location])
-
-    useEffect(() => {
-        const check = async () => {
-            const temp = localStorage.getItem('userToken')
-            if (temp != token) {
-                setToken(temp)
-            }
-            if (token) {
-                // logout if token expired
-                const decodedJwt = jwtDecode(token)
-                if (decodedJwt.exp * 1000 < Date.now()) {
-                    props.logOut()
-                    navigate('/')
-                    window.location.reload()
-                }
-            }
-        }
-        check()
-    }, [location, props])
 
     return <div></div>
 }

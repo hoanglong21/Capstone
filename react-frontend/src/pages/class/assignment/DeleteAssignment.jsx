@@ -25,9 +25,10 @@ const DeleteAssignment = ({
         try {
             await AssignmentService.deleteAssignment(assign?.id)
             if (isDelete === false) {
+                setShowDeleteModal(false)
                 setIsDelete(true)
             }
-            await deleteFolder(
+            deleteFolder(
                 `files/${assign.classroom.user.username}/class/${assign.classroom.id}/assignment/${assign.id}`
             )
             if (

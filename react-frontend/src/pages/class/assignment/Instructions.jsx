@@ -99,6 +99,7 @@ const Instructions = () => {
                     id: userInfo.id,
                     username: userInfo.username,
                     avatar: userInfo.avatar,
+                    status: userInfo.status,
                 },
                 content: text,
                 commentType: {
@@ -128,7 +129,7 @@ const Instructions = () => {
             <div className="instruction_main mb-3">
                 <div className="d-flex align-items-center justify-content-between mb-1">
                     <div className="instruction_heading">
-                        {assignment?.title}{' '}
+                        {assignment?.title || '...'}{' '}
                         {assignment?._draft ? '(Draft)' : ''}
                     </div>
                     {!assignment?.classroom?._deleted && (
@@ -238,7 +239,7 @@ const Instructions = () => {
                     </div>
                 </div>
             </div>
-            {/* attchments */}
+            {/* attachments */}
             {attachments?.length > 0 && (
                 <div className="row mb-3">
                     {attachments.map((file, index) => (
@@ -321,7 +322,6 @@ const Instructions = () => {
                     </div>
                 </div>
             )}
-
             {/* delete modal */}
             <DeleteAssignment
                 assign={assignment}

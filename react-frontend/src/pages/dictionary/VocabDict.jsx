@@ -1,21 +1,26 @@
 import { useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import DictionaryService from '../../services/DictionaryService'
 import TextToSpeech from '../../components/InputModel/TextToSpeech'
 import './dictionary.css'
+import Pagination from '../../components/Pagination'
 
 const VocabDict = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
-    const { userToken } = useSelector((state) => state.auth);
+
+    const { userToken } = useSelector((state) => state.auth)
+
     const [vocabs, setVocabs] = useState([])
     const [word, setWord] = useState({})
     const [activeIndex, setActiveIndex] = useState(0)
     const [kanjiSvgs, setKanjiSvgs] = useState([])
     const [loading, setLoading] = useState(true)
     const [loadingSelect, setLoadingSelect] = useState(false)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     async function getKanjiSvg(vocab) {
         var tempKanjiSvgs = []
@@ -44,16 +49,17 @@ const VocabDict = () => {
         try {
             const temp = (
                 await DictionaryService.getVocabulary(
-                    '=1',
+                    `=${page}`,
                     '=10',
                     `${searchKey ? '=' + searchKey : ''}`,
                     ''
                 )
-            ).data.list
-            setVocabs(temp)
-            if (temp.length > 0) {
-                setWord(temp[0])
-                setKanjiSvgs(await getKanjiSvg(temp[0].kanji[0]))
+            ).data
+            setTotalItems(temp.totalItems)
+            setVocabs(temp.list)
+            if (temp.list.length > 0) {
+                setWord(temp.list[0])
+                setKanjiSvgs(await getKanjiSvg(temp.list[0].kanji[0]))
             } else {
                 setWord({})
                 setKanjiSvgs([])
@@ -88,15 +94,15 @@ const VocabDict = () => {
         }
         return script
     }
-    const { userLanguage } = useSelector((state) => state.user);
+    const { userLanguage } = useSelector((state) => state.user)
 
-    const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation()
 
     useEffect(() => {
         if (userToken) {
-        i18n.changeLanguage(userLanguage);
+            i18n.changeLanguage(userLanguage)
         }
-    }, [userLanguage]);
+    }, [userLanguage])
 
     useEffect(() => {
         if (loading === true && document.getElementById('searchDictBtn')) {
@@ -112,7 +118,7 @@ const VocabDict = () => {
     // fetch data
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
     // kanji svg button
     useEffect(() => {
@@ -196,7 +202,16 @@ const VocabDict = () => {
                                 ))}
                             </div>
                         </div>
-                        <div className="vocab-dict-col-7">
+                        <div className="vocab-dict-col-7 d-flex flex-column">
+                            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
                             {loadingSelect ? (
                                 <div className="d-flex justify-content-center">
                                     <div
@@ -209,7 +224,7 @@ const VocabDict = () => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="word-detail h-100">
+                                <div className="word-detail flex-fill">
                                     <div className="word-detail-overview d-flex flex-column align-items-center">
                                         <span className="txtKanji">
                                             {word?.kanji[0]}
@@ -308,7 +323,9 @@ const VocabDict = () => {
                         )}
                     </div>
                 ) : (
-                    <p className="noFound">{t('noWord')} {search} {t('found')}</p>
+                    <p className="noFound">
+                        {t('noWord')} {search} {t('found')}
+                    </p>
                 )}
             </div>
         )
