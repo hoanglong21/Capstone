@@ -156,14 +156,21 @@ public class SubmissionServiceImpl implements SubmissionService {
             for (Attachment attachment : attachmentRepository.getAttachmentBySubmissionId(submission.getId())) {
                 attachmentRepository.delete(attachment);
             }
-        for(Comment commentroot : commentRepository.getCommentBySubmissionId(submission.getId())){
-            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                commentRepository.delete(comment);
-            }
-            commentRepository.delete(commentroot);
+        for(Comment commentsub : commentRepository.getCommentBySubmissionId(submission.getId())){
+            deleteCommentAndChildren(commentsub);
         }
          submissionRepository.delete(submission);
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override

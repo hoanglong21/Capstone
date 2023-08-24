@@ -46,7 +46,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getAllPostByClassId(id));
     }
 
-    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     @PostMapping("/post")
     public ResponseEntity<?> createPost(@Valid @RequestBody PostRequest postRequest, BindingResult result)  {
         if (result.hasErrors()) {
@@ -96,7 +96,7 @@ public class PostController {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_LEARNER') || hasRole('ROLE_TUTOR')")
     @DeleteMapping("/post/{id}")
     public ResponseEntity<?> deletePost(@PathVariable int id) {
         try {

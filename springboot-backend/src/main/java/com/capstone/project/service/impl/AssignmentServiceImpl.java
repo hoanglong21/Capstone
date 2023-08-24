@@ -163,25 +163,28 @@ public class AssignmentServiceImpl implements AssignmentService {
                 attachmentRepository.delete(attachment);
             }
             for(Comment commentroot : commentRepository.getCommentBySubmissionId(submission.getId())){
-                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                    commentRepository.delete(comment);
-                }
-                commentRepository.delete(commentroot);
+                deleteCommentAndChildren(commentroot);
             }
             submissionRepository.delete(submission);
         }
         for (Attachment attachment : attachmentRepository.getAttachmentByAssignmentId(assignmentclass.getId())) {
             attachmentRepository.delete(attachment);
         }
-        for(Comment commentroot : commentRepository.getCommentByAssignmentId(assignmentclass.getId())){
-            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                commentRepository.delete(comment);
-            }
-            commentRepository.delete(commentroot);
-
+        for(Comment commentassignment : commentRepository.getCommentByAssignmentId(assignmentclass.getId())){
+            deleteCommentAndChildren(commentassignment);
         }
         assignmentRepository.delete(assignmentclass);
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override

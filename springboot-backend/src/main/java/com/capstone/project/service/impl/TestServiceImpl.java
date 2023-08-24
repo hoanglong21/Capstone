@@ -224,14 +224,21 @@ public class TestServiceImpl  implements TestService {
             }
               questionRepository.delete(question);
         }
-        for(Comment commentroot : commentRepository.getCommentByTestId(testclass.getId())){
-            for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                commentRepository.delete(comment);
-            }
-            commentRepository.delete(commentroot);
+        for(Comment commenttest : commentRepository.getCommentByTestId(testclass.getId())){
+            deleteCommentAndChildren(commenttest);
         }
         testRepository.delete(testclass);
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override
