@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 const VocabCard = ({
     ques,
@@ -19,6 +21,15 @@ const VocabCard = ({
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [example, setExample] = useState(null)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { userToken } = useSelector((state) => state.auth);
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
 
     useEffect(() => {
         if (ques?.question_type) {
@@ -127,7 +138,7 @@ const VocabCard = ({
                                             aria-expanded="false"
                                             aria-controls="progressNote"
                                         >
-                                            <span>Note</span>
+                                            <span>{t('note')}</span>
                                         </button>
                                     </h2>
                                     <div
@@ -233,7 +244,7 @@ const VocabCard = ({
                                     <div className="col-12 col-md-6 mt-2 mt-md-0">
                                         <div className="learnExampleSection">
                                             <div className="learnExample_label">
-                                                Example
+                                            {t('example')}
                                             </div>
                                             <div
                                                 dangerouslySetInnerHTML={{
@@ -288,7 +299,7 @@ const VocabCard = ({
                                         aria-expanded="false"
                                         aria-controls="progressNote"
                                     >
-                                        <span>Note</span>
+                                        <span>{t('note')}</span>
                                     </button>
                                 </h2>
                                 <div
@@ -399,7 +410,7 @@ const VocabCard = ({
                     </div>
                     {isCurrentCorrect === false && (
                         <div className="learnExampleSection">
-                            <div className="learnExample_label">Example</div>
+                            <div className="learnExample_label">{t('example')}</div>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: example || '...',
@@ -465,7 +476,7 @@ const VocabCard = ({
                                                         aria-expanded="false"
                                                         aria-controls="progressNote"
                                                     >
-                                                        <span>Note</span>
+                                                        <span>{t('note')}</span>
                                                     </button>
                                                 </h2>
                                                 <div
@@ -638,7 +649,7 @@ const VocabCard = ({
                                     <div className="col-12 col-md-6 mt-2 mt-md-0">
                                         <div className="learnExampleSection">
                                             <div className="learnExample_label">
-                                                Example
+                                            {t('exmple')}
                                             </div>
                                             <div
                                                 dangerouslySetInnerHTML={{

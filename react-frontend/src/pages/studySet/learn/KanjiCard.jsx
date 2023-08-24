@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 const KanjiCard = ({
     ques,
@@ -19,7 +21,15 @@ const KanjiCard = ({
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [example, setExample] = useState(null)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { userToken } = useSelector((state) => state.auth);
+  const { t, i18n } = useTranslation();
 
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
@@ -143,7 +153,7 @@ const KanjiCard = ({
                                             aria-expanded="false"
                                             aria-controls="progressNote"
                                         >
-                                            <span>Note</span>
+                                            <span>{t('note')}</span>
                                         </button>
                                     </h2>
                                     <div
@@ -244,7 +254,7 @@ const KanjiCard = ({
                                 ></div>
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                        Example
+                                    {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{
@@ -309,7 +319,7 @@ const KanjiCard = ({
                                         aria-expanded="false"
                                         aria-controls="progressNote"
                                     >
-                                        <span>Note</span>
+                                        <span>{t('note')}</span>
                                     </button>
                                 </h2>
                                 <div
@@ -431,7 +441,7 @@ const KanjiCard = ({
                     </div>
                     {isCurrentCorrect === false && (
                         <div className="learnExampleSection">
-                            <div className="learnExample_label">Example</div>
+                            <div className="learnExample_label">{t('example')}</div>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: example || '...',
@@ -511,7 +521,7 @@ const KanjiCard = ({
                                                         aria-expanded="false"
                                                         aria-controls="progressNote"
                                                     >
-                                                        <span>Note</span>
+                                                        <span>{t('note')}</span>
                                                     </button>
                                                 </h2>
                                                 <div
@@ -711,7 +721,7 @@ const KanjiCard = ({
                                 )}
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                        Example
+                                    {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{

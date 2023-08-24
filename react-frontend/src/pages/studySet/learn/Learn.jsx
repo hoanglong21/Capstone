@@ -24,6 +24,7 @@ import {
 import illustration from '../../../assets/images/learn_finish.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './learn.css'
+import { useTranslation } from 'react-i18next'
 
 const Confettiful = function (el) {
     this.el = el
@@ -169,7 +170,14 @@ const Learn = () => {
     const [loading, setLoading] = useState(false)
     const [showOptionModal, setShowOptionModal] = useState(false)
     const [isAddHistory, setIsAddHistory] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { t, i18n } = useTranslation();
 
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     // add history
     useEffect(() => {
         if (
@@ -684,7 +692,7 @@ const Learn = () => {
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <span className="ps-2 me-2">Learn</span>
+                            <span className="ps-2 me-2">{t('learn')}</span>
                             <ArrowDownIcon size="1rem" strokeWidth="2.6" />
                         </button>
                         <ul className="dropdown-menu">
@@ -701,7 +709,7 @@ const Learn = () => {
                                         size="1.3rem"
                                     />
                                     <span className="align-middle fw-semibold">
-                                        Flashcards
+                                    {t('flashcard')}
                                     </span>
                                 </button>
                             </li>
@@ -719,7 +727,7 @@ const Learn = () => {
                                         strokeWidth="2"
                                     />
                                     <span className="align-middle fw-semibold">
-                                        Quiz
+                                    {t('quiz')}
                                     </span>
                                 </button>
                             </li>
@@ -732,7 +740,7 @@ const Learn = () => {
                                     type="button"
                                 >
                                     <span className="align-middle fw-semibold">
-                                        Home
+                                    {t('home')}
                                     </span>
                                 </button>
                             </li>
@@ -748,7 +756,7 @@ const Learn = () => {
                                 setShowOptionModal(true)
                             }}
                         >
-                            Options
+                            {t('option')}
                         </button>
                     )}
                     <button
@@ -986,7 +994,7 @@ const Learn = () => {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h3 className="modal-title" id="quizOptionModalLabel">
-                            Options
+                        {t('option')}
                         </h3>
                         <button
                             type="button"
@@ -1115,7 +1123,7 @@ const Learn = () => {
                                 </div>
                                 {/* note */}
                                 <div className="quizOptionBlock">
-                                    <legend>NOTE</legend>
+                                    <legend>{t('note')}</legend>
                                     <div className="mb-2">
                                         <input
                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
