@@ -43,7 +43,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
-
+    
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     // ignore error

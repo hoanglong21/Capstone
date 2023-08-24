@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 const KanjiCard = ({
     ques,
@@ -19,7 +21,15 @@ const KanjiCard = ({
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [example, setExample] = useState(null)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { userToken } = useSelector((state) => state.auth);
+  const { t, i18n } = useTranslation();
 
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
@@ -143,7 +153,7 @@ const KanjiCard = ({
                                             aria-expanded="false"
                                             aria-controls="progressNote"
                                         >
-                                            <span>Note</span>
+                                            <span>{t('note')}</span>
                                         </button>
                                     </h2>
                                     <div
@@ -204,7 +214,7 @@ const KanjiCard = ({
                         )}
                     </div>
                     {/* answer */}
-                    <div className="quizQues_label my-4">Your answer</div>
+                    <div className="quizQues_label my-4">{t('yanswer')}</div>
                     <form className="d-flex">
                         <input
                             id={`quizQuesInput${quesIndex}`}
@@ -227,13 +237,13 @@ const KanjiCard = ({
                             onClick={handleAnswerWritten}
                             disabled={isCurrentCorrect !== null}
                         >
-                            Answer
+                            {t('answer')}
                         </button>
                     </form>
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                                Correct answer
+                            {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct">
                                 <div
@@ -244,7 +254,7 @@ const KanjiCard = ({
                                 ></div>
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                        Example
+                                    {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{
@@ -309,7 +319,7 @@ const KanjiCard = ({
                                         aria-expanded="false"
                                         aria-controls="progressNote"
                                     >
-                                        <span>Note</span>
+                                        <span>{t('note')}</span>
                                     </button>
                                 </h2>
                                 <div
@@ -367,7 +377,7 @@ const KanjiCard = ({
                         </div>
                     )}
                     {/* answer */}
-                    <div className="quizQues_label my-4">Choose the answer</div>
+                    <div className="quizQues_label my-4">{t('choose')}</div>
                     <div className="row">
                         {ques.answers.map((ans, ansIndex) => (
                             <div key={ansIndex} className="col-12 mb-3">
@@ -431,7 +441,7 @@ const KanjiCard = ({
                     </div>
                     {isCurrentCorrect === false && (
                         <div className="learnExampleSection">
-                            <div className="learnExample_label">Example</div>
+                            <div className="learnExample_label">{t('example')}</div>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: example || '...',
@@ -511,7 +521,7 @@ const KanjiCard = ({
                                                         aria-expanded="false"
                                                         aria-controls="progressNote"
                                                     >
-                                                        <span>Note</span>
+                                                        <span>{t('note')}</span>
                                                     </button>
                                                 </h2>
                                                 <div
@@ -625,7 +635,7 @@ const KanjiCard = ({
                         )}
                     </div>
                     {/* answer */}
-                    <div className="quizQues_label my-4">Choose the answer</div>
+                    <div className="quizQues_label my-4">{t('choose')}</div>
                     <div className="row">
                         <div className="col-6">
                             <div
@@ -641,7 +651,7 @@ const KanjiCard = ({
                                 disabled={isCurrentCorrect !== null}
                                 onClick={() => handleAnswerTrueFalse(true)}
                             >
-                                True
+                                {t('true')}
                             </div>
                         </div>
                         <div className="col-6">
@@ -658,14 +668,14 @@ const KanjiCard = ({
                                 disabled={isCurrentCorrect !== null}
                                 onClick={() => handleAnswerTrueFalse(false)}
                             >
-                                False
+                                {t('false')}
                             </div>
                         </div>
                     </div>
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                                Correct answer
+                            {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 {ques.question.content.map(
@@ -711,7 +721,7 @@ const KanjiCard = ({
                                 )}
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                        Example
+                                    {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{

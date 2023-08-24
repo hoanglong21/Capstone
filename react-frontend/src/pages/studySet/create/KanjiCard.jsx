@@ -7,6 +7,8 @@ import CardService from '../../../services/CardService'
 import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
 import CardEditor from '../../../components/textEditor/CardEditor'
 import styles from '../../../assets/styles/Card.module.css'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 export const KanjiCard = (props) => {
     const [card, setCard] = useState(props.card)
@@ -24,7 +26,15 @@ export const KanjiCard = (props) => {
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
     const [loadingStrokeOrder, setLoadingStrokeOrder] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { userToken } = useSelector((state) => state.auth);
+  const { t, i18n } = useTranslation();
 
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
@@ -419,7 +429,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            CHARACTER
+                            {t('character')}
                         </span>
                     </div>
                     <div className="col-12 col-lg-5 ps-lg-4 d-flex flex-column justify-content-end">
@@ -439,7 +449,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            RADICAL
+                            {t('radical')}
                         </span>
                     </div>
                     <div className="col-12 col-lg-9 mt-4 pe-lg-4">
@@ -459,7 +469,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            NAME
+                            {t('name')}
                         </span>
                     </div>
                     <div className="col-12 col-lg-3 mt-4 ps-lg-4 d-flex flex-column justify-content-end">
@@ -480,7 +490,7 @@ export const KanjiCard = (props) => {
                                 doUpdateContent(jlptLevel)
                             }}
                         >
-                            <option value="Unknown">Unknown</option>
+                            <option value="Unknown">{t('unknown')}</option>
                             <option value="N1">N1</option>
                             <option value="N2">N2</option>
                             <option value="N3">N3</option>
@@ -490,7 +500,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            JLPT LEVEL
+                            {t('level')}
                         </span>
                     </div>
                     <div className="col-12 col-xl-6 mt-4 pe-xl-4 d-flex flex-column justify-content-end">
@@ -510,7 +520,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            ONYOMI
+                            {t('onyomi')}
                         </span>
                     </div>
                     <div className="col-12 col-xl-6 mt-4 ps-xl-4 d-flex flex-column justify-content-end">
@@ -530,7 +540,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            KUNYOMI
+                           {t('kunyomi')}
                         </span>
                     </div>
                     <div className="col-12 mt-4">
@@ -550,7 +560,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            MEANINGS
+                            {t('meaning')}
                         </span>
                     </div>
 
@@ -571,7 +581,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            EXAMPLE
+                            {t('example')}
                         </span>
                     </div>
                     <div className="col-12 col-xl-2 mt-4 d-flex flex-column justify-content-end">
@@ -597,7 +607,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            STROKES
+                            {t('stroke')}
                         </span>
                     </div>
                     <div className="col-12 col-xl-10 mt-4 d-flex flex-column justify-content-end">
@@ -655,7 +665,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                            STROKE ORDER
+                            {t('strokeOrder')}
                         </span>
                     </div>
                 </div>

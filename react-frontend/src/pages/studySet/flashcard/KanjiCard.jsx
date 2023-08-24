@@ -8,6 +8,8 @@ import {
     MicIconSolid,
     StarSolidIcon,
 } from '../../../components/icons'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const KanjiCard = ({
     userInfo,
@@ -34,7 +36,15 @@ const KanjiCard = ({
     const [example, setExample] = useState(null)
     const [jlptLevel, setJlptLevel] = useState(null)
     const [strokes, setStrokes] = useState(null)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -267,7 +277,7 @@ const KanjiCard = ({
                                     {name && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                Name
+                                            {t('name')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -281,7 +291,7 @@ const KanjiCard = ({
                                     {meanings && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                Meanings
+                                            {t('meaning')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -296,7 +306,7 @@ const KanjiCard = ({
                                     {onyomi && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                Onyomi
+                                            {t('onyomi')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -311,7 +321,7 @@ const KanjiCard = ({
                                     {kunyomi && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                Kunyomi
+                                            {t('kunyomi')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -326,7 +336,7 @@ const KanjiCard = ({
                                     {radical && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                Radical
+                                            {t('radical')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -341,7 +351,7 @@ const KanjiCard = ({
                                     {example && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                Example
+                                            {t('example')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -356,7 +366,7 @@ const KanjiCard = ({
                                     {jlptLevel && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                JLPT Level
+                                            {t('level')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -371,7 +381,7 @@ const KanjiCard = ({
                                     {strokes && (
                                         <div className="kanji-card-col-6 mb-3">
                                             <div className="flashCardField_label mb-2">
-                                                Strokes
+                                            {t('stroke')}
                                             </div>
                                             <div
                                                 className="flashCardField_content"
@@ -428,7 +438,7 @@ const KanjiCard = ({
                                         aria-expanded="false"
                                         aria-controls="progressNote"
                                     >
-                                        <span>Note</span>
+                                        <span>{t('note')}</span>
                                     </button>
                                 </h2>
                                 <div

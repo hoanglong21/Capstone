@@ -24,6 +24,7 @@ import {
 import illustration from '../../../assets/images/learn_finish.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './learn.css'
+import { useTranslation } from 'react-i18next'
 
 const Confettiful = function (el) {
     this.el = el
@@ -169,7 +170,14 @@ const Learn = () => {
     const [loading, setLoading] = useState(false)
     const [showOptionModal, setShowOptionModal] = useState(false)
     const [isAddHistory, setIsAddHistory] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { t, i18n } = useTranslation();
 
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     // add history
     useEffect(() => {
         if (
@@ -684,7 +692,7 @@ const Learn = () => {
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <span className="ps-2 me-2">Learn</span>
+                            <span className="ps-2 me-2">{t('learn')}</span>
                             <ArrowDownIcon size="1rem" strokeWidth="2.6" />
                         </button>
                         <ul className="dropdown-menu">
@@ -701,7 +709,7 @@ const Learn = () => {
                                         size="1.3rem"
                                     />
                                     <span className="align-middle fw-semibold">
-                                        Flashcards
+                                    {t('flashcard')}
                                     </span>
                                 </button>
                             </li>
@@ -719,7 +727,7 @@ const Learn = () => {
                                         strokeWidth="2"
                                     />
                                     <span className="align-middle fw-semibold">
-                                        Quiz
+                                    {t('quiz')}
                                     </span>
                                 </button>
                             </li>
@@ -732,7 +740,7 @@ const Learn = () => {
                                     type="button"
                                 >
                                     <span className="align-middle fw-semibold">
-                                        Home
+                                    {t('home')}
                                     </span>
                                 </button>
                             </li>
@@ -748,7 +756,7 @@ const Learn = () => {
                                 setShowOptionModal(true)
                             }}
                         >
-                            Options
+                            {t('option')}
                         </button>
                     )}
                     <button
@@ -791,11 +799,10 @@ const Learn = () => {
                             <div className="learnFinish mx-auto p-5">
                                 <div>
                                     <h2>
-                                        Congrats! You've studied everything.
+                                    {t('msg18')}.
                                     </h2>
                                     <p>
-                                        Study again to practice the same
-                                        questions or try another study mode.
+                                    {t('msg19')}.
                                     </p>
                                     <img
                                         src={illustration}
@@ -809,13 +816,13 @@ const Learn = () => {
                                             navigate(`/set/${id}`)
                                         }}
                                     >
-                                        Finish Learn mode
+                                    {t('msg20')}
                                     </button>
                                     <button
                                         className="learnFinish_btn learnFinish_btn--primary"
                                         onClick={handleCreateLearn}
                                     >
-                                        Study again
+                                        {t('sagain')}
                                     </button>
                                 </div>
                             </div>
@@ -824,9 +831,9 @@ const Learn = () => {
                         <div>
                             <div className="learnEndProgressContainer">
                                 <div className="learnEndProgress">
-                                    <h2>Great job! You’re making progress.</h2>
+                                    <h2>{t('msg22')}.</h2>
                                     <div className="learnEndProgressNumber mt-5 mb-2">
-                                        {endRound} / {questions.length} terms
+                                        {endRound} / {questions.length} {t('term')}
                                     </div>
                                     <div className="progress-stacked">
                                         <div
@@ -874,7 +881,7 @@ const Learn = () => {
                             </div>
                             <div className="learnEndTerms mt-4">
                                 <div className="learnEndProgressNumber mb-4">
-                                    Terms studied in this round
+                                    {t('msg23')}
                                 </div>
                                 {currentRound.map((round) => (
                                     <ViewCard
@@ -956,13 +963,13 @@ const Learn = () => {
                         <div className="learnIncorrectBox">
                             <div className="quizQues_container h-100 d-flex align-items-center justify-content-between">
                                 <span className="quizQues_label">
-                                    Press any key to continue
+                                    {t('msg24')}
                                 </span>
                                 <button
                                     className="btn btn-primary"
                                     onClick={nextQuestion}
                                 >
-                                    Continue
+                                    {t('continue')}
                                 </button>
                             </div>
                         </div>
@@ -970,7 +977,7 @@ const Learn = () => {
                 </div>
             ) : (
                 <div className="mt-5 text-center">
-                    <h4>You must have at least 2 cards to learn study set</h4>
+                    <h4>{t('msg25')}</h4>
                 </div>
             )}
             {/* Option modal */}
@@ -986,7 +993,7 @@ const Learn = () => {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h3 className="modal-title" id="quizOptionModalLabel">
-                            Options
+                        {t('option')}
                         </h3>
                         <button
                             type="button"
@@ -1005,7 +1012,7 @@ const Learn = () => {
                             <div className="col-6">
                                 {/* types */}
                                 <div className="quizOptionBlock">
-                                    <legend>QUESTION TYPES</legend>
+                                    <legend>{t('qtypes')}</legend>
                                     <div className="mb-2">
                                         <input
                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -1023,7 +1030,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="written"
                                         >
-                                            Written
+                                            {t('written')}
                                         </label>
                                     </div>
                                     <div className="mb-2">
@@ -1043,7 +1050,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="mupltipleChoice"
                                         >
-                                            Multiple choice
+                                           {t('mc')}
                                         </label>
                                     </div>
                                     <div className="mb-2">
@@ -1063,13 +1070,13 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="trueFalse"
                                         >
-                                            True/False
+                                           {t('tf')}
                                         </label>
                                     </div>
                                 </div>
                                 {/* picture */}
                                 <div className="quizOptionBlock">
-                                    <legend>PICTURE</legend>
+                                    <legend>{t('picture')}</legend>
                                     <div className="mb-2">
                                         <input
                                             id="picture"
@@ -1086,13 +1093,13 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="picture"
                                         >
-                                            Show picture
+                                            {t('show')} {t('picture')}
                                         </label>
                                     </div>
                                 </div>
                                 {/* audio */}
                                 <div className="quizOptionBlock">
-                                    <legend>AUDIO</legend>
+                                    <legend>{t('audio')}</legend>
                                     <div className="mb-2">
                                         <input
                                             id="audio"
@@ -1109,13 +1116,13 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="audio"
                                         >
-                                            Show audio
+                                            {t('show')} {t('audio')}
                                         </label>
                                     </div>
                                 </div>
                                 {/* note */}
                                 <div className="quizOptionBlock">
-                                    <legend>NOTE</legend>
+                                    <legend>{t('note')}</legend>
                                     <div className="mb-2">
                                         <input
                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -1132,7 +1139,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="note"
                                         >
-                                            Show note
+                                            {t('show')} {t('note')}
                                         </label>
                                     </div>
                                 </div>
@@ -1140,7 +1147,7 @@ const Learn = () => {
                             <div className="col-6">
                                 {/* status */}
                                 <div className="quizOptionBlock">
-                                    <legend>PROGRESS STATUS</legend>
+                                    <legend>{t('pst')}</legend>
                                     <div className="mb-2">
                                         <input
                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -1165,7 +1172,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="notStudied"
                                         >
-                                            Not studied
+                                            {t('nstudied')}
                                         </label>
                                     </div>
                                     <div className="mb-2">
@@ -1192,7 +1199,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="stillLearning"
                                         >
-                                            Still learning
+                                            {t('still')}
                                         </label>
                                     </div>
                                     <div className="mb-2">
@@ -1219,13 +1226,13 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="mastered"
                                         >
-                                            Mastered
+                                            {t('master')}
                                         </label>
                                     </div>
                                 </div>
                                 {/* star */}
                                 <div className="quizOptionBlock">
-                                    <legend>STAR</legend>
+                                    <legend>{t('star')}</legend>
                                     <div className="mb-2">
                                         <input
                                             className={`form-check-input ${FormStyles.formCheckInput} ms-0`}
@@ -1246,13 +1253,13 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="isStar"
                                         >
-                                            Study starred terms only
+                                            {t('studyStarred')}
                                         </label>
                                     </div>
                                 </div>
                                 {/* shuffle  */}
                                 <div className="quizOptionBlock">
-                                    <legend>SHUFFLE</legend>
+                                    <legend>{t('shuffle')}</legend>
                                     <div className="mb-2">
                                         <input
                                             id="shuffle"
@@ -1269,7 +1276,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="shuffle"
                                         >
-                                            Shuffle cards
+                                            {t('scard')}
                                         </label>
                                     </div>
                                 </div>
@@ -1291,7 +1298,7 @@ const Learn = () => {
                                     role="tab"
                                     aria-controls="listWritten"
                                 >
-                                    Written
+                                    {t('written')}
                                 </a>
                             </li>
                             <li className="nav-item">
@@ -1307,7 +1314,7 @@ const Learn = () => {
                                     role="tab"
                                     aria-controls="listMultiple"
                                 >
-                                    Multiple choice
+                                    {t('mc')}
                                 </a>
                             </li>
                             <li className="nav-item">
@@ -1323,7 +1330,7 @@ const Learn = () => {
                                     role="tab"
                                     aria-controls="listTrueFalse"
                                 >
-                                    True/False
+                                    {t('tf')}
                                 </a>
                             </li>
                         </ul>
@@ -1342,7 +1349,7 @@ const Learn = () => {
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="quizOptionBlock mb-4">
-                                            <legend>PROMPT WITH</legend>
+                                            <legend>{t('prw')}</legend>
                                             {fields?.map((field, index) => (
                                                 <div
                                                     className="mb-2"
@@ -1433,7 +1440,7 @@ const Learn = () => {
                                     </div>
                                     <div className="col-6">
                                         <div className="quizOptionBlock">
-                                            <legend>ANSWER WITH</legend>
+                                            <legend>{t('anws')}</legend>
                                             {fields?.map((field, index) => (
                                                 <div
                                                     className="mb-2"
@@ -1489,7 +1496,7 @@ const Learn = () => {
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="quizOptionBlock mb-4">
-                                            <legend>PROMPT WITH</legend>
+                                            <legend>{t('prw')}</legend>
                                             {fields?.map((field, index) => (
                                                 <div
                                                     className="mb-2"
@@ -1580,7 +1587,7 @@ const Learn = () => {
                                     </div>
                                     <div className="col-6">
                                         <div className="quizOptionBlock">
-                                            <legend>ANSWER WITH</legend>
+                                            <legend>{t('anws')}</legend>
                                             {fields?.map((field, index) => (
                                                 <div
                                                     className="mb-2"
@@ -1685,7 +1692,7 @@ const Learn = () => {
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="quizOptionBlock mb-4">
-                                            <legend>PROMPT WITH</legend>
+                                            <legend>{t('prw')}</legend>
                                             {fields?.map((field, index) => (
                                                 <div
                                                     className="mb-2"
@@ -1776,7 +1783,7 @@ const Learn = () => {
                                     </div>
                                     <div className="col-6">
                                         <div className="quizOptionBlock">
-                                            <legend>ANSWER WITH</legend>
+                                            <legend>{t('anws')}</legend>
                                             {fields?.map((field, index) => (
                                                 <div
                                                     className="mb-2"
@@ -1876,7 +1883,7 @@ const Learn = () => {
                             data-bs-dismiss="modal"
                             onClick={handleCancelCreateLearn}
                         >
-                            Cancel
+                            {t('cancel')}
                         </button>
                         <button
                             className="btn btn-primary classModalBtn"

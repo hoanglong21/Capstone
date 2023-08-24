@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 
@@ -7,6 +7,7 @@ import UserService from '../../services/UserService'
 import { logout } from '../../features/auth/authSlice'
 import './settings.css'
 import FormStyles from '../../assets/styles/Form.module.css'
+import { useTranslation } from 'react-i18next'
 
 const DeleteAccount = () => {
     const navigate = useNavigate()
@@ -69,12 +70,20 @@ const DeleteAccount = () => {
             }
         }
     }
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     return (
         <div className="settings-lang">
-            <h4 className='settings-h4'>Permanently delete {userInfo.username}</h4>
+            <h4 className='settings-h4'>{t('perDelete')} {userInfo.username}</h4>
             <p className='settings-p'>
-                Careful! This will delete all of your data and cannot be undone.
+            {t('msg53')}
             </p>
             <form className="mt-4 needs-validation" noValidate>
                 {/* error message */}
@@ -88,7 +97,7 @@ const DeleteAccount = () => {
                 )}
                 <div className="form-group mb-3">
                     <label className={FormStyles.formLabel}>
-                        Current Password
+                    {t('current')} {t('password')}
                     </label>
                     <input
                         id="currentPass"
@@ -100,15 +109,14 @@ const DeleteAccount = () => {
                         required
                     />
                     <p className="mt-2 settings-p" style={{ color: 'var(--text-light)' }}>
-                        Enter your current password to confirm cancellation of
-                        your account
+                    {t('msg54')}
                     </p>
                 </div>
                 <button
                     className="btn btn-danger px-4 mt-4"
                     onClick={handleSubmit}
                 >
-                    Delete account
+                    {t('delete')} {t('account')}
                 </button>
             </form>
             {/* Confirm Modal */}
@@ -119,12 +127,10 @@ const DeleteAccount = () => {
                 }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete Account</Modal.Title>
+                    <Modal.Title>{t('delete')} {t('account')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    You are about to delete all of the data in your Nihongo
-                    Level Up account. Are you absolutely positive? There is no
-                    option to 'undo'.
+                {t('msg55')}.
                 </Modal.Body>
                 <Modal.Footer>
                     <button
@@ -135,14 +141,14 @@ const DeleteAccount = () => {
                             setShowConfirmModal(false)
                         }}
                     >
-                        Cancel
+                        {t('cancel')}
                     </button>
                     <button
                         type="button"
                         className="btn btn-danger"
                         onClick={handleDelete}
                     >
-                        Delete {userInfo.username}'s account
+                        {t('delete')} {userInfo.username} {t('account')}
                     </button>
                 </Modal.Footer>
             </Modal>

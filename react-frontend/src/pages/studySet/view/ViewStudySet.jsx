@@ -36,6 +36,7 @@ import banned from '../../../assets/images/banned.png'
 import verified from '../../../assets/images/verified.png'
 import deleted from '../../../assets/images/deleted.png'
 import './viewStudySet.css'
+import { useTranslation } from 'react-i18next'
 
 const ViewStudySet = () => {
     const navigate = useNavigate()
@@ -78,7 +79,14 @@ const ViewStudySet = () => {
     const [showAssignModal, setShowAssignModal] = useState(false)
     const [showReportModal, setShowReportModal] = useState(false)
     const [showWarningModal, setShowWarningModal] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+  const { t, i18n } = useTranslation();
 
+  useEffect(() => {
+    if (userToken) {
+      i18n.changeLanguage(userLanguage);
+    }
+  }, [userLanguage]);
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
@@ -315,7 +323,7 @@ const ViewStudySet = () => {
                             className="StudyModesIcon"
                             size="2rem"
                         />
-                        <span className="studyModesItemName">Flashcards</span>
+                        <span className="studyModesItemName">{t('flashcard')}</span>
                     </button>
                 </div>
                 <div className="studyset-col-4">
@@ -334,7 +342,7 @@ const ViewStudySet = () => {
                             size="2rem"
                         />
                         <span className="studyModesItemName" href="/learn">
-                            Learn
+                        {t('learn')}
                         </span>
                     </button>
                 </div>
@@ -350,7 +358,7 @@ const ViewStudySet = () => {
                         }}
                     >
                         <TestSolidIcon className="StudyModesIcon" size="2rem" />
-                        <span className="studyModesItemName">Quiz</span>
+                        <span className="studyModesItemName">{t('quiz')}</span>
                     </button>
                 </div>
             </div>
@@ -458,7 +466,7 @@ const ViewStudySet = () => {
                                                 strokeWidth="2"
                                             />
                                             <span className="align-middle fw-semibold">
-                                                Add to a class
+                                            {t('addClass')}
                                             </span>
                                         </button>
                                     </li>
@@ -480,7 +488,7 @@ const ViewStudySet = () => {
                                             size="1.3rem"
                                         />
                                         <span className="align-middle fw-semibold">
-                                            Edit
+                                        {t('edit')}
                                         </span>
                                     </button>
                                 </li>
@@ -502,7 +510,7 @@ const ViewStudySet = () => {
                                             strokeWidth="2"
                                         />
                                         <span className="align-middle fw-semibold">
-                                            Delete
+                                        {t('delete')}
                                         </span>
                                     </button>
                                 </li>
@@ -527,14 +535,14 @@ const ViewStudySet = () => {
             </div>
             {/* Description */}
             <div className="setPageTermsHeader mb-3">
-                <div className="setPageTermsHeading mb-1">Description</div>
+                <div className="setPageTermsHeading mb-1">{t('description')}</div>
                 <div>{studySet?.description || '...'}</div>
             </div>
             {/* Progress */}
             {userToken && (
                 <div className="setPageProgress mb-4">
                     <div className="setPageTermsHeading mb-3">
-                        Your Progress
+                    {t('ypro')}
                     </div>
                     <div className="row">
                         {/* not studied */}
@@ -573,11 +581,11 @@ const ViewStudySet = () => {
                                                 </div>
                                             </div>
                                             <h5 className="setPageProgressLabel m-0 ms-3 ms-sm-0 ms-lg-3">
-                                                Not studied
+                                            {t('nstudied')}
                                             </h5>
                                         </div>
                                         <span className="setPageProgressLink">
-                                            Study
+                                        {t('study')}
                                         </span>
                                     </div>
                                 </div>
@@ -621,11 +629,11 @@ const ViewStudySet = () => {
                                                 </div>
                                             </div>
                                             <h5 className="setPageProgressLabel m-0 ms-3 ms-sm-0 ms-lg-3">
-                                                Still learning
+                                            {t('still')}
                                             </h5>
                                         </div>
                                         <span className="setPageProgressLink">
-                                            Study
+                                        {t('study')}
                                         </span>
                                     </div>
                                 </div>
@@ -669,11 +677,11 @@ const ViewStudySet = () => {
                                                 </div>
                                             </div>
                                             <h5 className="setPageProgressLabel m-0 ms-3 ms-sm-0 ms-lg-3">
-                                                Mastered
+                                            {t('master')}
                                             </h5>
                                         </div>
                                         <span className="setPageProgressLink">
-                                            Study
+                                        {t('study')}
                                         </span>
                                     </div>
                                 </div>
@@ -685,7 +693,7 @@ const ViewStudySet = () => {
             {/* Details */}
             <div className="setPageTermsHeader d-flex align-items-center justify-content-between">
                 <div className="setPageTermsHeading mb-2">
-                    Terms in this set ({numCards})
+                {t('termin')} ({numCards})
                 </div>
                 {userInfo?.id && (
                     <div className="d-flex align-items-center">
@@ -709,7 +717,7 @@ const ViewStudySet = () => {
                                 className="btn btn-outline-secondary btn-sm"
                                 htmlFor="allType"
                             >
-                                All
+                                {t('all')}
                             </label>
                             <input
                                 type="radio"
@@ -755,7 +763,7 @@ const ViewStudySet = () => {
                                         }}
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                            All progress
+                                        {t('allpro')}
                                         </span>
                                     </button>
                                 </li>
@@ -773,7 +781,7 @@ const ViewStudySet = () => {
                                         }
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                            Not studied
+                                        {t('nstudied')}
                                         </span>
                                     </button>
                                 </li>
@@ -791,7 +799,7 @@ const ViewStudySet = () => {
                                         }
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                            Still learning
+                                        {t('still')}
                                         </span>
                                     </button>
                                 </li>
@@ -809,7 +817,7 @@ const ViewStudySet = () => {
                                         }
                                     >
                                         <span className="setPageTermHeader_dropdown">
-                                            Mastered
+                                        {t('master')}
                                         </span>
                                     </button>
                                 </li>
@@ -854,7 +862,7 @@ const ViewStudySet = () => {
                                         setShowWarningModal(true)
                                     }}
                                 >
-                                    View more
+                                    {t('vmore')}
                                 </button>
                             </div>
                         )
@@ -920,7 +928,7 @@ const ViewStudySet = () => {
                             </div>
                         )}
                         {comments?.length === 0 ? (
-                            <div>No comments</div>
+                            <div>{t('nocmt')}</div>
                         ) : (
                             comments.map((comment, index) => (
                                 <Comment
@@ -959,11 +967,10 @@ const ViewStudySet = () => {
                 }}
             >
                 <Modal.Header className="border-0" closeButton>
-                    <Modal.Title>Login Required</Modal.Title>
+                    <Modal.Title>{t('msg35')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    In order to use this feature, you need to login. Would you
-                    like to login now or later?
+                {t('msg36')}?
                 </Modal.Body>
                 <Modal.Footer className="border-0">
                     <button
@@ -972,7 +979,7 @@ const ViewStudySet = () => {
                             setShowWarningModal(false)
                         }}
                     >
-                        Later
+                        {t('later')}
                     </button>
                     <button
                         className="btn btn-primary"
@@ -980,7 +987,7 @@ const ViewStudySet = () => {
                             navigate('/login')
                         }}
                     >
-                        Log in now
+                        {t('msg37')}
                     </button>
                 </Modal.Footer>
             </Modal>

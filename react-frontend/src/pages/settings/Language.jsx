@@ -48,8 +48,8 @@ const Language = () => {
 
     return (
         <div className="settings-lang">
-            <h4 className="settings-h4">Choose your language</h4>
-            <p className="settings-p">Adjust the language you see in menu</p>
+            <h4 className="settings-h4">{t('chooseLang')}</h4>
+            <p className="settings-p">{t('msg51')}</p>
             <form className="mt-4 needs-validation" noValidate>
                 <select
                     className={`form-select ${FormStyles.formSelect} mb-1`}
@@ -67,7 +67,7 @@ const Language = () => {
                     className="btn btn-primary px-4 mt-4"
                     onClick={handleSubmit}
                 >
-                    Change your language
+                    {t('changeLang')}
                 </button>
             </form>
         </div>

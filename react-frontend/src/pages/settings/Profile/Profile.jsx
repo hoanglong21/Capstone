@@ -18,6 +18,7 @@ import {
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
+import { useTranslation } from 'react-i18next'
 
 const Profile = () => {
     const dispatch = useDispatch()
@@ -32,7 +33,15 @@ const Profile = () => {
     const [loading, setLoading] = useState(false)
 
     const [showAvatarModal, setShowAvatarModal] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     // fetch user state
     useEffect(() => {
         setNewUser({ ...userInfo })
@@ -168,7 +177,7 @@ const Profile = () => {
 
     return (
         <div className="setting-profile">
-            <h4 className="my-profile">My Profile</h4>
+            <h4 className="my-profile">{t('myPro')}</h4>
             <form className="row g-4 needs-validation" noValidate>
                 {/* error message */}
                 {(errorMess || error) && (
@@ -184,7 +193,7 @@ const Profile = () => {
                         className="alert alert-success col-12 mb-0"
                         role="alert"
                     >
-                        Your changes have been successfully saved!
+                        {t('msg44')}!
                     </div>
                 )}
                 {/* avatar */}
@@ -209,7 +218,7 @@ const Profile = () => {
                 </div>
                 {/* Username */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>Username</label>
+                    <label className={FormStyles.formLabel}>{t('username')}</label>
                     <input
                         id="username"
                         className="form-control-plaintext p-0"
@@ -222,7 +231,7 @@ const Profile = () => {
                 </div>
                 {/* Email */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>Email</label>
+                    <label className={FormStyles.formLabel}>{t('email')}</label>
                     <input
                         id="email"
                         name="email"
@@ -235,7 +244,7 @@ const Profile = () => {
                 </div>
                 {/* First name */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>First Name</label>
+                    <label className={FormStyles.formLabel}>{t('firstname')}</label>
                     <input
                         id="first_name"
                         name="first_name"
@@ -249,7 +258,7 @@ const Profile = () => {
                 </div>
                 {/* Last name */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>Last Name</label>
+                    <label className={FormStyles.formLabel}>{t('lastname')}</label>
                     <input
                         id="last_name"
                         name="last_name"
@@ -264,7 +273,7 @@ const Profile = () => {
                 {/* DOB  */}
                 <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>
-                        Date of Birth
+                    {t('dob')}
                     </label>
                     <input
                         id="dob"
@@ -280,7 +289,7 @@ const Profile = () => {
                 </div>
                 {/* Phone */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>Phone</label>
+                    <label className={FormStyles.formLabel}>{t('phone')}</label>
                     <input
                         id="phone"
                         className={`form-control ${FormStyles.formControl}`}
@@ -294,7 +303,7 @@ const Profile = () => {
                 {/* Gender */}
                 <div className="form-group profile-col-6">
                     <label className={`d-block ${FormStyles.formLabel}`}>
-                        Gender
+                    {t('gender')}
                     </label>
                     <div className="form-check form-check-inline me-5">
                         <input
@@ -309,7 +318,7 @@ const Profile = () => {
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="male">
-                            Male
+                        {t('male')}
                         </label>
                     </div>
                     <div className="form-check form-check-inline me-5">
@@ -325,7 +334,7 @@ const Profile = () => {
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="female">
-                            Female
+                        {t('female')}
                         </label>
                     </div>
                     <div className="form-check form-check-inline">
@@ -341,13 +350,13 @@ const Profile = () => {
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="other">
-                            Other
+                        {t('other')}
                         </label>
                     </div>
                 </div>
                 {/* Role */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>Role</label>
+                    <label className={FormStyles.formLabel}>{t('role')}</label>
                     <input
                         name="role"
                         type="text"
@@ -365,7 +374,7 @@ const Profile = () => {
                 </div>
                 {/* Address */}
                 <div className="form-group col-12">
-                    <label className={FormStyles.formLabel}>Address</label>
+                    <label className={FormStyles.formLabel}>{t('address')}</label>
                     <input
                         id="address"
                         name="address"
@@ -378,7 +387,7 @@ const Profile = () => {
                 </div>
                 {/* Bio */}
                 <div className="form-group col-12">
-                    <label className={FormStyles.formLabel}>Bio</label>
+                    <label className={FormStyles.formLabel}>{t('bio')}</label>
                     <textarea
                         id="bio"
                         name="bio"
@@ -394,7 +403,7 @@ const Profile = () => {
                         disabled={userInfo?.status === 'pending'}
                         onClick={handleSubmit}
                     >
-                        Save
+                        {t('save')}
                     </button>
                 </div>
             </form>
@@ -418,7 +427,7 @@ const Profile = () => {
                 <div className="modal-content">
                     <div className="modal-body">
                         <div className="d-flex modal-heading justify-content-between align-items-center">
-                            <p className="">Choose your profile picture</p>
+                            <p className="">{t('propic')}</p>
                             <button
                                 id="toggleModal"
                                 type="button"
@@ -493,7 +502,7 @@ const Profile = () => {
                                 />
                                 <button className="btn btn-info p-0">
                                     <label htmlFor="uploadAvatar">
-                                        Upload your own avatar
+                                    {t('ava')}
                                     </label>
                                 </button>
                             </div>
