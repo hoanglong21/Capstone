@@ -47,6 +47,7 @@ const ClassLayout = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showAssignModal, setShowAssignModal] = useState(false)
     const [showReportModal, setShowReportModal] = useState(false)
+    const [showWarningModal, setShowWarningModal] = useState(false)
 
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
@@ -352,7 +353,13 @@ const ClassLayout = () => {
                                     <button
                                         className="btn btn-outline-primary rounded"
                                         type="button"
-                                        onClick={handleRequest}
+                                        onClick={() => {
+                                            if (userInfo?.id) {
+                                                handleRequest()
+                                            } else {
+                                                setShowWarningModal(true)
+                                            }
+                                        }}
                                     >
                                         Request to join class
                                     </button>
@@ -612,6 +619,40 @@ const ClassLayout = () => {
                     userInfo={userInfo}
                     destination={`class/${id}`}
                 />
+                {/* warning modal */}
+                <Modal
+                    className="mt-5"
+                    show={showWarningModal}
+                    onHide={() => {
+                        setShowWarningModal(false)
+                    }}
+                >
+                    <Modal.Header className="border-0" closeButton>
+                        <Modal.Title>Login Required</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        In order to use this feature, you need to login. Would
+                        you like to login now or later?
+                    </Modal.Body>
+                    <Modal.Footer className="border-0">
+                        <button
+                            className="btn btn-light"
+                            onClick={() => {
+                                setShowWarningModal(false)
+                            }}
+                        >
+                            Later
+                        </button>
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                                navigate('/login')
+                            }}
+                        >
+                            Log in now
+                        </button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }

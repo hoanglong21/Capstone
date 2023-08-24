@@ -177,6 +177,12 @@ const App = () => {
                     {/* Class */}
                     <Route path="class/:id" element={<ClassLayout />} />
                 </Route>
+                {/* No header + footer */}
+                {/* Auth */}
+                <Route element={<AuthLayout />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                </Route>
                 {/* user */}
                 <Route element={<UserProtectedRoute />}>
                     {/* Header + footer */}
@@ -285,25 +291,14 @@ const App = () => {
                         </Route>
                     </Route>
                     {/* No header + footer */}
-                    {/* Auth */}
-                    <Route element={<AuthLayout />}>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                    </Route>
-                    {/* Access deny */}
-                    <Route element={<ProtectedRoute />}>
-                        {/* study set */}
-                        <Route path="flashcards/:id" element={<Flashcard />} />
-                        <Route path="quiz/:id" element={<DoQuiz />} />
-                        <Route path="learn/:id" element={<Learn />} />
-                        <Route path="video-call" element={<VideoCall />} />
-                        <Route
-                            path="video-call/:call"
-                            element={<VideoCall />}
-                        />
-                        {/* test */}
-                        <Route path="do-test/:id" element={<DoTest />} />
-                    </Route>
+                    {/* study set */}
+                    <Route path="flashcards/:id" element={<Flashcard />} />
+                    <Route path="quiz/:id" element={<DoQuiz />} />
+                    <Route path="learn/:id" element={<Learn />} />
+                    <Route path="video-call" element={<VideoCall />} />
+                    <Route path="video-call/:call" element={<VideoCall />} />
+                    {/* test */}
+                    <Route path="do-test/:id" element={<DoTest />} />
                 </Route>
                 {/* admin */}
                 <Route element={<AdminProtectedRoute />}>
