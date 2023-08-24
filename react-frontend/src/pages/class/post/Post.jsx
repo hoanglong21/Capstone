@@ -76,7 +76,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                 setUploadFiles([...tempFiles])
                 // comments
                 const tempComments = (
-                    await CommentService.getAllCommentByPostId(post.id)
+                    await CommentService.getAllCommentDTOByPostId(post.id)
                 ).data
                 setComments(tempComments)
             } catch (error) {
@@ -228,6 +228,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                     id: userInfo.id,
                     username: userInfo.username,
                     avatar: userInfo.avatar,
+                    status: userInfo.status,
                 },
                 content: text,
                 commentType: {

@@ -19,21 +19,22 @@ import { useTranslation } from 'react-i18next'
 function Achievements() {
     const { name } = useParams()
     const { userInfo } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth);
+    const { userToken } = useSelector((state) => state.auth)
 
     const [awards, setAwards] = useState([])
     const [streaks, setStreaks] = useState([])
     const [roundStudied, setRoundStudied] = useState([])
     const [classes, setClasses] = useState([])
-    const { userLanguage } = useSelector((state) => state.user);
+    const { userLanguage } = useSelector((state) => state.user)
 
-  const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -66,7 +67,10 @@ function Achievements() {
                         <div className="card-body achievement">
                             {awards?.length === 0 ? (
                                 <div className="empty">
-                                    {t('anyAchieve')}.
+                                    {name === userInfo?.username
+                                        ? t('anyAchieve')
+                                        : t('anyAchieveNot')}
+                                    .
                                 </div>
                             ) : (
                                 awards?.map((item, index) => {
@@ -227,7 +231,10 @@ function Achievements() {
                         <div className="card-body achievement">
                             {streaks?.length === 0 ? (
                                 <div className="empty">
-                                    {t('anyAchieve')}.
+                                    {name === userInfo?.username
+                                        ? t('anyAchieve')
+                                        : t('anyAchieveNot')}
+                                    .
                                 </div>
                             ) : (
                                 streaks?.map((item, index) => (
@@ -265,7 +272,10 @@ function Achievements() {
                         <div className="card-body achievement">
                             {roundStudied?.length === 0 ? (
                                 <div className="empty">
-                                    {t('anyAchieve')}.
+                                    {name === userInfo?.username
+                                        ? t('anyAchieve')
+                                        : t('anyAchieveNot')}
+                                    .
                                 </div>
                             ) : (
                                 roundStudied?.map((item, index) => (
@@ -303,7 +313,10 @@ function Achievements() {
                         <div className="card-body achievement">
                             {classes?.length === 0 ? (
                                 <div className="empty">
-                                    {t('anyAchieve')}.
+                                    {name === userInfo?.username
+                                        ? t('anyAchieve')
+                                        : t('anyAchieveNot')}
+                                    .
                                 </div>
                             ) : (
                                 classes?.map((item, index) => (

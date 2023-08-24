@@ -99,6 +99,7 @@ const Instructions = () => {
                     id: userInfo.id,
                     username: userInfo.username,
                     avatar: userInfo.avatar,
+                    status: userInfo.status,
                 },
                 content: text,
                 commentType: {
@@ -238,7 +239,7 @@ const Instructions = () => {
                     </div>
                 </div>
             </div>
-            {/* attchments */}
+            {/* attachments */}
             {attachments?.length > 0 && (
                 <div className="row mb-3">
                     {attachments.map((file, index) => (
@@ -321,7 +322,6 @@ const Instructions = () => {
                     </div>
                 </div>
             )}
-
             {/* delete modal */}
             <DeleteAssignment
                 assign={assignment}
