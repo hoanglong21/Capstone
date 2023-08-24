@@ -22,19 +22,20 @@ const KanjiDict = () => {
       i18n.changeLanguage(userLanguage);
     }
   }, [userLanguage]);
+
   const fetchData = async (searchKey) => {
     setLoading(true);
     try {
       var tempKanjis = [];
-      if (searchKey.length > 1) {
-        for (var i = 0; i < searchKey.length; i++) {
-          var char = searchKey.charAt(i);
-          const temp = (
-            await DictionaryService.getKanji("=1", "=10", `=${char}`)
-          ).data.list;
-          tempKanjis.push(...temp);
-        }
-      } else {
+      // if (searchKey.length > 1) {
+      //   for (var i = 0; i < searchKey.length; i++) {
+      //     var char = searchKey.charAt(i);
+      //     const temp = (
+      //       await DictionaryService.getKanji("=1", "=10", `=${char}`)
+      //     ).data.list;
+      //     tempKanjis.push(...temp);
+      //   }
+      // } else {
         tempKanjis = (
           await DictionaryService.getKanji(
             "=1",
@@ -42,7 +43,7 @@ const KanjiDict = () => {
             `${searchKey ? "=" + searchKey : ""}`
           )
         ).data.list;
-      }
+      // }
       setKanjis(tempKanjis);
       setWord(tempKanjis[0]);
       setActiveIndex(0);
