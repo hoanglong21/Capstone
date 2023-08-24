@@ -106,6 +106,17 @@ const VideoCall = () => {
         dispatch(getUser(localStorage.getItem('userToken')))
     }, [])
 
+    useEffect(() => {
+        const getData = ref(database, 'messages/')
+
+        onChildRemoved(getData, (data) => {
+            alert('Sorry, the person you called is unavailable, turn off')
+            if(alert) {
+                window.close()
+            }
+        })
+    }, [])
+
     let webcamButtonClick = async () => {
         setLoadingSender(true)
         localStream = await navigator.mediaDevices.getUserMedia({
@@ -292,6 +303,8 @@ const VideoCall = () => {
     }
 
     let hangupButtonClick = () => {
+        const paramValue = searchParams.get('param')
+        deleteMessage(paramValue)
         // console.log("hangup")
         //  const videoEndMessage = document.getElementById('videoEndMessage');
         //   videoEndMessage.style.display = 'block';
@@ -365,6 +378,7 @@ const VideoCall = () => {
             window.close()
         }
     }
+    
 
     const deleteMessage = (messageId) => {
         // console.log(self);
