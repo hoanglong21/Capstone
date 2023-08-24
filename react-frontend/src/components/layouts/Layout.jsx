@@ -115,17 +115,17 @@ export default function Layout() {
 
     const answerCall = async (message) => {
         setIsAccept(true)
-        if (sessionStorage.getItem("callId")) {
-            alert("You are in another call")
-            return
-        }
+        // if (sessionStorage.getItem("callId")) {
+        //     alert("You are in another call")
+        //     return
+        // }
         sessionStorage.setItem("callId", message.message)
         var myWindow = window.open('', 'myWindow')
         var newURL =
             window.location.origin +
             '/video-call/' +
             message.message +
-            '?accepted=true'
+            '?accepted=true&video=' + message.key
         // Check if the window is already open
         if (myWindow.location.href === 'about:blank') {
             // If the window is not yet navigated to a page, navigate to the desired page

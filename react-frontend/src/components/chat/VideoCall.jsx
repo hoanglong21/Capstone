@@ -110,10 +110,10 @@ const VideoCall = () => {
         const getData = ref(database, 'messages/')
 
         onChildRemoved(getData, (data) => {
-            alert('Sorry, the person you called is unavailable, turn off')
-            if(alert) {
+            // alert('Sorry, the person you called is unavailable, turn off')
+            // if(alert) {
                 window.close()
-            }
+            // }
         })
     }, [])
 
@@ -303,8 +303,15 @@ const VideoCall = () => {
     }
 
     let hangupButtonClick = () => {
-        const paramValue = searchParams.get('param')
-        deleteMessage(paramValue)
+        try {
+            const paramValue = searchParams.get('video')
+            if(paramValue!=null) {
+                deleteMessage(paramValue)
+            }
+        } catch(err) {
+            
+        }
+        
         // console.log("hangup")
         //  const videoEndMessage = document.getElementById('videoEndMessage');
         //   videoEndMessage.style.display = 'block';
