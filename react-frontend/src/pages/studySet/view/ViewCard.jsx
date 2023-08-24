@@ -249,7 +249,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
 
     return (
         <div
-            className="setPageTerm mb-3"
+            className="setPageTerm pe-1 mb-3"
             onMouseEnter={() => {
                 setShowButton(true)
             }}
@@ -286,7 +286,9 @@ const ViewCard = ({ fullCard, userInfo }) => {
                             ></div>
                         </div>
                         <div className="setPageTerm_imageWrap d-flex align-items-center">
-                            {card.picture && <img src={card?.picture} />}
+                            {(card?.picture || progress?.picture) && (
+                                <img src={card?.picture || progress?.picture} />
+                            )}
                         </div>
                     </div>
                 </div>
@@ -359,7 +361,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                         <div className="setPage_editCardModal setPage_noteModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancel}
                                 >
                                     <CloseIcon size="1.875rem" />
@@ -395,7 +397,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                         <div className="setPage_editCardModal setPage_pictureModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancel}
                                 >
                                     <CloseIcon size="1.875rem" />
@@ -474,7 +476,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
                     )}
                     {/* audio modal */}
                     {showAudio && (
-                        <div className="setPage_editCardModal setPage_audioModal">
+                        <div className="btn setPage_editCardModal setPage_audioModal">
                             <div className="modal-content d-flex">
                                 <button
                                     className="close p-0 mb-3 text-end"

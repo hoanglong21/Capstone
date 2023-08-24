@@ -731,6 +731,7 @@ const ViewStudySet = () => {
                         </div>
                         <div className="dropdown setPageTermsHeader_controls">
                             <button
+                                className="btn"
                                 type="button dropdown-toggle"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
