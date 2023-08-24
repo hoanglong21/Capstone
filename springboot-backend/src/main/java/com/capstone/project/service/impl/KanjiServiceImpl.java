@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class KanjiServiceImpl implements KanjiService {
@@ -156,19 +154,10 @@ public class KanjiServiceImpl implements KanjiService {
         }
         String lowercaseQuery = query.toLowerCase();
 
-        List<String> kanjiList = extractKanji(lowercaseQuery);
-
         // Check if the query matches any property of the Kanji object
-
-        // Big update
-        if (kanjiList.contains(kanji.getCharacter().toLowerCase())) {
+        if (kanji.getCharacter().toLowerCase().contains(lowercaseQuery)) {
             return true;
         }
-        // End of big update
-
-//        if (kanji.getCharacter().toLowerCase().contains(lowercaseQuery)) {
-//            return true;
-//        }
 
         for (String reading : kanji.getReadingVietnam()) {
             //ignore accented Vietnamese
@@ -207,22 +196,5 @@ public class KanjiServiceImpl implements KanjiService {
         return Normalizer.normalize(input, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                 .toLowerCase();
-    }
-
-    private static List<String> extractKanji(String input) {
-        List<String> kanjiList = new ArrayList<>();
-
-        // Define the regular expression pattern for Kanji characters
-        Pattern pattern = Pattern.compile("\\p{Script=Han}");
-
-        // Create a Matcher object
-        Matcher matcher = pattern.matcher(input);
-
-        // Find and add Kanji characters to the list
-        while (matcher.find()) {
-            kanjiList.add(matcher.group());
-        }
-
-        return kanjiList;
     }
 }

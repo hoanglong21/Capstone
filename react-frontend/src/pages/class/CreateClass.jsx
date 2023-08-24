@@ -6,7 +6,6 @@ import Modal from 'react-bootstrap/Modal'
 import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
-import { useTranslation } from 'react-i18next'
 
 export default function CreateClass({ showCreateModal, setShowCreateModal }) {
     let navigate = useNavigate()
@@ -16,16 +15,7 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
     const [newClass, setNewClass] = useState({})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
-    useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
-    
+
     useEffect(() => {
         if (showCreateModal === false) {
             setNewClass({
@@ -109,7 +99,7 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
             <Modal.Header closeButton>
                 <Modal.Title>
                     <h5 className="modal-title joinClassModalTitle">
-                    {t('createClass')}
+                        Create a new class
                     </h5>
                 </Modal.Title>
             </Modal.Header>
@@ -137,7 +127,7 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
                             onChange={handleChange}
                             required
                         />
-                        <label htmlFor="class_name">{t('class')} {t('name')}</label>
+                        <label htmlFor="class_name">Class name</label>
                     </div>
                     {/* Description */}
                     <div className="form-floating">
@@ -150,7 +140,7 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
                             placeholder="Enter a description"
                             onChange={handleChange}
                         />
-                        <label htmlFor="description">{t('description')}</label>
+                        <label htmlFor="description">Description</label>
                     </div>
                 </form>
             </Modal.Body>

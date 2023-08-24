@@ -15,7 +15,6 @@ import banned from '../../assets/images/banned.png'
 import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import HistoryService from '../../services/HistoryService'
-import { useTranslation } from 'react-i18next'
 
 const People = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -27,16 +26,7 @@ const People = () => {
     const [requests, setRequests] = useState([])
     const [showToast, setShowToast] = useState(false)
     const [messToast, setMessToast] = useState('')
-    const { userLanguage } = useSelector((state) => state.user);
-  const { userToken } = useSelector((state) => state.auth);
-  const { t, i18n } = useTranslation();
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
-  
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
@@ -180,8 +170,8 @@ const People = () => {
             {requests.length > 0 && (
                 <div className="people_section mb-5">
                     <div className="people_heading mb-3 d-flex justify-content-between">
-                        <h2>{t('request')}</h2>
-                        <p>{requests?.length} {t('reJoin')}</p>
+                        <h2>Requests</h2>
+                        <p>{requests?.length} request to join</p>
                     </div>
                     {requests?.map((request, index) => (
                         <div
@@ -219,7 +209,7 @@ const People = () => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                {t('msg9')}.
+                                                This account is verified.
                                             </Tooltip>
                                         }
                                     >
@@ -234,7 +224,7 @@ const People = () => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                {t('msg8')}.
+                                                This account is deleted.
                                             </Tooltip>
                                         }
                                     >
@@ -251,7 +241,7 @@ const People = () => {
                                     disabled={classroom?._deleted}
                                     onClick={() => handleAccept(request, index)}
                                 >
-                                    {t('accept')}
+                                    Accept
                                 </button>
                                 <span className="people_btnDivider"></span>
                                 <button
@@ -261,7 +251,7 @@ const People = () => {
                                         handleDecline(request, index)
                                     }
                                 >
-                                    {t('decline')}
+                                    Decline
                                 </button>
                             </div>
                         </div>
@@ -270,7 +260,7 @@ const People = () => {
             )}
             <div className="people_section">
                 <div className="people_heading mb-3">
-                    <h2>{t('tutor')}</h2>
+                    <h2>Tutor</h2>
                 </div>
                 <div className="ps-3 d-flex align-items-center">
                     <img
@@ -288,7 +278,7 @@ const People = () => {
                             placement="bottom"
                             overlay={
                                 <Tooltip id="tooltip">
-                                    {t('msg7')}.
+                                    This account is banned.
                                 </Tooltip>
                             }
                         >
@@ -303,7 +293,7 @@ const People = () => {
                             placement="bottom"
                             overlay={
                                 <Tooltip id="tooltip">
-                                    {t('msg8')}.
+                                    This account is verified.
                                 </Tooltip>
                             }
                         >
@@ -318,7 +308,7 @@ const People = () => {
                             placement="bottom"
                             overlay={
                                 <Tooltip id="tooltip">
-                                    {t('msg7')}.
+                                    This account is deleted.
                                 </Tooltip>
                             }
                         >
@@ -332,8 +322,8 @@ const People = () => {
             </div>
             <div className="mt-5 people_section">
                 <div className="people_heading mb-3 d-flex justify-content-between">
-                    <h2>{t('member')}</h2>
-                    <p>{learners?.length} {t('member')}</p>
+                    <h2>Members</h2>
+                    <p>{learners?.length} members</p>
                 </div>
                 {learners?.map((learner, index) => (
                     <div
@@ -355,7 +345,7 @@ const People = () => {
                                 placement="bottom"
                                 overlay={
                                     <Tooltip id="tooltip">
-                                        {t('msg9')}.
+                                        This account is banned.
                                     </Tooltip>
                                 }
                             >
@@ -370,7 +360,7 @@ const People = () => {
                                 placement="bottom"
                                 overlay={
                                     <Tooltip id="tooltip">
-                                        {t('msg8')}.
+                                        This account is verified.
                                     </Tooltip>
                                 }
                             >
@@ -385,7 +375,7 @@ const People = () => {
                                 placement="bottom"
                                 overlay={
                                     <Tooltip id="tooltip">
-                                        {t('msg7')}.
+                                        This account is deleted.
                                     </Tooltip>
                                 }
                             >

@@ -29,8 +29,6 @@ import {
 } from '../../../components/icons'
 import './post.css'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { useTranslation } from 'react-i18next'
 
 const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [showUpdate, setShowUpdate] = useState(false)
@@ -45,11 +43,8 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
-
+    
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
 
     // ignore error
     useEffect(() => {
@@ -96,12 +91,6 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
             fetchData()
         }
     }, [post])
-
-    useEffect(() => {
-        if (userToken) {
-            i18n.changeLanguage(userLanguage)
-        }
-    }, [userLanguage])
 
     const handleUpdatePost = async () => {
         setLoadingUpdatePost(true)
@@ -208,6 +197,17 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                 console.log(error.message)
             }
         }
+    }
+
+    const handleDeleteFile = async (file, index) => {
+        // add to list delete
+        var tempDelete = [...deleteFiles]
+        tempDelete.push(file)
+        setDeleteFiles(tempDelete)
+        // update list file
+        var temp = [...uploadFiles]
+        temp.splice(index, 1)
+        setUploadFiles(temp)
     }
 
     const handleAddComment = async () => {
@@ -383,7 +383,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         }}
                                     />
                                     <label className="createAssign_formLabel createAssign_editorLabel">
-                                        {t('announce')}
+                                        Announce something to your class
                                     </label>
                                 </div>
                                 <div className="mainClass_filesUpload mt-3">
@@ -454,7 +454,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                             onClick={handleCancelUpdatePost}
                                             className="btn btn-light mx-2"
                                         >
-                                            {t('cancel')}
+                                            Cancel
                                         </button>
                                         <button
                                             onClick={handleUpdatePost}
@@ -509,10 +509,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                         <div>
                             <div className="d-flex align-items-center comment_label mb-3">
                                 <MemberSolidIcon size="24px" className="me-2" />
-                                <span>
-                                    {comments.length} {t('class')}{' '}
-                                    {t('comment')}
-                                </span>
+                                <span>{comments.length} class comment</span>
                             </div>
                             {comments.map((comment, index) => (
                                 <Comment
@@ -577,9 +574,11 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                 }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>{t('deleAnnoun')}?</Modal.Title>
+                    <Modal.Title>Delete Announcement?</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="p-4">{t('deleComment')}</Modal.Body>
+                <Modal.Body className="p-4">
+                    Comments will also be deleted
+                </Modal.Body>
                 <Modal.Footer>
                     <button
                         type="button"
@@ -588,14 +587,14 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                             setShowDeleteModal(false)
                         }}
                     >
-                        {t('cancel')}
+                        Cancel
                     </button>
                     <button
                         type="button"
                         className="btn btn-danger"
                         onClick={handleDeletePost}
                     >
-                        {t('delete')}
+                        Delete
                     </button>
                 </Modal.Footer>
             </Modal>

@@ -5,8 +5,6 @@ import ClassService from '../../services/ClassService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import './classLayout/classLayout.css'
-import { useSelector } from 'react-redux'
-import { useTranslation } from 'react-i18next'
 
 const UpdateClass = ({
     classroom,
@@ -26,16 +24,7 @@ const UpdateClass = ({
         }
         return ''
     }
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
-    useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
-    
+
     useEffect(() => {
         if (showEditModal === false) {
             setUpdateClass({ ...classroom })
@@ -122,7 +111,7 @@ const UpdateClass = ({
             <Modal.Header closeButton>
                 <Modal.Title>
                     <h5 className="modal-title editClassModalTitle">
-                    {t('edit')} {t('class')}
+                        Edit class
                     </h5>
                 </Modal.Title>
             </Modal.Header>
@@ -150,7 +139,7 @@ const UpdateClass = ({
                             onChange={handleChange}
                             required
                         />
-                        <label htmlFor="class_name">{t('class')} {t('name')}</label>
+                        <label htmlFor="class_name">Class name</label>
                     </div>
                     {/* Description */}
                     <div className="form-floating">
@@ -163,7 +152,7 @@ const UpdateClass = ({
                             placeholder="Enter a description"
                             onChange={handleChange}
                         />
-                        <label htmlFor="description">{t('description')}</label>
+                        <label htmlFor="description">Description</label>
                     </div>
                 </form>
             </Modal.Body>
