@@ -172,6 +172,17 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         setLoadingUpdatePost(false)
     }
 
+    const handleDeleteFile = async (file, index) => {
+        // add to list delete
+        var tempDelete = [...deleteFiles]
+        tempDelete.push(file)
+        setDeleteFiles(tempDelete)
+        // update list file
+        var temp = [...uploadFiles]
+        temp.splice(index, 1)
+        setUploadFiles(temp)
+    }
+
     const handleUploadFile = async (event) => {
         setLoadingUploadFile(true)
         const file = event.target.files[0]

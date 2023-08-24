@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 import CommentService from '../../services/CommentService'
 
@@ -12,7 +13,6 @@ import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import { OptionVerIcon, SendIcon } from '../icons'
 import './comment.css'
-import { Link } from 'react-router-dom'
 
 const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [isEdit, setIsEdit] = useState(false)
@@ -268,89 +268,89 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
         }
     }
 
-    const handleAddChildComment = async () => {
-        setLoadingComment(true)
-        try {
-            // remove line break
-            var text = new String(addComment)
-            while (true) {
-                const lastIndex = text.lastIndexOf('<p>&nbsp;</p>')
-                if (text.length - 13 !== lastIndex) {
-                    break
-                }
-                text = new String(text.slice(0, lastIndex))
-            }
-            // create child comment
-            var tempComment = {
-                user: {
-                    id: userInfo.id,
-                    username: userInfo.username,
-                    avatar: userInfo.avatar,
-                    status: userInfo.status,
-                },
-                root: { id: comment.id },
-                content: text,
-                commentType: {
-                    id: comment.commentType.id,
-                },
-            }
-            switch (comment.commentType.id) {
-                case 1:
-                    // post
-                    tempComment = {
-                        ...tempComment,
-                        post: { id: comment.post.id },
-                    }
-                    break
-                case 2:
-                    // study set
-                    tempComment = {
-                        ...tempComment,
-                        studySet: { id: comment.studySet.id },
-                    }
-                    break
-                case 3:
-                    // test
-                    tempComment = {
-                        ...tempComment,
-                        test: { id: comment.test.id },
-                    }
-                    break
-                case 4:
-                    // assignment
-                    tempComment = {
-                        ...tempComment,
-                        assignment: { id: comment.assignment.id },
-                    }
-                    break
-                case 5:
-                    // submission
-                    tempComment = {
-                        ...tempComment,
-                        submission: { id: comment.submission.id },
-                    }
-                    break
+    // const handleAddChildComment = async () => {
+    //     setLoadingComment(true)
+    //     try {
+    //         // remove line break
+    //         var text = new String(addComment)
+    //         while (true) {
+    //             const lastIndex = text.lastIndexOf('<p>&nbsp;</p>')
+    //             if (text.length - 13 !== lastIndex) {
+    //                 break
+    //             }
+    //             text = new String(text.slice(0, lastIndex))
+    //         }
+    //         // create child comment
+    //         var tempComment = {
+    //             user: {
+    //                 id: userInfo.id,
+    //                 username: userInfo.username,
+    //                 avatar: userInfo.avatar,
+    //                 status: userInfo.status,
+    //             },
+    //             root: { id: comment.id },
+    //             content: text,
+    //             commentType: {
+    //                 id: comment.commentType.id,
+    //             },
+    //         }
+    //         switch (comment.commentType.id) {
+    //             case 1:
+    //                 // post
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     post: { id: comment.post.id },
+    //                 }
+    //                 break
+    //             case 2:
+    //                 // study set
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     studySet: { id: comment.studySet.id },
+    //                 }
+    //                 break
+    //             case 3:
+    //                 // test
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     test: { id: comment.test.id },
+    //                 }
+    //                 break
+    //             case 4:
+    //                 // assignment
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     assignment: { id: comment.assignment.id },
+    //                 }
+    //                 break
+    //             case 5:
+    //                 // submission
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     submission: { id: comment.submission.id },
+    //                 }
+    //                 break
 
-                default:
-                    break
-            }
-            tempComment = (await CommentService.createComment(tempComment)).data
-            // add to list
-            var tempComments = [...comments]
-            tempComments[index].childComments.push({ ...tempComment })
-            setComments([tempComments])
-            // clear
-            setAddComment('')
-            setIsAdd(false)
-        } catch (error) {
-            if (error.response && error.response.data) {
-                console.log(error.response.data)
-            } else {
-                console.log(error.message)
-            }
-        }
-        setLoadingComment(false)
-    }
+    //             default:
+    //                 break
+    //         }
+    //         tempComment = (await CommentService.createComment(tempComment)).data
+    //         // add to list
+    //         var tempComments = [...comments]
+    //         tempComments[index].childComments.push({ ...tempComment })
+    //         setComments([tempComments])
+    //         // clear
+    //         setAddComment('')
+    //         setIsAdd(false)
+    //     } catch (error) {
+    //         if (error.response && error.response.data) {
+    //             console.log(error.response.data)
+    //         } else {
+    //             console.log(error.message)
+    //         }
+    //     }
+    //     setLoadingComment(false)
+    // }
 
     return (
         <div>
@@ -611,68 +611,77 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                 </div>
                             )}
                     </div>
-                    <div className="ms-3">
-                        {comment?.childComments?.map((child, index) => (
-                            <Comment
-                                key={comment.id}
-                                index={index}
-                                comments={comments}
-                                setComments={setComments}
-                                comment={comment}
-                                userInfo={userInfo}
-                            />
-                        ))}
-                        {/* add comment */}
-                        {isAdd && (
-                            <div className="mb-3">
-                                <div className="d-flex mb-1">
-                                    <img
-                                        src={userInfo?.avatar || defaultAvatar}
-                                        className="comment_img me-3"
+                    {/* {comment?.childComments?.length > 0 && (
+                        <div className="ms-3">
+                            {comment?.childComments?.map(
+                                (child, childIndex) => (
+                                    <Comment
+                                        key={child.id}
+                                        index={childIndex}
+                                        comments={child.childComments}
+                                        setComments={setComments}
+                                        comment={child}
+                                        userInfo={userInfo}
                                     />
-                                    <div className="commentEditor flex-fill">
-                                        <CardEditor
-                                            data={addComment}
-                                            onChange={(event, editor) => {
-                                                setAddComment(editor.getData())
-                                            }}
+                                )
+                            )}
+                            {/* add comment */}
+                    {/* {isAdd && (
+                                <div className="mb-3">
+                                    <div className="d-flex mb-1">
+                                        <img
+                                            src={
+                                                userInfo?.avatar ||
+                                                defaultAvatar
+                                            }
+                                            className="comment_img me-3"
                                         />
+                                        <div className="commentEditor flex-fill">
+                                            <CardEditor
+                                                data={addComment}
+                                                onChange={(event, editor) => {
+                                                    setAddComment(
+                                                        editor.getData()
+                                                    )
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <button
+                                                className="comment_btn ms-1"
+                                                onClick={handleAddChildComment}
+                                                disabled={!addComment}
+                                            >
+                                                {loadingComment ? (
+                                                    <div
+                                                        className="spinner-border spinner-border-sm text-secondary"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            LoadingUpload...
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <SendIcon
+                                                        size="20px"
+                                                        strokeWidth="1.8"
+                                                    />
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <button
-                                            className="comment_btn ms-1"
-                                            onClick={handleAddChildComment}
-                                            disabled={!addComment}
-                                        >
-                                            {loadingComment ? (
-                                                <div
-                                                    className="spinner-border spinner-border-sm text-secondary"
-                                                    role="status"
-                                                >
-                                                    <span className="visually-hidden">
-                                                        LoadingUpload...
-                                                    </span>
-                                                </div>
-                                            ) : (
-                                                <SendIcon
-                                                    size="20px"
-                                                    strokeWidth="1.8"
-                                                />
-                                            )}
-                                        </button>
-                                    </div>
+                                    <button
+                                        className="btn btn-secondary btn-sm p-1 px-2 float-end"
+                                        onClick={() => {
+                                            setIsAdd(false)
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
                                 </div>
-                                <button
-                                    className="btn btn-secondary btn-sm p-1 px-2 float-end"
-                                    onClick={() => {
-                                        setIsAdd(false)
-                                    }}
-                                >
-                                    Cancel
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    )} */}
                 </div>
             )}
             {/* Delete comment modal */}
