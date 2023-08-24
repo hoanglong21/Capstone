@@ -8,12 +8,23 @@ import UserService from '../../../services/UserService'
 import { WarningSolidIcon } from '../../../components/icons'
 import verifyAcc from '../../../assets/images/verify_account.png'
 import './SettingsLayout.css'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const AccountLayout = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [showVerifyModal, setShowVerifyModal] = useState(false)
     const [loading, setLoading] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     const sendVerifyAcc = async () => {
         setLoading(true)
@@ -32,7 +43,7 @@ const AccountLayout = () => {
 
     return (
         <div className="container mt-4 mb-5">
-            <h3 className="setting-h3">Account Settings</h3>
+            <h3 className="setting-h3">{t('accSetting')}</h3>
             {userInfo.status === 'pending' && (
                 <div
                     className="alert alert-warning d-flex align-items-center mt-3"
@@ -41,11 +52,10 @@ const AccountLayout = () => {
                     <WarningSolidIcon size="3rem" />
                     <div className="flex-fill d-flex flex-column ms-2">
                         <h6 className="alert-heading mb-0">
-                            Account Not Verified!
+                        {t('accVer')}!
                         </h6>
                         <div>
-                            Please verify your account in order to change
-                            account settings.
+                        {t('msg59')}.
                         </div>
                     </div>
                     <button
@@ -86,7 +96,7 @@ const AccountLayout = () => {
                             end
                             to="."
                         >
-                            My Profile
+                            {t('myPro')}
                         </NavLink>
                         <NavLink
                             className={
@@ -95,7 +105,7 @@ const AccountLayout = () => {
                             }
                             to="notification"
                         >
-                            Notifications
+                            {t('noti')}
                         </NavLink>
                         <NavLink
                             to="change-language"
@@ -104,7 +114,7 @@ const AccountLayout = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            Language
+                            {t('language')}
                         </NavLink>
                         <NavLink
                             to="change-password"
@@ -113,7 +123,7 @@ const AccountLayout = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            Change Password
+                            {t('changePass')}
                         </NavLink>
                         <NavLink
                             to="delete-account"
@@ -122,7 +132,7 @@ const AccountLayout = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            Delete Account
+                            {t('delete')} {t('account')}
                         </NavLink>
                     </div>
                     <div className="card-account__body col">
@@ -138,15 +148,14 @@ const AccountLayout = () => {
                 }}
             >
                 <Modal.Header closeButton className="border-0">
-                    <Modal.Title>Verify your account</Modal.Title>
+                    <Modal.Title>{t('msg60')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="text-center">
                         <img src={verifyAcc} className="verifyAcc_img" />
                     </div>
                     <p className="mt-3 mb-1">
-                        We've send an email to {userInfo?.email} to verify your
-                        account.
+                    {t('msg62')} {userInfo?.email} {t('msg63')}.
                     </p>
                     <p className="mt-1">
                         <a
@@ -157,9 +166,9 @@ const AccountLayout = () => {
                                 sendVerifyAcc()
                             }}
                         >
-                            Click here
+                            {t('click')}
                         </a>{' '}
-                        to resend email if you did not receive an email.
+                        {t('msg61')}.
                     </p>
                 </Modal.Body>
             </Modal>
