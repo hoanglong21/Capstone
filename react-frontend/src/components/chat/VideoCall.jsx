@@ -118,42 +118,48 @@ const VideoCall = () => {
     }, [])
 
     let webcamButtonClick = async () => {
-        setLoadingSender(true)
-        localStream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true,
-        })
-        remoteStream = new MediaStream()
-
-        // Push tracks from local stream to peer connection
-        localStream.getTracks().forEach((track) => {
-            pc.addTrack(track, localStream)
-        })
-
-        // Pull tracks from remote stream, add to video stream
-        pc.ontrack = (event) => {
-            //Add a bit - if
-            if (remoteStream != null) {
-                setIsWaiting(false)
-                event.streams[0].getTracks().forEach((track) => {
-                    remoteStream.addTrack(track)
-                })
+        try {
+            setLoadingSender(true)
+            localStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true,
+            })
+            remoteStream = new MediaStream()
+    
+            // Push tracks from local stream to peer connection
+            localStream.getTracks().forEach((track) => {
+                pc.addTrack(track, localStream)
+            })
+    
+            // Pull tracks from remote stream, add to video stream
+            pc.ontrack = (event) => {
+                //Add a bit - if
+                if (remoteStream != null) {
+                    setIsWaiting(false)
+                    event.streams[0].getTracks().forEach((track) => {
+                        remoteStream.addTrack(track)
+                    })
+                }
             }
+    
+            document.getElementById('webcamVideo').srcObject = localStream
+            document.getElementById('remoteVideo').srcObject = remoteStream
+            setLoadingSender(false)
+    
+            // After run all
+            const accepted = searchParams.get('accepted')
+            if (accepted == 'true') {
+                answerButtonClick()
+            } else if (accepted == 'false') {
+                answerButtonClick()
+            } else {
+                callButtonClick()
+            }
+        } catch (err) {
+            alert("Please allow your device")
+            window.close()
         }
-
-        document.getElementById('webcamVideo').srcObject = localStream
-        document.getElementById('remoteVideo').srcObject = remoteStream
-        setLoadingSender(false)
-
-        // After run all
-        const accepted = searchParams.get('accepted')
-        if (accepted == 'true') {
-            answerButtonClick()
-        } else if (accepted == 'false') {
-            answerButtonClick()
-        } else {
-            callButtonClick()
-        }
+        
     }
 
     let callButtonClick = async () => {

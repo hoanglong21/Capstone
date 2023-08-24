@@ -1,6 +1,6 @@
 package com.capstone.project.dto;
 
-import com.capstone.project.model.User;
+import com.capstone.project.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +19,18 @@ public class CommentDTO {
     private Date created_date;
 
     private User user;
+
+    private CommentType commentType;
+
+    private Post post;
+
+    private StudySet studySet;
+
+    private Test test;
+
+    private Assignment assignment;
+
+    private Submission submission;
 
     private List<CommentDTO> childComments;
 }

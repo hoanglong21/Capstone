@@ -91,6 +91,12 @@ public class CommentServiceImpl implements CommentService {
                     rootCommentPost.getContent(),
                     rootCommentPost.getCreated_date(),
                     rootCommentPost.getUser(),
+                    rootCommentPost.getCommentType(),
+                    rootCommentPost.getPost(),
+                    rootCommentPost.getStudySet(),
+                    rootCommentPost.getTest(),
+                    rootCommentPost.getAssignment(),
+                    rootCommentPost.getSubmission(),
                     nestedCommentDTOs  // add list child comment
             );
             commentDTOs.add(rootCommentDTO);
@@ -111,6 +117,12 @@ public class CommentServiceImpl implements CommentService {
                     rootComment.getContent(),
                     rootComment.getCreated_date(),
                     rootComment.getUser(),
+                    rootComment.getCommentType(),
+                    rootComment.getPost(),
+                    rootComment.getStudySet(),
+                    rootComment.getTest(),
+                    rootComment.getAssignment(),
+                    rootComment.getSubmission(),
                     nestedCommentDTOs  // add list child comment
             );
             commentDTOs.add(rootCommentDTO);
@@ -131,6 +143,12 @@ public class CommentServiceImpl implements CommentService {
                     rootCommentStudyset.getContent(),
                     rootCommentStudyset.getCreated_date(),
                     rootCommentStudyset.getUser(),
+                    rootCommentStudyset.getCommentType(),
+                    rootCommentStudyset.getPost(),
+                    rootCommentStudyset.getStudySet(),
+                    rootCommentStudyset.getTest(),
+                    rootCommentStudyset.getAssignment(),
+                    rootCommentStudyset.getSubmission(),
                     nestedCommentDTOs  // add list child comment
             );
             commentDTOs.add(rootCommentDTO);
@@ -151,6 +169,12 @@ public class CommentServiceImpl implements CommentService {
                     rootCommentTest.getContent(),
                     rootCommentTest.getCreated_date(),
                     rootCommentTest.getUser(),
+                    rootCommentTest.getCommentType(),
+                    rootCommentTest.getPost(),
+                    rootCommentTest.getStudySet(),
+                    rootCommentTest.getTest(),
+                    rootCommentTest.getAssignment(),
+                    rootCommentTest.getSubmission(),
                     nestedCommentDTOs  // add list child comment
             );
             commentDTOs.add(rootCommentDTO);
@@ -171,6 +195,12 @@ public class CommentServiceImpl implements CommentService {
                     rootCommentAssignment.getContent(),
                     rootCommentAssignment.getCreated_date(),
                     rootCommentAssignment.getUser(),
+                    rootCommentAssignment.getCommentType(),
+                    rootCommentAssignment.getPost(),
+                    rootCommentAssignment.getStudySet(),
+                    rootCommentAssignment.getTest(),
+                    rootCommentAssignment.getAssignment(),
+                    rootCommentAssignment.getSubmission(),
                     nestedCommentDTOs  // add list child comment
             );
             commentDTOs.add(rootCommentDTO);
@@ -191,6 +221,12 @@ public class CommentServiceImpl implements CommentService {
                     rootCommentSubmission.getContent(),
                     rootCommentSubmission.getCreated_date(),
                     rootCommentSubmission.getUser(),
+                    rootCommentSubmission.getCommentType(),
+                    rootCommentSubmission.getPost(),
+                    rootCommentSubmission.getStudySet(),
+                    rootCommentSubmission.getTest(),
+                    rootCommentSubmission.getAssignment(),
+                    rootCommentSubmission.getSubmission(),
                     nestedCommentDTOs  // add list child comment
             );
             commentDTOs.add(rootCommentDTO);
@@ -210,6 +246,12 @@ public class CommentServiceImpl implements CommentService {
                     childComment.getContent(),
                     childComment.getCreated_date(),
                     childComment.getUser(),
+                    childComment.getCommentType(),
+                    childComment.getPost(),
+                    childComment.getStudySet(),
+                    childComment.getTest(),
+                    childComment.getAssignment(),
+                    childComment.getSubmission(),
                     childCommentDTO
             );
             childCommentDTOs.add(nestedCommentDTO);
