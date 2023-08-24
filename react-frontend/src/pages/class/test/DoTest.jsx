@@ -35,6 +35,7 @@ const DoTest = () => {
     const [isEnd, setIsEnd] = useState(false)
     const [showSubmitModal, setShowSubmitModal] = useState(false)
     const [showResultModal, setShowResultModal] = useState(false)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [testEnd, setTestEnd] = useState({})
     const [endSecond, setEndSecond] = useState(null)
     const [endMinute, setEndMinute] = useState(null)
@@ -54,6 +55,7 @@ const DoTest = () => {
             Number(minutes) === endMinute &&
             Number(second) === endSecond
         ) {
+            setIsEnd(true)
             handleSubmit()
         }
     }
@@ -121,6 +123,7 @@ const DoTest = () => {
                 if (tempTest?.duration) {
                     const tempDuration = Number(tempTest.duration)
                     const tempEndMinute = Math.floor(tempDuration)
+                    // console.log((tempDuration - tempEndMinute) * 60)
                     setEndSecond((tempDuration - tempEndMinute) * 60)
                     setEndMinute(tempEndMinute)
                 }
@@ -209,6 +212,7 @@ const DoTest = () => {
 
     const handleSubmit = async () => {
         handleClearInterval()
+        setShowConfirmModal(false)
         setShowSubmitModal(false)
         setLoading(true)
         try {
@@ -281,9 +285,13 @@ const DoTest = () => {
                     <button
                         className="quizClose_btn ms-3 d-flex align-items-center"
                         onClick={() => {
-                            navigate(
-                                `/class/${test?.classroom?.id}/test/${id}/details`
-                            )
+                            if (isEnd) {
+                                navigate(
+                                    `/class/${test?.classroom?.id}/test/${id}/details`
+                                )
+                            } else {
+                                setShowConfirmModal(true)
+                            }
                         }}
                     >
                         <CloseIcon strokeWidth="2" />
@@ -665,6 +673,40 @@ const DoTest = () => {
                         }}
                     >
                         Review
+                    </button>
+                </Modal.Footer>
+            </Modal>
+            {/* confirm modal */}
+            <Modal
+                className="testSubmitModal"
+                show={showConfirmModal}
+                onHide={() => {
+                    setShowConfirmModal(false)
+                }}
+            >
+                <Modal.Body className="pb-2">
+                    <h5 className="modal-title mb-3">
+                        Are you sure you want to turn it off?
+                    </h5>
+                    <p className="modal-text">
+                        Are you sure you want to turn it off? If you turn it
+                        off, all test results will be lost and you will get 0.
+                    </p>
+                </Modal.Body>
+                <Modal.Footer className="border-0">
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary me-2"
+                        onClick={() => setShowConfirmModal(false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        className="btn btn-warning"
+                        onClick={handleSubmit}
+                        disabled={loading}
+                    >
+                        Yes, I want to out.
                     </button>
                 </Modal.Footer>
             </Modal>
