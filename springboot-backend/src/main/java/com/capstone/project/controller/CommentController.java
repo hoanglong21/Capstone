@@ -70,6 +70,36 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getAllCommentBySubmisionId(id));
     }
 
+    @GetMapping("/commentdtobypostid/{id}")
+    public ResponseEntity<?> getAllCommentDTOByPostId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentDTOByPostId(id));
+    }
+
+    @GetMapping("/commentdtobyrootid/{id}")
+    public ResponseEntity<?> getAllCommentDTOByRootId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentDTOByRootId(id));
+    }
+
+    @GetMapping("/commentdtobystudysetid/{id}")
+    public ResponseEntity<?> getAllCommentDTOByStudysetId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentDTOByStudySetId(id));
+    }
+
+    @GetMapping("/commentdtobytestid/{id}")
+    public ResponseEntity<?> getAllCommentDTOByTestId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentDTOByTestId(id));
+    }
+
+    @GetMapping("/commentdtobyasignmentid/{id}")
+    public ResponseEntity<?> getAllCommentDTOByAssignmentId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentDTOByAssignmentId(id));
+    }
+
+    @GetMapping("/commentdtobysubmisionid/{id}")
+    public ResponseEntity<?> getAllCommentDTOBySubmisionId(@PathVariable int id){
+        return ResponseEntity.ok(commentService.getAllCommentDTOBySubmisionId(id));
+    }
+
     @GetMapping("/comments/{id}")
     public ResponseEntity<?> getCommentById(@PathVariable int id){
         try {

@@ -1,5 +1,6 @@
 package com.capstone.project.service.impl;
 
+import com.capstone.project.dto.CommentDTO;
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
 import com.capstone.project.repository.CommentRepository;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -63,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getAllCommentByStudySetId(int id) {
-        return commentRepository.getCommentByStudySetId(id);
+        return null;
     }
 
     @Override
@@ -79,6 +77,145 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> getAllCommentBySubmisionId(int id) {
         return commentRepository.getCommentBySubmissionId(id);
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentDTOByPostId(int postid) {
+        List<Comment> rootCommentsPost = commentRepository.getCommentByPostId(postid);
+        List<CommentDTO> commentDTOs = new ArrayList<>();
+
+        for (Comment rootCommentPost : rootCommentsPost) {
+            List<CommentDTO> nestedCommentDTOs = getChildCommentDTOs(rootCommentPost);
+            CommentDTO rootCommentDTO = new CommentDTO(
+                    rootCommentPost.getId(),
+                    rootCommentPost.getContent(),
+                    rootCommentPost.getCreated_date(),
+                    rootCommentPost.getUser(),
+                    nestedCommentDTOs  // add list child comment
+            );
+            commentDTOs.add(rootCommentDTO);
+        }
+
+        return commentDTOs;
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentDTOByRootId(int rootid) {
+        List<Comment> rootCommentsPost = commentRepository.getCommentByRootId(rootid);
+        List<CommentDTO> commentDTOs = new ArrayList<>();
+
+        for (Comment rootComment : rootCommentsPost) {
+            List<CommentDTO> nestedCommentDTOs = getChildCommentDTOs(rootComment);
+            CommentDTO rootCommentDTO = new CommentDTO(
+                    rootComment.getId(),
+                    rootComment.getContent(),
+                    rootComment.getCreated_date(),
+                    rootComment.getUser(),
+                    nestedCommentDTOs  // add list child comment
+            );
+            commentDTOs.add(rootCommentDTO);
+        }
+
+        return commentDTOs;
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentDTOByStudySetId(int studysetid) {
+        List<Comment> rootCommentsStudyset = commentRepository.getCommentByStudySetId(studysetid);
+        List<CommentDTO> commentDTOs = new ArrayList<>();
+
+        for (Comment rootCommentStudyset : rootCommentsStudyset) {
+            List<CommentDTO> nestedCommentDTOs = getChildCommentDTOs(rootCommentStudyset);
+            CommentDTO rootCommentDTO = new CommentDTO(
+                    rootCommentStudyset.getId(),
+                    rootCommentStudyset.getContent(),
+                    rootCommentStudyset.getCreated_date(),
+                    rootCommentStudyset.getUser(),
+                    nestedCommentDTOs  // add list child comment
+            );
+            commentDTOs.add(rootCommentDTO);
+        }
+
+        return commentDTOs;
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentDTOByTestId(int testid) {
+        List<Comment> rootCommentsTest = commentRepository.getCommentByTestId(testid);
+        List<CommentDTO> commentDTOs = new ArrayList<>();
+
+        for (Comment rootCommentTest : rootCommentsTest) {
+            List<CommentDTO> nestedCommentDTOs = getChildCommentDTOs(rootCommentTest);
+            CommentDTO rootCommentDTO = new CommentDTO(
+                    rootCommentTest.getId(),
+                    rootCommentTest.getContent(),
+                    rootCommentTest.getCreated_date(),
+                    rootCommentTest.getUser(),
+                    nestedCommentDTOs  // add list child comment
+            );
+            commentDTOs.add(rootCommentDTO);
+        }
+
+        return commentDTOs;
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentDTOByAssignmentId(int assignmentid) {
+        List<Comment> rootCommentsAssignment = commentRepository.getCommentByTestId(assignmentid);
+        List<CommentDTO> commentDTOs = new ArrayList<>();
+
+        for (Comment rootCommentAssignment : rootCommentsAssignment) {
+            List<CommentDTO> nestedCommentDTOs = getChildCommentDTOs(rootCommentAssignment);
+            CommentDTO rootCommentDTO = new CommentDTO(
+                    rootCommentAssignment.getId(),
+                    rootCommentAssignment.getContent(),
+                    rootCommentAssignment.getCreated_date(),
+                    rootCommentAssignment.getUser(),
+                    nestedCommentDTOs  // add list child comment
+            );
+            commentDTOs.add(rootCommentDTO);
+        }
+
+        return commentDTOs;
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentDTOBySubmisionId(int submissionid) {
+        List<Comment> rootCommentsSubmission = commentRepository.getCommentBySubmissionId(submissionid);
+        List<CommentDTO> commentDTOs = new ArrayList<>();
+
+        for (Comment rootCommentSubmission : rootCommentsSubmission) {
+            List<CommentDTO> nestedCommentDTOs = getChildCommentDTOs(rootCommentSubmission);
+            CommentDTO rootCommentDTO = new CommentDTO(
+                    rootCommentSubmission.getId(),
+                    rootCommentSubmission.getContent(),
+                    rootCommentSubmission.getCreated_date(),
+                    rootCommentSubmission.getUser(),
+                    nestedCommentDTOs  // add list child comment
+            );
+            commentDTOs.add(rootCommentDTO);
+        }
+
+        return commentDTOs;
+    }
+
+    private List<CommentDTO> getChildCommentDTOs(Comment parentComment) {
+        List<CommentDTO> childCommentDTOs = new ArrayList<>();
+        List<Comment> childComments = commentRepository.getCommentByRootId(parentComment.getId());
+
+        for (Comment childComment : childComments) {
+            List<CommentDTO> childCommentDTO = getChildCommentDTOs(childComment);
+            CommentDTO nestedCommentDTO = new CommentDTO(
+                    childComment.getId(),
+                    childComment.getContent(),
+                    childComment.getCreated_date(),
+                    childComment.getUser(),
+                    childCommentDTO
+            );
+            childCommentDTOs.add(nestedCommentDTO);
+        }
+
+        return childCommentDTOs;
     }
 
 
@@ -109,11 +246,19 @@ public class CommentServiceImpl implements CommentService {
     public Boolean deleteComment(int id) throws ResourceNotFroundException {
         Comment comment = commentRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFroundException("Comment not exist with id:" + id));
-        for(Comment commentchild : commentRepository.getCommentByRootId(comment.getId())){
-            commentRepository.delete(commentchild);
-        }
-        commentRepository.delete(comment);
+        deleteCommentAndChildren(comment);
+
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override

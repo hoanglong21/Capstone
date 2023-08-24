@@ -47,11 +47,11 @@ public class ClassServiceImpl implements ClassService {
     private final StudySetRepository studySetRepository;
     private final StudySetService studySetService;
     private final ClassLearnerRepository classLearnerRepository;
-    private final HistoryRepository historyRepository;
+
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, JavaMailSender mailSender, UserSettingRepository usersettingRepository, UserSettingRepository userSettingRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService, HistoryRepository historyRepository) {
+    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, JavaMailSender mailSender, UserSettingRepository usersettingRepository, UserSettingRepository userSettingRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.mailSender = mailSender;
         this.userSettingRepository = userSettingRepository;
@@ -71,7 +71,6 @@ public class ClassServiceImpl implements ClassService {
         this.studySetService = studySetService;
         this.classLearnerRepository = classLearnerRepository;
         this.userService = userService;
-        this.historyRepository = historyRepository;
         this.em = em;
     }
 
@@ -173,6 +172,7 @@ public class ClassServiceImpl implements ClassService {
         for(ClassLearner classLearner : classLearnerList){
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
+                notification.setTitle("Class Deleted");
                 notification.setContent("Your Class " + classroom.getClass_name() + "' has been deleted.");
                 notification.set_read(false);
                 notification.setUser(classLearner.getUser());
@@ -181,6 +181,7 @@ public class ClassServiceImpl implements ClassService {
                 notificationRepository.save(notification);
             }
         }
+
     }
 
     @Override
@@ -188,11 +189,8 @@ public class ClassServiceImpl implements ClassService {
         Class classroom = classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
         for(Post post : postRepository.getPostByClassroomId(classroom.getId())){
-            for(Comment commentroot : commentRepository.getCommentByPostId(post.getId())){
-                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                    commentRepository.delete(comment);
-                }
-                commentRepository.delete(commentroot);
+            for(Comment commentpost : commentRepository.getCommentByPostId(post.getId())){
+                deleteCommentAndChildren(commentpost);
             }
             for(Attachment attachment : attachmentRepository.getAttachmentByPostId(post.getId())){
                 attachmentRepository.delete(attachment);
@@ -217,10 +215,7 @@ public class ClassServiceImpl implements ClassService {
             }
 
             for(Comment commentroot : commentRepository.getCommentByTestId(test.getId())){
-                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                    commentRepository.delete(comment);
-                }
-                commentRepository.delete(commentroot);
+                deleteCommentAndChildren(commentroot);
             }
             testRepository.delete(test);
         }
@@ -230,10 +225,7 @@ public class ClassServiceImpl implements ClassService {
                     attachmentRepository.delete(attachment);
                 }
                 for(Comment commentroot : commentRepository.getCommentBySubmissionId(submission.getId())){
-                    for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                        commentRepository.delete(comment);
-                    }
-                    commentRepository.delete(commentroot);
+                    deleteCommentAndChildren(commentroot);
                 }
                 submissionRepository.delete(submission);
             }
@@ -241,19 +233,22 @@ public class ClassServiceImpl implements ClassService {
                 attachmentRepository.delete(attachment);
             }
             for(Comment commentroot : commentRepository.getCommentByAssignmentId(assignment.getId())){
-                for(Comment comment : commentRepository.getCommentByRootId(commentroot.getId())){
-                    commentRepository.delete(comment);
-                }
-                commentRepository.delete(commentroot);
+                deleteCommentAndChildren(commentroot);
             }
             assignmentRepository.delete(assignment);
         }
-        List<History> historyList = historyRepository.getHistoriesByClassroomId(id);
-        for(History history : historyList) {
-            historyRepository.delete(history);
-        }
         classRepository.delete(classroom);
         return true;
+    }
+
+    private void deleteCommentAndChildren(Comment comment) {
+        List<Comment> nestedComments = commentRepository.getCommentByRootId(comment.getId());
+
+        for (Comment nestedComment : nestedComments) {
+            deleteCommentAndChildren(nestedComment);
+        }
+
+        commentRepository.delete(comment);
     }
 
     @Override
@@ -274,6 +269,7 @@ public class ClassServiceImpl implements ClassService {
         for(ClassLearner classLearner : classLearnerList){
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
+                notification.setTitle("Class Recovered");
                 notification.setContent("Your Class " + classroom.getClass_name() + "' has been recovered.");
                 notification.set_read(false);
                 notification.setUser(classLearner.getUser());
@@ -317,17 +313,19 @@ public class ClassServiceImpl implements ClassService {
 
         boolean checkAuthorNull = author == null || author.isEmpty();
         boolean checkLearnerNull = learner == null || learner.isEmpty();
-        if (!checkAuthorNull && !checkLearnerNull) {
-            query += " AND u.username = :authorname OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner)";
+        if (!checkAuthorNull && !checkLearnerNull && isDeleted != null) {
+            query += " AND u.username = :authorname AND c.is_deleted = :isDeleted OR EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner  AND cl.status = 'enrolled' AND c.is_deleted = :isDeleted)";
             parameters.put("authorname", author);
             parameters.put("learner", learner);
+            parameters.put("isDeleted", isDeleted);
         }
-        if (!checkAuthorNull && checkLearnerNull) {
-            query += " AND u.username = :authorname";
+        if (!checkAuthorNull && checkLearnerNull && isDeleted != null) {
+            query += " AND u.username = :authorname AND c.is_deleted = :isDeleted";
             parameters.put("authorname", author);
+            parameters.put("isDeleted", isDeleted);
         }
         if (checkAuthorNull && !checkLearnerNull) {
-            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner)";
+            query += " AND EXISTS (SELECT * FROM class_learner cl LEFT JOIN user r ON cl.user_id = r.id WHERE cl.class_id = c.id AND r.username = :learner AND cl.status = 'enrolled')";
             parameters.put("learner", learner);
         }
 
@@ -390,6 +388,7 @@ public class ClassServiceImpl implements ClassService {
             throw new ResourceNotFroundException("Class not exist with code: " +classCode);
         }
 
+
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " +username);
@@ -420,13 +419,6 @@ public class ClassServiceImpl implements ClassService {
         classLearner.setCreated_date(new Date());
         classLearner.setStatus("enrolled");
         classLearnerRepository.save(classLearner);
-
-        History history = new History();
-        history.setHistoryType(HistoryType.builder().id(8).build());
-        history.setClassroom(classroom);
-        history.setDatetime(new Date());
-        history.setUser(classroom.getUser());
-        historyRepository.save(history);
 
         return classRepository.save(classroom);
     }
