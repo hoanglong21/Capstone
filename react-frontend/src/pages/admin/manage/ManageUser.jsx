@@ -9,11 +9,14 @@ import UserService from '../../../services/UserService'
 import { useSelector } from 'react-redux'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Pagination from "../../../components/Pagination";
 function ManageUser() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { userInfo } = useSelector((state) => state.user)
   const search = searchParams.get("search");
   const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(1)
   const fetchData = async (searchKey) => {
     const temp = (
         await UserService.filterUserAdmin(
@@ -35,7 +38,7 @@ function ManageUser() {
             '',
             '',
             '',
-            '',
+            `=${page}`,
             '=15'
         )
     ).data.list
@@ -44,7 +47,7 @@ function ManageUser() {
 
 useEffect(() => {
     fetchData(search ? search : '')
-}, [search])
+}, [search, page])
 
 
   return (
@@ -117,8 +120,16 @@ useEffect(() => {
                     </tr>
                   ))}
                 </tbody>
-
               </table>
+              <Pagination
+                        className="mb-5"
+                        currentPage={page}
+                        totalCount={totalItems}
+                        pageSize={1}
+                        onPageChange={(page) => {
+                            setPage(page)
+                        }}
+                    />
             </div>
           </div>
         </div>
