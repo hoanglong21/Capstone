@@ -17,7 +17,6 @@ import AccountLayout from './pages/settings/SettingsLayout/SettingsLayout'
 import Profile from './pages/settings/Profile/Profile'
 import LibraryLayout from './pages/library/LibraryLayout'
 import StudySetList from './pages/library/StudySetList'
-import ProtectedRoute from './pages/protectedRoute/ProtectedRoute'
 import ForgotPassword from './pages/auth/ForgotPassword'
 import ResetPassword from './pages/auth/ResetPassword'
 import ChangePassword from './pages/settings/ChangePassword'
@@ -161,12 +160,13 @@ const App = () => {
                     </Route>
                     {/* Page not found */}
                     <Route path="*" element={<NotFound />} />
+                    <Route path="notFound" element={<NotFound />} />
                     {/* Other */}
                     <Route path="term" element={<Term />} />
                     <Route path="privacy" element={<Privacy />} />
                     <Route path="help-center" element={<HelpCenter />} />
-                    <Route path="/useaccount" element={<UseAccount />} />
-                    <Route path="/useclass" element={<UseClas />} />
+                    <Route path="useaccount" element={<UseAccount />} />
+                    <Route path="useclass" element={<UseClas />} />
                     {/* Discovery */}
                     <Route path="discovery" element={<Home />}>
                         <Route index element={<AllForHome />} />

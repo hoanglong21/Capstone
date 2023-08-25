@@ -285,6 +285,8 @@ const TutorSubmission = ({ assignment }) => {
                         user: {
                             id: userInfo.id,
                             username: userInfo.username,
+                            avatar: userInfo.avatar,
+                            status: userInfo.status,
                         },
                         assignment: {
                             id: assignment.id,

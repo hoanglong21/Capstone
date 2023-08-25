@@ -94,6 +94,7 @@ const TestDetails = () => {
                     id: userInfo.id,
                     username: userInfo.username,
                     avatar: userInfo.avatar,
+                    status: userInfo.status,
                 },
                 content: text,
                 commentType: {
