@@ -4,12 +4,14 @@ import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
 import SubmissionService from "../../../services/SubmissionService";
 import { useSearchParams } from 'react-router-dom'
+import Pagination from "../../../components/Pagination";
 
 function ManageSubmission() {
   const [submission, setSubmission] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
-
+  const [page, setPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
   const search = searchParams.get('search')
     const fetchData = async (searchKey) => {
       let temp;
@@ -20,10 +22,12 @@ function ManageSubmission() {
                 `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
-                '',
+                `=${page}`,
                 '=10',
             )
-        ).data.list
+        ).data
+        setSubmission(temp.list)
+        setTotalItems(temp.totalItems)
       }catch(error){
         if (error.response && error.response.data) {
           setError(error.response.data)
@@ -32,13 +36,12 @@ function ManageSubmission() {
       }
       return console.log(error)
       }
-      setSubmission(temp)
     }
     console.log(submission)
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
   return (
     <div className="container-fluid">
@@ -85,6 +88,15 @@ function ManageSubmission() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
           </div>
         </div>
       </div>

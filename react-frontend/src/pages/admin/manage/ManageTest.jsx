@@ -4,12 +4,14 @@ import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
 import TestService from "../../../services/TestService";
 import { useSearchParams } from 'react-router-dom'
+import Pagination from "../../../components/Pagination";
 
 function ManageTest() {
   const [tests, setTests] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
-
+  const [page, setPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
   const search = searchParams.get('search')
     const fetchData = async (searchKey) => {
       let temp;
@@ -24,10 +26,12 @@ function ManageTest() {
                 '',
                 '',
                 '',
-                '',
-                '=10'
+                `=${page}`,
+                '=10',
             )
-        ).data.list
+        ).data
+        setTests(temp.list)
+        setTotalItems(temp.totalItems)
       }catch(error){
         if (error.response && error.response.data) {
           setError(error.response.data)
@@ -36,12 +40,11 @@ function ManageTest() {
       }
       return console.log(error)
       }
-      setTests(temp)
     }
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
   return (
     <div className="container-fluid">
@@ -90,6 +93,15 @@ function ManageTest() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
           </div>
         </div>
       </div>

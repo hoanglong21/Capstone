@@ -53,7 +53,7 @@ function ManageUser() {
                 '',
                 '',
                 `=${page}`,
-                '=7'
+                '=10'
             )
         ).data
         setUsers(temp.list)
@@ -152,7 +152,7 @@ function ManageUser() {
                                 className="mb-4"
                                 currentPage={page}
                                 totalCount={totalItems}
-                                pageSize={7}
+                                pageSize={10}
                                 onPageChange={(page) => {
                                     setPage(page)
                                 }}

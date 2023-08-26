@@ -4,12 +4,14 @@ import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
 import PostService from "../../../services/PostService";
 import { useSearchParams } from 'react-router-dom'
+import Pagination from "../../../components/Pagination";
 
 function ManagePost() {
   const [post, setPost] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
-
+  const [page, setPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
   const search = searchParams.get('search')
     const fetchData = async (searchKey) => {
       let temp;
@@ -23,10 +25,12 @@ function ManagePost() {
                 '',
                 '',
                 '',
-                '',
+                `=${page}`,
                 '=10',
             )
-        ).data.list
+        ).data
+        setPost(temp.list)
+        setTotalItems(temp.totalItems)
       }catch(error){
         if (error.response && error.response.data) {
           setError(error.response.data)
@@ -35,12 +39,11 @@ function ManagePost() {
       }
       return console.log(error)
       }
-      setPost(temp)
     }
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
   return (
     <div className="container-fluid">
@@ -87,6 +90,15 @@ function ManagePost() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
           </div>
         </div>
       </div>
