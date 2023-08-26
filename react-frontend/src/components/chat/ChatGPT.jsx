@@ -5,6 +5,9 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import chatBot from '../../assets/images/chatbot.png'
 import { CloseIcon, SendIcon } from '../icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 // hide key
 const configuration = new Configuration({
@@ -21,7 +24,15 @@ function ChatGPT({ showGPT, setShowGPT, setShowChat, setShowNew, userInfo }) {
     const [message, setMessage] = useState('')
     const [chats, setChats] = useState([])
     const [isTyping, setIsTyping] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     const tooltip = <Tooltip>Chatbot</Tooltip>
 
     const chat = async (e, message) => {
@@ -69,7 +80,7 @@ function ChatGPT({ showGPT, setShowGPT, setShowChat, setShowNew, userInfo }) {
                             <div>
                                 <img src={chatBot} />
                                 <span className="chat_receiveUsername">
-                                    Chatbot
+                                {t('chatBot')}
                                 </span>
                             </div>
                             <button
@@ -114,7 +125,7 @@ function ChatGPT({ showGPT, setShowGPT, setShowChat, setShowNew, userInfo }) {
                             : ''}
                     </div>
                     <div className={isTyping ? 'p-2' : 'd-none'}>
-                        <span>Typing...</span>
+                        <span>{t('typing')}...</span>
                     </div>
                     <form className="chat_sendMess d-flex">
                         <input

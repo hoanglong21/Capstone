@@ -13,6 +13,8 @@ import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import { OptionVerIcon, SendIcon } from '../icons'
 import './comment.css'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [isEdit, setIsEdit] = useState(false)
@@ -351,7 +353,15 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     //     }
     //     setLoadingComment(false)
     // }
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     return (
         <div>
             {isEdit ? (
@@ -370,7 +380,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is banned.
+                                            {t('msg9')}.
                                         </Tooltip>
                                     }
                                 >
@@ -385,7 +395,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is verified.
+                                            {t('msg8')}.
                                         </Tooltip>
                                     }
                                 >
@@ -400,7 +410,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is deleted.
+                                            {t('msg7')}.
                                         </Tooltip>
                                     }
                                 >
@@ -432,7 +442,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                 className="btn btn-outline-secondary btn-sm me-2"
                                 onClick={handleCancelComment}
                             >
-                                Cancel
+                                {t('cancel')}
                             </button>
                             <button
                                 className="btn btn-primary btn-sm"
@@ -445,7 +455,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                         role="status"
                                     >
                                         <span className="visually-hidden">
-                                            LoadingUpload...
+                                        {t('loadingUpload')}...
                                         </span>
                                     </div>
                                 ) : (
@@ -501,7 +511,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                             placement="bottom"
                                             overlay={
                                                 <Tooltip id="tooltip">
-                                                    This account is banned.
+                                                    {t('msg9')}.
                                                 </Tooltip>
                                             }
                                         >
@@ -516,7 +526,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                             placement="bottom"
                                             overlay={
                                                 <Tooltip id="tooltip">
-                                                    This account is verified.
+                                                    {t('msg8')}.
                                                 </Tooltip>
                                             }
                                         >
@@ -531,7 +541,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                             placement="bottom"
                                             overlay={
                                                 <Tooltip id="tooltip">
-                                                    This account is deleted.
+                                                   {t('msg7')}.
                                                 </Tooltip>
                                             }
                                         >
@@ -577,7 +587,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                                 }}
                                             >
                                                 <span className="align-middle">
-                                                    Reply
+                                                {t('reply')}
                                                 </span>
                                             </button>
                                         </li>
@@ -590,7 +600,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                                 }}
                                             >
                                                 <span className="align-middle">
-                                                    Edit
+                                                {t('edit')}
                                                 </span>
                                             </button>
                                         </li>
@@ -603,7 +613,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                                 }}
                                             >
                                                 <span className="align-middle">
-                                                    Delete
+                                                {t('delete')}
                                                 </span>
                                             </button>
                                         </li>
@@ -693,10 +703,10 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                 }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete comment?</Modal.Title>
+                    <Modal.Title>{t('delecom')}?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to delete this comment?
+                {t('msg119')}?
                 </Modal.Body>
                 <Modal.Footer>
                     <button
@@ -705,14 +715,14 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         data-bs-dismiss="modal"
                         aria-label="Close"
                     >
-                        Cancel
+                       {t('cancel')}
                     </button>
                     <button
                         type="button"
                         className="btn btn-danger"
                         onClick={handleDeleteComment}
                     >
-                        Delete
+                        {t('delete')}
                     </button>
                 </Modal.Footer>
             </Modal>

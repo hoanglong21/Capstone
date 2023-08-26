@@ -6,6 +6,8 @@ import FeedbackService from '../../services/FeedbackService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import './report.css'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const Report = ({
     showReportModal,
@@ -86,6 +88,15 @@ const Report = ({
         }
         setLoading(false)
     }
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     return (
         <Modal
@@ -97,7 +108,7 @@ const Report = ({
             }}
         >
             <Modal.Header closeButton>
-                <Modal.Title>Report</Modal.Title>
+                <Modal.Title>{t('report')}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <form
@@ -114,7 +125,7 @@ const Report = ({
                     {/* success */}
                     {success && (
                         <div className="alert alert-primary" role="alert">
-                            Thank you for your feedback, we appreciate it!
+                            {t('msg115')}!
                         </div>
                     )}
                     <div className="formFeedbackBody row">
@@ -143,7 +154,7 @@ const Report = ({
                                     ))}
                                 </select>
                                 <label htmlFor="feedbackType">
-                                    Choose your type feedback
+                                {t('msg116')}
                                 </label>
                             </div>
                         </div>
@@ -164,9 +175,9 @@ const Report = ({
                                     }}
                                     required
                                 />
-                                <label htmlFor="title">Title</label>
+                                <label htmlFor="title">{t('title')}</label>
                                 <div className="invalid-feedback text-start">
-                                    Please fill out this field.
+                                {t('msg118')}.
                                 </div>
                             </div>
                         </div>
@@ -187,9 +198,9 @@ const Report = ({
                                     }}
                                     required
                                 ></textarea>
-                                <label htmlFor="content">Content</label>
+                                <label htmlFor="content">{t('content')}</label>
                                 <div className="invalid-feedback text-start">
-                                    Please fill out this field.
+                                {t('msg118')}.
                                 </div>
                             </div>
                         </div>
@@ -206,7 +217,7 @@ const Report = ({
                                         id="loading"
                                     >
                                         <span className="visually-hidden">
-                                            Loading...
+                                        {t('loading')}...
                                         </span>
                                     </div>
                                 ) : (

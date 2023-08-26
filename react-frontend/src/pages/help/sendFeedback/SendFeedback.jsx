@@ -7,6 +7,7 @@ import FeedbackService from '../../../services/FeedbackService'
 
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './SendFeedback.css'
+import { useTranslation } from 'react-i18next'
 
 const SendFeedback = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -16,6 +17,15 @@ const SendFeedback = () => {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
     const [loading, setLoading] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -87,8 +97,8 @@ const SendFeedback = () => {
 
     return (
         <div className="feedbackContainer">
-            <h1 className="feedback_heading">Contact Us</h1>
-            <h4 className="feedback_message">We'd love to hear from you!</h4>
+            <h1 className="feedback_heading">{t('contact')}</h1>
+            <h4 className="feedback_message">{t('msg120')}!</h4>
             <form
                 id="sendFeedbackForm"
                 className="needs-validation mt-4 mx-auto formFeedback"
@@ -103,7 +113,7 @@ const SendFeedback = () => {
                 {/* success */}
                 {success && (
                     <div className="alert alert-primary" role="alert">
-                        Thank you for your feedback, we appreciate it!
+                        {t('msg115')}!
                     </div>
                 )}
                 <div className="formFeedbackBody row mx-3">
@@ -132,7 +142,7 @@ const SendFeedback = () => {
                                 ))}
                             </select>
                             <label htmlFor="feedbackType">
-                                Choose your type feedback
+                                {t('msg116')}
                             </label>
                         </div>
                     </div>
@@ -153,9 +163,9 @@ const SendFeedback = () => {
                                 }}
                                 required
                             />
-                            <label htmlFor="title">Title</label>
+                            <label htmlFor="title">{t('title')}</label>
                             <div className="invalid-feedback text-start">
-                                Please fill out this field.
+                            {t('msg118')}.
                             </div>
                         </div>
                     </div>
@@ -176,9 +186,9 @@ const SendFeedback = () => {
                                 }}
                                 required
                             ></textarea>
-                            <label htmlFor="content">Content</label>
+                            <label htmlFor="content">{t('content')}</label>
                             <div className="invalid-feedback text-start">
-                                Please fill out this field.
+                            {t('msg118')}.
                             </div>
                         </div>
                     </div>
@@ -195,7 +205,7 @@ const SendFeedback = () => {
                                     id="loading"
                                 >
                                     <span className="visually-hidden">
-                                        Loading...
+                                    {t('loading')}...
                                     </span>
                                 </div>
                             ) : (

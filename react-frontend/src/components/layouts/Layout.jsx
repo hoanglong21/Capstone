@@ -19,6 +19,7 @@ import ChatGPT from '../chat/ChatGPT'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import { CloseIcon, MessageIcon, VideoCallSolidIcon } from '../icons'
 import '../chat/chat.css'
+import { useTranslation } from 'react-i18next'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyD9Fo5y8qhokjfJ_t4Gc0Gd4DXwDC_V2tM',
@@ -51,7 +52,14 @@ export default function Layout() {
     const [showNew, setShowNew] = useState(false)
     const [showChat, setShowChat] = useState(false)
     const [showGPT, setShowGPT] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     // useEffect(() => {
     //     if (userInfo?.id) {
     //         const getData = ref(database, 'messages/')
@@ -207,11 +215,10 @@ export default function Layout() {
                                     />
                                     <div className="flex-grow-1">
                                         <div className="chat_callModalHeading my-1">
-                                            {message.sender} is calling you
+                                            {message.sender} {t('msg113')}
                                         </div>
                                         <div className="chat_callModalSpan mb-4">
-                                            The call will start as soon as you
-                                            accept
+                                        {t('msg114')}
                                         </div>
                                     </div>
                                     <div>

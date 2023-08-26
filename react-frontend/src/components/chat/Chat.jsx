@@ -25,6 +25,7 @@ import {
 } from '../icons'
 import defaultAvatar from '../../assets/images/default_avatar.png'
 import './chat.css'
+import { useTranslation } from 'react-i18next'
 // import { AES, enc } from 'crypto-js';
 
 const firebaseConfig = {
@@ -59,7 +60,15 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
     const [messages, setMessages] = useState([])
     const [users, setUsers] = useState([])
     const [receiverUser, setReceiverUser] = useState(null)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     useEffect(() => {
         async function fetchData() {
             setLoading(true)
@@ -208,7 +217,7 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
                 <div className="chat_container">
                     <div className="chatNew_header">
                         <div className="d-flex justify-content-between align-items-center">
-                            <div className="chatNew-heading">New message</div>
+                            <div className="chatNew-heading">{t('newMess')}</div>
                             <button
                                 className="chat_btn chat_closeBtn"
                                 onClick={() => {
@@ -219,7 +228,7 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
                             </button>
                         </div>
                         <div className="chatNew_searchContainer d-flex align-items-center">
-                            <div>To:</div>
+                            <div>{t('to')}:</div>
                             <form className="mb-0 d-flex align-items-center w-100">
                                 <input
                                     type="text"
@@ -258,7 +267,7 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
                         <div className="d-flex justify-content-center">
                             <div className="spinner-border" role="status">
                                 <span className="visually-hidden">
-                                    Loading...
+                                {t('loading')}...
                                 </span>
                             </div>
                         </div>
@@ -294,7 +303,7 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
                                     ))}
                                 </ul>
                             ) : (
-                                <div className="p-2">Result not found</div>
+                                <div className="p-2">{t('notFound')}</div>
                             )}
                         </div>
                     )}
@@ -356,7 +365,7 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
                                                         message.message
                                                     }
                                                 >
-                                                    Call
+                                                    {t('call')}
                                                 </a>
                                             ) : (
                                                 <div>
