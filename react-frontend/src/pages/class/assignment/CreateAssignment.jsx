@@ -10,6 +10,7 @@ import AttachmentService from '../../../services/AttachmentService'
 import InstructionEditor from '../../../components/textEditor/InstructionEditor'
 
 import { DeleteIcon, UploadIcon } from '../../../components/icons'
+import { useTranslation } from 'react-i18next'
 
 function CreateAssignment() {
     const navigate = useNavigate()
@@ -30,7 +31,15 @@ function CreateAssignment() {
     const [saving, setSaving] = useState(null)
 
     const [error, setError] = useState('')
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
     }
@@ -350,7 +359,7 @@ function CreateAssignment() {
                             )
                         }}
                     >
-                        cancel
+                        {t('cancel')}
                     </button>
                     <div className="createTest_status">
                         {saving ? 'Saving...' : 'Saved'}
@@ -370,7 +379,7 @@ function CreateAssignment() {
                             disabled={!assignment?.title}
                             onClick={() => handleSubmit(true)}
                         >
-                            Save draft
+                           {t('saveDraft')}
                         </button>
                     </div>
                 ) : (
@@ -407,7 +416,7 @@ function CreateAssignment() {
                             htmlFor="title"
                             className="createAssign_formLabel"
                         >
-                            Title
+                            {t('title')}
                         </label>
                     </div>
                     <div className="createAssign_formGroup form-floating mb-4">
@@ -424,7 +433,7 @@ function CreateAssignment() {
                             onBlur={() => handleUpdate(assignment?.draft)}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
-                            Instruction (Optional)
+                        {t('instruction')}
                         </label>
                     </div>
                     <div className="row mb-4">
@@ -449,7 +458,7 @@ function CreateAssignment() {
                                     htmlFor="start_date"
                                     className="createAssign_formLabel"
                                 >
-                                    Start date
+                                    {t('startDate')}
                                 </label>
                             </div>
                         </div>
@@ -474,7 +483,7 @@ function CreateAssignment() {
                                     htmlFor="due_date"
                                     className="createAssign_formLabel"
                                 >
-                                    Due date
+                                    {t('dueDate')}
                                 </label>
                             </div>
                         </div>

@@ -16,6 +16,7 @@ import {
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import CardEditor from '../../../components/textEditor/CardEditor'
+import { useTranslation } from 'react-i18next'
 
 const LearnerSubmission = ({ assignment }) => {
     const { userInfo } = useSelector((state) => state.user)
@@ -28,6 +29,15 @@ const LearnerSubmission = ({ assignment }) => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -238,7 +248,7 @@ const LearnerSubmission = ({ assignment }) => {
             <div className="submission-col-4">
                 <div className="card submission_card mt-4">
                     <div className="card-body py-3 px-4">
-                        <div className="submission_heading">Your work</div>
+                        <div className="submission_heading">{t('yourWork')}</div>
                         {/* attchment */}
                         {attachments.map((file, index) => (
                             <div className="card mb-2" key={index}>
@@ -316,7 +326,7 @@ const LearnerSubmission = ({ assignment }) => {
                                                     strokeWidth="2"
                                                     className="me-2"
                                                 />
-                                                Add
+                                                {t('add')}
                                             </div>
                                         )}
                                     </label>

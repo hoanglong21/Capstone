@@ -8,6 +8,7 @@ import TutorSubmission from './TutorSubmission'
 import LearnerSubmission from './LearnerSubmission'
 
 import './assignment.css'
+import { useTranslation } from 'react-i18next'
 
 const Submissions = () => {
     const { id } = useParams()
@@ -16,7 +17,7 @@ const Submissions = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const [assignment, setAssignment] = useState({})
-
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
