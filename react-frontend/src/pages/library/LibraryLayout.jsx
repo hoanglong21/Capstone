@@ -182,7 +182,7 @@ const LibraryLayout = () => {
                             </span>
                         </NavLink>
                     </li>
-                    <li>
+                    {user?.role === 'ROLE_TUTOR' || userInfo?.role === 'ROLE_TUTOR' && <li>
                         <NavLink
                             to={{
                                 pathname: 'classes',
@@ -195,7 +195,7 @@ const LibraryLayout = () => {
                         >
                             <span className="align-middle">{t('class')}</span>
                         </NavLink>
-                    </li>
+                    </li>}                    
                     {name == userInfo?.username && (
                         <li>
                             <NavLink

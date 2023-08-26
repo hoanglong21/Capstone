@@ -50,7 +50,7 @@ const Notifications = () => {
           },
           value: settings["study reminder"],
         });
-        setIsStudyReminder(settings["study reminder"] ? true : false);
+        setIsStudyReminder(settings["study reminder"].toLowerCase() == 'false' ? false : true);
         // assign due date
         setAssignDueDate({
           user: {
@@ -63,7 +63,7 @@ const Notifications = () => {
           value: settings["assignment due date reminder"],
         });
         setIsAssignDueDate(
-          settings["assignment due date reminder"] ? true : false
+          settings["assignment due date reminder"].toLowerCase() == 'false' ? false : true
         );
         // test due date
         setTestDueDate({
@@ -76,7 +76,7 @@ const Notifications = () => {
           },
           value: settings["test due date reminder"],
         });
-        setIsTestDueDate(settings["test due date reminder"] ? true : false);
+        setIsTestDueDate(settings["test due date reminder"].toLowerCase() == 'false' ? false : true);
         // set added
         setSetAdded({
           user: {
@@ -86,7 +86,7 @@ const Notifications = () => {
           setting: {
             id: 5,
           },
-          value: settings["set added"] ? settings["set added"] : true,
+          value: settings["set added"].toLowerCase() == 'false' ? false : true,
         });
         // post added
         setPostAdded({
@@ -97,7 +97,7 @@ const Notifications = () => {
           setting: {
             id: 6,
           },
-          value: settings["post added"] ? settings["post added"] : true,
+          value: settings["post added"].toLowerCase() == 'false' ? false : true,
         });
         // assign assigned
         setAssignAssigned({
@@ -108,9 +108,7 @@ const Notifications = () => {
           setting: {
             id: 7,
           },
-          value: settings["assignment assigned"]
-            ? settings["assignment assigned"]
-            : true,
+          value: settings["assignment assigned"].toLowerCase() == 'false' ? false : true,
         });
         // test assigned
         setTestAssigned({
@@ -121,7 +119,7 @@ const Notifications = () => {
           setting: {
             id: 8,
           },
-          value: settings["test assigned"] ? settings["test assigned"] : true,
+          value: settings["test assigned"].toLowerCase() == 'false' ? false : true,
         });
         // submit graded
         setSubmitGraded({
@@ -132,9 +130,7 @@ const Notifications = () => {
           setting: {
             id: 9,
           },
-          value: settings["submission graded"]
-            ? settings["submission graded"]
-            : true,
+          value: settings["submission graded"].toLowerCase() == 'false' ? false : true,
         });
       } catch (error) {
         if (error.response && error.response.data) {

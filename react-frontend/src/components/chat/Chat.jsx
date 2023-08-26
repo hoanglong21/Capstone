@@ -192,7 +192,7 @@ const Chat = ({ showChat, setShowChat, showNew, setShowNew, setShowGPT }) => {
 
     const isUsernameMatch = (input) => {
         return messages.some((message) => {
-          return message.sender === input || message.receiver === input;
+          return (message.sender === input || message.receiver === input) && message.video_call === true ;
         });
       };
 
