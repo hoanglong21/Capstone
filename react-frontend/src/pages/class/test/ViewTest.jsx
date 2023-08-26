@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import ClassService from '../../../services/ClassService'
 
 import { ClassIcon } from '../../../components/icons'
+import { useTranslation } from 'react-i18next'
 
 const ViewTest = () => {
     const navigate = useNavigate()
@@ -13,7 +14,15 @@ const ViewTest = () => {
 
     const { id } = useParams()
     const [classroom, setClassroom] = useState({})
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -61,7 +70,7 @@ const ViewTest = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <span className="align-middle">Details</span>
+                            <span className="align-middle">{t('detail')}</span>
                         </NavLink>
                     </li>
                     <li>
@@ -73,7 +82,7 @@ const ViewTest = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <span className="align-middle">Results</span>
+                            <span className="align-middle">{t('result')}</span>
                         </NavLink>
                     </li>
                 </ul>

@@ -18,6 +18,7 @@ import {
 import empty from '../../../assets/images/tutor_assign_empty.png'
 import './test.css'
 import Pagination from '../../../components/Pagination'
+import { useTranslation } from 'react-i18next'
 
 const TestList = () => {
     const navigate = useNavigate()
@@ -42,7 +43,15 @@ const TestList = () => {
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
     const [isDesc, setIsDesc] = useState(true)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     function getToday() {
         const today = new Date()
         return (
@@ -235,7 +244,7 @@ const TestList = () => {
                     style={{ width: '3rem', height: '3rem' }}
                     role="status"
                 >
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">{t('loading')}...</span>
                 </div>
             </div>
         )
@@ -258,7 +267,7 @@ const TestList = () => {
                                         size="1.125rem"
                                         strokeWidth="2.25"
                                     />
-                                    Create
+                                    {t('create')}
                                 </button>
                             )}
                         </div>
@@ -317,15 +326,14 @@ const TestList = () => {
                     <div className="emptyTests_container d-flex flex-column align-items-center justify-content-center">
                         <img src={empty} alt="" />
                         <p className="mb-2 emptyTests_heading">
-                            This is where you’ll assign test
+                        {t('msg86')}
                         </p>
                         <p className="emptyTests_content">
-                            You can add test for the class, then organize it
-                            into topics
+                        {t('msg87')}
                         </p>
                     </div>
                 ) : search && tests?.length === 0 ? (
-                    <div className="mt-5">No matching found.</div>
+                    <div className="mt-5">{t('noMatch')}.</div>
                 ) : (
                     <div>
                         <div
@@ -386,7 +394,7 @@ const TestList = () => {
                                         <div className="accordion-body">
                                             <div className="d-flex align-items-center justify-content-between">
                                                 <div>
-                                                    Posted {test?.created_date}
+                                                {t('posted')} {test?.created_date}
                                                 </div>
                                                 {userInfo?.id !==
                                                     classroom?.user?.id && (
@@ -402,7 +410,7 @@ const TestList = () => {
                                                         )
                                                     }
                                                 >
-                                                    View details
+                                                    {t('viewDetail')}
                                                 </button>
                                                 {userInfo?.id ===
                                                     classroom?.user?.id && (
@@ -416,7 +424,7 @@ const TestList = () => {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                                Turned in
+                                                            {t('turnIn')}
                                                             </div>
                                                         </div>
                                                         <div className="asignInfo_block">
@@ -428,7 +436,7 @@ const TestList = () => {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                                Assigned
+                                                            {t('assigned')}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -446,7 +454,7 @@ const TestList = () => {
                                                                 )
                                                             }}
                                                         >
-                                                            Edit test
+                                                            {t('editTest')}
                                                         </button>
                                                         <button
                                                             className="deleteTest_btn"
@@ -460,7 +468,7 @@ const TestList = () => {
                                                                 )
                                                             }}
                                                         >
-                                                            Delete test
+                                                            {t('deleTest')}
                                                         </button>
                                                     </div>
                                                 )}
