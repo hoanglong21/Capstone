@@ -12,6 +12,7 @@ import BanUser from '../BanUser'
 import SidebarforAdmin from '../SidebarforAdmin'
 
 import 'react-toastify/dist/ReactToastify.css'
+import Pagination from '../../../components/Pagination'
 
 function ManageUser() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -28,6 +29,8 @@ function ManageUser() {
     const [unBanIndex, setUnBanIndex] = useState(0)
     const [showUnBanModal, setShowUnBanModal] = useState(false)
 
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
     const fetchData = async (searchKey) => {
         const temp = (
             await UserService.filterUserAdmin(
@@ -49,16 +52,17 @@ function ManageUser() {
                 '',
                 '',
                 '',
-                '',
-                '=15'
+                `=${page}`,
+                '=7'
             )
-        ).data.list
-        setUsers(temp)
+        ).data
+        setUsers(temp.list)
+        setTotalItems(temp.totalItems)
     }
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
     return (
         <div className="container-fluid">
@@ -144,6 +148,15 @@ function ManageUser() {
                                 </tbody>
                             </table>
                         </div>
+                        <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={7}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
                     </div>
                 </div>
             </div>
