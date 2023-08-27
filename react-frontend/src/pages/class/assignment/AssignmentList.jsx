@@ -468,7 +468,7 @@ function AssignmentList() {
                                                             </div>
                                                         ) : new Date(
                                                               assign?.due_date
-                                                          ) > today ? (
+                                                          ) < today ? (
                                                             <div className="assignMissing">
                                                                 {t('missing')}
                                                             </div>

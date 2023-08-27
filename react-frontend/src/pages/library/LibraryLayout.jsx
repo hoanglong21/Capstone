@@ -36,6 +36,12 @@ const LibraryLayout = () => {
     const { t, i18n } = useTranslation()
 
     useEffect(() => {
+        if (userInfo?.role === 'ROLE_ADMIN') {
+            navigate('/dashboard')
+        }
+    }, [userInfo])
+
+    useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
         }

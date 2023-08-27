@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
 import TranslateService from '../../services/TranslateService'
 import DetectionService from '../../services/DetectionService'
-import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+
 import SpeechToText from '../../components/InputModel/SpeechToText'
 import Draw from '../../components/InputModel/draw/Draw'
+import TextToSpeech from '../../components/InputModel/TextToSpeech'
+
 import {
     CloseIcon,
     CopyIcon,
@@ -14,9 +18,10 @@ import {
     TranslateIcon,
 } from '../../components/icons'
 import './Translate.css'
-import TextToSpeech from '../../components/InputModel/TextToSpeech'
 
 function Translate() {
+    const navigate = useNavigate()
+
     const [origText, setOrigText] = useState('')
     const [origLang, setOrigLang] = useState('ja')
     const [transText, setTransText] = useState('')
@@ -36,8 +41,17 @@ function Translate() {
     const [loadingOpenAI, setLoadingOpenAI] = useState(false)
 
     const [isClearVoice, setIsClearVoice] = useState(false)
+
+    const { userInfo } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
+
     const [error, setError] = useState('')
+
+    useEffect(() => {
+        if (userInfo?.role === 'ROLE_ADMIN') {
+            navigate('/dashboard')
+        }
+    }, [userInfo])
 
     useEffect(() => {
         if (origText.length > 5000) {
@@ -389,7 +403,7 @@ function Translate() {
                                                 aria-hidden="true"
                                             ></span>
                                             <span className="visually-hidden">
-                                            {t('loading')}...
+                                                {t('loading')}...
                                             </span>
                                         </div>
                                     ) : (
@@ -453,7 +467,7 @@ function Translate() {
                                         role="status"
                                     >
                                         <span className="visually-hidden">
-                                        {t('loading')}...
+                                            {t('loading')}...
                                         </span>
                                     </div>
                                 </div>
@@ -486,7 +500,7 @@ function Translate() {
                                         role="status"
                                     >
                                         <span className="visually-hidden">
-                                        {t('loading')}...
+                                            {t('loading')}...
                                         </span>
                                     </div>
                                 </div>
@@ -512,7 +526,26 @@ function Translate() {
                                                         {index + 1}
                                                     </th>
                                                     <td>{word.word}</td>
-                                                    <td>{word.partOfSpeech}</td>
+                                                    <td>
+                                                        {word.partOfSpeech.map(
+                                                            (item, index) => {
+                                                                if (
+                                                                    index !==
+                                                                    word
+                                                                        .partOfSpeech
+                                                                        .length -
+                                                                        1
+                                                                ) {
+                                                                    return (
+                                                                        item +
+                                                                        ','
+                                                                    )
+                                                                } else {
+                                                                    return item
+                                                                }
+                                                            }
+                                                        )}
+                                                    </td>
                                                     <td>
                                                         {word.dictionaryForm}
                                                     </td>
@@ -565,7 +598,7 @@ function Translate() {
                                                 aria-hidden="true"
                                             ></span>
                                             <span className="visually-hidden">
-                                            {t('loading')}...
+                                                {t('loading')}...
                                             </span>
                                         </div>
                                     ) : (
