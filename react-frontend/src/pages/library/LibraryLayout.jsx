@@ -44,9 +44,11 @@ const LibraryLayout = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                if (userInfo?.id || name != userInfo.username) {
+                if (userInfo?.id && name != userInfo.username) {
                     const tempUser = (await UserService.getUser(name)).data
                     setUser(tempUser)
+                } else if (userInfo?.id) {
+                    setUser(userInfo)
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -71,20 +73,15 @@ const LibraryLayout = () => {
                 <div className="searchAuthor_container d-flex align-items-center justify-content-between my-2">
                     <div className="d-flex align-items-center">
                         <img
-                            src={
-                                user?.avatar ||
-                                userInfo?.avatar ||
-                                defaultAvatar
-                            }
+                            src={user?.avatar || defaultAvatar}
                             className="searchAuthor_avatar"
                         />
                         <div className="ms-3">
                             <div className="d-flex align-items-center">
                                 <div className="searchAuthor_name">
-                                    {user?.username || userInfo?.username}
+                                    {user?.username}
                                 </div>
-                                {(user?.status == 'banned' ||
-                                    userInfo?.status == 'banned') && (
+                                {user?.status == 'banned' && (
                                     <OverlayTrigger
                                         placement="bottom"
                                         overlay={
@@ -99,8 +96,7 @@ const LibraryLayout = () => {
                                         />
                                     </OverlayTrigger>
                                 )}
-                                {(user?.status == 'active' ||
-                                    userInfo?.status == 'active') && (
+                                {user?.status == 'active' && (
                                     <OverlayTrigger
                                         placement="bottom"
                                         overlay={
@@ -115,8 +111,7 @@ const LibraryLayout = () => {
                                         />
                                     </OverlayTrigger>
                                 )}
-                                {(user?.status == 'deleted' ||
-                                    userInfo?.status == 'deleted') && (
+                                {user?.status == 'deleted' && (
                                     <OverlayTrigger
                                         placement="bottom"
                                         overlay={
@@ -132,8 +127,7 @@ const LibraryLayout = () => {
                                     </OverlayTrigger>
                                 )}
                             </div>
-                            {(user?.role == 'ROLE_TUTOR' ||
-                                userInfo?.role == 'ROLE_TUTOR') && (
+                            {user?.role == 'ROLE_TUTOR' && (
                                 <div className="searchAuthor_role">
                                     {t('tutor')}
                                 </div>
@@ -182,20 +176,25 @@ const LibraryLayout = () => {
                             </span>
                         </NavLink>
                     </li>
-                    {user?.role === 'ROLE_TUTOR' || userInfo?.role === 'ROLE_TUTOR' && <li>
-                        <NavLink
-                            to={{
-                                pathname: 'classes',
-                                search: `?${searchParams.toString()}`,
-                            }}
-                            className={
-                                'nav-link px-3 sub-nav-link me-3 ' +
-                                (({ isActive }) => (isActive ? 'active' : ''))
-                            }
-                        >
-                            <span className="align-middle">{t('class')}</span>
-                        </NavLink>
-                    </li>}                    
+                    {user?.role === 'ROLE_TUTOR' && (
+                        <li>
+                            <NavLink
+                                to={{
+                                    pathname: 'classes',
+                                    search: `?${searchParams.toString()}`,
+                                }}
+                                className={
+                                    'nav-link px-3 sub-nav-link me-3 ' +
+                                    (({ isActive }) =>
+                                        isActive ? 'active' : '')
+                                }
+                            >
+                                <span className="align-middle">
+                                    {t('class')}
+                                </span>
+                            </NavLink>
+                        </li>
+                    )}
                     {name == userInfo?.username && (
                         <li>
                             <NavLink
