@@ -16,67 +16,61 @@ function UseClas() {
   return (
     <div className="container">
       <div className="useaccount">
-        <h4>Study Flashcard?</h4>
+        <h4>{t('msg160')}?</h4>
         <ul className="useaccount-ul">
           <li>
-            User can select multiple types of study in flashcards to display.
+          {t('msg161')}
           </li>
           <li>
-            After that, press the <strong>"Create new flashcards"</strong>{" "}
-            button to get started.
+          {t('msg162')}
           </li>
         </ul>
       </div>
       <div className="useaccount">
-        <h4>Do Quiz?</h4>
+        <h4>{t('msg163')}?</h4>
         <ul className="useaccount-ul">
-          <li>User can select multiple types of quiz to display.</li>
+          <li>{t('msg164')}</li>
           <li>
-            After that, press the <strong>"Create new quiz"</strong> button to
-            get started.
+          {t('msg165')}
           </li>
         </ul>
       </div>
       <div className="useaccount">
-        <h4>Learn?</h4>
+        <h4>{t('learn')}?</h4>
         <ul className="useaccount-ul">
-          <li>User can select multiple types of quiz to display.</li>
+          <li>{t('msg164')}</li>
           <li>
-            After that, press the <strong>"Start"</strong> button to get
-            started.
+          {t('msg166')}
           </li>
         </ul>
       </div>
       <div className="useaccount">
-        <h4>Create Class?</h4>
+        <h4>{t('msg167')}?</h4>
         <ul className="useaccount-ul">
           <li>
-            With Tutor access, user can create class in header sidebar with icon{" "}
-            <strong>"+"</strong> button.
+          {t('msg168')}
           </li>
           <li>
-            Select <strong>"Create Class"</strong>.
+          {t('msg169')}
           </li>
           <li>
-            Fill all field requirement on the screen and then click{" "}
-            <strong>"Create"</strong> button.
+          {t('msg170')}
           </li>
-          <li>The class created will be displayed on the screen</li>
+          <li>{t('msg171')}</li>
         </ul>
       </div>
       <div className="useaccount">
-        <h4>Join Class?</h4>
+        <h4>{t('joinClass')}?</h4>
         <ul className="useaccount-ul">
           <li>
-            With Tutor or Learner access, user can join class in header sidebar
-            with icon <strong>"+"</strong> button.
+          {t('msg172')}
           </li>
           <li>
-            Select <strong>"Join Class"</strong>.
+          {t('msg173')}
           </li>
-          <li>Input class code.</li>
+          <li>{t('msg174')}</li>
           <li>
-            Then, click <strong>"Join class"</strong> to join.
+          {t('msg175')}
           </li>
         </ul>
       </div>

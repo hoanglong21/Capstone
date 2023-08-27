@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -103,21 +100,28 @@ public class PostServiceImpl implements PostService {
         Date date = localDateTimeToDate(localDateTime);
 
         List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+
+        Set<User> enrolledUsersToNotify = new HashSet<>();
+
         for (ClassLearner classLearner : classLearnerList) {
-            if(classLearner.getStatus().equals("enrolled")) {
-                Notification notification = new Notification();
-                notification.setTitle("New Post");
-                String urlWithClassId = "/class/[[classid]]";
-                urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
-
-                notification.setUrl(urlWithClassId);
-                notification.setContent("A new post in class '" + classroom.getClass_name() + "'");
-                notification.setDatetime(date);
-                notification.set_read(false);
-                notification.setUser(classLearner.getUser());
-
-                notificationRepository.save(notification);
+            if (classLearner.getStatus().equals("enrolled")) {
+                enrolledUsersToNotify.add(classLearner.getUser());
             }
+        }
+
+        for (User user : enrolledUsersToNotify) {
+            Notification notification = new Notification();
+            notification.setTitle("New Post");
+            String urlWithClassId = "/class/[[classid]]";
+            urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+            notification.setUrl(urlWithClassId);
+            notification.setContent("A new post in class '" + classroom.getClass_name() + "'");
+            notification.setDatetime(date);
+            notification.set_read(false);
+            notification.setUser(user);
+
+            notificationRepository.save(notification);
         }
     }
 

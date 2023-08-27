@@ -91,6 +91,9 @@ const CreateTest = () => {
                     const testClassUserCreated = toBEDate(
                         tempTest.classroom.user.created_date
                     )
+                    const testClassUserDob = toBEDate(
+                        tempTest.classroom.user.dob
+                    )
                     const testUserCreated = toBEDate(tempTest.user.created_date)
                     const testCreated = toBEDate(tempTest.created_date)
                     const testModified = toBEDate(tempTest.modified_date)
@@ -98,10 +101,11 @@ const CreateTest = () => {
                     const testDue = toBEDate(tempTest.due_date)
                     tempTest.classroom.created_date = testClassCreated
                     tempTest.classroom.user.created_date = testClassUserCreated
+                    tempTest.classroom.user.dob = testClassUserDob
                     tempTest.user.created_date = testUserCreated
+                    tempTest.user.dob = testClassUserDob
                     setTest({
                         ...tempTest,
-                        point: 1,
                         start_date: toFEDate(tempTest.start_date),
                         created_date: toFEDate(tempTest.created_date),
                         due_date: toFEDate(tempTest.due_date),
@@ -115,7 +119,10 @@ const CreateTest = () => {
                         ques.test.classroom.created_date = testClassCreated
                         ques.test.classroom.user.created_date =
                             testClassUserCreated
+                        ques.test.classroom.user.dob =
+                            testClassUserDob
                         ques.test.user.created_date = testUserCreated
+                        ques.test.user.dob = testClassUserDob
                         ques.test.created_date = testCreated
                         ques.test.modified_date = testModified
                         ques.test.start_date = testStart
@@ -128,6 +135,8 @@ const CreateTest = () => {
                                 testClassCreated
                             ans.question.test.classroom.user.created_date =
                                 testClassUserCreated
+                            ans.question.test.classroom.user.dob =
+                                testClassUserDob
                             ans.question.test.user.created_date =
                                 testUserCreated
                             ans.question.test.created_date = testCreated
@@ -336,6 +345,7 @@ const CreateTest = () => {
         }
         setSaving(true)
         try {
+            console.log(test);
             await TestService.updateTest(test.id, {
                 ...test,
                 created_date: toBEDate(test.created_date),

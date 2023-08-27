@@ -24,6 +24,13 @@ export const VocabCard = (props) => {
     const { userToken } = useSelector((state) => state.auth)
     const { t, i18n } = useTranslation()
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
@@ -78,23 +85,18 @@ export const VocabCard = (props) => {
                         ).data
                     )
                 } else {
-                    for (var content of contents) {
-                        const tempSetCreatedDate =
-                            content.card.studySet.created_date
-                        content.card.studySet.created_date =
-                            tempSetCreatedDate.replace(/\s/g, 'T') +
-                            '.000' +
-                            '+07:00'
-                        const tempUserCreatedDate =
-                            content.card.studySet.user.created_date
-                        content.card.studySet.user.created_date =
-                            tempUserCreatedDate.replace(/\s/g, 'T') +
-                            '.000' +
-                            '+07:00'
+                    var tempCard = {...card}
+                    if (tempCard?.studySet) {
+                        tempCard.studySet.created_date = toBEDate(tempCard.studySet.created_date)
+                        tempCard.studySet.deleted_date = toBEDate(tempCard.studySet.deleted_date)
+                        if (tempCard.studySet?.user) {
+                            tempCard.studySet.user.created_date = toBEDate(tempCard.studySet.user.created_date)
+                            tempCard.studySet.user.dob = toBEDate(tempCard.studySet.user.dob)
+                        }
                     }
-                    setTerm(contents[0])
-                    setDefinition(contents[1])
-                    setExample(contents[2])
+                    setTerm({ ...contents[0], card: { ...tempCard } })
+                    setDefinition({ ...contents[1], card: { ...tempCard } })
+                    setExample({ ...contents[2], card: { ...tempCard } })
                 }
             } catch (error) {
                 if (error.response && error.response.data) {

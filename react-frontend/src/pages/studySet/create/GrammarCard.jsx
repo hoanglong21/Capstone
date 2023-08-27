@@ -28,6 +28,13 @@ export const GrammarCard = (props) => {
     const { userToken } = useSelector((state) => state.auth)
     const { t, i18n } = useTranslation()
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
+    }
+
     useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
@@ -134,13 +141,22 @@ export const GrammarCard = (props) => {
                         ).data
                     )
                 } else {
-                    setTitle(contents[0])
-                    setJlptLevel(contents[1])
-                    setMeaning(contents[2])
-                    setExample(contents[3])
-                    setExplanation(contents[4])
-                    setNote(contents[5])
-                    setStructure(contents[6])
+                    var tempCard = {...card}
+                    if (tempCard?.studySet) {
+                        tempCard.studySet.created_date = toBEDate(tempCard.studySet.created_date)
+                        tempCard.studySet.deleted_date = toBEDate(tempCard.studySet.deleted_date)
+                        if (tempCard.studySet?.user) {
+                            tempCard.studySet.user.created_date = toBEDate(tempCard.studySet.user.created_date)
+                            tempCard.studySet.user.dob = toBEDate(tempCard.studySet.user.dob)
+                        }
+                    }
+                    setTitle({ ...contents[0], card: { ...tempCard } })
+                    setJlptLevel({ ...contents[1], card: { ...tempCard } })
+                    setMeaning({ ...contents[2], card: { ...tempCard } })
+                    setExample({ ...contents[3], card: { ...tempCard } })
+                    setExplanation({ ...contents[4], card: { ...tempCard } })
+                    setNote({ ...contents[5], card: { ...tempCard } })
+                    setStructure({ ...contents[6], card: { ...tempCard } })
                 }
             } catch (error) {
                 if (error.response && error.response.data) {

@@ -85,7 +85,7 @@ const ClassesForHome = () => {
         }
         if (loading === false && document.getElementById('searchHomeBtn')) {
             document.getElementById('searchHomeBtn').disabled = false
-            document.getElementById('searchHomeBtn').innerHTML = 'Search'
+            document.getElementById('searchHomeBtn').innerHTML = t('search')
             document.getElementById('searchHomeInput').readOnly = false
         }
     }, [loading])

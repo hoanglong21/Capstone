@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AssignmentServiceImpl implements AssignmentService {
@@ -105,25 +102,35 @@ public class AssignmentServiceImpl implements AssignmentService {
         Date date = localDateTimeToDate(localDateTime);
 
         List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+
+        Set<User> enrolledUsersToNotify = new HashSet<>();
+
         for (ClassLearner classLearner : classLearnerList) {
-            List<Assignment> assignmentList = assignmentRepository.getAssignmentByClassroomId(classLearner.getClassroom().getId());
-            for(Assignment assignment : assignmentList) {
-                if (classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
-                    Notification notification = new Notification();
-                    notification.setTitle("New Assignment");
-
-                    String urlWithClassId = "/[[classid]]/assignments";
-                    urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
-
-                    notification.setUrl(urlWithClassId);
-                    notification.setContent("A new assignment is added to class '" + classroom.getClass_name() + "'");
-                    notification.setDatetime(date);
-                    notification.set_read(false);
-                    notification.setUser(classLearner.getUser());
-
-                    notificationRepository.save(notification);
+            if (classLearner.getStatus().equals("enrolled")) {
+                List<Assignment> assignmentList = assignmentRepository.getAssignmentByClassroomId(classLearner.getClassroom().getId());
+                for (Assignment assignment : assignmentList) {
+                    if (!assignment.is_draft()) {
+                        enrolledUsersToNotify.add(classLearner.getUser());
+                        break;
+                    }
                 }
             }
+        }
+
+        for (User user : enrolledUsersToNotify) {
+            Notification notification = new Notification();
+            notification.setTitle("New Assignment");
+
+            String urlWithClassId = "/class/[[classid]]/assignments";
+            urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+            notification.setUrl(urlWithClassId);
+            notification.setContent("A new assignment is added to class '" + classroom.getClass_name() + "'");
+            notification.setDatetime(date);
+            notification.set_read(false);
+            notification.setUser(user);
+
+            notificationRepository.save(notification);
         }
     }
 
