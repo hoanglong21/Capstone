@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -132,37 +133,33 @@ public class PostServiceTest {
 
     @Order(6)
     @Test
-    void testDeletePost() {
-        Post post = Post.builder()
-                .id(1)
-                .user(User.builder().id(1).build())
-                .classroom(Class.builder().id(1).build())
-                .content("Submit Assignment Deadline")
-                .build();
-        Comment comment = Comment.builder()
-                .commentType(CommentType.builder().id(1).build())
-                .content("Hello")
-                .build();
-        Attachment attachment = Attachment.builder()
-                .assignment(Assignment.builder().id(1).build())
-                .file_url("home.doc")
-                .build();
-        doNothing().when(postRepository).delete(post);
-        doNothing().when(commentRepository).delete(comment);
-        doNothing().when(attachmentRepository).delete(attachment);
+    void testDeletePost() throws ResourceNotFroundException {
+
+        Post post = new Post();
+        post.setId(1);
+
+        Comment rootComment = new Comment();
+        rootComment.setId(2);
+
+        Comment childComment = new Comment();
+        childComment.setId(3);
+
+        Attachment attachment = new Attachment();
+        attachment.setId(4);
+
 
         when(postRepository.findById(1)).thenReturn(Optional.of(post));
-        when(commentRepository.getCommentByPostId(post.getId())).thenReturn(List.of(comment));
-        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
-        when(attachmentRepository.getAttachmentByPostId(post.getId())).thenReturn(List.of(attachment));
-        try {
-            postServiceImpl.deletePost(1);
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
-        verify(postRepository, times(1)).delete(post);
+        when(commentRepository.getCommentByPostId(1)).thenReturn(List.of(rootComment));
+        when(commentRepository.getCommentByRootId(2)).thenReturn(List.of(childComment));
+        when(attachmentRepository.getAttachmentByPostId(1)).thenReturn(List.of(attachment));
+
+        Boolean result = postServiceImpl.deletePost(1);
+
+        assertTrue(result);
+
+        verify(commentRepository, times(2)).delete(any());
         verify(attachmentRepository, times(1)).delete(attachment);
-        verify(commentRepository, times(2)).delete(comment);
+        verify(postRepository, times(1)).delete(post);
     }
 
     @Order(7)

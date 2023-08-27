@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getAllCommentByStudySetId(int id) {
-        return null;
+        return commentRepository.getCommentByStudySetId(id);
     }
 
     @Override

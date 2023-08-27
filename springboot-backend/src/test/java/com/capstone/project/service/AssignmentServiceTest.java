@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -166,58 +167,39 @@ public class AssignmentServiceTest {
 
     @Order(6)
     @Test
-    void testDeleteAssignment() {
+    void testDeleteAssignment() throws ResourceNotFroundException {
 
-        Assignment assignment = Assignment.builder()
-                .id(1)
-                .user(User.builder().id(2).build())
-                .classroom(Class.builder().id(2).build())
-                .instruction("do excersices")
-                .title("Assignment 1")
-                .build();
+        Assignment assignment = new Assignment();
+        assignment.setId(1);
 
-        Comment comment = Comment.builder()
-                .id(1)
-                .content("Hello guys")
-                .build();
+        Submission submission = new Submission();
+        submission.setId(2);
 
-        Submission submission = Submission.builder()
-                .id(1)
-                .description("submit assignment")
-                .assignment(assignment).build();
+        Attachment attachment = new Attachment();
+        attachment.setId(3);
 
-        Attachment attachment = Attachment.builder()
-                .attachmentType(AttachmentType.builder().id(1).build())
-                .file_url("tailieu.docx")
-                .assignment(assignment)
-                .submission(submission).build();
+        Comment comment = new Comment();
+        comment.setId(4);
 
-        doNothing().when(assignmentRepository).delete(assignment);
-        doNothing().when(submissionRepository).delete(submission);
-        doNothing().when(attachmentRepository).delete(attachment);
-        doNothing().when(commentRepository).delete(comment);
-
-        when(assignmentRepository.findById(any())).thenReturn(Optional.ofNullable(assignment));
-        doNothing().when(assignmentRepository).delete(assignment);
-
+        // Giả lập các phương thức của repository
         when(assignmentRepository.findById(1)).thenReturn(Optional.of(assignment));
-        when(submissionRepository.getSubmissionByAssignmentId(assignment.getId())).thenReturn(List.of(submission));
-        when(attachmentRepository.getAttachmentBySubmissionId(submission.getId())).thenReturn(List.of(attachment));
-        when(commentRepository.getCommentBySubmissionId(submission.getId())).thenReturn(List.of(comment));
-        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
-        when(commentRepository.getCommentByAssignmentId(assignment.getId())).thenReturn(List.of(comment));
-        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
+        when(submissionRepository.getSubmissionByAssignmentId(1)).thenReturn(List.of(submission));
+        when(attachmentRepository.getAttachmentBySubmissionId(2)).thenReturn(List.of(attachment));
+        when(attachmentRepository.getAttachmentByAssignmentId(1)).thenReturn(List.of(attachment));
+        when(commentRepository.getCommentBySubmissionId(2)).thenReturn(List.of(comment));
 
-        try {
-            assignmentServiceImpl.deleteAssignment(1);
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
 
-        verify(assignmentRepository, times(1)).delete(assignment);
+        // Gọi hàm xóa assignment
+        Boolean result = assignmentServiceImpl.deleteAssignment(1);
+
+        // Kiểm tra kết quả
+        assertTrue(result);
+
+        // Kiểm tra xem các phương thức delete đã được gọi đúng số lần
+        verify(attachmentRepository, times(2)).delete(attachment);
+        verify(commentRepository, times(1)).delete(any());
         verify(submissionRepository, times(1)).delete(submission);
-        verify(attachmentRepository, times(1)).delete(attachment);
-        verify(commentRepository, times(4)).delete(comment);
+        verify(assignmentRepository, times(1)).delete(assignment);
     }
 
 
