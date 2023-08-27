@@ -782,7 +782,7 @@ const CreateTest = () => {
             >
                 <div className="d-flex">
                     <button
-                        className="createTest_cancelBtn"
+                        className="btn p-0 createTest_cancelBtn"
                         onClick={() => {
                             navigate(
                                 `/class/${classroom.id}/test/${test.id}/details`
@@ -801,14 +801,14 @@ const CreateTest = () => {
                 {test?._draft ? (
                     <div className="d-flex">
                         <button
-                            className="createTest_submitBtn"
+                            className="btn p-0 createTest_submitBtn"
                             onClick={handleCreate}
                             disabled={!test?.title}
                         >
                             {t('create')}
                         </button>
                         <button
-                            className="createTest_draftBtn"
+                            className="btn p-0 createTest_draftBtn"
                             onClick={() => {
                                 navigate(
                                     `/class/${classroom.id}/test/${test.id}/details`
@@ -820,7 +820,7 @@ const CreateTest = () => {
                     </div>
                 ) : (
                     <button
-                        className="createTest_submitBtn"
+                        className="btn p-0 createTest_submitBtn"
                         onClick={handleCreate}
                         disabled={!test?.title || loadingCreate}
                     >
@@ -1279,7 +1279,7 @@ const CreateTest = () => {
                                                             }
                                                         />
                                                         <button
-                                                            className="btn-hide p-0"
+                                                            className="btn btn-hide p-0"
                                                             type="btn"
                                                             onMouseDown={(e) =>
                                                                 e.preventDefault()
@@ -1314,7 +1314,7 @@ const CreateTest = () => {
                                                             }
                                                         />
                                                         <button
-                                                            className="btn-hide p-0"
+                                                            className="btn btn-hide p-0"
                                                             type="btn"
                                                             onMouseDown={(e) =>
                                                                 e.preventDefault()
@@ -1349,7 +1349,7 @@ const CreateTest = () => {
                                                             }
                                                         />
                                                         <button
-                                                            className="btn-hide p-0"
+                                                            className="btn btn-hide p-0"
                                                             type="btn"
                                                             onMouseDown={(e) =>
                                                                 e.preventDefault()
@@ -1366,7 +1366,7 @@ const CreateTest = () => {
                                                 )}
                                                 {ques?.answers.length > 1 && (
                                                     <button
-                                                        className="btn-customLight ms-1 p-2 rounded-circle"
+                                                        className="btn btn-customLight ms-1 p-2 rounded-circle"
                                                         style={{
                                                             marginRight:
                                                                 '-0.5rem',
@@ -1477,7 +1477,7 @@ const CreateTest = () => {
                                 ))}
                                 <button
                                     type="button"
-                                    className="createTest_addOptionBtn"
+                                    className="btn p-0 createTest_addOptionBtn"
                                     onClick={() =>
                                         handleAddAnswer(ques, quesIndex)
                                     }
@@ -1533,7 +1533,7 @@ const CreateTest = () => {
                 <div className="card-body create-test_card-body d-flex justify-content-between">
                     <button
                         type="button"
-                        className="createTest_addQuesBtn text-uppercase"
+                        className="btn p-0 createTest_addQuesBtn text-uppercase"
                         onClick={handleAddTrueFalseQuestion}
                     >
                         + {t('tf')}
@@ -1547,7 +1547,7 @@ const CreateTest = () => {
                     </button>
                     <button
                         type="button"
-                        className="createTest_addQuesBtn text-uppercase"
+                        className="btn p-0 createTest_addQuesBtn text-uppercase"
                         onClick={handleAddWrittenQuestion}
                     >
                         + {t('written')}
