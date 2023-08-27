@@ -250,7 +250,7 @@ const TestDetails = () => {
                     <div className="my-2">{test?.description}</div>
                     <div className="d-flex justify-content-between mb-2 instruction_date">
                         <div>
-                            {t('numAttemps')}: {test?.num_attemps}
+                            {t('numAttempts')}: {test?.num_attemps}
                         </div>
                         {userInfo?.id !== test?.classroom?.user?.id ? (
                             <div>

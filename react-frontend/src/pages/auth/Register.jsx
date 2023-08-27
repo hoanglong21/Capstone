@@ -317,7 +317,7 @@ const Register = () => {
                                 </span>
                             </div>
                         ) : (
-                            'Register'
+                            t('register')
                         )}
                     </button>
                 </div>
