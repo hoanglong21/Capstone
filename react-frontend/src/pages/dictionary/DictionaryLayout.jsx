@@ -1,8 +1,9 @@
 import { NavLink, Outlet, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import './dictionary.css'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+
+import './dictionary.css'
 
 function DictionaryLayout() {
     const navigate = useNavigate()
