@@ -29,4 +29,6 @@ public class ClassLearnerRequest {
 
     private Date created_date;
 
+    private int userid;
+
 }

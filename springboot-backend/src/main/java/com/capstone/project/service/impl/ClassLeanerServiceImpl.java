@@ -206,7 +206,7 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
 
         int offset = (page - 1) * size;
 
-        String query = "SELECT cl.id, u.username as username,u.avatar as avatar,u.status as userstatus, cl.status as status, cl.created_date as created_date\n" +
+        String query = "SELECT cl.id, u.username as username,u.avatar as avatar,u.id as userid,u.status as userstatus, cl.status as status, cl.created_date as created_date\n" +
                 "FROM class_learner cl \n" +
                 "INNER JOIN user u  ON u.id = cl.user_id\n" +
                 "INNER JOIN class c on c.id = cl.class_id\n" +
