@@ -83,6 +83,7 @@ const LearnerSubmission = ({ assignment }) => {
                             tempSubmission.id
                         )
                     ).data
+                    console.log(tempComments)
                     setComments(tempComments)
                 }
                 setSubmission(tempSubmission)
