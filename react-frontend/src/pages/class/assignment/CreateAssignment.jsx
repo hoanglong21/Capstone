@@ -40,6 +40,7 @@ function CreateAssignment() {
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
+
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
     }
@@ -409,7 +410,7 @@ function CreateAssignment() {
                             value={title || ''}
                             onChange={(event) => setTitle(event.target.value)}
                             onBlur={() => {
-                                handleUpdateTitle(assignment?.draft)
+                                handleUpdateTitle(assignment?.draft || true)
                             }}
                         />
                         <label
@@ -430,7 +431,9 @@ function CreateAssignment() {
                                     })
                                 }
                             }}
-                            onBlur={() => handleUpdate(assignment?.draft)}
+                            onBlur={() =>
+                                handleUpdate(assignment?.draft || true)
+                            }
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
                             {t('instruction')}
@@ -451,7 +454,7 @@ function CreateAssignment() {
                                         setStartDate(event.target.value)
                                     }
                                     onBlur={() => {
-                                        handleUpdateStart(assignment?.draft)
+                                        handleUpdateStart(assignment?.draft || true)
                                     }}
                                 />
                                 <label
@@ -476,7 +479,7 @@ function CreateAssignment() {
                                         setDueDate(event.target.value)
                                     }}
                                     onBlur={() => {
-                                        handleUpdateDue(assignment?.draft)
+                                        handleUpdateDue(assignment?.draft || true)
                                     }}
                                 />
                                 <label
