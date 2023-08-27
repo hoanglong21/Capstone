@@ -225,6 +225,7 @@ const TestList = () => {
         }
         if (isDelete === true) {
             fetchData()
+            setIsDelete(false)
         }
     }, [isDelete])
 
