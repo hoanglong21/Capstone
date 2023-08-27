@@ -83,7 +83,8 @@ const Instructions = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') ||
+                    isNaN(assign_id)
                 ) {
                     navigate('/notFound')
                 }
