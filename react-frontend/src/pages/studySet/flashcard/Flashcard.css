@@ -143,6 +143,10 @@
     font-size: 1rem;
 }
 
+.flashCardField_content > * {
+    word-wrap: break-word;
+}
+
 .flashcardControls {
     margin-bottom: 1rem;
     margin-top: 5rem;
@@ -460,20 +464,20 @@
     box-shadow: none;
 }
 
-.flashcard-p-5{
+.flashcard-p-5 {
     padding: 3rem !important;
 }
 
-.flashCardSwitch_btn{
+.flashCardSwitch_btn {
     margin-right: 4rem;
 }
 
-.kanji-card-col-6{
+.kanji-card-col-6 {
     flex: 0 0 auto;
     width: 50% !important;
 }
 
-.kanji-card-col-3{
+.kanji-card-col-3 {
     flex: 0 0 auto;
     width: 25% !important;
 }
@@ -487,15 +491,16 @@
         font-size: 24px;
     }
 
-    .flashcard-p-5{
+    .flashcard-p-5 {
         padding: 0rem !important;
     }
 
-    .flashCardSwitch_btn{
+    .flashCardSwitch_btn {
         margin-right: 1.5rem;
     }
 
-    .kanji-card-col-6, .kanji-card-col-3{
+    .kanji-card-col-6,
+    .kanji-card-col-3 {
         width: 100% !important;
     }
 
