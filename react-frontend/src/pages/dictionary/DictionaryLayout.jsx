@@ -1,17 +1,28 @@
-import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './dictionary.css'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 function DictionaryLayout() {
+    const navigate = useNavigate()
+
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
+
+    const { userInfo } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
-    const [searchKey, setSearchKey] = useState(search)
     const { userLanguage } = useSelector((state) => state.user)
 
+    const [searchKey, setSearchKey] = useState(search)
+
     const { t, i18n } = useTranslation()
+
+    useEffect(() => {
+        if (userInfo?.role === 'ROLE_ADMIN') {
+            navigate('/dashboard')
+        }
+    }, [userInfo])
 
     useEffect(() => {
         if (userToken) {

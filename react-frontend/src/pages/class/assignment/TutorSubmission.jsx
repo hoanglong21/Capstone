@@ -33,6 +33,7 @@ const TutorSubmission = ({ assignment }) => {
     const [learners, setLearners] = useState([])
     const [numSubmit, setNumSubmit] = useState(0)
     const [numNotSubmit, setNumNotSubmit] = useState(0)
+    const [classLearner, setClassLearner] = useState({})
     const [submission, setSubmission] = useState({})
     const [attachments, setAttachments] = useState([])
     const [saving, setSaving] = useState(false)
@@ -72,7 +73,8 @@ const TutorSubmission = ({ assignment }) => {
                     await ClassLearnerService.filterGetLeaner(
                         '',
                         `=${assignment?.classroom?.id}`,
-                        `=${1}`,
+                        '',
+                        '=1',
                         '',
                         '',
                         '',
@@ -93,7 +95,7 @@ const TutorSubmission = ({ assignment }) => {
                 if (tempLearners.totalItems > 0) {
                     var tempSubmission = (
                         await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
-                            tempLearners[0].id,
+                            tempLearners.list[0].id,
                             assignment.id
                         )
                     ).data
@@ -113,8 +115,9 @@ const TutorSubmission = ({ assignment }) => {
                         ).data
                         setComments(tempComments)
                     } else {
-                        tempSubmission = { user: tempLearners[0] }
+                        tempSubmission = { user: tempLearners.list[0] }
                     }
+                    setClassLearner(tempLearners.list[0])
                     setSubmission(tempSubmission)
                 }
             } catch (error) {
@@ -147,7 +150,7 @@ const TutorSubmission = ({ assignment }) => {
                         '',
                         `=${assignment?.classroom?.id}`,
                         `${search ? `=${search}` : ''}`,
-                        `=${1}`,
+                        '=1',
                         '',
                         '',
                         '',
@@ -159,7 +162,7 @@ const TutorSubmission = ({ assignment }) => {
                 if (tempLearners.length > 0) {
                     var tempSubmission = (
                         await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
-                            tempLearners[0].id,
+                            tempLearners.list[0].id,
                             assignment.id
                         )
                     ).data
@@ -179,8 +182,9 @@ const TutorSubmission = ({ assignment }) => {
                         ).data
                         setComments(tempComments)
                     } else {
-                        tempSubmission = { user: tempLearners[0] }
+                        tempSubmission = { user: tempLearners.list[0] }
                     }
+                    setClassLearner(tempLearners.list[0])
                     setSubmission(tempSubmission)
                 }
             } catch (error) {
@@ -305,12 +309,13 @@ const TutorSubmission = ({ assignment }) => {
             // create comment
             var tempSubmission = {}
             if (!submission?.id) {
+                console.log(classLearner)
                 tempSubmission = (
                     await SubmissionService.createSubmission({
                         user: {
                             id: userInfo.id,
                             username: userInfo.username,
-                            avatar: userInfo.avatar,
+                            avatar: classLearner.avatar,
                             status: userInfo.status,
                         },
                         assignment: {
@@ -417,7 +422,10 @@ const TutorSubmission = ({ assignment }) => {
                             {learners?.map((learner, index) => (
                                 <tr key={index}>
                                     <td
-                                        className="d-flex align-items-center submission_item"
+                                        className={`d-flex align-items-center submission_item ${
+                                            learner?.id ===
+                                                submission?.user?.id && 'active'
+                                        }`}
                                         onClick={() =>
                                             handleSelectLearner(learner)
                                         }
@@ -485,9 +493,11 @@ const TutorSubmission = ({ assignment }) => {
                 {/* detail */}
                 <div className="submission-col-8 ps-0">
                     {loadingSelect ? (
-                        <div class="d-flex justify-content-center mt-5">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                        <div className="d-flex justify-content-center mt-5">
+                            <div className="spinner-border" role="status">
+                                <span className="visually-hidden">
+                                    Loading...
+                                </span>
                             </div>
                         </div>
                     ) : (
