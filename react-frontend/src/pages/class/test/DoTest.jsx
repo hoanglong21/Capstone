@@ -38,8 +38,12 @@ const DoTest = () => {
     const [showResultModal, setShowResultModal] = useState(false)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [testEnd, setTestEnd] = useState({})
+
+    const [second, setSecond] = useState(null)
+    const [minute, setMinute] = useState(null)
     const [endSecond, setEndSecond] = useState(null)
     const [endMinute, setEndMinute] = useState(null)
+
     const { userLanguage } = useSelector((state) => state.user)
     const { t, i18n } = useTranslation()
 
@@ -54,20 +58,34 @@ const DoTest = () => {
 
     function setTime() {
         ++totalSeconds
-        const second = pad(totalSeconds % 60)
+        const tempSecond = pad(totalSeconds % 60)
+        setSecond(tempSecond)
         const minutes = pad(parseInt(totalSeconds / 60))
-        document.getElementById('secondsTest').innerHTML = second
+        setMinute(minutes)
+        document.getElementById('secondsTest').innerHTML = tempSecond
         document.getElementById('minutesTest').innerHTML = minutes
+    }
+
+    // end test
+    useEffect(() => {
         if (
             endMinute !== null &&
             endSecond !== null &&
-            Number(minutes) === Number(endMinute) &&
-            Number(second) === Number(endSecond)
+            second !== null &&
+            minute !== null &&
+            Number(second) === Number(endSecond) &&
+            Number(minute) === Number(endMinute)
         ) {
+            console.log(
+                Number(second),
+                Number(endMinute),
+                Number(minute),
+                Number(endSecond)
+            )
             setIsEnd(true)
             handleSubmit()
         }
-    }
+    }, [endMinute, endSecond, second, minute])
 
     function pad(val) {
         var valString = val + ''
