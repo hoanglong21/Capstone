@@ -513,6 +513,11 @@ public class ClassServiceImpl implements ClassService {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
                 notification.setTitle("New StudySet");
+
+                String urlWithId = "https://nihongolevelup.com/class/[[classid]]/sets";
+                urlWithId = urlWithId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+                notification.setUrl(urlWithId);
                 notification.setContent("A new studyset is added to class '" + classroom.getClass_name() + "'");
                 notification.setDatetime(date);
                 notification.set_read(false);
@@ -533,7 +538,7 @@ public class ClassServiceImpl implements ClassService {
 
             subject = "[NihongoLevelUp]: New Studyset ";
             content = "Hi [[name]],<br><br>"
-                    + "A new studyset was added to your class << " + classLearner.getClassroom().getClass_name() + " >>.<br><br>"
+                    + "A new studyset was added to your class " + classLearner.getClassroom().getClass_name() + ".<br><br>"
                     + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                     + "Best regards,<br>"
                     + "NihongoLevelUp Team";

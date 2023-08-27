@@ -109,6 +109,11 @@ public class TestServiceImpl  implements TestService {
                 if (classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
                     Notification notification = new Notification();
                     notification.setTitle("New Test");
+
+                    String urlWithClassId = "https://nihongolevelup.com/class/[[classid]]/tests";
+                    urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+                    notification.setUrl(urlWithClassId);
                     notification.setContent("A new test is added to class '" + classroom.getClass_name() + "'");
                     notification.setDatetime(date);
                     notification.set_read(false);

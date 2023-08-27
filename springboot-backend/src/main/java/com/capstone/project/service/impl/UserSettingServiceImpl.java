@@ -218,7 +218,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             if (userSetting.getSetting().getId() == 4) {
                 subject = "[NihongoLevelUp]: Test due date";
                 content = "Hi [[name]],<br><br>"
-                        + "Your test << " + test.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in soon. Complete it before the time is due!<br><br>"
+                        + "Your test << " + test.getTitle() + " >> in class " + classroom.getClass_name() + " will be due in soon. Complete it before the time is due!<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Test</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
@@ -258,7 +258,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             if (userSetting.getSetting().getId() == 8) {
                 subject = "[NihongoLevelUp]: Test assigned";
                 content = "Hi [[name]],<br><br>"
-                        + "A new test << " + test.getTitle() + " >> in class << " + classroom.getClass_name() + " >> is assigned. Do the test now!<br><br>"
+                        + "A new test << " + test.getTitle() + " >> in class " + classroom.getClass_name() + " is assigned. Do the test now!<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Do Test</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
@@ -298,7 +298,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             if (userSetting.getSetting().getId() == 3) {
                 subject = "[NihongoLevelUp]: Assignment due date";
                 content = "Hi [[name]],<br><br>"
-                        + "Your assignment << " + assignment.getTitle() + " >> in class << " + classroom.getClass_name() + " >> will be due in soon. Complete it before the time is due!<br><br>"
+                        + "Your assignment << " + assignment.getTitle() + " >> in class " + classroom.getClass_name() + " will be due in soon. Complete it before the time is due!<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Assignment</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
@@ -338,7 +338,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             if (userSetting.getSetting().getId() == 7) {
                 subject = "[NihongoLevelUp]: Assignment assigned";
                 content = "Hi [[name]],<br><br>"
-                        + "Your assignment << " + assignment.getTitle() + " >> in class << " + classroom.getClass_name() + " >> assigned now. Complete it !<br><br>"
+                        + "Your assignment << " + assignment.getTitle() + " >> in class " + classroom.getClass_name() + " assigned now. Complete it !<br><br>"
                         + "<a href=\"[[URL]]\" style=\"display:inline-block;background-color:#3399FF;color:#FFF;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;\" target=\"_blank\">Complete Assignment</a><br><br>"
                         + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                         + "Best regards,<br>"
