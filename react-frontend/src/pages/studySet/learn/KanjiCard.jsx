@@ -33,7 +33,7 @@ const KanjiCard = ({
 
     useEffect(() => {
         if (ques?.question_type) {
-            setExample(ques.question.content[2].content)
+            setExample(ques.question.content[9].content)
             if (ques?.question_type === 1) {
                 document.getElementById(`quizQuesInput${quesIndex}`).value = ''
             }
@@ -58,13 +58,13 @@ const KanjiCard = ({
                 const tempContent = itemContent.content
                     .replaceAll(/(<([^>]+)>)/gi, ' ')
                     .trim()
-                correctAnswer = tempContent
+                correctAnswer = tempContent.toLowerCase()
                 setCorrectAnswer(itemContent.content)
                 break
             }
         }
         // check is correct
-        if (currentAnswer == correctAnswer) {
+        if (currentAnswer.toLowerCase() == correctAnswer) {
             setIsCurrentCorrect(true)
         } else {
             setIsCurrentCorrect(false)
