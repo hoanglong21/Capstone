@@ -13,14 +13,20 @@ const Language = () => {
     const { t, i18n } = useTranslation()
 
     const { userInfo } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
     const { userLanguage } = useSelector((state) => state.user)
 
     const [language, setLanguage] = useState('en')
 
     useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
+    useEffect(() => {
         const fetchData = async () => {
             setLanguage(userLanguage)
-            i18n.changeLanguage(language)
         }
         if (userInfo?.id) {
             fetchData()

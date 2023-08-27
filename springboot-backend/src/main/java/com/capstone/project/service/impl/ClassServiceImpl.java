@@ -265,18 +265,31 @@ public class ClassServiceImpl implements ClassService {
     private void notificationForRecoveredClass(Class classroom) {
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
         Date date = localDateTimeToDate(localDateTime);
-        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
-        for(ClassLearner classLearner : classLearnerList){
-            if(classLearner.getStatus().equals("enrolled")) {
-                Notification notification = new Notification();
-                notification.setTitle("Class Recovered");
-                notification.setContent("Your Class " + classroom.getClass_name() + "' has been recovered.");
-                notification.set_read(false);
-                notification.setUser(classLearner.getUser());
-                notification.setDatetime(date);
 
-                notificationRepository.save(notification);
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+
+        Set<User> enrolledUsersToNotify = new HashSet<>();
+
+        for (ClassLearner classLearner : classLearnerList) {
+            if (classLearner.getStatus().equals("enrolled")) {
+                enrolledUsersToNotify.add(classLearner.getUser());
             }
+        }
+
+        for (User user : enrolledUsersToNotify) {
+            Notification notification = new Notification();
+            notification.setTitle("Class Recovered");
+
+            String urlWithClassId = "/class/[[classid]]";
+            urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+            notification.setUrl(urlWithClassId);
+            notification.setContent("Your Class " + classroom.getClass_name() + "' has been recovered.");
+            notification.set_read(false);
+            notification.setUser(user);
+            notification.setDatetime(date);
+
+            notificationRepository.save(notification);
         }
     }
 
@@ -509,22 +522,29 @@ public class ClassServiceImpl implements ClassService {
         Date date = localDateTimeToDate(localDateTime);
 
         List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+
+        Set<User> enrolledUsersToNotify = new HashSet<>();
+
         for (ClassLearner classLearner : classLearnerList) {
-            if(classLearner.getStatus().equals("enrolled")) {
-                Notification notification = new Notification();
-                notification.setTitle("New StudySet");
-
-                String urlWithId = "https://nihongolevelup.com/class/[[classid]]/sets";
-                urlWithId = urlWithId.replace("[[classid]]", String.valueOf(classroom.getId()));
-
-                notification.setUrl(urlWithId);
-                notification.setContent("A new studyset is added to class '" + classroom.getClass_name() + "'");
-                notification.setDatetime(date);
-                notification.set_read(false);
-                notification.setUser(classLearner.getUser());
-
-                notificationRepository.save(notification);
+            if (classLearner.getStatus().equals("enrolled")) {
+                enrolledUsersToNotify.add(classLearner.getUser());
             }
+        }
+
+        for (User user : enrolledUsersToNotify) {
+            Notification notification = new Notification();
+            notification.setTitle("New StudySet");
+
+            String urlWithId = "/class/[[classid]]/sets";
+            urlWithId = urlWithId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+            notification.setUrl(urlWithId);
+            notification.setContent("A new studyset is added to class '" + classroom.getClass_name() + "'");
+            notification.setDatetime(date);
+            notification.set_read(false);
+            notification.setUser(user);
+
+            notificationRepository.save(notification);
         }
     }
 

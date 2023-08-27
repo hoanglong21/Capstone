@@ -33,6 +33,7 @@ const TutorSubmission = ({ assignment }) => {
     const [learners, setLearners] = useState([])
     const [numSubmit, setNumSubmit] = useState(0)
     const [numNotSubmit, setNumNotSubmit] = useState(0)
+    const [classLearner, setClassLearner] = useState({})
     const [submission, setSubmission] = useState({})
     const [attachments, setAttachments] = useState([])
     const [saving, setSaving] = useState(false)
@@ -66,13 +67,16 @@ const TutorSubmission = ({ assignment }) => {
     useEffect(() => {
         const fetchData = async () => {
             setError('')
+            var tempLearners = {}
+            var tempSubmission = {}
             try {
                 // learners
-                const tempLearners = (
+                tempLearners = (
                     await ClassLearnerService.filterGetLeaner(
                         '',
                         `=${assignment?.classroom?.id}`,
-                        `=${1}`,
+                        '',
+                        '=1',
                         '',
                         '',
                         '',
@@ -91,31 +95,12 @@ const TutorSubmission = ({ assignment }) => {
                 setNumNotSubmit(tempCountSubmit.notsubmitted)
                 // submission
                 if (tempLearners.totalItems > 0) {
-                    var tempSubmission = (
+                    tempSubmission = (
                         await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
-                            tempLearners[0].id,
+                            tempLearners.list[0].userid,
                             assignment.id
                         )
                     ).data
-                    if (tempSubmission?.id) {
-                        // attachments
-                        const tempAttachments = (
-                            await AttachmentService.getAttachmentsBySubmissionId(
-                                tempSubmission.id
-                            )
-                        ).data
-                        setAttachments(tempAttachments)
-                        // comments
-                        const tempComments = (
-                            await CommentService.getAllCommentBySubmisionId(
-                                tempSubmission.id
-                            )
-                        ).data
-                        setComments(tempComments)
-                    } else {
-                        tempSubmission = { user: tempLearners[0] }
-                    }
-                    setSubmission(tempSubmission)
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -130,6 +115,44 @@ const TutorSubmission = ({ assignment }) => {
                     navigate('/notFound')
                 }
             }
+            try {
+                if (tempSubmission?.id) {
+                    // attachments
+                    const tempAttachments = (
+                        await AttachmentService.getAttachmentsBySubmissionId(
+                            tempSubmission.id
+                        )
+                    ).data
+                    setAttachments(tempAttachments)
+                    // comments
+                    const tempComments = (
+                        await CommentService.getAllCommentBySubmisionId(
+                            tempSubmission.id
+                        )
+                    ).data
+                    setComments(tempComments)
+                } else {
+                    tempSubmission = {
+                        user: {
+                            id: tempLearners.list[0].userid,
+                            username: tempLearners.list[0].username,
+                            avatar: tempLearners.list[0].avatar,
+                            status: tempLearners.list[0].userstatus,
+                        },
+                        assignment: {
+                            id: assignment.id,
+                        },
+                    }
+                }
+                setClassLearner(tempLearners.list[0])
+                setSubmission(tempSubmission)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+            }
         }
         if (assignment?.id) {
             fetchData()
@@ -140,14 +163,16 @@ const TutorSubmission = ({ assignment }) => {
     useEffect(() => {
         const fetchData = async () => {
             setError('')
+            var tempLearners = {}
+            var tempSubmission = {}
             try {
                 // learners
-                const tempLearners = (
+                tempLearners = (
                     await ClassLearnerService.filterGetLeaner(
                         '',
                         `=${assignment?.classroom?.id}`,
                         `${search ? `=${search}` : ''}`,
-                        `=${1}`,
+                        '=1',
                         '',
                         '',
                         '',
@@ -157,31 +182,12 @@ const TutorSubmission = ({ assignment }) => {
                 setLearners(tempLearners.list)
                 // submission
                 if (tempLearners.length > 0) {
-                    var tempSubmission = (
+                    tempSubmission = (
                         await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
-                            tempLearners[0].id,
+                            tempLearners.list[0].userid,
                             assignment.id
                         )
                     ).data
-                    if (tempSubmission?.id) {
-                        // attachments
-                        const tempAttachments = (
-                            await AttachmentService.getAttachmentsBySubmissionId(
-                                tempSubmission.id
-                            )
-                        ).data
-                        setAttachments(tempAttachments)
-                        // comments
-                        const tempComments = (
-                            await CommentService.getAllCommentBySubmisionId(
-                                tempSubmission.id
-                            )
-                        ).data
-                        setComments(tempComments)
-                    } else {
-                        tempSubmission = { user: tempLearners[0] }
-                    }
-                    setSubmission(tempSubmission)
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
@@ -194,6 +200,45 @@ const TutorSubmission = ({ assignment }) => {
                     error?.response.data.includes('not exist')
                 ) {
                     navigate('/notFound')
+                }
+            }
+            try {
+                if (tempSubmission?.id) {
+                    // attachments
+                    const tempAttachments = (
+                        await AttachmentService.getAttachmentsBySubmissionId(
+                            tempSubmission.id
+                        )
+                    ).data
+                    setAttachments(tempAttachments)
+                    // comments
+                    const tempComments = (
+                        await CommentService.getAllCommentBySubmisionId(
+                            tempSubmission.id
+                        )
+                    ).data
+                    setComments(tempComments)
+                } else {
+                    tempSubmission = {
+                        user: {
+                            id: tempLearners.list[0].userid,
+                            username: tempLearners.list[0].username,
+                            avatar: tempLearners.list[0].avatar,
+                            status: tempLearners.list[0].userstatus,
+                        },
+                        assignment: {
+                            id: assignment.id,
+                        },
+                    }
+                    setComments([])
+                }
+                setClassLearner(tempLearners.list[0])
+                setSubmission(tempSubmission)
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
                 }
             }
         }
@@ -262,15 +307,36 @@ const TutorSubmission = ({ assignment }) => {
 
     const handleSelectLearner = async (learner) => {
         setLoadingSelect(true)
+        var tempSubmission = {}
         try {
-            var tempSubmission = (
+            tempSubmission = (
                 await SubmissionService.getSubmissionByAuthorIdandAssignmentId(
-                    learner.id,
+                    learner.userid,
                     assignment.id
                 )
             ).data
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setLoadingSelect(false)
+        try {
             if (!tempSubmission?.id) {
-                tempSubmission = { user: learner }
+                tempSubmission = {
+                    user: {
+                        id: learner.userid,
+                        username: learner.username,
+                        avatar: learner.avatar,
+                        status: learner.userstatus,
+                    },
+                    assignment: {
+                        id: assignment.id,
+                    },
+                }
+                setComments([])
             } else {
                 // attachments
                 const tempAttachments = (
@@ -279,6 +345,13 @@ const TutorSubmission = ({ assignment }) => {
                     )
                 ).data
                 setAttachments(tempAttachments)
+                // comments
+                const tempComments = (
+                    await CommentService.getAllCommentBySubmisionId(
+                        tempSubmission.id
+                    )
+                ).data
+                setComments(tempComments)
             }
             setSubmission(tempSubmission)
         } catch (error) {
@@ -288,7 +361,6 @@ const TutorSubmission = ({ assignment }) => {
                 console.log(error.message)
             }
         }
-        setLoadingSelect(false)
     }
 
     const handleAddComment = async () => {
@@ -308,10 +380,10 @@ const TutorSubmission = ({ assignment }) => {
                 tempSubmission = (
                     await SubmissionService.createSubmission({
                         user: {
-                            id: userInfo.id,
-                            username: userInfo.username,
-                            avatar: userInfo.avatar,
-                            status: userInfo.status,
+                            id: classLearner.userid,
+                            username: classLearner.username,
+                            avatar: classLearner.avatar,
+                            status: classLearner.userstatus,
                         },
                         assignment: {
                             id: assignment.id,
@@ -417,7 +489,10 @@ const TutorSubmission = ({ assignment }) => {
                             {learners?.map((learner, index) => (
                                 <tr key={index}>
                                     <td
-                                        className="d-flex align-items-center submission_item"
+                                        className={`d-flex align-items-center submission_item ${
+                                            learner?.userid ===
+                                                submission?.user?.id && 'active'
+                                        }`}
                                         onClick={() =>
                                             handleSelectLearner(learner)
                                         }
@@ -485,9 +560,11 @@ const TutorSubmission = ({ assignment }) => {
                 {/* detail */}
                 <div className="submission-col-8 ps-0">
                     {loadingSelect ? (
-                        <div class="d-flex justify-content-center mt-5">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                        <div className="d-flex justify-content-center mt-5">
+                            <div className="spinner-border" role="status">
+                                <span className="visually-hidden">
+                                    Loading...
+                                </span>
                             </div>
                         </div>
                     ) : (
