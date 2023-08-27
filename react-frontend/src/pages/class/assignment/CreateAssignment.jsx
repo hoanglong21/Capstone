@@ -31,15 +31,15 @@ function CreateAssignment() {
     const [saving, setSaving] = useState(null)
 
     const [error, setError] = useState('')
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
     }
@@ -186,7 +186,7 @@ function CreateAssignment() {
         try {
             var temp = [...attachments]
             temp.splice(index, 1)
-            setAttachments(file, temp)
+            setAttachments(temp)
             AttachmentService.deleteAttachment(file.id)
             deleteFileByUrl(
                 file.file_url,
@@ -379,7 +379,7 @@ function CreateAssignment() {
                             disabled={!assignment?.title}
                             onClick={() => handleSubmit(true)}
                         >
-                           {t('saveDraft')}
+                            {t('saveDraft')}
                         </button>
                     </div>
                 ) : (
@@ -433,7 +433,7 @@ function CreateAssignment() {
                             onBlur={() => handleUpdate(assignment?.draft)}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
-                        {t('instruction')}
+                            {t('instruction')}
                         </label>
                     </div>
                     <div className="row mb-4">
