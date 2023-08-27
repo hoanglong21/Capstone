@@ -226,6 +226,7 @@
 .createTest_addOptionBtn {
     color: #70757a;
     padding: 0.125rem 0;
+    border-radius: 0;
 }
 
 .createTest_addOptionBtn:hover {

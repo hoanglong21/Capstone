@@ -331,7 +331,6 @@ const DoTest = () => {
                     </button>
                 </div>
             </div>
-            {/* Question */}
             <div className="doTest_container mt-5 mb-4 flex-grow-1">
                 <div className="card">
                     <div className="quizQues_number">
@@ -342,27 +341,35 @@ const DoTest = () => {
                         <div className="flex-fill">
                             <div>{currentQuestion?.question?.question}</div>
                             {/* picture + audio + video */}
-                            {currentQuestion?.video && (
-                                <video controls src={currentQuestion?.video} />
+                            {currentQuestion?.question?.video && (
+                                <video
+                                    controls
+                                    src={currentQuestion?.question?.video}
+                                />
                             )}
-                        </div>
-                        <div className="row">
-                            {currentQuestion?.picture && (
-                                <div className="col-6">
-                                    <img
-                                        src={currentQuestion?.picture}
-                                        className="quizQues_img"
-                                    />
-                                </div>
-                            )}
-                            {currentQuestion?.audio && (
-                                <div className="col-6">
-                                    <audio
-                                        controls
-                                        src={currentQuestion?.audio}
-                                    />
-                                </div>
-                            )}
+                            <div className="row">
+                                {currentQuestion?.question?.picture && (
+                                    <div className="col-6">
+                                        <img
+                                            src={
+                                                currentQuestion?.question
+                                                    ?.picture
+                                            }
+                                            className="quizQues_img"
+                                        />
+                                    </div>
+                                )}
+                                {currentQuestion?.question?.audio && (
+                                    <div className="col-6">
+                                        <audio
+                                            controls
+                                            src={
+                                                currentQuestion?.question?.audio
+                                            }
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         {/* answer */}
                         {/* written */}

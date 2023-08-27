@@ -466,7 +466,8 @@ function AssignmentList() {
                                                             <div className="assignSubmitted">
                                                                 {t('submitted')}
                                                             </div>
-                                                        ) : new Date(
+                                                        ) : assign?.due_date &&
+                                                          new Date(
                                                               assign?.due_date
                                                           ) < today ? (
                                                             <div className="assignMissing">
