@@ -4,6 +4,7 @@ import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
 import AssignmentService from "../../../services/AssignmentService";
 import { useSearchParams } from "react-router-dom";
+import Pagination from "../../../components/Pagination";
 
 function ManageFeedback() {
   const [assignments, setAssignments] = useState([]);
@@ -11,7 +12,8 @@ function ManageFeedback() {
   const [error, setError] = useState("");
 
   const search = searchParams.get("search");
-
+  const [page, setPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
   const fetchData = async (searchKey) => {
     let temp;
     try {
@@ -24,10 +26,12 @@ function ManageFeedback() {
           '',
           '',
           '',
-          '',
+          `=${page}`,
           "=10"
         )
-      ).data.list;
+      ).data
+      setAssignments(temp.list)
+      setTotalItems(temp.totalItems)
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data);
@@ -36,12 +40,11 @@ function ManageFeedback() {
       }
       return console.log(error);
     }
-    setAssignments(temp);
   };
 
   useEffect(() => {
     fetchData(search ? search : "");
-  }, [search]);
+  }, [search, page]);
 
   return (
     <div className="container-fluid">
@@ -98,6 +101,15 @@ function ManageFeedback() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
           </div>
         </div>
       </div>

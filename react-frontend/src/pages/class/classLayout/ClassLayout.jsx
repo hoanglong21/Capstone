@@ -5,6 +5,8 @@ import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 
 import ClassService from '../../../services/ClassService'
 import ClassLearnerService from '../../../services/ClassLearnerService'
@@ -14,6 +16,10 @@ import UpdateClass from '../UpdateClass'
 import DeleteClass from '../DeleteClass'
 import AssignSets from '../AssignSets'
 import Report from '../../../components/report/Report'
+
+import banned from '../../../assets/images/banned.png'
+import verified from '../../../assets/images/verified.png'
+import deleted from '../../../assets/images/deleted.png'
 
 import {
     AddCircleIcon,
@@ -31,6 +37,8 @@ import './classLayout.css'
 
 const ClassLayout = () => {
     const navigate = useNavigate()
+
+    const { t, i18n } = useTranslation()
 
     const { userInfo } = useSelector((state) => state.user)
 
@@ -51,6 +59,8 @@ const ClassLayout = () => {
 
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
 
     // fetch data
     useEffect(() => {
@@ -108,7 +118,11 @@ const ClassLayout = () => {
             }
             setLoading(false)
         }
-        fetchData()
+        if (userInfo?.role === 'ROLE_ADMIN') {
+            navigate('/dashboard')
+        } else {
+            fetchData()
+        }
     }, [userInfo, id])
 
     useEffect(() => {
@@ -122,6 +136,12 @@ const ClassLayout = () => {
         }
     }, [classroom])
 
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     const handleRequest = async () => {
         try {
             ClassLearnerService.createClassLeaner({
@@ -133,7 +153,7 @@ const ClassLayout = () => {
             })
             NotificationService.createNotification({
                 title: 'Request to join class',
-                content: `You have a request to join class ${classroom.class_name} from ${userInfo?.username}`,
+                content: `You have a request to join class ${classroom?.class_name} from ${userInfo?.username}`,
                 user: {
                     id: classroom.user.id,
                     username: classroom.user.username,
@@ -216,12 +236,12 @@ const ClassLayout = () => {
                                     strokeWidth="2"
                                 />
                                 <h1 className="mainClass_title m-0 ms-3">
-                                    {classroom.class_name}
-                                    {classroom._deleted && ' (Deleted)'}
+                                    {classroom?.class_name}
+                                    {classroom?._deleted && ' (Deleted)'}
                                 </h1>
                             </div>
                             {!hasAccess && (
-                                <p className="mt-1">{classroom.description}</p>
+                                <p className="mt-1">{classroom?.description}</p>
                             )}
                         </div>
                         {hasAccess && !classroom?._deleted ? (
@@ -250,7 +270,7 @@ const ClassLayout = () => {
                                                         size="1.3rem"
                                                     />
                                                     <span className="align-middle fw-semibold">
-                                                        Edit
+                                                    {t('edit')}
                                                     </span>
                                                 </button>
                                             </li>
@@ -267,7 +287,7 @@ const ClassLayout = () => {
                                                         size="1.3rem"
                                                     />
                                                     <span className="align-middle fw-semibold">
-                                                        Add sets
+                                                    {t('aSet')}
                                                     </span>
                                                 </button>
                                             </li>
@@ -287,7 +307,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                    Report
+                                                {t('report')}
                                                 </span>
                                             </button>
                                         </li>
@@ -310,7 +330,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                    Delete
+                                                {t('delete')}
                                                 </span>
                                             </button>
                                         </li>
@@ -329,14 +349,16 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                    Unenroll
+                                                {t('unenroll')}
                                                 </span>
                                             </button>
                                         </li>
                                     )}
                                 </ul>
                             </div>
-                        ) : classroom?._deleted ? (
+                        ) : classroom?._deleted ||
+                          classroom?.authorstatus === 'banned' ||
+                          classroom?.authorstatus === 'deleted' ? (
                             ''
                         ) : (
                             <div>
@@ -346,7 +368,7 @@ const ClassLayout = () => {
                                         type="button"
                                         onClick={handleCancelRequest}
                                     >
-                                        Cancel Request
+                                        {t('cancelRe')}
                                     </button>
                                 ) : (
                                     <button
@@ -360,7 +382,7 @@ const ClassLayout = () => {
                                             }
                                         }}
                                     >
-                                        Request to join class
+                                       {t('requestClass')}
                                     </button>
                                 )}
                             </div>
@@ -381,7 +403,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Stream
+                                            {t('stream')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -396,7 +418,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Sets
+                                            {t('set')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -410,7 +432,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Assignments
+                                            {t('assignment')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -424,7 +446,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Tests
+                                            {t('test')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -438,7 +460,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                People
+                                            {t('people')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -455,7 +477,7 @@ const ClassLayout = () => {
                                                 }
                                             >
                                                 <span className="align-middle">
-                                                    Statistics
+                                                {t('statistics')}
                                                 </span>
                                             </NavLink>
                                         </li>
@@ -468,28 +490,36 @@ const ClassLayout = () => {
                         </div>
                     ) : (
                         <div className="row request-mt-5">
-                            {isWaiting ? (
+                            {classroom?.authorstatus === 'banned' ||
+                            classroom?.authorstatus === 'deleted' ? (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                        Your request to join this class has been
-                                        sent
+                                    {t('msg108')}.
                                     </h3>
                                     <p>
-                                        Once a class owner approves, you'll
-                                        start receiving class announcements
+                                    {t('msg109')}{' '}
+                                        {classroom.authorstatus}.
+                                    </p>
+                                </div>
+                            ) : isWaiting ? (
+                                <div className="request-col-8 text-center">
+                                    <h3 className="mainClass_infoTitle">
+                                    {t('msg110')}
+                                    </h3>
+                                    <p>
+                                    {t('msg111')}
                                     </p>
                                 </div>
                             ) : (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                        Join this class to get access to its
-                                        content
+                                    {t('msg112')}
                                     </h3>
                                 </div>
                             )}
                             <div className="request-col-4">
                                 <h6 className="mainClass_infoLabel">
-                                    CLASS DETAILS
+                                {t('classDetails')}
                                 </h6>
                                 <div className="d-flex align-items-center mt-2">
                                     <img
@@ -499,17 +529,62 @@ const ClassLayout = () => {
                                     <div className="ms-3">
                                         {classroom?.author}
                                     </div>
+                                    {classroom?.authorstatus === 'banned' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg9')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                src={banned}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
+                                    {classroom?.authorstatus === 'active' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg8')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag"
+                                                src={verified}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
+                                    {classroom?.authorstatus === 'deleted' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg7')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag"
+                                                src={deleted}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
                                 </div>
                                 <div className="d-flex align-items-center mt-2">
                                     <StudySetIcon size="20px" />
                                     <div className="ms-3">
-                                        {classroom?.studyset} sets
+                                        {classroom?.studyset} {t('set')}
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center mt-2">
                                     <MemberSolidIcon size="20px" />
                                     <div className="ms-3">
-                                        {classroom?.member} sets
+                                        {classroom?.member} {t('set')}
                                     </div>
                                 </div>
                             </div>
@@ -539,19 +614,15 @@ const ClassLayout = () => {
                 >
                     <Modal.Header closeButton>
                         <Modal.Title className="px-3">
-                            <h4 className="modal-title">
-                                Unenroll from this class?
-                            </h4>
+                            <h4 className="modal-title">{t('unroll')}?</h4>
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body className="p-4">
                         <div className="classUnenrollModalHeading mb-3">
                             {classroom?.class_name}
                         </div>
-                        <p>You are about to unenroll from this class.</p>
-                        <p className="fw-semibold">
-                            Are you sure? This cannot be undone.
-                        </p>
+                        <p>{t('msg67')}.</p>
+                        <p className="fw-semibold">{t('msg68')}.</p>
                     </Modal.Body>
                     <Modal.Footer>
                         <button
@@ -561,7 +632,7 @@ const ClassLayout = () => {
                                 setShowUnenrollModal(false)
                             }}
                         >
-                            Close
+                            {t('close')}
                         </button>
                         <button
                             className="btn btn-danger classUnenrollModalBtn"
@@ -627,12 +698,9 @@ const ClassLayout = () => {
                     }}
                 >
                     <Modal.Header className="border-0" closeButton>
-                        <Modal.Title>Login Required</Modal.Title>
+                        <Modal.Title>{t('msg35')}</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>
-                        In order to use this feature, you need to login. Would
-                        you like to login now or later?
-                    </Modal.Body>
+                    <Modal.Body>{t('msg36')}?</Modal.Body>
                     <Modal.Footer className="border-0">
                         <button
                             className="btn btn-light"
@@ -640,7 +708,7 @@ const ClassLayout = () => {
                                 setShowWarningModal(false)
                             }}
                         >
-                            Later
+                            {t('later')}
                         </button>
                         <button
                             className="btn btn-primary"
@@ -648,7 +716,7 @@ const ClassLayout = () => {
                                 navigate('/login')
                             }}
                         >
-                            Log in now
+                            {t('msg37')}
                         </button>
                     </Modal.Footer>
                 </Modal>

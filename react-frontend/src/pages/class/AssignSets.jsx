@@ -14,6 +14,8 @@ import {
 } from '../../components/icons'
 import Pagination from '../../components/Pagination'
 import { useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const AssignSets = ({
     showAssignModal,
@@ -70,6 +72,15 @@ const AssignSets = ({
         }
         setLoading(false)
     }
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     const fetchNot = async () => {
         setLoadingNot(true)
@@ -186,7 +197,7 @@ const AssignSets = ({
         >
             <Modal.Header closeButton className="border-0 pt-4 pb-3 ps-5 pe-4">
                 <Modal.Title id="example-modal-sizes-title-lg">
-                    Add to a class
+                {t('addToClass')}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-5">
@@ -274,14 +285,13 @@ const AssignSets = ({
                                 />
                             </div>
                         ) : search ? (
-                            <div>No matching found.</div>
+                            <div>{t('noMatch')}.</div>
                         ) : assignSets.length > 0 ||
                           notAssignSets.length > 0 ? (
-                            <div>This class doesn't have any sets yet</div>
+                            <div>{t('msg70')}</div>
                         ) : (
                             <div>
-                                You don't have any study sets to assign to this
-                                class.
+                                {t('msg71')}.
                             </div>
                         )}
                     </Tab>
@@ -323,17 +333,15 @@ const AssignSets = ({
                                 />
                             </div>
                         ) : search ? (
-                            <div>No matching found.</div>
+                            <div>{t('noMatch')}.</div>
                         ) : assignSets.length > 0 ||
                           notAssignSets.length > 0 ? (
                             <div>
-                                All of your study sets have been assigned to
-                                this class.
+                                {t('msg72')}.
                             </div>
                         ) : (
                             <div>
-                                You don't have any study sets to assign to this
-                                class.
+                                {t('msg71')}.
                             </div>
                         )}
                     </Tab>

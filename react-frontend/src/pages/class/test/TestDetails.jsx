@@ -16,6 +16,7 @@ import {
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import DeleteTest from './DeleteTest'
+import { useTranslation } from 'react-i18next'
 
 const TestDetails = () => {
     const navigate = useNavigate()
@@ -36,7 +37,15 @@ const TestDetails = () => {
 
     const [numAttempt, setNumAttempt] = useState(0)
     const [canTest, setCanTest] = useState(true)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -94,6 +103,7 @@ const TestDetails = () => {
                     id: userInfo.id,
                     username: userInfo.username,
                     avatar: userInfo.avatar,
+                    status: userInfo.status,
                 },
                 content: text,
                 commentType: {
@@ -159,7 +169,7 @@ const TestDetails = () => {
                                 }}
                                 disabled={test?._draft || !canTest}
                             >
-                                Do Test
+                                {t('doTest')}
                             </button>
                             {!test?.classroom?._deleted && (
                                 <div className="dropdown">
@@ -182,7 +192,7 @@ const TestDetails = () => {
                                                         to={`../../../edit-test/${test_id}`}
                                                         relative="path"
                                                     >
-                                                        Edit
+                                                        {t('edit')}
                                                     </Link>
                                                 </li>
                                                 <li>
@@ -195,7 +205,7 @@ const TestDetails = () => {
                                                             )
                                                         }}
                                                     >
-                                                        Delete
+                                                        {t('delete')}
                                                     </button>
                                                 </li>
                                             </div>
@@ -206,7 +216,7 @@ const TestDetails = () => {
                                                 type="button"
                                                 onClick={handleCopyLink}
                                             >
-                                                Copy link
+                                                {t('copyLink')}
                                             </button>
                                         </li>
                                         {userInfo?.id !==
@@ -220,7 +230,7 @@ const TestDetails = () => {
                                                         className="dropdown-item py-1 px-3 d-flex align-items-center"
                                                         type="button"
                                                     >
-                                                        Report
+                                                        {t('report')}
                                                     </button>
                                                 </li>
                                             </div>
@@ -233,19 +243,19 @@ const TestDetails = () => {
                     <div className="my-2">{test?.description}</div>
                     <div className="d-flex justify-content-between mb-2 instruction_date">
                         <div>
-                            Maximum number of attempts: {test?.num_attemps}
+                        {t('numAttemps')}: {test?.num_attemps}
                         </div>
                         {userInfo?.id !== test?.classroom?.user?.id ? (
-                            <div>Number of attempts: {numAttempt || 0}</div>
+                            <div>{t('nAtt')}: {numAttempt || 0}</div>
                         ) : (
                             <div>
-                                Duration: {test?.duration || 'No duration'}
+                                {t('dura')}: {test?.duration || 'No duration'}
                             </div>
                         )}
                     </div>
                     {userInfo?.id !== test?.classroom?.user?.id && (
                         <div className="mb-2 instruction_date">
-                            Duration: {test?.duration || 'No duration'}
+                            {t('dura')}: {test?.duration || 'No duration'}
                         </div>
                     )}
                     <div className="d-flex justify-content-between mb-3 instruction_date">
@@ -305,7 +315,7 @@ const TestDetails = () => {
                                     role="status"
                                 >
                                     <span className="visually-hidden">
-                                        LoadingUpload...
+                                    {t('loadingUpload')}...
                                     </span>
                                 </div>
                             ) : (
@@ -331,7 +341,7 @@ const TestDetails = () => {
                     }}
                 >
                     <Modal.Body className="p-4">
-                        Are you sure you want to start taking the test?
+                    {t('msg85')}?
                     </Modal.Body>
                     <Modal.Footer>
                         <button
@@ -342,7 +352,7 @@ const TestDetails = () => {
                                 setShowStartModal(false)
                             }}
                         >
-                            Cancel
+                            {t('cancel')}
                         </button>
                         <button
                             className="btn btn-warning btn-sm"
@@ -351,7 +361,7 @@ const TestDetails = () => {
                                 navigate(`/do-test/${test?.id}`)
                             }}
                         >
-                            Start
+                            {t('start')}
                         </button>
                     </Modal.Footer>
                 </Modal>

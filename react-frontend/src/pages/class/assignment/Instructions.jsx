@@ -17,6 +17,7 @@ import {
     SendIcon,
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
+import { useTranslation } from 'react-i18next'
 
 const Instructions = () => {
     const navigate = useNavigate()
@@ -34,7 +35,15 @@ const Instructions = () => {
     const [loadingComment, setLoadingComment] = useState(false)
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -99,6 +108,7 @@ const Instructions = () => {
                     id: userInfo.id,
                     username: userInfo.username,
                     avatar: userInfo.avatar,
+                    status: userInfo.status,
                 },
                 content: text,
                 commentType: {
@@ -128,7 +138,7 @@ const Instructions = () => {
             <div className="instruction_main mb-3">
                 <div className="d-flex align-items-center justify-content-between mb-1">
                     <div className="instruction_heading">
-                        {assignment?.title}{' '}
+                        {assignment?.title || '...'}{' '}
                         {assignment?._draft ? '(Draft)' : ''}
                     </div>
                     {!assignment?.classroom?._deleted && (
@@ -155,7 +165,7 @@ const Instructions = () => {
                                                     )
                                                 }}
                                             >
-                                                Edit
+                                                {t('edit')}
                                             </button>
                                         </li>
                                         <li>
@@ -166,7 +176,7 @@ const Instructions = () => {
                                                     setShowDeleteModal(true)
                                                 }}
                                             >
-                                                Delete
+                                                {t('delete')}
                                             </button>
                                         </li>
                                     </div>
@@ -177,7 +187,7 @@ const Instructions = () => {
                                         type="button"
                                         onClick={handleCopyLink}
                                     >
-                                        Copy link
+                                        {t('copyLink')}
                                     </button>
                                 </li>
                                 {userInfo?.id !==
@@ -191,7 +201,7 @@ const Instructions = () => {
                                                 className="dropdown-item py-1 px-3 d-flex align-items-center"
                                                 type="button"
                                             >
-                                                Report
+                                                {t('report')}
                                             </button>
                                         </li>
                                     </div>
@@ -238,7 +248,7 @@ const Instructions = () => {
                     </div>
                 </div>
             </div>
-            {/* attchments */}
+            {/* attachments */}
             {attachments?.length > 0 && (
                 <div className="row mb-3">
                     {attachments.map((file, index) => (
@@ -321,7 +331,6 @@ const Instructions = () => {
                     </div>
                 </div>
             )}
-
             {/* delete modal */}
             <DeleteAssignment
                 assign={assignment}

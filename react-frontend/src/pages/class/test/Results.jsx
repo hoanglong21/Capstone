@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { useState, useEffect } from 'react'
 
 import TestService from '../../../services/TestService'
+import { useTranslation } from 'react-i18next'
 
 const Results = () => {
     const { test_id } = useParams()
@@ -11,7 +12,15 @@ const Results = () => {
 
     const [test, setTest] = useState({})
     const [results, setResults] = useState([])
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -60,10 +69,10 @@ const Results = () => {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Mark</th>
-                            <th scope="col">No of attempt</th>
-                            <th scope="col">Start</th>
-                            <th scope="col">End</th>
+                            <th scope="col">{t('mark')}</th>
+                            <th scope="col">{t('noAttempt')}</th>
+                            <th scope="col">{t('start')}</th>
+                            <th scope="col">{t('end')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +94,7 @@ const Results = () => {
                                         new Date(test?.due_date) >
                                             new Date() ? (
                                             <div style={{ color: '#d50000' }}>
-                                                Missing
+                                                {t('missing')}
                                             </div>
                                         ) : (
                                             result?.testLearner[0]?.mark || ''

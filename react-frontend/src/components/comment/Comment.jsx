@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 import CommentService from '../../services/CommentService'
 
@@ -10,9 +11,10 @@ import defaultAvatar from '../../assets/images/default_avatar.png'
 import banned from '../../assets/images/banned.png'
 import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
-import { OptionVerIcon } from '../icons'
+import { OptionVerIcon, SendIcon } from '../icons'
 import './comment.css'
-import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [isEdit, setIsEdit] = useState(false)
@@ -20,6 +22,8 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [updateComment, setUpdateComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [addComment, setAddComment] = useState('')
+    const [isAdd, setIsAdd] = useState(false)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -265,6 +269,99 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
             }
         }
     }
+
+    // const handleAddChildComment = async () => {
+    //     setLoadingComment(true)
+    //     try {
+    //         // remove line break
+    //         var text = new String(addComment)
+    //         while (true) {
+    //             const lastIndex = text.lastIndexOf('<p>&nbsp;</p>')
+    //             if (text.length - 13 !== lastIndex) {
+    //                 break
+    //             }
+    //             text = new String(text.slice(0, lastIndex))
+    //         }
+    //         // create child comment
+    //         var tempComment = {
+    //             user: {
+    //                 id: userInfo.id,
+    //                 username: userInfo.username,
+    //                 avatar: userInfo.avatar,
+    //                 status: userInfo.status,
+    //             },
+    //             root: { id: comment.id },
+    //             content: text,
+    //             commentType: {
+    //                 id: comment.commentType.id,
+    //             },
+    //         }
+    //         switch (comment.commentType.id) {
+    //             case 1:
+    //                 // post
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     post: { id: comment.post.id },
+    //                 }
+    //                 break
+    //             case 2:
+    //                 // study set
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     studySet: { id: comment.studySet.id },
+    //                 }
+    //                 break
+    //             case 3:
+    //                 // test
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     test: { id: comment.test.id },
+    //                 }
+    //                 break
+    //             case 4:
+    //                 // assignment
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     assignment: { id: comment.assignment.id },
+    //                 }
+    //                 break
+    //             case 5:
+    //                 // submission
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     submission: { id: comment.submission.id },
+    //                 }
+    //                 break
+
+    //             default:
+    //                 break
+    //         }
+    //         tempComment = (await CommentService.createComment(tempComment)).data
+    //         // add to list
+    //         var tempComments = [...comments]
+    //         tempComments[index].childComments.push({ ...tempComment })
+    //         setComments([tempComments])
+    //         // clear
+    //         setAddComment('')
+    //         setIsAdd(false)
+    //     } catch (error) {
+    //         if (error.response && error.response.data) {
+    //             console.log(error.response.data)
+    //         } else {
+    //             console.log(error.message)
+    //         }
+    //     }
+    //     setLoadingComment(false)
+    // }
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     return (
         <div>
             {isEdit ? (
@@ -283,7 +380,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is banned.
+                                            {t('msg9')}.
                                         </Tooltip>
                                     }
                                 >
@@ -298,7 +395,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is verified.
+                                            {t('msg8')}.
                                         </Tooltip>
                                     }
                                 >
@@ -313,7 +410,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is deleted.
+                                            {t('msg7')}.
                                         </Tooltip>
                                     }
                                 >
@@ -345,7 +442,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                 className="btn btn-outline-secondary btn-sm me-2"
                                 onClick={handleCancelComment}
                             >
-                                Cancel
+                                {t('cancel')}
                             </button>
                             <button
                                 className="btn btn-primary btn-sm"
@@ -358,7 +455,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                         role="status"
                                     >
                                         <span className="visually-hidden">
-                                            LoadingUpload...
+                                        {t('loadingUpload')}...
                                         </span>
                                     </div>
                                 ) : (
@@ -369,141 +466,232 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                     </div>
                 </div>
             ) : (
-                <div
-                    className="d-flex justify-content-between"
-                    onMouseEnter={() => {
-                        document
-                            .getElementById(`comment${comment.id}`)
-                            ?.classList.remove('d-none')
-                    }}
-                    onMouseLeave={() => {
-                        document
-                            .getElementById(`comment${comment.id}`)
-                            ?.classList.add('d-none')
-                        if (
+                <div>
+                    <div
+                        className="d-flex justify-content-between"
+                        onMouseEnter={() => {
                             document
-                                .querySelector(
-                                    `#comment${comment.id} .dropdown-menu`
-                                )
-                                ?.classList.contains('show')
-                        ) {
+                                .getElementById(`comment${comment.id}`)
+                                ?.classList.remove('d-none')
+                        }}
+                        onMouseLeave={() => {
                             document
-                                .querySelector(`#comment${comment.id} > button`)
-                                ?.click()
-                        }
-                    }}
-                >
-                    <div className="d-flex mb-3">
-                        <img
-                            className="comment_img"
-                            src={comment?.user?.avatar || defaultAvatar}
-                        />
-                        <div className="ms-3">
-                            <div className="d-flex align-items-center">
-                                <Link
-                                    to={`/${comment.user.username}/sets`}
-                                    className="comment_author"
-                                >
-                                    {comment.user.username}
-                                </Link>
-                                {comment?.user?.status === 'banned' && (
-                                    <OverlayTrigger
-                                        placement="bottom"
-                                        overlay={
-                                            <Tooltip id="tooltip">
-                                                This account is banned.
-                                            </Tooltip>
-                                        }
+                                .getElementById(`comment${comment.id}`)
+                                ?.classList.add('d-none')
+                            if (
+                                document
+                                    .querySelector(
+                                        `#comment${comment.id} .dropdown-menu`
+                                    )
+                                    ?.classList.contains('show')
+                            ) {
+                                document
+                                    .querySelector(
+                                        `#comment${comment.id} > button`
+                                    )
+                                    ?.click()
+                            }
+                        }}
+                    >
+                        <div className="d-flex mb-2">
+                            <img
+                                className="comment_img"
+                                src={comment?.user?.avatar || defaultAvatar}
+                            />
+                            <div className="ms-3">
+                                <div className="d-flex align-items-center">
+                                    <Link
+                                        to={`/${comment.user.username}/sets`}
+                                        className="comment_author"
                                     >
-                                        <img
-                                            className="ms-1 author-avatarTag author-avatarTag--banned"
-                                            src={banned}
-                                        />
-                                    </OverlayTrigger>
-                                )}
-                                {comment?.user?.status === 'active' && (
-                                    <OverlayTrigger
-                                        placement="bottom"
-                                        overlay={
-                                            <Tooltip id="tooltip">
-                                                This account is verified.
-                                            </Tooltip>
-                                        }
-                                    >
-                                        <img
-                                            className="ms-1 author-avatarTag"
-                                            src={verified}
-                                        />
-                                    </OverlayTrigger>
-                                )}
-                                {comment?.user?.status === 'deleted' && (
-                                    <OverlayTrigger
-                                        placement="bottom"
-                                        overlay={
-                                            <Tooltip id="tooltip">
-                                                This account is deleted.
-                                            </Tooltip>
-                                        }
-                                    >
-                                        <img
-                                            className="ms-1 author-avatarTag"
-                                            src={deleted}
-                                        />
-                                    </OverlayTrigger>
-                                )}
+                                        {comment.user.username}
+                                    </Link>
+                                    {comment?.user?.status === 'banned' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg9')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag author-avatarTag--banned"
+                                                src={banned}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
+                                    {comment?.user?.status === 'active' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                    {t('msg8')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag"
+                                                src={verified}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
+                                    {comment?.user?.status === 'deleted' && (
+                                        <OverlayTrigger
+                                            placement="bottom"
+                                            overlay={
+                                                <Tooltip id="tooltip">
+                                                   {t('msg7')}.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <img
+                                                className="ms-1 author-avatarTag"
+                                                src={deleted}
+                                            />
+                                        </OverlayTrigger>
+                                    )}
+                                </div>
+                                <div className="comment_createdDate">
+                                    {comment.created_date}
+                                </div>
+                                <div
+                                    className="comment_content"
+                                    dangerouslySetInnerHTML={{
+                                        __html: comment?.content,
+                                    }}
+                                ></div>
                             </div>
-                            <div className="comment_createdDate">
-                                {comment.created_date}
-                            </div>
-                            <div
-                                className="comment_content"
-                                dangerouslySetInnerHTML={{
-                                    __html: comment?.content,
-                                }}
-                            ></div>
                         </div>
-                    </div>
-                    {userInfo?.id === comment?.user?.id &&
-                        !comment?.classroom?._deleted && (
-                            <div id={`comment${comment.id}`} className="d-none">
-                                <button
-                                    className="btn btn-light p-2 rounded-circle"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
+                        {userInfo?.id === comment?.user?.id &&
+                            !comment?.classroom?._deleted && (
+                                <div
+                                    id={`comment${comment.id}`}
+                                    className="d-none"
                                 >
-                                    <OptionVerIcon />
-                                </button>
-                                <ul className="dropdown-menu">
-                                    <li>
-                                        <button
-                                            className="dropdown-item d-flex align-items-center"
-                                            type="button"
-                                            onClick={() => {
-                                                setIsEdit(true)
-                                            }}
-                                        >
-                                            <span className="align-middle">
-                                                Edit
-                                            </span>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button
-                                            className="dropdown-item d-flex align-items-center"
-                                            type="button"
-                                            onClick={() => {
-                                                setShowDeleteModal(true)
-                                            }}
-                                        >
-                                            <span className="align-middle">
-                                                Delete
-                                            </span>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        )}
+                                    <button
+                                        className="btn btn-light p-2 rounded-circle"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <OptionVerIcon />
+                                    </button>
+                                    <ul className="dropdown-menu">
+                                        <li>
+                                            <button
+                                                className="dropdown-item d-flex align-items-center"
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsAdd(true)
+                                                }}
+                                            >
+                                                <span className="align-middle">
+                                                {t('reply')}
+                                                </span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="dropdown-item d-flex align-items-center"
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsEdit(true)
+                                                }}
+                                            >
+                                                <span className="align-middle">
+                                                {t('edit')}
+                                                </span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="dropdown-item d-flex align-items-center"
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowDeleteModal(true)
+                                                }}
+                                            >
+                                                <span className="align-middle">
+                                                {t('delete')}
+                                                </span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+                    </div>
+                    {/* {comment?.childComments?.length > 0 && (
+                        <div className="ms-3">
+                            {comment?.childComments?.map(
+                                (child, childIndex) => (
+                                    <Comment
+                                        key={child.id}
+                                        index={childIndex}
+                                        comments={child.childComments}
+                                        setComments={setComments}
+                                        comment={child}
+                                        userInfo={userInfo}
+                                    />
+                                )
+                            )}
+                            {/* add comment */}
+                    {/* {isAdd && (
+                                <div className="mb-3">
+                                    <div className="d-flex mb-1">
+                                        <img
+                                            src={
+                                                userInfo?.avatar ||
+                                                defaultAvatar
+                                            }
+                                            className="comment_img me-3"
+                                        />
+                                        <div className="commentEditor flex-fill">
+                                            <CardEditor
+                                                data={addComment}
+                                                onChange={(event, editor) => {
+                                                    setAddComment(
+                                                        editor.getData()
+                                                    )
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <button
+                                                className="comment_btn ms-1"
+                                                onClick={handleAddChildComment}
+                                                disabled={!addComment}
+                                            >
+                                                {loadingComment ? (
+                                                    <div
+                                                        className="spinner-border spinner-border-sm text-secondary"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            LoadingUpload...
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <SendIcon
+                                                        size="20px"
+                                                        strokeWidth="1.8"
+                                                    />
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button
+                                        className="btn btn-secondary btn-sm p-1 px-2 float-end"
+                                        onClick={() => {
+                                            setIsAdd(false)
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )} */}
                 </div>
             )}
             {/* Delete comment modal */}
@@ -515,10 +703,10 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                 }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete comment?</Modal.Title>
+                    <Modal.Title>{t('delecom')}?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to delete this comment?
+                {t('msg119')}?
                 </Modal.Body>
                 <Modal.Footer>
                     <button
@@ -527,14 +715,14 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         data-bs-dismiss="modal"
                         aria-label="Close"
                     >
-                        Cancel
+                       {t('cancel')}
                     </button>
                     <button
                         type="button"
                         className="btn btn-danger"
                         onClick={handleDeleteComment}
                     >
-                        Delete
+                        {t('delete')}
                     </button>
                 </Modal.Footer>
             </Modal>

@@ -22,6 +22,7 @@ import {
     SendIcon,
 } from '../../../components/icons'
 import './assignment.css'
+import { useTranslation } from 'react-i18next'
 
 const TutorSubmission = ({ assignment }) => {
     const { userInfo } = useSelector((state) => state.user)
@@ -41,7 +42,15 @@ const TutorSubmission = ({ assignment }) => {
 
     const [search, setSearch] = useState('')
     const [searchInput, setSearchInput] = useState('')
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -285,6 +294,8 @@ const TutorSubmission = ({ assignment }) => {
                         user: {
                             id: userInfo.id,
                             username: userInfo.username,
+                            avatar: userInfo.avatar,
+                            status: userInfo.status,
                         },
                         assignment: {
                             id: assignment.id,
@@ -367,13 +378,13 @@ const TutorSubmission = ({ assignment }) => {
                     <div className="d-flex">
                         <div className="asignInfo_block">
                             <div className="assignInfo_number">{numSubmit}</div>
-                            <div className="assignInfo_title">Turned in</div>
+                            <div className="assignInfo_title">{t('turnIn')}</div>
                         </div>
                         <div className="asignInfo_block">
                             <div className="assignInfo_number">
                                 {numNotSubmit}
                             </div>
-                            <div className="assignInfo_title">Assigned</div>
+                            <div className="assignInfo_title">{t('assigned')}</div>
                         </div>
                     </div>
                 </div>
@@ -405,7 +416,7 @@ const TutorSubmission = ({ assignment }) => {
                                                 placement="bottom"
                                                 overlay={
                                                     <Tooltip id="tooltip">
-                                                        This account is banned.
+                                                        {t('msg9')}.
                                                     </Tooltip>
                                                 }
                                             >
@@ -420,8 +431,7 @@ const TutorSubmission = ({ assignment }) => {
                                                 placement="bottom"
                                                 overlay={
                                                     <Tooltip id="tooltip">
-                                                        This account is
-                                                        verified.
+                                                        {t('msg8')}.
                                                     </Tooltip>
                                                 }
                                             >
@@ -436,7 +446,7 @@ const TutorSubmission = ({ assignment }) => {
                                                 placement="bottom"
                                                 overlay={
                                                     <Tooltip id="tooltip">
-                                                        This account is deleted.
+                                                        {t('msg7')}.
                                                     </Tooltip>
                                                 }
                                             >
@@ -512,12 +522,12 @@ const TutorSubmission = ({ assignment }) => {
                                         </div>
                                         {saving && (
                                             <div className="submission_status text-end">
-                                                Saving...
+                                                {t('saving')}...
                                             </div>
                                         )}
                                         {error && (
                                             <div className="submission_status submission_status--error text-end">
-                                                Mark must be between 0 and 100
+                                                {t('msg80')}
                                             </div>
                                         )}
                                     </div>
@@ -605,7 +615,7 @@ const TutorSubmission = ({ assignment }) => {
                                                             role="status"
                                                         >
                                                             <span className="visually-hidden">
-                                                                LoadingUpload...
+                                                            {t('loadingUpload')}...
                                                             </span>
                                                         </div>
                                                     ) : (

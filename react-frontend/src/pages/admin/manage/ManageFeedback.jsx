@@ -5,12 +5,14 @@ import { Link } from "react-router-dom";
 import FeedbackService from "../../../services/FeedbackService";
 import { useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Pagination from "../../../components/Pagination";
 
 function ManageFeedback() {
   const [feedback, setFeedback] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
-
+  const [page, setPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
   const search = searchParams.get('search')
 
     const { userInfo } = useSelector((state) => state.user)
@@ -27,9 +29,11 @@ function ManageFeedback() {
             '',
             '',
             '',
-            '',
-            ''
-          )).data.list
+            `=${page}`,
+            '=10',
+          )).data
+          setFeedback(temp.list)
+          setTotalItems(temp.totalItems)
       }catch(error){
         if (error.response && error.response.data) {
           setError(error.response.data)
@@ -38,12 +42,11 @@ function ManageFeedback() {
       }
       return console.log(error)
       }
-      setFeedback(temp)
     }
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
   return (
     <div className="container-fluid">
@@ -90,6 +93,15 @@ function ManageFeedback() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
           </div>
         </div>
       </div>

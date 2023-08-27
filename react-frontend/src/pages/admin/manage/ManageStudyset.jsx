@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import StudySetService from '../../../services/StudySetService'
 import { useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Pagination from '../../../components/Pagination'
 
 function ManageFeedback() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -14,13 +15,14 @@ function ManageFeedback() {
     const { userInfo } = useSelector((state) => state.user)
 
     const [sets, setSets] = useState([])
-
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
     const fetchData = async (searchKey) => {
         const temp = (
             await StudySetService.getFilterList(
-                '=0',
                 '',
-                '=0',
+                '',
+                '',
                 `${searchKey ? '=' + searchKey : ''}`,
                 '',
                 '',
@@ -31,16 +33,17 @@ function ManageFeedback() {
                 '',
                 '',
                 '',
-                '',
-                '=10'
+                `=${page}`,
+                '=10',
             )
-        ).data.list
-        setSets(temp)
+        ).data
+        setSets(temp.list)
+        setTotalItems(temp.totalItems)
     }
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
     return (
         <div className="container-fluid">
             <div className="row">
@@ -88,6 +91,15 @@ function ManageFeedback() {
                                 </tbody>
                             </table>
                         </div>
+                        <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
                     </div>
                 </div>
             </div>

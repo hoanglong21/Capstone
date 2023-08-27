@@ -10,6 +10,7 @@ import AttachmentService from '../../../services/AttachmentService'
 import InstructionEditor from '../../../components/textEditor/InstructionEditor'
 
 import { DeleteIcon, UploadIcon } from '../../../components/icons'
+import { useTranslation } from 'react-i18next'
 
 function CreateAssignment() {
     const navigate = useNavigate()
@@ -21,12 +22,24 @@ function CreateAssignment() {
 
     const [classroom, setClassroom] = useState({})
     const [assignment, setAssignment] = useState({})
+    const [title, setTitle] = useState('')
+    const [startDate, setStartDate] = useState('')
+    const [dueDate, setDueDate] = useState('')
     const [loadingUploadFile, setLoadingUploadFile] = useState(false)
     const [attachments, setAttachments] = useState([])
     const [loadingCreateAssign, setLoadingCreateAssign] = useState(false)
     const [saving, setSaving] = useState(null)
-    const [error, setError] = useState('')
 
+    const [error, setError] = useState('')
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
     }
@@ -119,6 +132,9 @@ function CreateAssignment() {
                     }
                 }
                 setAssignment(tempAssignment)
+                setTitle(tempAssignment?.title)
+                setStartDate(tempAssignment?.start_date)
+                setDueDate(tempAssignment?.due_date)
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
@@ -185,46 +201,7 @@ function CreateAssignment() {
         }
     }
 
-    const handleChange = (event) => {
-        setAssignment({
-            ...assignment,
-            [event.target.name]: event.target.value,
-        })
-    }
-
     const handleUpdate = async (draft) => {
-        setError('')
-        if (
-            new Date(assignment.created_date) > new Date(assignment.start_date)
-        ) {
-            setError(
-                `Start date must be after ${assignment.created_date.replace(
-                    'T',
-                    ' '
-                )}`
-            )
-            return
-        }
-        if (assignment?.due_date) {
-            if (
-                new Date(assignment.created_date) >
-                new Date(assignment.due_date)
-            ) {
-                setError(
-                    `Due date must be after ${assignment.created_date.replace(
-                        'T',
-                        ' '
-                    )}`
-                )
-                return
-            }
-            if (
-                new Date(assignment.start_date) > new Date(assignment.due_date)
-            ) {
-                setError('Due date must be after start date')
-                return
-            }
-        }
         setSaving(true)
         try {
             var tempAssignment = { ...assignment, _draft: draft }
@@ -248,9 +225,122 @@ function CreateAssignment() {
         setSaving(false)
     }
 
+    const handleUpdateTitle = async (draft) => {
+        setSaving(true)
+        setError('')
+        if (!title) {
+            setError('Title cannot be empty')
+            return
+        }
+        try {
+            var tempAssignment = { ...assignment, title: title, _draft: draft }
+            tempAssignment.created_date = toBEDate(tempAssignment.created_date)
+            tempAssignment.start_date = toBEDate(tempAssignment.start_date)
+            tempAssignment.modified_date = toBEDate(
+                tempAssignment.modified_date
+            )
+            tempAssignment.due_date = toBEDate(tempAssignment.due_date)
+            await AssignmentService.updateAssignment(
+                assignment.id,
+                tempAssignment
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setAssignment({ ...assignment, title: title, _draft: draft })
+        setSaving(false)
+    }
+
+    const handleUpdateStart = async (draft) => {
+        setSaving(true)
+        setError('')
+        if (new Date(assignment.created_date) > new Date(startDate)) {
+            setError(
+                `Start date must be after ${assignment.created_date.replace(
+                    'T',
+                    ' '
+                )}`
+            )
+            return
+        }
+        try {
+            var tempAssignment = {
+                ...assignment,
+                start_date: startDate,
+                _draft: draft,
+            }
+            tempAssignment.created_date = toBEDate(tempAssignment.created_date)
+            tempAssignment.start_date = toBEDate(tempAssignment.start_date)
+            tempAssignment.modified_date = toBEDate(
+                tempAssignment.modified_date
+            )
+            tempAssignment.due_date = toBEDate(tempAssignment.due_date)
+            await AssignmentService.updateAssignment(
+                assignment.id,
+                tempAssignment
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setAssignment({ ...assignment, start_date: startDate, _draft: draft })
+        setSaving(false)
+    }
+
+    const handleUpdateDue = async (draft) => {
+        setSaving(true)
+        setError('')
+        if (dueDate) {
+            if (new Date(assignment.created_date) > new Date(dueDate)) {
+                setError(
+                    `Due date must be after ${assignment.created_date.replace(
+                        'T',
+                        ' '
+                    )}`
+                )
+                return false
+            }
+            if (new Date(assignment.start_date) > new Date(dueDate)) {
+                setError('Due date must be after start date')
+                return false
+            }
+        }
+        try {
+            var tempAssignment = {
+                ...assignment,
+                due_date: dueDate,
+                _draft: draft,
+            }
+            tempAssignment.created_date = toBEDate(tempAssignment.created_date)
+            tempAssignment.start_date = toBEDate(tempAssignment.start_date)
+            tempAssignment.modified_date = toBEDate(
+                tempAssignment.modified_date
+            )
+            tempAssignment.due_date = toBEDate(tempAssignment.due_date)
+            await AssignmentService.updateAssignment(
+                assignment.id,
+                tempAssignment
+            )
+        } catch (error) {
+            if (error.response && error.response.data) {
+                console.log(error.response.data)
+            } else {
+                console.log(error.message)
+            }
+        }
+        setAssignment({ ...assignment, due_date: dueDate, _draft: draft })
+        setSaving(false)
+    }
+
     const handleSubmit = async (draft) => {
         setLoadingCreateAssign(true)
-        handleUpdate(draft)
         navigate(`/class/${classroom.id}/assignment/${assignment.id}/details`)
         setAssignment({ ...assignment, _draft: draft })
         setLoadingCreateAssign(false)
@@ -269,7 +359,7 @@ function CreateAssignment() {
                             )
                         }}
                     >
-                        cancel
+                        {t('cancel')}
                     </button>
                     <div className="createTest_status">
                         {saving ? 'Saving...' : 'Saved'}
@@ -289,7 +379,7 @@ function CreateAssignment() {
                             disabled={!assignment?.title}
                             onClick={() => handleSubmit(true)}
                         >
-                            Save draft
+                           {t('saveDraft')}
                         </button>
                     </div>
                 ) : (
@@ -316,15 +406,17 @@ function CreateAssignment() {
                             id="title"
                             name="title"
                             placeholder="title"
-                            value={assignment?.title || ''}
-                            onChange={handleChange}
-                            onBlur={() => handleUpdate(assignment?.draft)}
+                            value={title || ''}
+                            onChange={(event) => setTitle(event.target.value)}
+                            onBlur={() => {
+                                handleUpdateTitle(assignment?.draft)
+                            }}
                         />
                         <label
                             htmlFor="title"
                             className="createAssign_formLabel"
                         >
-                            Title
+                            {t('title')}
                         </label>
                     </div>
                     <div className="createAssign_formGroup form-floating mb-4">
@@ -341,7 +433,7 @@ function CreateAssignment() {
                             onBlur={() => handleUpdate(assignment?.draft)}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
-                            Instruction (Optional)
+                        {t('instruction')}
                         </label>
                     </div>
                     <div className="row mb-4">
@@ -354,17 +446,19 @@ function CreateAssignment() {
                                     id="start_date"
                                     placeholder="start date"
                                     min={assignment?.created_date || ''}
-                                    value={assignment?.start_date || ''}
-                                    onChange={handleChange}
-                                    onBlur={() =>
-                                        handleUpdate(assignment?.draft)
+                                    value={startDate || ''}
+                                    onChange={(event) =>
+                                        setStartDate(event.target.value)
                                     }
+                                    onBlur={() => {
+                                        handleUpdateStart(assignment?.draft)
+                                    }}
                                 />
                                 <label
                                     htmlFor="start_date"
                                     className="createAssign_formLabel"
                                 >
-                                    Start date
+                                    {t('startDate')}
                                 </label>
                             </div>
                         </div>
@@ -376,18 +470,20 @@ function CreateAssignment() {
                                     id="due_date"
                                     name="due_date"
                                     min={assignment?.start_date || ''}
-                                    value={assignment?.due_date || ''}
+                                    value={dueDate || ''}
                                     placeholder="due date"
-                                    onChange={handleChange}
-                                    onBlur={() =>
-                                        handleUpdate(assignment?.draft)
-                                    }
+                                    onChange={(event) => {
+                                        setDueDate(event.target.value)
+                                    }}
+                                    onBlur={() => {
+                                        handleUpdateDue(assignment?.draft)
+                                    }}
                                 />
                                 <label
                                     htmlFor="due_date"
                                     className="createAssign_formLabel"
                                 >
-                                    Due date
+                                    {t('dueDate')}
                                 </label>
                             </div>
                         </div>

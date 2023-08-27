@@ -4,12 +4,14 @@ import HeaderAdmin from "../HeaderAdmin";
 import { Link } from "react-router-dom";
 import CommentService from "../../../services/CommentService";
 import { useSearchParams } from 'react-router-dom'
+import Pagination from "../../../components/Pagination";
 
 function ManageComment() {
   const [comment, setComment] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const [error, setError] = useState('')
-
+  const [page, setPage] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
   const search = searchParams.get('search')
     const fetchData = async (searchKey) => {
       let temp;
@@ -22,10 +24,12 @@ function ManageComment() {
                 '',
                 '',
                 '',
-                '',
+                 `=${page}`,
                 '=10',
             )
-        ).data.list
+        ).data
+        setComment(temp.list)
+        setTotalItems(temp.totalItems)
       }catch(error){
         if (error.response && error.response.data) {
           setError(error.response.data)
@@ -34,12 +38,11 @@ function ManageComment() {
       }
       return console.log(error)
       }
-      setComment(temp)
     }
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
   return (
     <div className="container-fluid">
@@ -86,6 +89,15 @@ function ManageComment() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
           </div>
         </div>
       </div>

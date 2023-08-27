@@ -19,6 +19,7 @@ import {
     SpeakIcon,
     VideoIcon,
 } from '../../../components/icons'
+import { useTranslation } from 'react-i18next'
 
 const CreateTest = () => {
     const navigate = useNavigate()
@@ -36,6 +37,15 @@ const CreateTest = () => {
     const [isScroll, setIsScroll] = useState(false)
     const [questions, setQuestions] = useState([])
     const [classroom, setClassroom] = useState({})
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
@@ -773,10 +783,10 @@ const CreateTest = () => {
                             )
                         }}
                     >
-                        cancel
+                        {t('cancel')}
                     </button>
                     {loading && (
-                        <div className="createTest_status">Loading</div>
+                        <div className="createTest_status">{t('loading')}</div>
                     )}
                     <div className="createTest_status">
                         {saving === null ? '' : saving ? 'Saving...' : 'Saved'}
@@ -789,7 +799,7 @@ const CreateTest = () => {
                             onClick={handleCreate}
                             disabled={!test?.title}
                         >
-                            Create
+                            {t('create')}
                         </button>
                         <button
                             className="createTest_draftBtn"
@@ -799,7 +809,7 @@ const CreateTest = () => {
                                 )
                             }}
                         >
-                            Save draft
+                            {t('saveDraft')}
                         </button>
                     </div>
                 ) : (
@@ -812,7 +822,7 @@ const CreateTest = () => {
                             <div className="d-flex justify-content-center">
                                 <div className="spinner-border" role="status">
                                     <span className="visually-hidden">
-                                        Loading...
+                                    {t('Loading')}...
                                     </span>
                                 </div>
                             </div>
@@ -844,7 +854,7 @@ const CreateTest = () => {
                             onChange={handleChangeTest}
                         />
                         <label htmlFor="title" className="createTest_formLabel">
-                            Title
+                        {t('Title')}
                         </label>
                     </div>
                     <div className="createTest_formGroup form-floating mb-4">
@@ -862,7 +872,7 @@ const CreateTest = () => {
                             htmlFor="description"
                             className="createTest_formLabel"
                         >
-                            Description
+                           {t('description')}
                         </label>
                     </div>
                     <div className="row mb-4">
@@ -883,7 +893,7 @@ const CreateTest = () => {
                                     htmlFor="start_date"
                                     className="createTest_formLabel"
                                 >
-                                    Start date
+                                   {t('startDate')}
                                 </label>
                             </div>
                         </div>
@@ -904,7 +914,7 @@ const CreateTest = () => {
                                     htmlFor="due_date"
                                     className="createTest_formLabel"
                                 >
-                                    Due date
+                                    {t('dueDate')}
                                 </label>
                             </div>
                         </div>
@@ -926,7 +936,7 @@ const CreateTest = () => {
                                     htmlFor="duration"
                                     className="createTest_formLabel"
                                 >
-                                    Duration (minutes)
+                                    {t('duration')}
                                 </label>
                             </div>
                         </div>
@@ -946,7 +956,7 @@ const CreateTest = () => {
                                     htmlFor="num_attemps"
                                     className="createTest_formLabel"
                                 >
-                                    Number of attempts allowed for learners
+                                    {t('msg81')}
                                 </label>
                             </div>
                         </div>
@@ -1111,8 +1121,7 @@ const CreateTest = () => {
                                             controls
                                             src={ques?.video}
                                         >
-                                            Your browser does not support the
-                                            video tag.
+                                            {t('msg82')}.
                                         </video>
                                         <button
                                             type="button"
@@ -1160,7 +1169,7 @@ const CreateTest = () => {
                                         className="form-check-label"
                                         htmlFor={`answer${ques.id}_0`}
                                     >
-                                        True
+                                        {t('true')}
                                     </label>
                                 </div>
                                 <div className="createTest_formGroup-sm mb-2 form-check">
@@ -1188,7 +1197,7 @@ const CreateTest = () => {
                                         className="form-check-label"
                                         htmlFor={`answer${ques.id}_1`}
                                     >
-                                        False
+                                        {t('false')}
                                     </label>
                                 </div>
                             </div>
@@ -1436,9 +1445,7 @@ const CreateTest = () => {
                                                             controls
                                                             src={ans?.video}
                                                         >
-                                                            Your browser does
-                                                            not support the
-                                                            video tag.
+                                                            {t('msg82')}.
                                                         </video>
                                                         <button
                                                             type="button"
@@ -1469,7 +1476,7 @@ const CreateTest = () => {
                                         handleAddAnswer(ques, quesIndex)
                                     }
                                 >
-                                    Add option
+                                    {t('addOption')}
                                 </button>
                             </div>
                         )}
@@ -1505,7 +1512,7 @@ const CreateTest = () => {
                                 }
                                 onBlur={() => handleUpdateQuestion(ques)}
                             />
-                            <span>points</span>
+                            <span>{t('points')}</span>
                         </div>
                         <button
                             className="btn btn-customLight p-2 rounded-circle"
@@ -1520,24 +1527,24 @@ const CreateTest = () => {
                 <div className="card-body create-test_card-body d-flex justify-content-between">
                     <button
                         type="button"
-                        className="createTest_addQuesBtn"
+                        className="createTest_addQuesBtn text-uppercase"
                         onClick={handleAddTrueFalseQuestion}
                     >
-                        + TRUE/FALSE
+                        + {t('tf')}
                     </button>
                     <button
                         type="button"
-                        className="createTest_addQuesBtn"
+                        className="createTest_addQuesBtn text-uppercase"
                         onClick={handleAddMultipleChoiceQuestion}
                     >
-                        + MULTIPLE CHOICE
+                        + {t('mc')}
                     </button>
                     <button
                         type="button"
-                        className="createTest_addQuesBtn"
+                        className="createTest_addQuesBtn text-uppercase"
                         onClick={handleAddWrittenQuestion}
                     >
-                        + WRITTEN
+                        + {t('written')}
                     </button>
                 </div>
             </div>
