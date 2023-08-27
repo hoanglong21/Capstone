@@ -112,7 +112,7 @@ public class AssignmentServiceImpl implements AssignmentService {
                     Notification notification = new Notification();
                     notification.setTitle("New Assignment");
 
-                    String urlWithClassId = "https://nihongolevelup.com/class/[[classid]]/assignments";
+                    String urlWithClassId = "/[[classid]]/assignments";
                     urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
 
                     notification.setUrl(urlWithClassId);

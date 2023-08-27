@@ -270,6 +270,11 @@ public class ClassServiceImpl implements ClassService {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
                 notification.setTitle("Class Recovered");
+
+                String urlWithClassId = "/class/[[classid]]";
+                urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+                notification.setUrl(urlWithClassId);
                 notification.setContent("Your Class " + classroom.getClass_name() + "' has been recovered.");
                 notification.set_read(false);
                 notification.setUser(classLearner.getUser());
@@ -514,7 +519,7 @@ public class ClassServiceImpl implements ClassService {
                 Notification notification = new Notification();
                 notification.setTitle("New StudySet");
 
-                String urlWithId = "https://nihongolevelup.com/class/[[classid]]/sets";
+                String urlWithId = "/[[classid]]/sets";
                 urlWithId = urlWithId.replace("[[classid]]", String.valueOf(classroom.getId()));
 
                 notification.setUrl(urlWithId);

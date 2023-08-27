@@ -107,7 +107,7 @@ public class PostServiceImpl implements PostService {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
                 notification.setTitle("New Post");
-                String urlWithClassId = "https://nihongolevelup.com/class/[[classid]]";
+                String urlWithClassId = "/class/[[classid]]";
                 urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
 
                 notification.setUrl(urlWithClassId);
