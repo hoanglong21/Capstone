@@ -20,6 +20,7 @@ import java.util.Date;
                         @ColumnResult(name = "username", type =String.class),
                         @ColumnResult(name = "avatar", type =String.class),
                         @ColumnResult(name = "userstatus", type =String.class),
+                        @ColumnResult(name = "userid", type =Integer.class),
 
                 }
         )
