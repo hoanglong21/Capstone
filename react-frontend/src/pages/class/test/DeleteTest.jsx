@@ -29,6 +29,7 @@ const DeleteTest = ({
         i18n.changeLanguage(userLanguage);
       }
     }, [userLanguage]);
+    
     const handleSubmit = async () => {
         // clear validation
         setLoading(true)

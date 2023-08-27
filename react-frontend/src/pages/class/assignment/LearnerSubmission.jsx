@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import SubmissionService from '../../../services/SubmissionService'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
@@ -16,9 +18,9 @@ import {
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import CardEditor from '../../../components/textEditor/CardEditor'
-import { useTranslation } from 'react-i18next'
 
 const LearnerSubmission = ({ assignment }) => {
+    const navigate = useNavigate()
     const { userInfo } = useSelector((state) => state.user)
 
     const [submission, setSubmission] = useState({})
@@ -29,15 +31,15 @@ const LearnerSubmission = ({ assignment }) => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -89,6 +91,12 @@ const LearnerSubmission = ({ assignment }) => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -248,7 +256,9 @@ const LearnerSubmission = ({ assignment }) => {
             <div className="submission-col-4">
                 <div className="card submission_card mt-4">
                     <div className="card-body py-3 px-4">
-                        <div className="submission_heading">{t('yourWork')}</div>
+                        <div className="submission_heading">
+                            {t('yourWork')}
+                        </div>
                         {/* attchment */}
                         {attachments.map((file, index) => (
                             <div className="card mb-2" key={index}>

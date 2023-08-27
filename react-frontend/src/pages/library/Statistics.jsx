@@ -1,335 +1,366 @@
-import { useState, useEffect } from "react";
-import UserService from "../../services/UserService";
-import ReactApexChart from "react-apexcharts";
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+import { useState, useEffect } from 'react'
+import UserService from '../../services/UserService'
+import ReactApexChart from 'react-apexcharts'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 function Statistics() {
-  const { userInfo } = useSelector((state) => state.user);
-  const { userToken } = useSelector((state) => state.auth);
+    const navigate = useNavigate()
+    const { userInfo } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
 
-  const [studySetLearned, setStudySetLearned] = useState([]);
-  const [classJoined, setClassJoined] = useState([]);
-  const [access, setAccess] = useState([]);
-  const [learning, setLearning] = useState([]);
-  const [seriesDataHeapChart, setSeriesDataHeapChart] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { userLanguage } = useSelector((state) => state.user);
+    const [studySetLearned, setStudySetLearned] = useState([])
+    const [classJoined, setClassJoined] = useState([])
+    const [access, setAccess] = useState([])
+    const [learning, setLearning] = useState([])
+    const [seriesDataHeapChart, setSeriesDataHeapChart] = useState([])
+    const [loading, setLoading] = useState(true)
+    const { userLanguage } = useSelector((state) => state.user)
 
-  const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
-  const week = [
-    "Week 1",
-    "Week 2",
-    "Week 3",
-    "Week 4",
-    "Week 5",
-    "Week 6",
-    "Week 7",
-    "Week 8",
-    "Week 9",
-    "Week 10",
-    "Week 11",
-    "Week 12",
-  ];
-
-  const day = ["W6", "W5", "W4", "W3", "W2", "W1"];
-
-  const optionsDataLabel = {
-    plotOptions: {
-      bar: {
-        borderRadius: 10,
-        dataLabels: {
-          position: "top", // top, center, bottom
-        },
-      },
-    },
-    dataLabels: {
-      enabled: true,
-      formatter: function (val) {
-        return val;
-      },
-      offsetY: -20,
-      style: {
-        fontSize: "12px",
-        colors: ["#304758"],
-      },
-    },
-
-    xaxis: {
-      categories: week,
-      position: "top",
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      crosshairs: {
-        fill: {
-          type: "gradient",
-          gradient: {
-            colorFrom: "#D8E3F0",
-            colorTo: "#BED1E6",
-            stops: [0, 100],
-            opacityFrom: 0.4,
-            opacityTo: 0.5,
-          },
-        },
-      },
-      tooltip: {
-        enabled: true,
-      },
-    },
-    yaxis: {
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-      labels: {
-        show: false,
-        formatter: function (val) {
-          return Number(val).toFixed(0);
-        },
-      },
-    },
-    title: {
-      text: "",
-      floating: true,
-      offsetY: 330,
-      align: "center",
-      style: {
-        color: "#444",
-      },
-    },
-  };
-
-  const seriesDataLabel = [
-    {
-      name: "Person",
-      data: studySetLearned,
-    },
-  ];
-
-  const optionsDataChart = {
-    xaxis: {
-      categories: week,
-      tickPlacement: "on",
-    },
-    yaxis: {
-      title: {
-        text: "Class",
-      },
-      labels: {
-        formatter: function (val) {
-          return Number(val).toFixed(0);
-        },
-      },
-    },
-  };
-  const seriesDataChart = [
-    {
-      name: "Class Joined",
-      data: classJoined,
-    },
-  ];
-
-  const optionRadar = {
-    xaxis: {
-      categories: ["Vocabulary", "Kanji", "Grammar"],
-    },
-  };
-
-  const seriesRadar = [
-    {
-      name: "Learning",
-      data: learning,
-    },
-  ];
-
-  const optionDataHeapChart = {
-    dataLabels: {
-      enabled: false,
-    },
-    tooltip: {
-      enabled: true,
-    },
-    plotOptions: {
-      heatmap: {
-        colorScale: {
-          ranges: [
-            {
-              from: 0,
-              to: 0,
-              color: "#FFFFFF",
-              name: "low",
-            },
-            {
-              from: 1,
-              to: 10,
-              color: "#2772C2",
-              name: "medium",
-            },
-            {
-              from: 11,
-              to: 24,
-              color: "#103F91",
-              name: "high",
-            },
-          ],
-        },
-      },
-    },
-  };
-
-  useEffect(() => {
-    const fetchDataStudySetLearned = async () => {
-      try {
-        const temp = (
-          await UserService.getStudySetLearnedStatistic(userInfo.id)
-        ).data;
-        setStudySetLearned(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataClassJoined = async () => {
-      try {
-        const temp = (await UserService.getClassJoinedStatistic(userInfo.id))
-          .data;
-        setClassJoined(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-
-    const fetchDataAccess = async () => {
-      try {
-        const temp = (await UserService.getAccessStatistic(userInfo.id)).data;
-        setAccess(temp);
-        var tempSeriesDataHeapChart = [];
-        for (let index = 0; index < day.length; index++) {
-          const tempDay = day[index];
-          const tempArr = temp[day.length - 1 - index];
-          tempSeriesDataHeapChart.push({
-            name: tempDay,
-            data: tempArr,
-          });
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
         }
-        setSeriesDataHeapChart(tempSeriesDataHeapChart);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
+    }, [userLanguage])
 
-    const fetchDataLearning = async () => {
-      try {
-        const temp = (await UserService.getLearningStatistic(userInfo.id)).data;
-        setLearning(temp);
-      } catch (error) {
-        console.error("Error fetching statistics:", error);
-      }
-    };
-    if (userInfo.id) {
-      setLoading(true);
-      fetchDataStudySetLearned();
-      fetchDataClassJoined();
-      fetchDataAccess();
-      fetchDataLearning();
-      setLoading(false);
+    const week = [
+        'Week 1',
+        'Week 2',
+        'Week 3',
+        'Week 4',
+        'Week 5',
+        'Week 6',
+        'Week 7',
+        'Week 8',
+        'Week 9',
+        'Week 10',
+        'Week 11',
+        'Week 12',
+    ]
+
+    const day = ['W6', 'W5', 'W4', 'W3', 'W2', 'W1']
+
+    const optionsDataLabel = {
+        plotOptions: {
+            bar: {
+                borderRadius: 10,
+                dataLabels: {
+                    position: 'top', // top, center, bottom
+                },
+            },
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val) {
+                return val
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ['#304758'],
+            },
+        },
+
+        xaxis: {
+            categories: week,
+            position: 'top',
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
+            crosshairs: {
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        colorFrom: '#D8E3F0',
+                        colorTo: '#BED1E6',
+                        stops: [0, 100],
+                        opacityFrom: 0.4,
+                        opacityTo: 0.5,
+                    },
+                },
+            },
+            tooltip: {
+                enabled: true,
+            },
+        },
+        yaxis: {
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return Number(val).toFixed(0)
+                },
+            },
+        },
+        title: {
+            text: '',
+            floating: true,
+            offsetY: 330,
+            align: 'center',
+            style: {
+                color: '#444',
+            },
+        },
     }
-  }, [userInfo]);
 
-  if (!loading) {
-    return (
-      <div>
-        <div className="row gx-3 mb-3 mt-3">
-          <div className="col-xl-12 col-lg-12">
-            <div className="card shadow mb-4">
-              <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 className="m-0 fw-bold text-uppercase text-info">
-                {t('loginday')}
-                </h6>
-              </div>
-              <div className="card-body">
-                {seriesDataHeapChart?.length > 0 && (
-                  <ReactApexChart
-                    options={optionDataHeapChart}
-                    series={seriesDataHeapChart}
-                    type="heatmap"
-                    height={350}
-                  />
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row gx-3 mb-3">
-          <div className="col-xl-6 col-lg-6">
-            <div className="card shadow mb-4">
-              <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 className="m-0 fw-bold text-uppercase text-primary">
-                {t('setLearn')}
-                </h6>
-              </div>
-              <div className="card-body">
-                <ReactApexChart
-                  options={optionsDataLabel}
-                  series={seriesDataLabel}
-                  type="bar"
-                  height={350}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="col-xl-6 col-lg-6">
-            <div className="card shadow mb-4">
-              <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 className="m-0 fw-bold text-uppercase text-success">
-                {t('numberClass')}
-                </h6>
-              </div>
-              <div className="card-body">
-                <ReactApexChart
-                  options={optionsDataChart}
-                  series={seriesDataChart}
-                  type="bar"
-                  height={350}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="row gx-3 mb-3">
-            <div className="col-xl-6 col-lg-6 ms-auto me-auto">
-              <div className="card shadow mb-4">
-                <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 className="m-0 fw-bold text-uppercase text-warning">
-                  {t('numberLearn')}
-                  </h6>
+    const seriesDataLabel = [
+        {
+            name: 'Person',
+            data: studySetLearned,
+        },
+    ]
+
+    const optionsDataChart = {
+        xaxis: {
+            categories: week,
+            tickPlacement: 'on',
+        },
+        yaxis: {
+            title: {
+                text: 'Class',
+            },
+            labels: {
+                formatter: function (val) {
+                    return Number(val).toFixed(0)
+                },
+            },
+        },
+    }
+    const seriesDataChart = [
+        {
+            name: 'Class Joined',
+            data: classJoined,
+        },
+    ]
+
+    const optionRadar = {
+        xaxis: {
+            categories: ['Vocabulary', 'Kanji', 'Grammar'],
+        },
+    }
+
+    const seriesRadar = [
+        {
+            name: 'Learning',
+            data: learning,
+        },
+    ]
+
+    const optionDataHeapChart = {
+        dataLabels: {
+            enabled: false,
+        },
+        tooltip: {
+            enabled: true,
+        },
+        plotOptions: {
+            heatmap: {
+                colorScale: {
+                    ranges: [
+                        {
+                            from: 0,
+                            to: 0,
+                            color: '#FFFFFF',
+                            name: 'low',
+                        },
+                        {
+                            from: 1,
+                            to: 10,
+                            color: '#2772C2',
+                            name: 'medium',
+                        },
+                        {
+                            from: 11,
+                            to: 24,
+                            color: '#103F91',
+                            name: 'high',
+                        },
+                    ],
+                },
+            },
+        },
+    }
+
+    useEffect(() => {
+        const fetchDataStudySetLearned = async () => {
+            try {
+                const temp = (
+                    await UserService.getStudySetLearnedStatistic(userInfo.id)
+                ).data
+                setStudySetLearned(temp)
+            } catch (error) {
+                console.error('Error fetching statistics:', error)
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
+            }
+        }
+
+        const fetchDataClassJoined = async () => {
+            try {
+                const temp = (
+                    await UserService.getClassJoinedStatistic(userInfo.id)
+                ).data
+                setClassJoined(temp)
+            } catch (error) {
+                console.error('Error fetching statistics:', error)
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
+            }
+        }
+
+        const fetchDataAccess = async () => {
+            try {
+                const temp = (await UserService.getAccessStatistic(userInfo.id))
+                    .data
+                setAccess(temp)
+                var tempSeriesDataHeapChart = []
+                for (let index = 0; index < day.length; index++) {
+                    const tempDay = day[index]
+                    const tempArr = temp[day.length - 1 - index]
+                    tempSeriesDataHeapChart.push({
+                        name: tempDay,
+                        data: tempArr,
+                    })
+                }
+                setSeriesDataHeapChart(tempSeriesDataHeapChart)
+            } catch (error) {
+                console.error('Error fetching statistics:', error)
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
+            }
+        }
+
+        const fetchDataLearning = async () => {
+            try {
+                const temp = (
+                    await UserService.getLearningStatistic(userInfo.id)
+                ).data
+                setLearning(temp)
+            } catch (error) {
+                console.error('Error fetching statistics:', error)
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
+            }
+        }
+        if (userInfo.id) {
+            setLoading(true)
+            fetchDataStudySetLearned()
+            fetchDataClassJoined()
+            fetchDataAccess()
+            fetchDataLearning()
+            setLoading(false)
+        }
+    }, [userInfo])
+
+    if (!loading) {
+        return (
+            <div>
+                <div className="row gx-3 mb-3 mt-3">
+                    <div className="col-xl-12 col-lg-12">
+                        <div className="card shadow mb-4">
+                            <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 className="m-0 fw-bold text-uppercase text-info">
+                                    {t('loginday')}
+                                </h6>
+                            </div>
+                            <div className="card-body">
+                                {seriesDataHeapChart?.length > 0 && (
+                                    <ReactApexChart
+                                        options={optionDataHeapChart}
+                                        series={seriesDataHeapChart}
+                                        type="heatmap"
+                                        height={350}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="card-body">
-                  <ReactApexChart
-                    options={optionRadar}
-                    series={seriesRadar}
-                    type="radar"
-                    height={350}
-                  />
+                <div className="row gx-3 mb-3">
+                    <div className="col-xl-6 col-lg-6">
+                        <div className="card shadow mb-4">
+                            <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 className="m-0 fw-bold text-uppercase text-primary">
+                                    {t('setLearn')}
+                                </h6>
+                            </div>
+                            <div className="card-body">
+                                <ReactApexChart
+                                    options={optionsDataLabel}
+                                    series={seriesDataLabel}
+                                    type="bar"
+                                    height={350}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-xl-6 col-lg-6">
+                        <div className="card shadow mb-4">
+                            <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 className="m-0 fw-bold text-uppercase text-success">
+                                    {t('numberClass')}
+                                </h6>
+                            </div>
+                            <div className="card-body">
+                                <ReactApexChart
+                                    options={optionsDataChart}
+                                    series={seriesDataChart}
+                                    type="bar"
+                                    height={350}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row gx-3 mb-3">
+                        <div className="col-xl-6 col-lg-6 ms-auto me-auto">
+                            <div className="card shadow mb-4">
+                                <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 className="m-0 fw-bold text-uppercase text-warning">
+                                        {t('numberLearn')}
+                                    </h6>
+                                </div>
+                                <div className="card-body">
+                                    <ReactApexChart
+                                        options={optionRadar}
+                                        series={seriesRadar}
+                                        type="radar"
+                                        height={350}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+        )
+    }
 }
 
-export default Statistics;
+export default Statistics

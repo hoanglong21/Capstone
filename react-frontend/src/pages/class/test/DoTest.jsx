@@ -40,14 +40,15 @@ const DoTest = () => {
     const [testEnd, setTestEnd] = useState({})
     const [endSecond, setEndSecond] = useState(null)
     const [endMinute, setEndMinute] = useState(null)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     var totalSeconds = 0
     var handleCount = 0
 
@@ -60,8 +61,8 @@ const DoTest = () => {
         if (
             endMinute !== null &&
             endSecond !== null &&
-            Number(minutes) === endMinute &&
-            Number(second) === endSecond
+            Number(minutes) === Number(endMinute) &&
+            Number(second) === Number(endSecond)
         ) {
             setIsEnd(true)
             handleSubmit()
@@ -140,6 +141,12 @@ const DoTest = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -344,7 +351,7 @@ const DoTest = () => {
                         {currentQuestion?.question?.questionType?.id === 1 && (
                             <div>
                                 <div className="quizQues_label my-4">
-                                {t('yanswer')}
+                                    {t('yanswer')}
                                 </div>
                                 <input
                                     className={`form-control quizAns_input ${
@@ -370,7 +377,7 @@ const DoTest = () => {
                                 {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
-                                        {t('correctans')}
+                                            {t('correctans')}
                                         </div>
                                         <div className="quizQues_answer correct">
                                             <div className="learnCorrectAnswer">
@@ -389,7 +396,7 @@ const DoTest = () => {
                             <div>
                                 {/* answer */}
                                 <div className="quizQues_label my-4">
-                                {t('choose')}
+                                    {t('choose')}
                                 </div>
                                 <div className="row">
                                     {currentQuestion?.answerList.map(
@@ -484,7 +491,7 @@ const DoTest = () => {
                                 {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
-                                        {t('correctans')}
+                                            {t('correctans')}
                                         </div>
                                         <div className="quizQues_answer correct">
                                             {currentQuestion?.answerList.map(
@@ -512,7 +519,7 @@ const DoTest = () => {
                             <div>
                                 {/* answer */}
                                 <div className="quizQues_label my-4">
-                                {t('choose')}
+                                    {t('choose')}
                                 </div>
                                 <div className="row">
                                     <div className="col-6">

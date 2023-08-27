@@ -367,7 +367,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         }
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 60000)
     public void sendStudyReminderMails() {
         List<UserSetting> userSettings = userSettingRepository.findAll();
         for (UserSetting userSetting : userSettings) {
@@ -398,7 +398,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     private Set<LocalDateTime> sentAssignmentReminders = new HashSet<>();
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 60000)
     public void sendAssignmentDueDateMails() throws ResourceNotFroundException {
         List<UserSetting> userSettings = userSettingRepository.findAll();
 
@@ -444,7 +444,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     private Set<LocalDateTime> sentAssignStartDates = new HashSet<>();
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 60000)
     public void sendAssignmentStartDateMails() throws ResourceNotFroundException {
         List<UserSetting> userSettings = userSettingRepository.findAll();
 
@@ -478,7 +478,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     private Set<LocalDateTime> sentTestDueDates = new HashSet<>();
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 60000)
     public void sendTestDueDateMails() throws ResourceNotFroundException {
         List<UserSetting> userSettings = userSettingRepository.findAll();
 
@@ -522,7 +522,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     private Set<LocalDateTime> sentTestStartDates = new HashSet<>();
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 60000)
     public void sendTestStartDateMails() throws ResourceNotFroundException {
         List<UserSetting> userSettings = userSettingRepository.findAll();
 

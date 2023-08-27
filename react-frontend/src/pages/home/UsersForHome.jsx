@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,7 @@ import '../../assets/styles/LibrarySearchList.css'
 import Pagination from '../../components/Pagination'
 
 function UsersForHome() {
+    const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
@@ -29,6 +30,7 @@ function UsersForHome() {
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
+
     const fetchData = async (searchKey) => {
         try {
             const temp = (
@@ -51,6 +53,12 @@ function UsersForHome() {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
     }
@@ -125,7 +133,10 @@ function UsersForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        {t('msg9')}.
+                                                                        {t(
+                                                                            'msg9'
+                                                                        )}
+                                                                        .
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -141,7 +152,10 @@ function UsersForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        {t('msg8')}.
+                                                                        {t(
+                                                                            'msg8'
+                                                                        )}
+                                                                        .
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -159,7 +173,10 @@ function UsersForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        {t('msg7')}.
+                                                                        {t(
+                                                                            'msg7'
+                                                                        )}
+                                                                        .
                                                                     </Tooltip>
                                                                 }
                                                             >

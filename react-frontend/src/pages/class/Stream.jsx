@@ -3,7 +3,7 @@ import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import ClassService from '../../services/ClassService'
 import PostService from '../../services/PostService'
@@ -28,6 +28,7 @@ import TestService from '../../services/TestService'
 import { useTranslation } from 'react-i18next'
 
 const Stream = () => {
+    const navigate = useNavigate()
     const { userInfo } = useSelector((state) => state.user)
 
     const { id } = useParams()
@@ -47,15 +48,16 @@ const Stream = () => {
 
     const [assignments, setAssignments] = useState([])
     const [tests, setTests] = useState([])
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     function getToday() {
         const today = new Date()
         return (
@@ -154,6 +156,12 @@ const Stream = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -325,7 +333,7 @@ const Stream = () => {
                                                             size="1.3rem"
                                                         />
                                                         <span className="align-middle fw-medium">
-                                                        {t('copyClass')}
+                                                            {t('copyClass')}
                                                         </span>
                                                     </button>
                                                 </li>
@@ -342,7 +350,7 @@ const Stream = () => {
                                                             size="1.3rem"
                                                         />
                                                         <span className="align-middle fw-medium">
-                                                        {t('resetClass')}
+                                                            {t('resetClass')}
                                                         </span>
                                                     </button>
                                                 </li>
@@ -360,11 +368,13 @@ const Stream = () => {
                     <div className="stream-card card">
                         <div className="card-body">
                             <div className="card-title mainClass_sectionTitle">
-                            {t('upcoming')}
+                                {t('upcoming')}
                             </div>
                             <div className="mb-1">{t('assignment')}</div>
                             {assignments?.length === 0 ? (
-                                <p className="mainClass_subText">{t('noWorkDue')}</p>
+                                <p className="mainClass_subText">
+                                    {t('noWorkDue')}
+                                </p>
                             ) : (
                                 assignments?.map((assignment, index) => (
                                     <div key={index} className="mb-1">
@@ -382,12 +392,14 @@ const Stream = () => {
                             )}
                             <div className="mb-1">Test</div>
                             {tests?.length === 0 ? (
-                                <p className="mainClass_subText">{t('noWorkDue')}</p>
+                                <p className="mainClass_subText">
+                                    {t('noWorkDue')}
+                                </p>
                             ) : (
                                 tests?.map((test, index) => (
                                     <div key={index} className="mb-1">
                                         <div className="mainClass_dueDate">
-                                        {t('due')} {test.due_date}
+                                            {t('due')} {test.due_date}
                                         </div>
                                         <Link
                                             to={`test/${test.id}/details`}
@@ -421,7 +433,7 @@ const Stream = () => {
                                             }}
                                         />
                                         <label className="createAssign_formLabel createAssign_editorLabel">
-                                        {t('announce')}
+                                            {t('announce')}
                                         </label>
                                     </div>
                                     <div className="mainClass_filesUpload mt-3">
@@ -530,7 +542,7 @@ const Stream = () => {
                                         />
                                     </div>
                                     <span className="ms-4">
-                                    {t('announce')}
+                                        {t('announce')}
                                     </span>
                                 </div>
                             )}
@@ -542,10 +554,10 @@ const Stream = () => {
                             <div className="card-body d-flex flex-column align-items-center">
                                 <img src={empty} alt="" />
                                 <p className="emptyPosts_heading">
-                                {t('msg74')}
+                                    {t('msg74')}
                                 </p>
                                 <p className="emptyPosts_content">
-                                {t('msg75')}
+                                    {t('msg75')}
                                 </p>
                             </div>
                         </div>
@@ -578,7 +590,7 @@ const Stream = () => {
                         <Toast.Body className="d-flex flex-column p-3">
                             <div className="d-flex justify-content-between">
                                 <span className="me-auto">
-                                {t('classCodeSet')} {classroom.classcode}
+                                    {t('classCodeSet')} {classroom.classcode}
                                 </span>
                                 <button
                                     type="button"

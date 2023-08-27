@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import DictionaryService from '../../services/DictionaryService'
 import GrammarDetail from './GrammarDetail'
 import Pagination from '../../components/Pagination'
 
 const GrammarDict = () => {
+    const navigate = useNavigate()
+    
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
 
@@ -17,17 +19,17 @@ const GrammarDict = () => {
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
 
-    const { userToken } = useSelector((state) => state.auth);
-    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth)
+    const { userLanguage } = useSelector((state) => state.user)
 
-    const { t, i18n } = useTranslation();
+    const { t, i18n } = useTranslation()
 
     useEffect(() => {
         if (userToken) {
-        i18n.changeLanguage(userLanguage);
+            i18n.changeLanguage(userLanguage)
         }
-    }, [userLanguage]);
-    
+    }, [userLanguage])
+
     useEffect(() => {
         if (loading === true && document.getElementById('searchDictBtn')) {
             document.getElementById('searchDictBtn').disabled = true
@@ -76,6 +78,12 @@ const GrammarDict = () => {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
         setLoading(false)

@@ -43,15 +43,16 @@ const TestList = () => {
     const [page, setPage] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
     const [isDesc, setIsDesc] = useState(true)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     function getToday() {
         const today = new Date()
         return (
@@ -111,6 +112,12 @@ const TestList = () => {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
             setLoading(false)
         }
@@ -154,6 +161,12 @@ const TestList = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)
@@ -200,6 +213,12 @@ const TestList = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)
@@ -325,12 +344,8 @@ const TestList = () => {
                 {isEmpty ? (
                     <div className="emptyTests_container d-flex flex-column align-items-center justify-content-center">
                         <img src={empty} alt="" />
-                        <p className="mb-2 emptyTests_heading">
-                        {t('msg86')}
-                        </p>
-                        <p className="emptyTests_content">
-                        {t('msg87')}
-                        </p>
+                        <p className="mb-2 emptyTests_heading">{t('msg86')}</p>
+                        <p className="emptyTests_content">{t('msg87')}</p>
                     </div>
                 ) : search && tests?.length === 0 ? (
                     <div className="mt-5">{t('noMatch')}.</div>
@@ -394,7 +409,8 @@ const TestList = () => {
                                         <div className="accordion-body">
                                             <div className="d-flex align-items-center justify-content-between">
                                                 <div>
-                                                {t('posted')} {test?.created_date}
+                                                    {t('posted')}{' '}
+                                                    {test?.created_date}
                                                 </div>
                                                 {userInfo?.id !==
                                                     classroom?.user?.id && (
@@ -424,7 +440,7 @@ const TestList = () => {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                            {t('turnIn')}
+                                                                {t('turnIn')}
                                                             </div>
                                                         </div>
                                                         <div className="asignInfo_block">
@@ -436,7 +452,7 @@ const TestList = () => {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                            {t('assigned')}
+                                                                {t('assigned')}
                                                             </div>
                                                         </div>
                                                     </div>

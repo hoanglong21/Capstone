@@ -87,6 +87,7 @@ const ViewStudySet = () => {
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
+
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
@@ -132,6 +133,12 @@ const ViewStudySet = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoadingFilter(false)
@@ -224,6 +231,12 @@ const ViewStudySet = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -436,7 +449,7 @@ const ViewStudySet = () => {
                         <span>
                             {comments?.length === 0
                                 ? 'Comments'
-                                : `${comments?.length} class comment`}
+                                : `${comments?.length} comment`}
                         </span>
                     </button>
                     {userInfo?.id === studySet?.user?.id &&

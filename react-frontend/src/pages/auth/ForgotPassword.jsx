@@ -8,14 +8,17 @@ import { useTranslation } from 'react-i18next'
 
 const ForgotPassword = () => {
     const { userInfo } = useSelector((state) => state.user)
+    const [success, setSuccess] = useState(false)
+    const { userToken } = useSelector((state) => state.auth)
+    const { userLanguage } = useSelector((state) => state.user)
+
     const { t, i18n } = useTranslation()
+    
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-    const [success, setSuccess] = useState(false)
-    const { userToken } = useSelector((state) => state.auth)
-    const { userLanguage } = useSelector((state) => state.user)
+
     useEffect(() => {
         const fetchData = () => {
             setUsername(userInfo.username)

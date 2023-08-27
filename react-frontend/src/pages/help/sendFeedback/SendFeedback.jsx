@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import FeedbackTypeService from '../../../services/FeedbackTypeService'
 import FeedbackService from '../../../services/FeedbackService'
 
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './SendFeedback.css'
-import { useTranslation } from 'react-i18next'
 
 const SendFeedback = () => {
+    const navigate = useNavigate()
     const { userInfo } = useSelector((state) => state.user)
 
     const [types, setTypes] = useState([])
@@ -17,15 +19,15 @@ const SendFeedback = () => {
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
     const [loading, setLoading] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,6 +49,12 @@ const SendFeedback = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -141,9 +149,7 @@ const SendFeedback = () => {
                                     </option>
                                 ))}
                             </select>
-                            <label htmlFor="feedbackType">
-                                {t('msg116')}
-                            </label>
+                            <label htmlFor="feedbackType">{t('msg116')}</label>
                         </div>
                     </div>
                     {/* title */}
@@ -165,7 +171,7 @@ const SendFeedback = () => {
                             />
                             <label htmlFor="title">{t('title')}</label>
                             <div className="invalid-feedback text-start">
-                            {t('msg118')}.
+                                {t('msg118')}.
                             </div>
                         </div>
                     </div>
@@ -188,7 +194,7 @@ const SendFeedback = () => {
                             ></textarea>
                             <label htmlFor="content">{t('content')}</label>
                             <div className="invalid-feedback text-start">
-                            {t('msg118')}.
+                                {t('msg118')}.
                             </div>
                         </div>
                     </div>
@@ -205,7 +211,7 @@ const SendFeedback = () => {
                                     id="loading"
                                 >
                                     <span className="visually-hidden">
-                                    {t('loading')}...
+                                        {t('loading')}...
                                     </span>
                                 </div>
                             ) : (

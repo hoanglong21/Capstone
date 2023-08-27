@@ -18,16 +18,16 @@ const DeleteSet = ({
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
-  
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         // clear validation
@@ -63,7 +63,7 @@ const DeleteSet = ({
         >
             <Modal.Header closeButton className="border-0 px-4">
                 <Modal.Title className="setModalTitle">
-                {t('deleteSet')}?
+                    {t('deleteSet')}?
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-4">
@@ -74,12 +74,8 @@ const DeleteSet = ({
                     </div>
                 )}
                 <div className="setModalHeading mb-1">{studySet?.title}</div>
-                <p className="mb-1">
-                {t('msg40')}.
-                </p>
-                <p className="fw-semibold">
-                {t('msg39')}.
-                </p>
+                <p className="mb-1">{t('msg40')}.</p>
+                <p className="fw-semibold">{t('msg39')}.</p>
             </Modal.Body>
             <Modal.Footer className="px-4">
                 <button

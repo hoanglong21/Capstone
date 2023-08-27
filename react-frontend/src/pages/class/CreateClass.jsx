@@ -16,16 +16,16 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
     const [newClass, setNewClass] = useState({})
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
-    
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         if (showCreateModal === false) {
             setNewClass({
@@ -109,7 +109,7 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
             <Modal.Header closeButton>
                 <Modal.Title>
                     <h5 className="modal-title joinClassModalTitle">
-                    {t('createClass')}
+                        {t('createClass')}
                     </h5>
                 </Modal.Title>
             </Modal.Header>
@@ -137,7 +137,9 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
                             onChange={handleChange}
                             required
                         />
-                        <label htmlFor="class_name">{t('class')} {t('name')}</label>
+                        <label htmlFor="class_name">
+                            {t('class')} {t('name')}
+                        </label>
                     </div>
                     {/* Description */}
                     <div className="form-floating">

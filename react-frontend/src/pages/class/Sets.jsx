@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 
@@ -17,6 +17,8 @@ import deleted from '../../assets/images/deleted.png'
 import { useTranslation } from 'react-i18next'
 
 const Sets = () => {
+    const navigate = useNavigate()
+
     const { userInfo } = useSelector((state) => state.user)
 
     const { id } = useParams()
@@ -36,15 +38,16 @@ const Sets = () => {
     const [isAssign, setIsAssign] = useState(false)
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -75,6 +78,12 @@ const Sets = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -108,6 +117,12 @@ const Sets = () => {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
         }
         if (id && userInfo?.id) {
@@ -140,6 +155,12 @@ const Sets = () => {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
         }
         if (isAssign === true) {
@@ -168,9 +189,7 @@ const Sets = () => {
                         <h3>{t('msg70')}</h3>
                         {userInfo?.id === classroom?.user?.id && (
                             <div>
-                                <p>
-                                {t('msg73')}.
-                                </p>
+                                <p>{t('msg73')}.</p>
                                 <button
                                     className="btn btn-info"
                                     disabled={classroom?._deleted}
@@ -264,7 +283,8 @@ const Sets = () => {
                                                                 : set?.title}
                                                         </div>
                                                         <div className="term-count mb-2">
-                                                            {set?.count} {t('term')}
+                                                            {set?.count}{' '}
+                                                            {t('term')}
                                                         </div>
                                                         <p
                                                             className="set-description m-0 mb-2"
@@ -305,7 +325,10 @@ const Sets = () => {
                                                                     placement="bottom"
                                                                     overlay={
                                                                         <Tooltip id="tooltip">
-                                                                           {t('msg9')}.
+                                                                            {t(
+                                                                                'msg9'
+                                                                            )}
+                                                                            .
                                                                         </Tooltip>
                                                                     }
                                                                 >
@@ -324,7 +347,10 @@ const Sets = () => {
                                                                     placement="bottom"
                                                                     overlay={
                                                                         <Tooltip id="tooltip">
-                                                                            {t('msg8')}.
+                                                                            {t(
+                                                                                'msg8'
+                                                                            )}
+                                                                            .
                                                                         </Tooltip>
                                                                     }
                                                                 >
@@ -343,7 +369,10 @@ const Sets = () => {
                                                                     placement="bottom"
                                                                     overlay={
                                                                         <Tooltip id="tooltip">
-                                                                            {t('msg7')}.
+                                                                            {t(
+                                                                                'msg7'
+                                                                            )}
+                                                                            .
                                                                         </Tooltip>
                                                                     }
                                                                 >
