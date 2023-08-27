@@ -103,25 +103,35 @@ public class TestServiceImpl  implements TestService {
         Date date = localDateTimeToDate(localDateTime);
 
         List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+
+        Set<User> enrolledUsersToNotify = new HashSet<>();
+
         for (ClassLearner classLearner : classLearnerList) {
-            List<Test> testList = testRepository.getTestByClassroomId(classLearner.getClassroom().getId());
-            for(Test test : testList) {
-                if (classLearner.getStatus().equals("enrolled") && !test.is_draft()) {
-                    Notification notification = new Notification();
-                    notification.setTitle("New Test");
-
-                    String urlWithClassId = "/class/[[classid]]/tests";
-                    urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
-
-                    notification.setUrl(urlWithClassId);
-                    notification.setContent("A new test is added to class '" + classroom.getClass_name() + "'");
-                    notification.setDatetime(date);
-                    notification.set_read(false);
-                    notification.setUser(classLearner.getUser());
-
-                    notificationRepository.save(notification);
+            if (classLearner.getStatus().equals("enrolled")) {
+                List<Test> testList = testRepository.getTestByClassroomId(classLearner.getClassroom().getId());
+                for (Test test : testList) {
+                    if (!test.is_draft()) {
+                        enrolledUsersToNotify.add(classLearner.getUser());
+                        break;
+                    }
                 }
             }
+        }
+
+        for (User user : enrolledUsersToNotify) {
+            Notification notification = new Notification();
+            notification.setTitle("New Test");
+
+            String urlWithClassId = "/class/[[classid]]/tests";
+            urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+            notification.setUrl(urlWithClassId);
+            notification.setContent("A new test is added to class '" + classroom.getClass_name() + "'");
+            notification.setDatetime(date);
+            notification.set_read(false);
+            notification.setUser(user);
+
+            notificationRepository.save(notification);
         }
     }
 
