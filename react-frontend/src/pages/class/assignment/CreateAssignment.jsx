@@ -118,6 +118,9 @@ function CreateAssignment() {
                     tempAssignment.user.created_date = toBEDate(
                         tempAssignment.user.created_date
                     )
+                    tempAssignment.user.dob = toBEDate(
+                        tempAssignment.user.dob
+                    )
                 }
                 if (tempAssignment?.classroom) {
                     tempAssignment.classroom.created_date = toBEDate(
@@ -129,6 +132,9 @@ function CreateAssignment() {
                     if (tempAssignment.classroom?.user) {
                         tempAssignment.classroom.user.created_date = toBEDate(
                             tempAssignment.classroom.user.created_date
+                        )
+                        tempAssignment.classroom.user.dob = toBEDate(
+                            tempAssignment.classroom.user.dob
                         )
                     }
                 }
