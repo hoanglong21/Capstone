@@ -335,7 +335,6 @@ function Translate() {
                                 className="form-control translateInput py-2 ps-3 pe-1"
                                 id="floatingTextarea"
                                 value={origText}
-                                onInput={autoGrow}
                                 onChange={(event) => {
                                     setOrigText(event.target.value)
                                 }}
@@ -354,7 +353,7 @@ function Translate() {
                                 className="form-control translateInput"
                                 id="floatingTextarea"
                                 value={transText}
-                                onInput={autoGrow}
+                                maxLength={5000}
                                 disabled
                             ></textarea>
                         </div>
