@@ -61,8 +61,8 @@ const DoTest = () => {
         if (
             endMinute !== null &&
             endSecond !== null &&
-            Number(minutes) === endMinute &&
-            Number(second) === endSecond
+            Number(minutes) === Number(endMinute) &&
+            Number(second) === Number(endSecond)
         ) {
             setIsEnd(true)
             handleSubmit()

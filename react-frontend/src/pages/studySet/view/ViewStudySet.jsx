@@ -449,7 +449,7 @@ const ViewStudySet = () => {
                         <span>
                             {comments?.length === 0
                                 ? 'Comments'
-                                : `${comments?.length} class comment`}
+                                : `${comments?.length} comment`}
                         </span>
                     </button>
                     {userInfo?.id === studySet?.user?.id &&
