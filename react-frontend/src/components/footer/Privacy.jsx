@@ -1,7 +1,20 @@
 import React from 'react'
 import '../footer/Footer.css'
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 function Privacy() {
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
+    
     return (
         <div className="privacy__content">
             <h2 className="privacy__header">Nihongo Level Up Privacy Policy</h2>

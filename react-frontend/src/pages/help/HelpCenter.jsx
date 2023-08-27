@@ -1,17 +1,30 @@
 import { Link, useNavigate } from 'react-router-dom'
 
 import '../../assets/styles/Helpcenter.css'
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 function HelpCenter() {
     const navigate = useNavigate()
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
+
     return (
         <div className="hkb__main">
             <div className="ht-container">
-                <h2 className="site-header__title">Hi, How can we help you?</h2>
+                <h2 className="site-header__title">{t('msg121')}?</h2>
 
                 <form className="hkb-site-search">
                     <label className="hkb-screen-reader-text" for="hkb-search">
-                        Search For
+                    {t('searchFor')}
                     </label>
                     <input
                         className="hkb-site-search__field"
@@ -19,13 +32,13 @@ function HelpCenter() {
                         placeholder="Search help center..."
                     />
                     <button className="hkb-site-search__button" type="submit">
-                        <span>Search</span>
+                        <span>{t('search')}</span>
                     </button>
                 </form>
             </div>
             <div className="ht-container1">
                 <div className="ht-page__content">
-                    <h2 className="hkb-archive__title">Help Topics</h2>
+                    <h2 className="hkb-archive__title">{t('helpTopic')}</h2>
 
                     <ul className="hkb-archive  hkb-archive--2cols">
                         <li>
@@ -41,12 +54,11 @@ function HelpCenter() {
 
                                     <div className="hkb-category__content">
                                         <h2 className="hkb-category__title">
-                                            My Account{' '}
+                                        {t('myAcc')}{' '}
                                         </h2>
 
                                         <div className="hkb-category__description">
-                                            How to manage your account and it's
-                                            features.
+                                        {t('msg122')}.
                                         </div>
                                     </div>
                                 </Link>
@@ -65,12 +77,11 @@ function HelpCenter() {
 
                                     <div className="hkb-category__content">
                                         <h2 className="hkb-category__title">
-                                            Class And Flashcard{' '}
+                                        {t('msg123')}{' '}
                                         </h2>
 
                                         <div className="hkb-category__description">
-                                            Articles to get you up and running,
-                                            quick and easy.
+                                        {t('msg124')}.
                                         </div>
                                     </div>
                                 </Link>
@@ -89,12 +100,11 @@ function HelpCenter() {
 
                                     <div className="hkb-category__content">
                                         <h2 className="hkb-category__title">
-                                            Copyright &amp; Legal{' '}
+                                        {t('copyright')} &amp; {t('legal')}{' '}
                                         </h2>
 
                                         <div className="hkb-category__description">
-                                            Important information about how we
-                                            handle your privacy and data.
+                                        {t('msg133')}.
                                         </div>
                                     </div>
                                 </Link>
@@ -113,12 +123,11 @@ function HelpCenter() {
 
                                     <div className="hkb-category__content">
                                         <h2 className="hkb-category__title">
-                                            Developers{' '}
+                                        {t('developers')}{' '}
                                         </h2>
 
                                         <div className="hkb-category__description">
-                                            Developer documentation and
-                                            integration features.
+                                        {t('msg132')}.
                                         </div>
                                     </div>
                                 </Link>
@@ -136,41 +145,39 @@ function HelpCenter() {
                         id="ht-kb-articles-widget-2"
                         className="widget hkb_widget_articles"
                     >
-                        <h3 className="widget__title">Popular Articles</h3>
+                        <h3 className="widget__title">{t('msg131')}</h3>
                         <ul>
                             <li className="hkb-widget-article__format-standard">
                                 <a className="hkb-widget__entry-title" href="/">
-                                    How to Create an Account?
+                                {t('msg130')}?
                                 </a>
                             </li>
 
                             <li className="hkb-widget-article__format-standard">
                                 <a className="hkb-widget__entry-title" href="/">
-                                    How to Join class?
+                                {t('msg129')}?
                                 </a>
                             </li>
 
                             <li className="hkb-widget-article__format-standard">
                                 <a className="hkb-widget__entry-title" href="/">
-                                    What can I learn from joining the
-                                    classroom?
+                                {t('msg128')}?
                                 </a>
                             </li>
 
                             <li className="hkb-widget-article__format-standard">
                                 <a className="hkb-widget__entry-title" href="/">
-                                    How secure is my account?
+                                {t('msg127')}?
                                 </a>
                             </li>
                         </ul>
                     </section>
                     <section className="widget hkb_widget_exit">
                         <h3 className="widget__title">
-                            Need Support or Feedback?
+                        {t('msg126')}?
                         </h3>
                         <div className="hkb_widget_exit__content">
-                            Can't find the answer you're looking for? Don't
-                            worry we're here to help!
+                        {t('msg125')}!
                         </div>
                         <button
                             className="hkb_widget_exit__btn"
@@ -178,7 +185,7 @@ function HelpCenter() {
                                 navigate('send-feedback')
                             }}
                         >
-                            Send Feedback
+                            {t('sendFeedback')}
                         </button>
                     </section>{' '}
                 </aside>

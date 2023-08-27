@@ -60,7 +60,7 @@ function ViewDetailSubmission() {
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
-                <div className="col-md-4">
+                <div className="col-md-3">
                     <label className="small mb-1 fs-6">Modified Date</label>
                     <input
                       className="form-control"
@@ -69,7 +69,7 @@ function ViewDetailSubmission() {
                       value={submission.modified_date}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Mark</label>
                     <input
                       className="form-control"
@@ -78,7 +78,7 @@ function ViewDetailSubmission() {
                       value={submission.mark}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Assignment</label>
                     <input
                       className="form-control"
@@ -86,6 +86,21 @@ function ViewDetailSubmission() {
                       readOnly
                       value={submission.assignment?.title}
                     />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="small mb-1 fs-6">Done?</label>
+                    <select
+                      className="form-control"
+                      readOnly
+                      value={submission?._done}
+                    >
+                      <option value={true} hidden>
+                        Done
+                      </option>
+                      <option value={false} hidden>
+                        Not done
+                      </option>
+                    </select>
                   </div>
                 </div>
                 <div className="mb-3">
