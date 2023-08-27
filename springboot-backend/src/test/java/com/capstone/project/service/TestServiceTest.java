@@ -21,8 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -183,53 +182,43 @@ public class TestServiceTest {
 
     @Order(6)
     @Test
-    void testDeleteTest() {
-        com.capstone.project.model.Test test = com.capstone.project.model.Test.builder()
-                .id(1)
-                .user(User.builder().id(1).build())
-                .description("test 1 for all")
-                .duration(12)
-                .title("PT1")
-                .build();
-        Question question = Question.builder()
-                .id(1)
-                .test(com.capstone.project.model.Test.builder().id(1).build())
-                .questionType(QuestionType.builder().id(1).build())
-                .num_choice(4)
-                .question("Who kill Jack Robin")
-                .build();
-        Answer answer = Answer.builder().question(Question.builder().id(1).build()).content("Mango").is_true(false).build();
+    void testDeleteTest() throws ResourceNotFroundException {
+        com.capstone.project.model.Test test = new com.capstone.project.model.Test();
+        test.setId(1);
 
-        TestLearner testLearner = TestLearner.builder().id(1).test(test).user(User.builder().build()).build();
+        TestLearner testLearner = new TestLearner();
+        testLearner.setId(2);
 
-        TestResult testResult = TestResult.builder().id(1).question(question).build();
+        TestResult testResult = new TestResult();
+        testResult.setId(3);
 
-        Comment comment = Comment.builder().commentType(CommentType.builder().id(1).build()).content("Focus").build();
+        Question question = new Question();
+        question.setId(4);
 
-        doNothing().when(testRepository).delete(test);
-        doNothing().when(questionRepository).delete(question);
-        doNothing().when(testlearnerRepository).delete(testLearner);
-        doNothing().when(testresultRepository).delete(testResult);
-        doNothing().when(answerRepository).delete(answer);
-        doNothing().when(commentRepository).delete(comment);
+        Answer answer = new Answer();
+        answer.setId(5);
+
+        Comment comment = new Comment();
+        comment.setId(6);
 
         when(testRepository.findById(1)).thenReturn(Optional.of(test));
         when(testlearnerRepository.getTestLearnerByTestId(1)).thenReturn(List.of(testLearner));
-        when(testresultRepository.getTestResultBytestLearnerId(1)).thenReturn(List.of(testResult));
-        when(questionRepository.getQuestionByTestId(test.getId())).thenReturn(List.of(question));
-        when(testresultRepository.getTestResultByQuestionId(1)).thenReturn(List.of(testResult));
-        when(answerRepository.getAnswerByQuestionId(question.getId())).thenReturn(List.of(answer));
-        when(commentRepository.getCommentByTestId(test.getId())).thenReturn(List.of(comment));
-        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
-        try {
-            testServiceImpl.deleteTest(1);
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
-        verify(testRepository, times(1)).delete(test);
+        when(testresultRepository.getTestResultBytestLearnerId(2)).thenReturn(List.of(testResult));
+        when(questionRepository.getQuestionByTestId(1)).thenReturn(List.of(question));
+        when(answerRepository.getAnswerByQuestionId(4)).thenReturn(List.of(answer));
+        when(testresultRepository.getTestResultByQuestionId(4)).thenReturn(List.of(testResult));
+        when(commentRepository.getCommentByTestId(1)).thenReturn(List.of(comment));
+
+        Boolean result = testServiceImpl.deleteTest(1);
+
+        assertTrue(result);
+
+        verify(testresultRepository, times(2)).delete(testResult);
+        verify(testlearnerRepository, times(1)).delete(testLearner);
         verify(questionRepository, times(1)).delete(question);
         verify(answerRepository, times(1)).delete(answer);
-        verify(commentRepository, times(2)).delete(comment);
+        verify(commentRepository, times(1)).delete(any());
+        verify(testRepository, times(1)).delete(test);
     }
 
     @Order(7)

@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -200,24 +201,22 @@ public class CommentSerivceTest {
 
     @Order(9)
     @Test
-    void testDeleteComment() {
-        Comment comment = Comment.builder()
-                .id(1)
-                .commentType(CommentType.builder().id(1).build())
-                .content("Forcus")
-                .build();
+    void testDeleteComment() throws ResourceNotFroundException {
+        Comment comment = new Comment();
+        comment.setId(1);
 
-        doNothing().when(commentRepository).delete(comment);
+        Comment nestedComment = new Comment();
+        nestedComment.setId(2);
 
-        when(commentRepository.findById(any())).thenReturn(Optional.ofNullable(comment));
-        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
+        when(commentRepository.findById(1)).thenReturn(Optional.of(comment));
+        when(commentRepository.getCommentByRootId(1)).thenReturn(List.of(nestedComment));
 
-        try {
-            commentServiceImpl.deleteComment(comment.getId());
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
-        verify(commentRepository, times(2)).delete(comment);
+        Boolean result = commentServiceImpl.deleteComment(1);
+
+        assertTrue(result);
+
+        verify(commentRepository, times(1)).delete(comment);
+        verify(commentRepository, times(1)).delete(nestedComment);
     }
 
     @Order(10)
