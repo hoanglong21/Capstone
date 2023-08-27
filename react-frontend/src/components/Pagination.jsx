@@ -1,4 +1,7 @@
+import { useSelector } from 'react-redux';
 import { usePagination, DOTS } from '../hooks/usePagination '
+import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 const Pagination = (props) => {
     const {
@@ -17,6 +20,15 @@ const Pagination = (props) => {
         siblingCount,
         pageSize,
     })
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
 
     // If there are less than 2 times in pagination range we shall not render the component
     if (currentPage === 0 || paginationRange.length < 2) {
@@ -53,7 +65,7 @@ const Pagination = (props) => {
                     }`}
                     onClick={onPrevious}
                 >
-                    <span className="page-link">Previous</span>
+                    <span className="page-link">{t('previous')}</span>
                 </li>
                 {paginationRange.map((pageNumber, index) => {
                     // If the pageItem is a DOT, render the DOTS unicode character
@@ -88,7 +100,7 @@ const Pagination = (props) => {
                     }`}
                     onClick={onNext}
                 >
-                    <span className="page-link">Next</span>
+                    <span className="page-link">{t('next')}</span>
                 </li>
             </ul>
         </nav>

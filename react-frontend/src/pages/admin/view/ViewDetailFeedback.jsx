@@ -68,7 +68,7 @@ function ViewDetailFeedback() {
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
-                <div className="col-md-4">
+                <div className="col-md-6">
                     <label className="small mb-1 fs-6">Feedback Type</label>
                     <input
                       className="form-control"
@@ -77,7 +77,18 @@ function ViewDetailFeedback() {
                       value={feedback.feedbackType?.name}
                     />
                   </div>
-                  <div className="col-md-8">
+                  <div className="col-md-6">
+                    <label className="small mb-1 fs-6">Destination</label>
+                    <input
+                      className="form-control"
+                      type="tel"
+                      readOnly
+                      value={feedback.destination}
+                    />
+                  </div>
+                </div>
+                <div className="row gx-3 mb-3">
+                  <div className="col-md-12">
                     <label className="small mb-1 fs-6">Content</label>
                     <input
                       className="form-control"

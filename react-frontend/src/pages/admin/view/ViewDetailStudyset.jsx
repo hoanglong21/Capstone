@@ -40,7 +40,7 @@ function ViewDetailStudyset() {
                   />
                 </div>
                 <div className="row gx-3 mb-3">
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">StudySet ID</label>
                     <input
                       className="form-control"
@@ -49,7 +49,7 @@ function ViewDetailStudyset() {
                       value={studySet?.id}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Creator By</label>
                     <input
                       className="form-control"
@@ -58,7 +58,7 @@ function ViewDetailStudyset() {
                       value={studySet?.user?.username}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Created Date</label>
                     <input
                       className="form-control"
@@ -67,9 +67,24 @@ function ViewDetailStudyset() {
                       value={studySet?.created_date}
                     />
                   </div>
+                  <div className="col-md-3">
+                    <label className="small mb-1 fs-6">Deleted ?</label>
+                    <select
+                      className="form-control"
+                      readOnly
+                      value={studySet?._deleted}
+                    >
+                      <option value={true} hidden>
+                        Deleted
+                      </option>
+                      <option value={false} hidden>
+                        Not delete
+                      </option>
+                    </select>
+                  </div>
                 </div>
                 <div className="row gx-3 mb-3">
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Type</label>
                     <input
                       className="form-control"
@@ -78,7 +93,7 @@ function ViewDetailStudyset() {
                       value={studySet?.studySetType?.name}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Status</label>
                     <select
                       className="form-control"
@@ -93,7 +108,7 @@ function ViewDetailStudyset() {
                       </option>
                     </select>
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Deleted Date</label>
                     <input
                       className="form-control"
@@ -101,6 +116,21 @@ function ViewDetailStudyset() {
                       readOnly
                       value={studySet?.deleted_date}
                     />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="small mb-1 fs-6">Draft ?</label>
+                    <select
+                      className="form-control"
+                      readOnly
+                      value={studySet?._draft}
+                    >
+                      <option value={true} hidden>
+                        Draft
+                      </option>
+                      <option value={false} hidden>
+                        Not draft
+                      </option>
+                    </select>
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">

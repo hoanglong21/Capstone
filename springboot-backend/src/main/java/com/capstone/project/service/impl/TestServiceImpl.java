@@ -110,7 +110,7 @@ public class TestServiceImpl  implements TestService {
                     Notification notification = new Notification();
                     notification.setTitle("New Test");
 
-                    String urlWithClassId = "https://nihongolevelup.com/class/[[classid]]/tests";
+                    String urlWithClassId = "/[[classid]]/tests";
                     urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
 
                     notification.setUrl(urlWithClassId);
