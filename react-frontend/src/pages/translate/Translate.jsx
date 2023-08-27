@@ -526,7 +526,26 @@ function Translate() {
                                                         {index + 1}
                                                     </th>
                                                     <td>{word.word}</td>
-                                                    <td>{word.partOfSpeech}</td>
+                                                    <td>
+                                                        {word.partOfSpeech.map(
+                                                            (item, index) => {
+                                                                if (
+                                                                    index !==
+                                                                    word
+                                                                        .partOfSpeech
+                                                                        .length -
+                                                                        1
+                                                                ) {
+                                                                    return (
+                                                                        item +
+                                                                        ','
+                                                                    )
+                                                                } else {
+                                                                    return item
+                                                                }
+                                                            }
+                                                        )}
+                                                    </td>
                                                     <td>
                                                         {word.dictionaryForm}
                                                     </td>
