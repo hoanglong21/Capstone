@@ -1268,6 +1268,12 @@ const CreateTest = () => {
                                                             name="picture"
                                                             accept="image/*"
                                                             className="postUpload"
+                                                            onClick={(
+                                                                event
+                                                            ) => {
+                                                                event.target.value =
+                                                                    null
+                                                            }}
                                                             onChange={(event) =>
                                                                 handleUploadFileAnswer(
                                                                     event,
@@ -1303,6 +1309,12 @@ const CreateTest = () => {
                                                             name="audio"
                                                             accept="audio/*"
                                                             className="postUpload"
+                                                            onClick={(
+                                                                event
+                                                            ) => {
+                                                                event.target.value =
+                                                                    null
+                                                            }}
                                                             onChange={(event) =>
                                                                 handleUploadFileAnswer(
                                                                     event,
@@ -1338,6 +1350,12 @@ const CreateTest = () => {
                                                             name="video"
                                                             accept="video/*"
                                                             className="d-none"
+                                                            onClick={(
+                                                                event
+                                                            ) => {
+                                                                event.target.value =
+                                                                    null
+                                                            }}
                                                             onChange={(event) =>
                                                                 handleUploadFileAnswer(
                                                                     event,
