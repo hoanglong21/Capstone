@@ -1,7 +1,19 @@
 import React from "react";
 import "../footer/Footer.css"
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 
 function Term() {
+  const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
   return (
     <div className="term__full">
       <h2 className="term__service">Term Of Service</h2>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/styles/Helpcenter.css";
 import register from "../../assets/images/register.png";
@@ -8,8 +8,20 @@ import changePass from "../../assets/images/change-password.png";
 import resetPass from "../../assets/images/resetpass.png";
 import deleteAcc from "../../assets/images/deleteaccount.png";
 import '../../assets/styles/Helpcenter.css'
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 function UseAccount() {
+  const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
+    
   return (
     <div className="container">
       <div className="row useaccount mt-4">

@@ -33,11 +33,9 @@ function ViewDetailPost() {
               <form>
                 <div className="mb-3">
                   <label className="small mb-1 fs-6">Content</label>
-                  <input
+                   <div
                     className="form-control"
-                    type="text"
-                    readOnly
-                    value={post.content}
+                    dangerouslySetInnerHTML={{__html: post.content}}
                   />
                 </div>
                 <div className="row gx-3 mb-3">
