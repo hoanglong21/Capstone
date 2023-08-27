@@ -58,13 +58,13 @@ const VocabCard = ({
                 const tempContent = itemContent.content
                     .replaceAll(/(<([^>]+)>)/gi, ' ')
                     .trim()
-                correctAnswer = tempContent
+                correctAnswer = tempContent.toLowerCase()
                 setCorrectAnswer(itemContent.content)
                 break
             }
         }
         // check is correct
-        if (currentAnswer == correctAnswer) {
+        if (currentAnswer.toLowerCase() == correctAnswer) {
             setIsCurrentCorrect(true)
         } else {
             setIsCurrentCorrect(false)
