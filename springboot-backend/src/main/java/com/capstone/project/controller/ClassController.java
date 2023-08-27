@@ -193,7 +193,7 @@ public class ClassController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PreAuthorize("hasRole('ROLE_TUTOR')")
+//    @PreAuthorize("hasRole('ROLE_TUTOR')")
     @PostMapping("/resetclasscode/{id}")
     public ResponseEntity<?> ResetClassCode(@PathVariable int id){
         try {
