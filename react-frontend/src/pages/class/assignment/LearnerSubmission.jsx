@@ -35,6 +35,13 @@ const LearnerSubmission = ({ assignment }) => {
     const { userToken } = useSelector((state) => state.auth)
     const { t, i18n } = useTranslation()
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return new String(date?.replace(/\s/g, 'T') + '.000' + '+07:00')
+        }
+        return ''
+    }
+
     useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
@@ -83,7 +90,6 @@ const LearnerSubmission = ({ assignment }) => {
                             tempSubmission.id
                         )
                     ).data
-                    console.log(tempComments)
                     setComments(tempComments)
                 }
                 setSubmission(tempSubmission)
@@ -167,31 +173,56 @@ const LearnerSubmission = ({ assignment }) => {
                 ...submission,
                 _done: submission?._done ? false : true,
             }
-            tempSubmission.assignment.classroom.created_date = toBEDate(
-                tempSubmission.assignment.classroom.created_date
-            )
-            tempSubmission.assignment.classroom.user.created_date = toBEDate(
-                tempSubmission.assignment.classroom.user.created_date
-            )
-            tempSubmission.assignment.created_date = toBEDate(
-                tempSubmission.assignment.created_date
-            )
-            tempSubmission.assignment.modified_date = toBEDate(
-                tempSubmission.assignment.modified_date
-            )
-            tempSubmission.assignment.start_date = toBEDate(
-                tempSubmission.assignment.start_date
-            )
-            tempSubmission.assignment.user.created_date = toBEDate(
-                tempSubmission.assignment.user.created_date
-            )
             tempSubmission.created_date = toBEDate(tempSubmission.created_date)
             tempSubmission.modified_date = toBEDate(
                 tempSubmission.modified_date
             )
-            tempSubmission.user.created_date = toBEDate(
-                tempSubmission.user.created_date
-            )
+            if (tempSubmission?.user) {
+                tempSubmission.user.created_date = toBEDate(
+                    tempSubmission.user.created_date
+                )
+                tempSubmission.user.dob = toBEDate(tempSubmission.user.dob)
+            }
+            if (tempSubmission?.assignment) {
+                tempSubmission.assignment.created_date = toBEDate(
+                    tempSubmission.assignment.created_date
+                )
+                tempSubmission.assignment.modified_date = toBEDate(
+                    tempSubmission.assignment.modified_date
+                )
+                tempSubmission.assignment.due_date = toBEDate(
+                    tempSubmission.assignment.due_date
+                )
+                tempSubmission.assignment.start_date = toBEDate(
+                    tempSubmission.assignment.start_date
+                )
+                if (tempSubmission.assignment?.user) {
+                    tempSubmission.assignment.user.created_date = toBEDate(
+                        tempSubmission.assignment.user.created_date
+                    )
+                    tempSubmission.assignment.user.dob = toBEDate(
+                        tempSubmission.assignment.user.dob
+                    )
+                }
+                if (tempSubmission.assignment?.classroom) {
+                    tempSubmission.assignment.classroom.created_date = toBEDate(
+                        tempSubmission.assignment.classroom.created_date
+                    )
+                    tempSubmission.assignment.classroom.deleted_date = toBEDate(
+                        tempSubmission.assignment.classroom.deleted_date
+                    )
+                    if (tempSubmission.assignment.classroom?.user) {
+                        tempSubmission.assignment.classroom.user.created_date =
+                            toBEDate(
+                                tempSubmission.assignment.classroom.user
+                                    .created_date
+                            )
+                        tempSubmission.assignment.classroom.user.dob = toBEDate(
+                            tempSubmission.assignment.classroom.user.dob
+                        )
+                    }
+                }
+            }
             setSubmission(
                 (
                     await SubmissionService.updateSubmission(
