@@ -214,7 +214,7 @@ public class CommentSerivceTest {
         Boolean result = commentServiceImpl.deleteComment(1);
 
         assertTrue(result);
-        
+
         verify(commentRepository, times(1)).delete(comment);
         verify(commentRepository, times(1)).delete(nestedComment);
     }

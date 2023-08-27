@@ -181,7 +181,6 @@ public class AssignmentServiceTest {
         Comment comment = new Comment();
         comment.setId(4);
 
-        // Giả lập các phương thức của repository
         when(assignmentRepository.findById(1)).thenReturn(Optional.of(assignment));
         when(submissionRepository.getSubmissionByAssignmentId(1)).thenReturn(List.of(submission));
         when(attachmentRepository.getAttachmentBySubmissionId(2)).thenReturn(List.of(attachment));
@@ -189,13 +188,10 @@ public class AssignmentServiceTest {
         when(commentRepository.getCommentBySubmissionId(2)).thenReturn(List.of(comment));
 
 
-        // Gọi hàm xóa assignment
         Boolean result = assignmentServiceImpl.deleteAssignment(1);
 
-        // Kiểm tra kết quả
         assertTrue(result);
-
-        // Kiểm tra xem các phương thức delete đã được gọi đúng số lần
+        
         verify(attachmentRepository, times(2)).delete(attachment);
         verify(commentRepository, times(1)).delete(any());
         verify(submissionRepository, times(1)).delete(submission);
