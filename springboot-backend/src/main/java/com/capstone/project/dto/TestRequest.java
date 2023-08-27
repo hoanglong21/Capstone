@@ -29,7 +29,7 @@ public class TestRequest {
 
     private Class classroom;
 
-    @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:+-]+", message = "Description can only contain letters, numbers, and spaces")
+//    @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:+-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
 
