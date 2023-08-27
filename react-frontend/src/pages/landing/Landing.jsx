@@ -10,15 +10,15 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 
 const Landing = () => {
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     return (
         <div>
@@ -34,21 +34,17 @@ const Landing = () => {
             </div>
             <div className="landing__ti text-center">
                 <h2 className="heading__line">{t('msg88')}?</h2>
-                <p className="lead text-muted">
-                    {t('msg89')}.
-                </p>
+                <p className="lead text-muted">{t('msg89')}.</p>
             </div>
             <div className="landing__content">
                 <div className="landing__description">
                     <div className="landing__title">
-                        <h2 className="landing__assembly2">
-                        {t('msg90')}
-                        </h2>
+                        <h2 className="landing__assembly2">{t('msg90')}</h2>
                     </div>
                     <div className="landing-description2">
                         <p className="landing__assembly paragraph"></p>
                         <p className="landing__assembly paragraph2">
-                        {t('msg91')}.
+                            {t('msg91')}.
                         </p>
                         <p></p>
                     </div>
@@ -81,14 +77,12 @@ const Landing = () => {
                 </div>
                 <div className="landing__description">
                     <div className="landing__title">
-                        <h2 className="landing__assembly2">
-                        {t('msg92')}
-                        </h2>
+                        <h2 className="landing__assembly2">{t('msg92')}</h2>
                     </div>
                     <div className="landing-description2">
                         <p className="landing__assembly paragraph"></p>
                         <p className="landing__assembly paragraph2">
-                        {t('msg93')}.
+                            {t('msg93')}.
                         </p>
                         <p></p>
                     </div>
@@ -107,11 +101,9 @@ const Landing = () => {
                 </div>
             </div>
             <div className="section-title">
-                <h4 className="title text-center">
-                {t('msg95')}
-                </h4>
+                <h4 className="title text-center">{t('msg95')}</h4>
                 <p className="text-muted para-desc mx-auto text-center">
-                {t('msg96')}{' '}
+                    {t('msg96')}{' '}
                     <span className="text-primary fw-bold">NihongoLevelUp</span>{' '}
                     {t('msg97')}
                 </p>
@@ -144,11 +136,9 @@ const Landing = () => {
                             <h3 className="blog-title my-3">
                                 <a href="/">{t('msg101')}</a>
                             </h3>
-                            <p>
-                            {t('msg102')}
-                            </p>
+                            <p>{t('msg102')}</p>
                             <a href="/" className="blog-btn mt-3">
-                            {t('readMore')}
+                                {t('readMore')}
                             </a>
                         </div>
                     </div>
@@ -173,11 +163,9 @@ const Landing = () => {
                             <h3 className="blog-title my-3">
                                 <a href="/">{t('msg103')}</a>
                             </h3>
-                            <p>
-                            {t('msg104')}
-                            </p>
+                            <p>{t('msg104')}</p>
                             <a href="/" className="blog-btn mt-3">
-                            {t('readMore')}
+                                {t('readMore')}
                             </a>
                         </div>
                     </div>
@@ -202,11 +190,9 @@ const Landing = () => {
                             <h3 className="blog-title my-3">
                                 <a href="/">{t('msg106')}</a>
                             </h3>
-                            <p>
-                            {t('msg107')}
-                            </p>
+                            <p>{t('msg107')}</p>
                             <a href="/" className="blog-btn mt-3">
-                            {t('readMore')}
+                                {t('readMore')}
                             </a>
                         </div>
                     </div>

@@ -70,21 +70,22 @@ const DeleteAccount = () => {
             }
         }
     }
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     return (
         <div className="settings-lang">
-            <h4 className='settings-h4'>{t('perDelete')} {userInfo.username}</h4>
-            <p className='settings-p'>
-            {t('msg53')}
-            </p>
+            <h4 className="settings-h4">
+                {t('perDelete')} {userInfo.username}
+            </h4>
+            <p className="settings-p">{t('msg53')}</p>
             <form className="mt-4 needs-validation" noValidate>
                 {/* error message */}
                 {error && (
@@ -97,7 +98,7 @@ const DeleteAccount = () => {
                 )}
                 <div className="form-group mb-3">
                     <label className={FormStyles.formLabel}>
-                    {t('current')} {t('password')}
+                        {t('current')} {t('password')}
                     </label>
                     <input
                         id="currentPass"
@@ -108,8 +109,11 @@ const DeleteAccount = () => {
                         onChange={(event) => setCurrentPass(event.target.value)}
                         required
                     />
-                    <p className="mt-2 settings-p" style={{ color: 'var(--text-light)' }}>
-                    {t('msg54')}
+                    <p
+                        className="mt-2 settings-p"
+                        style={{ color: 'var(--text-light)' }}
+                    >
+                        {t('msg54')}
                     </p>
                 </div>
                 <button
@@ -127,11 +131,11 @@ const DeleteAccount = () => {
                 }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>{t('delete')} {t('account')}</Modal.Title>
+                    <Modal.Title>
+                        {t('delete')} {t('account')}
+                    </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                {t('msg55')}.
-                </Modal.Body>
+                <Modal.Body>{t('msg55')}.</Modal.Body>
                 <Modal.Footer>
                     <button
                         id="closeModal"

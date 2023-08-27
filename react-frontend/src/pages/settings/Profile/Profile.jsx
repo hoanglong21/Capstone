@@ -19,8 +19,10 @@ import defaultAvatar from '../../../assets/images/default_avatar.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const { userInfo, error, success } = useSelector((state) => state.user)
@@ -33,15 +35,16 @@ const Profile = () => {
     const [loading, setLoading] = useState(false)
 
     const [showAvatarModal, setShowAvatarModal] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     // fetch user state
     useEffect(() => {
         setNewUser({ ...userInfo })
@@ -65,6 +68,12 @@ const Profile = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)
@@ -218,7 +227,9 @@ const Profile = () => {
                 </div>
                 {/* Username */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>{t('username')}</label>
+                    <label className={FormStyles.formLabel}>
+                        {t('username')}
+                    </label>
                     <input
                         id="username"
                         className="form-control-plaintext p-0"
@@ -244,7 +255,9 @@ const Profile = () => {
                 </div>
                 {/* First name */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>{t('firstname')}</label>
+                    <label className={FormStyles.formLabel}>
+                        {t('firstname')}
+                    </label>
                     <input
                         id="first_name"
                         name="first_name"
@@ -258,7 +271,9 @@ const Profile = () => {
                 </div>
                 {/* Last name */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>{t('lastname')}</label>
+                    <label className={FormStyles.formLabel}>
+                        {t('lastname')}
+                    </label>
                     <input
                         id="last_name"
                         name="last_name"
@@ -272,9 +287,7 @@ const Profile = () => {
                 </div>
                 {/* DOB  */}
                 <div className="form-group profile-col-6">
-                    <label className={FormStyles.formLabel}>
-                    {t('dob')}
-                    </label>
+                    <label className={FormStyles.formLabel}>{t('dob')}</label>
                     <input
                         id="dob"
                         className={`form-control ${FormStyles.formControl}`}
@@ -303,7 +316,7 @@ const Profile = () => {
                 {/* Gender */}
                 <div className="form-group profile-col-6">
                     <label className={`d-block ${FormStyles.formLabel}`}>
-                    {t('gender')}
+                        {t('gender')}
                     </label>
                     <div className="form-check form-check-inline me-5">
                         <input
@@ -318,7 +331,7 @@ const Profile = () => {
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="male">
-                        {t('male')}
+                            {t('male')}
                         </label>
                     </div>
                     <div className="form-check form-check-inline me-5">
@@ -334,7 +347,7 @@ const Profile = () => {
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="female">
-                        {t('female')}
+                            {t('female')}
                         </label>
                     </div>
                     <div className="form-check form-check-inline">
@@ -350,7 +363,7 @@ const Profile = () => {
                             onChange={handleChange}
                         />
                         <label className="form-check-label" htmlFor="other">
-                        {t('other')}
+                            {t('other')}
                         </label>
                     </div>
                 </div>
@@ -374,7 +387,9 @@ const Profile = () => {
                 </div>
                 {/* Address */}
                 <div className="form-group col-12">
-                    <label className={FormStyles.formLabel}>{t('address')}</label>
+                    <label className={FormStyles.formLabel}>
+                        {t('address')}
+                    </label>
                     <input
                         id="address"
                         name="address"
@@ -502,7 +517,7 @@ const Profile = () => {
                                 />
                                 <button className="btn btn-info p-0">
                                     <label htmlFor="uploadAvatar">
-                                    {t('ava')}
+                                        {t('ava')}
                                     </label>
                                 </button>
                             </div>

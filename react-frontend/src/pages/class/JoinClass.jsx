@@ -17,16 +17,16 @@ const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
     const [classCode, setClassCode] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
-    
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         if (showJoinModal === false) {
             setClassCode('')
@@ -84,7 +84,7 @@ const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
             <Modal.Header closeButton>
                 <Modal.Title>
                     <h4 className="modal-title editClassModalTitle">
-                    {t('joinClass')}
+                        {t('joinClass')}
                     </h4>
                 </Modal.Title>
             </Modal.Header>

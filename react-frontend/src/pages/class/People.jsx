@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
@@ -18,7 +18,12 @@ import HistoryService from '../../services/HistoryService'
 import { useTranslation } from 'react-i18next'
 
 const People = () => {
+    const navigate = useNavigate()
+    
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
     const { id } = useParams()
 
@@ -27,16 +32,13 @@ const People = () => {
     const [requests, setRequests] = useState([])
     const [showToast, setShowToast] = useState(false)
     const [messToast, setMessToast] = useState('')
-    const { userLanguage } = useSelector((state) => state.user);
-  const { userToken } = useSelector((state) => state.auth);
-  const { t, i18n } = useTranslation();
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
-  
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
@@ -79,6 +81,12 @@ const People = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -181,7 +189,9 @@ const People = () => {
                 <div className="people_section mb-5">
                     <div className="people_heading mb-3 d-flex justify-content-between">
                         <h2>{t('request')}</h2>
-                        <p>{requests?.length} {t('reJoin')}</p>
+                        <p>
+                            {requests?.length} {t('reJoin')}
+                        </p>
                     </div>
                     {requests?.map((request, index) => (
                         <div
@@ -287,9 +297,7 @@ const People = () => {
                         <OverlayTrigger
                             placement="bottom"
                             overlay={
-                                <Tooltip id="tooltip">
-                                    {t('msg7')}.
-                                </Tooltip>
+                                <Tooltip id="tooltip">{t('msg7')}.</Tooltip>
                             }
                         >
                             <img
@@ -302,9 +310,7 @@ const People = () => {
                         <OverlayTrigger
                             placement="bottom"
                             overlay={
-                                <Tooltip id="tooltip">
-                                    {t('msg8')}.
-                                </Tooltip>
+                                <Tooltip id="tooltip">{t('msg8')}.</Tooltip>
                             }
                         >
                             <img
@@ -317,9 +323,7 @@ const People = () => {
                         <OverlayTrigger
                             placement="bottom"
                             overlay={
-                                <Tooltip id="tooltip">
-                                    {t('msg7')}.
-                                </Tooltip>
+                                <Tooltip id="tooltip">{t('msg7')}.</Tooltip>
                             }
                         >
                             <img
@@ -333,7 +337,9 @@ const People = () => {
             <div className="mt-5 people_section">
                 <div className="people_heading mb-3 d-flex justify-content-between">
                     <h2>{t('member')}</h2>
-                    <p>{learners?.length} {t('member')}</p>
+                    <p>
+                        {learners?.length} {t('member')}
+                    </p>
                 </div>
                 {learners?.map((learner, index) => (
                     <div
@@ -354,9 +360,7 @@ const People = () => {
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={
-                                    <Tooltip id="tooltip">
-                                        {t('msg9')}.
-                                    </Tooltip>
+                                    <Tooltip id="tooltip">{t('msg9')}.</Tooltip>
                                 }
                             >
                                 <img
@@ -369,9 +373,7 @@ const People = () => {
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={
-                                    <Tooltip id="tooltip">
-                                        {t('msg8')}.
-                                    </Tooltip>
+                                    <Tooltip id="tooltip">{t('msg8')}.</Tooltip>
                                 }
                             >
                                 <img
@@ -384,9 +386,7 @@ const People = () => {
                             <OverlayTrigger
                                 placement="bottom"
                                 overlay={
-                                    <Tooltip id="tooltip">
-                                        {t('msg7')}.
-                                    </Tooltip>
+                                    <Tooltip id="tooltip">{t('msg7')}.</Tooltip>
                                 }
                             >
                                 <img

@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { uploadFile, deleteFileByUrl } from '../../../features/fileManagement'
 import ContentService from '../../../services/ContentService'
@@ -7,10 +10,10 @@ import CardService from '../../../services/CardService'
 import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
 import CardEditor from '../../../components/textEditor/CardEditor'
 import styles from '../../../assets/styles/Card.module.css'
-import { useSelector } from 'react-redux'
-import { useTranslation } from 'react-i18next'
 
 export const KanjiCard = (props) => {
+    const navigate = useNavigate()
+
     const [card, setCard] = useState(props.card)
     const [character, setCharacter] = useState({})
     const [name, setName] = useState({})
@@ -213,6 +216,12 @@ export const KanjiCard = (props) => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             props.setLoading(false)

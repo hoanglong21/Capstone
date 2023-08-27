@@ -98,6 +98,7 @@ const DoQuiz = () => {
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
+
     // add history
     useEffect(() => {
         if (isAddHistory === false && userInfo?.id && isEnd === true) {
@@ -246,6 +247,12 @@ const DoQuiz = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)

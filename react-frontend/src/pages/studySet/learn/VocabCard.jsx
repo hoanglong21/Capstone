@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
 const VocabCard = ({
     ques,
@@ -21,15 +21,15 @@ const VocabCard = ({
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [example, setExample] = useState(null)
-    const { userLanguage } = useSelector((state) => state.user);
-  const { userToken } = useSelector((state) => state.auth);
-  const { t, i18n } = useTranslation();
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     useEffect(() => {
         if (ques?.question_type) {
@@ -229,7 +229,7 @@ const VocabCard = ({
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                            {t('correctans')}
+                                {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 <div className="row">
@@ -244,7 +244,7 @@ const VocabCard = ({
                                     <div className="col-12 col-md-6 mt-2 mt-md-0">
                                         <div className="learnExampleSection">
                                             <div className="learnExample_label">
-                                            {t('example')}
+                                                {t('example')}
                                             </div>
                                             <div
                                                 dangerouslySetInnerHTML={{
@@ -410,7 +410,9 @@ const VocabCard = ({
                     </div>
                     {isCurrentCorrect === false && (
                         <div className="learnExampleSection">
-                            <div className="learnExample_label">{t('example')}</div>
+                            <div className="learnExample_label">
+                                {t('example')}
+                            </div>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: example || '...',
@@ -616,7 +618,7 @@ const VocabCard = ({
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                            {t('correctans')}
+                                {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 <div className="row">
@@ -649,7 +651,7 @@ const VocabCard = ({
                                     <div className="col-12 col-md-6 mt-2 mt-md-0">
                                         <div className="learnExampleSection">
                                             <div className="learnExample_label">
-                                            {t('example')}
+                                                {t('example')}
                                             </div>
                                             <div
                                                 dangerouslySetInnerHTML={{

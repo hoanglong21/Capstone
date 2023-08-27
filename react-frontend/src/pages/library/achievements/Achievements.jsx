@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import UserAchievementService from '../../../services/UserAchievement'
 
@@ -17,6 +17,8 @@ import './achievement.css'
 import { useTranslation } from 'react-i18next'
 
 function Achievements() {
+    const navigate = useNavigate()
+    
     const { name } = useParams()
     const { userInfo } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
@@ -52,6 +54,12 @@ function Achievements() {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }

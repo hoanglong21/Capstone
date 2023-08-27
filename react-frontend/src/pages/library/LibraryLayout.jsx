@@ -62,6 +62,12 @@ const LibraryLayout = () => {
                 ) {
                     navigate('/notFound')
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
         }
         fetchData()
@@ -176,7 +182,9 @@ const LibraryLayout = () => {
                             </span>
                         </NavLink>
                     </li>
-                    {user?.role === 'ROLE_TUTOR' && (
+                    {((name != userInfo?.username &&
+                        user?.role === 'ROLE_TUTOR') ||
+                        name == userInfo?.username) && (
                         <li>
                             <NavLink
                                 to={{

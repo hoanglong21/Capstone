@@ -26,16 +26,16 @@ const UpdateClass = ({
         }
         return ''
     }
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
-    
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         if (showEditModal === false) {
             setUpdateClass({ ...classroom })
@@ -122,7 +122,7 @@ const UpdateClass = ({
             <Modal.Header closeButton>
                 <Modal.Title>
                     <h5 className="modal-title editClassModalTitle">
-                    {t('edit')} {t('class')}
+                        {t('edit')} {t('class')}
                     </h5>
                 </Modal.Title>
             </Modal.Header>
@@ -150,7 +150,9 @@ const UpdateClass = ({
                             onChange={handleChange}
                             required
                         />
-                        <label htmlFor="class_name">{t('class')} {t('name')}</label>
+                        <label htmlFor="class_name">
+                            {t('class')} {t('name')}
+                        </label>
                     </div>
                     {/* Description */}
                     <div className="form-floating">
