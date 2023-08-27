@@ -410,7 +410,7 @@ const TestList = () => {
                                                         )
                                                     }
                                                 >
-                                                    {t('viewDetail')}
+                                                    {t('viewDetails')}
                                                 </button>
                                                 {userInfo?.id ===
                                                     classroom?.user?.id && (

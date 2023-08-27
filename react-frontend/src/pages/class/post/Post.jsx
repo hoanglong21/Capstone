@@ -292,7 +292,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                This account is banned.
+                                                {t('msg9')}.
                                             </Tooltip>
                                         }
                                     >
@@ -307,7 +307,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                This account is verified.
+                                                {t('msg8')}.
                                             </Tooltip>
                                         }
                                     >
@@ -322,7 +322,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                This account is deleted.
+                                                {t('msg7')}.
                                             </Tooltip>
                                         }
                                     >
@@ -358,7 +358,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         }}
                                     >
                                         <span className="align-middle fw-medium">
-                                            Edit
+                                        {t('edit')}
                                         </span>
                                     </button>
                                 </li>
@@ -369,7 +369,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         onClick={() => setShowDeleteModal(true)}
                                     >
                                         <span className="align-middle fw-medium">
-                                            Delete
+                                        {t('delete')}
                                         </span>
                                     </button>
                                 </li>
