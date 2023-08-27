@@ -128,7 +128,7 @@ const ForgotPassword = () => {
                                         </span>
                                     </div>
                                 ) : (
-                                    'Submit'
+                                    t('sb')
                                 )}
                             </button>
                         </div>

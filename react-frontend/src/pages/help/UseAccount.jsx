@@ -26,20 +26,17 @@ function UseAccount() {
     <div className="container">
       <div className="row useaccount mt-4">
         <div className="use-account-col-8">
-          <h4>Create Account ?</h4>
+          <h4>{t('msg134')} ?</h4>
           <ul className="useaccount-ul">
             <li>
-              User need to access the <Link>Register</Link> to create account.
+            {t('msg135')}.
             </li>
             <li>
-              On the Register page, user need fill all information display on
-              the screen to create.
+              {t('msg136')}.
             </li>
-            <li>All information is validated and user must follow.</li>
+            <li>{t('msg137')}.</li>
             <li>
-              After fill, please click on <strong>"Register"</strong> button
-              after that the screen show message "Registered successfully.
-              Please Login to continue."
+            {t('msg138')}
             </li>
           </ul>
         </div>
@@ -53,19 +50,16 @@ function UseAccount() {
       </div>
       <div className="row useaccount mt-4">
         <div className="use-account-col-8">
-          <h4>Update profile?</h4>
+          <h4>{t('msg139')}?</h4>
           <ul className="useaccount-ul">
             <li>
-              On Header bar, when user click to icon avatar, pop-up settings
-              will display. User choose <strong>"Settings"</strong> on the
-              screen.
+            {t('msg140')}.
             </li>
             <li>
-              Account profile display with all information user registered.
+            {t('msg141')}.
             </li>
             <li>
-              User can update related information. And click to{" "}
-              <strong>"Save"</strong> to save all data.
+            {t('msg142')}.
             </li>
           </ul>
         </div>
@@ -79,16 +73,13 @@ function UseAccount() {
       </div>
       <div className="row useaccount mt-4">
         <div className="use-account-col-8">
-          <h4>Change Language?</h4>
+          <h4>{t('msg143')}?</h4>
           <ul className="useaccount-ul">
             <li>
-              In <strong>"Settings"</strong>, user choose{" "}
-              <strong>"Language"</strong> in left sidebar.
+            {t('msg144')}.
             </li>
             <li>
-              If the user wants the website to display in any language, then
-              select that language. And then press{" "}
-              <strong>"Change your language"</strong> to save.
+            {t('msg145')}.
             </li>
           </ul>
         </div>
@@ -102,19 +93,16 @@ function UseAccount() {
       </div>
       <div className="row useaccount mt-4">
         <div className="use-account-col-8">
-          <h4>Change your Password?</h4>
+          <h4>{t('changeP')}?</h4>
           <ul className="useaccount-ul">
             <li>
-              In <strong>"Settings"</strong>, user choose{" "}
-              <strong>"Change Password"</strong> in left sidebar.
+            {t('msg146')}.
             </li>
             <li>
-              User must enter current password, new password and confirm new
-              password to be able to change password.
+            {t('msg147')}.
             </li>
             <li>
-              After enter all field, click <strong>"Save"</strong> to change
-              successfully.
+            {t('msg148')}.
             </li>
           </ul>
         </div>
@@ -128,29 +116,24 @@ function UseAccount() {
       </div>
       <div className="row useaccount mt-4">
         <div className="use-account-col-8">
-          <h4>Reset Password?</h4>
+          <h4>{t('msg149')}?</h4>
           <ul className="useaccount-ul">
             <li>
-              In <strong>"Change Password"</strong> screen, user click to{" "}
-              <strong>"Reset your password"</strong>.
+            {t('msg150')}.
             </li>
             <li>
-              The system show screen reset password and user click to button{" "}
-              <strong>"Submit"</strong>.
+            {t('msg151')}.
             </li>
             <li>
-              After click button <strong>"Submit"</strong>, the system show
-              message "Check your mail".
+            {t('msg152')}.
             </li>
             <li>
-              User need to go to mail and read mail. User can click button{" "}
-              <strong>"Reset Password"</strong> to reset.
+            {t('msg153')}.
             </li>
             <li>
-              In the redirected page, user must enter new password and confirm
-              password.
+            {t('msg154')}.
             </li>
-            <li>Now, user reset password successfully.</li>
+            <li>{t('msg155')}.</li>
           </ul>
         </div>
         <div className="use-account-col-4">
@@ -163,17 +146,16 @@ function UseAccount() {
       </div>
       <div className="row useaccount mt-4">
         <div className="use-account-col-8">
-          <h4>Delete Account?</h4>
+          <h4>{t('msg156')}?</h4>
           <ul className="useaccount-ul">
             <li>
-              In <strong>"Settings"</strong>, user choose{" "}
-              <strong>"Delete Account"</strong> in left sidebar.
+            {t('msg157')}.
             </li>
             <li>
-              User need to enter correct current password to delete account.
+            {t('msg158')}
             </li>
             <li>
-              Click to button <strong>"Delete Account"</strong> to delete.
+            {t('msg159')}
             </li>
           </ul>
         </div>

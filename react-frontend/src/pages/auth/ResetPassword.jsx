@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import UserService from '../../services/UserService'
 
 import FormStyles from '../../assets/styles/Form.module.css'
 import './auth.css'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const ResetPassword = () => {
     const navigate = useNavigate()
@@ -15,7 +17,15 @@ const ResetPassword = () => {
     const [confirmPass, setConfirmPass] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const { userToken } = useSelector((state) => state.auth)
+    const { userLanguage } = useSelector((state) => state.user)
 
+    const { t, i18n } = useTranslation()
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
     const handleReset = async (event) => {
         event.preventDefault()
         setLoading(true)
@@ -74,7 +84,7 @@ const ResetPassword = () => {
 
     return (
         <div className="container">
-            <h2 className="auth-header">Reset Password</h2>
+            <h2 className="auth-header">{t('msg149')}</h2>
             <form className="needs-validation mt-4" noValidate>
                 {/* error message */}
                 {error && (
@@ -97,7 +107,7 @@ const ResetPassword = () => {
                         }}
                         required
                     />
-                    <label htmlFor="newPass">New password</label>
+                    <label htmlFor="newPass">{t('newP')}</label>
                 </div>
                 <div className="form-floating mb-3">
                     <input
@@ -112,7 +122,7 @@ const ResetPassword = () => {
                         }}
                         required
                     />
-                    <label htmlFor="confirmPass">Confirm password</label>
+                    <label htmlFor="confirmPass">{t('confirmP')}</label>
                 </div>
                 <div className="form-group mt-5">
                     <button
@@ -127,11 +137,11 @@ const ResetPassword = () => {
                                 id="loading"
                             >
                                 <span className="visually-hidden">
-                                    Loading...
+                                {t('loading')}...
                                 </span>
                             </div>
                         ) : (
-                            'Save password'
+                            t('saveP')
                         )}
                     </button>
                 </div>
