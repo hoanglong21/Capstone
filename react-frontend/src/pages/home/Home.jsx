@@ -19,6 +19,7 @@ function Home() {
     const { userLanguage } = useSelector((state) => state.user)
 
     const { t, i18n } = useTranslation()
+    
     useEffect(() => {
         userToken ? setPath('/') : setPath('/discovery/')
     }, [userToken])

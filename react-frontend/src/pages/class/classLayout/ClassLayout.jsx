@@ -115,6 +115,12 @@ const ClassLayout = () => {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
             setLoading(false)
         }
@@ -270,7 +276,7 @@ const ClassLayout = () => {
                                                         size="1.3rem"
                                                     />
                                                     <span className="align-middle fw-semibold">
-                                                    {t('edit')}
+                                                        {t('edit')}
                                                     </span>
                                                 </button>
                                             </li>
@@ -287,7 +293,7 @@ const ClassLayout = () => {
                                                         size="1.3rem"
                                                     />
                                                     <span className="align-middle fw-semibold">
-                                                    {t('aSet')}
+                                                        {t('aSet')}
                                                     </span>
                                                 </button>
                                             </li>
@@ -307,7 +313,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                {t('report')}
+                                                    {t('report')}
                                                 </span>
                                             </button>
                                         </li>
@@ -330,7 +336,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                {t('delete')}
+                                                    {t('delete')}
                                                 </span>
                                             </button>
                                         </li>
@@ -349,7 +355,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                {t('unenroll')}
+                                                    {t('unenroll')}
                                                 </span>
                                             </button>
                                         </li>
@@ -382,7 +388,7 @@ const ClassLayout = () => {
                                             }
                                         }}
                                     >
-                                       {t('requestClass')}
+                                        {t('requestClass')}
                                     </button>
                                 )}
                             </div>
@@ -403,7 +409,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                            {t('stream')}
+                                                {t('stream')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -418,7 +424,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                            {t('set')}
+                                                {t('set')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -432,7 +438,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                            {t('assignment')}
+                                                {t('assignment')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -446,7 +452,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                            {t('test')}
+                                                {t('test')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -460,7 +466,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                            {t('people')}
+                                                {t('people')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -477,7 +483,7 @@ const ClassLayout = () => {
                                                 }
                                             >
                                                 <span className="align-middle">
-                                                {t('statistics')}
+                                                    {t('statistics')}
                                                 </span>
                                             </NavLink>
                                         </li>
@@ -494,32 +500,29 @@ const ClassLayout = () => {
                             classroom?.authorstatus === 'deleted' ? (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                    {t('msg108')}.
+                                        {t('msg108')}.
                                     </h3>
                                     <p>
-                                    {t('msg109')}{' '}
-                                        {classroom.authorstatus}.
+                                        {t('msg109')} {classroom.authorstatus}.
                                     </p>
                                 </div>
                             ) : isWaiting ? (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                    {t('msg110')}
+                                        {t('msg110')}
                                     </h3>
-                                    <p>
-                                    {t('msg111')}
-                                    </p>
+                                    <p>{t('msg111')}</p>
                                 </div>
                             ) : (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                    {t('msg112')}
+                                        {t('msg112')}
                                     </h3>
                                 </div>
                             )}
                             <div className="request-col-4">
                                 <h6 className="mainClass_infoLabel">
-                                {t('classDetails')}
+                                    {t('classDetails')}
                                 </h6>
                                 <div className="d-flex align-items-center mt-2">
                                     <img

@@ -2,6 +2,7 @@ package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
 import com.capstone.project.model.*;
+import com.capstone.project.model.Class;
 import com.capstone.project.repository.*;
 import com.capstone.project.service.AssignmentService;
 import com.capstone.project.service.ClassService;
@@ -35,13 +36,15 @@ public class AssignmentServiceImpl implements AssignmentService {
     private final UserSettingRepository userSettingRepository;
     private final CommentRepository commentRepository;
     private final AttachmentRepository attachmentRepository;
+    private final ClassRepository classRepository;
     private final ClassLearnerRepository classLearnerRepository;
+    private final NotificationRepository notificationRepository;
 
     private final UserService userService;
     private final ClassService classService;
 
     @Autowired
-    public AssignmentServiceImpl(JavaMailSender mailSender,EntityManager em, AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, UserSettingRepository userSettingRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, ClassLearnerRepository classLearnerRepository, UserService userService, ClassService classService) {
+    public AssignmentServiceImpl(JavaMailSender mailSender, EntityManager em, AssignmentRepository assignmentRepository, SubmissionRepository submissionRepository, UserSettingRepository userSettingRepository, CommentRepository commentRepository, AttachmentRepository attachmentRepository, ClassRepository classRepository, ClassLearnerRepository classLearnerRepository, NotificationRepository notificationRepository, UserService userService, ClassService classService) {
         this.mailSender = mailSender;
         this.em = em;
         this.assignmentRepository = assignmentRepository;
@@ -49,7 +52,9 @@ public class AssignmentServiceImpl implements AssignmentService {
         this.userSettingRepository = userSettingRepository;
         this.commentRepository = commentRepository;
         this.attachmentRepository = attachmentRepository;
+        this.classRepository = classRepository;
         this.classLearnerRepository = classLearnerRepository;
+        this.notificationRepository = notificationRepository;
         this.userService = userService;
         this.classService = classService;
     }
@@ -89,7 +94,37 @@ public class AssignmentServiceImpl implements AssignmentService {
 //                }
 //            }
 //        }
+        Class classroom = classRepository.findClassById(savedAssignment.getClassroom().getId());
+        notificationAssignmentCreated(classroom);
         return savedAssignment;
+    }
+
+    public void notificationAssignmentCreated(Class classroom) {
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        Date date = localDateTimeToDate(localDateTime);
+
+        List<ClassLearner> classLearnerList = classLearnerRepository.getClassLeanerByClassroomId(classroom.getId());
+        for (ClassLearner classLearner : classLearnerList) {
+            List<Assignment> assignmentList = assignmentRepository.getAssignmentByClassroomId(classLearner.getClassroom().getId());
+            for(Assignment assignment : assignmentList) {
+                if (classLearner.getStatus().equals("enrolled") && !assignment.is_draft()) {
+                    Notification notification = new Notification();
+                    notification.setTitle("New Assignment");
+
+                    String urlWithClassId = "https://nihongolevelup.com/class/[[classid]]/assignments";
+                    urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+                    notification.setUrl(urlWithClassId);
+                    notification.setContent("A new assignment is added to class '" + classroom.getClass_name() + "'");
+                    notification.setDatetime(date);
+                    notification.set_read(false);
+                    notification.setUser(classLearner.getUser());
+
+                    notificationRepository.save(notification);
+                }
+            }
+        }
     }
 
 

@@ -31,15 +31,16 @@ function CreateAssignment() {
     const [saving, setSaving] = useState(null)
 
     const [error, setError] = useState('')
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
     }
@@ -141,6 +142,12 @@ function CreateAssignment() {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
         }
         if (userInfo?.id) {
@@ -186,7 +193,7 @@ function CreateAssignment() {
         try {
             var temp = [...attachments]
             temp.splice(index, 1)
-            setAttachments(file, temp)
+            setAttachments(temp)
             AttachmentService.deleteAttachment(file.id)
             deleteFileByUrl(
                 file.file_url,
@@ -379,7 +386,7 @@ function CreateAssignment() {
                             disabled={!assignment?.title}
                             onClick={() => handleSubmit(true)}
                         >
-                           {t('saveDraft')}
+                            {t('saveDraft')}
                         </button>
                     </div>
                 ) : (
@@ -409,7 +416,7 @@ function CreateAssignment() {
                             value={title || ''}
                             onChange={(event) => setTitle(event.target.value)}
                             onBlur={() => {
-                                handleUpdateTitle(assignment?.draft)
+                                handleUpdateTitle(assignment?.draft || true)
                             }}
                         />
                         <label
@@ -430,10 +437,12 @@ function CreateAssignment() {
                                     })
                                 }
                             }}
-                            onBlur={() => handleUpdate(assignment?.draft)}
+                            onBlur={() =>
+                                handleUpdate(assignment?.draft || true)
+                            }
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
-                        {t('instruction')}
+                            {t('instruction')}
                         </label>
                     </div>
                     <div className="row mb-4">
@@ -451,7 +460,7 @@ function CreateAssignment() {
                                         setStartDate(event.target.value)
                                     }
                                     onBlur={() => {
-                                        handleUpdateStart(assignment?.draft)
+                                        handleUpdateStart(assignment?.draft || true)
                                     }}
                                 />
                                 <label
@@ -476,7 +485,7 @@ function CreateAssignment() {
                                         setDueDate(event.target.value)
                                     }}
                                     onBlur={() => {
-                                        handleUpdateDue(assignment?.draft)
+                                        handleUpdateDue(assignment?.draft || true)
                                     }}
                                 />
                                 <label

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
@@ -16,6 +16,7 @@ import '../../assets/styles/LibrarySearchList.css'
 import '../../assets/styles/Home.css'
 
 const ClassesForHome = () => {
+    const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
@@ -51,6 +52,12 @@ const ClassesForHome = () => {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
     }

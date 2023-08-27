@@ -45,15 +45,15 @@ const DeleteClass = ({
         }
         setLoading(false)
     }
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     return (
         <Modal
@@ -72,12 +72,8 @@ const DeleteClass = ({
                 <div className="classDeleteModalHeading mb-3">
                     {deleteClass.class_name}
                 </div>
-                <p className="mb-1">
-                {t('msg69')}.
-                </p>
-                <p className="fw-semibold">
-                {t('msg41')}.
-                </p>
+                <p className="mb-1">{t('msg69')}.</p>
+                <p className="fw-semibold">{t('msg41')}.</p>
             </Modal.Body>
             <Modal.Footer>
                 <button

@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { uploadFile, deleteFileByUrl } from '../../../features/fileManagement'
 import ContentService from '../../../services/ContentService'
@@ -7,10 +10,10 @@ import CardService from '../../../services/CardService'
 import { DeleteIcon, ImageIcon, MicIcon } from '../../../components/icons'
 import CardEditor from '../../../components/textEditor/CardEditor'
 import styles from '../../../assets/styles/Card.module.css'
-import { useSelector } from 'react-redux'
-import { useTranslation } from 'react-i18next'
 
 export const KanjiCard = (props) => {
+    const navigate = useNavigate()
+
     const [card, setCard] = useState(props.card)
     const [character, setCharacter] = useState({})
     const [name, setName] = useState({})
@@ -26,15 +29,24 @@ export const KanjiCard = (props) => {
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
     const [loadingStrokeOrder, setLoadingStrokeOrder] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-  const { userToken } = useSelector((state) => state.auth);
-  const { t, i18n } = useTranslation();
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
+        }
+        return ''
     }
-  }, [userLanguage]);
+
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     //fetch data
     useEffect(() => {
         const fetchData = async () => {
@@ -174,22 +186,42 @@ export const KanjiCard = (props) => {
                         ).data
                     )
                 } else {
-                    setCharacter(contents[0])
-                    setName(contents[1])
-                    setStrokes(contents[2])
-                    setJlptLevel(contents[3])
-                    setRadical(contents[4])
-                    setOnyomi(contents[5])
-                    setKunyomi(contents[6])
-                    setMeanings(contents[7])
-                    setStrokeOrder(contents[8])
-                    setExample(contents[9])
+                    var tempCard = contents[0].card
+                    if (tempCard?.studySet) {
+                        tempCard.studySet.created_date = toBEDate(
+                            tempCard.studySet.deleted_date
+                        )
+                        tempCard.studySet.created_date = toBEDate(
+                            tempCard.studySet.deleted_date
+                        )
+                        if (tempCard.studySet?.user) {
+                            tempCard.studySet.user.created_date = toBEDate(
+                                tempCard.studySet.user.deleted_date
+                            )
+                        }
+                    }
+                    setCharacter({ ...contents[0], card: { ...tempCard } })
+                    setName({ ...contents[1], card: { ...tempCard } })
+                    setStrokes({ ...contents[2], card: { ...tempCard } })
+                    setJlptLevel({ ...contents[3], card: { ...tempCard } })
+                    setRadical({ ...contents[4], card: { ...tempCard } })
+                    setOnyomi({ ...contents[5], card: { ...tempCard } })
+                    setKunyomi({ ...contents[6], card: { ...tempCard } })
+                    setMeanings({ ...contents[7], card: { ...tempCard } })
+                    setStrokeOrder({ ...contents[8], card: { ...tempCard } })
+                    setExample({ ...contents[9], card: { ...tempCard } })
                 }
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             props.setLoading(false)
@@ -540,7 +572,7 @@ export const KanjiCard = (props) => {
                         <span
                             className={`card-header-label ${styles.card_header_label} mt-1`}
                         >
-                           {t('kunyomi')}
+                            {t('kunyomi')}
                         </span>
                     </div>
                     <div className="col-12 mt-4">

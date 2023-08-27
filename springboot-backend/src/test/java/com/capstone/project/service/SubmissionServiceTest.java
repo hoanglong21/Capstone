@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
@@ -147,39 +148,27 @@ public class SubmissionServiceTest {
 
     @Order(6)
     @Test
-    void testDeleteSubmision() {
-        Submission submission = Submission.builder()
-                .id(1)
-                .user(User.builder().id(1).build())
-                .assignment(Assignment.builder().id(1).build())
-                .description("Submit for assignment")
-                .build();
-        Attachment attachment = Attachment.builder()
-                .assignment(Assignment.builder().id(1).build())
-                .attachmentType(AttachmentType.builder().id(1).build())
-                .submission(Submission.builder().id(1).build())
-                .file_url("home.doc")
-                .build();
-        Comment comment = Comment.builder()
-                .commentType(CommentType.builder().id(1).build())
-                .content("Hello")
-                .build();
-        doNothing().when(submissionRepository).delete(submission);
-        doNothing().when(attachmentRepository).delete(attachment);
-        doNothing().when(commentRepository).delete(comment);
+    void testDeleteSubmision() throws ResourceNotFroundException {
+        Submission submission = new Submission();
+        submission.setId(1);
+
+        Attachment attachment = new Attachment();
+        attachment.setId(2);
+
+        Comment comment = new Comment();
+        comment.setId(3);
 
         when(submissionRepository.findById(1)).thenReturn(Optional.of(submission));
-        when(attachmentRepository.getAttachmentBySubmissionId(submission.getId())).thenReturn(List.of(attachment));
-        when(commentRepository.getCommentBySubmissionId(submission.getId())).thenReturn(List.of(comment));
-        when(commentRepository.getCommentByRootId(comment.getId())).thenReturn(List.of(comment));
-        try {
-            submissionServiceImpl.deleteSubmission(submission.getId());
-        } catch (ResourceNotFroundException e) {
-            e.printStackTrace();
-        }
-        verify(submissionRepository, times(1)).delete(submission);
+        when(attachmentRepository.getAttachmentBySubmissionId(1)).thenReturn(List.of(attachment));
+        when(commentRepository.getCommentBySubmissionId(1)).thenReturn(List.of(comment));
+
+        Boolean result = submissionServiceImpl.deleteSubmission(1);
+
+        assertTrue(result);
+
         verify(attachmentRepository, times(1)).delete(attachment);
-        verify(commentRepository, times(2)).delete(comment);
+        verify(commentRepository, times(1)).delete(any());
+        verify(submissionRepository, times(1)).delete(submission);
     }
 
     @Order(7)

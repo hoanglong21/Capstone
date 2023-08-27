@@ -170,14 +170,15 @@ const Learn = () => {
     const [loading, setLoading] = useState(false)
     const [showOptionModal, setShowOptionModal] = useState(false)
     const [isAddHistory, setIsAddHistory] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-  const { t, i18n } = useTranslation();
+    const { userLanguage } = useSelector((state) => state.user)
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     // add history
     useEffect(() => {
         if (
@@ -197,6 +198,12 @@ const Learn = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -348,6 +355,12 @@ const Learn = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)
@@ -688,6 +701,7 @@ const Learn = () => {
                     <LearnSolidIcon className="quizModeIcon" size="2rem" />
                     <div className="quizMode dropdown d-flex align-items-center">
                         <button
+                            className="btn"
                             type="button dropdown-toggle"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
@@ -709,7 +723,7 @@ const Learn = () => {
                                         size="1.3rem"
                                     />
                                     <span className="align-middle fw-semibold">
-                                    {t('flashcard')}
+                                        {t('flashcard')}
                                     </span>
                                 </button>
                             </li>
@@ -727,7 +741,7 @@ const Learn = () => {
                                         strokeWidth="2"
                                     />
                                     <span className="align-middle fw-semibold">
-                                    {t('quiz')}
+                                        {t('quiz')}
                                     </span>
                                 </button>
                             </li>
@@ -740,7 +754,7 @@ const Learn = () => {
                                     type="button"
                                 >
                                     <span className="align-middle fw-semibold">
-                                    {t('home')}
+                                        {t('home')}
                                     </span>
                                 </button>
                             </li>
@@ -798,12 +812,8 @@ const Learn = () => {
                         <div id="learnAnimation">
                             <div className="learnFinish mx-auto p-5">
                                 <div>
-                                    <h2>
-                                    {t('msg18')}.
-                                    </h2>
-                                    <p>
-                                    {t('msg19')}.
-                                    </p>
+                                    <h2>{t('msg18')}.</h2>
+                                    <p>{t('msg19')}.</p>
                                     <img
                                         src={illustration}
                                         alt="congratulation img"
@@ -816,7 +826,7 @@ const Learn = () => {
                                             navigate(`/set/${id}`)
                                         }}
                                     >
-                                    {t('msg20')}
+                                        {t('msg20')}
                                     </button>
                                     <button
                                         className="learnFinish_btn learnFinish_btn--primary"
@@ -833,7 +843,8 @@ const Learn = () => {
                                 <div className="learnEndProgress">
                                     <h2>{t('msg22')}.</h2>
                                     <div className="learnEndProgressNumber mt-5 mb-2">
-                                        {endRound} / {questions.length} {t('term')}
+                                        {endRound} / {questions.length}{' '}
+                                        {t('term')}
                                     </div>
                                     <div className="progress-stacked">
                                         <div
@@ -921,12 +932,11 @@ const Learn = () => {
                                     ques={currentQuestion}
                                     quesIndex={currentIndex}
                                     writtenPromptWith={writtenPromptWith}
+                                    writtenAnswerWith={writtenAnswerWith}
                                     multiplePromptWith={multiplePromptWith}
                                     multipleAnswerWith={multipleAnswerWith}
                                     trueFalsePromptWith={trueFalsePromptWith}
                                     trueFalseAnswerWith={trueFalseAnswerWith}
-                                    setProgress={setProgress}
-                                    progress={progress}
                                     showPicture={showPicture}
                                     showAudio={showAudio}
                                     showNote={showNote}
@@ -941,12 +951,11 @@ const Learn = () => {
                                     ques={currentQuestion}
                                     quesIndex={currentIndex}
                                     writtenPromptWith={writtenPromptWith}
+                                    writtenAnswerWith={writtenAnswerWith}
                                     multiplePromptWith={multiplePromptWith}
                                     multipleAnswerWith={multipleAnswerWith}
                                     trueFalsePromptWith={trueFalsePromptWith}
                                     trueFalseAnswerWith={trueFalseAnswerWith}
-                                    setProgress={setProgress}
-                                    progress={progress}
                                     showPicture={showPicture}
                                     showAudio={showAudio}
                                     showNote={showNote}
@@ -993,7 +1002,7 @@ const Learn = () => {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h3 className="modal-title" id="quizOptionModalLabel">
-                        {t('option')}
+                            {t('option')}
                         </h3>
                         <button
                             type="button"
@@ -1050,7 +1059,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="mupltipleChoice"
                                         >
-                                           {t('mc')}
+                                            {t('mc')}
                                         </label>
                                     </div>
                                     <div className="mb-2">
@@ -1070,7 +1079,7 @@ const Learn = () => {
                                             className="form-check-label"
                                             htmlFor="trueFalse"
                                         >
-                                           {t('tf')}
+                                            {t('tf')}
                                         </label>
                                     </div>
                                 </div>

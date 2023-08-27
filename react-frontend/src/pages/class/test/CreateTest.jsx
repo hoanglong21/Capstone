@@ -37,15 +37,15 @@ const CreateTest = () => {
     const [isScroll, setIsScroll] = useState(false)
     const [questions, setQuestions] = useState([])
     const [classroom, setClassroom] = useState({})
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     function padWithLeadingZeros(num, totalLength) {
         return String(num).padStart(totalLength, '0')
@@ -174,6 +174,12 @@ const CreateTest = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setError('')
@@ -822,7 +828,7 @@ const CreateTest = () => {
                             <div className="d-flex justify-content-center">
                                 <div className="spinner-border" role="status">
                                     <span className="visually-hidden">
-                                    {t('Loading')}...
+                                        {t('Loading')}...
                                     </span>
                                 </div>
                             </div>
@@ -854,7 +860,7 @@ const CreateTest = () => {
                             onChange={handleChangeTest}
                         />
                         <label htmlFor="title" className="createTest_formLabel">
-                        {t('Title')}
+                            {t('Title')}
                         </label>
                     </div>
                     <div className="createTest_formGroup form-floating mb-4">
@@ -872,7 +878,7 @@ const CreateTest = () => {
                             htmlFor="description"
                             className="createTest_formLabel"
                         >
-                           {t('description')}
+                            {t('description')}
                         </label>
                     </div>
                     <div className="row mb-4">
@@ -893,7 +899,7 @@ const CreateTest = () => {
                                     htmlFor="start_date"
                                     className="createTest_formLabel"
                                 >
-                                   {t('startDate')}
+                                    {t('startDate')}
                                 </label>
                             </div>
                         </div>

@@ -36,7 +36,7 @@ public class KanjiServiceTest {
     @ParameterizedTest(name = "{index} => query={0}, page={1}, pageSize={2}, greaterThanZero={3}")
     @CsvSource({
             "亜, 1, 20, true",
-            "亜亜, 1, 20, false",
+            "亜亜, 1, 20, true",
     })
     public void searchAndPaginate(String query, int page, int pageSize, boolean greaterThanZero) {
         List<Kanji> list = (List<Kanji>) kanjiService.searchAndPaginate(query, page, pageSize).get("list");

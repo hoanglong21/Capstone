@@ -107,6 +107,10 @@ public class PostServiceImpl implements PostService {
             if(classLearner.getStatus().equals("enrolled")) {
                 Notification notification = new Notification();
                 notification.setTitle("New Post");
+                String urlWithClassId = "https://nihongolevelup.com/class/[[classid]]";
+                urlWithClassId = urlWithClassId.replace("[[classid]]", String.valueOf(classroom.getId()));
+
+                notification.setUrl(urlWithClassId);
                 notification.setContent("A new post in class '" + classroom.getClass_name() + "'");
                 notification.setDatetime(date);
                 notification.set_read(false);
@@ -127,7 +131,7 @@ public class PostServiceImpl implements PostService {
 
             subject = "[NihongoLevelUp]: New Post ";
             content = "Hi [[name]],<br><br>"
-                    + "A new post was added in your class << " + classLearner.getClassroom().getClass_name() + " >>.<br><br>"
+                    + "A new post was added in your class " + classLearner.getClassroom().getClass_name() + ".<br><br>"
                     + "Thank you for choosing NihongoLevelUp! If you have any questions or concerns, please do not hesitate to contact us.<br><br>"
                     + "Best regards,<br>"
                     + "NihongoLevelUp Team";

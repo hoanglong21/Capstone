@@ -38,35 +38,54 @@ const DoTest = () => {
     const [showResultModal, setShowResultModal] = useState(false)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [testEnd, setTestEnd] = useState({})
+
+    const [second, setSecond] = useState(null)
+    const [minute, setMinute] = useState(null)
     const [endSecond, setEndSecond] = useState(null)
     const [endMinute, setEndMinute] = useState(null)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { t, i18n } = useTranslation();
-  
+
+    const { userLanguage } = useSelector((state) => state.user)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     var totalSeconds = 0
     var handleCount = 0
 
     function setTime() {
         ++totalSeconds
-        const second = pad(totalSeconds % 60)
+        const tempSecond = pad(totalSeconds % 60)
+        setSecond(tempSecond)
         const minutes = pad(parseInt(totalSeconds / 60))
-        document.getElementById('secondsTest').innerHTML = second
+        setMinute(minutes)
+        document.getElementById('secondsTest').innerHTML = tempSecond
         document.getElementById('minutesTest').innerHTML = minutes
+    }
+
+    // end test
+    useEffect(() => {
         if (
             endMinute !== null &&
             endSecond !== null &&
-            Number(minutes) === endMinute &&
-            Number(second) === endSecond
+            second !== null &&
+            minute !== null &&
+            Number(second) === Number(endSecond) &&
+            Number(minute) === Number(endMinute)
         ) {
+            console.log(
+                Number(second),
+                Number(endMinute),
+                Number(minute),
+                Number(endSecond)
+            )
             setIsEnd(true)
             handleSubmit()
         }
-    }
+    }, [endMinute, endSecond, second, minute])
 
     function pad(val) {
         var valString = val + ''
@@ -140,6 +159,12 @@ const DoTest = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -344,7 +369,7 @@ const DoTest = () => {
                         {currentQuestion?.question?.questionType?.id === 1 && (
                             <div>
                                 <div className="quizQues_label my-4">
-                                {t('yanswer')}
+                                    {t('yanswer')}
                                 </div>
                                 <input
                                     className={`form-control quizAns_input ${
@@ -370,7 +395,7 @@ const DoTest = () => {
                                 {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
-                                        {t('correctans')}
+                                            {t('correctans')}
                                         </div>
                                         <div className="quizQues_answer correct">
                                             <div className="learnCorrectAnswer">
@@ -389,7 +414,7 @@ const DoTest = () => {
                             <div>
                                 {/* answer */}
                                 <div className="quizQues_label my-4">
-                                {t('choose')}
+                                    {t('choose')}
                                 </div>
                                 <div className="row">
                                     {currentQuestion?.answerList.map(
@@ -484,7 +509,7 @@ const DoTest = () => {
                                 {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
-                                        {t('correctans')}
+                                            {t('correctans')}
                                         </div>
                                         <div className="quizQues_answer correct">
                                             {currentQuestion?.answerList.map(
@@ -512,7 +537,7 @@ const DoTest = () => {
                             <div>
                                 {/* answer */}
                                 <div className="quizQues_label my-4">
-                                {t('choose')}
+                                    {t('choose')}
                                 </div>
                                 <div className="row">
                                     <div className="col-6">

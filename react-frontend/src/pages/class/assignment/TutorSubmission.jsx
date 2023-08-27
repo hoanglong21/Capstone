@@ -23,8 +23,11 @@ import {
 } from '../../../components/icons'
 import './assignment.css'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 const TutorSubmission = ({ assignment }) => {
+    const navigate = useNavigate()
+
     const { userInfo } = useSelector((state) => state.user)
 
     const [learners, setLearners] = useState([])
@@ -42,15 +45,16 @@ const TutorSubmission = ({ assignment }) => {
 
     const [search, setSearch] = useState('')
     const [searchInput, setSearchInput] = useState('')
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -119,6 +123,12 @@ const TutorSubmission = ({ assignment }) => {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
         }
         if (assignment?.id) {
@@ -178,6 +188,12 @@ const TutorSubmission = ({ assignment }) => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -378,13 +394,17 @@ const TutorSubmission = ({ assignment }) => {
                     <div className="d-flex">
                         <div className="asignInfo_block">
                             <div className="assignInfo_number">{numSubmit}</div>
-                            <div className="assignInfo_title">{t('turnIn')}</div>
+                            <div className="assignInfo_title">
+                                {t('turnIn')}
+                            </div>
                         </div>
                         <div className="asignInfo_block">
                             <div className="assignInfo_number">
                                 {numNotSubmit}
                             </div>
-                            <div className="assignInfo_title">{t('assigned')}</div>
+                            <div className="assignInfo_title">
+                                {t('assigned')}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -615,7 +635,10 @@ const TutorSubmission = ({ assignment }) => {
                                                             role="status"
                                                         >
                                                             <span className="visually-hidden">
-                                                            {t('loadingUpload')}...
+                                                                {t(
+                                                                    'loadingUpload'
+                                                                )}
+                                                                ...
                                                             </span>
                                                         </div>
                                                     ) : (

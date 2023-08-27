@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
 const KanjiCard = ({
     ques,
@@ -21,18 +21,19 @@ const KanjiCard = ({
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [example, setExample] = useState(null)
-    const { userLanguage } = useSelector((state) => state.user);
-  const { userToken } = useSelector((state) => state.auth);
-  const { t, i18n } = useTranslation();
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         if (ques?.question_type) {
-            setExample(ques.question.content[2].content)
+            setExample(ques.question.content[9].content)
             if (ques?.question_type === 1) {
                 document.getElementById(`quizQuesInput${quesIndex}`).value = ''
             }
@@ -53,17 +54,17 @@ const KanjiCard = ({
         // get correct answer
         var correctAnswer = ''
         for (const itemContent of ques.question.content) {
-            if (itemContent.field.id === writtenAnswerWith) {
+            if (itemContent.field.id == writtenAnswerWith) {
                 const tempContent = itemContent.content
                     .replaceAll(/(<([^>]+)>)/gi, ' ')
                     .trim()
-                correctAnswer = tempContent
+                correctAnswer = tempContent.toLowerCase()
                 setCorrectAnswer(itemContent.content)
                 break
             }
         }
         // check is correct
-        if (currentAnswer == correctAnswer) {
+        if (currentAnswer.toLowerCase() == correctAnswer) {
             setIsCurrentCorrect(true)
         } else {
             setIsCurrentCorrect(false)
@@ -243,7 +244,7 @@ const KanjiCard = ({
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                            {t('correctans')}
+                                {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct">
                                 <div
@@ -254,7 +255,7 @@ const KanjiCard = ({
                                 ></div>
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                    {t('example')}
+                                        {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{
@@ -441,7 +442,9 @@ const KanjiCard = ({
                     </div>
                     {isCurrentCorrect === false && (
                         <div className="learnExampleSection">
-                            <div className="learnExample_label">{t('example')}</div>
+                            <div className="learnExample_label">
+                                {t('example')}
+                            </div>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: example || '...',
@@ -675,7 +678,7 @@ const KanjiCard = ({
                     {isCurrentCorrect === false && (
                         <div>
                             <div className="quizQues_label my-4">
-                            {t('correctans')}
+                                {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 {ques.question.content.map(
@@ -721,7 +724,7 @@ const KanjiCard = ({
                                 )}
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                    {t('example')}
+                                        {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{

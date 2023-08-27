@@ -35,15 +35,15 @@ const ViewCard = ({ fullCard, userInfo }) => {
 
     const [showButton, setShowButton] = useState(false)
     const [loading, setLoading] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user);
-  const { userToken } = useSelector((state) => state.auth);
-  const { t, i18n } = useTranslation();
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -461,7 +461,10 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                                         className="icon-warning"
                                                         size="2.5rem"
                                                     />
-                                                    <div>{t('add')} {t('picture')}</div>
+                                                    <div>
+                                                        {t('add')}{' '}
+                                                        {t('picture')}
+                                                    </div>
                                                 </div>
                                             )}
                                         </label>
@@ -546,7 +549,9 @@ const ViewCard = ({ fullCard, userInfo }) => {
                                                         className="icon-warning"
                                                         size="1.75rem"
                                                     />
-                                                    <div>{t('add')} {t('audio')}</div>
+                                                    <div>
+                                                        {t('add')} {t('audio')}
+                                                    </div>
                                                 </div>
                                             )}
                                         </label>

@@ -1,23 +1,24 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import AssignmentService from '../../../services/AssignmentService'
 import TutorSubmission from './TutorSubmission'
 import LearnerSubmission from './LearnerSubmission'
 
 import './assignment.css'
-import { useTranslation } from 'react-i18next'
 
 const Submissions = () => {
+    const navigate = useNavigate()
+    
     const { id } = useParams()
     const { assign_id } = useParams()
 
     const { userInfo } = useSelector((state) => state.user)
 
     const [assignment, setAssignment] = useState({})
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -30,6 +31,12 @@ const Submissions = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }

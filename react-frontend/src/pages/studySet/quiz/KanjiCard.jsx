@@ -22,15 +22,16 @@ const KanjiCard = ({
 }) => {
     const [correctAnswer, setCorrectAnswer] = useState(null)
     const [example, setExample] = useState(null)
-    const { userToken } = useSelector((state) => state.auth);
-    const { userLanguage } = useSelector((state) => state.user);
-  const { t, i18n } = useTranslation();
+    const { userToken } = useSelector((state) => state.auth)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { t, i18n } = useTranslation()
 
-  useEffect(() => {
-    if (userToken) {
-      i18n.changeLanguage(userLanguage);
-    }
-  }, [userLanguage]);
+    useEffect(() => {
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
@@ -145,7 +146,7 @@ const KanjiCard = ({
                     {results[quesIndex] === 0 && (
                         <div>
                             <div className="quizQues_label my-4">
-                            {t('correctans')}
+                                {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct">
                                 <div
@@ -156,7 +157,7 @@ const KanjiCard = ({
                                 ></div>
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                    {t('example')}
+                                        {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{
@@ -317,7 +318,9 @@ const KanjiCard = ({
                     </div>
                     {results[quesIndex] === 0 && (
                         <div className="learnExampleSection">
-                            <div className="learnExample_label">{t('example')}</div>
+                            <div className="learnExample_label">
+                                {t('example')}
+                            </div>
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html: example || '...',
@@ -514,14 +517,14 @@ const KanjiCard = ({
                                     }
                                 }}
                             >
-                               {t('false')}
+                                {t('false')}
                             </div>
                         </div>
                     </div>
                     {results[quesIndex] === 0 && (
                         <div>
                             <div className="quizQues_label my-4">
-                            {t('correctans')}
+                                {t('correctans')}
                             </div>
                             <div className="quizQues_answer correct" disabled>
                                 {ques.question.content.map(
@@ -567,7 +570,7 @@ const KanjiCard = ({
                                 )}
                                 <div className="learnExampleSection">
                                     <div className="learnExample_label">
-                                    {t('example')}
+                                        {t('example')}
                                     </div>
                                     <div
                                         dangerouslySetInnerHTML={{

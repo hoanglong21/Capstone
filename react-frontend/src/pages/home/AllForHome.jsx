@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -15,12 +15,13 @@ import deleted from '../../assets/images/deleted.png'
 import { ClassIcon } from '../../components/icons'
 
 function AllForHome() {
+    const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
-    
+
     const { t, i18n } = useTranslation()
-    
+
     const [sets, setSets] = useState([])
     const [classes, setClasses] = useState([])
     const [users, setUsers] = useState([])
@@ -61,6 +62,12 @@ function AllForHome() {
             } else {
                 console.log(error.message)
             }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
+            }
         }
         setLoadingSets(false)
     }
@@ -92,6 +99,12 @@ function AllForHome() {
             } else {
                 console.log(error.message)
             }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
+            }
         }
         setLoadingClasses(false)
     }
@@ -118,6 +131,12 @@ function AllForHome() {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
         setLoadingUsers(false)
@@ -182,7 +201,7 @@ function AllForHome() {
                     <div className="sets-list row g-3">
                         {sets.length === 0 && (
                             <p className="noFound">
-                                 {t('noSet')} {search} {t('found')}
+                                {t('noSet')} {search} {t('found')}
                             </p>
                         )}
                         {sets.map((set) => (
@@ -229,7 +248,7 @@ function AllForHome() {
                                                             placement="bottom"
                                                             overlay={
                                                                 <Tooltip id="tooltip">
-                                                                     {t('msg9')}.
+                                                                    {t('msg9')}.
                                                                 </Tooltip>
                                                             }
                                                         >
@@ -245,7 +264,7 @@ function AllForHome() {
                                                             placement="bottom"
                                                             overlay={
                                                                 <Tooltip id="tooltip">
-                                                                     {t('msg8')}.
+                                                                    {t('msg8')}.
                                                                 </Tooltip>
                                                             }
                                                         >
@@ -261,7 +280,7 @@ function AllForHome() {
                                                             placement="bottom"
                                                             overlay={
                                                                 <Tooltip id="tooltip">
-                                                                     {t('msg7')}.
+                                                                    {t('msg7')}.
                                                                 </Tooltip>
                                                             }
                                                         >
@@ -352,7 +371,7 @@ function AllForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                 {t('msg9')}.
+                                                                {t('msg9')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -368,7 +387,7 @@ function AllForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                 {t('msg8')}.
+                                                                {t('msg8')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -384,7 +403,7 @@ function AllForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                                 {t('msg7')}.
+                                                                {t('msg7')}.
                                                             </Tooltip>
                                                         }
                                                     >
@@ -396,7 +415,8 @@ function AllForHome() {
                                                 )}
                                             </div>
                                             <div className="term-count">
-                                                {classroom?.member} {t('member')}
+                                                {classroom?.member}{' '}
+                                                {t('member')}
                                             </div>
                                             <div className="term-count">
                                                 {classroom?.studyset} {t('set')}
@@ -433,7 +453,7 @@ function AllForHome() {
                     <div className="sets-list row g-3">
                         {users.length === 0 && (
                             <p className="noFound">
-                             {t('noUser')} {search} {t('found')}
+                                {t('noUser')} {search} {t('found')}
                             </p>
                         )}
                         {users.map((user) => (
@@ -465,7 +485,10 @@ function AllForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        {t('msg9')}.
+                                                                        {t(
+                                                                            'msg9'
+                                                                        )}
+                                                                        .
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -481,7 +504,10 @@ function AllForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        {t('msg8')}.
+                                                                        {t(
+                                                                            'msg8'
+                                                                        )}
+                                                                        .
                                                                     </Tooltip>
                                                                 }
                                                             >
@@ -499,7 +525,10 @@ function AllForHome() {
                                                                 placement="bottom"
                                                                 overlay={
                                                                     <Tooltip id="tooltip">
-                                                                        {t('msg7')}.
+                                                                        {t(
+                                                                            'msg7'
+                                                                        )}
+                                                                        .
                                                                     </Tooltip>
                                                                 }
                                                             >
