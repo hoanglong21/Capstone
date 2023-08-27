@@ -22,7 +22,7 @@ const Pagination = (props) => {
     if (currentPage === 0 || paginationRange.length < 2) {
         return null
     }
-
+    
     const onNext = (event) => {
         event.stopPropagation()
         if (currentPage < lastPage) {
@@ -38,7 +38,7 @@ const Pagination = (props) => {
     }
 
     let lastPage = paginationRange[paginationRange.length - 1]
-
+    
     return (
         <nav>
             <ul

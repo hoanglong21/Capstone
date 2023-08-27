@@ -4,6 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { deleteFolder } from '../../../features/fileManagement'
 import TestService from '../../../services/TestService'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const DeleteTest = ({
     isDelete,
@@ -17,7 +20,15 @@ const DeleteTest = ({
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     const handleSubmit = async () => {
         // clear validation
         setLoading(true)
@@ -55,10 +66,10 @@ const DeleteTest = ({
             }}
         >
             <Modal.Header closeButton>
-                <Modal.Title>Delete test</Modal.Title>
+                <Modal.Title>{t('deleTest')}</Modal.Title>
             </Modal.Header>
             <Modal.Body className="p-4">
-                Are you sure you want to delete this test?
+            {t('msg84')}?
             </Modal.Body>
             <Modal.Footer>
                 <button
@@ -68,7 +79,7 @@ const DeleteTest = ({
                         setShowDeleteModal(false)
                     }}
                 >
-                    Cancel
+                    {t('cancel')}
                 </button>
                 <button
                     className="btn btn-danger"
@@ -81,7 +92,7 @@ const DeleteTest = ({
                             role="status"
                             id="loading"
                         >
-                            <span className="visually-hidden">Loading...</span>
+                            <span className="visually-hidden">{t('loading')}...</span>
                         </div>
                     ) : (
                         'Delete'

@@ -6,6 +6,9 @@ import { deleteFolder } from '../../../features/fileManagement'
 
 import './assignment.css'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const DeleteAssignment = ({
     isDelete,
@@ -18,7 +21,15 @@ const DeleteAssignment = ({
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     const handleSubmit = async () => {
         // clear validation
         setLoading(true)
@@ -56,9 +67,9 @@ const DeleteAssignment = ({
             }}
         >
             <Modal.Header closeButton>
-                <Modal.Title>Delete assignment?</Modal.Title>
+                <Modal.Title>{t('deleAss')}?</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Grades and comments will also be deleted</Modal.Body>
+            <Modal.Body>{t('msg79')}</Modal.Body>
             <Modal.Footer>
                 <button
                     type="button"
@@ -67,7 +78,7 @@ const DeleteAssignment = ({
                         setShowDeleteModal(false)
                     }}
                 >
-                    Close
+                    {t('close')}
                 </button>
                 <button
                     className="btn btn-danger"

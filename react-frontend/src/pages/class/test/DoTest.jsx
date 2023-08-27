@@ -11,6 +11,7 @@ import Pagination from '../../../components/Pagination'
 import { CloseIcon } from '../../../components/icons'
 import '../../../assets/styles/test.css'
 import HistoryService from '../../../services/HistoryService'
+import { useTranslation } from 'react-i18next'
 
 const DoTest = () => {
     const dispatch = useDispatch()
@@ -39,7 +40,14 @@ const DoTest = () => {
     const [testEnd, setTestEnd] = useState({})
     const [endSecond, setEndSecond] = useState(null)
     const [endMinute, setEndMinute] = useState(null)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     var totalSeconds = 0
     var handleCount = 0
 
@@ -280,7 +288,7 @@ const DoTest = () => {
                         onClick={handleCheckSubmit}
                         disabled={loading}
                     >
-                        Submit
+                        {t('sb')}
                     </button>
                     <button
                         className="quizClose_btn ms-3 d-flex align-items-center"
@@ -336,7 +344,7 @@ const DoTest = () => {
                         {currentQuestion?.question?.questionType?.id === 1 && (
                             <div>
                                 <div className="quizQues_label my-4">
-                                    Your answer
+                                {t('yanswer')}
                                 </div>
                                 <input
                                     className={`form-control quizAns_input ${
@@ -362,7 +370,7 @@ const DoTest = () => {
                                 {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
-                                            Correct answer
+                                        {t('correctans')}
                                         </div>
                                         <div className="quizQues_answer correct">
                                             <div className="learnCorrectAnswer">
@@ -381,7 +389,7 @@ const DoTest = () => {
                             <div>
                                 {/* answer */}
                                 <div className="quizQues_label my-4">
-                                    Choose the answer
+                                {t('choose')}
                                 </div>
                                 <div className="row">
                                     {currentQuestion?.answerList.map(
@@ -476,7 +484,7 @@ const DoTest = () => {
                                 {results[currentIndex]?._true === 0 && (
                                     <div>
                                         <div className="quizQues_label my-4">
-                                            Correct answer
+                                        {t('correctans')}
                                         </div>
                                         <div className="quizQues_answer correct">
                                             {currentQuestion?.answerList.map(
@@ -504,7 +512,7 @@ const DoTest = () => {
                             <div>
                                 {/* answer */}
                                 <div className="quizQues_label my-4">
-                                    Choose the answer
+                                {t('choose')}
                                 </div>
                                 <div className="row">
                                     <div className="col-6">
@@ -546,7 +554,7 @@ const DoTest = () => {
                                                 }
                                             }}
                                         >
-                                            True
+                                            {t('true')}
                                         </div>
                                     </div>
                                     <div className="col-6">
@@ -588,7 +596,7 @@ const DoTest = () => {
                                                 }
                                             }}
                                         >
-                                            False
+                                            {t('false')}
                                         </div>
                                     </div>
                                 </div>

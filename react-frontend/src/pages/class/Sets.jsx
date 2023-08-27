@@ -14,6 +14,7 @@ import defaultAvatar from '../../assets/images/default_avatar.png'
 import banned from '../../assets/images/banned.png'
 import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
+import { useTranslation } from 'react-i18next'
 
 const Sets = () => {
     const { userInfo } = useSelector((state) => state.user)
@@ -35,7 +36,15 @@ const Sets = () => {
     const [isAssign, setIsAssign] = useState(false)
     const [showToast, setShowToast] = useState(false)
     const [toastMess, setToastMess] = useState('')
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -156,12 +165,11 @@ const Sets = () => {
             <div>
                 {isEmpty ? (
                     <div className="class_setsEmpty text-center mt-5">
-                        <h3>This class doesn't have any sets yet</h3>
+                        <h3>{t('msg70')}</h3>
                         {userInfo?.id === classroom?.user?.id && (
                             <div>
                                 <p>
-                                    Add an existing set or create a new one to
-                                    share.
+                                {t('msg73')}.
                                 </p>
                                 <button
                                     className="btn btn-info"
@@ -170,7 +178,7 @@ const Sets = () => {
                                         setShowAssignModal(true)
                                     }}
                                 >
-                                    Add a study set
+                                    {t('addToSet')}
                                 </button>
                                 {/* assign modal */}
                                 <AssignSets
@@ -197,10 +205,10 @@ const Sets = () => {
                                     setType(event.target.value)
                                 }}
                             >
-                                <option value={-1}>All type</option>
-                                <option value={1}>Vocabulary</option>
-                                <option value={2}>Kanji</option>
-                                <option value={3}>Grammar</option>
+                                <option value={-1}>{t('allType')}</option>
+                                <option value={1}>{t('vocabulary')}</option>
+                                <option value={2}>{t('kanji')}</option>
+                                <option value={3}>{t('grammar')}</option>
                             </select>
                             <input
                                 type="text"
@@ -235,7 +243,7 @@ const Sets = () => {
                             </button>
                         </form>
                         {sets?.length === 0 ? (
-                            <div>No matching found.</div>
+                            <div>{t('noMatch')}.</div>
                         ) : (
                             <div>
                                 <div className="row mb-4">
@@ -256,7 +264,7 @@ const Sets = () => {
                                                                 : set?.title}
                                                         </div>
                                                         <div className="term-count mb-2">
-                                                            {set?.count} terms
+                                                            {set?.count} {t('term')}
                                                         </div>
                                                         <p
                                                             className="set-description m-0 mb-2"
@@ -297,10 +305,7 @@ const Sets = () => {
                                                                     placement="bottom"
                                                                     overlay={
                                                                         <Tooltip id="tooltip">
-                                                                            This
-                                                                            account
-                                                                            is
-                                                                            banned.
+                                                                           {t('msg9')}.
                                                                         </Tooltip>
                                                                     }
                                                                 >
@@ -319,10 +324,7 @@ const Sets = () => {
                                                                     placement="bottom"
                                                                     overlay={
                                                                         <Tooltip id="tooltip">
-                                                                            This
-                                                                            account
-                                                                            is
-                                                                            verified.
+                                                                            {t('msg8')}.
                                                                         </Tooltip>
                                                                     }
                                                                 >
@@ -341,10 +343,7 @@ const Sets = () => {
                                                                     placement="bottom"
                                                                     overlay={
                                                                         <Tooltip id="tooltip">
-                                                                            This
-                                                                            account
-                                                                            is
-                                                                            deleted.
+                                                                            {t('msg7')}.
                                                                         </Tooltip>
                                                                     }
                                                                 >

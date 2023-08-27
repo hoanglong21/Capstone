@@ -17,6 +17,7 @@ import {
     SendIcon,
 } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
+import { useTranslation } from 'react-i18next'
 
 const Instructions = () => {
     const navigate = useNavigate()
@@ -34,7 +35,15 @@ const Instructions = () => {
     const [loadingComment, setLoadingComment] = useState(false)
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -156,7 +165,7 @@ const Instructions = () => {
                                                     )
                                                 }}
                                             >
-                                                Edit
+                                                {t('edit')}
                                             </button>
                                         </li>
                                         <li>
@@ -167,7 +176,7 @@ const Instructions = () => {
                                                     setShowDeleteModal(true)
                                                 }}
                                             >
-                                                Delete
+                                                {t('delete')}
                                             </button>
                                         </li>
                                     </div>
@@ -178,7 +187,7 @@ const Instructions = () => {
                                         type="button"
                                         onClick={handleCopyLink}
                                     >
-                                        Copy link
+                                        {t('copyLink')}
                                     </button>
                                 </li>
                                 {userInfo?.id !==
@@ -192,7 +201,7 @@ const Instructions = () => {
                                                 className="dropdown-item py-1 px-3 d-flex align-items-center"
                                                 type="button"
                                             >
-                                                Report
+                                                {t('report')}
                                             </button>
                                         </li>
                                     </div>

@@ -20,6 +20,7 @@ import learnerEmpty from '../../../assets/images/learner_assign_empty.png'
 import './assignment.css'
 import SubmissionService from '../../../services/SubmissionService'
 import Pagination from '../../../components/Pagination'
+import { useTranslation } from 'react-i18next'
 
 function AssignmentList() {
     const navigate = useNavigate()
@@ -45,7 +46,15 @@ function AssignmentList() {
     const [isDesc, setIsDesc] = useState(true)
 
     const [deleteAssign, setDeleteAssign] = useState({})
-
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     function getToday() {
         const today = new Date()
         return (
@@ -286,7 +295,7 @@ function AssignmentList() {
                                         size="1.125rem"
                                         strokeWidth="2.25"
                                     />
-                                    Create
+                                    {t('create')}
                                 </button>
                             </div>
                         )}
@@ -347,24 +356,23 @@ function AssignmentList() {
                             <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
                                 <img src={tutorEmpty} alt="" />
                                 <p className="mb-2 emptyAssignments_heading">
-                                    This is where you’ll assign work
+                                {t('msg76')}
                                 </p>
                                 <p className="emptyAssignments_content">
-                                    You can add assignments for the class, then
-                                    organize it into topics
+                                {t('msg77')}
                                 </p>
                             </div>
                         ) : (
                             <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
                                 <img src={learnerEmpty} alt="" />
                                 <p className="emptyAssignments_heading">
-                                    No assignments yet. Lucky you!
+                                {t('msg78')}
                                 </p>
                             </div>
                         )}
                     </div>
                 ) : search && assignments?.length === 0 ? (
-                    <div className="mt-5">No matching found.</div>
+                    <div className="mt-5"> {t('noMatch')}.</div>
                 ) : (
                     <div>
                         <div
@@ -423,7 +431,7 @@ function AssignmentList() {
                                         <div className="accordion-body">
                                             <div className="d-flex align-items-center justify-content-between">
                                                 <div>
-                                                    Posted{' '}
+                                                {t('posted')}{' '}
                                                     {assign?.created_date}
                                                 </div>
                                                 {userInfo?.id !==
@@ -432,18 +440,18 @@ function AssignmentList() {
                                                         {assign?.submission
                                                             ?.mark ? (
                                                             <div className="assignGraded">
-                                                                Graded
+                                                                {t('graded')}
                                                             </div>
                                                         ) : assign?.submission
                                                               ?._done ? (
                                                             <div className="assignSubmitted">
-                                                                Submitted
+                                                                {t('submitted')}
                                                             </div>
                                                         ) : new Date(
                                                               assign?.due_date
                                                           ) > today ? (
                                                             <div className="assignMissing">
-                                                                Missing
+                                                                {t('missing')}
                                                             </div>
                                                         ) : (
                                                             'Not submitted'
@@ -460,7 +468,7 @@ function AssignmentList() {
                                                         )
                                                     }
                                                 >
-                                                    View details
+                                                    {t('viewDetails')}
                                                 </button>
                                                 {userInfo?.id ===
                                                     assign?.user?.id && (
@@ -474,7 +482,7 @@ function AssignmentList() {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                                Submitted
+                                                            {t('submitted')}
                                                             </div>
                                                         </div>
                                                         <div className="asignInfo_block">
@@ -486,7 +494,7 @@ function AssignmentList() {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                                Not Submitted
+                                                            {t('notSub')}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -504,7 +512,7 @@ function AssignmentList() {
                                                                 )
                                                             }}
                                                         >
-                                                            Edit assignment
+                                                            {t('editAss')}
                                                         </button>
                                                         <button
                                                             className="deleteAssign_btn"
@@ -518,7 +526,7 @@ function AssignmentList() {
                                                                 )
                                                             }}
                                                         >
-                                                            Delete assignment
+                                                           {t('deleAss')}
                                                         </button>
                                                     </div>
                                                 )}

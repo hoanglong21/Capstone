@@ -278,12 +278,12 @@ function Translate() {
                         >
                             {autoSource && (
                                 <option value="auto">
-                                    {autoSource} - Detected
+                                    {autoSource} - {t('detected')}
                                 </option>
                             )}
-                            <option value="ja">Japan</option>
-                            <option value="vi">Vietnamese</option>
-                            <option value="en">English</option>
+                            <option value="ja">{t('japanese')}</option>
+                            <option value="vi">{t('vietnam')}</option>
+                            <option value="en">{t('english')}</option>
                         </select>
                     </div>
                     <button
@@ -308,9 +308,9 @@ function Translate() {
                                 }
                             }}
                         >
-                            <option value="ja">Japan</option>
-                            <option value="vi">Vietnamese</option>
-                            <option value="en">English</option>
+                            <option value="ja">{t('japanese')}</option>
+                            <option value="vi">{t('vietnam')}</option>
+                            <option value="en">{t('english')}</option>
                         </select>
                     </div>
                 </div>
@@ -389,7 +389,7 @@ function Translate() {
                                                 aria-hidden="true"
                                             ></span>
                                             <span className="visually-hidden">
-                                                Loading...
+                                            {t('loading')}...
                                             </span>
                                         </div>
                                     ) : (
@@ -453,7 +453,7 @@ function Translate() {
                                         role="status"
                                     >
                                         <span className="visually-hidden">
-                                            Loading...
+                                        {t('loading')}...
                                         </span>
                                     </div>
                                 </div>
@@ -486,7 +486,7 @@ function Translate() {
                                         role="status"
                                     >
                                         <span className="visually-hidden">
-                                            Loading...
+                                        {t('loading')}...
                                         </span>
                                     </div>
                                 </div>
@@ -565,7 +565,7 @@ function Translate() {
                                                 aria-hidden="true"
                                             ></span>
                                             <span className="visually-hidden">
-                                                Loading...
+                                            {t('loading')}...
                                             </span>
                                         </div>
                                     ) : (

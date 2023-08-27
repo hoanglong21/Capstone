@@ -5,8 +5,21 @@ import img1 from '../../assets/images/blog_1.jpg'
 import img2 from '../../assets/images/blog_2.jpg'
 import img3 from '../../assets/images/blog_3.jpg'
 import './landing.css'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const Landing = () => {
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
+
     return (
         <div>
             <div className="landing__video">
@@ -20,27 +33,22 @@ const Landing = () => {
                 />
             </div>
             <div className="landing__ti text-center">
-                <h2 className="heading__line">What is NihongoLevelUp?</h2>
+                <h2 className="heading__line">{t('msg88')}?</h2>
                 <p className="lead text-muted">
-                    NihongoLevelUp is a language learning tool specifically
-                    designed to support learners of the Japanese language. Its
-                    purpose is to help learners overcome difficulties
-                    encountered during the Japanese language learning process.
+                    {t('msg89')}.
                 </p>
             </div>
             <div className="landing__content">
                 <div className="landing__description">
                     <div className="landing__title">
                         <h2 className="landing__assembly2">
-                            Memorize Faster with Flashcards, Study Sets, Quiz
+                        {t('msg90')}
                         </h2>
                     </div>
                     <div className="landing-description2">
                         <p className="landing__assembly paragraph"></p>
                         <p className="landing__assembly paragraph2">
-                            Research shows that self-testing with flashcards is
-                            effective than rereading your notes. NihongoLevelUp
-                            is used by students in a variety of Japanese topics.
+                        {t('msg91')}.
                         </p>
                         <p></p>
                     </div>
@@ -52,7 +60,7 @@ const Landing = () => {
                                 tabIndex="0"
                                 to="/login"
                             >
-                                <span>Start With Us</span>
+                                <span>{t('startWithUs')}</span>
                             </Link>
                         </div>
                     </div>
@@ -74,13 +82,13 @@ const Landing = () => {
                 <div className="landing__description">
                     <div className="landing__title">
                         <h2 className="landing__assembly2">
-                            Yesterday's commute time, today is class again
+                        {t('msg92')}
                         </h2>
                     </div>
                     <div className="landing-description2">
                         <p className="landing__assembly paragraph"></p>
                         <p className="landing__assembly paragraph2">
-                            Learning anywhere, anytime.
+                        {t('msg93')}.
                         </p>
                         <p></p>
                     </div>
@@ -92,7 +100,7 @@ const Landing = () => {
                                 tabIndex="0"
                                 to="/discovery/sets"
                             >
-                                <span>Explore More</span>
+                                <span>{t('msg94')}</span>
                             </Link>
                         </div>
                     </div>
@@ -100,12 +108,12 @@ const Landing = () => {
             </div>
             <div className="section-title">
                 <h4 className="title text-center">
-                    Have Question ? Get in touch!
+                {t('msg95')}
                 </h4>
                 <p className="text-muted para-desc mx-auto text-center">
-                    Start working with{' '}
+                {t('msg96')}{' '}
                     <span className="text-primary fw-bold">NihongoLevelUp</span>{' '}
-                    that can provide everything you need about Japanese
+                    {t('msg97')}
                 </p>
             </div>
             <div
@@ -128,22 +136,19 @@ const Landing = () => {
                         </div>
                         <div className="blog-content p-4">
                             <ul className="meta-info d-flex justify-content-between">
-                                <li className="landing_li">By Anna</li>
+                                <li className="landing_li">{t('msg99')}</li>
                                 <li className="landing_li">
-                                    <a href="/">Feb 05, 2019</a>
+                                    <a href="/">{t('msg100')}</a>
                                 </li>
                             </ul>
                             <h3 className="blog-title my-3">
-                                <a href="/">Rate For 5 Stars</a>
+                                <a href="/">{t('msg101')}</a>
                             </h3>
                             <p>
-                                NihongoLevelUp has been supporting my success
-                                since GCSE. Flashcards available on the go are
-                                single handedly getting me through university.
-                                Wish the website to grow more and more.
+                            {t('msg102')}
                             </p>
                             <a href="/" className="blog-btn mt-3">
-                                Read More
+                            {t('readMore')}
                             </a>
                         </div>
                     </div>
@@ -160,22 +165,19 @@ const Landing = () => {
                         </div>
                         <div className="blog-content p-4">
                             <ul className="meta-info d-flex justify-content-between">
-                                <li className="landing_li">By Jessica</li>
+                                <li className="landing_li">{t('msg98')}</li>
                                 <li className="landing_li">
-                                    <a href="/">Feb 05, 2019</a>
+                                    <a href="/">{t('msg100')}</a>
                                 </li>
                             </ul>
                             <h3 className="blog-title my-3">
-                                <a href="/">A Nice Website For Learning</a>
+                                <a href="/">{t('msg103')}</a>
                             </h3>
                             <p>
-                                “NihongoLevelUp has allowed me to transition my
-                                studying from passive to active recall. This has
-                                allowed me to memorise information faster than
-                                simply re-reading notes.”
+                            {t('msg104')}
                             </p>
                             <a href="/" className="blog-btn mt-3">
-                                Read More
+                            {t('readMore')}
                             </a>
                         </div>
                     </div>
@@ -192,23 +194,19 @@ const Landing = () => {
                         </div>
                         <div className="blog-content p-4">
                             <ul className="meta-info d-flex justify-content-between">
-                                <li className="landing_li">By John</li>
+                                <li className="landing_li">{t('msg105')}</li>
                                 <li className="landing_li">
-                                    <a href="/">Mar 05, 2019</a>
+                                    <a href="/">{t('msg100')}</a>
                                 </li>
                             </ul>
                             <h3 className="blog-title my-3">
-                                <a href="/">Good Learning</a>
+                                <a href="/">{t('msg106')}</a>
                             </h3>
                             <p>
-                                Flashcards, Learn and Test can be used to
-                                practise active recall helping you to retain
-                                information for longer. Flashcards available on
-                                the go are single handedly getting me through
-                                university.
+                            {t('msg107')}
                             </p>
                             <a href="/" className="blog-btn mt-3">
-                                Read More
+                            {t('readMore')}
                             </a>
                         </div>
                     </div>

@@ -270,7 +270,7 @@ const ClassLayout = () => {
                                                         size="1.3rem"
                                                     />
                                                     <span className="align-middle fw-semibold">
-                                                        Edit
+                                                    {t('edit')}
                                                     </span>
                                                 </button>
                                             </li>
@@ -287,7 +287,7 @@ const ClassLayout = () => {
                                                         size="1.3rem"
                                                     />
                                                     <span className="align-middle fw-semibold">
-                                                        Add sets
+                                                    {t('aSet')}
                                                     </span>
                                                 </button>
                                             </li>
@@ -307,7 +307,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                    Report
+                                                {t('report')}
                                                 </span>
                                             </button>
                                         </li>
@@ -330,7 +330,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                    Delete
+                                                {t('delete')}
                                                 </span>
                                             </button>
                                         </li>
@@ -349,7 +349,7 @@ const ClassLayout = () => {
                                                     strokeWidth="2"
                                                 />
                                                 <span className="align-middle fw-semibold">
-                                                    Unenroll
+                                                {t('unenroll')}
                                                 </span>
                                             </button>
                                         </li>
@@ -368,7 +368,7 @@ const ClassLayout = () => {
                                         type="button"
                                         onClick={handleCancelRequest}
                                     >
-                                        Cancel Request
+                                        {t('cancelRe')}
                                     </button>
                                 ) : (
                                     <button
@@ -382,7 +382,7 @@ const ClassLayout = () => {
                                             }
                                         }}
                                     >
-                                        Request to join class
+                                       {t('requestClass')}
                                     </button>
                                 )}
                             </div>
@@ -403,7 +403,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Stream
+                                            {t('stream')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -418,7 +418,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Sets
+                                            {t('set')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -432,7 +432,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Assignments
+                                            {t('assignment')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -446,7 +446,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                Tests
+                                            {t('test')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -460,7 +460,7 @@ const ClassLayout = () => {
                                             }
                                         >
                                             <span className="align-middle">
-                                                People
+                                            {t('people')}
                                             </span>
                                         </NavLink>
                                     </li>
@@ -477,7 +477,7 @@ const ClassLayout = () => {
                                                 }
                                             >
                                                 <span className="align-middle">
-                                                    Statistics
+                                                {t('statistics')}
                                                 </span>
                                             </NavLink>
                                         </li>
@@ -494,35 +494,32 @@ const ClassLayout = () => {
                             classroom?.authorstatus === 'deleted' ? (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                        Sorry you cannot join this class.
+                                    {t('msg108')}.
                                     </h3>
                                     <p>
-                                        The tutor of this class has been{' '}
+                                    {t('msg109')}{' '}
                                         {classroom.authorstatus}.
                                     </p>
                                 </div>
                             ) : isWaiting ? (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                        Your request to join this class has been
-                                        sent
+                                    {t('msg110')}
                                     </h3>
                                     <p>
-                                        Once a class owner approves, you'll
-                                        start receiving class announcements
+                                    {t('msg111')}
                                     </p>
                                 </div>
                             ) : (
                                 <div className="request-col-8 text-center">
                                     <h3 className="mainClass_infoTitle">
-                                        Join this class to get access to its
-                                        content
+                                    {t('msg112')}
                                     </h3>
                                 </div>
                             )}
                             <div className="request-col-4">
                                 <h6 className="mainClass_infoLabel">
-                                    CLASS DETAILS
+                                {t('classDetails')}
                                 </h6>
                                 <div className="d-flex align-items-center mt-2">
                                     <img
@@ -581,13 +578,13 @@ const ClassLayout = () => {
                                 <div className="d-flex align-items-center mt-2">
                                     <StudySetIcon size="20px" />
                                     <div className="ms-3">
-                                        {classroom?.studyset} sets
+                                        {classroom?.studyset} {t('set')}
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center mt-2">
                                     <MemberSolidIcon size="20px" />
                                     <div className="ms-3">
-                                        {classroom?.member} sets
+                                        {classroom?.member} {t('set')}
                                     </div>
                                 </div>
                             </div>

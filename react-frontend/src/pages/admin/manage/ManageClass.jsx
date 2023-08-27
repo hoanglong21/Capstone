@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux'
 import ClassService from '../../../services/ClassService';
 import { useSearchParams } from 'react-router-dom'
+import Pagination from "../../../components/Pagination";
 
 function ManageClass() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -14,7 +15,8 @@ function ManageClass() {
     const { userInfo } = useSelector((state) => state.user)
 
     const [classes, setClasses] = useState([])
-
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
     const fetchData = async (searchKey) => {
         const temp = (
             await ClassService.getFilterList(
@@ -29,17 +31,18 @@ function ManageClass() {
               '',
               '',
               '',
-              '',
+              `=${page}`,
               '=10'
             )
-        ).data.list
-        setClasses(temp)
+        ).data
+        setClasses(temp.list)
+        setTotalItems(temp.totalItems)
     }
 
     console.log(classes)
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
   return (
     <div className="container-fluid">
@@ -87,6 +90,15 @@ function ManageClass() {
                 </tbody>
               </table>
             </div>
+            <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
           </div>
         </div>
       </div>

@@ -13,6 +13,8 @@ import verified from '../../assets/images/verified.png'
 import deleted from '../../assets/images/deleted.png'
 import { OptionVerIcon, SendIcon } from '../icons'
 import './comment.css'
+import { useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 
 const Comment = ({ index, comments, setComments, comment, userInfo }) => {
     const [isEdit, setIsEdit] = useState(false)
@@ -268,6 +270,98 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
         }
     }
 
+    // const handleAddChildComment = async () => {
+    //     setLoadingComment(true)
+    //     try {
+    //         // remove line break
+    //         var text = new String(addComment)
+    //         while (true) {
+    //             const lastIndex = text.lastIndexOf('<p>&nbsp;</p>')
+    //             if (text.length - 13 !== lastIndex) {
+    //                 break
+    //             }
+    //             text = new String(text.slice(0, lastIndex))
+    //         }
+    //         // create child comment
+    //         var tempComment = {
+    //             user: {
+    //                 id: userInfo.id,
+    //                 username: userInfo.username,
+    //                 avatar: userInfo.avatar,
+    //                 status: userInfo.status,
+    //             },
+    //             root: { id: comment.id },
+    //             content: text,
+    //             commentType: {
+    //                 id: comment.commentType.id,
+    //             },
+    //         }
+    //         switch (comment.commentType.id) {
+    //             case 1:
+    //                 // post
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     post: { id: comment.post.id },
+    //                 }
+    //                 break
+    //             case 2:
+    //                 // study set
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     studySet: { id: comment.studySet.id },
+    //                 }
+    //                 break
+    //             case 3:
+    //                 // test
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     test: { id: comment.test.id },
+    //                 }
+    //                 break
+    //             case 4:
+    //                 // assignment
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     assignment: { id: comment.assignment.id },
+    //                 }
+    //                 break
+    //             case 5:
+    //                 // submission
+    //                 tempComment = {
+    //                     ...tempComment,
+    //                     submission: { id: comment.submission.id },
+    //                 }
+    //                 break
+
+    //             default:
+    //                 break
+    //         }
+    //         tempComment = (await CommentService.createComment(tempComment)).data
+    //         // add to list
+    //         var tempComments = [...comments]
+    //         tempComments[index].childComments.push({ ...tempComment })
+    //         setComments([tempComments])
+    //         // clear
+    //         setAddComment('')
+    //         setIsAdd(false)
+    //     } catch (error) {
+    //         if (error.response && error.response.data) {
+    //             console.log(error.response.data)
+    //         } else {
+    //             console.log(error.message)
+    //         }
+    //     }
+    //     setLoadingComment(false)
+    // }
+    const { userLanguage } = useSelector((state) => state.user);
+    const { userToken } = useSelector((state) => state.auth);
+    const { t, i18n } = useTranslation();
+  
+    useEffect(() => {
+      if (userToken) {
+        i18n.changeLanguage(userLanguage);
+      }
+    }, [userLanguage]);
     return (
         <div>
             {isEdit ? (
@@ -286,7 +380,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is banned.
+                                            {t('msg9')}.
                                         </Tooltip>
                                     }
                                 >
@@ -301,7 +395,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is verified.
+                                            {t('msg8')}.
                                         </Tooltip>
                                     }
                                 >
@@ -316,7 +410,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                     placement="bottom"
                                     overlay={
                                         <Tooltip id="tooltip">
-                                            This account is deleted.
+                                            {t('msg7')}.
                                         </Tooltip>
                                     }
                                 >
@@ -348,7 +442,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                 className="btn btn-outline-secondary btn-sm me-2"
                                 onClick={handleCancelComment}
                             >
-                                Cancel
+                                {t('cancel')}
                             </button>
                             <button
                                 className="btn btn-primary btn-sm"
@@ -361,7 +455,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                         role="status"
                                     >
                                         <span className="visually-hidden">
-                                            LoadingUpload...
+                                        {t('loadingUpload')}...
                                         </span>
                                     </div>
                                 ) : (
@@ -417,7 +511,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                             placement="bottom"
                                             overlay={
                                                 <Tooltip id="tooltip">
-                                                    This account is banned.
+                                                    {t('msg9')}.
                                                 </Tooltip>
                                             }
                                         >
@@ -432,7 +526,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                             placement="bottom"
                                             overlay={
                                                 <Tooltip id="tooltip">
-                                                    This account is verified.
+                                                    {t('msg8')}.
                                                 </Tooltip>
                                             }
                                         >
@@ -447,7 +541,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                             placement="bottom"
                                             overlay={
                                                 <Tooltip id="tooltip">
-                                                    This account is deleted.
+                                                   {t('msg7')}.
                                                 </Tooltip>
                                             }
                                         >
@@ -489,11 +583,24 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                                 className="dropdown-item d-flex align-items-center"
                                                 type="button"
                                                 onClick={() => {
+                                                    setIsAdd(true)
+                                                }}
+                                            >
+                                                <span className="align-middle">
+                                                {t('reply')}
+                                                </span>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                className="dropdown-item d-flex align-items-center"
+                                                type="button"
+                                                onClick={() => {
                                                     setIsEdit(true)
                                                 }}
                                             >
                                                 <span className="align-middle">
-                                                    Edit
+                                                {t('edit')}
                                                 </span>
                                             </button>
                                         </li>
@@ -506,7 +613,7 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                                                 }}
                                             >
                                                 <span className="align-middle">
-                                                    Delete
+                                                {t('delete')}
                                                 </span>
                                             </button>
                                         </li>
@@ -596,10 +703,10 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                 }}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete comment?</Modal.Title>
+                    <Modal.Title>{t('delecom')}?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to delete this comment?
+                {t('msg119')}?
                 </Modal.Body>
                 <Modal.Footer>
                     <button
@@ -608,14 +715,14 @@ const Comment = ({ index, comments, setComments, comment, userInfo }) => {
                         data-bs-dismiss="modal"
                         aria-label="Close"
                     >
-                        Cancel
+                       {t('cancel')}
                     </button>
                     <button
                         type="button"
                         className="btn btn-danger"
                         onClick={handleDeleteComment}
                     >
-                        Delete
+                        {t('delete')}
                     </button>
                 </Modal.Footer>
             </Modal>
