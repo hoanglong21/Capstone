@@ -46,15 +46,16 @@ function AssignmentList() {
     const [isDesc, setIsDesc] = useState(true)
 
     const [deleteAssign, setDeleteAssign] = useState({})
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     function getToday() {
         const today = new Date()
         return (
@@ -116,6 +117,12 @@ function AssignmentList() {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
             setLoading(false)
         }
@@ -158,6 +165,12 @@ function AssignmentList() {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)
@@ -204,6 +217,12 @@ function AssignmentList() {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)
@@ -356,17 +375,17 @@ function AssignmentList() {
                             <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
                                 <img src={tutorEmpty} alt="" />
                                 <p className="mb-2 emptyAssignments_heading">
-                                {t('msg76')}
+                                    {t('msg76')}
                                 </p>
                                 <p className="emptyAssignments_content">
-                                {t('msg77')}
+                                    {t('msg77')}
                                 </p>
                             </div>
                         ) : (
                             <div className="emptyAssignments_container d-flex flex-column align-items-center justify-content-center">
                                 <img src={learnerEmpty} alt="" />
                                 <p className="emptyAssignments_heading">
-                                {t('msg78')}
+                                    {t('msg78')}
                                 </p>
                             </div>
                         )}
@@ -431,7 +450,7 @@ function AssignmentList() {
                                         <div className="accordion-body">
                                             <div className="d-flex align-items-center justify-content-between">
                                                 <div>
-                                                {t('posted')}{' '}
+                                                    {t('posted')}{' '}
                                                     {assign?.created_date}
                                                 </div>
                                                 {userInfo?.id !==
@@ -482,7 +501,7 @@ function AssignmentList() {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                            {t('submitted')}
+                                                                {t('submitted')}
                                                             </div>
                                                         </div>
                                                         <div className="asignInfo_block">
@@ -494,7 +513,7 @@ function AssignmentList() {
                                                                 }
                                                             </div>
                                                             <div className="assignInfo_title">
-                                                            {t('notSub')}
+                                                                {t('notSub')}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -526,7 +545,7 @@ function AssignmentList() {
                                                                 )
                                                             }}
                                                         >
-                                                           {t('deleAss')}
+                                                            {t('deleAss')}
                                                         </button>
                                                     </div>
                                                 )}

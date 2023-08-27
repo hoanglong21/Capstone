@@ -45,7 +45,7 @@ const CreateSet = () => {
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
-    
+
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -148,6 +148,12 @@ const CreateSet = () => {
                     }
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
             setLoading(false)

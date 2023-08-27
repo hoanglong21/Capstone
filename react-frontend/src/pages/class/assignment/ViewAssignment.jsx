@@ -14,15 +14,16 @@ const ViewAssignment = () => {
 
     const { id } = useParams()
     const [classroom, setClassroom] = useState({})
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -33,6 +34,12 @@ const ViewAssignment = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -70,7 +77,9 @@ const ViewAssignment = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <span className="align-middle">{t('instructions')}</span>
+                            <span className="align-middle">
+                                {t('instructions')}
+                            </span>
                         </NavLink>
                     </li>
                     <li>
@@ -82,7 +91,9 @@ const ViewAssignment = () => {
                                 (({ isActive }) => (isActive ? 'active' : ''))
                             }
                         >
-                            <span className="align-middle">{t('submissions')}</span>
+                            <span className="align-middle">
+                                {t('submissions')}
+                            </span>
                         </NavLink>
                     </li>
                 </ul>

@@ -37,15 +37,16 @@ const TestDetails = () => {
 
     const [numAttempt, setNumAttempt] = useState(0)
     const [canTest, setCanTest] = useState(true)
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -72,6 +73,12 @@ const TestDetails = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -243,10 +250,12 @@ const TestDetails = () => {
                     <div className="my-2">{test?.description}</div>
                     <div className="d-flex justify-content-between mb-2 instruction_date">
                         <div>
-                        {t('numAttemps')}: {test?.num_attemps}
+                            {t('numAttemps')}: {test?.num_attemps}
                         </div>
                         {userInfo?.id !== test?.classroom?.user?.id ? (
-                            <div>{t('nAtt')}: {numAttempt || 0}</div>
+                            <div>
+                                {t('nAtt')}: {numAttempt || 0}
+                            </div>
                         ) : (
                             <div>
                                 {t('dura')}: {test?.duration || 'No duration'}
@@ -315,7 +324,7 @@ const TestDetails = () => {
                                     role="status"
                                 >
                                     <span className="visually-hidden">
-                                    {t('loadingUpload')}...
+                                        {t('loadingUpload')}...
                                     </span>
                                 </div>
                             ) : (
@@ -340,9 +349,7 @@ const TestDetails = () => {
                         setShowStartModal(false)
                     }}
                 >
-                    <Modal.Body className="p-4">
-                    {t('msg85')}?
-                    </Modal.Body>
+                    <Modal.Body className="p-4">{t('msg85')}?</Modal.Body>
                     <Modal.Footer>
                         <button
                             id="startTestModalClose"

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import StudySetService from '../../services/StudySetService'
@@ -14,6 +14,8 @@ import deleted from '../../assets/images/deleted.png'
 import '../../assets/styles/LibrarySearchList.css'
 
 function SetsForHome() {
+    const navigate = useNavigate()
+    
     const [searchParams, setSearchParams] = useSearchParams()
 
     const search = searchParams.get('search')
@@ -32,7 +34,6 @@ function SetsForHome() {
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
-
 
     const fetchData = async (searchKey) => {
         try {
@@ -62,6 +63,12 @@ function SetsForHome() {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
     }
@@ -168,7 +175,7 @@ function SetsForHome() {
                                                         placement="bottom"
                                                         overlay={
                                                             <Tooltip id="tooltip">
-                                                               {t('msg8')}.
+                                                                {t('msg8')}.
                                                             </Tooltip>
                                                         }
                                                     >

@@ -28,11 +28,13 @@ import {
     UploadIcon,
 } from '../../../components/icons'
 import './post.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
 const Post = ({ post, stateChanger, posts, index, userInfo }) => {
+    const navigate = useNavigate()
+
     const [showUpdate, setShowUpdate] = useState(false)
 
     const [updatePost, setUpdatePost] = useState({ ...post })
@@ -89,6 +91,12 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }
@@ -358,7 +366,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         }}
                                     >
                                         <span className="align-middle fw-medium">
-                                        {t('edit')}
+                                            {t('edit')}
                                         </span>
                                     </button>
                                 </li>
@@ -369,7 +377,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         onClick={() => setShowDeleteModal(true)}
                                     >
                                         <span className="align-middle fw-medium">
-                                        {t('delete')}
+                                            {t('delete')}
                                         </span>
                                     </button>
                                 </li>

@@ -194,6 +194,12 @@ const Flashcard = () => {
                 } else {
                     console.log(error.message)
                 }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
             }
         }
     }, [userInfo, cards, cardIndex, isAddHistory])
@@ -260,6 +266,12 @@ const Flashcard = () => {
                     console.log(error.response.data)
                 } else {
                     console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
                 }
             }
         }

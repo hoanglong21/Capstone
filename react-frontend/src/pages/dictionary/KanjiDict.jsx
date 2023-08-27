@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -8,6 +8,7 @@ import DictionaryService from '../../services/DictionaryService'
 import Pagination from '../../components/Pagination'
 
 const KanjiDict = () => {
+    const navigate = useNavigate()
     const { t, i18n } = useTranslation()
 
     const [searchParams, setSearchParams] = useSearchParams()
@@ -49,6 +50,12 @@ const KanjiDict = () => {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
         setLoading(false)

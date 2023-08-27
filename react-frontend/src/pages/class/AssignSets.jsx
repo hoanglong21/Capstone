@@ -13,7 +13,7 @@ import {
     SearchIcon,
 } from '../../components/icons'
 import Pagination from '../../components/Pagination'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
@@ -27,7 +27,12 @@ const AssignSets = ({
     isAssign,
     setIsAssign,
 }) => {
+    const navigate = useNavigate()
     const location = useLocation()
+
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
     const [assignSets, setAssignSets] = useState([])
     const [notAssignSets, setNotAssignSets] = useState([])
@@ -69,18 +74,21 @@ const AssignSets = ({
             } else {
                 console.log(error.message)
             }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
+            }
         }
         setLoading(false)
     }
-    const { userLanguage } = useSelector((state) => state.user);
-    const { userToken } = useSelector((state) => state.auth);
-    const { t, i18n } = useTranslation();
-  
+
     useEffect(() => {
-      if (userToken) {
-        i18n.changeLanguage(userLanguage);
-      }
-    }, [userLanguage]);
+        if (userToken) {
+            i18n.changeLanguage(userLanguage)
+        }
+    }, [userLanguage])
 
     const fetchNot = async () => {
         setLoadingNot(true)
@@ -106,6 +114,12 @@ const AssignSets = ({
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
         setLoadingNot(false)
@@ -197,7 +211,7 @@ const AssignSets = ({
         >
             <Modal.Header closeButton className="border-0 pt-4 pb-3 ps-5 pe-4">
                 <Modal.Title id="example-modal-sizes-title-lg">
-                {t('addToClass')}
+                    {t('addToClass')}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="px-5">
@@ -290,9 +304,7 @@ const AssignSets = ({
                           notAssignSets.length > 0 ? (
                             <div>{t('msg70')}</div>
                         ) : (
-                            <div>
-                                {t('msg71')}.
-                            </div>
+                            <div>{t('msg71')}.</div>
                         )}
                     </Tab>
                     <Tab eventKey="notAssigned" title="Not assigned">
@@ -336,13 +348,9 @@ const AssignSets = ({
                             <div>{t('noMatch')}.</div>
                         ) : assignSets.length > 0 ||
                           notAssignSets.length > 0 ? (
-                            <div>
-                                {t('msg72')}.
-                            </div>
+                            <div>{t('msg72')}.</div>
                         ) : (
-                            <div>
-                                {t('msg71')}.
-                            </div>
+                            <div>{t('msg71')}.</div>
                         )}
                     </Tab>
                 </Tabs>
