@@ -41,7 +41,7 @@ function ViewDetailAssignment() {
                   />
                 </div>
                 <div className="row gx-3 mb-3">
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Assignment ID</label>
                     <input
                       className="form-control"
@@ -50,7 +50,22 @@ function ViewDetailAssignment() {
                       value={assignments?.id}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
+                    <label className="small mb-1 fs-6">Draft ?</label>
+                    <select
+                      className="form-control"
+                      readOnly
+                      value={assignments?._draft}
+                    >
+                      <option value={true} hidden>
+                        Draft
+                      </option>
+                      <option value={false} hidden>
+                        Not draft
+                      </option>
+                    </select>
+                  </div>
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Creator By</label>
                     <input
                       className="form-control"
@@ -59,7 +74,7 @@ function ViewDetailAssignment() {
                       value={assignments?.user?.username}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Class Name</label>
                     <input
                       className="form-control"
@@ -70,31 +85,40 @@ function ViewDetailAssignment() {
                   </div>
                 </div>
                 <div className="row gx-3 mb-3">
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Create Date</label>
                     <input
                       className="form-control"
-                      type="tel"
+                      type="text"
                       readOnly
                       value={assignments?.created_date}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Start Date</label>
                     <input
                       className="form-control"
-                      type="tel"
+                      type="text"
                       readOnly
                       value={assignments?.start_date}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Due Date</label>
                     <input
                       className="form-control"
-                      type="tel"
+                      type="text"
                       readOnly
                       value={assignments?.due_date}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="small mb-1 fs-6">Modified Date</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      readOnly
+                      value={assignments?.modified_date}
                     />
                   </div>
                 </div>
@@ -103,7 +127,7 @@ function ViewDetailAssignment() {
                     <label className="small mb-1 fs-6">Instruction</label>
                     <input
                       className="form-control"
-                      type="tel"
+                      type="text"
                       readOnly
                       value={assignments?.instruction}
                     />

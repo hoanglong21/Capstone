@@ -70,15 +70,6 @@ function ViewDetailComment() {
                     />
                   </div>
                   <div className="col-md-4">
-                    <label className="small mb-1 fs-6">Post Content</label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      readOnly
-                      value={comment.post?.content}
-                    />
-                  </div>
-                  <div className="col-md-4">
                     <label className="small mb-1 fs-6">Type</label>
                     <input
                       className="form-control"
@@ -87,9 +78,18 @@ function ViewDetailComment() {
                       value={comment.commentType?.name}
                     />
                   </div>
+                  <div className="col-md-4">
+                    <label className="small mb-1 fs-6">From Assignment</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      readOnly
+                      value={comment.assignment?.title}
+                    />
+                  </div>
                 </div>
                 <div className="row gx-3 mb-3">
-                <div className="col-md-4">
+                <div className="col-md-3">
                     <label className="small mb-1 fs-6">Study Set Name</label>
                     <input
                       className="form-control"
@@ -98,7 +98,7 @@ function ViewDetailComment() {
                       value={comment.studySet?.title}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Test Name</label>
                     <input
                       className="form-control"
@@ -107,13 +107,22 @@ function ViewDetailComment() {
                       value={comment.test?.title}
                     />
                   </div>
-                  <div className="col-md-4">
+                  <div className="col-md-3">
                     <label className="small mb-1 fs-6">Parent</label>
                     <input
                       className="form-control"
                       type="text"
                       readOnly
                       value={comment.root?.content}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="small mb-1 fs-6">In submission ID</label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      readOnly
+                      value={comment.submission?.id}
                     />
                   </div>
                 </div>
