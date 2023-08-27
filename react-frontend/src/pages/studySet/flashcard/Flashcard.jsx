@@ -252,6 +252,10 @@ const Flashcard = () => {
                     )
                 ).data.list
                 setCards(tempCards)
+                if (tempCards.length === 0) {
+                    navigate('/notFound')
+                    return
+                }
                 // initial data
                 setCardIndex(0)
                 if (tempCards[0]?.progress) {
@@ -269,7 +273,7 @@ const Flashcard = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') || isNaN(id)
                 ) {
                     navigate('/notFound')
                 }

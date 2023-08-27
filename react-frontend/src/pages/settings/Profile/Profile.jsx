@@ -44,7 +44,9 @@ const Profile = () => {
     // fetch user state
     useEffect(() => {
         setNewUser({ ...userInfo })
-        document.getElementById('dobProfile').value = formatDate(userInfo?.dob)
+        if (userInfo?.dob) {
+            document.getElementById('dobProfile').value = formatDate(userInfo?.dob)
+        }
     }, [userInfo])
 
     // fetch avatar
@@ -408,6 +410,7 @@ const Profile = () => {
                 </div>
                 <div className="col-12">
                     <button
+                        type='button'
                         className="btn btn-primary px-4 mt-1"
                         disabled={userInfo?.status === 'pending'}
                         onClick={handleSubmit}

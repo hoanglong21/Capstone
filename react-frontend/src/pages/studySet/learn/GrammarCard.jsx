@@ -34,7 +34,7 @@ const GrammarCard = ({
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[3].content)
-            if (ques?.question_type === 1) {
+            if (ques?.question_type === 1 && document.getElementById(`quizQuesInput${quesIndex}`)) {
                 document.getElementById(`quizQuesInput${quesIndex}`).value = ''
             }
             if (ques?.question_type === 2) {
