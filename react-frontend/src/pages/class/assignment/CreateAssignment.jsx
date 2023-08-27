@@ -211,7 +211,10 @@ function CreateAssignment() {
     const handleUpdate = async (draft) => {
         setSaving(true)
         try {
-            var tempAssignment = { ...assignment, _draft: draft }
+            var tempAssignment = {
+                ...assignment,
+                _draft: draft,
+            }
             tempAssignment.created_date = toBEDate(tempAssignment.created_date)
             tempAssignment.start_date = toBEDate(tempAssignment.start_date)
             tempAssignment.modified_date = toBEDate(
@@ -240,7 +243,11 @@ function CreateAssignment() {
             return
         }
         try {
-            var tempAssignment = { ...assignment, title: title, _draft: draft }
+            var tempAssignment = {
+                ...assignment,
+                title: title,
+                _draft: draft,
+            }
             tempAssignment.created_date = toBEDate(tempAssignment.created_date)
             tempAssignment.start_date = toBEDate(tempAssignment.start_date)
             tempAssignment.modified_date = toBEDate(
@@ -258,7 +265,11 @@ function CreateAssignment() {
                 console.log(error.message)
             }
         }
-        setAssignment({ ...assignment, title: title, _draft: draft })
+        setAssignment({
+            ...assignment,
+            title: title,
+            _draft: draft,
+        })
         setSaving(false)
     }
 
@@ -297,7 +308,11 @@ function CreateAssignment() {
                 console.log(error.message)
             }
         }
-        setAssignment({ ...assignment, start_date: startDate, _draft: draft })
+        setAssignment({
+            ...assignment,
+            start_date: startDate,
+            _draft: draft,
+        })
         setSaving(false)
     }
 
@@ -342,13 +357,18 @@ function CreateAssignment() {
                 console.log(error.message)
             }
         }
-        setAssignment({ ...assignment, due_date: dueDate, _draft: draft })
+        setAssignment({
+            ...assignment,
+            due_date: dueDate,
+            _draft: draft,
+        })
         setSaving(false)
     }
 
     const handleSubmit = async (draft) => {
         setLoadingCreateAssign(true)
         navigate(`/class/${classroom.id}/assignment/${assignment.id}/details`)
+        handleUpdate(draft)
         setAssignment({ ...assignment, _draft: draft })
         setLoadingCreateAssign(false)
     }
@@ -416,7 +436,7 @@ function CreateAssignment() {
                             value={title || ''}
                             onChange={(event) => setTitle(event.target.value)}
                             onBlur={() => {
-                                handleUpdateTitle(assignment?.draft || true)
+                                handleUpdateTitle(assignment?._draft)
                             }}
                         />
                         <label
@@ -437,9 +457,7 @@ function CreateAssignment() {
                                     })
                                 }
                             }}
-                            onBlur={() =>
-                                handleUpdate(assignment?.draft || true)
-                            }
+                            onBlur={() => handleUpdate(assignment?._draft)}
                         />
                         <label className="createAssign_formLabel createAssign_editorLabel">
                             {t('instruction')}
@@ -460,7 +478,7 @@ function CreateAssignment() {
                                         setStartDate(event.target.value)
                                     }
                                     onBlur={() => {
-                                        handleUpdateStart(assignment?.draft || true)
+                                        handleUpdateStart(assignment?._draft)
                                     }}
                                 />
                                 <label
@@ -485,7 +503,7 @@ function CreateAssignment() {
                                         setDueDate(event.target.value)
                                     }}
                                     onBlur={() => {
-                                        handleUpdateDue(assignment?.draft || true)
+                                        handleUpdateDue(assignment?._draft)
                                     }}
                                 />
                                 <label
