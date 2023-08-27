@@ -519,7 +519,7 @@ public class ClassServiceImpl implements ClassService {
                 Notification notification = new Notification();
                 notification.setTitle("New StudySet");
 
-                String urlWithId = "/[[classid]]/sets";
+                String urlWithId = "/class/[[classid]]/sets";
                 urlWithId = urlWithId.replace("[[classid]]", String.valueOf(classroom.getId()));
 
                 notification.setUrl(urlWithId);
