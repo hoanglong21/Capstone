@@ -19,7 +19,7 @@ public class AnswerRequest {
     private Question question;
 
     @NotBlank(message = "Answer cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s.,:]+", message = "Answer  can only contain letters, numbers, and spaces")
+//    @Pattern(regexp = "[\\p{L}0-9\\s.,:]+", message = "Answer  can only contain letters, numbers, and spaces")
     @Length(min = 1, message = "Answer  must have at least 1 characters")
     private String content;
 

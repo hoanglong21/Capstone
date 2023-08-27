@@ -18,11 +18,11 @@ public class NotificationRequest {
     private User user;
 
     @NotBlank(message = "Title cannot be empty")
-    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Title can only contain letters, numbers, and spaces")
+//    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Title can only contain letters, numbers, and spaces")
     @Length(min = 2, message = "Title must have at least 2 characters")
     private String title;
 
-    @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:+-]+", message = " Can only contain letters, numbers, and spaces")
+//    @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:+-]+", message = " Can only contain letters, numbers, and spaces")
     private String content;
 
     private String url;

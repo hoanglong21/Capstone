@@ -21,15 +21,13 @@ public class ClassRequest {
     private Date created_date;
 
     @NotBlank(message = "Classname cannot be empty")
-//    @Pattern(regexp = "[^\\s].*[^\\s]", message = "Class name must not start or end with whitespace")
-    @Pattern(regexp = "[a-zA-Z0-9\\s]+", message = "Class name can only contain letters, numbers, and spaces")
-    @Length(min = 3, message = "Class name must have at least 3 characters")
+    @Pattern(regexp = "[\\p{L}0-9\\s]+", message = "Class name can only contain letters, numbers, and spaces")
+    @Length(min = 2, message = "Class name must have at least 2 characters")
     private String class_name;
 
     private String classcode;
 
-//    @Pattern(regexp = "[^\\s].*[^\\s]", message = "Description must not start or end with whitespace")
-    @Pattern(regexp = "^$|[a-zA-Z0-9\\s.,:;!?+&\\[\\]()\\-]+", message = "Description can only contain letters, numbers, and spaces")
+//    @Pattern(regexp = "^$|[\\p{L}0-9\\s.,:;!?+&\\[\\]()\\-]+", message = "Description can only contain letters, numbers, and spaces")
     private String description;
 
     private Date deleted_date;

@@ -18,7 +18,7 @@ public class QuestionRequest {
     private int id;
 
     @NotNull(message = "Question cannot be null")
-    @Length(min = 5, message = "Question must have at least 5 characters")
+    @Length(min = 2, message = "Question must have at least 2 characters")
     private String question;
 
     private String picture;
