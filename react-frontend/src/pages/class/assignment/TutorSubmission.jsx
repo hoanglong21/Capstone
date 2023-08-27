@@ -262,31 +262,74 @@ const TutorSubmission = ({ assignment }) => {
                 ...submission,
                 mark: submission.mark,
             }
-            tempSubmission.assignment.classroom.created_date = toBEDate(
-                tempSubmission.assignment.classroom.created_date
-            )
-            tempSubmission.assignment.classroom.user.created_date = toBEDate(
-                tempSubmission.assignment.classroom.user.created_date
-            )
-            tempSubmission.assignment.created_date = toBEDate(
-                tempSubmission.assignment.created_date
-            )
-            tempSubmission.assignment.modified_date = toBEDate(
-                tempSubmission.assignment.modified_date
-            )
-            tempSubmission.assignment.start_date = toBEDate(
-                tempSubmission.assignment.start_date
-            )
-            tempSubmission.assignment.user.created_date = toBEDate(
-                tempSubmission.assignment.user.created_date
-            )
             tempSubmission.created_date = toBEDate(tempSubmission.created_date)
             tempSubmission.modified_date = toBEDate(
                 tempSubmission.modified_date
             )
-            tempSubmission.user.created_date = toBEDate(
-                tempSubmission.user.created_date
-            )
+            if (tempSubmission?.user) {                
+                tempSubmission.user.created_date = toBEDate(
+                    tempSubmission.user.created_date
+                )
+                tempSubmission.user.dob = toBEDate(
+                    tempSubmission.user.dob
+                )
+                tempSubmission.user.banned_date = toBEDate(
+                    tempSubmission.user.banned_date
+                )
+                tempSubmission.user.deleted_date = toBEDate(
+                    tempSubmission.user.deleted_date
+                )
+            }
+            if (tempSubmission?.assignment) {                        
+                tempSubmission.assignment.created_date = toBEDate(
+                    tempSubmission.assignment.created_date
+                )
+                tempSubmission.assignment.modified_date = toBEDate(
+                    tempSubmission.assignment.modified_date
+                )
+                tempSubmission.assignment.start_date = toBEDate(
+                    tempSubmission.assignment.start_date
+                )
+                tempSubmission.assignment.due_date = toBEDate(
+                    tempSubmission.assignment.due_date
+                )
+                if (tempSubmission.assignment?.user) {                
+                    tempSubmission.assignment.user.created_date = toBEDate(
+                        tempSubmission.assignment.user.created_date
+                    )
+                    tempSubmission.assignment.user.dob = toBEDate(
+                        tempSubmission.assignment.user.dob
+                    )
+                    tempSubmission.assignment.user.banned_date = toBEDate(
+                        tempSubmission.assignment.user.banned_date
+                    )
+                    tempSubmission.assignment.user.deleted_date = toBEDate(
+                        tempSubmission.assignment.user.deleted_date
+                    )
+                }
+                if (tempSubmission.assignment?.classroom) {                
+                    tempSubmission.assignment.classroom.created_date = toBEDate(
+                        tempSubmission.assignment.classroom.created_date
+                    )
+                    tempSubmission.assignment.classroom.deleted_date = toBEDate(
+                        tempSubmission.assignment.classroom.deleted_date
+                    )
+                    if (tempSubmission.assignment.classroom?.user) {                
+                        tempSubmission.assignment.classroom.user.created_date = toBEDate(
+                            tempSubmission.assignment.classroom.user.created_date
+                        )
+                        tempSubmission.assignment.classroom.user.dob = toBEDate(
+                            tempSubmission.assignment.classroom.user.dob
+                        )
+                        tempSubmission.assignment.classroom.user.banned_date = toBEDate(
+                            tempSubmission.assignment.classroom.user.banned_date
+                        )
+                        tempSubmission.assignment.classroom.user.deleted_date = toBEDate(
+                            tempSubmission.assignment.classroom.user.deleted_date
+                        )
+                    }
+                }
+            }
             setSubmission(
                 (
                     await SubmissionService.updateSubmission(

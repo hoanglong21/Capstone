@@ -13,6 +13,7 @@ const ViewAssignment = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const { id } = useParams()
+    const { assign_id } = useParams()
     const [classroom, setClassroom] = useState({})
     const { userLanguage } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
@@ -26,6 +27,12 @@ const ViewAssignment = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (
+                isNaN(assign_id)
+            ) {
+                navigate('/notFound')
+                return
+            }
             try {
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
@@ -37,7 +44,8 @@ const ViewAssignment = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') ||
+                    isNaN(assign_id)
                 ) {
                     navigate('/notFound')
                 }
