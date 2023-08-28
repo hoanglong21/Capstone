@@ -141,13 +141,21 @@ export const GrammarCard = (props) => {
                         ).data
                     )
                 } else {
-                    var tempCard = {...card}
+                    var tempCard = { ...card }
                     if (tempCard?.studySet) {
-                        tempCard.studySet.created_date = toBEDate(tempCard.studySet.created_date)
-                        tempCard.studySet.deleted_date = toBEDate(tempCard.studySet.deleted_date)
+                        tempCard.studySet.created_date = toBEDate(
+                            tempCard.studySet.created_date
+                        )
+                        tempCard.studySet.deleted_date = toBEDate(
+                            tempCard.studySet.deleted_date
+                        )
                         if (tempCard.studySet?.user) {
-                            tempCard.studySet.user.created_date = toBEDate(tempCard.studySet.user.created_date)
-                            tempCard.studySet.user.dob = toBEDate(tempCard.studySet.user.dob)
+                            tempCard.studySet.user.created_date = toBEDate(
+                                tempCard.studySet.user.created_date
+                            )
+                            tempCard.studySet.user.dob = toBEDate(
+                                tempCard.studySet.user.dob
+                            )
                         }
                     }
                     setTitle({ ...contents[0], card: { ...tempCard } })
@@ -210,12 +218,16 @@ export const GrammarCard = (props) => {
     }
 
     const handleChangeFile = async (event) => {
-        props.setSaving(true)
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
         if (file) {
             try {
+                if (file.size > 20 * 1024 * 1024) {
+                    props.setShowToast(true)
+                    return
+                }
+                props.setSaving(true)
                 const urlOld = String(card[name])
                 const url = await uploadFile(
                     file,

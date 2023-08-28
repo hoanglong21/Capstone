@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 
 import {
     deleteFileByUrl,
@@ -28,6 +30,9 @@ const CreateTest = () => {
     const { test_id } = useParams()
 
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
@@ -37,9 +42,7 @@ const CreateTest = () => {
     const [isScroll, setIsScroll] = useState(false)
     const [questions, setQuestions] = useState([])
     const [classroom, setClassroom] = useState({})
-    const { userLanguage } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
+    const [showToast, setShowToast] = useState(false)
 
     useEffect(() => {
         if (userToken) {
@@ -119,8 +122,7 @@ const CreateTest = () => {
                         ques.test.classroom.created_date = testClassCreated
                         ques.test.classroom.user.created_date =
                             testClassUserCreated
-                        ques.test.classroom.user.dob =
-                            testClassUserDob
+                        ques.test.classroom.user.dob = testClassUserDob
                         ques.test.user.created_date = testUserCreated
                         ques.test.user.dob = testClassUserDob
                         ques.test.created_date = testCreated
@@ -345,7 +347,7 @@ const CreateTest = () => {
         }
         setSaving(true)
         try {
-            console.log(test);
+            console.log(test)
             await TestService.updateTest(test.id, {
                 ...test,
                 created_date: toBEDate(test.created_date),
@@ -512,10 +514,14 @@ const CreateTest = () => {
     }
 
     const handleUploadFileQuestion = async (event, ques, quesIndex) => {
-        setSaving(true)
         var file = event.target.files[0]
         if (file) {
             try {
+                if (file.size > 20 * 1024 * 1024) {
+                    setShowToast(true)
+                    return
+                }
+                setSaving(true)
                 const url = await uploadFile(
                     file,
                     `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/question`
@@ -698,9 +704,13 @@ const CreateTest = () => {
         ans,
         ansIndex
     ) => {
-        setSaving(true)
         const file = event.target.files[0]
         if (file) {
+            if (file.size > 20 * 1024 * 1024) {
+                setShowToast(true)
+                return
+            }
+            setSaving(true)
             const url = await uploadFile(
                 file,
                 `${userInfo.username}/class/${classroom.id}/test/${test.id}/${ques.id}/answer/${ans.id}`
@@ -792,7 +802,7 @@ const CreateTest = () => {
             >
                 <div className="d-flex">
                     <button
-                        className="btn p-0 createTest_cancelBtn"
+                        className="createTest_cancelBtn"
                         onClick={() => {
                             navigate(
                                 `/class/${classroom.id}/test/${test.id}/details`
@@ -1582,6 +1592,24 @@ const CreateTest = () => {
                     </button>
                 </div>
             </div>
+            {/* toast error */}
+            <ToastContainer
+                className="p-3"
+                position="top-end"
+                style={{ zIndex: 1 }}
+            >
+                <Toast
+                    show={showToast}
+                    bg="danger"
+                    onClose={() => {
+                        setShowToast(false)
+                    }}
+                    delay={3000}
+                    autohide
+                >
+                    <Toast.Body>File is bigger than 20MB!</Toast.Body>
+                </Toast>
+            </ToastContainer>
         </div>
     )
 }

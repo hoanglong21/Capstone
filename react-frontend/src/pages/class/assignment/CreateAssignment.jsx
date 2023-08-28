@@ -19,6 +19,9 @@ function CreateAssignment() {
     const { assign_id } = useParams()
 
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
     const [classroom, setClassroom] = useState({})
     const [assignment, setAssignment] = useState({})
@@ -31,9 +34,15 @@ function CreateAssignment() {
     const [saving, setSaving] = useState(null)
 
     const [error, setError] = useState('')
-    const { userLanguage } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
+    const [errorUpload, setErrorUpload] = useState(false)
+
+    useEffect(() => {
+        if (errorUpload === true) {
+            setTimeout(() => {
+                setErrorUpload(false)
+            }, 1500)
+        }
+    }, [errorUpload])
 
     useEffect(() => {
         if (userToken) {
@@ -118,9 +127,7 @@ function CreateAssignment() {
                     tempAssignment.user.created_date = toBEDate(
                         tempAssignment.user.created_date
                     )
-                    tempAssignment.user.dob = toBEDate(
-                        tempAssignment.user.dob
-                    )
+                    tempAssignment.user.dob = toBEDate(tempAssignment.user.dob)
                 }
                 if (tempAssignment?.classroom) {
                     tempAssignment.classroom.created_date = toBEDate(
@@ -162,10 +169,14 @@ function CreateAssignment() {
     }, [userInfo])
 
     const handleUploadFile = async (event) => {
-        setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
             try {
+                if (file.size > 20 * 1024 * 1024) {
+                    setErrorUpload(true)
+                    return
+                }
+                setLoadingUploadFile(true)
                 const url = await uploadFile(
                     file,
                     `${userInfo.username}/class/${classroom.id}/assignment/${assignment.id}/tutor`
@@ -430,6 +441,11 @@ function CreateAssignment() {
                     {error && (
                         <div className="alert alert-danger mb-4" role="alert">
                             {error}
+                        </div>
+                    )}
+                    {errorUpload && (
+                        <div className="alert alert-danger" role="alert">
+                            File is bigger than 20MB!
                         </div>
                     )}
                     <div className="createAssign_formGroup form-floating mb-4">

@@ -150,12 +150,16 @@ export const VocabCard = (props) => {
     }
 
     const handleChangeFile = async (event) => {
-        props.setSaving(true)
         const name = event.target.name
         name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
         if (file) {
             try {
+                if (file.size > 20 * 1024 * 1024) {
+                    props.setShowToast(true)
+                    return
+                }
+                props.setSaving(true)
                 const urlOld = String(card[name])
                 const url = await uploadFile(
                     file,

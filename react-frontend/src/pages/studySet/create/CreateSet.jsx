@@ -37,6 +37,7 @@ const CreateSet = () => {
     const [loading, setLoading] = useState(false)
     const [saving, setSaving] = useState(false)
     const { userLanguage } = useSelector((state) => state.user)
+    const [showToast, setShowToast] = useState(false)
 
     const { t, i18n } = useTranslation()
 
@@ -533,6 +534,8 @@ const CreateSet = () => {
                                     }
                                     setLoading={setLoading}
                                     setSaving={setSaving}
+                                    showToast={showToast}
+                                    setShowToast={setShowToast}
                                 />
                             )
                         }
@@ -547,6 +550,8 @@ const CreateSet = () => {
                                     }
                                     setLoading={setLoading}
                                     setSaving={setSaving}
+                                    showToast={showToast}
+                                    setShowToast={setShowToast}
                                 />
                             )
                         }
@@ -561,6 +566,8 @@ const CreateSet = () => {
                                     }
                                     setLoading={setLoading}
                                     setSaving={setSaving}
+                                    showToast={showToast}
+                                    setShowToast={setShowToast}
                                 />
                             )
                         }
@@ -612,6 +619,26 @@ const CreateSet = () => {
                                 {t('discard')}
                             </button>
                         </div>
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
+            {/* toast error */}
+            <ToastContainer
+                className="p-3 mt-5 position-sticky"
+                position="bottom-start"
+                style={{ zIndex: 9999 }}
+            >
+                <Toast
+                    show={showToast}
+                    bg="danger"
+                    onClose={() => {
+                        setShowToast(false)
+                    }}
+                    delay={3000}
+                    autohide
+                >
+                    <Toast.Body className="text-white">
+                        File is bigger than 20MB!
                     </Toast.Body>
                 </Toast>
             </ToastContainer>

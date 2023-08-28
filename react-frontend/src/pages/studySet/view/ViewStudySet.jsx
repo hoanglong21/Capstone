@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import Modal from 'react-bootstrap/Modal'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import Toast from 'react-bootstrap/Toast'
 
 import StudySetService from '../../../services/StudySetService'
 import CardService from '../../../services/CardService'
@@ -81,6 +83,8 @@ const ViewStudySet = () => {
     const [showWarningModal, setShowWarningModal] = useState(false)
     const { userLanguage } = useSelector((state) => state.user)
     const { t, i18n } = useTranslation()
+
+    const [showToast, setShowToast] = useState(false)
 
     useEffect(() => {
         if (id.includes('.')) {
@@ -866,6 +870,8 @@ const ViewStudySet = () => {
                             fullCard={fullCard}
                             key={fullCard.card.id}
                             userInfo={userInfo}
+                            showToast={showToast}
+                            setShowToast={setShowToast}
                         />
                     ))}
                     {/* Pagination */}
@@ -1015,6 +1021,26 @@ const ViewStudySet = () => {
                     </button>
                 </Modal.Footer>
             </Modal>
+            {/* toast error */}
+            <ToastContainer
+                className="p-3 mt-5 position-sticky"
+                position="bottom-start"
+                style={{ zIndex: 99999 }}
+            >
+                <Toast
+                    show={showToast}
+                    bg="danger"
+                    onClose={() => {
+                        setShowToast(false)
+                    }}
+                    delay={3000}
+                    autohide
+                >
+                    <Toast.Body className="text-white">
+                        File is bigger than 20MB!
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
         </div>
     )
 }

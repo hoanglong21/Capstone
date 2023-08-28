@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import ClassService from '../../services/ClassService'
 import PostService from '../../services/PostService'
-import { uploadFile } from '../../features/fileManagement'
+import { deleteFolder, uploadFile } from '../../features/fileManagement'
 import AttachmentService from '../../services/AttachmentService'
 import AssignmentService from '../../services/AssignmentService'
 
@@ -26,11 +26,13 @@ import {
 import '../../assets/styles/class.css'
 import TestService from '../../services/TestService'
 import { useTranslation } from 'react-i18next'
-import Pagination from '../../components/Pagination'
 
 const Stream = () => {
     const navigate = useNavigate()
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
     const { id } = useParams()
 
@@ -49,12 +51,7 @@ const Stream = () => {
 
     const [assignments, setAssignments] = useState([])
     const [tests, setTests] = useState([])
-    const { userLanguage } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
-
-    const [page, setPage] = useState(1)
-    const [totalItems, setTotalItems] = useState(0)
+    const [error, setError] = useState(false)
 
     useEffect(() => {
         if (userToken) {
@@ -84,33 +81,33 @@ const Stream = () => {
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
+            setError(false)
             try {
                 // class
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
                 // posts
-                const tempPosts = (
-                    await PostService.getFilterList(
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        `=${tempClass.id}`,
-                        '=1',
-                        '=10'
-                    )
-                ).data
-                setTotalItems(tempPosts.totalItems)
                 setPosts(
-                    tempPosts.list
+                    (
+                        await PostService.getFilterList(
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            '',
+                            `=${tempClass.id}`,
+                            '=1',
+                            '=10'
+                        )
+                    ).data.list
                 )
                 // add post
                 setAddPost({
                     user: {
                         id: userInfo.id,
                         username: userInfo.username,
+                        avatar: userInfo.avatar,
                     },
                     classroom: {
                         id: tempClass.id,
@@ -178,47 +175,6 @@ const Stream = () => {
         }
     }, [userInfo])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const tempPosts = (
-                    await PostService.getFilterList(
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        `=${classroom.id}`,
-                        `=${page}`,
-                        '=10'
-                    )
-                ).data
-                setTotalItems(tempPosts.totalItems)
-                setPosts(
-                    tempPosts.list
-                )
-            } catch (error) {
-                if (error.response && error.response.data) {
-                    console.log(error.response.data)
-                } else {
-                    console.log(error.message)
-                }
-                if (
-                    error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
-                ) {
-                    navigate('/notFound')
-                }
-            }
-        }
-        if (userInfo?.id && classroom?.id) {
-            setLoading(true)
-            fetchData()
-            setLoading(false)
-        }
-    }, [classroom, page])
-
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
@@ -238,6 +194,14 @@ const Stream = () => {
             }
         })
     }, [])
+
+    useEffect(() => {
+        if (error === true) {
+            setTimeout(() => {
+                setError(false)
+            }, 1500)
+        }
+    }, [error])
 
     const toggleShowResetMess = () => {
         setShowResetMess(!showResetMess)
@@ -269,9 +233,13 @@ const Stream = () => {
     }
 
     const handleUploadFile = async (event) => {
-        setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
+            if (file.size > 20 * 1024 * 1024) {
+                setError(true)
+                return
+            }
+            setLoadingUploadFile(true)
             setUploadFiles([
                 ...uploadFiles,
                 { file_name: file.name, file_type: file.type, file: file },
@@ -310,6 +278,8 @@ const Stream = () => {
             setAddPost({
                 user: {
                     id: userInfo.id,
+                    username: userInfo.username,
+                    avatar: userInfo.avatar,
                 },
                 classroom: {
                     id: classroom.id,
@@ -317,23 +287,20 @@ const Stream = () => {
                 content: '',
             })
             setUploadFiles([])
-            const tempPosts = (
-                await PostService.getFilterList(
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    `=${classroom.id}`,
-                    '=1',
-                    '=10'
-                )
-            ).data
-            setPage(1)
-            setTotalItems(tempPosts.totalItems)
             setPosts(
-                tempPosts.list
+                (
+                    await PostService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        `=${classroom.id}`,
+                        '=1',
+                        '=10'
+                    )
+                ).data.list
             )
             setShowInput(false)
         } catch (error) {
@@ -347,6 +314,7 @@ const Stream = () => {
     }
 
     const handleCancelAddPost = () => {
+        setError(false)
         setUploadFiles([])
         setAddPost({ ...addPost, content: '' })
         setShowInput(false)
@@ -484,6 +452,14 @@ const Stream = () => {
                         <div className="card mainClass_postAddContainer mb-4">
                             {showInput ? (
                                 <div>
+                                    {error && (
+                                        <div
+                                            className="alert alert-danger"
+                                            role="alert"
+                                        >
+                                            File is bigger than 20MB!
+                                        </div>
+                                    )}
                                     <div className="createAssign_formGroup form-floating mb-4">
                                         <PostEditor
                                             onChange={(event, editor) => {
@@ -545,6 +521,7 @@ const Stream = () => {
                                         />
                                         <button
                                             type="btn"
+                                            className="btn p-0"
                                             disabled={loadingUploadFile}
                                         >
                                             <label
@@ -577,7 +554,8 @@ const Stream = () => {
                                                 className="btn btn-primary"
                                                 disabled={
                                                     !addPost?.content ||
-                                                    loadingAddPost
+                                                    loadingAddPost ||
+                                                    error
                                                 }
                                             >
                                                 {loadingAddPost
@@ -626,8 +604,7 @@ const Stream = () => {
                             </div>
                         </div>
                     ) : (
-                        <div>
-                            {posts?.map((post, index) => (
+                        posts?.map((post, index) => (
                             <Post
                                 key={post.id}
                                 post={post}
@@ -636,18 +613,7 @@ const Stream = () => {
                                 posts={posts}
                                 userInfo={userInfo}
                             />
-                        ))}
-                        <Pagination
-                            className="mb-5"
-                            currentPage={page}
-                            totalCount={totalItems}
-                            pageSize={10}
-                            onPageChange={(page) => {
-                                setPage(page)
-                            }}
-                        />
-                        </div>
-                        
+                        ))
                     )}
                 </div>
                 {/* Toast reset code */}

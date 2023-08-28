@@ -186,7 +186,7 @@ export const KanjiCard = (props) => {
                         ).data
                     )
                 } else {
-                    var tempCard = contents[0].card
+                    var tempCard = { ...card }
                     if (tempCard?.studySet) {
                         tempCard.studySet.created_date = toBEDate(
                             tempCard.studySet.deleted_date
@@ -203,6 +203,7 @@ export const KanjiCard = (props) => {
                             )
                         }
                     }
+                    setCard(tempCard)
                     setCharacter({ ...contents[0], card: { ...tempCard } })
                     setName({ ...contents[1], card: { ...tempCard } })
                     setStrokes({ ...contents[2], card: { ...tempCard } })
@@ -266,7 +267,6 @@ export const KanjiCard = (props) => {
     }
 
     const handleChangeFile = async (event) => {
-        props.setSaving(true)
         const name = event.target.name
         // set loading
         if (name === 'picture') {
@@ -281,6 +281,11 @@ export const KanjiCard = (props) => {
         const file = event.target.files[0]
         if (file) {
             try {
+                if (file.size > 20 * 1024 * 1024) {
+                    props.setShowToast(true)
+                    return
+                }
+                props.setSaving(true)
                 const urlOld = String(card[name])
                 const url = await uploadFile(
                     file,
