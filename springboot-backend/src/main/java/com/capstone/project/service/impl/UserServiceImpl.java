@@ -8,6 +8,7 @@ import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.UserService;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.mail.internet.MimeMessage;
+import net.loomchild.segment.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,21 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
             throw new ResourceNotFroundException("User not exist with username: " + username);
+        }
+        return user;
+    }
+
+    @Override
+    public User getUserByUsernameOrEmail(String usernameOrEmail) throws ResourceNotFroundException {
+        boolean isEmail = usernameOrEmail.contains("@");
+        User user = null;
+        if (isEmail) {
+            user = userRepository.findUserByEmail(usernameOrEmail);
+        } else {
+            user = userRepository.findUserByUsername(usernameOrEmail);
+        }
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found with username or email: " + usernameOrEmail);
         }
         return user;
     }

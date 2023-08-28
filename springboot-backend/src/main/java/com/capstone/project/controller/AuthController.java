@@ -66,8 +66,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> AuthenticateAndGetToken(@RequestBody AuthenticationRequest authRequest) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-            User user = userService.getUserByUsername(authRequest.getUsername());
+            User user = userService.getUserByUsernameOrEmail(authRequest.getUsername());
 
             // Check if the user is banned
             if ("banned".equalsIgnoreCase(user.getStatus())) {
@@ -76,6 +75,8 @@ public class AuthController {
             if ("deleted".equalsIgnoreCase(user.getStatus())) {
                 return ResponseEntity.badRequest().body("Your account was deleted. Please contact the administrator.");
             }
+
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
                 String jwtToken = jwtService.generateToken(authRequest.getUsername());

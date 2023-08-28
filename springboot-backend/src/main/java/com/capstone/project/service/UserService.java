@@ -15,6 +15,8 @@ public interface UserService {
 
     User getUserByUsername(String username) throws ResourceNotFroundException;
 
+    User getUserByUsernameOrEmail(String usernameOrEmail) throws ResourceNotFroundException;
+
     User updateUser(String username, User userDetails) throws ResourceNotFroundException, DuplicateValueException;
 
     Boolean banUser(String username) throws ResourceNotFroundException;

@@ -75,6 +75,9 @@ const TestDetails = () => {
                         setCanTest(false)
                     }
                 }
+                if (tempTest?.due_date && new Date(tempTest?.due_date) < new Date()) {
+                    setCanTest(false)
+                }
             } catch (error) {
                 if (error.response && error.response.data) {
                     console.log(error.response.data)
