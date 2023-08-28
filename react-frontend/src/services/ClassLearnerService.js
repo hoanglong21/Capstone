@@ -57,6 +57,10 @@ const updateClassLeanerById = (classLearner, userId, classId) => {
     )
 }
 
+const requestToJoin = (classLearner) => {
+    return axios.put(API_BASE_URL + '/requestojoin', classLearner)
+}
+
 const filterGetLeaner = (
     userId,
     classId,
@@ -130,6 +134,7 @@ const ClassLearnerService = {
     deleteClassLearner,
     filterClassLeaner,
     updateClassLeanerById,
+    requestToJoin,
 }
 
 export default ClassLearnerService

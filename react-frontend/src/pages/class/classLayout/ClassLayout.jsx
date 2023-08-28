@@ -158,7 +158,7 @@ const ClassLayout = () => {
 
     const handleRequest = async () => {
         try {
-            ClassLearnerService.createClassLeaner({
+            ClassLearnerService.requestToJoin({
                 user: { id: userInfo.id, username: userInfo.username },
                 classroom: {
                     id: classroom.id,

@@ -186,7 +186,7 @@ export const KanjiCard = (props) => {
                         ).data
                     )
                 } else {
-                    var tempCard = contents[0].card
+                    var tempCard = { ...card }
                     if (tempCard?.studySet) {
                         tempCard.studySet.created_date = toBEDate(
                             tempCard.studySet.deleted_date
@@ -203,6 +203,7 @@ export const KanjiCard = (props) => {
                             )
                         }
                     }
+                    setCard(tempCard)
                     setCharacter({ ...contents[0], card: { ...tempCard } })
                     setName({ ...contents[1], card: { ...tempCard } })
                     setStrokes({ ...contents[2], card: { ...tempCard } })
