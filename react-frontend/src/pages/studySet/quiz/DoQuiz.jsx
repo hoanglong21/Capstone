@@ -189,7 +189,7 @@ const DoQuiz = () => {
                     tempFields.splice(2, 1)
                 } else if (tempStudySet.studySetType.id === 2) {
                     tempFields.splice(9, 1)
-                } else if (tempStudySet.studySetType.id === 2) {
+                } else if (tempStudySet.studySetType.id === 3) {
                     tempFields.splice(3, 1)
                 }
                 setFields(tempFields)

@@ -35,7 +35,7 @@ const KanjiCard = ({
 
     useEffect(() => {
         if (ques?.question_type) {
-            setExample(ques.question.content[2].content)
+            setExample(ques.question.content[9].content)
             if (
                 ques?.question_type === 1 &&
                 document.getElementById(`answerQues${quesIndex}`)
@@ -163,7 +163,7 @@ const KanjiCard = ({
                             <div className="quizQues_label my-4">
                                 {t('correctans')}
                             </div>
-                            <div className="quizQues_answer correct">
+                            <div className="quizQues_answer correct" disabled>
                                 <div
                                     className="learnCorrectAnswer"
                                     dangerouslySetInnerHTML={{

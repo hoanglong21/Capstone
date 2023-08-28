@@ -34,7 +34,7 @@ const GrammarCard = ({
 
     useEffect(() => {
         if (ques?.question_type) {
-            setExample(ques.question.content[2].content)
+            setExample(ques.question.content[3].content)
             if (
                 ques?.question_type === 1 &&
                 document.getElementById(`answerQues${quesIndex}`)
@@ -152,7 +152,7 @@ const GrammarCard = ({
                             <div className="quizQues_label my-4">
                                 {t('correctans')}
                             </div>
-                            <div className="quizQues_answer correct">
+                            <div className="quizQues_answer correct" disabled>
                                 <div
                                     className="learnCorrectAnswer"
                                     dangerouslySetInnerHTML={{
@@ -492,7 +492,7 @@ const GrammarCard = ({
                             <div className="quizQues_label my-4">
                                 {t('correctans')}
                             </div>
-                            <div className="quizQues_answer correct">
+                            <div className="quizQues_answer correct" disabled>
                                 {ques.question.content.map(
                                     (itemContent, index) => {
                                         if (
