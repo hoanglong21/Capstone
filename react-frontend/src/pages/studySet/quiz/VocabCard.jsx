@@ -132,13 +132,17 @@ const VocabCard = ({
                         placeholder="Type your answer here"
                         readOnly={results[quesIndex] !== null}
                         value={answers[quesIndex] || ''}
-                        onChange={(event) =>
+                        onChange={(event) => {
                             handleChangeAnswer(event.target.value, quesIndex)
-                        }
-                        onBlur={(event) => {
-                            if (event.target.value) {
+                            if (
+                                answers[quesIndex] === null &&
+                                event.target.value
+                            ) {
                                 setProgress(progress + 1)
-                            } else {
+                            } else if (
+                                answers[quesIndex] !== null &&
+                                !event.target.value
+                            ) {
                                 setProgress(progress > 0 ? progress - 1 : 0)
                             }
                         }}
