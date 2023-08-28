@@ -26,6 +26,7 @@ import {
 import '../../assets/styles/class.css'
 import TestService from '../../services/TestService'
 import { useTranslation } from 'react-i18next'
+import Pagination from '../../components/Pagination'
 
 const Stream = () => {
     const navigate = useNavigate()
@@ -51,6 +52,9 @@ const Stream = () => {
     const { userLanguage } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
     const { t, i18n } = useTranslation()
+
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     useEffect(() => {
         if (userToken) {
@@ -85,20 +89,22 @@ const Stream = () => {
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
                 // posts
+                const tempPosts = (
+                    await PostService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        `=${tempClass.id}`,
+                        '=1',
+                        '=10'
+                    )
+                ).data
+                setTotalItems(tempPosts.totalItems)
                 setPosts(
-                    (
-                        await PostService.getFilterList(
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            '',
-                            `=${tempClass.id}`,
-                            '=1',
-                            '=10'
-                        )
-                    ).data.list
+                    tempPosts.list
                 )
                 // add post
                 setAddPost({
@@ -171,6 +177,47 @@ const Stream = () => {
             setLoading(false)
         }
     }, [userInfo])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const tempPosts = (
+                    await PostService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        `=${classroom.id}`,
+                        `=${page}`,
+                        '=10'
+                    )
+                ).data
+                setTotalItems(tempPosts.totalItems)
+                setPosts(
+                    tempPosts.list
+                )
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    console.log(error.response.data)
+                } else {
+                    console.log(error.message)
+                }
+                if (
+                    error.message.includes('not exist') ||
+                    error?.response.data.includes('not exist')
+                ) {
+                    navigate('/notFound')
+                }
+            }
+        }
+        if (userInfo?.id && classroom?.id) {
+            setLoading(true)
+            fetchData()
+            setLoading(false)
+        }
+    }, [classroom, page])
 
     // ignore error
     useEffect(() => {
@@ -270,7 +317,24 @@ const Stream = () => {
                 content: '',
             })
             setUploadFiles([])
-            setPosts([...posts, tempPost])
+            const tempPosts = (
+                await PostService.getFilterList(
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    `=${classroom.id}`,
+                    '=1',
+                    '=10'
+                )
+            ).data
+            setPage(1)
+            setTotalItems(tempPosts.totalItems)
+            setPosts(
+                tempPosts.list
+            )
             setShowInput(false)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -562,7 +626,8 @@ const Stream = () => {
                             </div>
                         </div>
                     ) : (
-                        posts?.map((post, index) => (
+                        <div>
+                            {posts?.map((post, index) => (
                             <Post
                                 key={post.id}
                                 post={post}
@@ -571,7 +636,18 @@ const Stream = () => {
                                 posts={posts}
                                 userInfo={userInfo}
                             />
-                        ))
+                        ))}
+                        <Pagination
+                            className="mb-5"
+                            currentPage={page}
+                            totalCount={totalItems}
+                            pageSize={10}
+                            onPageChange={(page) => {
+                                setPage(page)
+                            }}
+                        />
+                        </div>
+                        
                     )}
                 </div>
                 {/* Toast reset code */}
