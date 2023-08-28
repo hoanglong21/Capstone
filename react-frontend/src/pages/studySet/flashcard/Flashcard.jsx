@@ -252,6 +252,10 @@ const Flashcard = () => {
                     )
                 ).data.list
                 setCards(tempCards)
+                if (tempCards.length === 0) {
+                    navigate('/notFound')
+                    return
+                }
                 // initial data
                 setCardIndex(0)
                 if (tempCards[0]?.progress) {
@@ -269,7 +273,7 @@ const Flashcard = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') || isNaN(id)
                 ) {
                     navigate('/notFound')
                 }
@@ -302,10 +306,16 @@ const Flashcard = () => {
                     progress.card.studySet.user.created_date = toBEDate(
                         progress.card.studySet.user.created_date
                     )
+                    progress.card.studySet.user.dob = toBEDate(
+                        progress.card.studySet.user.dob
+                    )
                 }
                 if (progress?.user) {
                     progress.user.created_date = toBEDate(
                         progress.user.created_date
+                    )
+                    progress.user.dob = toBEDate(
+                        progress.user.dob
                     )
                 }
                 // update
@@ -550,9 +560,21 @@ const Flashcard = () => {
         tempCard.studySet.user.created_date = toBEDate(
             tempCard.studySet.user.created_date
         )
+        tempCard.studySet.user.dob = toBEDate(
+            tempCard.studySet.user.dob
+        )
+        tempCard.studySet.user.deleted_date = toBEDate(
+            tempCard.studySet.user.deleted_date
+        )
+        tempCard.studySet.user.banned_date = toBEDate(
+            tempCard.studySet.user.banned_date
+        )
         var tempUser = {
             ...userInfo,
             created_date: toBEDate(userInfo.created_date),
+            dob: toBEDate(userInfo.dob),
+            deleted_date: toBEDate(userInfo.deleted_date),
+            banned_date: toBEDate(userInfo.banned_date),
         }
         var tempProgress = {
             user: tempUser,
@@ -926,7 +948,7 @@ const Flashcard = () => {
                         <div className="setPage_editCardModal setPage_noteModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancelProgressModal}
                                 >
                                     <CloseIcon size="1.875rem" />
@@ -962,7 +984,7 @@ const Flashcard = () => {
                         <div className="setPage_editCardModal setPage_pictureModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancelProgressModal}
                                 >
                                     <CloseIcon size="1.875rem" />
@@ -1047,7 +1069,7 @@ const Flashcard = () => {
                         <div className="setPage_editCardModal setPage_audioModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancelProgressModal}
                                 >
                                     <CloseIcon size="1.875rem" />
@@ -1394,7 +1416,7 @@ const Flashcard = () => {
                             <button
                                 id="autoPlayToastClose"
                                 type="button"
-                                className="btn-close btn-close-white"
+                                className="btn btn-close btn-close-white"
                                 data-bs-dismiss="toast"
                                 aria-label="Close"
                             ></button>

@@ -98,14 +98,14 @@ const Results = () => {
                                         {result?.classLearner?.user?.username}
                                     </th>
                                     <td>
-                                        {result?.testLearner?.length === 0 &&
+                                        {result?.testLearner?.length === 0 && test?.due_date &&
                                         new Date(test?.due_date) >
                                             new Date() ? (
                                             <div style={{ color: '#d50000' }}>
                                                 {t('missing')}
                                             </div>
                                         ) : (
-                                            result?.testLearner[0]?.mark || ''
+                                            isNaN(result?.testLearner[0]?.mark) ? '' : result?.testLearner[0]?.mark
                                         )}
                                     </td>
                                     <td>

@@ -53,6 +53,13 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const { userToken } = useSelector((state) => state.auth)
     const { t, i18n } = useTranslation()
 
+    function toBEDate(date) {
+        if (date && !date.includes('+07:00')) {
+            return new String(date?.replace(/\s/g, 'T') + '.000' + '+07:00')
+        }
+        return ''
+    }
+
     // ignore error
     useEffect(() => {
         window.addEventListener('error', (e) => {
@@ -115,6 +122,21 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         setLoadingUpdatePost(true)
         try {
             // update post
+            var tempUpdatePost = {...updatePost}
+            tempUpdatePost.created_date = toBEDate(tempUpdatePost.created_date)
+            tempUpdatePost.modified_date = toBEDate(tempUpdatePost.modified_date)
+            if (tempUpdatePost?.user) {
+                tempUpdatePost.user.created_date = toBEDate(tempUpdatePost.user.created_date)
+                tempUpdatePost.user.dob = toBEDate(tempUpdatePost.user.dob)
+            }
+            if (tempUpdatePost?.classroom) {
+                tempUpdatePost.classroom.created_date = toBEDate(tempUpdatePost.classroom.created_date)
+                tempUpdatePost.classroom.deleted_date = toBEDate(tempUpdatePost.classroom.deleted_date)
+                if (tempUpdatePost.classroom?.user) {
+                    tempUpdatePost.classroom.user.created_date = toBEDate(tempUpdatePost.classroom.user.created_date)
+                    tempUpdatePost.classroom.user.dob = toBEDate(tempUpdatePost.classroom.user.dob)
+                }
+            }
             const tempPost = (
                 await PostService.updatePost(updatePost.id, updatePost)
             ).data
@@ -346,7 +368,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                             </div>
                         </div>
                     </div>
-                    {!post?.classroom?._deleted && (
+                    {(!post?.classroom?._deleted && post?.user?.id === userInfo?.id) && (
                         <div className="dropdown">
                             <button
                                 className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
@@ -447,6 +469,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         onChange={handleUploadFile}
                                     />
                                     <button
+                                        className='btn p-0'
                                         type="btn"
                                         disabled={loadingUploadFile}
                                     >

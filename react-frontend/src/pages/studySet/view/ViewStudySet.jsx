@@ -136,7 +136,8 @@ const ViewStudySet = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') ||
+                    isNaN(id)
                 ) {
                     navigate('/notFound')
                 }
@@ -234,7 +235,8 @@ const ViewStudySet = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') ||
+                    isNaN(id)
                 ) {
                     navigate('/notFound')
                 }

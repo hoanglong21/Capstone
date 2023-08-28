@@ -4,9 +4,9 @@
 }
 
 .translateContainer .translateInput {
-    overflow: auto hidden;
+    overflow-y: auto;
     box-sizing: border-box;
-    min-height: 9.375rem;
+    height: 15rem;
     padding: 0.625rem 1rem;
     line-height: 1.56;
     resize: none;

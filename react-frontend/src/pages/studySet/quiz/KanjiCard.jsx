@@ -35,7 +35,7 @@ const KanjiCard = ({
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
-            if (ques?.question_type === 1) {
+            if (ques?.question_type === 1 && document.getElementById(`answerQues${quesIndex}`)) {
                 document.getElementById(`answerQues${quesIndex}`).value = ''
             }
             if (ques?.question_type === 2) {

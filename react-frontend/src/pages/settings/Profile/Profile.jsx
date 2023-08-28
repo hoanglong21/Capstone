@@ -10,11 +10,7 @@ import {
 import { updateUser } from '../../../features/user/userAction'
 import { reset } from '../../../features/user/userSlice'
 
-import {
-    DeleteIcon,
-    EditIcon,
-    WarningSolidIcon,
-} from '../../../components/icons'
+import { DeleteIcon, EditIcon } from '../../../components/icons'
 import defaultAvatar from '../../../assets/images/default_avatar.png'
 import FormStyles from '../../../assets/styles/Form.module.css'
 import './Profile.css'
@@ -48,6 +44,9 @@ const Profile = () => {
     // fetch user state
     useEffect(() => {
         setNewUser({ ...userInfo })
+        if (userInfo?.dob) {
+            document.getElementById('dobProfile').value = formatDate(userInfo?.dob)
+        }
     }, [userInfo])
 
     // fetch avatar
@@ -289,15 +288,12 @@ const Profile = () => {
                 <div className="form-group profile-col-6">
                     <label className={FormStyles.formLabel}>{t('dob')}</label>
                     <input
-                        id="dob"
+                        id="dobProfile"
                         className={`form-control ${FormStyles.formControl}`}
                         name="dob"
                         type="date"
-                        value={
-                            newUser.dob ? formatDate(newUser.dob) : undefined
-                        }
                         disabled={userInfo?.status === 'pending'}
-                        onChange={handleChange}
+                        onBlur={handleChange}
                     />
                 </div>
                 {/* Phone */}
@@ -414,6 +410,7 @@ const Profile = () => {
                 </div>
                 <div className="col-12">
                     <button
+                        type='button'
                         className="btn btn-primary px-4 mt-1"
                         disabled={userInfo?.status === 'pending'}
                         onClick={handleSubmit}

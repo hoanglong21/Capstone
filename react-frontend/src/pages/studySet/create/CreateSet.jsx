@@ -120,9 +120,9 @@ const CreateSet = () => {
                 }
                 const tempSetCreatedDate = temp?.created_date
                 temp.created_date = toBEDate(tempSetCreatedDate)
-                if (temp.user) {
-                    const tempUserCreatedDate = temp?.user?.created_date
-                    temp.user.created_date = toBEDate(tempUserCreatedDate)
+                if (temp?.user) {
+                    temp.user.created_date = toBEDate(temp.user.created_date)
+                    temp.user.dob = toBEDate(temp.user.dob)
                 }
                 setStudySet(temp)
                 // type

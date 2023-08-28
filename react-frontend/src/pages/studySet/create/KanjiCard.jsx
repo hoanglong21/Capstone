@@ -196,7 +196,10 @@ export const KanjiCard = (props) => {
                         )
                         if (tempCard.studySet?.user) {
                             tempCard.studySet.user.created_date = toBEDate(
-                                tempCard.studySet.user.deleted_date
+                                tempCard.studySet.user.created_date
+                            )
+                            tempCard.studySet.user.dob = toBEDate(
+                                tempCard.studySet.user.dob
                             )
                         }
                     }

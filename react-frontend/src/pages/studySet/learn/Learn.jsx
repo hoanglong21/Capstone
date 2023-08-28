@@ -244,6 +244,10 @@ const Learn = () => {
                     tempCounts['Not studied'] +
                     tempCounts['Still learning'] +
                     tempCounts['Mastered']
+                if (tempNumCards === 0) {
+                    navigate('/notFound')
+                    return
+                }
                 setNumQues(tempNumCards)
                 // check allow
                 if (tempNumCards < 2) {
@@ -358,7 +362,7 @@ const Learn = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') || isNaN(id)
                 ) {
                     navigate('/notFound')
                 }

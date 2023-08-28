@@ -161,7 +161,7 @@ const Login = () => {
                                     </span>
                                 </div>
                             ) : (
-                                'Login'
+                                t('login')
                             )}
                         </button>
                     </div>

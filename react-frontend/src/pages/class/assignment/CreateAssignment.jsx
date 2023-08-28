@@ -555,6 +555,9 @@ function CreateAssignment() {
                         type="file"
                         id="uploadPostFile"
                         className="postUpload"
+                        onClick={(event) => {
+                            event.target.value = null
+                        }}
                         onChange={handleUploadFile}
                     />
                     <button className="btn p-0" disabled={loadingUploadFile}>

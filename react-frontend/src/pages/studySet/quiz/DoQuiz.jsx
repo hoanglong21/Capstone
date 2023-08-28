@@ -166,6 +166,10 @@ const DoQuiz = () => {
                     tempCounts['Not studied'] +
                     tempCounts['Still learning'] +
                     tempCounts['Mastered']
+                if (tempNumQues === 0) {
+                    navigate('/notFound')
+                    return
+                }
                 if (tempNumQues < 2) {
                     setIsAllow(false)
                     setLoading(false)
@@ -250,7 +254,7 @@ const DoQuiz = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') || isNaN(id)
                 ) {
                     navigate('/notFound')
                 }

@@ -13,6 +13,7 @@ const ViewTest = () => {
     const { userInfo } = useSelector((state) => state.user)
 
     const { id } = useParams()
+    const { test_id } = useParams()
     const [classroom, setClassroom] = useState({})
     const { userLanguage } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
@@ -26,6 +27,12 @@ const ViewTest = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (
+                isNaN(test_id)
+            ) {
+                navigate('/notFound')
+                return
+            }
             try {
                 const tempClass = (await ClassService.getClassroomById(id)).data
                 setClassroom(tempClass)
