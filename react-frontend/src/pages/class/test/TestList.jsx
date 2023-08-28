@@ -413,13 +413,6 @@ const TestList = () => {
                                                     {t('posted')}{' '}
                                                     {test?.created_date}
                                                 </div>
-                                                {test?.due_date &&
-                                                    new Date(test?.due_date) <
-                                                        today && (
-                                                        <div className="assignMissing">
-                                                            {t('missing')}
-                                                        </div>
-                                                    )}
                                             </div>
                                             <div className="mt-3 d-flex justify-content-between">
                                                 <button
