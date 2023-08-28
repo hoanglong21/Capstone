@@ -23,7 +23,11 @@ const LearnerSubmission = ({ assignment }) => {
     const navigate = useNavigate()
 
     const { assign_id } = useParams()
+
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
     const [submission, setSubmission] = useState({})
     const [attachments, setAttachments] = useState([])
@@ -33,9 +37,7 @@ const LearnerSubmission = ({ assignment }) => {
     const [comments, setComments] = useState([])
     const [addComment, setAddComment] = useState('')
     const [loadingComment, setLoadingComment] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
+    const [error, setError] = useState(false)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -43,6 +45,14 @@ const LearnerSubmission = ({ assignment }) => {
         }
         return ''
     }
+
+    useEffect(() => {
+        if (error === true) {
+            setTimeout(() => {
+                setError(false)
+            }, 1500)
+        }
+    }, [error])
 
     useEffect(() => {
         if (userToken) {
@@ -116,10 +126,14 @@ const LearnerSubmission = ({ assignment }) => {
     }, [assignment, userInfo])
 
     const handleUploadFile = async (event) => {
-        setLoadingUploadFile(true)
         try {
             const file = event.target.files[0]
             if (file) {
+                if (file.size > 1 * 1024 * 1024) {
+                    setError(true)
+                    return
+                }
+                setLoadingUploadFile(true)
                 const url = await uploadFile(
                     file,
                     `${assignment?.user?.username}/class/${assignment?.classroom?.id}/assignment/${assignment?.id}/submission/${submission?.id}`
@@ -294,7 +308,12 @@ const LearnerSubmission = ({ assignment }) => {
                         <div className="submission_heading">
                             {t('yourWork')}
                         </div>
-                        {/* attchment */}
+                        {error && (
+                            <div className="alert alert-danger" role="alert">
+                                File is bigger than 20MB!
+                            </div>
+                        )}
+                        {/* attachment */}
                         {attachments.map((file, index) => (
                             <div className="card mb-2" key={index}>
                                 <div className="card-body d-flex justify-content-between">
@@ -310,12 +329,16 @@ const LearnerSubmission = ({ assignment }) => {
                                             {file.file_type}
                                         </div>
                                     </a>
-                                    <button
-                                        className="btn p-0 fileUploadDelButton"
-                                        onClick={() => handleDeleteFile(index)}
-                                    >
-                                        <CloseIcon />
-                                    </button>
+                                    {!submission?._done && (
+                                        <button
+                                            className="btn p-0 fileUploadDelButton"
+                                            onClick={() =>
+                                                handleDeleteFile(index)
+                                            }
+                                        >
+                                            <CloseIcon />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}

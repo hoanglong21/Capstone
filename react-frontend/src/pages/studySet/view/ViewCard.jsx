@@ -17,7 +17,7 @@ import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
-const ViewCard = ({ fullCard, userInfo }) => {
+const ViewCard = ({ fullCard, userInfo, showToast, setShowToast }) => {
     const [card, setCard] = useState({})
     const [progress, setProgress] = useState({})
 
@@ -87,9 +87,13 @@ const ViewCard = ({ fullCard, userInfo }) => {
 
     const handleChangeFile = async (event) => {
         const name = event.target.name
-        name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
         if (file) {
+            if (file.size > 20 * 1024 * 1024) {
+                setShowToast(true)
+                return
+            }
+            name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
             name === 'picture' ? setPicture(file) : setAudio(file)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
@@ -490,10 +494,10 @@ const ViewCard = ({ fullCard, userInfo }) => {
                     )}
                     {/* audio modal */}
                     {showAudio && (
-                        <div className="btn setPage_editCardModal setPage_audioModal">
+                        <div className="setPage_editCardModal setPage_audioModal">
                             <div className="modal-content d-flex">
                                 <button
-                                    className="close p-0 mb-3 text-end"
+                                    className="btn close p-0 mb-3 text-end"
                                     onClick={handleCancel}
                                 >
                                     <CloseIcon size="1.875rem" />

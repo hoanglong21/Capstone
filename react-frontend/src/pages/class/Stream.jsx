@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import ClassService from '../../services/ClassService'
 import PostService from '../../services/PostService'
-import { uploadFile } from '../../features/fileManagement'
+import { deleteFolder, uploadFile } from '../../features/fileManagement'
 import AttachmentService from '../../services/AttachmentService'
 import AssignmentService from '../../services/AssignmentService'
 
@@ -30,6 +30,9 @@ import { useTranslation } from 'react-i18next'
 const Stream = () => {
     const navigate = useNavigate()
     const { userInfo } = useSelector((state) => state.user)
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
 
     const { id } = useParams()
 
@@ -48,9 +51,7 @@ const Stream = () => {
 
     const [assignments, setAssignments] = useState([])
     const [tests, setTests] = useState([])
-    const { userLanguage } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
+    const [error, setError] = useState(false)
 
     useEffect(() => {
         if (userToken) {
@@ -80,6 +81,7 @@ const Stream = () => {
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
+            setError(false)
             try {
                 // class
                 const tempClass = (await ClassService.getClassroomById(id)).data
@@ -105,6 +107,7 @@ const Stream = () => {
                     user: {
                         id: userInfo.id,
                         username: userInfo.username,
+                        avatar: userInfo.avatar,
                     },
                     classroom: {
                         id: tempClass.id,
@@ -192,6 +195,14 @@ const Stream = () => {
         })
     }, [])
 
+    useEffect(() => {
+        if (error === true) {
+            setTimeout(() => {
+                setError(false)
+            }, 1500)
+        }
+    }, [error])
+
     const toggleShowResetMess = () => {
         setShowResetMess(!showResetMess)
     }
@@ -222,9 +233,13 @@ const Stream = () => {
     }
 
     const handleUploadFile = async (event) => {
-        setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
+            if (file.size > 20 * 1024 * 1024) {
+                setError(true)
+                return
+            }
+            setLoadingUploadFile(true)
             setUploadFiles([
                 ...uploadFiles,
                 { file_name: file.name, file_type: file.type, file: file },
@@ -263,6 +278,8 @@ const Stream = () => {
             setAddPost({
                 user: {
                     id: userInfo.id,
+                    username: userInfo.username,
+                    avatar: userInfo.avatar,
                 },
                 classroom: {
                     id: classroom.id,
@@ -270,7 +287,21 @@ const Stream = () => {
                 content: '',
             })
             setUploadFiles([])
-            setPosts([...posts, tempPost])
+            setPosts(
+                (
+                    await PostService.getFilterList(
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        `=${classroom.id}`,
+                        '=1',
+                        '=10'
+                    )
+                ).data.list
+            )
             setShowInput(false)
         } catch (error) {
             if (error.response && error.response.data) {
@@ -283,6 +314,7 @@ const Stream = () => {
     }
 
     const handleCancelAddPost = () => {
+        setError(false)
         setUploadFiles([])
         setAddPost({ ...addPost, content: '' })
         setShowInput(false)
@@ -420,6 +452,14 @@ const Stream = () => {
                         <div className="card mainClass_postAddContainer mb-4">
                             {showInput ? (
                                 <div>
+                                    {error && (
+                                        <div
+                                            className="alert alert-danger"
+                                            role="alert"
+                                        >
+                                            File is bigger than 20MB!
+                                        </div>
+                                    )}
                                     <div className="createAssign_formGroup form-floating mb-4">
                                         <PostEditor
                                             onChange={(event, editor) => {
@@ -481,6 +521,7 @@ const Stream = () => {
                                         />
                                         <button
                                             type="btn"
+                                            className="btn p-0"
                                             disabled={loadingUploadFile}
                                         >
                                             <label
@@ -513,7 +554,8 @@ const Stream = () => {
                                                 className="btn btn-primary"
                                                 disabled={
                                                     !addPost?.content ||
-                                                    loadingAddPost
+                                                    loadingAddPost ||
+                                                    error
                                                 }
                                             >
                                                 {loadingAddPost
