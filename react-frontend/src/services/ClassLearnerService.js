@@ -61,7 +61,7 @@ const filterGetLeaner = (
     userId,
     classId,
     username,
-    isAccepted,
+    status,
     sortBy,
     direction,
     page,
@@ -75,8 +75,8 @@ const filterGetLeaner = (
             classId +
             '&username' +
             username +
-            '&accepted' +
-            isAccepted +
+            '&status' +
+            status +
             '&sortby' +
             sortBy +
             '&direction' +

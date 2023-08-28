@@ -32,6 +32,7 @@ public class ClassServiceImpl implements ClassService {
     private final JavaMailSender mailSender;
     private final ClassRepository classRepository;
     private final UserSettingRepository userSettingRepository;
+    private final HistoryRepository historyRepository;
     private final PostRepository postRepository;
     private final TestRepository testRepository;
     private final TestLearnerRepository testLearnerRepository;
@@ -51,10 +52,11 @@ public class ClassServiceImpl implements ClassService {
     private final UserService userService;
 
     @Autowired
-    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, JavaMailSender mailSender, UserSettingRepository usersettingRepository, UserSettingRepository userSettingRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
+    public ClassServiceImpl(ClassRepository classRepository, EntityManager em, JavaMailSender mailSender, UserSettingRepository usersettingRepository, UserSettingRepository userSettingRepository, HistoryRepository historyRepository, PostRepository postRepository, TestRepository testRepository, TestLearnerRepository testLearnerRepository, TestResultRepository testResultRepository, QuestionRepository questionRepository, AnswerRepository answerRepository, NotificationRepository notificationRepository, CommentRepository commentRepository, AssignmentRepository assignmentRepository, AttachmentRepository attachmentRepository, SubmissionRepository submissionRepository, UserRepository userRepository, StudySetRepository studySetRepository, StudySetService studySetService, ClassLearnerRepository classLearnerRepository, UserService userService) {
         this.classRepository = classRepository;
         this.mailSender = mailSender;
         this.userSettingRepository = userSettingRepository;
+        this.historyRepository = historyRepository;
         this.postRepository = postRepository;
         this.testRepository = testRepository;
         this.testLearnerRepository = testLearnerRepository;
@@ -188,6 +190,12 @@ public class ClassServiceImpl implements ClassService {
     public Boolean deleteHardClass(int id) throws ResourceNotFroundException {
         Class classroom = classRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFroundException("Class not exist with id:" + id));
+        for(ClassLearner classLearner : classLearnerRepository.getClassLeanerByClassroomId(classroom.getId())){
+            classLearnerRepository.delete(classLearner);
+        }
+        for(History history : historyRepository.getHistoriesByClassroomId(classroom.getId())){
+            historyRepository.delete(history);
+        }
         for(Post post : postRepository.getPostByClassroomId(classroom.getId())){
             for(Comment commentpost : commentRepository.getCommentByPostId(post.getId())){
                 deleteCommentAndChildren(commentpost);

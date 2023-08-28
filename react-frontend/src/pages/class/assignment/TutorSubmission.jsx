@@ -78,7 +78,7 @@ const TutorSubmission = ({ assignment }) => {
                         '',
                         `=${assignment?.classroom?.id}`,
                         '',
-                        '=1',
+                        '=enrolled',
                         '',
                         '',
                         '',
@@ -175,7 +175,7 @@ const TutorSubmission = ({ assignment }) => {
                         '',
                         `=${assignment?.classroom?.id}`,
                         `${search ? `=${search}` : ''}`,
-                        '=1',
+                        '=enrolled',
                         '',
                         '',
                         '',
@@ -617,7 +617,7 @@ const TutorSubmission = ({ assignment }) => {
                                 </span>
                             </div>
                         </div>
-                    ) : (
+                    ) : submission?.id ? (
                         <div>
                             <div className="submission_detail">
                                 <div className="d-flex justify-content-between">
@@ -781,7 +781,7 @@ const TutorSubmission = ({ assignment }) => {
                                 </div>
                             </div>
                         </div>
-                    )}
+                    ) : ''}
                 </div>
             </div>
         </div>

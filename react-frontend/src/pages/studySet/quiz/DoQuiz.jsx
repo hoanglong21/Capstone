@@ -668,30 +668,30 @@ const DoQuiz = () => {
                                 className="progress"
                                 role="progressbar"
                                 aria-label="Segment one"
-                                aria-valuenow={`${(correct / numQues) * 100}`}
+                                aria-valuenow={`${((correct / numQues) * 100).toFixed(2)}`}
                                 aria-valuemin="0"
                                 aria-valuemax="100"
                                 style={{
-                                    width: `${(correct / numQues) * 100}%`,
+                                    width: `${((correct / numQues) * 100).toFixed(2)}%`,
                                 }}
                             >
                                 <div className="progress-bar bg-success">
-                                    {(correct / numQues) * 100}%
+                                    {((correct / numQues) * 100).toFixed(2)}%
                                 </div>
                             </div>
                             <div
                                 className="progress"
                                 role="progressbar"
                                 aria-label="Segment two"
-                                aria-valuenow={`${(incorrect / numQues) * 100}`}
+                                aria-valuenow={`${((incorrect / numQues) * 100).toFixed(2)}`}
                                 aria-valuemin="0"
                                 aria-valuemax="100"
                                 style={{
-                                    width: `${(incorrect / numQues) * 100}%`,
+                                    width: `${((incorrect / numQues) * 100).toFixed(2)}%`,
                                 }}
                             >
                                 <div className="progress-bar bg-danger">
-                                    {(incorrect / numQues) * 100}%
+                                    {((incorrect / numQues) * 100).toFixed(2)}%
                                 </div>
                             </div>
                         </div>

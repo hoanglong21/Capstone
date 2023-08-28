@@ -107,9 +107,21 @@ const VocabCard = ({
         tempCard.studySet.user.created_date = toBEDate(
             tempCard.studySet.user.created_date
         )
+        tempCard.studySet.user.dob = toBEDate(
+            tempCard.studySet.user.dob
+        )
+        tempCard.studySet.user.deleted_date = toBEDate(
+            tempCard.studySet.user.deleted_date
+        )
+        tempCard.studySet.user.banned_date = toBEDate(
+            tempCard.studySet.user.banned_date
+        )
         var tempUser = {
             ...userInfo,
             created_date: toBEDate(userInfo.created_date),
+            dob: toBEDate(userInfo.dob),
+            deleted_date: toBEDate(userInfo.deleted_date),
+            banned_date: toBEDate(userInfo.banned_date),
         }
         var tempProgress = {
             user: tempUser,
