@@ -57,8 +57,10 @@ const updateClassLeanerById = (classLearner, userId, classId) => {
     )
 }
 
-const requestToJoin = (classLearner) => {
-    return axios.put(API_BASE_URL + '/requestojoin', classLearner)
+const requestToJoin = (userid, classid) => {
+    return axios.get(
+        API_BASE_URL + '/requestojoin?userid=' + userid + '&classid=' + classid
+    )
 }
 
 const filterGetLeaner = (

@@ -158,19 +158,13 @@ const ClassLayout = () => {
 
     const handleRequest = async () => {
         try {
-            ClassLearnerService.requestToJoin({
-                user: { id: userInfo.id, username: userInfo.username },
-                classroom: {
-                    id: classroom.id,
-                },
-                status: 'pending',
-            })
+            ClassLearnerService.requestToJoin(userInfo.id, classroom.id)
             NotificationService.createNotification({
                 title: 'Request to join class',
                 content: `You have a request to join class ${classroom?.class_name} from ${userInfo?.username}`,
                 user: {
-                    id: classroom.user.id,
-                    username: classroom.user.username,
+                    id: classroom.author_id,
+                    username: classroom.author,
                 },
                 url: `/class/${classroom.id}/people`,
             })
