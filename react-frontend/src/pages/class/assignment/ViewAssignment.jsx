@@ -21,6 +21,13 @@ const ViewAssignment = () => {
     const [classroom, setClassroom] = useState({})
 
     useEffect(() => {
+        if (assign_id.includes('.')) {
+            navigate('/notFound')
+            return
+        }
+    }, [])
+
+    useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
         }

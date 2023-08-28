@@ -63,8 +63,9 @@ const ClassLayout = () => {
     const { userToken } = useSelector((state) => state.auth)
 
     useEffect(() => {
-        if (!/^[0-9]$/.test(id)) {
+        if (id.includes('.')) {
             navigate('/notFound')
+            return
         }
     }, [])
 
