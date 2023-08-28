@@ -263,7 +263,7 @@ const ViewCard = ({ fullCard, userInfo }) => {
         var tempProgress = {
             user: tempUser,
             card: tempCard,
-            star: progress?.id ? !progress?._star : 0,
+            star: progress?.id ? !progress?._star === true : 1,
             audio: audio,
             picture: picture,
             note: note,
