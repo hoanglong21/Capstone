@@ -7,6 +7,7 @@ const VocabCard = ({
     quesIndex,
     numQues,
     writtenPromptWith,
+    writtenAnswerWith,
     multiplePromptWith,
     multipleAnswerWith,
     trueFalsePromptWith,
@@ -34,8 +35,16 @@ const VocabCard = ({
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
-            if (ques?.question_type === 1 && document.getElementById(`answerQues${quesIndex}`)) {
+            if (
+                ques?.question_type === 1 &&
+                document.getElementById(`answerQues${quesIndex}`)
+            ) {
                 document.getElementById(`answerQues${quesIndex}`).value = ''
+                for (const item of ques.answers[0].content) {
+                    if (writtenAnswerWith == item.field.id) {
+                        setCorrectAnswer(item.content)
+                    }
+                }
             }
             if (ques?.question_type === 2) {
                 setCorrectAnswer(ques.question.card.id)
@@ -122,6 +131,7 @@ const VocabCard = ({
                         type="text"
                         placeholder="Type your answer here"
                         readOnly={results[quesIndex] !== null}
+                        value={answers[quesIndex] || ''}
                         onChange={(event) =>
                             handleChangeAnswer(event.target.value, quesIndex)
                         }

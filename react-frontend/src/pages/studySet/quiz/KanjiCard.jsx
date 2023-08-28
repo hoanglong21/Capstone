@@ -8,6 +8,7 @@ const KanjiCard = ({
     quesIndex,
     numQues,
     writtenPromptWith,
+    writtenAnswerWith,
     multiplePromptWith,
     multipleAnswerWith,
     trueFalsePromptWith,
@@ -35,8 +36,16 @@ const KanjiCard = ({
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
-            if (ques?.question_type === 1 && document.getElementById(`answerQues${quesIndex}`)) {
+            if (
+                ques?.question_type === 1 &&
+                document.getElementById(`answerQues${quesIndex}`)
+            ) {
                 document.getElementById(`answerQues${quesIndex}`).value = ''
+                for (const item of ques.answers[0].content) {
+                    if (writtenAnswerWith == item.field.id) {
+                        setCorrectAnswer(item.content)
+                    }
+                }
             }
             if (ques?.question_type === 2) {
                 setCorrectAnswer(ques.question.card.id)
@@ -131,6 +140,7 @@ const KanjiCard = ({
                         }`}
                         type="text"
                         placeholder="Type your answer here"
+                        value={answers[quesIndex] || ''}
                         readOnly={results[quesIndex] !== null}
                         onChange={(event) =>
                             handleChangeAnswer(event.target.value, quesIndex)
