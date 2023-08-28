@@ -1,51 +1,46 @@
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 import DictionaryService from '../../../services/DictionaryService'
+import Pagination from '../../../components/Pagination'
 
 const KanjiDictForAdmin = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
-
+    const navigate = useNavigate()
     const [kanjis, setKanjis] = useState([])
     const [word, setWord] = useState({})
     const [activeIndex, setActiveIndex] = useState(0)
     const [loading, setLoading] = useState(true)
     const [loadingSelect, setLoadingSelect] = useState(false)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     const fetchData = async (searchKey) => {
         setLoading(true)
         try {
-            var tempKanjis = []
-            if (searchKey.length > 1) {
-                for (var i = 0; i < searchKey.length; i++) {
-                    var char = searchKey.charAt(i)
-                    const temp = (
-                        await DictionaryService.getKanji(
-                            '=1',
-                            '=10',
-                            `=${char}`
-                        )
-                    ).data.list
-                    tempKanjis.push(...temp)
-                }
-            } else {
-                tempKanjis = (
-                    await DictionaryService.getKanji(
-                        '=1',
-                        '=10',
-                        `${searchKey ? '=' + searchKey : ''}`
-                    )
-                ).data.list
-            }
-            setKanjis(tempKanjis)
-            setWord(tempKanjis[0])
+            const tempKanjis = (
+                await DictionaryService.getKanji(
+                    `=${page}`,
+                    '=10',
+                    `${searchKey ? '=' + searchKey : ''}`
+                )
+            ).data
+            setTotalItems(tempKanjis.totalItems)
+            setKanjis(tempKanjis.list)
+            setWord(tempKanjis.list[0])
             setActiveIndex(0)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
         setLoading(false)
@@ -83,7 +78,7 @@ const KanjiDictForAdmin = () => {
     useEffect(() => {
         clearSetTimeout()
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
     // kanji svg button
     useEffect(() => {
@@ -156,6 +151,15 @@ const KanjiDictForAdmin = () => {
                         </div>
                     </div>
                     <div className="kanji-dict">
+                    <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
                         {loadingSelect ? (
                             <div className="d-flex justify-content-center">
                                 <div

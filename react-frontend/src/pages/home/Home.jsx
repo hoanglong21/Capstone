@@ -43,7 +43,7 @@ function Home() {
                                         id="searchHomeInput"
                                         className="form-home-input form-control mr-sm-2"
                                         type="search"
-                                        placeholder="Study set, Class, User"
+                                        placeholder={t('msg208')}
                                         aria-label="Search"
                                         value={searchKey || ''}
                                         onChange={(event) =>

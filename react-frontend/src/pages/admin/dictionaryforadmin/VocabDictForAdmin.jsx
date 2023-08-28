@@ -1,19 +1,22 @@
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 import DictionaryService from '../../../services/DictionaryService'
 import TextToSpeech from '../../../components/InputModel/TextToSpeech'
+import Pagination from '../../../components/Pagination'
 
 const VocabDictForAdmin = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
-
+    const navigate = useNavigate()
     const [vocabs, setVocabs] = useState([])
     const [word, setWord] = useState({})
     const [activeIndex, setActiveIndex] = useState(0)
     const [kanjiSvgs, setKanjiSvgs] = useState([])
     const [loading, setLoading] = useState(true)
     const [loadingSelect, setLoadingSelect] = useState(false)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     async function getKanjiSvg(vocab) {
         var tempKanjiSvgs = []
@@ -42,16 +45,17 @@ const VocabDictForAdmin = () => {
         try {
             const temp = (
                 await DictionaryService.getVocabulary(
-                    '=1',
+                    `=${page}`,
                     '=10',
                     `${searchKey ? '=' + searchKey : ''}`,
                     ''
                 )
-            ).data.list
-            setVocabs(temp)
-            if (temp.length > 0) {
-                setWord(temp[0])
-                setKanjiSvgs(await getKanjiSvg(temp[0].kanji[0]))
+            ).data
+            setTotalItems(temp.totalItems)
+            setVocabs(temp.list)
+            if (temp.list.length > 0) {
+                setWord(temp.list[0])
+                setKanjiSvgs(await getKanjiSvg(temp.list[0].kanji[0]))
             } else {
                 setWord({})
                 setKanjiSvgs([])
@@ -61,6 +65,12 @@ const VocabDictForAdmin = () => {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
         setLoading(false)
@@ -90,7 +100,7 @@ const VocabDictForAdmin = () => {
     // fetch data
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
     // kanji svg button
     useEffect(() => {
@@ -175,6 +185,15 @@ const VocabDictForAdmin = () => {
                         </div>
                     </div>
                     <div className="vocab-dict-col-7">
+                    <Pagination
+                                className="mb-4"
+                                currentPage={page}
+                                totalCount={totalItems}
+                                pageSize={10}
+                                onPageChange={(page) => {
+                                    setPage(page)
+                                }}
+                            />
                         {loadingSelect ? (
                             <div className="d-flex justify-content-center">
                                 <div
