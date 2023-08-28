@@ -11,13 +11,21 @@ const ViewAssignment = () => {
     const navigate = useNavigate()
 
     const { userInfo } = useSelector((state) => state.user)
-
-    const { id } = useParams()
-    const { assign_id } = useParams()
-    const [classroom, setClassroom] = useState({})
     const { userLanguage } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
     const { t, i18n } = useTranslation()
+
+    const { id } = useParams()
+    const { assign_id } = useParams()
+
+    const [classroom, setClassroom] = useState({})
+
+    useEffect(() => {
+        if (assign_id.includes('.')) {
+            navigate('/notFound')
+            return
+        }
+    }, [])
 
     useEffect(() => {
         if (userToken) {
@@ -27,9 +35,7 @@ const ViewAssignment = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (
-                isNaN(assign_id)
-            ) {
+            if (isNaN(assign_id)) {
                 navigate('/notFound')
                 return
             }
@@ -54,7 +60,7 @@ const ViewAssignment = () => {
         if (userInfo.username) {
             fetchData()
         }
-    }, [userInfo, id])
+    }, [userInfo, id, assign_id])
 
     return (
         <div className="mainClass_container mx-auto">

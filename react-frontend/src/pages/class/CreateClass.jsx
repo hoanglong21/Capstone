@@ -171,7 +171,7 @@ export default function CreateClass({ showCreateModal, setShowCreateModal }) {
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Create class'
+                        t('msg167')
                     )}
                 </button>
             </Modal.Footer>

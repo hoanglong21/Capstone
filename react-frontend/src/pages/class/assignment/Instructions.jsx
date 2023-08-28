@@ -47,6 +47,7 @@ const Instructions = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            var tempAssignment = {}
             try {
                 // assignment
                 const tempAssignment = (
@@ -83,7 +84,8 @@ const Instructions = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') ||
+                    isNaN(assign_id)
                 ) {
                     navigate('/notFound')
                 }

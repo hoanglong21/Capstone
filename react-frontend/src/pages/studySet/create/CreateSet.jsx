@@ -333,14 +333,12 @@ const CreateSet = () => {
                 )
             ).data
             if (tempAssignClass.totalItems > 0) {
-                setError(
-                    'Study set cannot be changed to private if it is assigned to the class.'
-                )
+                setError(t('msg207'))
                 document.body.scrollTop = document.documentElement.scrollTop = 0
                 return
             }
         }
-        setStudySet({ ...studySet, [event.target.name]: event.target.value })
+        setStudySet({ ...studySet, _public: !studySet?._public })
         doUpdate()
     }
 
@@ -413,7 +411,7 @@ const CreateSet = () => {
                                     </div>
                                 )}
                                 <div className="createTest_status">
-                                    {saving ? 'Saving...' : 'Saved'}
+                                    {saving ? t('saving') : t('saved')}
                                 </div>
                             </div>
                             <button
@@ -447,7 +445,7 @@ const CreateSet = () => {
                                         ? 'Saving...'
                                         : loading
                                         ? ''
-                                        : 'Saved'}
+                                        : t('saved')}
                                 </div>
                             </div>
                             <button
@@ -455,7 +453,7 @@ const CreateSet = () => {
                                 className="btn btn-primary"
                                 onClick={handleSubmit}
                             >
-                                Done
+                                {t('done')}
                             </button>
                         </div>
                     )}
@@ -499,7 +497,7 @@ const CreateSet = () => {
                                 className={`form-select ${styles.formSelect}`}
                                 aria-label="public"
                                 name="_public"
-                                value={studySet._public}
+                                value={studySet?._public}
                                 onChange={handleChangeAccess}
                             >
                                 <option value={true}>{t('public')}</option>

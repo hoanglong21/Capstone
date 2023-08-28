@@ -96,10 +96,12 @@ const DeleteClass = ({
                             role="status"
                             id="loading"
                         >
-                            <span className="visually-hidden">Loading...</span>
+                            <span className="visually-hidden">
+                                {t('loading')}...
+                            </span>
                         </div>
                     ) : (
-                        'Yes, delete this class'
+                        t('msg206')
                     )}
                 </button>
             </Modal.Footer>

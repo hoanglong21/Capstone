@@ -231,8 +231,8 @@ const Sets = () => {
                             </select>
                             <input
                                 type="text"
-                                className="form-control"
-                                placeholder="Search..."
+                                className="form-control rounded"
+                                placeholder={t('search')}
                                 value={searchInput || ''}
                                 onChange={(event) => {
                                     setSearchInput(event.target.value)

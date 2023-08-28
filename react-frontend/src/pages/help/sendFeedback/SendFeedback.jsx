@@ -215,7 +215,7 @@ const SendFeedback = () => {
                                     </span>
                                 </div>
                             ) : (
-                                'Send Feedback'
+                                t('sendFeedback')
                             )}
                         </button>
                     </div>

@@ -581,8 +581,8 @@ const Stream = () => {
                                                 }
                                             >
                                                 {loadingAddPost
-                                                    ? 'Posting...'
-                                                    : 'Post'}
+                                                    ? t('posting')
+                                                    : t('post')}
                                             </button>
                                         </div>
                                     </div>

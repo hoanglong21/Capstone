@@ -42,7 +42,7 @@ const GrammarCard = ({
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
-    
+
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -221,6 +221,7 @@ const GrammarCard = ({
                         </button>
                     </div>
                     <div
+                        className="flashcardFrontContent"
                         dangerouslySetInnerHTML={{
                             __html: title?.content,
                         }}
@@ -339,32 +340,40 @@ const GrammarCard = ({
                                 </div>
                             )}
                         </div>
-                        <div className="row my-2 flashCardNote">
-                            <div className="col-12 col-xl-6">
-                                {(progress?.picture || card?.picture) && (
-                                    <div className="flashCardField_img d-flex align-items-center">
-                                        <img
-                                            src={
-                                                progress?.picture ||
-                                                card?.picture
-                                            }
-                                            alt="card picture"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                            <div className="col-12 col-xl-6">
-                                {(progress?.audio || card?.audio) && (
-                                    <div className="d-flex align-items-center">
-                                        <audio
-                                            controls
-                                            src={progress?.audio || card?.audio}
-                                            alt="card audio"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        {progress?.picture ||
+                            card?.picture ||
+                            progress?.audio ||
+                            (card?.audio && (
+                                <div className="row my-2 flashCardNote">
+                                    {(progress?.picture || card?.picture) && (
+                                        <div className="col-12 col-xl-6">
+                                            <div className="flashCardField_img d-flex align-items-center">
+                                                <img
+                                                    src={
+                                                        progress?.picture ||
+                                                        card?.picture
+                                                    }
+                                                    alt="card picture"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                    {(progress?.audio || card?.audio) && (
+                                        <div className="col-12 col-xl-6">
+                                            <div className="d-flex align-items-center">
+                                                <audio
+                                                    controls
+                                                    src={
+                                                        progress?.audio ||
+                                                        card?.audio
+                                                    }
+                                                    alt="card audio"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
                         <div
                             className="accordion flashcard_accordion"
                             id={`accordionNote${card?.id}`}

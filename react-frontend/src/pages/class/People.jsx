@@ -214,7 +214,7 @@ const People = () => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                This account is banned.
+                                                {t('msg9')}.
                                             </Tooltip>
                                         }
                                     >
@@ -229,7 +229,7 @@ const People = () => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                {t('msg9')}.
+                                                {t('msg8')}.
                                             </Tooltip>
                                         }
                                     >
@@ -244,7 +244,7 @@ const People = () => {
                                         placement="bottom"
                                         overlay={
                                             <Tooltip id="tooltip">
-                                                {t('msg8')}.
+                                                {t('msg7')}.
                                             </Tooltip>
                                         }
                                     >
@@ -297,7 +297,7 @@ const People = () => {
                         <OverlayTrigger
                             placement="bottom"
                             overlay={
-                                <Tooltip id="tooltip">{t('msg7')}.</Tooltip>
+                                <Tooltip id="tooltip">{t('msg9')}.</Tooltip>
                             }
                         >
                             <img

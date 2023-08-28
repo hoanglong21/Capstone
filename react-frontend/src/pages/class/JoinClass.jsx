@@ -133,7 +133,7 @@ const JoinClass = ({ showJoinModal, setShowJoinModal }) => {
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Join'
+                        t('joinClass')
                     )}
                 </button>
             </Modal.Footer>

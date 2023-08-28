@@ -20,6 +20,13 @@ const ViewTest = () => {
     const { t, i18n } = useTranslation()
 
     useEffect(() => {
+        if (test_id.includes('.')) {
+            navigate('/notFound')
+            return
+        }
+    }, [])
+
+    useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
         }
@@ -27,9 +34,7 @@ const ViewTest = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (
-                isNaN(test_id)
-            ) {
+            if (isNaN(test_id)) {
                 navigate('/notFound')
                 return
             }

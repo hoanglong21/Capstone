@@ -99,7 +99,7 @@ const DeleteClass = ({
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Move to trash'
+                        t('moveTrash')
                     )}
                 </button>
             </Modal.Footer>
