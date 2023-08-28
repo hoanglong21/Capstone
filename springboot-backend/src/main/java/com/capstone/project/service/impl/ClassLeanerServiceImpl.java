@@ -1,11 +1,10 @@
 package com.capstone.project.service.impl;
 
 import com.capstone.project.exception.ResourceNotFroundException;
-import com.capstone.project.model.Class;
 import com.capstone.project.model.ClassLearner;
-import com.capstone.project.model.UserAchievement;
-import com.capstone.project.model.UserSetting;
 import com.capstone.project.repository.ClassLearnerRepository;
+import com.capstone.project.repository.ClassRepository;
+import com.capstone.project.repository.UserRepository;
 import com.capstone.project.service.ClassLearnerService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,10 +24,14 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     private EntityManager em;
 
     private final ClassLearnerRepository classLearnerRepository;
+    private final ClassRepository classRepository;
+    private final UserRepository userRepository;
 
-    public ClassLeanerServiceImpl(ClassLearnerRepository classLearnerRepository,EntityManager em) {
+    public ClassLeanerServiceImpl(ClassLearnerRepository classLearnerRepository, EntityManager em, ClassRepository classRepository, UserRepository userRepository) {
         this.classLearnerRepository = classLearnerRepository;
         this.em = em;
+        this.classRepository = classRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -92,24 +95,30 @@ public class ClassLeanerServiceImpl implements ClassLearnerService {
     }
 
     @Override
-    public ClassLearner requestToJoin(ClassLearner classLearner) throws ResourceNotFroundException {
-        ClassLearner existingEnrollment = classLearnerRepository.findByUserIdAndClassroomId(classLearner.getUser().getId(), classLearner.getClassroom().getId());
+    public Boolean requestToJoin(int userid, int classid) throws ResourceNotFroundException {
+        ClassLearner existingEnrollment = classLearnerRepository.findByUserIdAndClassroomId(userid, classid);
 
         if (existingEnrollment != null) {
             if (existingEnrollment.getStatus().equals("enrolled")) {
                 throw new ResourceNotFroundException("You are already enrolled in this class.");
             } else if (existingEnrollment.getStatus().equals("pending")) {
                 throw new ResourceNotFroundException("You have a pending request for this class.");
-            } else if (existingEnrollment.getStatus().equals("unenroll")) {
+            } else if (existingEnrollment.getStatus().equals("unenrolled")) {
                 // Allow user to request to join again
                 existingEnrollment.setStatus("pending");
-                return classLearnerRepository.save(existingEnrollment);
+                classLearnerRepository.save(existingEnrollment);
+                return true;
             }
         } else {
-            classLearner.setCreated_date(new Date());
-            classLearner.setStatus("pending");
+            ClassLearner newEnrollment = new ClassLearner();
+            newEnrollment.setCreated_date(new Date());
+            newEnrollment.setStatus("pending");
+            newEnrollment.setUser(userRepository.findById(userid).orElseThrow(() -> new ResourceNotFroundException("User not found with id:" + userid)));
+            newEnrollment.setClassroom(classRepository.findById(classid).orElseThrow(() -> new ResourceNotFroundException("Class not found with id:" + classid)));
+            classLearnerRepository.save(newEnrollment);
+            return true;
         }
-        return classLearnerRepository.save(classLearner);
+        return false;
     }
 
 
