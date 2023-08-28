@@ -340,7 +340,7 @@ const CreateSet = () => {
                 return
             }
         }
-        setStudySet({ ...studySet, [event.target.name]: event.target.value })
+        setStudySet({ ...studySet, _public: !studySet?._public })
         doUpdate()
     }
 
@@ -499,7 +499,7 @@ const CreateSet = () => {
                                 className={`form-select ${styles.formSelect}`}
                                 aria-label="public"
                                 name="_public"
-                                value={studySet._public}
+                                value={studySet?._public}
                                 onChange={handleChangeAccess}
                             >
                                 <option value={true}>{t('public')}</option>
