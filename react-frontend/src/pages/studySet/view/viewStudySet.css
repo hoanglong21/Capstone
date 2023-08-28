@@ -275,7 +275,7 @@
 
 .setPageTerm_termText {
     padding: 0 2rem;
-    word-wrap: break-word;
+    word-break: break-all;
     font-size: 1.1rem;
 }
 
@@ -288,7 +288,7 @@
 
 .setPageTerm_definitionText {
     padding: 0 2rem;
-    word-wrap: break-word;
+    word-break: break-all;
     font-size: 1.1rem;
 }
 
