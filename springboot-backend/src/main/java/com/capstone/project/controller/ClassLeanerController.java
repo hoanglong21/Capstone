@@ -71,9 +71,10 @@ public class ClassLeanerController {
 
     @GetMapping("/requestojoin")
 
-    public ResponseEntity<?> requestToJoin(@RequestBody ClassLearner classLearner) {
+    public ResponseEntity<?> requestToJoin(@RequestParam(value = "userid", required = false, defaultValue = "0") int userid,
+                                           @RequestParam(value = "classid", required = false, defaultValue = "0") int classid) {
         try {
-            return ResponseEntity.ok(classLearnerService.requestToJoin(classLearner));
+            return ResponseEntity.ok(classLearnerService.requestToJoin(userid,classid));
         } catch (ResourceNotFroundException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
