@@ -267,7 +267,7 @@
 .setPageTerm {
     background-color: #fff;
     border-radius: 0.25rem;
-    min-height: 3.625rem;
+    min-height: 200px;
     box-shadow: 0 0.125rem 0.25rem #00000014;
     padding: 1rem;
     padding-right: 0;
@@ -292,13 +292,8 @@
     font-size: 1.1rem;
 }
 
-.setPageTerm_imageWrap {
-    height: 6.25rem;
-    width: 9.5rem;
-}
-
 .setPageTerm_imageWrap img {
-    max-height: 200px;
+    max-height: 150px;
     max-width: 150px;
 }
 

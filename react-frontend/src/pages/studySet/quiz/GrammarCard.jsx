@@ -120,6 +120,7 @@ const GrammarCard = ({
                     {/* answer */}
                     <div className="quizQues_label my-4">{t('yanswer')}</div>
                     <input
+                        id={`answerQues${quesIndex}`}
                         className={`form-control quizAns_input ${
                             results[quesIndex] === 0
                                 ? 'incorrect'
@@ -151,7 +152,7 @@ const GrammarCard = ({
                                 <div
                                     className="learnCorrectAnswer"
                                     dangerouslySetInnerHTML={{
-                                        __html: correctAnswer,
+                                        __html: correctAnswer || '...',
                                     }}
                                 ></div>
                                 <div className="learnExampleSection">

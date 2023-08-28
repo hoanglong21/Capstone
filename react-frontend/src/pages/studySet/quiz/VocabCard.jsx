@@ -154,7 +154,7 @@ const VocabCard = ({
                                         <div
                                             className="learnCorrectAnswer"
                                             dangerouslySetInnerHTML={{
-                                                __html: correctAnswer,
+                                                __html: correctAnswer || '...',
                                             }}
                                         ></div>
                                     </div>
