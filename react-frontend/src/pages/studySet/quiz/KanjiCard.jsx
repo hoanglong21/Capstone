@@ -8,6 +8,7 @@ const KanjiCard = ({
     quesIndex,
     numQues,
     writtenPromptWith,
+    writtenAnswerWith,
     multiplePromptWith,
     multipleAnswerWith,
     trueFalsePromptWith,
@@ -35,8 +36,16 @@ const KanjiCard = ({
     useEffect(() => {
         if (ques?.question_type) {
             setExample(ques.question.content[2].content)
-            if (ques?.question_type === 1 && document.getElementById(`answerQues${quesIndex}`)) {
+            if (
+                ques?.question_type === 1 &&
+                document.getElementById(`answerQues${quesIndex}`)
+            ) {
                 document.getElementById(`answerQues${quesIndex}`).value = ''
+                for (const item of ques.answers[0].content) {
+                    if (writtenAnswerWith == item.field.id) {
+                        setCorrectAnswer(item.content)
+                    }
+                }
             }
             if (ques?.question_type === 2) {
                 setCorrectAnswer(ques.question.card.id)
@@ -131,6 +140,7 @@ const KanjiCard = ({
                         }`}
                         type="text"
                         placeholder="Type your answer here"
+                        value={answers[quesIndex] || ''}
                         readOnly={results[quesIndex] !== null}
                         onChange={(event) =>
                             handleChangeAnswer(event.target.value, quesIndex)
@@ -264,12 +274,19 @@ const KanjiCard = ({
                                             setProgress(
                                                 progress > 0 ? progress - 1 : 0
                                             )
-                                        } else {
+                                        } else if (
+                                            answers[quesIndex] === null
+                                        ) {
                                             handleChangeAnswer(
                                                 ans.card.id,
                                                 quesIndex
                                             )
                                             setProgress(progress + 1)
+                                        } else {
+                                            handleChangeAnswer(
+                                                ans.card.id,
+                                                quesIndex
+                                            )
                                         }
                                     }}
                                 >
@@ -482,6 +499,8 @@ const KanjiCard = ({
                                         setProgress(
                                             progress > 0 ? progress - 1 : 0
                                         )
+                                    } else if (answers[quesIndex] === 0) {
+                                        handleChangeAnswer(1, quesIndex)
                                     } else {
                                         handleChangeAnswer(1, quesIndex)
                                         setProgress(progress + 1)
@@ -511,6 +530,8 @@ const KanjiCard = ({
                                         setProgress(
                                             progress > 0 ? progress - 1 : 0
                                         )
+                                    } else if (answers[quesIndex] === 1) {
+                                        handleChangeAnswer(0, quesIndex)
                                     } else {
                                         handleChangeAnswer(0, quesIndex)
                                         setProgress(progress + 1)

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import ToastContainer from 'react-bootstrap/ToastContainer'
 import Toast from 'react-bootstrap/Toast'
@@ -15,7 +15,6 @@ import ProgressService from '../../../services/ProgressService'
 
 import KanjiCard from './KanjiCard'
 import GrammarCard from './GrammarCard'
-import NoteEditor from '../../../components/textEditor/NoteEditor'
 
 import {
     ArrowDownIcon,
@@ -131,7 +130,6 @@ const Flashcard = () => {
     const [note, setNote] = useState('')
     const [showPictureModal, setShowPictureModal] = useState(false)
     const [showAudioModal, setShowAudioModal] = useState(false)
-    const [showNoteModal, setShowNoteModal] = useState(false)
     const [loadingPicture, setLoadingPicture] = useState(false)
     const [loadingAudio, setLoadingAudio] = useState(false)
 
@@ -152,6 +150,8 @@ const Flashcard = () => {
     const [isAddHistory, setIsAddHistory] = useState(false)
     const { userLanguage } = useSelector((state) => state.user)
     const { t, i18n } = useTranslation()
+
+    const [showToast, setShowToast] = useState(false)
 
     useEffect(() => {
         if (userToken) {
@@ -273,7 +273,8 @@ const Flashcard = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist') || isNaN(id)
+                    error?.response.data.includes('not exist') ||
+                    isNaN(id)
                 ) {
                     navigate('/notFound')
                 }
@@ -306,16 +307,10 @@ const Flashcard = () => {
                     progress.card.studySet.user.created_date = toBEDate(
                         progress.card.studySet.user.created_date
                     )
-                    progress.card.studySet.user.dob = toBEDate(
-                        progress.card.studySet.user.dob
-                    )
                 }
                 if (progress?.user) {
                     progress.user.created_date = toBEDate(
                         progress.user.created_date
-                    )
-                    progress.user.dob = toBEDate(
-                        progress.user.dob
                     )
                 }
                 // update
@@ -536,9 +531,13 @@ const Flashcard = () => {
 
     const handleChangeFile = async (event) => {
         const name = event.target.name
-        name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
         const file = event.target.files[0]
         if (file) {
+            if (file.size > 20 * 1024 * 1024) {
+                setShowToast(true)
+                return
+            }
+            name === 'picture' ? setLoadingPicture(true) : setLoadingAudio(true)
             name === 'picture' ? setPicture(file) : setAudio(file)
         }
         name === 'picture' ? setLoadingPicture(false) : setLoadingAudio(false)
@@ -560,9 +559,7 @@ const Flashcard = () => {
         tempCard.studySet.user.created_date = toBEDate(
             tempCard.studySet.user.created_date
         )
-        tempCard.studySet.user.dob = toBEDate(
-            tempCard.studySet.user.dob
-        )
+        tempCard.studySet.user.dob = toBEDate(tempCard.studySet.user.dob)
         tempCard.studySet.user.deleted_date = toBEDate(
             tempCard.studySet.user.deleted_date
         )
@@ -571,7 +568,7 @@ const Flashcard = () => {
         )
         var tempUser = {
             ...userInfo,
-            created_date: toBEDate(userInfo.created_date),
+            created_date: toBEDate(userInfo.dob),
             dob: toBEDate(userInfo.dob),
             deleted_date: toBEDate(userInfo.deleted_date),
             banned_date: toBEDate(userInfo.banned_date),
@@ -653,7 +650,6 @@ const Flashcard = () => {
             var tempCards = [...cards]
             tempCards[cardIndex].progress = tempProgress
             setCards(tempCards)
-            setShowNoteModal(false)
             setShowPictureModal(false)
             setShowAudioModal(false)
         } catch (error) {
@@ -668,7 +664,6 @@ const Flashcard = () => {
 
     const handleCancelProgressModal = () => {
         const progress = cards[cardIndex].progress
-        setShowNoteModal(false)
         setShowPictureModal(false)
         setShowAudioModal(false)
         setPicture(progress?.picture || '')
@@ -911,7 +906,6 @@ const Flashcard = () => {
                             setFullCards={setCards}
                             setShowPictureModal={setShowPictureModal}
                             setShowAudioModal={setShowAudioModal}
-                            setShowNoteModal={setShowNoteModal}
                             handleUpdateNumStar={handleUpdateNumStar}
                         />
                     ) : type === 2 ? (
@@ -925,7 +919,6 @@ const Flashcard = () => {
                             setFullCards={setCards}
                             setShowPictureModal={setShowPictureModal}
                             setShowAudioModal={setShowAudioModal}
-                            setShowNoteModal={setShowNoteModal}
                             handleUpdateNumStar={handleUpdateNumStar}
                         />
                     ) : (
@@ -939,45 +932,8 @@ const Flashcard = () => {
                             setFullCards={setCards}
                             setShowPictureModal={setShowPictureModal}
                             setShowAudioModal={setShowAudioModal}
-                            setShowNoteModal={setShowNoteModal}
                             handleUpdateNumStar={handleUpdateNumStar}
                         />
-                    )}
-                    {/* note modal */}
-                    {showNoteModal && (
-                        <div className="setPage_editCardModal setPage_noteModal">
-                            <div className="modal-content d-flex">
-                                <button
-                                    className="btn close p-0 mb-3 text-end"
-                                    onClick={handleCancelProgressModal}
-                                >
-                                    <CloseIcon size="1.875rem" />
-                                </button>
-                                <div className="setPage_noteEditor flex-grow-1">
-                                    <NoteEditor
-                                        data={note}
-                                        onChange={(event, editor) => {
-                                            setNote(editor.getData())
-                                        }}
-                                    />
-                                </div>
-                                <div className="d-flex justify-content-end mt-5">
-                                    <button
-                                        className="btn btn-secondary me-3"
-                                        onClick={handleCancelProgressModal}
-                                    >
-                                        {t('cancel')}
-                                    </button>
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={handleSaveProgress}
-                                        disabled={loading}
-                                    >
-                                        {loading ? 'Saving' : 'Save'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     )}
                     {/* picture modal */}
                     {showPictureModal && (
@@ -1416,11 +1372,31 @@ const Flashcard = () => {
                             <button
                                 id="autoPlayToastClose"
                                 type="button"
-                                className="btn btn-close btn-close-white"
+                                className="btn-close btn-close-white"
                                 data-bs-dismiss="toast"
                                 aria-label="Close"
                             ></button>
                         </div>
+                    </Toast.Body>
+                </Toast>
+            </ToastContainer>
+            {/* toast error */}
+            <ToastContainer
+                className="p-3 mt-5 position-sticky"
+                position="bottom-start"
+                style={{ zIndex: 99999 }}
+            >
+                <Toast
+                    show={showToast}
+                    bg="danger"
+                    onClose={() => {
+                        setShowToast(false)
+                    }}
+                    delay={3000}
+                    autohide
+                >
+                    <Toast.Body className="text-white">
+                        File is bigger than 20MB!
                     </Toast.Body>
                 </Toast>
             </ToastContainer>

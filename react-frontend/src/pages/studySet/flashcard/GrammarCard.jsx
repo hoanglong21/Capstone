@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import ProgressService from '../../../services/ProgressService'
 
 import {
-    EditIcon,
     ImageSolidIcon,
     MicIconSolid,
     StarSolidIcon,
@@ -21,7 +20,6 @@ const GrammarCard = ({
     setFullCards,
     setShowPictureModal,
     setShowAudioModal,
-    setShowNoteModal,
     handleUpdateNumStar,
 }) => {
     const [card, setCard] = useState({})
@@ -42,7 +40,7 @@ const GrammarCard = ({
             i18n.changeLanguage(userLanguage)
         }
     }, [userLanguage])
-    
+
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
             return date?.replace(/\s/g, 'T') + '.000' + '+07:00'
@@ -139,9 +137,7 @@ const GrammarCard = ({
         tempCard.studySet.user.created_date = toBEDate(
             tempCard.studySet.user.created_date
         )
-        tempCard.studySet.user.dob = toBEDate(
-            tempCard.studySet.user.dob
-        )
+        tempCard.studySet.user.dob = toBEDate(tempCard.studySet.user.dob)
         tempCard.studySet.user.deleted_date = toBEDate(
             tempCard.studySet.user.deleted_date
         )
@@ -221,6 +217,7 @@ const GrammarCard = ({
                         </button>
                     </div>
                     <div
+                        className="flashcardFrontContent"
                         dangerouslySetInnerHTML={{
                             __html: title?.content,
                         }}
@@ -339,77 +336,71 @@ const GrammarCard = ({
                                 </div>
                             )}
                         </div>
-                        <div className="row my-2 flashCardNote">
-                            <div className="col-12 col-xl-6">
+                        {(progress?.picture ||
+                            card?.picture ||
+                            progress?.audio ||
+                            card?.audio) && (
+                            <div className="row my-2 flashCardNote">
                                 {(progress?.picture || card?.picture) && (
-                                    <div className="flashCardField_img d-flex align-items-center">
-                                        <img
-                                            src={
-                                                progress?.picture ||
-                                                card?.picture
-                                            }
-                                            alt="card picture"
-                                        />
+                                    <div className="col-12 col-md-6">
+                                        <div className="flashCardField_img d-flex align-items-center">
+                                            <img
+                                                src={
+                                                    progress?.picture ||
+                                                    card?.picture
+                                                }
+                                                alt="card picture"
+                                            />
+                                        </div>
                                     </div>
                                 )}
-                            </div>
-                            <div className="col-12 col-xl-6">
                                 {(progress?.audio || card?.audio) && (
-                                    <div className="d-flex align-items-center">
-                                        <audio
-                                            controls
-                                            src={progress?.audio || card?.audio}
-                                            alt="card audio"
-                                        />
+                                    <div className="col-12 col-md-6 mt-2">
+                                        <div className="d-flex align-items-center">
+                                            <audio
+                                                controls
+                                                src={
+                                                    progress?.audio ||
+                                                    card?.audio
+                                                }
+                                                alt="card audio"
+                                            />
+                                        </div>
                                     </div>
                                 )}
                             </div>
-                        </div>
-                        <div
-                            className="accordion flashcard_accordion"
-                            id={`accordionNote${card?.id}`}
-                        >
-                            <div className="accordion-item border-0">
-                                <h2 className="accordion-header">
-                                    <button
-                                        id={`toggleAccordionNoteBtn${card?.id}`}
-                                        name="flashcardContent_noteBtn"
-                                        className="accordion-button collapsed"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target={`#progressNote${card?.id}`}
-                                        aria-expanded="false"
-                                        aria-controls="progressNote"
+                        )}
+                        <div className="row">
+                            <div
+                                className="accordion flashcard_accordion"
+                                id={`accordionNote${card?.id}`}
+                            >
+                                <div className="accordion-item border-0">
+                                    <h2 className="accordion-header">
+                                        <button
+                                            id={`toggleAccordionNoteBtn${card?.id}`}
+                                            name="flashcardContent_noteBtn"
+                                            className="accordion-button collapsed"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target={`#progressNote${card?.id}`}
+                                            aria-expanded="false"
+                                            aria-controls="progressNote"
+                                        >
+                                            <span>{t('note')}</span>
+                                        </button>
+                                    </h2>
+                                    <div
+                                        id={`progressNote${card?.id}`}
+                                        className="accordion-collapse collapse"
+                                        data-bs-parent={`#accordionNote${card?.id}`}
                                     >
-                                        <span>{t('note')}</span>
-                                    </button>
-                                </h2>
-                                <div
-                                    id={`progressNote${card?.id}`}
-                                    className="accordion-collapse collapse"
-                                    data-bs-parent={`#accordionNote${card?.id}`}
-                                >
-                                    <div className="row">
-                                        <div className="col-11">
-                                            <div
-                                                className="accordion-body"
-                                                dangerouslySetInnerHTML={{
-                                                    __html:
-                                                        progress?.note || '...',
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <div className="col-1">
-                                            <button
-                                                name="flashcardContent_noteBtn"
-                                                className="btn btn-customLight btn-customLight--sm ms-1 mt-2"
-                                                onClick={() => {
-                                                    setShowNoteModal(true)
-                                                }}
-                                            >
-                                                <EditIcon size="1rem" />
-                                            </button>
-                                        </div>
+                                        <div
+                                            className="accordion-body"
+                                            dangerouslySetInnerHTML={{
+                                                __html: progress?.note || '...',
+                                            }}
+                                        ></div>
                                     </div>
                                 </div>
                             </div>

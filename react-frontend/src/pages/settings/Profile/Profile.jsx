@@ -112,7 +112,7 @@ const Profile = () => {
                 await uploadFile(file, `${newUser.username}/avatar`)
                 // reload userAvatars
                 const tempUser = await getAll(
-                    `files/image/avatar/${newUser.username}`
+                    `files/${newUser.username}/avatar`
                 )
                 setUserAvatars(tempUser)
             } catch (error) {

@@ -42,6 +42,13 @@ const TestDetails = () => {
     const { t, i18n } = useTranslation()
 
     useEffect(() => {
+        if (test_id.includes('.')) {
+            navigate('/notFound')
+            return
+        }
+    }, [])
+
+    useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
         }

@@ -601,7 +601,7 @@ function Translate() {
                                             </span>
                                         </div>
                                     ) : (
-                                        'Run detection'
+                                        t('runDetection')
                                     )}
                                 </button>
                             ) : (

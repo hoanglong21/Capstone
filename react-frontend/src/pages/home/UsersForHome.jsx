@@ -201,8 +201,8 @@ function UsersForHome() {
                                                             ? 'Admin'
                                                             : user?.role ===
                                                               'ROLE_TUTOR'
-                                                            ? 'Tutor'
-                                                            : 'Learner'}
+                                                            ? t('tutor')
+                                                            : t('learner')}
                                                     </p>
                                                 </div>
                                             </div>

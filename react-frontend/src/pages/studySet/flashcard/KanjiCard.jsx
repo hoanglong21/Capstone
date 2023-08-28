@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import ProgressService from '../../../services/ProgressService'
 
 import {
-    EditIcon,
     ImageSolidIcon,
     MicIconSolid,
     StarSolidIcon,
@@ -21,7 +20,6 @@ const KanjiCard = ({
     setFullCards,
     setShowPictureModal,
     setShowAudioModal,
-    setShowNoteModal,
     handleUpdateNumStar,
 }) => {
     const [card, setCard] = useState({})
@@ -233,6 +231,7 @@ const KanjiCard = ({
                         </button>
                     </div>
                     <div
+                        className="flashcardFrontContent"
                         dangerouslySetInnerHTML={{
                             __html: character?.content,
                         }}
@@ -459,28 +458,12 @@ const KanjiCard = ({
                                     className="accordion-collapse collapse"
                                     data-bs-parent={`#accordionNote${card?.id}`}
                                 >
-                                    <div className="row">
-                                        <div className="col-11">
-                                            <div
-                                                className="accordion-body"
-                                                dangerouslySetInnerHTML={{
-                                                    __html:
-                                                        progress?.note || '...',
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <div className="col-1">
-                                            <button
-                                                name="flashcardContent_noteBtn"
-                                                className="btn btn-customLight btn-customLight--sm ms-1 mt-2"
-                                                onClick={() => {
-                                                    setShowNoteModal(true)
-                                                }}
-                                            >
-                                                <EditIcon size="1rem" />
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <div
+                                        className="accordion-body"
+                                        dangerouslySetInnerHTML={{
+                                            __html: progress?.note || '...',
+                                        }}
+                                    ></div>
                                 </div>
                             </div>
                         </div>

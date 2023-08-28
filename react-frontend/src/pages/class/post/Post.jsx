@@ -35,6 +35,10 @@ import { useTranslation } from 'react-i18next'
 const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const navigate = useNavigate()
 
+    const { userLanguage } = useSelector((state) => state.user)
+    const { userToken } = useSelector((state) => state.auth)
+    const { t, i18n } = useTranslation()
+
     const [showUpdate, setShowUpdate] = useState(false)
 
     const [updatePost, setUpdatePost] = useState({ ...post })
@@ -49,9 +53,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     const [loadingComment, setLoadingComment] = useState(false)
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { userLanguage } = useSelector((state) => state.user)
-    const { userToken } = useSelector((state) => state.auth)
-    const { t, i18n } = useTranslation()
+    const [error, setError] = useState(false)
 
     function toBEDate(date) {
         if (date && !date.includes('+07:00')) {
@@ -59,6 +61,14 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         }
         return ''
     }
+
+    useEffect(() => {
+        if (error === true) {
+            setTimeout(() => {
+                setError(false)
+            }, 1500)
+        }
+    }, [error])
 
     // ignore error
     useEffect(() => {
@@ -122,19 +132,31 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
         setLoadingUpdatePost(true)
         try {
             // update post
-            var tempUpdatePost = {...updatePost}
+            var tempUpdatePost = { ...updatePost }
             tempUpdatePost.created_date = toBEDate(tempUpdatePost.created_date)
-            tempUpdatePost.modified_date = toBEDate(tempUpdatePost.modified_date)
+            tempUpdatePost.modified_date = toBEDate(
+                tempUpdatePost.modified_date
+            )
             if (tempUpdatePost?.user) {
-                tempUpdatePost.user.created_date = toBEDate(tempUpdatePost.user.created_date)
+                tempUpdatePost.user.created_date = toBEDate(
+                    tempUpdatePost.user.created_date
+                )
                 tempUpdatePost.user.dob = toBEDate(tempUpdatePost.user.dob)
             }
             if (tempUpdatePost?.classroom) {
-                tempUpdatePost.classroom.created_date = toBEDate(tempUpdatePost.classroom.created_date)
-                tempUpdatePost.classroom.deleted_date = toBEDate(tempUpdatePost.classroom.deleted_date)
+                tempUpdatePost.classroom.created_date = toBEDate(
+                    tempUpdatePost.classroom.created_date
+                )
+                tempUpdatePost.classroom.deleted_date = toBEDate(
+                    tempUpdatePost.classroom.deleted_date
+                )
                 if (tempUpdatePost.classroom?.user) {
-                    tempUpdatePost.classroom.user.created_date = toBEDate(tempUpdatePost.classroom.user.created_date)
-                    tempUpdatePost.classroom.user.dob = toBEDate(tempUpdatePost.classroom.user.dob)
+                    tempUpdatePost.classroom.user.created_date = toBEDate(
+                        tempUpdatePost.classroom.user.created_date
+                    )
+                    tempUpdatePost.classroom.user.dob = toBEDate(
+                        tempUpdatePost.classroom.user.dob
+                    )
                 }
             }
             const tempPost = (
@@ -214,9 +236,13 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     }
 
     const handleUploadFile = async (event) => {
-        setLoadingUploadFile(true)
         const file = event.target.files[0]
         if (file) {
+            if (file.size > 20 * 1024 * 1024) {
+                setError(true)
+                return
+            }
+            setLoadingUploadFile(true)
             setUploadFiles([
                 ...uploadFiles,
                 { file_name: file.name, file_type: file.type, file: file },
@@ -226,6 +252,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
     }
 
     const handleCancelUpdatePost = () => {
+        setError(false)
         setUploadFiles([...currentFiles])
         setUpdatePost({ ...post })
         setShowUpdate(false)
@@ -368,49 +395,60 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                             </div>
                         </div>
                     </div>
-                    {(!post?.classroom?._deleted && post?.user?.id === userInfo?.id) && (
-                        <div className="dropdown">
-                            <button
-                                className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <OptionVerIcon />
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <button
-                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => {
-                                            setShowUpdate(true)
-                                        }}
-                                    >
-                                        <span className="align-middle fw-medium">
-                                            {t('edit')}
-                                        </span>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => setShowDeleteModal(true)}
-                                    >
-                                        <span className="align-middle fw-medium">
-                                            {t('delete')}
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    )}
+                    {!post?.classroom?._deleted &&
+                        post?.user?.id === userInfo?.id && (
+                            <div className="dropdown">
+                                <button
+                                    className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <OptionVerIcon />
+                                </button>
+                                <ul className="dropdown-menu">
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                            type="button"
+                                            onClick={() => {
+                                                setShowUpdate(true)
+                                            }}
+                                        >
+                                            <span className="align-middle fw-medium">
+                                                {t('edit')}
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                            type="button"
+                                            onClick={() =>
+                                                setShowDeleteModal(true)
+                                            }
+                                        >
+                                            <span className="align-middle fw-medium">
+                                                {t('delete')}
+                                            </span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
                 </div>
                 <div className="card-body">
                     <div className="post__content">
                         {showUpdate ? (
                             <div>
+                                {error && (
+                                    <div
+                                        className="alert alert-danger"
+                                        role="alert"
+                                    >
+                                        File is bigger than 20MB!
+                                    </div>
+                                )}
                                 <div className="createAssign_formGroup form-floating mb-4">
                                     <PostEditor
                                         data={updatePost?.content}
@@ -469,7 +507,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         onChange={handleUploadFile}
                                     />
                                     <button
-                                        className='btn p-0'
+                                        className="btn p-0"
                                         type="btn"
                                         disabled={loadingUploadFile}
                                     >
@@ -507,8 +545,8 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                             }
                                         >
                                             {loadingUpdatePost
-                                                ? 'Saving...'
-                                                : 'Save'}
+                                                ? t('saving')
+                                                : t('save')}
                                         </button>
                                     </div>
                                 </div>
