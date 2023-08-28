@@ -18,6 +18,13 @@ const Results = () => {
     const { t, i18n } = useTranslation()
 
     useEffect(() => {
+        if (test_id.includes('.')) {
+            navigate('/notFound')
+            return
+        }
+    }, [])
+
+    useEffect(() => {
         if (userToken) {
             i18n.changeLanguage(userLanguage)
         }
@@ -98,14 +105,19 @@ const Results = () => {
                                         {result?.classLearner?.user?.username}
                                     </th>
                                     <td>
-                                        {result?.testLearner?.length === 0 && test?.due_date &&
+                                        {result?.testLearner?.length === 0 &&
+                                        test?.due_date &&
                                         new Date(test?.due_date) >
                                             new Date() ? (
                                             <div style={{ color: '#d50000' }}>
                                                 {t('missing')}
                                             </div>
+                                        ) : isNaN(
+                                              result?.testLearner[0]?.mark
+                                          ) ? (
+                                            ''
                                         ) : (
-                                            isNaN(result?.testLearner[0]?.mark) ? '' : result?.testLearner[0]?.mark
+                                            result?.testLearner[0]?.mark
                                         )}
                                     </td>
                                     <td>

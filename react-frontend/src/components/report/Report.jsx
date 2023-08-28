@@ -154,7 +154,7 @@ const Report = ({
                                     ))}
                                 </select>
                                 <label htmlFor="feedbackType">
-                                {t('msg116')}
+                                    {t('msg116')}
                                 </label>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ const Report = ({
                                 />
                                 <label htmlFor="title">{t('title')}</label>
                                 <div className="invalid-feedback text-start">
-                                {t('msg118')}.
+                                    {t('msg118')}.
                                 </div>
                             </div>
                         </div>
@@ -200,7 +200,7 @@ const Report = ({
                                 ></textarea>
                                 <label htmlFor="content">{t('content')}</label>
                                 <div className="invalid-feedback text-start">
-                                {t('msg118')}.
+                                    {t('msg118')}.
                                 </div>
                             </div>
                         </div>
@@ -217,11 +217,11 @@ const Report = ({
                                         id="loading"
                                     >
                                         <span className="visually-hidden">
-                                        {t('loading')}...
+                                            {t('loading')}...
                                         </span>
                                     </div>
                                 ) : (
-                                    'Submit'
+                                    t('sb')
                                 )}
                             </button>
                         </div>

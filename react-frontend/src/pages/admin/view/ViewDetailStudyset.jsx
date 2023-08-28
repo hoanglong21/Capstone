@@ -12,6 +12,7 @@ function ViewDetailStudyset() {
     const fetchData = async () => {
       const tempStudySet = (await StudySetService.getStudySetById(id)).data;
       setStudySet(tempStudySet);
+      
     };
     if (id) {
       fetchData();

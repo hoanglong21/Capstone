@@ -62,6 +62,12 @@ const ClassLayout = () => {
     const { userLanguage } = useSelector((state) => state.user)
     const { userToken } = useSelector((state) => state.auth)
 
+    useEffect(() => {
+        if (!/^[0-9]$/.test(id)) {
+            navigate('/notFound')
+        }
+    }, [])
+
     // fetch data
     useEffect(() => {
         const fetchData = async () => {
@@ -588,7 +594,7 @@ const ClassLayout = () => {
                                 <div className="d-flex align-items-center mt-2">
                                     <MemberSolidIcon size="20px" />
                                     <div className="ms-3">
-                                        {classroom?.member} {t('set')}
+                                        {classroom?.member} {t('member')}
                                     </div>
                                 </div>
                             </div>

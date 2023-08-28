@@ -176,7 +176,7 @@ const TrashClasses = () => {
                     style={{ width: '3rem', height: '3rem' }}
                     role="status"
                 >
-                    <span className="visually-hidden">Loading...</span>
+                    <span className="visually-hidden">{t('loading')}...</span>
                 </div>
             </div>
         )
@@ -258,7 +258,7 @@ const TrashClasses = () => {
                                     role="status"
                                 >
                                     <span className="visually-hidden">
-                                        Loading...
+                                        {t('loading')}...
                                     </span>
                                 </div>
                             </div>
@@ -321,6 +321,7 @@ const TrashClasses = () => {
                                                                                 {t(
                                                                                     'msg9'
                                                                                 )}
+
                                                                                 .
                                                                             </Tooltip>
                                                                         }
@@ -342,6 +343,7 @@ const TrashClasses = () => {
                                                                                 {t(
                                                                                     'msg8'
                                                                                 )}
+
                                                                                 .
                                                                             </Tooltip>
                                                                         }
@@ -363,6 +365,7 @@ const TrashClasses = () => {
                                                                                 {t(
                                                                                     'msg7'
                                                                                 )}
+
                                                                                 .
                                                                             </Tooltip>
                                                                         }

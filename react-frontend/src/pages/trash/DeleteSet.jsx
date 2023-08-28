@@ -96,10 +96,12 @@ const DeleteSet = ({
                             role="status"
                             id="loading"
                         >
-                            <span className="visually-hidden">Loading...</span>
+                            <span className="visually-hidden">
+                                {t('loading')}...
+                            </span>
                         </div>
                     ) : (
-                        'Yes, delete this set'
+                        t('msg205')
                     )}
                 </button>
             </Modal.Footer>

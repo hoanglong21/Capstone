@@ -368,44 +368,47 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                             </div>
                         </div>
                     </div>
-                    {(!post?.classroom?._deleted && post?.user?.id === userInfo?.id) && (
-                        <div className="dropdown">
-                            <button
-                                className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <OptionVerIcon />
-                            </button>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <button
-                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => {
-                                            setShowUpdate(true)
-                                        }}
-                                    >
-                                        <span className="align-middle fw-medium">
-                                            {t('edit')}
-                                        </span>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        className="dropdown-item py-2 px-3 d-flex align-items-center"
-                                        type="button"
-                                        onClick={() => setShowDeleteModal(true)}
-                                    >
-                                        <span className="align-middle fw-medium">
-                                            {t('delete')}
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    )}
+                    {!post?.classroom?._deleted &&
+                        post?.user?.id === userInfo?.id && (
+                            <div className="dropdown">
+                                <button
+                                    className="mainClass_sectionButton btn btn-light p-2 rounded-circle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <OptionVerIcon />
+                                </button>
+                                <ul className="dropdown-menu">
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                            type="button"
+                                            onClick={() => {
+                                                setShowUpdate(true)
+                                            }}
+                                        >
+                                            <span className="align-middle fw-medium">
+                                                {t('edit')}
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item py-2 px-3 d-flex align-items-center"
+                                            type="button"
+                                            onClick={() =>
+                                                setShowDeleteModal(true)
+                                            }
+                                        >
+                                            <span className="align-middle fw-medium">
+                                                {t('delete')}
+                                            </span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
                 </div>
                 <div className="card-body">
                     <div className="post__content">
@@ -469,7 +472,7 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                         onChange={handleUploadFile}
                                     />
                                     <button
-                                        className='btn p-0'
+                                        className="btn p-0"
                                         type="btn"
                                         disabled={loadingUploadFile}
                                     >
@@ -507,8 +510,8 @@ const Post = ({ post, stateChanger, posts, index, userInfo }) => {
                                             }
                                         >
                                             {loadingUpdatePost
-                                                ? 'Saving...'
-                                                : 'Save'}
+                                                ? t('saving')
+                                                : t('save')}
                                         </button>
                                     </div>
                                 </div>

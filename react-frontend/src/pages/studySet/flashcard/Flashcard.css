@@ -143,6 +143,14 @@
     font-size: 1rem;
 }
 
+.flashcardFrontContent {
+    word-break: break-all;
+    overflow: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 .flashCardField_content > * {
     word-wrap: break-word;
 }

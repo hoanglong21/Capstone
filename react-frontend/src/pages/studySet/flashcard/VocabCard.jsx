@@ -179,6 +179,7 @@ const VocabCard = ({
                         </button>
                     </div>
                     <div
+                        className="flashcardFrontContent"
                         dangerouslySetInnerHTML={{
                             __html: contents[0]?.content,
                         }}

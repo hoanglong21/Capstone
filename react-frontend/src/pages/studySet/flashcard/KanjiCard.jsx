@@ -221,6 +221,7 @@ const KanjiCard = ({
                         </button>
                     </div>
                     <div
+                        className="flashcardFrontContent"
                         dangerouslySetInnerHTML={{
                             __html: character?.content,
                         }}

@@ -184,7 +184,7 @@ const UpdateClass = ({
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     ) : (
-                        'Save'
+                        t('save')
                     )}
                 </button>
             </Modal.Footer>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import SubmissionService from '../../../services/SubmissionService'
 import { deleteFileByUrl, uploadFile } from '../../../features/fileManagement'
@@ -21,6 +21,8 @@ import CardEditor from '../../../components/textEditor/CardEditor'
 
 const LearnerSubmission = ({ assignment }) => {
     const navigate = useNavigate()
+
+    const { assign_id } = useParams()
     const { userInfo } = useSelector((state) => state.user)
 
     const [submission, setSubmission] = useState({})
@@ -101,7 +103,8 @@ const LearnerSubmission = ({ assignment }) => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') ||
+                    isNaN(assign_id)
                 ) {
                     navigate('/notFound')
                 }

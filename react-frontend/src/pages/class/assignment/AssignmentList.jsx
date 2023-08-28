@@ -432,14 +432,14 @@ function AssignmentList() {
                                         </div>
                                         <div>
                                             {assign._draft
-                                                ? 'Draft'
+                                                ? t('draft')
                                                 : assign?.start_date &&
                                                   new Date(assign?.start_date) >
                                                       today
                                                 ? `Scheduled for ${assign?.start_date}`
                                                 : assign?.due_date
                                                 ? `Due ${assign?.due_date}`
-                                                : 'No due date'}
+                                                : t('noDue')}
                                         </div>
                                     </button>
                                     <div
@@ -474,7 +474,7 @@ function AssignmentList() {
                                                                 {t('missing')}
                                                             </div>
                                                         ) : (
-                                                            'Not submitted'
+                                                            t('notSub')
                                                         )}
                                                     </div>
                                                 )}

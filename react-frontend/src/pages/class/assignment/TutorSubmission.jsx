@@ -23,12 +23,14 @@ import {
 } from '../../../components/icons'
 import './assignment.css'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const TutorSubmission = ({ assignment }) => {
     const navigate = useNavigate()
 
     const { userInfo } = useSelector((state) => state.user)
+
+    const { assign_id } = useParams()
 
     const [learners, setLearners] = useState([])
     const [numSubmit, setNumSubmit] = useState(0)
@@ -110,7 +112,8 @@ const TutorSubmission = ({ assignment }) => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist')
+                    error?.response.data.includes('not exist') ||
+                    isNaN(assign_id)
                 ) {
                     navigate('/notFound')
                 }
@@ -266,13 +269,11 @@ const TutorSubmission = ({ assignment }) => {
             tempSubmission.modified_date = toBEDate(
                 tempSubmission.modified_date
             )
-            if (tempSubmission?.user) {                
+            if (tempSubmission?.user) {
                 tempSubmission.user.created_date = toBEDate(
                     tempSubmission.user.created_date
                 )
-                tempSubmission.user.dob = toBEDate(
-                    tempSubmission.user.dob
-                )
+                tempSubmission.user.dob = toBEDate(tempSubmission.user.dob)
                 tempSubmission.user.banned_date = toBEDate(
                     tempSubmission.user.banned_date
                 )
@@ -280,7 +281,7 @@ const TutorSubmission = ({ assignment }) => {
                     tempSubmission.user.deleted_date
                 )
             }
-            if (tempSubmission?.assignment) {                        
+            if (tempSubmission?.assignment) {
                 tempSubmission.assignment.created_date = toBEDate(
                     tempSubmission.assignment.created_date
                 )
@@ -293,7 +294,7 @@ const TutorSubmission = ({ assignment }) => {
                 tempSubmission.assignment.due_date = toBEDate(
                     tempSubmission.assignment.due_date
                 )
-                if (tempSubmission.assignment?.user) {                
+                if (tempSubmission.assignment?.user) {
                     tempSubmission.assignment.user.created_date = toBEDate(
                         tempSubmission.assignment.user.created_date
                     )
@@ -307,26 +308,32 @@ const TutorSubmission = ({ assignment }) => {
                         tempSubmission.assignment.user.deleted_date
                     )
                 }
-                if (tempSubmission.assignment?.classroom) {                
+                if (tempSubmission.assignment?.classroom) {
                     tempSubmission.assignment.classroom.created_date = toBEDate(
                         tempSubmission.assignment.classroom.created_date
                     )
                     tempSubmission.assignment.classroom.deleted_date = toBEDate(
                         tempSubmission.assignment.classroom.deleted_date
                     )
-                    if (tempSubmission.assignment.classroom?.user) {                
-                        tempSubmission.assignment.classroom.user.created_date = toBEDate(
-                            tempSubmission.assignment.classroom.user.created_date
-                        )
+                    if (tempSubmission.assignment.classroom?.user) {
+                        tempSubmission.assignment.classroom.user.created_date =
+                            toBEDate(
+                                tempSubmission.assignment.classroom.user
+                                    .created_date
+                            )
                         tempSubmission.assignment.classroom.user.dob = toBEDate(
                             tempSubmission.assignment.classroom.user.dob
                         )
-                        tempSubmission.assignment.classroom.user.banned_date = toBEDate(
-                            tempSubmission.assignment.classroom.user.banned_date
-                        )
-                        tempSubmission.assignment.classroom.user.deleted_date = toBEDate(
-                            tempSubmission.assignment.classroom.user.deleted_date
-                        )
+                        tempSubmission.assignment.classroom.user.banned_date =
+                            toBEDate(
+                                tempSubmission.assignment.classroom.user
+                                    .banned_date
+                            )
+                        tempSubmission.assignment.classroom.user.deleted_date =
+                            toBEDate(
+                                tempSubmission.assignment.classroom.user
+                                    .deleted_date
+                            )
                     }
                 }
             }
