@@ -248,7 +248,7 @@ const Flashcard = () => {
                         '',
                         '',
                         '',
-                        ''
+                        `=${tempCounts['Not studied'] + tempCounts['Still learning'] + tempCounts['Mastered']}`
                     )
                 ).data.list
                 setCards(tempCards)
@@ -704,13 +704,27 @@ const Flashcard = () => {
         }
         // create
         try {
+            var tempCount = 0
+            if (optionProgressStatus.includes("not studied")) {
+                tempCount += optionIsStar ? numNotStar : numNot
+            }
+            if (optionProgressStatus.includes("still learning")) {
+                tempCount += optionIsStar ? numStillStar :numStill
+            }
+            if (optionProgressStatus.includes("mastered")) {
+                tempCount += optionIsStar ? numMasterStar : numMaster
+            }
             setLoading(true)
             const tempCards = (
                 await CardService.countCardInSet(
                     `=${userInfo.id}`,
                     `=${id}`,
                     `=${optionProgressStatus}`,
-                    `=${optionIsStar}`
+                    `=${optionIsStar}`,
+                    '',
+                    '',
+                    '',
+                    `=${tempCount}`
                 )
             ).data.list
             setCards(tempCards)
