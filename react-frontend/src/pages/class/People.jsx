@@ -111,9 +111,27 @@ const People = () => {
             tempRequest.classroom.user.created_date = toBEDate(
                 tempRequest.classroom.user.created_date
             )
+            tempRequest.classroom.user.dob = toBEDate(
+                tempRequest.classroom.user.dob
+            )
+            tempRequest.classroom.user.deleted_date = toBEDate(
+                tempRequest.classroom.user.deleted_date
+            )
+            tempRequest.classroom.user.banned_date = toBEDate(
+                tempRequest.classroom.user.banned_date
+            )
             tempRequest.created_date = toBEDate(tempRequest.created_date)
             tempRequest.user.created_date = toBEDate(
                 tempRequest.user.created_date
+            )
+            tempRequest.user.dob = toBEDate(
+                tempRequest.user.dob
+            )
+            tempRequest.user.deleted_date = toBEDate(
+                tempRequest.user.deleted_date
+            )
+            tempRequest.user.banned_date = toBEDate(
+                tempRequest.user.banned_date
             )
             await ClassLearnerService.updateClassLeaner(
                 { ...tempRequest },
