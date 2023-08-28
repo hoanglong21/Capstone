@@ -254,7 +254,8 @@ const DoQuiz = () => {
                 }
                 if (
                     error.message.includes('not exist') ||
-                    error?.response.data.includes('not exist') || isNaN(id)
+                    error?.response.data.includes('not exist') ||
+                    isNaN(id)
                 ) {
                     navigate('/notFound')
                 }
@@ -453,7 +454,7 @@ const DoQuiz = () => {
         if (ans) {
             tempAnswers[index] = ans
         } else {
-            tempAnswers[index] = ans
+            tempAnswers[index] = null
         }
         setAnswers(tempAnswers)
     }
