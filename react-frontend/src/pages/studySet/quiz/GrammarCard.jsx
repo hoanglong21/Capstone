@@ -253,12 +253,19 @@ const GrammarCard = ({
                                             setProgress(
                                                 progress > 0 ? progress - 1 : 0
                                             )
-                                        } else {
+                                        } else if (
+                                            answers[quesIndex] === null
+                                        ) {
                                             handleChangeAnswer(
                                                 ans.card.id,
                                                 quesIndex
                                             )
                                             setProgress(progress + 1)
+                                        } else {
+                                            handleChangeAnswer(
+                                                ans.card.id,
+                                                quesIndex
+                                            )
                                         }
                                     }}
                                 >
@@ -432,6 +439,8 @@ const GrammarCard = ({
                                         setProgress(
                                             progress > 0 ? progress - 1 : 0
                                         )
+                                    } else if (answers[quesIndex] === 0) {
+                                        handleChangeAnswer(1, quesIndex)
                                     } else {
                                         handleChangeAnswer(1, quesIndex)
                                         setProgress(progress + 1)
@@ -461,6 +470,8 @@ const GrammarCard = ({
                                         setProgress(
                                             progress > 0 ? progress - 1 : 0
                                         )
+                                    } else if (answers[quesIndex] === 1) {
+                                        handleChangeAnswer(0, quesIndex)
                                     } else {
                                         handleChangeAnswer(0, quesIndex)
                                         setProgress(progress + 1)
