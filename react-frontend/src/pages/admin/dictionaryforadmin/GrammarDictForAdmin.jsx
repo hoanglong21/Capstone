@@ -1,33 +1,44 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import DictionaryService from '../../../services/DictionaryService'
 import GrammarDetail from './GrammarDetailForAdmin'
 import './dictionary.css'
+import Pagination from '../../../components/Pagination'
 const GrammarDictForAdmin = () => {
+    const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
     const search = searchParams.get('search')
     const [showGrammarDetail, setShowGrammarDetail] = useState(false)
     const [grammars, setGrammars] = useState([])
     const [grammar, setGrammar] = useState({})
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
 
     const fetchData = async (searchKey) => {
         setLoading(true)
         try {
             const temp = (
                 await DictionaryService.getGrammar(
-                    '=1',
+                    `=${page}`,
                     '=40',
                     `${searchKey ? '=' + searchKey : ''}`
                 )
-            ).data.list
-            setGrammars(temp)
+            ).data
+            setGrammars(temp.list)
+            setTotalItems(temp.totalItems)
         } catch (error) {
             if (error.response && error.response.data) {
                 console.log(error.response.data)
             } else {
                 console.log(error.message)
+            }
+            if (
+                error.message.includes('not exist') ||
+                error?.response.data.includes('not exist')
+            ) {
+                navigate('/notFound')
             }
         }
         setLoading(false)
@@ -35,7 +46,7 @@ const GrammarDictForAdmin = () => {
 
     useEffect(() => {
         fetchData(search ? search : '')
-    }, [search])
+    }, [search, page])
 
     if (loading) {
         return (
@@ -78,6 +89,15 @@ const GrammarDictForAdmin = () => {
                         </div>
                     </div>
                 ))}
+                 <Pagination
+                        className="mt-5"
+                        currentPage={page}
+                        totalCount={totalItems}
+                        pageSize={40}
+                        onPageChange={(page) => {
+                            setPage(page)
+                        }}
+                    />
             </div>
             {/* Grammar modal */}
             {showGrammarDetail && (
