@@ -43,6 +43,8 @@ public class AssignmentServiceTest {
     private ClassService classService;
     @Mock
     private AssignmentRepository assignmentRepository;
+    @Mock
+    private ClassRepository classRepository;
 
     @Mock
     private ClassLearnerRepository classLearnerRepository;
@@ -101,6 +103,7 @@ public class AssignmentServiceTest {
     })
     public void testCreateAssignment(int userId, int classId, String instruction, String due_date, String modified_date, String start_date, String title) {
         try {
+            Class classroom = new Class();
             Assignment assignment = Assignment.builder()
                     .user(User.builder().id(userId).build())
                     .classroom(Class.builder().id(classId).build())
@@ -111,6 +114,7 @@ public class AssignmentServiceTest {
                     .title(title)
                     .build();
             when(assignmentRepository.save(any())).thenReturn(assignment);
+            when(classRepository.findClassById(anyInt())).thenReturn(classroom);
             Assignment createdassignment = assignmentServiceImpl.createAssignment(assignment);
             assertThat(assignment).isEqualTo(createdassignment);
         } catch (ParseException | ResourceNotFroundException e) {
